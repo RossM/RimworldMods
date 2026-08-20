@@ -20,7 +20,6 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
     public void Notify_PostLovin(Pawn partner)
     {
         if (Props.hediffs is { Count: > 0 })
-        {
             foreach (var hediffDef in Props.hediffs)
             {
                 var hediff = partner.health.GetOrAddHediff(hediffDef);
@@ -28,7 +27,6 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
                 if (hediff.TryGetComp<HediffComp_Source>() is { } source)
                     source.other = Pawn;
             }
-        }
 
         partner.needs.TryGetNeed(Props.need)?.CurLevel += Props.needOffset;
     }

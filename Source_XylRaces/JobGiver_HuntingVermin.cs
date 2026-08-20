@@ -13,9 +13,7 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
         if (mentalState_huntingVermin.target?.Corpse is Corpse corpse)
         {
             if (!pawn.CanReserveAndReach(corpse, PathEndMode.ClosestTouch, Danger.Some))
-            {
                 pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
-            }
 
             job = JobMaker.MakeJob(JobDefOf.Ingest, corpse);
             return job;

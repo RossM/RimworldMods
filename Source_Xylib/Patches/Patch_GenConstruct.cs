@@ -7,7 +7,8 @@ internal static class Patch_GenConstruct
         = AccessTools.StaticFieldRefAccess<List<string>>(AccessTools.Field(typeof(GenConstruct), "tmpIdeoMemberNames"));
 
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]
-    [Postfix] [Inner(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
+    [Postfix]
+    [Inner(typeof(Ideo), nameof(Ideo.MembersCanBuild))]
     [Target(nameof(GenConstruct.CanConstruct), typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool), typeof(JobDef))]
     public static void MembersCanBuild_Postfix(Ideo __instance, Thing thing, Pawn p, ref bool __result)
     {
@@ -21,13 +22,11 @@ internal static class Patch_GenConstruct
 
         bool hasGeneDesignator = p.GeneTracker_Xylib?.unlockedBuildables?.Contains(def) ?? false;
         if (!hasGeneDesignator && tmpIdeoMemberNames()!.Count == 0)
-        {
             foreach (GeneDef gene in DefDatabase<GeneDef>.AllDefs)
             {
                 if (gene.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables.Contains(def) is true)
                     tmpIdeoMemberNames()!.Add("XylCharactersWithGene".Translate(gene.LabelCap));
             }
-        }
 
         __result = hasGeneDesignator;
     }

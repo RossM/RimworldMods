@@ -5,20 +5,6 @@ public static class Patch_MemoryThoughtHandler
 {
     [Feature(typeof(DefModExtension_Thought))]
     [Postfix]
-    [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
-    public static void RemoveMemoriesOfDef_Postfix(MemoryThoughtHandler __instance, ThoughtDef def)
-    {
-        var extension = def.GetModExtension<DefModExtension_Thought>();
-        if (extension?.extraThoughts == null)
-            return;
-        foreach (var extraDef in extension.extraThoughts)
-        {
-            __instance.RemoveMemoriesOfDef(extraDef);
-        }
-    }
-
-    [Feature(typeof(DefModExtension_Thought))]
-    [Postfix]
     [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefIf))]
     public static void RemoveMemoriesOfDefIf_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Func<Thought_Memory, bool> predicate)
     {
@@ -26,9 +12,7 @@ public static class Patch_MemoryThoughtHandler
         if (extension?.extraThoughts == null)
             return;
         foreach (var extraDef in extension.extraThoughts)
-        {
             __instance.RemoveMemoriesOfDefIf(extraDef, predicate);
-        }
     }
 
     [Feature(typeof(DefModExtension_Thought))]
@@ -40,9 +24,19 @@ public static class Patch_MemoryThoughtHandler
         if (extension?.extraThoughts == null)
             return;
         foreach (var extraDef in extension.extraThoughts)
-        {
             __instance.RemoveMemoriesOfDefWhereOtherPawnIs(extraDef, otherPawn);
-        }
+    }
+
+    [Feature(typeof(DefModExtension_Thought))]
+    [Postfix]
+    [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
+    public static void RemoveMemoriesOfDef_Postfix(MemoryThoughtHandler __instance, ThoughtDef def)
+    {
+        var extension = def.GetModExtension<DefModExtension_Thought>();
+        if (extension?.extraThoughts == null)
+            return;
+        foreach (var extraDef in extension.extraThoughts)
+            __instance.RemoveMemoriesOfDef(extraDef);
     }
 
     [Feature(typeof(DefModExtension_Thought))]

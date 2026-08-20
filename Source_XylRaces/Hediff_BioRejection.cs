@@ -28,9 +28,7 @@ public class Hediff_BioRejection : HediffWithComps
             foreach (Hediff hediff in hediffs)
             {
                 if (hediff.def.countsAsAddedPartOrImplant)
-                {
                     causes.Add(hediff.Label);
-                }
             }
 
             return $"""

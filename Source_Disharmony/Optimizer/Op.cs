@@ -10,9 +10,7 @@
 ///     <see cref="AssignmentOp" /> or <see cref="Branch" />.
 /// </remarks>
 /// <param name="Type">The type of value produced by the <see cref="Op" />.</param>
-internal abstract record Op(Type Type) : Node
-{
-}
+internal abstract record Op(Type Type) : Node { }
 
 /// <summary>
 ///     Represents an assignment to a <see cref="Variable" />.
@@ -89,7 +87,8 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
 /// <remarks>
 ///     There is one input per stack slot popped by the IL opcode, and the output type is the type of the value pushed by
 ///     the IL opcode,
-///     or <see langword="void" /> if it does not push a value. Numeric values use <see langword="int" />, <see langword="long" />,
+///     or <see langword="void" /> if it does not push a value. Numeric values use <see langword="int" />,
+///     <see langword="long" />,
 ///     <see cref="IntPtr" />, or <see langword="double" /> to represent the IL stack types.
 /// </remarks>
 /// <param name="Inputs">The <see cref="Op" />s that produce the instruction's stack inputs.</param>
@@ -158,9 +157,8 @@ internal abstract record MemoryVariable(Type Type) : Variable(Type)
 /// <param name="Type">The argument type.</param>
 internal sealed record Argument(int Index, Type Type) : MemoryVariable(Type)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override int Index { get; } = Index;
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => $"Arg{Index} :{Type}";
 }
@@ -175,7 +173,7 @@ internal sealed record Argument(int Index, Type Type) : MemoryVariable(Type)
 /// </remarks>
 internal sealed record Local : MemoryVariable
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
+    public override int Index => Tracker.Index;
 
     public Local(LocalBuilder builder) : this(builder.LocalType ?? TypeLattice.Any, new LocalTrackerBuilder(builder)) { }
     public Local(Type type, int index) : this(type, new LocalTrackerIndex(index)) { }
@@ -197,8 +195,7 @@ internal sealed record Local : MemoryVariable
     }
 
     public LocalTracker Tracker { get; }
-
-    public override int Index => Tracker.Index;
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => $"Local{Index} :{Type}";
 }

@@ -15,16 +15,24 @@ public static class Patch_ITab_Pawn_Visitor
             {
                 min = 1, max = 0,
                 mode = OutputMode.Replace,
-                pattern = [new(OpCodes.Call, SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default)))],
-                output = [new(OpCodes.Call, SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default)))],
+                pattern =
+                [
+                    new(OpCodes.Call,
+                        SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate o) => o.GetExplanationForTooltip(default))),
+                ],
+                output =
+                [
+                    new(OpCodes.Call,
+                        SymbolExtensions.GetMethodInfo((StatWorker_SuppressionFallRate_Fixed o) => o.GetExplanationForTooltip(default))),
+                ],
                 name = "GetExplanationForTooltip",
             },
             new()
             {
                 min = 1, max = 0,
                 mode = OutputMode.Replace,
-                pattern = [new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate)),],
-                output = [new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate_Fixed)),],
+                pattern = [new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate))],
+                output = [new(OpCodes.Castclass, typeof(StatWorker_SuppressionFallRate_Fixed))],
             },
         },
     };

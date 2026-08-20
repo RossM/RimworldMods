@@ -3,6 +3,15 @@ namespace XylXenos.Patches;
 [HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
 internal static class Patch_Pawn_PsychicEntropyTracker
 {
+    [Feature(typeof(Psycast))]
+    [Postfix]
+    [Target(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
+    public static void NeedToShowGizmo_Postfix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
+    {
+        if (__instance.Pawn.HasActivePsycastGene)
+            __result = true;
+    }
+
     // Note: This patch is performance-sensitive
     [Feature(typeof(Psycast))]
     [Prefix]
@@ -11,14 +20,5 @@ internal static class Patch_Pawn_PsychicEntropyTracker
     {
         __result = __instance.Pawn.NeedsPsyfocus;
         return false;
-    }
-
-    [Feature(typeof(Psycast))]
-    [Postfix]
-    [Target(nameof(Pawn_PsychicEntropyTracker.NeedToShowGizmo))]
-    public static void NeedToShowGizmo_Postfix(Pawn_PsychicEntropyTracker __instance, ref bool __result)
-    {
-        if (__instance.Pawn.HasActivePsycastGene)
-            __result = true;
     }
 }

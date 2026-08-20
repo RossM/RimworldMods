@@ -4,7 +4,8 @@
 public static class PatchLovin
 {
     [Feature(typeof(GeneCompProperties_Youthful))]
-    [Postfix] [Inner(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYearsFloat))]
+    [Postfix]
+    [Inner(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYearsFloat))]
     [Target(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
     [Target(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.LovinAgeFactor))]
     [Target(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]
@@ -20,12 +21,8 @@ public static class PatchLovin
     public static void LovinMtbSinglePawnFactor_Postfix(Pawn pawn, ref float __result)
     {
         if (ModsConfig.BiotechActive && pawn.genes != null)
-        {
             foreach (Gene item in pawn.genes.GenesListForReading)
-            {
                 __result *= item.def.lovinMTBFactor;
-            }
-        }
 
         foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
         {

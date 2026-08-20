@@ -31,9 +31,7 @@ public class HediffComp_RandomInspiration : HediffComp
             return;
 
         if (Rand.MTBEventOccurs(Props.mtbDays, GenDate.TicksPerDay, checkFrequency))
-        {
             GiveInspiration();
-        }
     }
 
     private void GiveInspiration()

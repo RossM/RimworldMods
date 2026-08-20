@@ -12,16 +12,12 @@ public static class Patch_WorkGiver_Warden_Feed
             return;
 
         if (!__instance.ShouldTakeCareOfPrisoner(pawn, t, forced))
-        {
             return;
-        }
 
         Pawn prisoner = (Pawn)t;
 
         if (!WardenFeedUtility.ShouldBeFed(prisoner))
-        {
             return;
-        }
 
         foreach (var hediff in prisoner.HediffsOfType<Hediff_DietDependency>().Where(h => h.ShouldSatisfy)
                      .OrderByDescending(h => h.Severity))

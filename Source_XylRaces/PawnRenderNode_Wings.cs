@@ -16,9 +16,7 @@ public class PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, Paw
         //    return null;
 
         if (props.texPaths is { Count: > 0 })
-        {
             return pawn.flight?.Flying is true ? props.texPaths[1] : props.texPaths[0];
-        }
 
         return base.TexPathFor(pawn);
     }

@@ -7,16 +7,13 @@ public static class Scribe_Ext
         List<T1> listFirst = [];
         List<T2> listSecond = [];
         if (Scribe.mode == LoadSaveMode.Saving)
-        {
             foreach (var pair in valueTuples)
             {
                 listFirst.Add(pair.Item1);
                 listSecond.Add(pair.Item2);
             }
-        }
 
         if (Scribe.EnterNode(label))
-        {
             try
             {
                 Scribe_Collections.Look(ref listFirst, "first", lookMode);
@@ -26,17 +23,14 @@ public static class Scribe_Ext
             {
                 Scribe.ExitNode();
             }
-        }
 
-        if (lookMode == LookMode.Reference && Scribe.mode == LoadSaveMode.ResolvingCrossRefs ||
-            lookMode != LookMode.Reference && Scribe.mode == LoadSaveMode.LoadingVars)
+        if ((lookMode == LookMode.Reference && Scribe.mode == LoadSaveMode.ResolvingCrossRefs) ||
+            (lookMode != LookMode.Reference && Scribe.mode == LoadSaveMode.LoadingVars))
         {
             valueTuples = [];
             if (listFirst != null && listSecond != null)
-            {
                 foreach (var pair in listFirst.Zip(listSecond, (f, s) => (f, s)))
                     valueTuples.Add(pair);
-            }
         }
     }
 }

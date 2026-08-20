@@ -117,9 +117,7 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
         float mtbDays = GrowthMode.changeMtbDays;
 
         if (mtbDays > 0 && Rand.MTBEventOccurs(mtbDays, GenDate.TicksPerDay, delta))
-        {
             ChangeGrowthMode();
-        }
     }
 
     public virtual void ChangeGrowthMode()
@@ -129,12 +127,10 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
         SetGrowthMode(TProps.modes.Where(mode => mode != GrowthMode).RandomElementByWeight(mode => mode.weight));
 
         if (!GrowthMode.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(Pawn))
-        {
             Messages.Message(
                 GrowthMode.message.Formatted(Pawn.Named("PAWN")),
                 Pawn,
                 GrowthMode.messageType ?? MessageTypeDefOf.NegativeHealthEvent);
-        }
     }
 
     private void SetGrowthMode(GrowthMode mode)

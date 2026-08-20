@@ -4,7 +4,8 @@
 public static class Patch_JoyUtility
 {
     [Feature(typeof(Need_Wetness))]
-    [Prefix] [Inner(typeof(JoyUtility), nameof(JoyUtility.EnjoyableOutsideNow), typeof(Map), typeof(StringBuilder))]
+    [Prefix]
+    [Inner(typeof(JoyUtility), nameof(JoyUtility.EnjoyableOutsideNow), typeof(Map), typeof(StringBuilder))]
     [Target(nameof(JoyUtility.EnjoyableOutsideNow), typeof(Pawn), typeof(StringBuilder))]
     public static bool EnjoyableOutsideNow_Prefix(Pawn pawn, Map map, StringBuilder? outFailReason, out bool __result)
     {

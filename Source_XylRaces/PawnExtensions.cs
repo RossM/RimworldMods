@@ -27,9 +27,7 @@ public static class PawnExtensions
 
             if (pawn.AllGenesOfType<GeneWithComps>().Any(gene =>
                     gene.Active && gene.GetComp<GeneComp_Psycast>() != null && gene.def.abilities?.Contains(ability) is true))
-            {
                 return ability.level;
-            }
 
             return 0;
         }

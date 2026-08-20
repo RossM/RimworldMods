@@ -25,17 +25,13 @@ public class CompAbilityEffect_ToxicBurst : CompAbilityEffect_ReleaseGas
         {
             IntVec3 c = parent.pawn.Position + GenRadial.RadialPattern[i];
             if (!c.InBounds(parent.pawn.Map))
-            {
                 continue;
-            }
 
             foreach (Thing thing in c.GetThingList(parent.pawn.Map))
             {
                 if (thing is Pawn pawn && pawn != parent.pawn && pawn.HostileTo(parent.pawn) && GasUtility.IsAffectedByExposure(pawn)
                     && !pawn.IsPsychologicallyInvisible())
-                {
                     return true;
-                }
             }
         }
 

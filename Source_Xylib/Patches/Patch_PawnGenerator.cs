@@ -4,7 +4,8 @@ namespace Xylib.Patches;
 internal static class Patch_PawnGenerator
 {
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
-    [Prefix] [Inner(typeof(PawnGenerator), "GenerateGenes")]
+    [Prefix]
+    [Inner(typeof(PawnGenerator), "GenerateGenes")]
     [Target("TryGenerateNewPawnInternal")]
     public static void GenerateGenes_Prefix(ref XenotypeDef? xenotype, [State] PawnGenerationData data)
     {
@@ -20,7 +21,8 @@ internal static class Patch_PawnGenerator
     }
 
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
-    [Prefix] [Inner(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+    [Prefix]
+    [Inner(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
     [Target("TryGenerateNewPawnInternal")]
     public static void GiveAppropriateBioAndNameTo_Prefix(
         Pawn pawn,

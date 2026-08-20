@@ -46,10 +46,8 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 
         if (!Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.Has(i))
                 .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo? ideo))
-        {
             Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.IsPrimary(i))
                 .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out ideo);
-        }
 
         return ideo;
     }

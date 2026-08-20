@@ -100,9 +100,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         outCandidates.Clear();
 
         foreach (ThingDef def in WetnessGivingThings)
-        {
             outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(def));
-        }
     }
 
     private static bool CanInteractWith(Pawn pawn, Thing t) =>
@@ -112,9 +110,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     protected override Job? TryGiveJob(Pawn pawn)
     {
         if (IsValidWaterTileFor(pawn, pawn.Position))
-        {
             return JobMaker.MakeJob(soakJobDef, pawn.Position);
-        }
 
         if (FindBestWetnessSource(pawn) is { } bestThing)
         {
@@ -125,9 +121,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
         }
 
         if (TryFindWaterTile(pawn, out IntVec3 foundTile))
-        {
             return JobMaker.MakeJob(soakJobDef, foundTile);
-        }
 
         return null;
     }

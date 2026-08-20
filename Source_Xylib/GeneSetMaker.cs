@@ -18,16 +18,12 @@ public abstract class GeneSetMaker
         List<GeneDef> genes = geneSet.GenesListForReading;
 
         if (pawn.genes.Xenotype != null)
-        {
             foreach (var gene in pawn.genes.Xenotype.genes)
                 geneSet.AddGene(gene);
-        }
 
         if (pawn.genes.CustomXenotype != null)
-        {
             foreach (var gene in pawn.genes.CustomXenotype.genes)
                 geneSet.AddGene(gene);
-        }
 
         foreach (var gene in pawn.genes.GenesListForReading.Where(g => g.Active))
             geneSet.AddGene(gene.def);
@@ -130,10 +126,8 @@ public class GeneSetMaker_Option : GeneSetMaker
             if (option.maker == null)
                 yield return $"null {nameof(option.maker)} in {nameof(option)}";
             else
-            {
                 foreach (var error in option.maker.ConfigErrors())
                     yield return error;
-            }
         }
     }
 

@@ -21,7 +21,9 @@ public static class FoodHelpers
                             continue;
                     }
                     else if (foodGroup.foodTypes != 0 && (foodGroup.foodTypes & flags) == 0)
+                    {
                         continue;
+                    }
 
                     if (foodGroup.humanlike && race?.Humanlike is not true)
                         continue;
@@ -39,21 +41,15 @@ public static class FoodHelpers
         public float GetExtraNutritionFactor(Thing foodSource, ThingDef foodDef)
         {
             if (foodDef.IsRawFoodOrCorpse)
-            {
                 return eater.GetRawNutritionFactor(foodDef.FoodGroups);
-            }
 
             var compIngredients = foodSource.TryGetComp<CompIngredients>();
             if (compIngredients is null)
-            {
                 return eater.GetCookedNutritionFactor(foodDef.FoodGroups);
-            }
 
             List<float> multipliers = [];
             foreach (var ingredient in compIngredients.ingredients)
-            {
                 multipliers.Add(eater.GetCookedNutritionFactor(ingredient.FoodGroups));
-            }
 
             return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
         }

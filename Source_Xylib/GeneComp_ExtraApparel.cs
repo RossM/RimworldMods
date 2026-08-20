@@ -76,15 +76,11 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
 
         if (pawn.kindDef?.apparelTags is { Count: > 0 } &&
             !pawn.kindDef.apparelTags.Any(apparelTags.Contains))
-        {
             return false;
-        }
 
         if (pawn.kindDef?.apparelDisallowTags is { Count: > 0 } &&
             pawn.kindDef.apparelDisallowTags.Any(apparelTags.Contains))
-        {
             return false;
-        }
 
         return true;
     }

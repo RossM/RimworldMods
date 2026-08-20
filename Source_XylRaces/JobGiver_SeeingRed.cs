@@ -12,9 +12,7 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
     protected override Job? TryGiveJob(Pawn pawn)
     {
         if (pawn.TryGetAttackVerb(null) == null)
-        {
             return null;
-        }
 
         if (FindAttackTarget(pawn) is not { } thing)
             return null;
@@ -33,7 +31,7 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
 
     protected virtual bool IsGoodTarget(Thing thing)
     {
-        return thing is Pawn { Spawned: true, Downed: false } pawn && !pawn.IsPsychologicallyInvisible() ||
+        return (thing is Pawn { Spawned: true, Downed: false } pawn && !pawn.IsPsychologicallyInvisible()) ||
                thing is Building { Spawned: true, def.building.IsTurret: true };
     }
 

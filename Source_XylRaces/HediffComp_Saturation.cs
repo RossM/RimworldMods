@@ -28,19 +28,15 @@ public class HediffCompProperties_Saturation : HediffCompPropertiesExt
                 "PerDay".Translate(severityGainPerDay.ToStringPercent()),
                 "XylSaturationGainDesc".Translate(), 0);
             if (parent != null)
-            {
                 yield return new(StatCategoryDefOf.Drug, "XylDaysToFullSaturation".Translate(),
                     "PeriodDays".Translate((parent.maxSeverity / severityGainPerDay).ToStringDecimalIfSmall()),
                     "XylDaysToFullSaturationDesc".Translate(), 0);
-            }
         }
 
         if (severityLossPerDay < 0)
-        {
             yield return new(StatCategoryDefOf.Drug, "XylSaturationLoss".Translate(),
                 "PerDay".Translate(severityLossPerDay.ToStringPercent()),
                 "XylSaturationLossDesc".Translate(), 0);
-        }
     }
 }
 

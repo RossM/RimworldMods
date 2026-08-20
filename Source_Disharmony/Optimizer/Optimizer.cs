@@ -2,6 +2,7 @@
 
 internal class Optimizer
 {
+    public IReadOnlyList<CodeInstruction> Instructions => inputInstructions;
     private static readonly bool forceDebug;
     private static readonly string forceDebugForMethod;
     private readonly List<CodeInstruction> inputInstructions;
@@ -12,10 +13,6 @@ internal class Optimizer
 
     internal ControlFlowGraph cfg = ControlFlowGraph.Empty;
 
-
-    public MethodBase Method { get; }
-
-    public IReadOnlyList<CodeInstruction> Instructions => inputInstructions;
     static Optimizer()
     {
         forceDebug = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DISHARMONY_DEBUG"));
@@ -36,6 +33,9 @@ internal class Optimizer
 
         returnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
+
+
+    public MethodBase Method { get; }
 
     public List<CodeInstruction> Optimize()
     {

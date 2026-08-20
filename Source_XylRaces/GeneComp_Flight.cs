@@ -92,7 +92,6 @@ public class GeneComp_Flight : GeneComp, IEventListener
         if (flightAllowedByApparel)
         {
             if (Pawn.Drafted)
-            {
                 yield return new Command_Toggle
                 {
                     defaultLabel = "XylCommandAutoFlyDraftedLabel".TranslateSimple(),
@@ -101,9 +100,7 @@ public class GeneComp_Flight : GeneComp, IEventListener
                     toggleAction = () => { autoFlyDrafted = !autoFlyDrafted; },
                     icon = ExtraIcon,
                 };
-            }
             else
-            {
                 yield return new Command_Toggle
                 {
                     defaultLabel = "XylCommandAutoFlyLabel".TranslateSimple(),
@@ -112,7 +109,6 @@ public class GeneComp_Flight : GeneComp, IEventListener
                     toggleAction = () => { autoFly = !autoFly; },
                     icon = ExtraIcon,
                 };
-            }
         }
     }
 
@@ -139,16 +135,12 @@ public class GeneComp_Flight : GeneComp, IEventListener
                 Pather.Moving &&
                 Pawn.Position.DistanceTo(Pather.Destination.Cell) >= Props.autoFlyMinDistance &&
                 Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
-            {
                 Flight.StartFlying();
-            }
         }
         else
         {
             if (Pather.Moving && Pawn.CurJob?.locomotionUrgency > LocomotionUrgency.Walk)
-            {
                 Flight.StartFlying();
-            }
         }
     }
 

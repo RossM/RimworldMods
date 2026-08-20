@@ -130,16 +130,10 @@ public static class DebugArena
                 continue;
 
             if (pawnKindDef.RaceProps.Humanlike)
-            {
                 foreach (var xenotypeDef in xenotypes)
-                {
                     pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, xenotypeDef));
-                }
-            }
             else
-            {
                 pawnKindsForBattleRoyale.Add(pawnKindDef);
-            }
         }
 
         List<DebugActionNode> actions = [];
@@ -218,13 +212,9 @@ public static class DebugArena
                 continue;
 
             if (pawnKindDef.RaceProps.Humanlike)
-            {
                 pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, GetDefaultXenotype(pawnKindDef)));
-            }
             else
-            {
                 pawnKindsForBattleRoyale.Add(pawnKindDef);
-            }
         }
 
         return pawnKindsForBattleRoyale;
@@ -237,7 +227,7 @@ public static class DebugArena
             {
                 [{ chance: >= 1 } value] => value.xenotype,
                 XenotypeSetWithDefault withDefault => withDefault.defaultXenotype,
-                _ => XenotypeDefOf.Baseliner
+                _ => XenotypeDefOf.Baseliner,
             };
         return XenotypeDefOf.Baseliner;
     }
@@ -339,9 +329,7 @@ public static class DebugArena
             PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
 
             if (forcedPawnKind != null && Rand.Chance(0.5f))
-            {
                 (lhsDef, rhsDef) = (rhsDef, lhsDef);
-            }
 
             float lhsPower = CombatPower(lhsDef);
             float rhsPower = CombatPower(rhsDef);

@@ -56,9 +56,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
 
         List<Pawn> list = ApplyToPawns([.. ActualVictims(parms)], out var blockedInfo);
         if (list is not { Count: > 0 } && blockedInfo.NullOrEmpty())
-        {
             return false;
-        }
 
         TaggedString baseLetterLabel = def.letterLabel;
         TaggedString baseLetterText;
@@ -67,10 +65,8 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
             if (def.letterSingularForm)
             {
                 if (list.Count > 1)
-                {
                     Log.Error("Incident " + def.defName +
                               " is marked to only generate a letter in a singular format, but multiple victims were provided.");
-                }
 
                 Pawn pawn = list[0];
                 DebugAssert.NotNull(pawn);
@@ -91,9 +87,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                 }
 
                 if (mostRecentHediff.IsAnyStageLifeThreatening() && !def.diseaseLethalLetterText.NullOrEmpty())
-                {
                     baseLetterText += "\n\n" + def.diseaseLethalLetterText.Formatted(pawn.Named("PAWN"));
-                }
             }
             else
             {
@@ -101,9 +95,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
                 foreach (Pawn pawn in list)
                 {
                     if (stringBuilder.Length != 0)
-                    {
                         stringBuilder.AppendLine();
-                    }
 
                     stringBuilder.AppendTagged("  - " + pawn.LabelNoCountColored.Resolve());
                 }
@@ -121,9 +113,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
         if (!blockedInfo.NullOrEmpty())
         {
             if (!baseLetterText.NullOrEmpty())
-            {
                 baseLetterText += "\n\n";
-            }
 
             baseLetterText += blockedInfo;
         }

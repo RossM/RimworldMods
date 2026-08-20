@@ -44,7 +44,7 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
         var data = OpCodeData.Get(op.IL.OpCode);
 
         IEnumerable<Type> inputTypes = inputs.Select(input => input.Type);
-        
+
         Type[] types;
         if (data.flags.HasFlag(OpCodeFlags.Argument))
             types = [optimizer.cfg.Arguments[OpCodeData.GetIntOperand(op.IL)].Type, .. inputTypes];
@@ -60,7 +60,7 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
         return DefaultVisit(new ILOp(op.IL, inputs, resultType));
     }
 
-    public override Node Visit(StackSlot op) => GetReplacement(op) ;
+    public override Node Visit(StackSlot op) => GetReplacement(op);
 
     private StackSlot GetReplacement(StackSlot op) => stackSlots.TryGetValue(op.Id, out StackSlot replacement) ? replacement : op;
 

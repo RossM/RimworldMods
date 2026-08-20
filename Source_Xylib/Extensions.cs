@@ -10,6 +10,11 @@ namespace Xylib;
 [PublicAPI]
 public static class Extensions
 {
+    private delegate object MemberwiseCloneDelegate(object obj);
+
+    private static MemberwiseCloneDelegate? memberwiseCloneFn;
+    public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = new();
+
     extension(Faction faction)
     {
         /// <summary>
@@ -926,9 +931,4 @@ public static class Extensions
         public static string[] GetNames<T>() where T : Enum => Enum.GetNames(typeof(T));
         public static T[] GetValues<T>() where T : Enum => (T[])Enum.GetValues(typeof(T));
     }
-
-    private delegate object MemberwiseCloneDelegate(object obj);
-
-    private static MemberwiseCloneDelegate? memberwiseCloneFn;
-    public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = new();
 }

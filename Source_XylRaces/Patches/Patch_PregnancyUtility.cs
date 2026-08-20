@@ -8,7 +8,8 @@
 public static class Patch_PregnancyUtility
 {
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
-    [Postfix] [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
+    [Postfix]
+    [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
     {
@@ -44,7 +45,8 @@ public static class Patch_PregnancyUtility
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
-    [Postfix] [Inner(typeof(PregnancyUtility), "ShouldByHybrid")]
+    [Postfix]
+    [Inner(typeof(PregnancyUtility), "ShouldByHybrid")]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void ShouldBeHybrid_Postfix(Pawn mother, Pawn father, ref bool __result)
     {

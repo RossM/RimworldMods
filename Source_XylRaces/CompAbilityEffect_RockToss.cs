@@ -94,10 +94,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         DebugAssert.NotNull(parent.pawn.Map);
 
         if (Props.range > 0f)
-        {
             GenDraw.DrawRadiusRing(target.Cell, Props.range, Color.white,
                 c => c.DistanceTo(target.Cell) >= Props.minRange && GenSight.LineOfSight(target.Cell, c, parent.pawn.Map));
-        }
     }
 
     public override bool CanHitTarget(LocalTargetInfo target)
@@ -119,20 +117,16 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         DebugAssert.NotNull(parent.pawn.Map);
 
         if (Props.range > 0f)
-        {
             GenDraw.DrawRadiusRing(selectedTarget.Cell, Props.range, Color.white,
                 c => c.DistanceTo(selectedTarget.Cell) >= Props.minRange
                      && GenSight.LineOfSight(selectedTarget.Cell, c, parent.pawn.Map));
-        }
 
         if (target.IsValid)
         {
             GenDraw.DrawTargetHighlight(target);
             DebugAssert.NotNull(Props.projectileDef.projectile);
             if (Props.projectileDef.projectile.explosionRadius > 0f)
-            {
                 GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
-            }
         }
     }
 }

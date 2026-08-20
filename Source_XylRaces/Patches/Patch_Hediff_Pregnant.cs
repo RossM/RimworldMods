@@ -13,8 +13,6 @@ public static class Patch_Hediff_Pregnant
 
         GeneSet inheritedGeneSet = PregnancyUtility.GetInheritedGeneSet(null, __instance.pawn, out var success);
         if (success)
-        {
             __instance.SetParents(__instance.pawn, null, inheritedGeneSet);
-        }
     }
 }

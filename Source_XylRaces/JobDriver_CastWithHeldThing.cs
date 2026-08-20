@@ -17,9 +17,7 @@ public class JobDriver_CastWithHeldThing : JobDriver_CastAbility
         {
             DebugAssert.NotNull(pawn);
             if (pawn.IsCarrying())
-            {
                 pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
-            }
         });
         yield return Toils_Reserve.Reserve(TargetIndex.A);
         yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell).FailOn(() => !ability.CanApplyOn(job.targetA));

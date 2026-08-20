@@ -74,10 +74,8 @@ public static class Analyzer
 
                 // Applying [InfixPatch] without [InfixPrefix] or [InfixPostfix], or vice versa, won't do anything, so is probably a bug
                 if (hasTarget != (hasPrefix || hasPostfix))
-                {
                     Log.Warning(
                         $"[{name}] {type.FullName}::{method.Name} has should have both [Target] and a patch type");
-                }
 
                 // Enforce a naming convention for patch methods. This makes it more obvious at a glance when a patch will run
                 if ((hasHarmonyPrefix || hasPrefix) && !(method.Name == "Prefix" || method.Name.EndsWith("_Prefix")))
@@ -103,12 +101,10 @@ public static class Analyzer
                 }
 
                 if (hasHarmonyPostfix)
-                {
                     // Postfix patches taking __result usually want to modify it, which won't work without 'ref',
                     // so a missing 'ref' modifier potentially indicates a bug.
                     if (resultParameter is { ParameterType.IsByRef: false })
                         Log.Warning($"[{name}] {type.FullName}::{method.Name} has a non-ref __result");
-                }
             }
         }
     }
@@ -167,10 +163,8 @@ public static class Analyzer
             List<CodeInstruction>? instructions = ReflectionHelpers.GetInstructions(method);
 
             if (!instructions.Any(inst => inst.operand is MethodInfo m && ReflectionHelpers.PossiblyWrappedTargetIs(m, baseMethod)))
-            {
                 Log.Warning(
                     $"[{name}] {method.FullName} is missing a call to {baseMethod.FullName}");
-            }
         }
     }
 
@@ -229,10 +223,8 @@ public static class Analyzer
                     DebugAssert.NotNull(baseType);
 
                     if (baseType.GetFields().Any(field => ShouldExposeField(field, baseType)))
-                    {
                         Log.Warning(
                             $"[{name}] {type.FullName}::{method.Name} is missing a call to {baseType.FullName}::{baseMethod.Name}");
-                    }
                 }
             }
 

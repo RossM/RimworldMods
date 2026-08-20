@@ -28,7 +28,7 @@ public abstract class GeneTracker : IEventListener, IPawnData
         if (source == null || source.Count == 0)
             return;
         if (dest == null)
-            dest = [..source];
+            dest = [.. source];
         else
             dest.AddRange(source);
     }

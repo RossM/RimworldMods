@@ -49,9 +49,7 @@ public class JobDriver_TakeShower : JobDriver
         };
 
         if (job.def.GetModExtension<DefModExtension_Job_TakeShower>() is { effecter: not null } modExtension)
-        {
             toil.WithEffect(modExtension.effecter, TargetIndex.A);
-        }
 
         toil.handlingFacing = true;
         yield return toil;

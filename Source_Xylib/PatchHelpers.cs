@@ -50,9 +50,7 @@ internal static class PatchHelpers
     public static void AddDefs<T>(IEnumerable<Def> defs, bool hotReload) where T : Def, new()
     {
         foreach (var def in defs)
-        {
             DefGenerator.AddImpliedDef((T)def, hotReload);
-        }
     }
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, [NotNullWhen(true)] out Gene? outGene)
@@ -79,10 +77,8 @@ internal static class PatchHelpers
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
         if (geneDef.Extension_GeneWithComps is { } defExt)
-        {
             foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
                 yield return customEffectDescription;
-        }
     }
 
     public static float GetRangedDodgeChance(Pawn target)

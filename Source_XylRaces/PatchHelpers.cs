@@ -33,7 +33,6 @@ public static class PatchHelpers
         string text = "";
 
         if (xenotypeDefExtension.agreeingMemes is { Count: > 0 })
-        {
             foreach (MemeDef meme in ideo.memes)
             {
                 if (xenotypeDefExtension.agreeingMemes.Contains(meme))
@@ -43,10 +42,8 @@ public static class PatchHelpers
                     text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
                 }
             }
-        }
 
         if (xenotypeDefExtension.disagreeingMemes is { Count: > 0 })
-        {
             foreach (MemeDef meme in ideo.memes)
             {
                 if (xenotypeDefExtension.disagreeingMemes.Contains(meme))
@@ -56,7 +53,6 @@ public static class PatchHelpers
                     text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
                 }
             }
-        }
 
         if (sb != null && !text.NullOrEmpty())
             sb.AppendInNewLine($" -  {"AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN"))}: {text}");
@@ -66,9 +62,7 @@ public static class PatchHelpers
         string MemeAndXenotypeDesc(MemeDef meme, XenotypeDef xenotype, float offset)
         {
             if (sb == null)
-            {
                 return string.Empty;
-            }
 
             // Adding 1 to the offset and reporting it as a percentage is complete nonsense and gives the impression
             // that these are factors being multiplied together rather than added. However, it's complete nonsense
@@ -164,9 +158,7 @@ public static class PatchHelpers
         DebugAssert.NotNull(pawn.pather);
 
         if (pawn.CurJobDef == DefOf.XylTakeShower && !pawn.pather.Moving)
-        {
             flags &= ~(PawnRenderFlags.Clothes | PawnRenderFlags.Headgear);
-        }
 
         return flags;
     }
@@ -257,9 +249,7 @@ public static class PatchHelpers
         ThingDef? ingestible)
     {
         if (thought == null || ingestible == null)
-        {
             return false;
-        }
 
         List<GeneIngestionThoughtOverride>? thoughtOverrides = eater.GeneTracker_XylXenos?.ingestionThoughtOverrides;
         if (thoughtOverrides == null)
@@ -307,14 +297,12 @@ public static class PatchHelpers
             return false;
 
         if (ModsConfig.BiotechActive && pawn.genes != null)
-        {
             foreach (Gene item2 in pawn.genes.GenesListForReading)
             {
                 if (item2.Active && item2.def.passionMod is { modType: PassionMod.PassionModType.AddOneLevel } &&
                     item2.def.passionMod.skill == record.def)
                     return true;
             }
-        }
 
         return false;
     }

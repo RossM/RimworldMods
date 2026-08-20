@@ -26,7 +26,6 @@ public class GeneTracker_XylXenos : GeneTracker
         youthfulMaxAge = float.MaxValue;
 
         if (Pawn.genes != null)
-        {
             foreach (var gene in Pawn.ActiveGenesOfType<GeneWithComps>())
             {
                 var def = gene.DefExt;
@@ -40,6 +39,5 @@ public class GeneTracker_XylXenos : GeneTracker
                 if (def.CompProps<GeneCompProperties_Youthful>() is { } youthful)
                     youthfulMaxAge = Mathf.Min(youthfulMaxAge, youthful.maxAge);
             }
-        }
     }
 }

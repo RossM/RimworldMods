@@ -7,7 +7,6 @@ internal abstract record Node
     public virtual void DebugPrint() => FileLog.LogBuffered(ToString());
 }
 
-
 /// <summary>
 ///     Represents a region, which can be the root region or an exception region.
 /// </summary>
@@ -139,7 +138,8 @@ internal sealed record ExceptionGroup(IReadOnlyList<HandlerRegion> HandlerRegion
 {
     public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
-    public bool Equals(ExceptionGroup? group) {
+    public bool Equals(ExceptionGroup? group)
+    {
         if (group is null)
             return false;
         if (ReferenceEquals(this, group))
@@ -202,7 +202,6 @@ internal abstract record Branch(IReadOnlyList<BlockLabel> Labels) : Node
             return hashCode;
         }
     }
-
 }
 
 /// <summary>
@@ -253,7 +252,8 @@ internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs
 
     public override string ToString() => $"{OpCode} ({string.Join(", ", Inputs)}) {{ {string.Join(", ", Labels)} }}";
 
-    public bool Equals(ConditionalBranch? branch) {
+    public bool Equals(ConditionalBranch? branch)
+    {
         if (branch is null)
             return false;
         if (ReferenceEquals(this, branch))
@@ -343,12 +343,14 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
         Branch.DebugPrint();
     }
 
-    public bool Equals(BasicBlock? block) {
+    public bool Equals(BasicBlock? block)
+    {
         if (block is null)
             return false;
         if (ReferenceEquals(this, block))
             return true;
-        return base.Equals(block) && Label.Equals(block.Label) && Ops.SequenceEqual(block.Ops) && Region.Equals(block.Region) && Branch.Equals(block.Branch);
+        return base.Equals(block) && Label.Equals(block.Label) && Ops.SequenceEqual(block.Ops) && Region.Equals(block.Region) &&
+               Branch.Equals(block.Branch);
     }
 
     public override int GetHashCode()
@@ -390,7 +392,8 @@ internal sealed record Edge(BlockLabel Source, BlockLabel Destination, IReadOnly
             return false;
         if (ReferenceEquals(this, other))
             return true;
-        return base.Equals(other) && Source.Equals(other.Source) && Destination.Equals(other.Destination) && EdgeAssignments.SequenceEqual(other.EdgeAssignments);
+        return base.Equals(other) && Source.Equals(other.Source) && Destination.Equals(other.Destination) &&
+               EdgeAssignments.SequenceEqual(other.EdgeAssignments);
     }
 
     public override int GetHashCode()

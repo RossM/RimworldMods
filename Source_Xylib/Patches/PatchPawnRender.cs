@@ -10,7 +10,8 @@ internal static class PatchPawnRender
     // visiting children. So we're stuck waiting for the complete list to be filled and then removing the ones we don't
     // want afterward.
     [Feature(typeof(GeneCompProperties_RenderNodeModifiers))]
-    [Postfix] [Inner(typeof(PawnRenderNode), nameof(PawnRenderNode.AppendRequests))]
+    [Postfix]
+    [Inner(typeof(PawnRenderNode), nameof(PawnRenderNode.AppendRequests))]
     [Target(typeof(PawnRenderTree), nameof(PawnRenderTree.ParallelPreDraw))]
     public static void AppendRequests_Postfix(PawnRenderNode __instance, PawnDrawParms parms, List<PawnGraphicDrawRequest> requests)
     {
@@ -77,7 +78,8 @@ internal static class PatchPawnRender
     }
 
     [Feature(typeof(GeneCompProperties_RenderNodeModifiers))]
-    [Postfix] [Inner(typeof(PawnRenderNode), nameof(PawnRenderNode.GetTransform))]
+    [Postfix]
+    [Inner(typeof(PawnRenderNode), nameof(PawnRenderNode.GetTransform))]
     [Target(typeof(PawnRenderTree), nameof(PawnRenderTree.TryGetMatrix))]
     public static void GetTransform_Postfix(
         PawnRenderNode __instance,

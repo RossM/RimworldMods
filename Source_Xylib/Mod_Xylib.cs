@@ -48,12 +48,18 @@ public class Mod_Xylib : Mod
         var harmony = new Harmony("Xylthixlm.Xylib");
 
         using (new ProfileBlock("Xylib Harmony patching"))
+        {
             harmony.PatchCategory(null);
+        }
 
         using (new ProfileBlock("Xylib Disharmony patching"))
+        {
             Patcher.PatchAll(Assembly.GetExecutingAssembly());
+        }
 
         using (new ProfileBlock("Xylib Check coding style"))
+        {
             Analyzer.CheckCodingStyle(typeof(Mod_Xylib).Assembly);
+        }
     }
 }

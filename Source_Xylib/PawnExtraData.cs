@@ -109,7 +109,9 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             return;
 
         if (value == null)
+        {
             data.Remove(pawn.thingIDNumber);
+        }
         else
         {
             value.Pawn = pawn;

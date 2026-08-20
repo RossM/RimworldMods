@@ -122,9 +122,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
                 if (FoodValidator(pawnGettingFood, this, item) && !spawnedColonyAnimal.IsForbidden(pawnGettingFood)
                                                                && pawnGettingFood.CanReach(spawnedColonyAnimal, PathEndMode.OnCell,
                                                                    Danger.Some))
-                {
                     return item;
-                }
             }
         }
 
@@ -197,11 +195,9 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         if (numTaken > 0)
             nutrition *= numTaken;
         else if (pawn.needs.food?.NutritionWanted != null)
-        {
             // If only part of a corpse was consumed, numTaken will be 0, so assume the pawn eats until full.
             // There doesn't seem to be an easy way to get the nutrition gained directly.
             nutrition = Math.Min(nutrition, pawn.needs.food.NutritionWanted);
-        }
 
         if (ValidateFood(food))
             Severity -= nutrition * DefExt.severityReductionPerNutrition;

@@ -22,14 +22,10 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
     public override bool AvailableOnNow(Thing? thing, BodyPartRecord? part = null)
     {
         if (!base.AvailableOnNow(thing, part))
-        {
             return false;
-        }
 
         if (thing is not Pawn pawn)
-        {
             return false;
-        }
 
         if (recipe.targetsBodyPart)
             return GetPartsToApplyOn(pawn, recipe).Any();
@@ -44,9 +40,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         if (billDoer != null)
         {
             if (CheckSurgeryFail(billDoer, pawn, ingredients, part, bill))
-            {
                 return;
-            }
 
             TaleRecorder.RecordTale(TaleDefOf.DidSurgery, billDoer, pawn);
             if (PawnUtility.ShouldSendNotificationAbout(pawn) || PawnUtility.ShouldSendNotificationAbout(billDoer))
@@ -64,9 +58,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             // ReSharper disable once VariableHidesOuterVariable
             if (pawn.health.hediffSet.hediffs.Find(hediff =>
                     hediff.def == recipe.removesHediff && hediff.Part == part && hediff.Visible) is { } hediff)
-            {
                 RemoveHediff(pawn, billDoer, hediff, bill);
-            }
 
             return;
         }
@@ -74,9 +66,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         foreach (var hediff in pawn.health.hediffSet.hediffs.ToList())
         {
             if (hediff.def == recipe.removesHediff && hediff.Visible)
-            {
                 RemoveHediff(pawn, billDoer, hediff, bill);
-            }
         }
     }
 

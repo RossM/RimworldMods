@@ -4,7 +4,8 @@
 public static class Patch_RaceProperties
 {
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
-    [Prefix] [Inner(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
+    [Prefix]
+    [Inner(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
     [Target(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
     public static bool GetFirstHediffOfDef_Prefix(HediffSet __instance, out Hediff? __result)
     {
@@ -40,7 +41,8 @@ public static class Patch_RaceProperties
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
-    [Postfix] [InnerConstant("StatsReport_FinalValue")]
+    [Postfix]
+    [InnerConstant("StatsReport_FinalValue")]
     [Target("NutritionEatenPerDayExplanation")]
     public static void StatsReport_FinalValue_Postfix([Parameter("p")] Pawn pawn, [State] StringBuilder sb)
     {
@@ -48,7 +50,8 @@ public static class Patch_RaceProperties
     }
 
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
-    [Postfix] [Inner(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
+    [Postfix]
+    [Inner(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
     [Target("NutritionEatenPerDayExplanation")]
     public static void StringBuilder_ctor_Postfix(StringBuilder __result, [State] out StringBuilder sb)
     {

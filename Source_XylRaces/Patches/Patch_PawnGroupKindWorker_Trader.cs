@@ -75,9 +75,7 @@ public static class Patch_PawnGroupKindWorker_Trader
         }
 
         for (; itemIndex < waresItems.Count; itemIndex++)
-        {
             carrierPawns.RandomElement().inventory.innerContainer.TryAdd(waresItems[itemIndex]);
-        }
 
         return false;
     }

@@ -12,11 +12,15 @@ public static class PatchLate
         var harmony = new Harmony("net.pardeike.rimworld.lib.harmony");
 
         using (new ProfileBlock("XylXenos Harmony patching"))
+        {
             harmony.PatchCategory("PostLoadDefs");
+        }
 
         // TODO Split infix patching into early and late
         using (new ProfileBlock("XylXenos Disharmony patching"))
+        {
             Patcher.PatchCategory(Assembly.GetExecutingAssembly(), "PostLoadDefs");
+        }
     }
 }
 
@@ -27,10 +31,14 @@ public class Main : Mod
     public Main(ModContentPack content) : base(content)
     {
         using (new ProfileBlock("XylXenos Load settings"))
+        {
             Settings.instance = GetSettings<Settings>();
+        }
 
         using (new ProfileBlock("XylXenos CheckCodingStyle"))
+        {
             Analyzer.CheckCodingStyle(typeof(Main).Assembly);
+        }
 
         var harmony = new Harmony("Xylthixlm.Races.Core");
 
@@ -47,7 +55,9 @@ public class Main : Mod
         }
 
         using (new ProfileBlock("XylXenos Register XML loaders"))
+        {
             RegisterXmlLoaders();
+        }
     }
 
     [DebugAction(allowedGameStates = AllowedGameStates.Entry)]

@@ -200,13 +200,11 @@ public class GeneWithComps : Gene, IEventListener
             return false;
 
         if (comps != null)
-        {
             foreach (var comp in comps)
             {
                 if (!comp.CompAllowActive())
                     return false;
             }
-        }
 
         return true;
     }
@@ -220,10 +218,8 @@ public class GeneWithComps : Gene, IEventListener
         if (Scribe.mode == LoadSaveMode.LoadingVars)
             InitializeComps();
         if (comps != null)
-        {
             foreach (GeneComp comp in comps)
                 comp.CompExposeData();
-        }
     }
 
     /// <summary>
@@ -275,19 +271,15 @@ public class GeneWithComps : Gene, IEventListener
                 comps.Add(comp);
 
                 if (!hasTickCache.TryGetValue(compClass, out var hasTick))
-                {
                     hasTickCache[compClass]
                         = hasTick = ReflectionHelpers.HasOverridingMethod(compClass, typeof(GeneComp), nameof(CompTick));
-                }
 
                 if (hasTick)
                     CompTick += comp.CompTick;
 
                 if (!hasTickIntervalCache.TryGetValue(compClass, out var hasTickInterval))
-                {
                     hasTickIntervalCache[compClass]
                         = hasTickInterval = ReflectionHelpers.HasOverridingMethod(compClass, typeof(GeneComp), nameof(CompTickInterval));
-                }
 
                 if (hasTickInterval)
                     CompTickInterval += comp.CompTickInterval;
@@ -334,10 +326,8 @@ public class GeneWithComps : Gene, IEventListener
         base.PostAdd();
 
         if (comps != null)
-        {
             foreach (var comp in comps)
                 comp.CompPostPostAdd();
-        }
     }
 
     /// <summary>
@@ -352,10 +342,8 @@ public class GeneWithComps : Gene, IEventListener
         base.PostRemove();
 
         if (comps != null)
-        {
             foreach (var comp in comps)
                 comp.CompPostPostRemove();
-        }
     }
 
     /// <summary>
@@ -366,10 +354,8 @@ public class GeneWithComps : Gene, IEventListener
         base.Reset();
 
         if (comps != null)
-        {
             foreach (var comp in comps)
                 comp.CompReset();
-        }
     }
 
     /// <summary>
@@ -379,11 +365,9 @@ public class GeneWithComps : Gene, IEventListener
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
         if (comps != null)
-        {
             foreach (var comp in comps)
             foreach (var result in comp.SpecialDisplayStats())
                 yield return result;
-        }
     }
 
     /// <summary>
@@ -401,12 +385,8 @@ public class GeneWithComps : Gene, IEventListener
 
         List<HediffGiver>? hediffGivers = DefExt.hediffGivers;
         if (hediffGivers is { Count: > 0 } && pawn.IsHashIntervalTick(60, delta))
-        {
             for (var index = 0; index < hediffGivers.Count; index++)
-            {
                 hediffGivers[index]?.OnIntervalPassed(pawn, null);
-            }
-        }
     }
 
     /// <summary>
@@ -429,11 +409,9 @@ public class GeneWithComps : Gene, IEventListener
     public override IEnumerable<Gizmo> GetGizmos()
     {
         if (comps != null)
-        {
             foreach (var comp in comps)
             foreach (var gizmo in comp.CompGetGizmos())
                 yield return gizmo;
-        }
 
         if (!DebugSettings.ShowDevGizmos)
             yield break;

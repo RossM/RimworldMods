@@ -28,9 +28,7 @@ public static class XenotypeHelpers
 
         if (!weights.Keys.Where(xenotypeDef => !playerXenotypes.Contains(xenotypeDef))
                 .TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out XenotypeDef xenotype))
-        {
             weights.Keys.TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out xenotype);
-        }
 
         return xenotype;
     }

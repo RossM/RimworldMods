@@ -80,7 +80,9 @@ public class HediffWithCompsExt : HediffWithComps
         Pawn? sourcePawn = SourcePawn;
 
         if (!def.overrideTooltip.NullOrEmpty())
+        {
             tipSb.AppendLine().AppendLineTagged(def.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
+        }
         else if (curStage != null && !curStage.overrideTooltip.NullOrEmpty())
         {
             tipSb.AppendLine().AppendLineTagged(curStage.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));

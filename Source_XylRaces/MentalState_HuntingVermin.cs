@@ -75,9 +75,7 @@ public class MentalState_HuntingVermin : MentalState
     public bool IsTargetStillValidAndReachable()
     {
         if (target is { SpawnedParentOrMe: not null } && (target.SpawnedParentOrMe is not Pawn || target.SpawnedParentOrMe == target))
-        {
             return pawn.CanReach(target.SpawnedParentOrMe, PathEndMode.Touch, Danger.Deadly, canBashDoors: true);
-        }
 
         return false;
     }
@@ -96,15 +94,11 @@ public class MentalState_HuntingVermin : MentalState
             if (pawn2.Faction == null && pawn2.IsAnimal && pawn2.BodySize <= pawn.BodySize &&
                 pawn2.RaceProps.manhunterOnDamageChance <= 0.1f &&
                 pawn.CanReach(pawn2, PathEndMode.Touch, Danger.Some))
-            {
                 tmpTargets.Add(pawn2);
-            }
         }
 
         if (!tmpTargets.Any())
-        {
             return null;
-        }
 
         Pawn? result = tmpTargets.OrderBy(p => pawn.Position.DistanceToSquared(p.Position)).ThenBy(_ => Rand.Value).FirstOrDefault();
         tmpTargets.Clear();

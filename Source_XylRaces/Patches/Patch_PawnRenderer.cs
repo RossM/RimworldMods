@@ -4,7 +4,8 @@
 public static class Patch_PawnRenderer
 {
     [Feature(nameof(DefOf.XylTakeShower))]
-    [Prefix] [Inner(typeof(PawnRenderer), "GetDrawParms")]
+    [Prefix]
+    [Inner(typeof(PawnRenderer), "GetDrawParms")]
     [Target("ParallelGetPreRenderResults")]
     public static void GetDrawParms_Prefix(Pawn ___pawn, ref PawnRenderFlags flags)
     {

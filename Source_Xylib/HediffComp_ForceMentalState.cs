@@ -41,8 +41,6 @@ public class HediffComp_ForceMentalState : HediffComp
 
         if (Props.endMentalStateOnCure && Pawn.mindState.mentalStateHandler.CurStateDef == Props.mentalState &&
             !Pawn.mindState.mentalStateHandler.CurState!.causedByMood)
-        {
             Pawn.mindState.mentalStateHandler.CurState.RecoverFromState();
-        }
     }
 }

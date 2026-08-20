@@ -48,10 +48,8 @@ public class HediffGiver_RandomExt : HediffGiver
         base.OnIntervalPassed(pawn, cause);
         float chanceFactor = ChanceFactor(pawn);
         if (chanceFactor != 0f && Rand.MTBEventOccurs(mtbDays / chanceFactor, GenDate.TicksPerDay, 60f) && TryApply(pawn, cause))
-        {
             if (sendLetter)
                 SendLetter(pawn, cause);
-        }
     }
 
     /// <summary>

@@ -390,10 +390,8 @@ public class EventManager
             throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
         if (doDebug)
-        {
             Debug.Log(
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
-        }
 
         var records = registrations.GetOrCreateValue(listener);
 
@@ -469,17 +467,13 @@ public class EventManager
         }
 
         if (eventDef.dataType is null)
-        {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
                 Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
-        }
         else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
-        {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
-        }
 
         RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data!), callback.Target, MethodName(callback), priority);
     }
@@ -516,17 +510,13 @@ public class EventManager
         }
 
         if (eventDef.dataType is null)
-        {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
                 Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
-        }
         else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
-        {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
-        }
 
         RegisterInternal(eventDef, target, (_, data) => callback((T)data!), callback.Target, MethodName(callback), priority);
     }
@@ -646,17 +636,13 @@ public class EventManager
         }
 
         if (eventDef.dataType is null)
-        {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
                 Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
-        }
         else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
-        {
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
                 Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
-        }
 
         RegisterInternal(eventDef, target, (t, data) => callback(t, (T?)data), listener,
             $"{listener.GetType().FullName}.<{eventDef.defName}>", 0);
@@ -681,7 +667,9 @@ public class EventManager
         foreach (var record in records)
         {
             if (record.target == null)
+            {
                 Notifications[record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
+            }
             else
             {
                 if (!record.target.TryGetTarget(out Thing target))
@@ -738,9 +726,7 @@ public class EventManager
         if (!notificationInfo.usesPriority)
         {
             foreach (CallbackInfo callbackInfo in notificationInfo.globalCallbacks)
-            {
                 DoNotify(eventDef, callbackInfo, target, data);
-            }
 
             if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
                 return;
@@ -749,9 +735,7 @@ public class EventManager
             DebugAssert.NotNull(localCallbacks);
 
             foreach (CallbackInfo callbackInfo in localCallbacks)
-            {
                 DoNotify(eventDef, callbackInfo, target, data);
-            }
 
             return;
         }
@@ -769,9 +753,7 @@ public class EventManager
         tempCallbacks.SortByDescending(callback => callback.priority);
 
         foreach (CallbackInfo callbackInfo in tempCallbacks)
-        {
             DoNotify(eventDef, callbackInfo, target, data);
-        }
 
         tempCallbacks.Clear();
     }
@@ -793,43 +775,33 @@ public class EventManager
         if (eventDef.global)
         {
             if (target != null)
-            {
                 Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is global but was called with target {target}",
                     Gen.HashCombineInt(0x34330AEF, eventDef.index));
-            }
         }
         else
         {
             if (target == null)
-            {
                 Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is not global but was called with null target",
                     Gen.HashCombineInt(0x140A0CA2, eventDef.index));
-            }
         }
 
         if (eventDef.dataType != null)
         {
             if (data == null)
-            {
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null",
                     Gen.HashCombineInt(0xEEB8AC2, eventDef.index));
-            }
             else if (!eventDef.dataType.IsInstanceOfType(data))
-            {
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}",
                     Gen.HashCombineInt(0x4D53041B, eventDef.index));
-            }
         }
         else
         {
             if (data != null)
-            {
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}",
                     Gen.HashCombineInt(0x7A213146, eventDef.index));
-            }
         }
     }
 
@@ -872,16 +844,12 @@ public class EventManager
         catch (Exception exception)
         {
             if (Prefs.DevMode)
-            {
                 Log.Error(
                     $"[EventManager] Exception notifying {callbackInfo} ({eventDef} on {target}): {exception}");
-            }
             else
-            {
                 Log.ErrorOnce(
                     $"[EventManager] Exception notifying {callbackInfo} ({eventDef} on {target}). Suppressing further errors. Exception: {exception}",
                     callbackInfo.listener.GetHashCode() ^ 0x1c502196);
-            }
         }
     }
 

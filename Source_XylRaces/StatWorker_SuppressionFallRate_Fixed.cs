@@ -5,14 +5,10 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
     public override bool ShouldShowFor(StatRequest req)
     {
         if (!base.ShouldShowFor(req))
-        {
             return false;
-        }
 
         if (req.Thing is not Pawn pawn)
-        {
             return false;
-        }
 
         return pawn.IsSlave;
     }

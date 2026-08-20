@@ -62,7 +62,6 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
         bool affectsEnemy = false;
 
         if (parent.pawn.Faction != null)
-        {
             foreach (IntVec3 item in AffectedCells(target))
             {
                 List<Thing> thingList = item.GetThingList(parent.pawn.Map);
@@ -77,7 +76,6 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
                     }
                 }
             }
-        }
 
         return affectsEnemy && !affectsAlly;
     }
@@ -89,18 +87,14 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
         tmpCells.Clear();
         IntVec3 targetPosition = target.Cell.ClampInsideMap(parent.pawn.Map);
         if (parent.pawn.Position == targetPosition)
-        {
             return tmpCells;
-        }
 
         int cellsInRadius = GenRadial.NumCellsInRadius(Props.radius);
         for (int i = 0; i < cellsInRadius; i++)
         {
             IntVec3 intVec2 = targetPosition + GenRadial.RadialPattern[i];
             if (CanUseCell(intVec2))
-            {
                 tmpCells.Add(intVec2);
-            }
         }
 
         return tmpCells;

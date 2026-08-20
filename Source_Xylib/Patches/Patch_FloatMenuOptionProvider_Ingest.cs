@@ -16,14 +16,10 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
 
         __result = null;
         if (clickedThing.def.ingestible is not { showIngestFloatOption: true })
-        {
             return true;
-        }
 
         if (!clickedThing.IngestibleNow || !context.FirstSelectedPawn.RaceProps.CanEverEat(clickedThing.def))
-        {
             return true;
-        }
 
         ChemicalDef? chemical = DrugStatsUtility.GetChemical(clickedThing.def);
         if (chemical == null)
@@ -39,24 +35,20 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
         var defExtension = chemical.GetModExtension<DefModExtension_Chemical>();
 
         if (defExtension is { prohibitedGenes.Count: > 0 })
-        {
             // ReSharper disable once VariableHidesOuterVariable
             if (defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene)
             {
                 __result = new FloatMenuOption($"{text}: {"XylBlockedByGene".Translate(gene.label)}", null);
                 return false;
             }
-        }
 
         if (defExtension is { requiredGenesAll.Count: > 0 })
-        {
             // ReSharper disable once VariableHidesOuterVariable
             if (defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene)
             {
                 __result = new FloatMenuOption($"{text}: {"XylRequiresGene".Translate(gene.label)}", null);
                 return false;
             }
-        }
 
         if (defExtension is { requiredGenesAny.Count: > 0 })
         {

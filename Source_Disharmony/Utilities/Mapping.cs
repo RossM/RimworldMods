@@ -11,11 +11,10 @@ internal record MappingElement<T>(T Input, T Output);
 /// <typeparam name="T"></typeparam>
 internal class Mapping<T> : IEnumerable<MappingElement<T>>
 {
-    private readonly Dictionary<T, T> elements = [];
-
     internal IEnumerable<MappingElement<T>> EnumerableImplementation => elements.Select(kvp => new MappingElement<T>(kvp.Key, kvp.Value));
 
     public int Count => elements.Count;
+    private readonly Dictionary<T, T> elements = [];
 
     public Mapping() { }
 
@@ -48,7 +47,8 @@ internal class Mapping<T> : IEnumerable<MappingElement<T>>
     public bool Remove(T input) => elements.Remove(input);
 
     /// <summary>
-    ///     Returns a mapping that produces the effect of first applying <paramref name="first" /> and then <paramref name="second" />.
+    ///     Returns a mapping that produces the effect of first applying <paramref name="first" /> and then
+    ///     <paramref name="second" />.
     /// </summary>
     /// <remarks>
     ///     <c>Merge(first, second)[x]</c> will give the same result as <c>second[first[x]]</c>.
@@ -62,8 +62,11 @@ internal class Mapping<T> : IEnumerable<MappingElement<T>>
         foreach (var kvp in first)
             result[kvp.Input] = second[kvp.Output];
         foreach (var kvp in second)
+        {
             if (!result.elements.ContainsKey(kvp.Input))
                 result[kvp.Input] = kvp.Output;
+        }
+
         return result;
     }
 

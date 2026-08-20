@@ -16,16 +16,12 @@ public class GeneCompProperties_RaceModifiers : GeneCompProperties
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
         if (bodySizeFactor != 1.0f)
-        {
             yield return new(StatCategoryDefOf.BasicsPawn, "BodySize".Translate(), bodySizeFactor.ToStringPercent(),
                 "Stat_Race_BodySize_Desc".Translate(), 4195);
-        }
 
         if (healthScaleFactor != 1.0f)
-        {
             yield return new(StatCategoryDefOf.BasicsPawn, "HitPointsBasic".Translate(), healthScaleFactor.ToStringPercent(),
                 "XylHitPointsDesc".Translate(), 4194);
-        }
     }
 
     public override IEnumerable<string> CustomEffectDescriptions()

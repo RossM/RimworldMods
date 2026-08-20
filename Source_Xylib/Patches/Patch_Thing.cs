@@ -25,14 +25,13 @@ internal static class Patch_Thing
     }
 
     [Feature(nameof(FoodHelpers.GetFoodPoisonChanceFactor))]
-    [Postfix] [Inner(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
+    [Postfix]
+    [Inner(typeof(StatExtension), nameof(StatExtension.GetStatValue))]
     [Target("Ingested")]
     public static void GetStatValue_Postfix(Pawn ingester, Thing thing, StatDef stat, ref float __result)
     {
         if (stat == StatDefOf.FoodPoisonChanceFixedHuman)
-        {
             __result *= ingester.GetFoodPoisonChanceFactor(thing);
-        }
     }
 
     private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant or Mineable);

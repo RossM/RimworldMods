@@ -21,9 +21,7 @@ public abstract class GeneCompProperties
     public virtual IEnumerable<string> CustomEffectDescriptions()
     {
         foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
-        {
             yield return $"{entry.LabelCap}: {entry.ValueString}";
-        }
     }
 }
 
@@ -187,9 +185,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
             return;
 
         foreach (var comp in comps)
-        {
             comp?.ResolveReferences(parentDef);
-        }
     }
 
     public T? CompProps<T>() where T : GeneCompProperties

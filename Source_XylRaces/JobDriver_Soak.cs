@@ -19,13 +19,9 @@ public class JobDriver_Soak : JobDriver
         {
             if (Find.TickManager.TicksGame > startTick + job.def.joyDuration ||
                 need_wetness is { CurLevel: > 0.999f })
-            {
                 EndJobWith(JobCondition.Succeeded);
-            }
             else
-            {
                 CheckForSwimmingPose();
-            }
         };
         goToil.AddFinishAction(CheckForSwimmingPose);
         goToil.FailOnCannotReach(TargetIndex.A, PathEndMode.OnCell);

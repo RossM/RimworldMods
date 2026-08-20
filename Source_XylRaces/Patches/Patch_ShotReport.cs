@@ -32,8 +32,6 @@ public static class Patch_ShotReport
     public static void HitReportFor_Postfix(Thing caster, ref ShotReport __result)
     {
         if (PatchHelpers.IsUsingEcholocation(caster))
-        {
             __result.factorFromCoveringGas = 1f;
-        }
     }
 }

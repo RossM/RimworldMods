@@ -4,7 +4,8 @@
 public static class Patch_StatWorker
 {
     [Feature(typeof(Hediff_SubstituteCapacity))]
-    [Postfix] [Inner(typeof(StringBuilder), nameof(StringBuilder.AppendLine), typeof(string))]
+    [Postfix]
+    [Inner(typeof(StringBuilder), nameof(StringBuilder.AppendLine), typeof(string))]
     [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
     public static void AppendLine_Postfix(
         StringBuilder __instance,
@@ -17,7 +18,8 @@ public static class Patch_StatWorker
     }
 
     [Feature(typeof(Hediff_SubstituteCapacity))]
-    [Prefix] [Inner(typeof(PawnCapacitiesHandler), nameof(PawnCapacitiesHandler.GetLevel))]
+    [Prefix]
+    [Inner(typeof(PawnCapacitiesHandler), nameof(PawnCapacitiesHandler.GetLevel))]
     [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
     public static void GetLevel_Prefix(
         StatRequest req,

@@ -102,10 +102,8 @@ internal class CreateControlFlowGraph : Pass
         }
 
         if (locals.Count > 0)
-        {
             for (int i = 0; i <= locals.Keys.Max(); i++)
                 Locals.Add(locals.TryGetValue(i, out Local local) ? local : new Local(TypeLattice.Any, i));
-        }
     }
 
     private BlockLabel CreateBlockLabel() => new(Id: NextBlockLabelId++);

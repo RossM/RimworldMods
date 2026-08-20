@@ -14,18 +14,6 @@ internal static class Patch_GeneDef
     }
 
     [Feature(typeof(DefModExtension_GeneWithComps))]
-    [Postfix] [Inner(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
-    [Target("GetDescriptionFull")]
-    public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
-    {
-        var extraDescriptions = __instance.GetGeneEffectDescriptions().ToList();
-        if (extraDescriptions.Count == 0)
-            return;
-
-        __result = __result is not { Count: > 0 } ? extraDescriptions : [.. __result, .. extraDescriptions];
-    }
-
-    [Feature(typeof(DefModExtension_GeneWithComps))]
     [Postfix]
     [Target("SpecialDisplayStats")]
     public static void GeneDef_SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
@@ -35,5 +23,18 @@ internal static class Patch_GeneDef
             return;
 
         __result = __result.Concat(defExt.SpecialDisplayStats(req));
+    }
+
+    [Feature(typeof(DefModExtension_GeneWithComps))]
+    [Postfix]
+    [Inner(typeof(GeneDef), nameof(GeneDef.customEffectDescriptions))]
+    [Target("GetDescriptionFull")]
+    public static void GeneDef_customEffectDescriptions_Postfix(GeneDef __instance, ref List<string> __result)
+    {
+        var extraDescriptions = __instance.GetGeneEffectDescriptions().ToList();
+        if (extraDescriptions.Count == 0)
+            return;
+
+        __result = __result is not { Count: > 0 } ? extraDescriptions : [.. __result, .. extraDescriptions];
     }
 }

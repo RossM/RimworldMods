@@ -43,9 +43,7 @@ public abstract class JobDriver_InteractWithPawn : JobDriver
         toil.AddFinishAction(() =>
         {
             if (Target != null && Target.CurJobDef == JobDefOf.Wait_MaintainPosture)
-            {
                 Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
-            }
         });
         toil.FailOnDespawnedOrNull(TargetIndex.A);
         toil.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);

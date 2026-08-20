@@ -6,7 +6,8 @@ internal static class Patch_SkillUI
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionNone))]
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionMinor))]
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionMajor))]
-    [Postfix] [Inner(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
+    [Postfix]
+    [Inner(typeof(SkillUI), nameof(SkillUI.GetLearningFactor))]
     [Target("GetSkillDescription")]
     public static void GetLearningFactor_Postfix(Passion passion, SkillRecord sk, ref float __result)
     {
