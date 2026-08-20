@@ -2,7 +2,7 @@
 
 internal class CreateControlFlowGraph : Pass
 {
-    public MethodBase Method => Optimizer.Method;
+    public MethodBase Method => Optimizer.method;
     public IReadOnlyList<CodeInstruction> CodeInstructions => Optimizer.Instructions;
 
     public CreateControlFlowGraph(Optimizer optimizer) : base(optimizer)
@@ -166,7 +166,7 @@ internal class CreateControlFlowGraph : Pass
         Stack<(ProtectedRegion ProtectedRegion, List<HandlerRegion> HandlerRegions)> exceptionGroupStack = [];
         regionStack.Push(RootRegion);
 
-        AddSyntheticEntryBlock(RootRegion, instructionBlocks[0].Label, []);
+        AddSyntheticEntryBlock(RootRegion, instructionBlocks[0].Label);
 
         // Translate basic blocks
         Dictionary<BlockLabel, int> incomingStackSize = [];

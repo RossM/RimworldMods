@@ -10,6 +10,7 @@ internal class Optimizer
     private readonly bool debug;
     internal readonly List<Type> parameterTypes;
     internal readonly Type returnType;
+    public readonly MethodBase method;
 
     internal ControlFlowGraph cfg = ControlFlowGraph.Empty;
 
@@ -21,7 +22,7 @@ internal class Optimizer
 
     public Optimizer(MethodBase method, List<CodeInstruction> inputInstructions, ILGenerator generator, bool debug)
     {
-        this.Method = method;
+        this.method = method;
         this.inputInstructions = inputInstructions;
         this.generator = generator;
         this.debug = debug || forceDebug || (!string.IsNullOrEmpty(forceDebugForMethod) && method.Name == forceDebugForMethod);
@@ -34,9 +35,6 @@ internal class Optimizer
         returnType = method is MethodInfo methodInfo ? methodInfo.ReturnType : typeof(void);
     }
 
-
-    public MethodBase Method { get; }
-
     public List<CodeInstruction> Optimize()
     {
         new CreateControlFlowGraph(this).Run();
@@ -47,7 +45,7 @@ internal class Optimizer
 
         if (debug)
         {
-            FileLog.LogBuffered($"# {Method.FullName}");
+            FileLog.LogBuffered($"# {method.FullName}");
             cfg.DebugPrint();
             FileLog.LogBuffered("");
             FileLog.FlushBuffer();

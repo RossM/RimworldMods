@@ -10,7 +10,7 @@
 ///     <see cref="AssignmentOp" /> or <see cref="Branch" />.
 /// </remarks>
 /// <param name="Type">The type of value produced by the <see cref="Op" />.</param>
-internal abstract record Op(Type Type) : Node { }
+internal abstract record Op(Type Type) : Node;
 
 /// <summary>
 ///     Represents an assignment to a <see cref="Variable" />.
@@ -143,7 +143,6 @@ internal sealed record StackSlot(int Depth, Type Type, int Id) : Variable(Type)
 /// <summary>
 ///     Base class for <see cref="Argument" /> and <see cref="Local" /> variables.
 /// </summary>
-/// <param name="Index">The argument or local index.</param>
 /// <param name="Type">The type of value stored by the variable.</param>
 internal abstract record MemoryVariable(Type Type) : Variable(Type)
 {
