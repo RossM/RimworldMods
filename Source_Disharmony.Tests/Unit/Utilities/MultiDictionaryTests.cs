@@ -8,11 +8,12 @@ public sealed class MultiDictionaryTests
     [Test]
     public void AddAssociatesMultipleValuesWithEachKeyInInsertionOrder()
     {
-        MultiDictionary<string, int> dictionary = new();
-
-        dictionary.Add("first", 1);
-        dictionary.Add("second", 2);
-        dictionary.Add("first", 3);
+        MultiDictionary<string, int> dictionary = new()
+        {
+            { "first", 1 },
+            { "second", 2 },
+            { "first", 3 },
+        };
 
         Assert.Multiple(() =>
         {
@@ -26,8 +27,7 @@ public sealed class MultiDictionaryTests
     [Test]
     public void ClearRemovesEveryAssociation()
     {
-        MultiDictionary<string, int> dictionary = new();
-        dictionary.Add("key", 1);
+        MultiDictionary<string, int> dictionary = new() { { "key", 1 } };
 
         dictionary.Clear();
 

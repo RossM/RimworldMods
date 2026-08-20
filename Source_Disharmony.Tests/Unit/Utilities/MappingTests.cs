@@ -1,4 +1,3 @@
-using System.Collections;
 using Disharmony.Utilities;
 
 namespace Disharmony.Tests.Unit.Utilities;
@@ -6,6 +5,7 @@ namespace Disharmony.Tests.Unit.Utilities;
 [TestFixture]
 public sealed class MappingTests
 {
+    // ReSharper disable once NotAccessedPositionalProperty.Local
     private sealed record Value(int Id);
 
     [Test]
@@ -78,7 +78,7 @@ public sealed class MappingTests
                 new MappingElement<int>(1, 2),
                 new MappingElement<int>(3, 4),
             ]));
-            Assert.That(((IEnumerable)mapping).Cast<MappingElement<int>>(), Is.EquivalentTo([
+            Assert.That(mapping.Cast<MappingElement<int>>(), Is.EquivalentTo([
                 new MappingElement<int>(1, 2),
                 new MappingElement<int>(3, 4),
             ]));

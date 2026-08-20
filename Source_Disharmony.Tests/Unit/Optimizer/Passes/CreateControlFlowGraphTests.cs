@@ -1348,7 +1348,7 @@ public sealed class CreateControlFlowGraphTests
                 new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptFilterBlock)),
                 new CodeInstruction(OpCodes.Ldc_I4_1),
                 new CodeInstruction(OpCodes.Endfilter),
-                new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, null)),
+                new CodeInstruction(OpCodes.Pop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock)),
                 new CodeInstruction(OpCodes.Leave, endLabel).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
                 new CodeInstruction(OpCodes.Ret).WithLabels(endLabel),
             ], ilGenerator, false);

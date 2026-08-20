@@ -2,34 +2,34 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static partial class ResultBindingPatches
 {
-    public static int ValueObserved;
-    public static string? ReferenceObserved;
-    public static int InnerObserved;
-    public static BindingStruct StructObserved;
+    public static int valueObserved;
+    public static string? referenceObserved;
+    public static int innerObserved;
+    public static BindingStruct structObserved;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void Prefix_Result_Primitive_ReadByValue(int __result) => ValueObserved = __result;
+    public static void Prefix_Result_Primitive_ReadByValue(int __result) => valueObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void Postfix_Result_Primitive_ReadByValue(int __result) => ValueObserved = __result;
+    public static void Postfix_Result_Primitive_ReadByValue(int __result) => valueObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
-    public static void Prefix_Result_ReferenceType_ReadByValue(string? __result) => ReferenceObserved = __result;
+    public static void Prefix_Result_ReferenceType_ReadByValue(string? __result) => referenceObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
-    public static void Prefix_Result_Struct_ReadByValue(BindingStruct __result) => StructObserved = __result;
+    public static void Prefix_Result_Struct_ReadByValue(BindingStruct __result) => structObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
-    public static void Postfix_Result_ReferenceType_ReadByValue(string __result) => ReferenceObserved = __result;
+    public static void Postfix_Result_ReferenceType_ReadByValue(string __result) => referenceObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
-    public static void Postfix_Result_Struct_ReadByValue(BindingStruct __result) => StructObserved = __result;
+    public static void Postfix_Result_Struct_ReadByValue(BindingStruct __result) => structObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
@@ -70,27 +70,27 @@ public static partial class ResultBindingPatches
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
-    public static void InnerPrefix_Result_Primitive_ReadByValue(int __result) => InnerObserved = __result;
+    public static void InnerPrefix_Result_Primitive_ReadByValue(int __result) => innerObserved = __result;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringResult))]
-    public static void InnerPrefix_Result_ReferenceType_ReadByValue(string? __result) => ReferenceObserved = __result;
+    public static void InnerPrefix_Result_ReferenceType_ReadByValue(string? __result) => referenceObserved = __result;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructResult))]
-    public static void InnerPrefix_Result_Struct_ReadByValue(BindingStruct __result) => StructObserved = __result;
+    public static void InnerPrefix_Result_Struct_ReadByValue(BindingStruct __result) => structObserved = __result;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
-    public static void InnerPostfix_Result_Primitive_ReadByValue(int __result) => InnerObserved = __result;
+    public static void InnerPostfix_Result_Primitive_ReadByValue(int __result) => innerObserved = __result;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringResult))]
-    public static void InnerPostfix_Result_ReferenceType_ReadByValue(string __result) => ReferenceObserved = __result;
+    public static void InnerPostfix_Result_ReferenceType_ReadByValue(string __result) => referenceObserved = __result;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructResult))]
-    public static void InnerPostfix_Result_Struct_ReadByValue(BindingStruct __result) => StructObserved = __result;
+    public static void InnerPostfix_Result_Struct_ReadByValue(BindingStruct __result) => structObserved = __result;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
@@ -135,12 +135,12 @@ public static partial class ResultBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void Prefix_ReturnValueAttribute_Primitive_ReadByValue([ReturnValue] int value) => ValueObserved = value;
+    public static void Prefix_ReturnValueAttribute_Primitive_ReadByValue([ReturnValue] int value) => valueObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void Prefix_ReturnValueAttribute_ReferenceType_ReadByValue([ReturnValue] string? value) =>
-        ReferenceObserved = value;
+        referenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingStringResult))]
@@ -152,7 +152,7 @@ public static partial class ResultBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
-    public static void Prefix_ReturnValueAttribute_Struct_ReadByValue([ReturnValue] BindingStruct value) => StructObserved = value;
+    public static void Prefix_ReturnValueAttribute_Struct_ReadByValue([ReturnValue] BindingStruct value) => structObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingStructResult))]
@@ -164,12 +164,12 @@ public static partial class ResultBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void Postfix_ReturnValueAttribute_Primitive_ReadByValue([ReturnValue] int value) => ValueObserved = value;
+    public static void Postfix_ReturnValueAttribute_Primitive_ReadByValue([ReturnValue] int value) => valueObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void Postfix_ReturnValueAttribute_ReferenceType_ReadByValue([ReturnValue] string value) =>
-        ReferenceObserved = value;
+        referenceObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
@@ -178,7 +178,7 @@ public static partial class ResultBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
-    public static void Postfix_ReturnValueAttribute_Struct_ReadByValue([ReturnValue] BindingStruct value) => StructObserved = value;
+    public static void Postfix_ReturnValueAttribute_Struct_ReadByValue([ReturnValue] BindingStruct value) => structObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
@@ -190,78 +190,78 @@ public static partial class ResultBindingPatches
 {
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void Prefix_Result_Primitive_ReadByReference(ref int __result) => ValueObserved = __result;
+    public static void Prefix_Result_Primitive_ReadByReference(ref int __result) => valueObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
-    public static void Prefix_Result_ReferenceType_ReadByReference(ref string? __result) => ReferenceObserved = __result;
+    public static void Prefix_Result_ReferenceType_ReadByReference(ref string? __result) => referenceObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
-    public static void Prefix_Result_Struct_ReadByReference(ref BindingStruct __result) => StructObserved = __result;
+    public static void Prefix_Result_Struct_ReadByReference(ref BindingStruct __result) => structObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void Postfix_Result_Primitive_ReadByReference(ref int __result) => ValueObserved = __result;
+    public static void Postfix_Result_Primitive_ReadByReference(ref int __result) => valueObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
-    public static void Postfix_Result_ReferenceType_ReadByReference(ref string __result) => ReferenceObserved = __result;
+    public static void Postfix_Result_ReferenceType_ReadByReference(ref string __result) => referenceObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
-    public static void Postfix_Result_Struct_ReadByReference(ref BindingStruct __result) => StructObserved = __result;
+    public static void Postfix_Result_Struct_ReadByReference(ref BindingStruct __result) => structObserved = __result;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
-    public static void InnerPrefix_Result_Primitive_ReadByReference(ref int __result) => InnerObserved = __result;
+    public static void InnerPrefix_Result_Primitive_ReadByReference(ref int __result) => innerObserved = __result;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringResult))]
     public static void InnerPrefix_Result_ReferenceType_ReadByReference(ref string? __result) =>
-        ReferenceObserved = __result;
+        referenceObserved = __result;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructResult))]
-    public static void InnerPrefix_Result_Struct_ReadByReference(ref BindingStruct __result) => StructObserved = __result;
+    public static void InnerPrefix_Result_Struct_ReadByReference(ref BindingStruct __result) => structObserved = __result;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
-    public static void InnerPostfix_Result_Primitive_ReadByReference(ref int __result) => InnerObserved = __result;
+    public static void InnerPostfix_Result_Primitive_ReadByReference(ref int __result) => innerObserved = __result;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StringResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StringResult))]
     public static void InnerPostfix_Result_ReferenceType_ReadByReference(ref string __result) =>
-        ReferenceObserved = __result;
+        referenceObserved = __result;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.StructResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.StructResult))]
-    public static void InnerPostfix_Result_Struct_ReadByReference(ref BindingStruct __result) => StructObserved = __result;
+    public static void InnerPostfix_Result_Struct_ReadByReference(ref BindingStruct __result) => structObserved = __result;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void Postfix_ReturnValueAttribute_Primitive_ReadByReference([ReturnValue] ref int value) =>
-        ValueObserved = value;
+        valueObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void Prefix_ReturnValueAttribute_ReferenceType_ReadByReference(
-        [ReturnValue] ref string? value) => ReferenceObserved = value;
+        [ReturnValue] ref string? value) => referenceObserved = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
     public static void Prefix_ReturnValueAttribute_Struct_ReadByReference(
-        [ReturnValue] ref BindingStruct value) => StructObserved = value;
+        [ReturnValue] ref BindingStruct value) => structObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
     public static void Postfix_ReturnValueAttribute_ReferenceType_ReadByReference(
-        [ReturnValue] ref string value) => ReferenceObserved = value;
+        [ReturnValue] ref string value) => referenceObserved = value;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructResult))]
     public static void Postfix_ReturnValueAttribute_Struct_ReadByReference(
-        [ReturnValue] ref BindingStruct value) => StructObserved = value;
+        [ReturnValue] ref BindingStruct value) => structObserved = value;
 }
 
 [TestFixture]
@@ -270,154 +270,154 @@ public sealed partial class ResultBindingTests
     [Test]
     public void Prefix_Result_Primitive_ReadByReference()
     {
-        ResultBindingPatches.ValueObserved = -1;
+        ResultBindingPatches.valueObserved = -1;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_Result_Primitive_ReadByReference));
         StaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.ValueObserved, Is.Zero);
+        Assert.That(ResultBindingPatches.valueObserved, Is.Zero);
     }
 
     [Test]
     public void Prefix_Result_ReferenceType_ReadByReference()
     {
-        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ResultBindingPatches.referenceObserved = "sentinel";
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_Result_ReferenceType_ReadByReference));
         StaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+        Assert.That(ResultBindingPatches.referenceObserved, Is.Null);
     }
 
     [Test]
     public void Prefix_Result_Struct_ReadByReference()
     {
-        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ResultBindingPatches.structObserved = new BindingStruct { Value = -1 };
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_Result_Struct_ReadByReference));
         StaticMethodTargets.StructResult();
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.Zero);
     }
 
     [Test]
     public void Postfix_Result_Primitive_ReadByReference()
     {
-        ResultBindingPatches.ValueObserved = 0;
+        ResultBindingPatches.valueObserved = 0;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_Result_Primitive_ReadByReference));
         StaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.ValueObserved, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.valueObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void Postfix_Result_ReferenceType_ReadByReference()
     {
-        ResultBindingPatches.ReferenceObserved = null;
+        ResultBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_Result_ReferenceType_ReadByReference));
         StaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_Result_Struct_ReadByReference()
     {
-        ResultBindingPatches.StructObserved = default;
+        ResultBindingPatches.structObserved = default;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_Result_Struct_ReadByReference));
         StaticMethodTargets.StructResult();
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPrefix_Result_Primitive_ReadByReference()
     {
-        ResultBindingPatches.InnerObserved = -1;
+        ResultBindingPatches.innerObserved = -1;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefix_Result_Primitive_ReadByReference));
         OuterStaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.InnerObserved, Is.Zero);
+        Assert.That(ResultBindingPatches.innerObserved, Is.Zero);
     }
 
     [Test]
     public void InnerPrefix_Result_ReferenceType_ReadByReference()
     {
-        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ResultBindingPatches.referenceObserved = "sentinel";
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefix_Result_ReferenceType_ReadByReference));
         OuterStaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+        Assert.That(ResultBindingPatches.referenceObserved, Is.Null);
     }
 
     [Test]
     public void InnerPrefix_Result_Struct_ReadByReference()
     {
-        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ResultBindingPatches.structObserved = new BindingStruct { Value = -1 };
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefix_Result_Struct_ReadByReference));
         OuterStaticMethodTargets.StructResult();
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.Zero);
     }
 
     [Test]
     public void InnerPostfix_Result_Primitive_ReadByReference()
     {
-        ResultBindingPatches.InnerObserved = 0;
+        ResultBindingPatches.innerObserved = 0;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfix_Result_Primitive_ReadByReference));
         OuterStaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.InnerObserved, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.innerObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPostfix_Result_ReferenceType_ReadByReference()
     {
-        ResultBindingPatches.ReferenceObserved = null;
+        ResultBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfix_Result_ReferenceType_ReadByReference));
         OuterStaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void InnerPostfix_Result_Struct_ReadByReference()
     {
-        ResultBindingPatches.StructObserved = default;
+        ResultBindingPatches.structObserved = default;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfix_Result_Struct_ReadByReference));
         OuterStaticMethodTargets.StructResult();
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.EqualTo(1));
     }
 
     [Test]
     public void Postfix_ReturnValueAttribute_Primitive_ReadByReference()
     {
-        ResultBindingPatches.ValueObserved = 0;
+        ResultBindingPatches.valueObserved = 0;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_ReturnValueAttribute_Primitive_ReadByReference));
         StaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.ValueObserved, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.valueObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void Prefix_ReturnValueAttribute_ReferenceType_ReadByReference()
     {
-        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ResultBindingPatches.referenceObserved = "sentinel";
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_ReturnValueAttribute_ReferenceType_ReadByReference));
         StaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+        Assert.That(ResultBindingPatches.referenceObserved, Is.Null);
     }
 
     [Test]
     public void Prefix_ReturnValueAttribute_Struct_ReadByReference()
     {
-        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ResultBindingPatches.structObserved = new BindingStruct { Value = -1 };
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_ReturnValueAttribute_Struct_ReadByReference));
         StaticMethodTargets.StructResult();
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.Zero);
     }
 
     [Test]
     public void Postfix_ReturnValueAttribute_ReferenceType_ReadByReference()
     {
-        ResultBindingPatches.ReferenceObserved = null;
+        ResultBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_ReturnValueAttribute_ReferenceType_ReadByReference));
         StaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_ReturnValueAttribute_Struct_ReadByReference()
     {
-        ResultBindingPatches.StructObserved = default;
+        ResultBindingPatches.structObserved = default;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_ReturnValueAttribute_Struct_ReadByReference));
         StaticMethodTargets.StructResult();
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.EqualTo(1));
     }
 }
 
@@ -427,59 +427,59 @@ public sealed partial class ResultBindingTests : PatchTestBase
     [Test]
     public void Prefix_Result_Primitive_ReadByValue()
     {
-        ResultBindingPatches.ValueObserved = -1;
+        ResultBindingPatches.valueObserved = -1;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_Result_Primitive_ReadByValue));
         StaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.ValueObserved, Is.Zero);
+        Assert.That(ResultBindingPatches.valueObserved, Is.Zero);
     }
 
     [Test]
     public void Postfix_Result_Primitive_ReadByValue()
     {
-        ResultBindingPatches.ValueObserved = 0;
+        ResultBindingPatches.valueObserved = 0;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_Result_Primitive_ReadByValue));
         StaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.ValueObserved, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.valueObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void Prefix_Result_ReferenceType_ReadByValue()
     {
-        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ResultBindingPatches.referenceObserved = "sentinel";
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_Result_ReferenceType_ReadByValue));
         StaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+        Assert.That(ResultBindingPatches.referenceObserved, Is.Null);
     }
 
     [Test]
     public void Prefix_Result_Struct_ReadByValue()
     {
-        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ResultBindingPatches.structObserved = new BindingStruct { Value = -1 };
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_Result_Struct_ReadByValue));
 
         StaticMethodTargets.StructResult();
 
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.Zero);
     }
 
     [Test]
     public void Postfix_Result_ReferenceType_ReadByValue()
     {
-        ResultBindingPatches.ReferenceObserved = null;
+        ResultBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_Result_ReferenceType_ReadByValue));
         StaticMethodTargets.StringResult();
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_Result_Struct_ReadByValue()
     {
-        ResultBindingPatches.StructObserved = default;
+        ResultBindingPatches.structObserved = default;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_Result_Struct_ReadByValue));
 
         StaticMethodTargets.StructResult();
 
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.EqualTo(1));
     }
 
     [Test]
@@ -537,63 +537,63 @@ public sealed partial class ResultBindingTests
     [Test]
     public void InnerPrefix_Result_Primitive_ReadByValue()
     {
-        ResultBindingPatches.InnerObserved = -1;
+        ResultBindingPatches.innerObserved = -1;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefix_Result_Primitive_ReadByValue));
         OuterStaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.InnerObserved, Is.Zero);
+        Assert.That(ResultBindingPatches.innerObserved, Is.Zero);
     }
 
     [Test]
     public void InnerPrefix_Result_ReferenceType_ReadByValue()
     {
-        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ResultBindingPatches.referenceObserved = "sentinel";
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefix_Result_ReferenceType_ReadByValue));
 
         OuterStaticMethodTargets.StringResult();
 
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+        Assert.That(ResultBindingPatches.referenceObserved, Is.Null);
     }
 
     [Test]
     public void InnerPrefix_Result_Struct_ReadByValue()
     {
-        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ResultBindingPatches.structObserved = new BindingStruct { Value = -1 };
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPrefix_Result_Struct_ReadByValue));
 
         OuterStaticMethodTargets.StructResult();
 
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.Zero);
     }
 
     [Test]
     public void InnerPostfix_Result_Primitive_ReadByValue()
     {
-        ResultBindingPatches.InnerObserved = 0;
+        ResultBindingPatches.innerObserved = 0;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfix_Result_Primitive_ReadByValue));
         OuterStaticMethodTargets.IntResult();
-        Assert.That(ResultBindingPatches.InnerObserved, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.innerObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPostfix_Result_ReferenceType_ReadByValue()
     {
-        ResultBindingPatches.ReferenceObserved = null;
+        ResultBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfix_Result_ReferenceType_ReadByValue));
 
         OuterStaticMethodTargets.StringResult();
 
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void InnerPostfix_Result_Struct_ReadByValue()
     {
-        ResultBindingPatches.StructObserved = default;
+        ResultBindingPatches.structObserved = default;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.InnerPostfix_Result_Struct_ReadByValue));
 
         OuterStaticMethodTargets.StructResult();
 
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.EqualTo(1));
     }
 
     [Test]
@@ -657,23 +657,23 @@ public sealed partial class ResultBindingTests
     [Test]
     public void Prefix_ReturnValueAttribute_Primitive_ReadByValue()
     {
-        ResultBindingPatches.ValueObserved = -1;
+        ResultBindingPatches.valueObserved = -1;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_ReturnValueAttribute_Primitive_ReadByValue));
 
         StaticMethodTargets.IntResult();
 
-        Assert.That(ResultBindingPatches.ValueObserved, Is.Zero);
+        Assert.That(ResultBindingPatches.valueObserved, Is.Zero);
     }
 
     [Test]
     public void Prefix_ReturnValueAttribute_ReferenceType_ReadByValue()
     {
-        ResultBindingPatches.ReferenceObserved = "sentinel";
+        ResultBindingPatches.referenceObserved = "sentinel";
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_ReturnValueAttribute_ReferenceType_ReadByValue));
 
         StaticMethodTargets.StringResult();
 
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.Null);
+        Assert.That(ResultBindingPatches.referenceObserved, Is.Null);
     }
 
     [Test]
@@ -687,12 +687,12 @@ public sealed partial class ResultBindingTests
     [Test]
     public void Prefix_ReturnValueAttribute_Struct_ReadByValue()
     {
-        ResultBindingPatches.StructObserved = new BindingStruct { Value = -1 };
+        ResultBindingPatches.structObserved = new BindingStruct { Value = -1 };
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Prefix_ReturnValueAttribute_Struct_ReadByValue));
 
         StaticMethodTargets.StructResult();
 
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.Zero);
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.Zero);
     }
 
     [Test]
@@ -708,23 +708,23 @@ public sealed partial class ResultBindingTests
     [Test]
     public void Postfix_ReturnValueAttribute_Primitive_ReadByValue()
     {
-        ResultBindingPatches.ValueObserved = 0;
+        ResultBindingPatches.valueObserved = 0;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_ReturnValueAttribute_Primitive_ReadByValue));
 
         StaticMethodTargets.IntResult();
 
-        Assert.That(ResultBindingPatches.ValueObserved, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.valueObserved, Is.EqualTo(1));
     }
 
     [Test]
     public void Postfix_ReturnValueAttribute_ReferenceType_ReadByValue()
     {
-        ResultBindingPatches.ReferenceObserved = null;
+        ResultBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_ReturnValueAttribute_ReferenceType_ReadByValue));
 
         StaticMethodTargets.StringResult();
 
-        Assert.That(ResultBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
@@ -738,12 +738,12 @@ public sealed partial class ResultBindingTests
     [Test]
     public void Postfix_ReturnValueAttribute_Struct_ReadByValue()
     {
-        ResultBindingPatches.StructObserved = default;
+        ResultBindingPatches.structObserved = default;
         ApplyPatch(typeof(ResultBindingPatches), nameof(ResultBindingPatches.Postfix_ReturnValueAttribute_Struct_ReadByValue));
 
         StaticMethodTargets.StructResult();
 
-        Assert.That(ResultBindingPatches.StructObserved.Value, Is.EqualTo(1));
+        Assert.That(ResultBindingPatches.structObserved.Value, Is.EqualTo(1));
     }
 
     [Test]

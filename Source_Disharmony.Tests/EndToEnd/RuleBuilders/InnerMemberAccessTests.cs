@@ -2,10 +2,10 @@ namespace Disharmony.Tests.EndToEnd.RuleBuilders;
 
 public static class InnerMemberAccessPatches
 {
-    public static InnerInstanceMethodTargets? InstanceObserved;
-    public static InnerInstanceMethodTargets? ReplacementInstance;
-    public static InnerStructMethodTargets StructInstanceObserved;
-    public static int ValueObserved;
+    public static InnerInstanceMethodTargets? instanceObserved;
+    public static InnerInstanceMethodTargets? replacementInstance;
+    public static InnerStructMethodTargets structInstanceObserved;
+    public static int valueObserved;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.FieldResult))]
@@ -34,25 +34,25 @@ public static class InnerMemberAccessPatches
     [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceField))]
     public static void InnerPrefix_InstanceField_ReferenceType_Instance_ReadByReference(
-        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => InstanceObserved = instance;
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => instanceObserved = instance;
 
     [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceField))]
     public static void InnerPrefix_InstanceField_ReferenceType_Instance_WriteByReference(
-        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => instance = ReplacementInstance!;
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => instance = replacementInstance!;
 
     [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceField))]
     public static void InnerPostfix_InstanceField_ReferenceType_Instance_ReadByReference(
-        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => InstanceObserved = instance;
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => instanceObserved = instance;
 
     [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceField))]
     public static void InnerPostfix_InstanceField_ReferenceType_Instance_WriteByReference(
         [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance)
     {
-        instance = ReplacementInstance!;
-        InstanceObserved = instance;
+        instance = replacementInstance!;
+        instanceObserved = instance;
     }
 
     [Postfix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Getter)]
@@ -62,7 +62,7 @@ public static class InnerMemberAccessPatches
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadStructField))]
     public static void InnerPrefix_InstanceField_Struct_Instance_ReadByReference(
-        [Instance(Scope.Inner)] ref InnerStructMethodTargets instance) => StructInstanceObserved = instance;
+        [Instance(Scope.Inner)] ref InnerStructMethodTargets instance) => structInstanceObserved = instance;
 
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadStructField))]
@@ -72,7 +72,7 @@ public static class InnerMemberAccessPatches
     [Postfix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadStructField))]
     public static void InnerPostfix_InstanceField_Struct_Instance_ReadByReference(
-        [Instance(Scope.Inner)] ref InnerStructMethodTargets instance) => StructInstanceObserved = instance;
+        [Instance(Scope.Inner)] ref InnerStructMethodTargets instance) => structInstanceObserved = instance;
 
     [Postfix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadStructField))]
@@ -80,18 +80,18 @@ public static class InnerMemberAccessPatches
         [Instance(Scope.Inner)] ref InnerStructMethodTargets instance)
     {
         instance.foo = 42;
-        StructInstanceObserved = instance;
+        structInstanceObserved = instance;
     }
 
     [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Property), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadInstanceProperty))]
     public static void InnerPostfix_InstanceProperty_ReferenceType_Instance_ReadByReference_Rejected(
-        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => InstanceObserved = instance;
+        [Instance(Scope.Inner)] ref InnerInstanceMethodTargets instance) => instanceObserved = instance;
 
     [Postfix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Property), MemberType.Getter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.ReadStructProperty))]
     public static void InnerPostfix_InstanceProperty_Struct_Instance_ReadByReference(
-        [Instance(Scope.Inner)] ref InnerStructMethodTargets instance) => StructInstanceObserved = instance;
+        [Instance(Scope.Inner)] ref InnerStructMethodTargets instance) => structInstanceObserved = instance;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field), MemberType.Setter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SetStaticField))]
@@ -99,7 +99,7 @@ public static class InnerMemberAccessPatches
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field), MemberType.Setter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SetStaticField))]
-    public static void InnerPostfix_StaticFieldSetter_Primitive_Value_ReadByValue(int value) => ValueObserved = value;
+    public static void InnerPostfix_StaticFieldSetter_Primitive_Value_ReadByValue(int value) => valueObserved = value;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field), MemberType.Setter)]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SetStaticField))]
@@ -111,7 +111,7 @@ public static class InnerMemberAccessPatches
         [Instance(Scope.Inner)] InnerInstanceMethodTargets instance,
         ref int value)
     {
-        InstanceObserved = instance;
+        instanceObserved = instance;
         value = 42;
     }
 
@@ -121,8 +121,8 @@ public static class InnerMemberAccessPatches
         [Instance(Scope.Inner)] InnerInstanceMethodTargets instance,
         int value)
     {
-        InstanceObserved = instance;
-        ValueObserved = value;
+        instanceObserved = instance;
+        valueObserved = value;
     }
 
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.foo), MemberType.Setter)]
@@ -131,7 +131,7 @@ public static class InnerMemberAccessPatches
         [Instance(Scope.Inner)] ref InnerStructMethodTargets instance,
         ref int value)
     {
-        StructInstanceObserved = instance;
+        structInstanceObserved = instance;
         value = 42;
     }
 
@@ -141,8 +141,8 @@ public static class InnerMemberAccessPatches
         [Instance(Scope.Inner)] ref InnerStructMethodTargets instance,
         int value)
     {
-        StructInstanceObserved = instance;
-        ValueObserved = value;
+        structInstanceObserved = instance;
+        valueObserved = value;
     }
 }
 
@@ -200,7 +200,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPrefix_InstanceField_ReferenceType_Instance_ReadByReference()
     {
-        InnerMemberAccessPatches.InstanceObserved = null;
+        InnerMemberAccessPatches.instanceObserved = null;
         var inner = new InnerInstanceMethodTargets { foo = 42 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -209,7 +209,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         int result = OuterStaticMethodTargets.ReadInstanceField(inner);
 
         Assert.That(result, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.InstanceObserved, Is.SameAs(inner));
+        Assert.That(InnerMemberAccessPatches.instanceObserved, Is.SameAs(inner));
     }
 
     [Test]
@@ -217,7 +217,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     {
         var inner = new InnerInstanceMethodTargets { foo = 1 };
         var replacement = new InnerInstanceMethodTargets { foo = 42 };
-        InnerMemberAccessPatches.ReplacementInstance = replacement;
+        InnerMemberAccessPatches.replacementInstance = replacement;
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
             nameof(InnerMemberAccessPatches.InnerPrefix_InstanceField_ReferenceType_Instance_WriteByReference));
@@ -231,7 +231,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPostfix_InstanceField_ReferenceType_Instance_ReadByReference()
     {
-        InnerMemberAccessPatches.InstanceObserved = null;
+        InnerMemberAccessPatches.instanceObserved = null;
         var inner = new InnerInstanceMethodTargets { foo = 42 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -240,16 +240,16 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         int result = OuterStaticMethodTargets.ReadInstanceField(inner);
 
         Assert.That(result, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.InstanceObserved, Is.SameAs(inner));
+        Assert.That(InnerMemberAccessPatches.instanceObserved, Is.SameAs(inner));
     }
 
     [Test]
     public void InnerPostfix_InstanceField_ReferenceType_Instance_WriteByReference()
     {
-        InnerMemberAccessPatches.InstanceObserved = null;
+        InnerMemberAccessPatches.instanceObserved = null;
         var inner = new InnerInstanceMethodTargets { foo = 1 };
         var replacement = new InnerInstanceMethodTargets { foo = 42 };
-        InnerMemberAccessPatches.ReplacementInstance = replacement;
+        InnerMemberAccessPatches.replacementInstance = replacement;
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
             nameof(InnerMemberAccessPatches.InnerPostfix_InstanceField_ReferenceType_Instance_WriteByReference));
@@ -258,7 +258,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo(1));
         Assert.That(inner.foo, Is.EqualTo(1));
-        Assert.That(InnerMemberAccessPatches.InstanceObserved, Is.SameAs(replacement));
+        Assert.That(InnerMemberAccessPatches.instanceObserved, Is.SameAs(replacement));
     }
 
     [Test]
@@ -276,7 +276,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPrefix_InstanceField_Struct_Instance_ReadByReference()
     {
-        InnerMemberAccessPatches.StructInstanceObserved = default;
+        InnerMemberAccessPatches.structInstanceObserved = default;
         var inner = new InnerStructMethodTargets { foo = 42 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -285,7 +285,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         int result = OuterStaticMethodTargets.ReadStructField(inner);
 
         Assert.That(result, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.StructInstanceObserved.foo, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.structInstanceObserved.foo, Is.EqualTo(42));
     }
 
     [Test]
@@ -305,7 +305,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPostfix_InstanceField_Struct_Instance_ReadByReference()
     {
-        InnerMemberAccessPatches.StructInstanceObserved = default;
+        InnerMemberAccessPatches.structInstanceObserved = default;
         var inner = new InnerStructMethodTargets { foo = 42 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -314,13 +314,13 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         int result = OuterStaticMethodTargets.ReadStructField(inner);
 
         Assert.That(result, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.StructInstanceObserved.foo, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.structInstanceObserved.foo, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfix_InstanceField_Struct_Instance_WriteByReference()
     {
-        InnerMemberAccessPatches.StructInstanceObserved = default;
+        InnerMemberAccessPatches.structInstanceObserved = default;
         var inner = new InnerStructMethodTargets { foo = 1 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -330,7 +330,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo(1));
         Assert.That(inner.foo, Is.EqualTo(1));
-        Assert.That(InnerMemberAccessPatches.StructInstanceObserved.foo, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.structInstanceObserved.foo, Is.EqualTo(42));
     }
 
     [Test]
@@ -347,7 +347,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPostfix_InstanceProperty_Struct_Instance_ReadByReference()
     {
-        InnerMemberAccessPatches.StructInstanceObserved = default;
+        InnerMemberAccessPatches.structInstanceObserved = default;
         var inner = new InnerStructMethodTargets { foo = 42 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -356,7 +356,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         int result = OuterStaticMethodTargets.ReadStructProperty(inner);
 
         Assert.That(result, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.StructInstanceObserved.foo, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.structInstanceObserved.foo, Is.EqualTo(42));
     }
 
     [Test]
@@ -375,7 +375,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPostfix_StaticFieldSetter_Primitive_Value_ReadByValue()
     {
-        InnerMemberAccessPatches.ValueObserved = 0;
+        InnerMemberAccessPatches.valueObserved = 0;
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
             nameof(InnerMemberAccessPatches.InnerPostfix_StaticFieldSetter_Primitive_Value_ReadByValue));
@@ -383,7 +383,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         OuterStaticMethodTargets.SetStaticField(42);
 
         Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.ValueObserved, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.valueObserved, Is.EqualTo(42));
     }
 
     [Test]
@@ -402,7 +402,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPrefix_InstanceFieldSetter_ReferenceType_Instance_ReadByValue_Value_WriteByReference()
     {
-        InnerMemberAccessPatches.InstanceObserved = null;
+        InnerMemberAccessPatches.instanceObserved = null;
         var inner = new InnerInstanceMethodTargets { foo = 1 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -411,14 +411,14 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         OuterStaticMethodTargets.SetInstanceField(inner, 2);
 
         Assert.That(inner.foo, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.InstanceObserved, Is.SameAs(inner));
+        Assert.That(InnerMemberAccessPatches.instanceObserved, Is.SameAs(inner));
     }
 
     [Test]
     public void InnerPostfix_InstanceFieldSetter_ReferenceType_Instance_ReadByValue_Value_ReadByValue()
     {
-        InnerMemberAccessPatches.InstanceObserved = null;
-        InnerMemberAccessPatches.ValueObserved = 0;
+        InnerMemberAccessPatches.instanceObserved = null;
+        InnerMemberAccessPatches.valueObserved = 0;
         var inner = new InnerInstanceMethodTargets { foo = 1 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -427,14 +427,14 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         OuterStaticMethodTargets.SetInstanceField(inner, 42);
 
         Assert.That(inner.foo, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.InstanceObserved, Is.SameAs(inner));
-        Assert.That(InnerMemberAccessPatches.ValueObserved, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.instanceObserved, Is.SameAs(inner));
+        Assert.That(InnerMemberAccessPatches.valueObserved, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPrefix_InstanceFieldSetter_Struct_Instance_ReadByReference_Value_WriteByReference()
     {
-        InnerMemberAccessPatches.StructInstanceObserved = default;
+        InnerMemberAccessPatches.structInstanceObserved = default;
         var inner = new InnerStructMethodTargets { foo = 1 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -443,14 +443,14 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         OuterStaticMethodTargets.SetStructField(ref inner, 2);
 
         Assert.That(inner.foo, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.StructInstanceObserved.foo, Is.EqualTo(1));
+        Assert.That(InnerMemberAccessPatches.structInstanceObserved.foo, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPostfix_InstanceFieldSetter_Struct_Instance_ReadByReference_Value_ReadByValue()
     {
-        InnerMemberAccessPatches.StructInstanceObserved = default;
-        InnerMemberAccessPatches.ValueObserved = 0;
+        InnerMemberAccessPatches.structInstanceObserved = default;
+        InnerMemberAccessPatches.valueObserved = 0;
         var inner = new InnerStructMethodTargets { foo = 1 };
         ApplyPatch(
             typeof(InnerMemberAccessPatches),
@@ -459,7 +459,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
         OuterStaticMethodTargets.SetStructField(ref inner, 42);
 
         Assert.That(inner.foo, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.StructInstanceObserved.foo, Is.EqualTo(42));
-        Assert.That(InnerMemberAccessPatches.ValueObserved, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.structInstanceObserved.foo, Is.EqualTo(42));
+        Assert.That(InnerMemberAccessPatches.valueObserved, Is.EqualTo(42));
     }
 }

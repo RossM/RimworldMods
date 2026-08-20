@@ -1,4 +1,3 @@
-using System.Collections;
 using Disharmony.Utilities;
 
 namespace Disharmony.Tests.Unit.Utilities;
@@ -6,6 +5,7 @@ namespace Disharmony.Tests.Unit.Utilities;
 [TestFixture]
 public sealed class DisjointSetUnionTests
 {
+    // ReSharper disable once NotAccessedPositionalProperty.Local
     private sealed record ValueRecord(int Value);
 
     [Test]
@@ -119,7 +119,7 @@ public sealed class DisjointSetUnionTests
                 Is.EquivalentTo([first, second]));
             Assert.That(groups.Single(group => ReferenceEquals(group.Key, fourth)),
                 Is.EquivalentTo([third, fourth]));
-            Assert.That(((IEnumerable)sets).Cast<object>().Count(), Is.EqualTo(2));
+            Assert.That(sets.Cast<object>().Count(), Is.EqualTo(2));
         });
     }
 

@@ -2,9 +2,9 @@ namespace Disharmony.Tests.EndToEnd.Optimizer;
 
 public static class OptimizerPipelinePatches
 {
-    public static int PatchCalls;
+    public static int patchCalls;
 
-    private static void RecordPatch() => PatchCalls++;
+    private static void RecordPatch() => patchCalls++;
 
     [Prefix]
     [Target(typeof(OptimizerControlFlowTargets), nameof(OptimizerControlFlowTargets.ConditionalBranches))]
@@ -251,7 +251,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
     public void EnableOptimizer()
     {
         HarmonyInterface.Instance.optimizerEnabled = true;
-        OptimizerPipelinePatches.PatchCalls = 0;
+        OptimizerPipelinePatches.patchCalls = 0;
         OptimizerControlFlowTargets.RightOperandCalls = 0;
         OptimizerExceptionTargets.FinallyExecutions = 0;
         OptimizerExceptionTargets.DisposalCount = 0;
@@ -272,7 +272,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerControlFlowTargets.ConditionalBranches(-1), Is.EqualTo("negative"));
         Assert.That(OptimizerControlFlowTargets.ConditionalBranches(0), Is.EqualTo("zero"));
         Assert.That(OptimizerControlFlowTargets.ConditionalBranches(1), Is.EqualTo("positive"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(3));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(3));
     }
 
     [Test]
@@ -285,7 +285,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerControlFlowTargets.DenseSwitch(2), Is.EqualTo(12));
         Assert.That(OptimizerControlFlowTargets.DenseSwitch(3), Is.EqualTo(13));
         Assert.That(OptimizerControlFlowTargets.DenseSwitch(4), Is.EqualTo(99));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(5));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(5));
     }
 
     [Test]
@@ -296,7 +296,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerControlFlowTargets.LoopWithBreakAndContinue(0), Is.Zero);
         Assert.That(OptimizerControlFlowTargets.LoopWithBreakAndContinue(4), Is.EqualTo(4));
         Assert.That(OptimizerControlFlowTargets.LoopWithBreakAndContinue(10), Is.EqualTo(16));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(3));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(3));
     }
 
     [Test]
@@ -309,7 +309,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         int result = OptimizerControlFlowTargets.ConditionalInfiniteLoop(false);
 
         Assert.That(result, Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -322,7 +322,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerControlFlowTargets.ShortCircuit(true, false), Is.False);
         Assert.That(OptimizerControlFlowTargets.ShortCircuit(true, true), Is.True);
         Assert.That(OptimizerControlFlowTargets.RightOperandCalls, Is.EqualTo(2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(3));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(3));
     }
 
     [Test]
@@ -332,7 +332,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerControlFlowTargets.RefLocalConditional(true), Is.EqualTo(42));
         Assert.That(OptimizerControlFlowTargets.RefLocalConditional(false), Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -351,7 +351,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
             OptimizerControlFlowTargets.PatternMatching(new BindingReference { Value = 42 }),
             Is.EqualTo("reference with value 42"));
         Assert.That(OptimizerControlFlowTargets.PatternMatching(new object()), Is.EqualTo("other"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(7));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(7));
     }
 
     [Test]
@@ -367,7 +367,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerControlFlowTargets.NullPropagation(null), Is.Null);
         Assert.That(OptimizerControlFlowTargets.NullPropagation(withoutNext), Is.Null);
         Assert.That(OptimizerControlFlowTargets.NullPropagation(withNext), Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(3));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(3));
     }
 
     [Test]
@@ -377,7 +377,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerControlFlowTargets.NullCoalescingAssignment(null), Is.EqualTo("fallback"));
         Assert.That(OptimizerControlFlowTargets.NullCoalescingAssignment("value"), Is.EqualTo("value"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -392,7 +392,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerControlFlowTargets.ForeachWithContinueAndEarlyReturn([0, 1, 2]), Is.EqualTo(3));
         Assert.That(OptimizerControlFlowTargets.ForeachWithContinueAndEarlyReturn([1, -2, 3]), Is.EqualTo(-2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -402,7 +402,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerExceptionTargets.TryCatch(false), Is.EqualTo(1));
         Assert.That(OptimizerExceptionTargets.TryCatch(true), Is.EqualTo(2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -413,7 +413,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerExceptionTargets.TryFinally(true), Is.EqualTo(1));
         Assert.That(OptimizerExceptionTargets.TryFinally(false), Is.EqualTo(2));
         Assert.That(OptimizerExceptionTargets.FinallyExecutions, Is.EqualTo(2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -427,7 +427,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerExceptionTargets.NestedTryFinallyAndCatch(1), Is.EqualTo(20));
         Assert.That(OptimizerExceptionTargets.NestedTryFinallyAndCatch(2), Is.EqualTo(30));
         Assert.That(OptimizerExceptionTargets.FinallyExecutions, Is.EqualTo(3));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(3));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(3));
     }
 
     [Test]
@@ -441,7 +441,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerExceptionTargets.ExceptionFilter(true), Is.EqualTo(1));
         Assert.That(OptimizerExceptionTargets.ExceptionFilter(false), Is.EqualTo(2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -452,7 +452,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerExceptionTargets.UsingWithEarlyReturn(true), Is.EqualTo(1));
         Assert.That(OptimizerExceptionTargets.UsingWithEarlyReturn(false), Is.EqualTo(2));
         Assert.That(OptimizerExceptionTargets.DisposalCount, Is.EqualTo(2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -464,7 +464,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerExceptionTargets.LockWithConditionalReturn(true), Is.EqualTo(1));
         Assert.That(OptimizerExceptionTargets.LockWithConditionalReturn(false), Is.EqualTo(2));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -479,7 +479,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerExceptionTargets.CatchAndRethrow(false), Is.EqualTo(42));
         var exception = Assert.Throws<InvalidOperationException>(() => OptimizerExceptionTargets.CatchAndRethrow(true));
         Assert.That(exception!.Message, Is.EqualTo("original"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -495,7 +495,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(result.Product, Is.EqualTo(1200L));
         Assert.That(result.Quotient, Is.EqualTo(75.0));
         Assert.That(result.Narrowed, Is.EqualTo(44));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -507,7 +507,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerDataTargets.CheckedNumericConversion(42L), Is.EqualTo(42));
         Assert.Throws<OverflowException>(() => OptimizerDataTargets.CheckedNumericConversion(long.MaxValue));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -520,7 +520,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(result, Has.Length.EqualTo(2));
         Assert.That(result[0], Is.EqualTo(11));
         Assert.That(result[1], Is.EqualTo(7));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -534,7 +534,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(result.Number, Is.EqualTo(42));
         Assert.That(result.Text, Is.EqualTo("text"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -548,7 +548,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(result.Original.Text, Is.EqualTo("original"));
         Assert.That(result.Copy.Number, Is.EqualTo(42));
         Assert.That(result.Copy.Text, Is.EqualTo("copy"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -561,7 +561,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(result.Boxed, Is.TypeOf<int>());
         Assert.That(result.Boxed, Is.EqualTo(42));
         Assert.That(result.Unboxed, Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -578,7 +578,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(present.Value, Is.EqualTo(42));
         Assert.That(absent.HasValue, Is.False);
         Assert.That(absent.Value, Is.Zero);
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -599,7 +599,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(result.Reference, Is.EqualTo("reference"));
         Assert.That(result.Structure.Number, Is.EqualTo(42));
         Assert.That(result.Structure.Text, Is.EqualTo("structure"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -610,7 +610,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
             nameof(OptimizerPipelinePatches.CapturingLambda_PreservesClosureAndDelegateInvocation));
 
         Assert.That(OptimizerDataTargets.CapturingLambda(40, 2), Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -619,7 +619,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         ApplyPatch(typeof(OptimizerPipelinePatches), nameof(OptimizerPipelinePatches.StringInterpolation_PreservesFormatting));
 
         Assert.That(OptimizerDataTargets.StringInterpolation("value", 42), Is.EqualTo("value: 0042"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -633,7 +633,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(result.Text, Is.EqualTo("text"));
         Assert.That(result.Number, Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -648,7 +648,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(target.Text, Is.EqualTo("text"));
         Assert.That(result.Number, Is.EqualTo(42));
         Assert.That(result.Text, Is.EqualTo("text"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -657,7 +657,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         ApplyPatch(typeof(OptimizerPipelinePatches), nameof(OptimizerPipelinePatches.InterfaceDispatch_PreservesImplementationCall));
 
         Assert.That(OptimizerDataTargets.InterfaceDispatch(42), Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -674,7 +674,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(first.Number, Is.EqualTo(7));
         Assert.That(second, Is.TypeOf<OptimizerSecondBranchValue>());
         Assert.That(second.Number, Is.EqualTo(11));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -686,7 +686,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.ConditionalInterfaceImplementation(true), Is.EqualTo(7));
         Assert.That(OptimizerMixedTargets.ConditionalInterfaceImplementation(false), Is.EqualTo(11));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -703,7 +703,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(number, Is.EqualTo(42));
         Assert.That(text, Is.TypeOf<string>());
         Assert.That(text, Is.EqualTo("text"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -720,7 +720,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(first.Text, Is.EqualTo("FIRST"));
         Assert.That(second.Number, Is.EqualTo(12));
         Assert.That(second.Text, Is.EqualTo("SECOND"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -734,7 +734,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(1, 8), Is.EqualTo(16.0));
         Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(2, 8), Is.EqualTo(4.0));
         Assert.That(OptimizerMixedTargets.SwitchWithNumericConversions(3, 8), Is.EqualTo(2.0));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(4));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(4));
     }
 
     [Test]
@@ -748,7 +748,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(result.Number, Is.EqualTo(6));
         Assert.That(result.Text, Is.EqualTo("2: 3"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
@@ -765,7 +765,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(parsed.Text, Is.EqualTo("parsed"));
         Assert.That(fallback.Number, Is.EqualTo(-1));
         Assert.That(fallback.Text, Is.EqualTo("fallback"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -782,7 +782,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(first.Text, Is.EqualTo("FIRST"));
         Assert.That(second.Number, Is.EqualTo(12));
         Assert.That(second.Text, Is.EqualTo("SECOND"));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -794,7 +794,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.ConditionalDelegate(true, 40), Is.EqualTo(42));
         Assert.That(OptimizerMixedTargets.ConditionalDelegate(false, 21), Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -811,7 +811,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(first.Second, Is.EqualTo(11));
         Assert.That(second.First, Is.EqualTo(7));
         Assert.That(second.Second, Is.EqualTo(42));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -823,7 +823,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.ExplicitReferenceCastOnLocal(true), Is.EqualTo(7));
         Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitReferenceCastOnLocal(false));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -835,7 +835,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(true), Is.EqualTo(7));
         Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitReferenceCastOnEvaluationStack(false));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -847,7 +847,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.ExplicitUnboxingCastOnLocal(true), Is.EqualTo(42));
         Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitUnboxingCastOnLocal(false));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -859,7 +859,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(true), Is.EqualTo(42));
         Assert.Throws<InvalidCastException>(() => OptimizerMixedTargets.ExplicitUnboxingCastOnEvaluationStack(false));
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -880,7 +880,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
         Assert.That(dataObject.IsString, Is.False);
         Assert.That(dataObject.IsInt, Is.False);
         Assert.That(dataObject.IsDataObject, Is.True);
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(3));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(3));
     }
 
     [Test]
@@ -890,7 +890,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.AsClassOnLocal(true), Is.EqualTo(7));
         Assert.That(OptimizerMixedTargets.AsClassOnLocal(false), Is.Null);
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -900,7 +900,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
 
         Assert.That(OptimizerMixedTargets.AsInterfaceOnLocal(true), Is.EqualTo(7));
         Assert.That(OptimizerMixedTargets.AsInterfaceOnLocal(false), Is.Null);
-        Assert.That(OptimizerPipelinePatches.PatchCalls, Is.EqualTo(2));
+        Assert.That(OptimizerPipelinePatches.patchCalls, Is.EqualTo(2));
     }
 
 }

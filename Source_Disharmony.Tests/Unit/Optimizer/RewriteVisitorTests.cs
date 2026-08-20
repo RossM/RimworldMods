@@ -16,8 +16,13 @@ public sealed class RewriteVisitorTests
     {
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         Assert.Multiple(() =>
         {
@@ -34,9 +39,14 @@ public sealed class RewriteVisitorTests
         Temporary originalOutput = new(typeof(int), 0);
         Temporary replacementOutput = new(typeof(int), 1);
         AssignmentOp assignment = new(originalOutput, originalInput);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[originalInput] = replacementInput;
-        visitor.Replacements[originalOutput] = replacementOutput;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [originalInput] = replacementInput,
+                [originalOutput] = replacementOutput,
+            },
+        };
 
         var rewritten = (AssignmentOp)assignment.Accept(visitor);
 
@@ -54,8 +64,13 @@ public sealed class RewriteVisitorTests
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
         ILOp operation = new(new ILInstruction(OpCodes.Add, null!, []), [original, original], typeof(int));
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewritten = (ILOp)operation.Accept(visitor);
 
@@ -73,8 +88,13 @@ public sealed class RewriteVisitorTests
     {
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewrittenThrow = (Throw)new Throw(original).Accept(visitor);
         var rewrittenReturn = (Return)new Return(Ret, original).Accept(visitor);
@@ -94,8 +114,13 @@ public sealed class RewriteVisitorTests
         StackSlot original = new(0, typeof(int), 0);
         StackSlot replacement = new(0, typeof(int), 1);
         ConditionalBranch branch = new(OpCodes.Beq, [original, original], [new BlockLabel(1), new BlockLabel(2)]);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewritten = (ConditionalBranch)branch.Accept(visitor);
 
@@ -115,8 +140,13 @@ public sealed class RewriteVisitorTests
         StackSlot replacement = new(0, typeof(int), 1);
         AssignmentOp assignment = new(new Temporary(typeof(int), 0), original);
         BasicBlock block = new(region.EntryLabel, [assignment], region, new Return(Ret, original));
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewritten = (BasicBlock)block.Accept(visitor);
 
@@ -138,8 +168,13 @@ public sealed class RewriteVisitorTests
         AssignmentOp becomesIdentity = new(replacement, original);
         AssignmentOp retained = new(retainedOutput, original);
         Edge edge = new(new BlockLabel(1), new BlockLabel(-1), [becomesIdentity, retained]);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewritten = (Edge)edge.Accept(visitor);
 
@@ -162,8 +197,13 @@ public sealed class RewriteVisitorTests
         FinallyRegion finallyRegion = new(new BlockLabel(2), root);
         FaultRegion faultRegion = new(new BlockLabel(3), root);
         ExceptionGroup group = new([catchRegion, finallyRegion, faultRegion]);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewritten = (ExceptionGroup)group.Accept(visitor);
 
@@ -244,8 +284,13 @@ public sealed class RewriteVisitorTests
         BasicBlock target = new(destination, [], root, new Return(Ret, original));
         Edge edge = new(source.Label, target.Label, [new AssignmentOp(replacement, original)]);
         ControlFlowGraph graph = new(root, [source, target], [edge], [], []);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[original] = replacement;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [original] = replacement,
+            },
+        };
 
         var rewritten = (ControlFlowGraph)visitor.Visit(graph);
 
@@ -273,9 +318,14 @@ public sealed class RewriteVisitorTests
         Local unchangedLocal = new(typeof(string), 1);
         ControlFlowGraph graph = new(root, [block], [],
             [originalArgument, unchangedArgument], [originalLocal, unchangedLocal]);
-        ReplaceVisitor visitor = new();
-        visitor.Replacements[originalArgument] = replacementArgument;
-        visitor.Replacements[originalLocal] = replacementLocal;
+        ReplaceVisitor visitor = new()
+        {
+            Replacements =
+            {
+                [originalArgument] = replacementArgument,
+                [originalLocal] = replacementLocal,
+            },
+        };
 
         var rewritten = (ControlFlowGraph)visitor.Visit(graph);
 

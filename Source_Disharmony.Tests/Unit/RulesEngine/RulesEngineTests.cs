@@ -293,20 +293,16 @@ public sealed class RulesEngineTests
         Label sourceLabel = PatchProcessor.CreateILGenerator().DefineLabel();
         var target = new CodeInstruction(OpCodes.Nop);
         target.labels.Add(sourceLabel);
-        var ruleset = new Ruleset(new List<Rule>
+        var ruleset = new Ruleset(new()
         {
-            new()
-            {
-                phase = 1,
-                mode = OutputMode.MethodPrefix,
-                output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
-            },
-            new()
-            {
-                phase = 2,
-                mode = OutputMode.MethodPostfix,
-                output = [target],
-            },
+            phase = 1,
+            mode = OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
+        }, new()
+        {
+            phase = 2,
+            mode = OutputMode.MethodPostfix,
+            output = [target],
         });
         ruleset.crossRuleLabels.Add(sourceLabel);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
@@ -327,20 +323,16 @@ public sealed class RulesEngineTests
         Label sourceLabel = PatchProcessor.CreateILGenerator().DefineLabel();
         var target = new CodeInstruction(OpCodes.Nop);
         target.labels.Add(sourceLabel);
-        var ruleset = new Ruleset(new List<Rule>
+        var ruleset = new Ruleset(new()
         {
-            new()
-            {
-                phase = 1,
-                mode = OutputMode.MethodPrefix,
-                output = [new CodeInstruction(OpCodes.Switch, new[] { sourceLabel })],
-            },
-            new()
-            {
-                phase = 2,
-                mode = OutputMode.MethodPostfix,
-                output = [target],
-            },
+            phase = 1,
+            mode = OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Switch, new[] { sourceLabel })],
+        }, new()
+        {
+            phase = 2,
+            mode = OutputMode.MethodPostfix,
+            output = [target],
         });
         ruleset.crossRuleLabels.Add(sourceLabel);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
@@ -725,20 +717,16 @@ public sealed class RulesEngineTests
         var dynamicMethod = new DynamicMethod("InstructionMatcherCrossRuleLocalTest", typeof(void), Type.EmptyTypes);
         ILGenerator generator = dynamicMethod.GetILGenerator();
         LocalBuilder sourceLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
-        var ruleset = new Ruleset(new List<Rule>
+        var ruleset = new Ruleset(new()
         {
-            new()
-            {
-                phase = 1,
-                mode = OutputMode.MethodPrefix,
-                output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
-            },
-            new()
-            {
-                phase = 2,
-                mode = OutputMode.MethodPostfix,
-                output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
-            },
+            phase = 1,
+            mode = OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
+        }, new()
+        {
+            phase = 2,
+            mode = OutputMode.MethodPostfix,
+            output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
         });
         ruleset.crossRuleLocals.Add(sourceLocal);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];

@@ -2,7 +2,7 @@ namespace Disharmony.Tests.EndToEnd.Patching;
 
 public static class PatchInteractionPatches
 {
-    public static int Observed;
+    public static int observed;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
@@ -14,7 +14,7 @@ public static class PatchInteractionPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Postfix(int value) => Observed = value;
+    public static void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Postfix(int value) => observed = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntArgument))]
@@ -26,7 +26,7 @@ public static class PatchInteractionPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntArgument))]
-    public static void PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Postfix(int value) => Observed = value;
+    public static void PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Postfix(int value) => observed = value;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
@@ -38,7 +38,7 @@ public static class PatchInteractionPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
-    public static void PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Postfix(int __result) => Observed = __result;
+    public static void PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Postfix(int __result) => observed = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
@@ -50,7 +50,7 @@ public static class PatchInteractionPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
-    public static void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Postfix(int __result) => Observed = __result;
+    public static void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Postfix(int __result) => observed = __result;
 }
 
 [TestFixture]
@@ -59,7 +59,7 @@ public sealed class PatchInteractionTests : PatchTestBase
     [Test]
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetRuns()
     {
-        PatchInteractionPatches.Observed = 0;
+        PatchInteractionPatches.observed = 0;
         ApplyPatch(typeof(PatchInteractionPatches),
             nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetRuns_Prefix));
         ApplyPatch(typeof(PatchInteractionPatches),
@@ -67,13 +67,13 @@ public sealed class PatchInteractionTests : PatchTestBase
 
         StaticMethodTargets.IntArgument(1);
 
-        Assert.That(PatchInteractionPatches.Observed, Is.EqualTo(42));
+        Assert.That(PatchInteractionPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped()
     {
-        PatchInteractionPatches.Observed = 0;
+        PatchInteractionPatches.observed = 0;
         ApplyPatch(typeof(PatchInteractionPatches),
             nameof(PatchInteractionPatches.PostfixObservesArgumentWrittenByPrefixWhenTargetIsSkipped_Prefix));
         ApplyPatch(typeof(PatchInteractionPatches),
@@ -81,13 +81,13 @@ public sealed class PatchInteractionTests : PatchTestBase
 
         StaticMethodTargets.ThrowingIntArgument(1);
 
-        Assert.That(PatchInteractionPatches.Observed, Is.EqualTo(42));
+        Assert.That(PatchInteractionPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns()
     {
-        PatchInteractionPatches.Observed = 0;
+        PatchInteractionPatches.observed = 0;
         ApplyPatch(typeof(PatchInteractionPatches),
             nameof(PatchInteractionPatches.PostfixObservesTargetResultWhenPrefixWritesResultAndTargetRuns_Prefix));
         ApplyPatch(typeof(PatchInteractionPatches),
@@ -95,13 +95,13 @@ public sealed class PatchInteractionTests : PatchTestBase
 
         StaticMethodTargets.IntResult();
 
-        Assert.That(PatchInteractionPatches.Observed, Is.EqualTo(1));
+        Assert.That(PatchInteractionPatches.observed, Is.EqualTo(1));
     }
 
     [Test]
     public void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped()
     {
-        PatchInteractionPatches.Observed = 0;
+        PatchInteractionPatches.observed = 0;
         ApplyPatch(typeof(PatchInteractionPatches),
             nameof(PatchInteractionPatches.PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Prefix));
         ApplyPatch(typeof(PatchInteractionPatches),
@@ -109,6 +109,6 @@ public sealed class PatchInteractionTests : PatchTestBase
 
         StaticMethodTargets.ThrowingIntResult();
 
-        Assert.That(PatchInteractionPatches.Observed, Is.EqualTo(42));
+        Assert.That(PatchInteractionPatches.observed, Is.EqualTo(42));
     }
 }

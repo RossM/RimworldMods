@@ -2,7 +2,7 @@ namespace Disharmony.Tests.EndToEnd.PatchLifecycle;
 
 public static class UnpatchPatches
 {
-    public static int ObservedPatch;
+    public static int observedPatch;
 
     [Postfix]
     [Target(typeof(UnpatchPatchTargets), nameof(UnpatchPatchTargets.TargetA))]
@@ -14,11 +14,11 @@ public static class UnpatchPatches
 
     [Prefix]
     [Target(typeof(UnpatchPatchTargets), nameof(UnpatchPatchTargets.ApplyUnpatchApplyTarget))]
-    public static void ApplyUnpatchApply_ExecutesSecondPatch_First() => ObservedPatch = 1;
+    public static void ApplyUnpatchApply_ExecutesSecondPatch_First() => observedPatch = 1;
 
     [Prefix]
     [Target(typeof(UnpatchPatchTargets), nameof(UnpatchPatchTargets.ApplyUnpatchApplyTarget))]
-    public static void ApplyUnpatchApply_ExecutesSecondPatch_Second() => ObservedPatch = 2;
+    public static void ApplyUnpatchApply_ExecutesSecondPatch_Second() => observedPatch = 2;
 }
 
 internal class UnpatchTests
@@ -67,14 +67,14 @@ internal class UnpatchTests
     public void ApplyUnpatchApply_ExecutesSecondPatch()
     {
         Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
-        UnpatchPatches.ObservedPatch = 0;
+        UnpatchPatches.observedPatch = 0;
 
         ApplyPatch(nameof(UnpatchPatches.ApplyUnpatchApply_ExecutesSecondPatch_First));
         Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
         ApplyPatch(nameof(UnpatchPatches.ApplyUnpatchApply_ExecutesSecondPatch_Second));
 
         UnpatchPatchTargets.ApplyUnpatchApplyTarget();
-        int observedPatch = UnpatchPatches.ObservedPatch;
+        int observedPatch = UnpatchPatches.observedPatch;
 
         Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
         Assert.That(observedPatch, Is.EqualTo(2));

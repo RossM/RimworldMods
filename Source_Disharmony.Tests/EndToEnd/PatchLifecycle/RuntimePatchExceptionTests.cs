@@ -1,8 +1,10 @@
+// ReSharper disable UnusedTypeParameter
+// ReSharper disable UnusedParameter.Global
 namespace Disharmony.Tests.EndToEnd.PatchLifecycle;
 
 public class RuntimePatchExceptionPatches
 {
-    public static int PatchCalls;
+    public static int patchCalls;
 
     public static void RuleBuilder_IncompatibleParameterConversion_IsRejectedBeforeUpdateMethod(string value) { }
 
@@ -21,7 +23,7 @@ public class RuntimePatchExceptionPatches
 
     public static void Circumfix_GenericPatchMethod_IsRejectedBeforeUpdateMethod<T>() { }
 
-    public static void Circumfix_ConstructedGenericPatchMethod_IsAllowed<T>() => PatchCalls++;
+    public static void Circumfix_ConstructedGenericPatchMethod_IsAllowed<T>() => patchCalls++;
 
     public static BindingStruct Circumfix_PrefixReturningStruct_IsRejectedBeforeUpdateMethod() => default;
 
@@ -176,7 +178,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     [Test]
     public void Circumfix_ConstructedGenericPatchMethod_IsAllowed()
     {
-        RuntimePatchExceptionPatches.PatchCalls = 0;
+        RuntimePatchExceptionPatches.patchCalls = 0;
         MethodInfo patch = typeof(RuntimePatchExceptionPatches)
             .GetMethod(nameof(RuntimePatchExceptionPatches.Circumfix_ConstructedGenericPatchMethod_IsAllowed))!
             .MakeGenericMethod(typeof(int));
@@ -188,14 +190,14 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(RuntimePatchExceptionPatches.PatchCalls, Is.EqualTo(1));
+        Assert.That(RuntimePatchExceptionPatches.patchCalls, Is.EqualTo(1));
     }
 
     [Test]
     public void Circumfix_OpenGenericDeclaringType_IsRejectedBeforeUpdateMethod()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionGenericPatches<>)
-            .GetMethod(nameof(RuntimePatchExceptionGenericPatches<int>.Circumfix_OpenGenericDeclaringType_IsRejectedBeforeUpdateMethod))!;
+            .GetMethod(nameof(RuntimePatchExceptionGenericPatches<>.Circumfix_OpenGenericDeclaringType_IsRejectedBeforeUpdateMethod))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
@@ -210,7 +212,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     public void Circumfix_ClosedGenericDeclaringType_IsAllowed()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionGenericPatches<int>)
-            .GetMethod(nameof(RuntimePatchExceptionGenericPatches<int>.Circumfix_ClosedGenericDeclaringType_IsAllowed))!;
+            .GetMethod(nameof(RuntimePatchExceptionGenericPatches<>.Circumfix_ClosedGenericDeclaringType_IsAllowed))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 

@@ -2,13 +2,13 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class FieldBindingPatches
 {
-    public static int Observed;
-    public static BindingReference? ReferenceObserved;
-    public static BindingStruct StructObserved;
+    public static int observed;
+    public static BindingReference? referenceObserved;
+    public static BindingStruct structObserved;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void Prefix_TripleUnderscoreField_Primitive_ReadByValue(int ___primitiveField) => Observed = ___primitiveField;
+    public static void Prefix_TripleUnderscoreField_Primitive_ReadByValue(int ___primitiveField) => observed = ___primitiveField;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -17,12 +17,12 @@ public static class FieldBindingPatches
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_TripleUnderscoreField_Primitive_ReadByReference(ref int ___primitiveField) =>
-        Observed = ___primitiveField;
+        observed = ___primitiveField;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_TripleUnderscoreField_ReferenceType_ReadByValue(BindingReference ___referenceField) =>
-        ReferenceObserved = ___referenceField;
+        referenceObserved = ___referenceField;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -32,11 +32,11 @@ public static class FieldBindingPatches
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_TripleUnderscoreField_ReferenceType_ReadByReference(
-        ref BindingReference ___referenceField) => ReferenceObserved = ___referenceField;
+        ref BindingReference ___referenceField) => referenceObserved = ___referenceField;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void Prefix_TripleUnderscoreField_Struct_ReadByValue(BindingStruct ___structField) => StructObserved = ___structField;
+    public static void Prefix_TripleUnderscoreField_Struct_ReadByValue(BindingStruct ___structField) => structObserved = ___structField;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -46,16 +46,16 @@ public static class FieldBindingPatches
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_TripleUnderscoreField_Struct_ReadByReference(ref BindingStruct ___structField) =>
-        StructObserved = ___structField;
+        structObserved = ___structField;
 
     [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByValue(int ___foo) => Observed = ___foo;
+    public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByValue(int ___foo) => observed = ___foo;
 
     [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByValue_WhenBothScopesMatch(int ___foo) =>
-        Observed = ___foo;
+        observed = ___foo;
 
     [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
@@ -63,7 +63,7 @@ public static class FieldBindingPatches
 
     [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
+    public static void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByReference(ref int ___foo) => observed = ___foo;
 
     [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
@@ -71,16 +71,16 @@ public static class FieldBindingPatches
 
     [Postfix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
-    public static void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
+    public static void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByReference(ref int ___foo) => observed = ___foo;
 
     [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByValue(int ___foo) => Observed = ___foo;
+    public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByValue(int ___foo) => observed = ___foo;
 
     [Postfix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
     public static void InnerPostfix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByValue_WhenBothScopesMatch(int ___foo) =>
-        Observed = ___foo;
+        observed = ___foo;
 
     [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
@@ -88,7 +88,7 @@ public static class FieldBindingPatches
 
     [Prefix] [Inner(typeof(InstanceMethodTargetsWithoutFields), nameof(InstanceMethodTargetsWithoutFields.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithoutField))]
-    public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
+    public static void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByReference(ref int ___foo) => observed = ___foo;
 
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
@@ -96,7 +96,7 @@ public static class FieldBindingPatches
 
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithField))]
-    public static void InnerPrefix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByReference(ref int ___foo) => Observed = ___foo;
+    public static void InnerPrefix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByReference(ref int ___foo) => observed = ___foo;
 
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
@@ -105,7 +105,7 @@ public static class FieldBindingPatches
     [Prefix] [Inner(typeof(InnerStructMethodTargets), nameof(InnerStructMethodTargets.Void))]
     [Target(typeof(StructMethodTargets), nameof(StructMethodTargets.CallInnerWithFieldByValue))]
     public static void InnerPrefix_TripleUnderscoreField_InnerStructPassedByValue_Primitive_ReadByReference(ref int ___foo) =>
-        Observed = ___foo;
+        observed = ___foo;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -113,16 +113,16 @@ public static class FieldBindingPatches
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void Prefix_FieldAttribute_Primitive_ReadByReference([Field("foo")] ref int field) => Observed = field;
+    public static void Prefix_FieldAttribute_Primitive_ReadByReference([Field("foo")] ref int field) => observed = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void Prefix_FieldAttribute_Primitive_ReadByValue([Field("primitiveField")] int field) => Observed = field;
+    public static void Prefix_FieldAttribute_Primitive_ReadByValue([Field("primitiveField")] int field) => observed = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_FieldAttribute_ReferenceType_ReadByValue([Field("referenceField")] BindingReference field) =>
-        ReferenceObserved = field;
+        referenceObserved = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -132,11 +132,11 @@ public static class FieldBindingPatches
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_FieldAttribute_ReferenceType_ReadByReference(
-        [Field("referenceField")] ref BindingReference field) => ReferenceObserved = field;
+        [Field("referenceField")] ref BindingReference field) => referenceObserved = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
-    public static void Prefix_FieldAttribute_Struct_ReadByValue([Field("structField")] BindingStruct field) => StructObserved = field;
+    public static void Prefix_FieldAttribute_Struct_ReadByValue([Field("structField")] BindingStruct field) => structObserved = field;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -146,32 +146,32 @@ public static class FieldBindingPatches
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_FieldAttribute_Struct_ReadByReference([Field("structField")] ref BindingStruct field) =>
-        StructObserved = field;
+        structObserved = field;
 
     [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_FieldAttribute_OuterScope_Primitive_ReadByValue([Field("foo", Scope.Outer)] int field) =>
-        Observed = field;
+        observed = field;
 
     [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_FieldAttribute_InnerScope_Primitive_ReadByValue([Field("foo", Scope.Inner)] int field) =>
-        Observed = field;
+        observed = field;
 }
 
 [TestFixture]
-public sealed partial class FieldBindingTests : PatchTestBase
+public sealed class FieldBindingTests : PatchTestBase
 {
     [Test]
     public void Prefix_TripleUnderscoreField_Primitive_ReadByValue()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_TripleUnderscoreField_Primitive_ReadByValue));
         var target = new ClassMethodTargets { primitiveField = 42 };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
@@ -188,14 +188,14 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void Prefix_TripleUnderscoreField_ReferenceType_ReadByValue()
     {
-        FieldBindingPatches.ReferenceObserved = null;
+        FieldBindingPatches.referenceObserved = null;
         var field = new BindingReference { Value = 42 };
         var target = new ClassMethodTargets { referenceField = field };
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_TripleUnderscoreField_ReferenceType_ReadByValue));
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+        Assert.That(FieldBindingPatches.referenceObserved, Is.SameAs(field));
     }
 
     [Test]
@@ -212,13 +212,13 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void Prefix_TripleUnderscoreField_Struct_ReadByValue()
     {
-        FieldBindingPatches.StructObserved = default;
+        FieldBindingPatches.structObserved = default;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_TripleUnderscoreField_Struct_ReadByValue));
         var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
@@ -235,20 +235,20 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByValue()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByValue));
         var outer = new ClassMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByValue_WhenBothScopesMatch()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByValue_WhenBothScopesMatch));
         var outer = new ClassMethodTargets { foo = 1 };
@@ -256,7 +256,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
 
         outer.CallInnerWithField(inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
@@ -288,20 +288,20 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByValue()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByValue));
         var outer = new StructMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByValue_WhenBothScopesMatch()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPostfix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByValue_WhenBothScopesMatch));
         var outer = new StructMethodTargets { foo = 1 };
@@ -309,7 +309,7 @@ public sealed partial class FieldBindingTests : PatchTestBase
 
         outer.CallInnerWithField(ref inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
@@ -370,26 +370,26 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void Prefix_FieldAttribute_Primitive_ReadByValue()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_Primitive_ReadByValue));
         var target = new ClassMethodTargets { primitiveField = 42 };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_FieldAttribute_ReferenceType_ReadByValue()
     {
-        FieldBindingPatches.ReferenceObserved = null;
+        FieldBindingPatches.referenceObserved = null;
         var field = new BindingReference { Value = 42 };
         var target = new ClassMethodTargets { referenceField = field };
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_ReferenceType_ReadByValue));
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+        Assert.That(FieldBindingPatches.referenceObserved, Is.SameAs(field));
     }
 
     [Test]
@@ -406,13 +406,13 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void Prefix_FieldAttribute_Struct_ReadByValue()
     {
-        FieldBindingPatches.StructObserved = default;
+        FieldBindingPatches.structObserved = default;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_Struct_ReadByValue));
         var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
@@ -429,83 +429,83 @@ public sealed partial class FieldBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_FieldAttribute_OuterScope_Primitive_ReadByValue()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_OuterScope_Primitive_ReadByValue));
         var outer = new ClassMethodTargets { foo = 1 };
         var inner = new InnerInstanceMethodTargets { foo = 42 };
 
         outer.CallInnerWithField(inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(1));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(1));
     }
 
     [Test]
     public void InnerPrefix_FieldAttribute_InnerScope_Primitive_ReadByValue()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_InnerScope_Primitive_ReadByValue));
         var outer = new ClassMethodTargets { foo = 1 };
         var inner = new InnerInstanceMethodTargets { foo = 42 };
 
         outer.CallInnerWithField(inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_TripleUnderscoreField_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_TripleUnderscoreField_Primitive_ReadByReference));
         var target = new ClassMethodTargets { primitiveField = 42 };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_TripleUnderscoreField_ReferenceType_ReadByReference()
     {
-        FieldBindingPatches.ReferenceObserved = null;
+        FieldBindingPatches.referenceObserved = null;
         var field = new BindingReference { Value = 42 };
         var target = new ClassMethodTargets { referenceField = field };
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_TripleUnderscoreField_ReferenceType_ReadByReference));
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+        Assert.That(FieldBindingPatches.referenceObserved, Is.SameAs(field));
     }
 
     [Test]
     public void Prefix_TripleUnderscoreField_Struct_ReadByReference()
     {
-        FieldBindingPatches.StructObserved = default;
+        FieldBindingPatches.structObserved = default;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_TripleUnderscoreField_Struct_ReadByReference));
         var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPrefix_TripleUnderscoreField_OuterClassInstance_Primitive_ReadByReference));
         var outer = new ClassMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPostfix_TripleUnderscoreField_InnerClassInstance_Primitive_ReadByReference));
         var outer = new ClassMethodTargets { foo = 1 };
@@ -513,26 +513,26 @@ public sealed partial class FieldBindingTests : PatchTestBase
 
         outer.CallInnerWithField(inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPrefix_TripleUnderscoreField_OuterStructInstance_Primitive_ReadByReference));
         var outer = new StructMethodTargets { foo = 42 };
 
         outer.CallInnerWithoutField(new InstanceMethodTargetsWithoutFields());
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPrefix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPrefix_TripleUnderscoreField_InnerStructInstance_Primitive_ReadByReference));
         var outer = new StructMethodTargets { foo = 1 };
@@ -540,13 +540,13 @@ public sealed partial class FieldBindingTests : PatchTestBase
 
         outer.CallInnerWithField(ref inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPrefix_TripleUnderscoreField_InnerStructPassedByValue_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches),
             nameof(FieldBindingPatches.InnerPrefix_TripleUnderscoreField_InnerStructPassedByValue_Primitive_ReadByReference));
         var outer = new StructMethodTargets { foo = 1 };
@@ -554,43 +554,43 @@ public sealed partial class FieldBindingTests : PatchTestBase
 
         outer.CallInnerWithFieldByValue(inner);
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_FieldAttribute_Primitive_ReadByReference()
     {
-        FieldBindingPatches.Observed = 0;
+        FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_Primitive_ReadByReference));
         var target = new ClassMethodTargets { foo = 42 };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_FieldAttribute_ReferenceType_ReadByReference()
     {
-        FieldBindingPatches.ReferenceObserved = null;
+        FieldBindingPatches.referenceObserved = null;
         var field = new BindingReference { Value = 42 };
         var target = new ClassMethodTargets { referenceField = field };
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_ReferenceType_ReadByReference));
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.ReferenceObserved, Is.SameAs(field));
+        Assert.That(FieldBindingPatches.referenceObserved, Is.SameAs(field));
     }
 
     [Test]
     public void Prefix_FieldAttribute_Struct_ReadByReference()
     {
-        FieldBindingPatches.StructObserved = default;
+        FieldBindingPatches.structObserved = default;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_Struct_ReadByReference));
         var target = new ClassMethodTargets { structField = new BindingStruct { Value = 42 } };
 
         target.Void();
 
-        Assert.That(FieldBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(FieldBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 }

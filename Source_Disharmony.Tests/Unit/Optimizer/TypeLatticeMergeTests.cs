@@ -9,6 +9,7 @@ internal sealed class TypeLatticeMergeTests
 
     private enum IntEnum
     {
+        // ReSharper disable once UnusedMember.Local
         Value,
     }
 

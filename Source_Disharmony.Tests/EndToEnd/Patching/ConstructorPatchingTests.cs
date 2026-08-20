@@ -2,46 +2,46 @@ namespace Disharmony.Tests.EndToEnd.Patching;
 
 public static class ConstructorPatchingPatches
 {
-    public static int ExecutionCount;
-    public static int ParameterObserved;
-    public static ConstructorTargets? InstanceObserved;
-    public static ConstructorTargets? ResultObserved;
+    public static int executionCount;
+    public static int parameterObserved;
+    public static ConstructorTargets? instanceObserved;
+    public static ConstructorTargets? resultObserved;
 
     [Prefix]
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
-    public static void Prefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
+    public static void Prefix_Constructor_ReferenceType_Parameterless_Executes() => executionCount++;
 
     [Postfix]
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
-    public static void Postfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
+    public static void Postfix_Constructor_ReferenceType_Parameterless_Executes() => executionCount++;
 
     [Prefix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
-    public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
+    public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes() => executionCount++;
 
     [Postfix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
-    public static void InnerPostfix_Constructor_ReferenceType_Parameterless_Executes() => ExecutionCount++;
+    public static void InnerPostfix_Constructor_ReferenceType_Parameterless_Executes() => executionCount++;
 
     [Prefix]
     [Target(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
-    public static void Prefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
+    public static void Prefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => parameterObserved = value;
 
     [Postfix]
     [Target(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
-    public static void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
+    public static void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => parameterObserved = value;
 
     [Postfix]
     [Target(
@@ -49,21 +49,21 @@ public static class ConstructorPatchingPatches
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     public static void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected(ref int value) =>
-        ParameterObserved = value;
+        parameterObserved = value;
 
     [Prefix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
-    public static void InnerPrefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
+    public static void InnerPrefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => parameterObserved = value;
 
     [Postfix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
-    public static void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => ParameterObserved = value;
+    public static void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => parameterObserved = value;
 
     [Postfix] [Inner(
         typeof(ConstructorTargets),
@@ -71,22 +71,22 @@ public static class ConstructorPatchingPatches
         parameterTypes: [typeof(int)])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [typeof(int)])]
     public static void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected(ref int value) =>
-        ParameterObserved = value;
+        parameterObserved = value;
 
     [Prefix]
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Prefix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue(ConstructorTargets __instance) =>
-        InstanceObserved = __instance;
+        instanceObserved = __instance;
 
     [Postfix]
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue(ConstructorTargets __instance) =>
-        InstanceObserved = __instance;
+        instanceObserved = __instance;
 
     [Postfix]
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByReference_Rejected(
-        ref ConstructorTargets __instance) => InstanceObserved = __instance;
+        ref ConstructorTargets __instance) => instanceObserved = __instance;
 
     [Postfix]
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
@@ -99,7 +99,7 @@ public static class ConstructorPatchingPatches
         parameterTypes: [])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPrefix_Constructor_ReferenceType_Parameterless_Result_ReadByValue(ConstructorTargets? __result) =>
-        ResultObserved = __result;
+        resultObserved = __result;
 
     [Postfix] [Inner(
         typeof(ConstructorTargets),
@@ -107,7 +107,7 @@ public static class ConstructorPatchingPatches
         parameterTypes: [])]
     [Target(typeof(ConstructorTargets), nameof(ConstructorTargets.Create), parameterTypes: [])]
     public static void InnerPostfix_Constructor_ReferenceType_Parameterless_Result_ReadByValue(ConstructorTargets __result) =>
-        ResultObserved = __result;
+        resultObserved = __result;
 }
 
 [TestFixture]
@@ -116,63 +116,63 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void Prefix_Constructor_ReferenceType_Parameterless_Executes()
     {
-        ConstructorPatchingPatches.ExecutionCount = 0;
+        ConstructorPatchingPatches.executionCount = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Prefix_Constructor_ReferenceType_Parameterless_Executes));
 
         var result = new ConstructorTargets();
 
-        Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(ConstructorPatchingPatches.executionCount, Is.EqualTo(1));
         Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
     public void Postfix_Constructor_ReferenceType_Parameterless_Executes()
     {
-        ConstructorPatchingPatches.ExecutionCount = 0;
+        ConstructorPatchingPatches.executionCount = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameterless_Executes));
 
         var result = new ConstructorTargets();
 
-        Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(ConstructorPatchingPatches.executionCount, Is.EqualTo(1));
         Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
     public void InnerPrefix_Constructor_ReferenceType_Parameterless_Executes()
     {
-        ConstructorPatchingPatches.ExecutionCount = 0;
+        ConstructorPatchingPatches.executionCount = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPrefix_Constructor_ReferenceType_Parameterless_Executes));
 
         ConstructorTargets result = ConstructorTargets.Create();
 
-        Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(ConstructorPatchingPatches.executionCount, Is.EqualTo(1));
         Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
     public void InnerPostfix_Constructor_ReferenceType_Parameterless_Executes()
     {
-        ConstructorPatchingPatches.ExecutionCount = 0;
+        ConstructorPatchingPatches.executionCount = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPostfix_Constructor_ReferenceType_Parameterless_Executes));
 
         ConstructorTargets result = ConstructorTargets.Create();
 
-        Assert.That(ConstructorPatchingPatches.ExecutionCount, Is.EqualTo(1));
+        Assert.That(ConstructorPatchingPatches.executionCount, Is.EqualTo(1));
         Assert.That(result.ConstructorExecuted, Is.True);
     }
 
     [Test]
     public void Prefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue()
     {
-        ConstructorPatchingPatches.ParameterObserved = 0;
+        ConstructorPatchingPatches.parameterObserved = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Prefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue));
@@ -180,13 +180,13 @@ public sealed class ConstructorPatchingTests : PatchTestBase
         var result = new ConstructorTargets(42);
 
         Assert.That(result.Value, Is.EqualTo(42));
-        Assert.That(ConstructorPatchingPatches.ParameterObserved, Is.EqualTo(42));
+        Assert.That(ConstructorPatchingPatches.parameterObserved, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue()
     {
-        ConstructorPatchingPatches.ParameterObserved = 0;
+        ConstructorPatchingPatches.parameterObserved = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue));
@@ -194,7 +194,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
         var result = new ConstructorTargets(42);
 
         Assert.That(result.Value, Is.EqualTo(42));
-        Assert.That(ConstructorPatchingPatches.ParameterObserved, Is.EqualTo(42));
+        Assert.That(ConstructorPatchingPatches.parameterObserved, Is.EqualTo(42));
     }
 
     [Test]
@@ -211,7 +211,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void InnerPrefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue()
     {
-        ConstructorPatchingPatches.ParameterObserved = 0;
+        ConstructorPatchingPatches.parameterObserved = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPrefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue));
@@ -219,13 +219,13 @@ public sealed class ConstructorPatchingTests : PatchTestBase
         ConstructorTargets result = ConstructorTargets.Create(42);
 
         Assert.That(result.Value, Is.EqualTo(42));
-        Assert.That(ConstructorPatchingPatches.ParameterObserved, Is.EqualTo(42));
+        Assert.That(ConstructorPatchingPatches.parameterObserved, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue()
     {
-        ConstructorPatchingPatches.ParameterObserved = 0;
+        ConstructorPatchingPatches.parameterObserved = 0;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue));
@@ -233,7 +233,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
         ConstructorTargets result = ConstructorTargets.Create(42);
 
         Assert.That(result.Value, Is.EqualTo(42));
-        Assert.That(ConstructorPatchingPatches.ParameterObserved, Is.EqualTo(42));
+        Assert.That(ConstructorPatchingPatches.parameterObserved, Is.EqualTo(42));
     }
 
     [Test]
@@ -250,27 +250,27 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void Prefix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue()
     {
-        ConstructorPatchingPatches.InstanceObserved = null;
+        ConstructorPatchingPatches.instanceObserved = null;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Prefix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue));
 
         var result = new ConstructorTargets();
 
-        Assert.That(ConstructorPatchingPatches.InstanceObserved, Is.SameAs(result));
+        Assert.That(ConstructorPatchingPatches.instanceObserved, Is.SameAs(result));
     }
 
     [Test]
     public void Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue()
     {
-        ConstructorPatchingPatches.InstanceObserved = null;
+        ConstructorPatchingPatches.instanceObserved = null;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByValue));
 
         var result = new ConstructorTargets();
 
-        Assert.That(ConstructorPatchingPatches.InstanceObserved, Is.SameAs(result));
+        Assert.That(ConstructorPatchingPatches.instanceObserved, Is.SameAs(result));
     }
 
     [Test]
@@ -298,7 +298,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void InnerPrefix_Constructor_ReferenceType_Parameterless_Result_ReadByValue()
     {
-        ConstructorPatchingPatches.ResultObserved = new ConstructorTargets();
+        ConstructorPatchingPatches.resultObserved = new ConstructorTargets();
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPrefix_Constructor_ReferenceType_Parameterless_Result_ReadByValue));
@@ -306,13 +306,13 @@ public sealed class ConstructorPatchingTests : PatchTestBase
         ConstructorTargets result = ConstructorTargets.Create();
 
         Assert.That(result.ConstructorExecuted, Is.True);
-        Assert.That(ConstructorPatchingPatches.ResultObserved, Is.Null);
+        Assert.That(ConstructorPatchingPatches.resultObserved, Is.Null);
     }
 
     [Test]
     public void InnerPostfix_Constructor_ReferenceType_Parameterless_Result_ReadByValue()
     {
-        ConstructorPatchingPatches.ResultObserved = null;
+        ConstructorPatchingPatches.resultObserved = null;
         ApplyPatch(
             typeof(ConstructorPatchingPatches),
             nameof(ConstructorPatchingPatches.InnerPostfix_Constructor_ReferenceType_Parameterless_Result_ReadByValue));
@@ -320,6 +320,6 @@ public sealed class ConstructorPatchingTests : PatchTestBase
         ConstructorTargets result = ConstructorTargets.Create();
 
         Assert.That(result.ConstructorExecuted, Is.True);
-        Assert.That(ConstructorPatchingPatches.ResultObserved, Is.SameAs(result));
+        Assert.That(ConstructorPatchingPatches.resultObserved, Is.SameAs(result));
     }
 }

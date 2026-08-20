@@ -2,7 +2,7 @@ namespace Disharmony.Tests.EndToEnd.PatchLifecycle;
 
 public static class PatcherRegistrationPatches
 {
-    public static int OverloadPatchCalls;
+    public static int overloadPatchCalls;
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
@@ -19,7 +19,7 @@ public static class PatcherRegistrationPatches
 
     [Postfix]
     [Targets(typeof(StaticMethodTargets), nameof(StaticMethodTargets.OverloadedVoid))]
-    public static void TargetsAttributePatchesEveryOverload() => OverloadPatchCalls++;
+    public static void TargetsAttributePatchesEveryOverload() => overloadPatchCalls++;
 
     [Postfix]
     public static void Register_TargetsOnly_UsesAttributesAndDefersUntilApply(ref int __result) => __result = 42;
@@ -65,27 +65,27 @@ public static class PreferredRegistrationAttributePatches
 [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
 public static class ClassTargetAttributePatches
 {
-    public static int FirstPatchCalls;
-    public static int SecondPatchCalls;
+    public static int firstPatchCalls;
+    public static int secondPatchCalls;
 
     [Postfix]
-    public static void ClassTargetAttributeAppliesToEveryPatchMethod_First() => FirstPatchCalls++;
+    public static void ClassTargetAttributeAppliesToEveryPatchMethod_First() => firstPatchCalls++;
 
     [Postfix]
-    public static void ClassTargetAttributeAppliesToEveryPatchMethod_Second() => SecondPatchCalls++;
+    public static void ClassTargetAttributeAppliesToEveryPatchMethod_Second() => secondPatchCalls++;
 }
 
 [Targets(typeof(StaticMethodTargets), nameof(StaticMethodTargets.OverloadedVoid))]
 public static class ClassTargetsAttributePatches
 {
-    public static int FirstPatchCalls;
-    public static int SecondPatchCalls;
+    public static int firstPatchCalls;
+    public static int secondPatchCalls;
 
     [Postfix]
-    public static void ClassTargetsAttributeAppliesToEveryPatchMethod_First() => FirstPatchCalls++;
+    public static void ClassTargetsAttributeAppliesToEveryPatchMethod_First() => firstPatchCalls++;
 
     [Postfix]
-    public static void ClassTargetsAttributeAppliesToEveryPatchMethod_Second() => SecondPatchCalls++;
+    public static void ClassTargetsAttributeAppliesToEveryPatchMethod_Second() => secondPatchCalls++;
 }
 
 [HarmonyPatch(typeof(StaticMethodTargets))]
@@ -183,28 +183,28 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void ClassTargetAttributeAppliesToEveryPatchMethod()
     {
-        ClassTargetAttributePatches.FirstPatchCalls = 0;
-        ClassTargetAttributePatches.SecondPatchCalls = 0;
+        ClassTargetAttributePatches.firstPatchCalls = 0;
+        ClassTargetAttributePatches.secondPatchCalls = 0;
         Patcher.Patch(typeof(ClassTargetAttributePatches));
 
         StaticMethodTargets.RegistrationResultA();
 
-        Assert.That(ClassTargetAttributePatches.FirstPatchCalls, Is.EqualTo(1));
-        Assert.That(ClassTargetAttributePatches.SecondPatchCalls, Is.EqualTo(1));
+        Assert.That(ClassTargetAttributePatches.firstPatchCalls, Is.EqualTo(1));
+        Assert.That(ClassTargetAttributePatches.secondPatchCalls, Is.EqualTo(1));
     }
 
     [Test]
     public void ClassTargetsAttributeAppliesToEveryPatchMethod()
     {
-        ClassTargetsAttributePatches.FirstPatchCalls = 0;
-        ClassTargetsAttributePatches.SecondPatchCalls = 0;
+        ClassTargetsAttributePatches.firstPatchCalls = 0;
+        ClassTargetsAttributePatches.secondPatchCalls = 0;
         Patcher.Patch(typeof(ClassTargetsAttributePatches));
 
         StaticMethodTargets.OverloadedVoid(1);
         StaticMethodTargets.OverloadedVoid("value");
 
-        Assert.That(ClassTargetsAttributePatches.FirstPatchCalls, Is.EqualTo(2));
-        Assert.That(ClassTargetsAttributePatches.SecondPatchCalls, Is.EqualTo(2));
+        Assert.That(ClassTargetsAttributePatches.firstPatchCalls, Is.EqualTo(2));
+        Assert.That(ClassTargetsAttributePatches.secondPatchCalls, Is.EqualTo(2));
     }
 
     [Test]
@@ -222,7 +222,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void TargetsAttributePatchesEveryOverload()
     {
-        PatcherRegistrationPatches.OverloadPatchCalls = 0;
+        PatcherRegistrationPatches.overloadPatchCalls = 0;
         MethodInfo patch = typeof(PatcherRegistrationPatches)
             .GetMethod(nameof(PatcherRegistrationPatches.TargetsAttributePatchesEveryOverload))!;
         Patcher.Patch(patch);
@@ -230,7 +230,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
         StaticMethodTargets.OverloadedVoid(1);
         StaticMethodTargets.OverloadedVoid("value");
 
-        Assert.That(PatcherRegistrationPatches.OverloadPatchCalls, Is.EqualTo(2));
+        Assert.That(PatcherRegistrationPatches.overloadPatchCalls, Is.EqualTo(2));
     }
 
     [Test]

@@ -2,10 +2,10 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static partial class StateBindingPatches
 {
-    public static int Observed;
-    public static int SecondaryObserved;
-    public static string? ReferenceObserved;
-    public static BindingStruct StructObserved;
+    public static int observed;
+    public static int secondaryObserved;
+    public static string? referenceObserved;
+    public static BindingStruct structObserved;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -13,7 +13,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateParameter_Primitive_ReadByValue_Postfix(int __state) => Observed = __state;
+    public static void Postfix_StateParameter_Primitive_ReadByValue_Postfix(int __state) => observed = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -25,7 +25,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateParameter_Primitive_WriteByReference_SecondPostfix(int __state) => Observed = __state;
+    public static void Postfix_StateParameter_Primitive_WriteByReference_SecondPostfix(int __state) => observed = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -33,7 +33,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateParameter_ReferenceType_ReadByValue_Postfix(string __state) => ReferenceObserved = __state;
+    public static void Postfix_StateParameter_ReferenceType_ReadByValue_Postfix(string __state) => referenceObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -48,7 +48,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateParameter_ReferenceType_WriteByReference_SecondPostfix(string __state) =>
-        ReferenceObserved = __state;
+        referenceObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -57,7 +57,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateParameter_Struct_ReadByValue_Postfix(BindingStruct __state) => StructObserved = __state;
+    public static void Postfix_StateParameter_Struct_ReadByValue_Postfix(BindingStruct __state) => structObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -72,7 +72,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateParameter_Struct_WriteByReference_SecondPostfix(BindingStruct __state) =>
-        StructObserved = __state;
+        structObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -80,7 +80,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateAttribute_Primitive_ReadByValue_Postfix([State] int state) => Observed = state;
+    public static void Postfix_StateAttribute_Primitive_ReadByValue_Postfix([State] int state) => observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -92,7 +92,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateAttribute_Primitive_WriteByReference_SecondPostfix([State] int state) => Observed = state;
+    public static void Postfix_StateAttribute_Primitive_WriteByReference_SecondPostfix([State] int state) => observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -100,7 +100,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateAttribute_ReferenceType_ReadByValue_Postfix([State] string state) => ReferenceObserved = state;
+    public static void Postfix_StateAttribute_ReferenceType_ReadByValue_Postfix([State] string state) => referenceObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -115,7 +115,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateAttribute_ReferenceType_WriteByReference_SecondPostfix([State] string state) =>
-        ReferenceObserved = state;
+        referenceObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -124,7 +124,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateAttribute_Struct_ReadByValue_Postfix([State] BindingStruct state) => StructObserved = state;
+    public static void Postfix_StateAttribute_Struct_ReadByValue_Postfix([State] BindingStruct state) => structObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -139,7 +139,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateAttribute_Struct_WriteByReference_SecondPostfix([State] BindingStruct state) =>
-        StructObserved = state;
+        structObserved = state;
 }
 
 public static partial class StateBindingPatches
@@ -150,7 +150,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateParameter_Primitive_ReadByReference_Postfix(ref int __state) => Observed = __state;
+    public static void Postfix_StateParameter_Primitive_ReadByReference_Postfix(ref int __state) => observed = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -159,7 +159,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateParameter_ReferenceType_ReadByReference_Postfix(ref string __state) =>
-        ReferenceObserved = __state;
+        referenceObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -168,7 +168,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateParameter_Struct_ReadByReference_Postfix(ref BindingStruct __state) => StructObserved = __state;
+    public static void Postfix_StateParameter_Struct_ReadByReference_Postfix(ref BindingStruct __state) => structObserved = __state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -176,7 +176,7 @@ public static partial class StateBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Postfix_StateAttribute_Primitive_ReadByReference_Postfix([State] ref int state) => Observed = state;
+    public static void Postfix_StateAttribute_Primitive_ReadByReference_Postfix([State] ref int state) => observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -186,7 +186,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateAttribute_ReferenceType_ReadByReference_Postfix([State] ref string state) =>
-        ReferenceObserved = state;
+        referenceObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -196,7 +196,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void Postfix_StateAttribute_Struct_ReadByReference_Postfix([State] ref BindingStruct state) =>
-        StructObserved = state;
+        structObserved = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -206,7 +206,7 @@ public static partial class StateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void StateSharing_SameClass_SameType_ImplicitAndAttribute_Shares_Postfix([State("__state")] int state) =>
-        Observed = state;
+        observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -218,7 +218,7 @@ public static partial class StateBindingPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void StateSharing_SameClass_SameType_SameExplicitKey_Shares_Postfix(
         [State("shared")] int state) =>
-        Observed = state;
+        observed = state;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
@@ -236,8 +236,8 @@ public static partial class StateBindingPatches
         [State("first")] int first,
         [State("second")] int second)
     {
-        Observed = first;
-        SecondaryObserved = second;
+        observed = first;
+        secondaryObserved = second;
     }
 
     [Prefix]
@@ -256,8 +256,8 @@ public static partial class StateBindingPatches
         [State] int unkeyed,
         [State("keyed")] int keyed)
     {
-        Observed = unkeyed;
-        SecondaryObserved = keyed;
+        observed = unkeyed;
+        secondaryObserved = keyed;
     }
 
     [Prefix]
@@ -276,8 +276,8 @@ public static partial class StateBindingPatches
         [State] int primitive,
         [State] string reference)
     {
-        Observed = primitive;
-        ReferenceObserved = reference;
+        observed = primitive;
+        referenceObserved = reference;
     }
 
     [Prefix]
@@ -291,7 +291,7 @@ public static class OtherStateBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
     public static void StateSharing_DifferentClasses_SameType_Unkeyed_Separate_Postfix(int __state) =>
-        StateBindingPatches.Observed = __state;
+        StateBindingPatches.observed = __state;
 }
 
 [TestFixture]
@@ -300,61 +300,61 @@ public sealed partial class StateBindingTests
     [Test]
     public void Postfix_StateParameter_Primitive_ReadByReference()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByReference_Postfix));
         StaticMethodTargets.Void();
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateParameter_ReferenceType_ReadByReference()
     {
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByReference_Postfix));
         StaticMethodTargets.Void();
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_StateParameter_Struct_ReadByReference()
     {
-        StateBindingPatches.StructObserved = default;
+        StateBindingPatches.structObserved = default;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByReference_Postfix));
         StaticMethodTargets.Void();
-        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateAttribute_Primitive_ReadByReference()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByReference_Postfix));
         StaticMethodTargets.Void();
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateAttribute_ReferenceType_ReadByReference()
     {
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByReference_Postfix));
         StaticMethodTargets.Void();
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_StateAttribute_Struct_ReadByReference()
     {
-        StateBindingPatches.StructObserved = default;
+        StateBindingPatches.structObserved = default;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByReference_Postfix));
         StaticMethodTargets.Void();
-        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 }
 
@@ -364,19 +364,19 @@ public sealed partial class StateBindingTests : PatchTestBase
     [Test]
     public void Postfix_StateParameter_Primitive_ReadByValue()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByValue_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateParameter_Primitive_WriteByReference()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Primitive_WriteByReference_FirstPostfix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -384,25 +384,25 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(43));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(43));
     }
 
     [Test]
     public void Postfix_StateParameter_ReferenceType_ReadByValue()
     {
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByValue_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_StateParameter_ReferenceType_WriteByReference()
     {
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.Postfix_StateParameter_ReferenceType_WriteByReference_FirstPostfix));
@@ -411,50 +411,50 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("patched"));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("patched"));
     }
 
     [Test]
     public void Postfix_StateParameter_Struct_ReadByValue()
     {
-        StateBindingPatches.StructObserved = default;
+        StateBindingPatches.structObserved = default;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByValue_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateParameter_Struct_WriteByReference()
     {
-        StateBindingPatches.StructObserved = default;
+        StateBindingPatches.structObserved = default;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_WriteByReference_FirstPostfix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateParameter_Struct_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateAttribute_Primitive_ReadByValue()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByValue_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateAttribute_Primitive_WriteByReference()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Primitive_WriteByReference_FirstPostfix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -462,25 +462,25 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateAttribute_ReferenceType_ReadByValue()
     {
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByValue_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("original"));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("original"));
     }
 
     [Test]
     public void Postfix_StateAttribute_ReferenceType_WriteByReference()
     {
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.Postfix_StateAttribute_ReferenceType_WriteByReference_FirstPostfix));
@@ -489,38 +489,38 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("patched"));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("patched"));
     }
 
     [Test]
     public void Postfix_StateAttribute_Struct_ReadByValue()
     {
-        StateBindingPatches.StructObserved = default;
+        StateBindingPatches.structObserved = default;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByValue_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_ReadByValue_Postfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_StateAttribute_Struct_WriteByReference()
     {
-        StateBindingPatches.StructObserved = default;
+        StateBindingPatches.structObserved = default;
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_WriteByReference_Prefix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_WriteByReference_FirstPostfix));
         ApplyPatch(typeof(StateBindingPatches), nameof(StateBindingPatches.Postfix_StateAttribute_Struct_WriteByReference_SecondPostfix));
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.StructObserved.Value, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.structObserved.Value, Is.EqualTo(42));
     }
 
     [Test]
     public void StateSharing_SameClass_SameType_ImplicitAndAttribute_Shares()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.StateSharing_SameClass_SameType_ImplicitAndAttribute_Shares_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -528,13 +528,13 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void StateSharing_SameClass_SameType_SameExplicitKey_Shares()
     {
-        StateBindingPatches.Observed = 0;
+        StateBindingPatches.observed = 0;
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.StateSharing_SameClass_SameType_SameExplicitKey_Shares_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -542,14 +542,14 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
     }
 
     [Test]
     public void StateSharing_SameClass_SameType_DifferentExplicitKeys_Separate()
     {
-        StateBindingPatches.Observed = 0;
-        StateBindingPatches.SecondaryObserved = 0;
+        StateBindingPatches.observed = 0;
+        StateBindingPatches.secondaryObserved = 0;
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.StateSharing_SameClass_SameType_DifferentExplicitKeys_Separate_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -557,15 +557,15 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(41));
-        Assert.That(StateBindingPatches.SecondaryObserved, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(41));
+        Assert.That(StateBindingPatches.secondaryObserved, Is.EqualTo(42));
     }
 
     [Test]
     public void StateSharing_SameClass_SameType_KeyedAndUnkeyed_Separate()
     {
-        StateBindingPatches.Observed = 0;
-        StateBindingPatches.SecondaryObserved = 0;
+        StateBindingPatches.observed = 0;
+        StateBindingPatches.secondaryObserved = 0;
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.StateSharing_SameClass_SameType_KeyedAndUnkeyed_Separate_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -573,15 +573,15 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(41));
-        Assert.That(StateBindingPatches.SecondaryObserved, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(41));
+        Assert.That(StateBindingPatches.secondaryObserved, Is.EqualTo(42));
     }
 
     [Test]
     public void StateSharing_SameClass_DifferentTypes_Unkeyed_Separate()
     {
-        StateBindingPatches.Observed = 0;
-        StateBindingPatches.ReferenceObserved = null;
+        StateBindingPatches.observed = 0;
+        StateBindingPatches.referenceObserved = null;
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.StateSharing_SameClass_DifferentTypes_Unkeyed_Separate_Prefix));
         ApplyPatch(typeof(StateBindingPatches),
@@ -589,14 +589,14 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.EqualTo(42));
-        Assert.That(StateBindingPatches.ReferenceObserved, Is.EqualTo("state"));
+        Assert.That(StateBindingPatches.observed, Is.EqualTo(42));
+        Assert.That(StateBindingPatches.referenceObserved, Is.EqualTo("state"));
     }
 
     [Test]
     public void StateSharing_DifferentClasses_SameType_Unkeyed_Separate()
     {
-        StateBindingPatches.Observed = -1;
+        StateBindingPatches.observed = -1;
         ApplyPatch(typeof(StateBindingPatches),
             nameof(StateBindingPatches.StateSharing_DifferentClasses_SameType_Unkeyed_Separate_Prefix));
         ApplyPatch(typeof(OtherStateBindingPatches),
@@ -604,6 +604,6 @@ public sealed partial class StateBindingTests : PatchTestBase
 
         StaticMethodTargets.Void();
 
-        Assert.That(StateBindingPatches.Observed, Is.Zero);
+        Assert.That(StateBindingPatches.observed, Is.Zero);
     }
 }

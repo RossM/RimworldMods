@@ -2,14 +2,14 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class PatchMethodCombinationPatches
 {
-    public static int FirstObserved;
-    public static ClassMethodTargets? InstanceObserved;
+    public static int firstObserved;
+    public static ClassMethodTargets? instanceObserved;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_ExplicitParameterBinding_ReservedName_Result_BindsArgument(
         [Parameter("value")] int __result) =>
-        FirstObserved = __result;
+        firstObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
@@ -17,7 +17,7 @@ public static class PatchMethodCombinationPatches
         int value,
         [Parameter("value")] ref int replacement)
     {
-        FirstObserved = value;
+        firstObserved = value;
         replacement = 42;
     }
 
@@ -27,7 +27,7 @@ public static class PatchMethodCombinationPatches
         [ReturnValue] int original,
         [ReturnValue] ref int replacement)
     {
-        FirstObserved = original;
+        firstObserved = original;
         replacement = 42;
     }
 
@@ -37,7 +37,7 @@ public static class PatchMethodCombinationPatches
         [ReturnValue] int original,
         [ReturnValue] ref int replacement)
     {
-        FirstObserved = original;
+        firstObserved = original;
         replacement = 42;
         return false;
     }
@@ -48,7 +48,7 @@ public static class PatchMethodCombinationPatches
         [ReturnValue] int original,
         [ReturnValue] ref int replacement)
     {
-        FirstObserved = original;
+        firstObserved = original;
         replacement = 42;
     }
 
@@ -58,7 +58,7 @@ public static class PatchMethodCombinationPatches
         [ReturnValue] int original,
         [ReturnValue] ref int replacement)
     {
-        FirstObserved = original;
+        firstObserved = original;
         replacement = 42;
         return false;
     }
@@ -71,10 +71,10 @@ public static class PatchMethodCombinationPatches
         [Parameter("value")] ref int argument,
         [ReturnValue] ref int result)
     {
-        InstanceObserved = instance;
+        instanceObserved = instance;
         field = 41;
         argument = 42;
-        FirstObserved = argument;
+        firstObserved = argument;
         result = 43;
         return false;
     }
@@ -85,7 +85,7 @@ public static class PatchMethodCombinationPatches
         [Parameter("value", Scope.Outer)] int outerValue,
         [Parameter("value", Scope.Inner)] ref int innerValue)
     {
-        FirstObserved = outerValue;
+        firstObserved = outerValue;
         innerValue = 42;
     }
 }
@@ -96,91 +96,91 @@ public sealed class PatchMethodCombinationTests : PatchTestBase
     [Test]
     public void Prefix_ExplicitParameterBinding_ReservedName_Result_BindsArgument()
     {
-        PatchMethodCombinationPatches.FirstObserved = 0;
+        PatchMethodCombinationPatches.firstObserved = 0;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.Prefix_ExplicitParameterBinding_ReservedName_Result_BindsArgument));
 
         StaticMethodTargets.IntArgument(42);
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.EqualTo(42));
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_DuplicateArgumentBinding_ReadByValueThenWriteByReference()
     {
-        PatchMethodCombinationPatches.FirstObserved = 0;
+        PatchMethodCombinationPatches.firstObserved = 0;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.Prefix_DuplicateArgumentBinding_ReadByValueThenWriteByReference));
 
         int result = StaticMethodTargets.IntIdentity(1);
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.EqualTo(1));
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.EqualTo(1));
         Assert.That(result, Is.EqualTo(42));
     }
 
     [Test]
     public void Postfix_DuplicateResultBinding_ReadByValueThenWriteByReference()
     {
-        PatchMethodCombinationPatches.FirstObserved = 0;
+        PatchMethodCombinationPatches.firstObserved = 0;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.Postfix_DuplicateResultBinding_ReadByValueThenWriteByReference));
 
         int result = StaticMethodTargets.IntResult();
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.EqualTo(1));
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.EqualTo(1));
         Assert.That(result, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_DuplicateResultBinding_ReadByValueThenWriteByReference_SkipsTarget()
     {
-        PatchMethodCombinationPatches.FirstObserved = -1;
+        PatchMethodCombinationPatches.firstObserved = -1;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.Prefix_DuplicateResultBinding_ReadByValueThenWriteByReference_SkipsTarget));
 
         int result = StaticMethodTargets.ThrowingIntResult();
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.Zero);
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.Zero);
         Assert.That(result, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPostfix_DuplicateResultBinding_ReadByValueThenWriteByReference()
     {
-        PatchMethodCombinationPatches.FirstObserved = 0;
+        PatchMethodCombinationPatches.firstObserved = 0;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.InnerPostfix_DuplicateResultBinding_ReadByValueThenWriteByReference));
 
         int result = OuterStaticMethodTargets.IntResult();
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.EqualTo(1));
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.EqualTo(1));
         Assert.That(result, Is.EqualTo(42));
     }
 
     [Test]
     public void InnerPrefix_DuplicateResultBinding_ReadByValueThenWriteByReference_SkipsTarget()
     {
-        PatchMethodCombinationPatches.FirstObserved = -1;
+        PatchMethodCombinationPatches.firstObserved = -1;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.InnerPrefix_DuplicateResultBinding_ReadByValueThenWriteByReference_SkipsTarget));
 
         int result = OuterStaticMethodTargets.IntResult();
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.Zero);
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.Zero);
         Assert.That(result, Is.EqualTo(42));
     }
 
     [Test]
     public void Prefix_CombinedBindings_InstanceFieldArgumentResult_SkipsTarget()
     {
-        PatchMethodCombinationPatches.FirstObserved = 0;
-        PatchMethodCombinationPatches.InstanceObserved = null;
+        PatchMethodCombinationPatches.firstObserved = 0;
+        PatchMethodCombinationPatches.instanceObserved = null;
         var target = new ClassMethodTargets { foo = 1 };
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
@@ -188,8 +188,8 @@ public sealed class PatchMethodCombinationTests : PatchTestBase
 
         int result = target.IntIdentity(2);
 
-        Assert.That(PatchMethodCombinationPatches.InstanceObserved, Is.SameAs(target));
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.EqualTo(42));
+        Assert.That(PatchMethodCombinationPatches.instanceObserved, Is.SameAs(target));
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.EqualTo(42));
         Assert.That(target.foo, Is.EqualTo(41));
         Assert.That(target.Value, Is.Zero);
         Assert.That(result, Is.EqualTo(43));
@@ -198,7 +198,7 @@ public sealed class PatchMethodCombinationTests : PatchTestBase
     [Test]
     public void InnerPrefix_CombinedScopes_SameNamedRefArgument_WritesInnerOnly()
     {
-        PatchMethodCombinationPatches.FirstObserved = 0;
+        PatchMethodCombinationPatches.firstObserved = 0;
         ApplyPatch(
             typeof(PatchMethodCombinationPatches),
             nameof(PatchMethodCombinationPatches.InnerPrefix_CombinedScopes_SameNamedRefArgument_WritesInnerOnly));
@@ -206,7 +206,7 @@ public sealed class PatchMethodCombinationTests : PatchTestBase
 
         int result = OuterStaticMethodTargets.SameNamedRefArgument(ref outerValue);
 
-        Assert.That(PatchMethodCombinationPatches.FirstObserved, Is.EqualTo(7));
+        Assert.That(PatchMethodCombinationPatches.firstObserved, Is.EqualTo(7));
         Assert.That(outerValue, Is.EqualTo(7));
         Assert.That(result, Is.EqualTo(42));
     }
