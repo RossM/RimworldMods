@@ -19,7 +19,7 @@ namespace Disharmony;
 ///         same function or accessing the same field compare equal.
 ///     </para>
 /// </remarks>
-internal abstract class Invocation
+internal abstract record Invocation
 {
     public virtual bool HasThis => !IsStatic;
 
@@ -50,9 +50,12 @@ internal abstract class Invocation
     public static implicit operator Invocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
 
     public override string ToString() => $"[{GetType().FullName}({FullName})]";
+
+    public virtual bool Equals(Invocation? other) => other is not null && GetType() == other.GetType();
+    public override int GetHashCode() => GetType().GetHashCode();
 }
 
-internal class EmptyInvocation : Invocation
+internal record EmptyInvocation : Invocation
 {
     public override string FullName => "";
 
@@ -72,9 +75,12 @@ internal class EmptyInvocation : Invocation
 
     protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
     public override IEnumerable<CodeInstruction> GetCodeInstructions() => [];
+
+    public virtual bool Equals(EmptyInvocation? other) => base.Equals(other);
+    public override int GetHashCode() => base.GetHashCode();
 }
 
-internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
+internal record FieldInvocation(FieldInfo FieldInfo) : Invocation
 {
     public override string FullName => FieldInfo.FullName;
     public override Type ReturnType => FieldInfo.FieldType;
@@ -83,35 +89,30 @@ internal class FieldInvocation(FieldInfo fieldInfo) : Invocation
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
     public override Type InstanceType => FieldInfo.DeclaringType;
 
-    // ReSharper disable once MemberCanBeProtected.Global
-    public FieldInfo FieldInfo { get; } = fieldInfo;
-
 
     public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo);
 
-    public override bool Equals(object? obj)
+    public virtual bool Equals(FieldInvocation? other)
     {
-        if (obj is null)
+        if (other is null)
             return false;
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(this, other))
             return true;
-        if (obj.GetType() != GetType())
-            return false;
-        return Equals((FieldInvocation)obj);
+        return base.Equals(other) && FieldInfo.Equals(other.FieldInfo);
     }
 
-    protected bool Equals(FieldInvocation other) => FieldInfo.Equals(other.FieldInfo);
-
-    public override int GetHashCode() => FieldInfo.GetHashCode();
-
-    public static bool operator ==(FieldInvocation? left, FieldInvocation? right) => Equals(left, right);
-
-    public static bool operator !=(FieldInvocation? left, FieldInvocation? right) => !Equals(left, right);
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ FieldInfo.GetHashCode();
+        }
+    }
 }
 
-internal class SetFieldInvocation(FieldInfo fieldInfo) : FieldInvocation(fieldInfo)
+internal record SetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldInfo)
 {
     public override Type ReturnType => typeof(void);
 
@@ -123,17 +124,24 @@ internal class SetFieldInvocation(FieldInfo fieldInfo) : FieldInvocation(fieldIn
     public const string ValueFieldName = "value";
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Stsfld : OpCodes.Stfld, FieldInfo);
+
+    public virtual bool Equals(SetFieldInvocation? other) => base.Equals(other);
+
+    public override int GetHashCode() => base.GetHashCode();
 }
 
-internal abstract class MethodBaseInvocation : Invocation
+internal abstract record MethodBaseInvocation : Invocation
 {
     public abstract MethodBase MethodBase { get; }
 
     public static implicit operator MethodBaseInvocation(MethodInfo method) => new MethodInvocation(method);
     public static implicit operator MethodBaseInvocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
+
+    public virtual bool Equals(MethodBaseInvocation? other) => base.Equals(other);
+    public override int GetHashCode() => base.GetHashCode();
 }
 
-internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
+internal record MethodInvocation(MethodInfo MethodInfo) : MethodBaseInvocation
 {
     public override string FullName => MethodInfo.FullName;
     public override Type ReturnType => MethodInfo.ReturnType;
@@ -153,37 +161,35 @@ internal class MethodInvocation(MethodInfo methodInfo) : MethodBaseInvocation
             ? [InstanceParameterName, .. MethodInfo.GetParameters().Select(p => p.Name)]
             : [.. MethodInfo.GetParameters().Select(p => p.Name)];
 
-    public MethodInfo MethodInfo { get; } = methodInfo;
-
     public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
     protected override CodeInstruction GetCodeInstruction() => new(MethodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, MethodInfo);
 
-    public override bool Equals(object? obj)
+    public virtual bool Equals(MethodInvocation? other)
     {
-        if (obj is null)
+        if (other is null)
             return false;
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(this, other))
             return true;
-        if (obj.GetType() != GetType())
-            return false;
-        return Equals((MethodInvocation)obj);
+        return base.Equals(other) && MethodInfo.Equals(other.MethodInfo);
     }
 
-    protected bool Equals(MethodInvocation other) => MethodInfo.Equals(other.MethodInfo);
-
-    public override int GetHashCode() => MethodInfo.GetHashCode();
-
-    public static bool operator ==(MethodInvocation? left, MethodInvocation? right) => Equals(left, right);
-
-    public static bool operator !=(MethodInvocation? left, MethodInvocation? right) => !Equals(left, right);
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = base.GetHashCode();
+            hashCode = (hashCode * 397) ^ MethodInfo.GetHashCode();
+            return hashCode;
+        }
+    }
 }
 
 /// <summary>
 ///     This class represents a <see cref="OpCodes.Newobj" /> call of a constructor.
 /// </summary>
-/// <param name="constructorInfo"></param>
-internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBaseInvocation
+/// <param name="ConstructorInfo"></param>
+internal record ConstructorInvocation(ConstructorInfo ConstructorInfo) : MethodBaseInvocation
 {
     public override string FullName => ConstructorInfo.FullName;
     public override Type ReturnType => ConstructorInfo.DeclaringType;
@@ -194,36 +200,33 @@ internal class ConstructorInvocation(ConstructorInfo constructorInfo) : MethodBa
     public override Type InstanceType => ConstructorInfo.DeclaringType;
 
     public override MethodBase MethodBase => ConstructorInfo;
-    public ConstructorInfo ConstructorInfo { get; } = constructorInfo;
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, ConstructorInfo);
 
-    public override bool Equals(object? obj)
+    public virtual bool Equals(ConstructorInvocation? other)
     {
-        if (obj is null)
+        if (other is null)
             return false;
-        if (ReferenceEquals(this, obj))
+        if (ReferenceEquals(this, other))
             return true;
-        if (obj.GetType() != GetType())
-            return false;
-        return Equals((ConstructorInvocation)obj);
+        return base.Equals(other) && ConstructorInfo.Equals(other.ConstructorInfo);
     }
 
-    protected bool Equals(ConstructorInvocation other) => ConstructorInfo.Equals(other.ConstructorInfo);
-
-    public override int GetHashCode() => ConstructorInfo.GetHashCode();
-
-    public static bool operator ==(ConstructorInvocation? left, ConstructorInvocation? right) => Equals(left, right);
-
-    public static bool operator !=(ConstructorInvocation? left, ConstructorInvocation? right) => !Equals(left, right);
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ ConstructorInfo.GetHashCode();
+        }
+    }
 }
 
 /// <summary>
 ///     This class represents a constructor call as seen from inside the constructor itself, where it
 ///     functions like an ordinary instance method returning void.
 /// </summary>
-/// <param name="constructorInfo"></param>
-internal class PatchableConstructorInvocation(ConstructorInfo constructorInfo) : ConstructorInvocation(constructorInfo)
+/// <param name="ConstructorInfo"></param>
+internal record PatchableConstructorInvocation(ConstructorInfo ConstructorInfo) : ConstructorInvocation(ConstructorInfo)
 {
     public override Type ReturnType => typeof(void);
     public override bool IsStatic => ConstructorInfo.IsStatic;
@@ -240,9 +243,12 @@ internal class PatchableConstructorInvocation(ConstructorInfo constructorInfo) :
             : [.. ConstructorInfo.GetParameters().Select(p => p.Name)];
 
     protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
+
+    public virtual bool Equals(PatchableConstructorInvocation? other) => base.Equals(other);
+    public override int GetHashCode() => base.GetHashCode();
 }
 
-internal abstract class ConstantInvocation : Invocation
+internal abstract record ConstantInvocation : Invocation
 {
     public override bool IsStatic => true;
     public override Type InstanceType => typeof(void);
@@ -250,15 +256,17 @@ internal abstract class ConstantInvocation : Invocation
     public override Type[] ParameterTypes => [];
 
     public override string[] ParameterNames => [];
+
+    public virtual bool Equals(ConstantInvocation? other) => base.Equals(other);
+    public override int GetHashCode() => base.GetHashCode();
 }
 
-internal class ConstantIntInvocation(int value) : ConstantInvocation
+internal record ConstantIntInvocation(int Value) : ConstantInvocation
 {
-    public override string FullName => value.ToString();
+    public override string FullName => Value.ToString();
     public override Type ReturnType => typeof(int);
-    public int Value => value;
 
-    protected override CodeInstruction GetCodeInstruction() => value switch
+    protected override CodeInstruction GetCodeInstruction() => Value switch
     {
         -1 => new(OpCodes.Ldc_I4_M1),
         0 => new(OpCodes.Ldc_I4_0),
@@ -270,43 +278,124 @@ internal class ConstantIntInvocation(int value) : ConstantInvocation
         6 => new(OpCodes.Ldc_I4_6),
         7 => new(OpCodes.Ldc_I4_7),
         8 => new(OpCodes.Ldc_I4_8),
-        >= -128 and <= 127 => new(OpCodes.Ldc_I4_S, value),
-        _ => new(OpCodes.Ldc_I4, value),
+        >= -128 and <= 127 => new(OpCodes.Ldc_I4_S, Value),
+        _ => new(OpCodes.Ldc_I4, Value),
     };
+
+    public virtual bool Equals(ConstantIntInvocation? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ Value;
+        }
+    }
 }
 
-internal class ConstantLongInvocation(long value) : ConstantInvocation
+internal record ConstantLongInvocation(long Value) : ConstantInvocation
 {
-    public override string FullName => value.ToString();
+    public override string FullName => Value.ToString();
     public override Type ReturnType => typeof(long);
-    public long Value => value;
 
-    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_I8, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_I8, Value);
+
+    public virtual bool Equals(ConstantLongInvocation? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
+        }
+    }
 }
 
-internal class ConstantStringInvocation(string value) : ConstantInvocation
+internal record ConstantStringInvocation(string Value) : ConstantInvocation
 {
-    public override string FullName => $"\"{value}\"";
+    public override string FullName => $"\"{Value}\"";
     public override Type ReturnType => typeof(string);
-    public string Value => value;
 
-    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldstr, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldstr, Value);
+
+    public virtual bool Equals(ConstantStringInvocation? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
+        }
+    }
 }
 
-internal class ConstantFloatInvocation(float value) : ConstantInvocation
+internal record ConstantFloatInvocation(float Value) : ConstantInvocation
 {
-    public override string FullName => value.ToString(CultureInfo.InvariantCulture);
+    public override string FullName => Value.ToString(CultureInfo.InvariantCulture);
     public override Type ReturnType => typeof(float);
-    public float Value => value;
 
-    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R4, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R4, Value);
+
+    public virtual bool Equals(ConstantFloatInvocation? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
+        }
+    }
 }
 
-internal class ConstantDoubleInvocation(double value) : ConstantInvocation
+internal record ConstantDoubleInvocation(double Value) : ConstantInvocation
 {
-    public override string FullName => value.ToString(CultureInfo.InvariantCulture);
+    public override string FullName => Value.ToString(CultureInfo.InvariantCulture);
     public override Type ReturnType => typeof(double);
-    public double Value => value;
 
-    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R8, value);
+    protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R8, Value);
+
+    public virtual bool Equals(ConstantDoubleInvocation? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return base.Equals(other) && Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
+        }
+    }
 }
