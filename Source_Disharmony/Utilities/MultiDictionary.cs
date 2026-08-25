@@ -6,7 +6,7 @@ namespace Disharmony.Utilities;
 /// <summary>
 ///     Associates each key with an insertion-ordered collection of values.
 /// </summary>
-internal sealed class MultiDictionary<TKey, TElement> : IEnumerable<IGrouping<TKey, TElement>>
+internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
 {
     private class Grouping(TKey key, IEnumerable<TElement> values) : IGrouping<TKey, TElement>
     {
@@ -15,11 +15,16 @@ internal sealed class MultiDictionary<TKey, TElement> : IEnumerable<IGrouping<TK
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)values).GetEnumerator();
     }
 
-    private IEnumerable<IGrouping<TKey, TElement>> Groups => valuesByKey.Select(kvp => new Grouping(kvp.Key, kvp.Value));
+    private IEnumerable<IGrouping<TKey, TElement>> EnumerableImplementation => valuesByKey.Select(kvp => new Grouping(kvp.Key, kvp.Value));
 
+    public int Count => valuesByKey.Count;
+
+    
     private readonly Dictionary<TKey, List<TElement>> valuesByKey = [];
-
+    
     public IEnumerable<TElement> this[TKey key] => valuesByKey.TryGetValue(key, out var values) ? values : Array.Empty<TElement>();
+
+    public bool Contains(TKey key) => valuesByKey.ContainsKey(key);
 
     public void Add(TKey key, TElement value)
     {
@@ -61,6 +66,6 @@ internal sealed class MultiDictionary<TKey, TElement> : IEnumerable<IGrouping<TK
 
     public void Clear() => valuesByKey.Clear();
 
-    public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => Groups.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Groups).GetEnumerator();
+    public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => EnumerableImplementation.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)EnumerableImplementation).GetEnumerator();
 }
