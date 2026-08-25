@@ -53,8 +53,7 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
     {
         if (Operand != null)
             return $"{OpCode} {{{OperandDescription(Operand)}}}";
-        else
-            return $"{OpCode}";
+        return $"{OpCode}";
     }
 
     public bool Equals(ILInstruction? other)

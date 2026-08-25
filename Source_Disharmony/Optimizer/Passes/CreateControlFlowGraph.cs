@@ -70,7 +70,7 @@ internal class CreateControlFlowGraph : Pass
         Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges, Arguments, Locals, validate: false);
 
         ProtectedRegionRewriteVisitor visitor = new ProtectedRegionRewriteVisitor(ExceptionGroups);
-        Optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);
+        Optimizer.cfg = visitor.Visit(Optimizer.cfg);
     }
 
     private void CreateArguments()
@@ -423,8 +423,8 @@ internal class ProtectedRegionRewriteVisitor(Dictionary<ProtectedRegion, Excepti
         if (replacements.TryGetValue(region, out var value))
             return value;
 
-        var parent = (Region)Visit(region.Parent);
-        var exceptionGroup = (ExceptionGroup)(this).Visit(exceptionGroups[region]);
+        var parent = Visit(region.Parent);
+        var exceptionGroup = Visit(exceptionGroups[region]);
 
         return replacements[region] = new ProtectedRegion(region.EntryLabel, parent, exceptionGroup);
     }

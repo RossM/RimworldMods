@@ -5,7 +5,7 @@ internal class DeduceTypes(Optimizer optimizer) : Pass(optimizer)
     protected internal override void RunInternal()
     {
         var visitor = new TypeVisitor(Optimizer);
-        Optimizer.cfg = (ControlFlowGraph)visitor.Visit(Optimizer.cfg);
+        Optimizer.cfg = visitor.Visit(Optimizer.cfg);
     }
 }
 
@@ -17,7 +17,7 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
 
     protected override Op Visit(AssignmentOp op)
     {
-        var input = (Op)Visit(op.Input);
+        var input = Visit(op.Input);
 
         if (op.Output is StackSlot stackSlot)
         {
@@ -39,7 +39,7 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
 
     protected override Op Visit(ILOp op)
     {
-        var inputs = op.Inputs.Select(input => (Op)Visit(input)).ToList();
+        var inputs = op.Inputs.Select(Visit).ToList();
 
         var data = OpCodeData.Get(op.IL.OpCode);
 
@@ -70,8 +70,8 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
         {
             dirty = false;
 
-            var blocks = cfg.BasicBlocks.Select(block => (BasicBlock)(this).Visit(block)).ToList();
-            var edges = cfg.Edges.Select(edge => (Edge)(this).Visit(edge)).ToList();
+            var blocks = cfg.BasicBlocks.Select(Visit).ToList();
+            var edges = cfg.Edges.Select(Visit).ToList();
 
             if (!dirty)
                 return new ControlFlowGraph(cfg.RootRegion, blocks, edges, cfg.Arguments, cfg.Locals);
