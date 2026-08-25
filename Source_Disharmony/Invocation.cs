@@ -46,10 +46,6 @@ internal abstract record Invocation
 
     public virtual IEnumerable<CodeInstruction> GetCodeInstructions() => [GetCodeInstruction()];
 
-    public static implicit operator Invocation(FieldInfo field) => new FieldInvocation(field);
-    public static implicit operator Invocation(MethodInfo method) => new MethodInvocation(method);
-    public static implicit operator Invocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
-
     public override string ToString() => $"[{GetType().FullName}({FullName})]";
 
     public virtual bool Equals(Invocation? other) => other is not null && GetType() == other.GetType();
@@ -90,8 +86,6 @@ internal record FieldInvocation(FieldInfo FieldInfo) : Invocation
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
     public override Type InstanceType => FieldInfo.DeclaringType;
 
-
-    public static implicit operator FieldInvocation(FieldInfo field) => new(field);
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo);
 
@@ -135,9 +129,6 @@ internal abstract record MethodBaseInvocation : Invocation
 {
     public abstract MethodBase MethodBase { get; }
 
-    public static implicit operator MethodBaseInvocation(MethodInfo method) => new MethodInvocation(method);
-    public static implicit operator MethodBaseInvocation(ConstructorInfo constructor) => new ConstructorInvocation(constructor);
-
     public virtual bool Equals(MethodBaseInvocation? other) => base.Equals(other);
     public override int GetHashCode() => base.GetHashCode();
 }
@@ -161,8 +152,6 @@ internal record MethodInvocation(MethodInfo MethodInfo) : MethodBaseInvocation
         MethodInfo.HasThis
             ? [InstanceParameterName, .. MethodInfo.GetParameters().Select(p => p.Name)]
             : [.. MethodInfo.GetParameters().Select(p => p.Name)];
-
-    public static implicit operator MethodInvocation(MethodInfo method) => new(method);
 
     protected override CodeInstruction GetCodeInstruction() => new(MethodInfo.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, MethodInfo);
 

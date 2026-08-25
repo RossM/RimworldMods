@@ -331,7 +331,7 @@ internal class PatchRegistry
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
 
         MethodBaseInvocation outer = GetOuterInvocation(target);
-        AddPatch(method, patchType, outer, inner, options, stateGroupKey);
+        AddPatch(new MethodInvocation(method), patchType, outer, inner, options, stateGroupKey);
     }
 
     private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
@@ -361,7 +361,7 @@ internal class PatchRegistry
             var iterator = outerMethod.MethodInfo.GetIteratorImplementation();
             if (iterator != null)
             {
-                outer = iterator;
+                outer = new MethodInvocation(iterator);
                 isIterator = true;
             }
         }
