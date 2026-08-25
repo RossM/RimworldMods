@@ -9,7 +9,7 @@ internal class ReplaceVisitor : RewriteVisitor
 
 internal class RewriteVisitor
 {
-    public Node Visit(Op op) => op switch
+    public Op Visit(Op op) => op switch
     {
         AssignmentOp assignmentOp => Visit(assignmentOp),
         Argument argument => Visit(argument),
@@ -21,7 +21,7 @@ internal class RewriteVisitor
         _ => throw new ArgumentOutOfRangeException(nameof(op), op, null),
     };
 
-    public Node Visit(Branch branch) => branch switch
+    public Branch Visit(Branch branch) => branch switch
     {
         ConditionalBranch conditionalBranch => Visit(conditionalBranch),
         Jump jump => Visit(jump),
@@ -30,10 +30,10 @@ internal class RewriteVisitor
         Return @return => Visit(@return),
         Throw @throw => Visit(@throw),
         UnconditionalBranch unconditionalBranch => Visit(unconditionalBranch),
-        _ => throw new ArgumentOutOfRangeException(nameof(branch)),
+        _ => throw new ArgumentOutOfRangeException(nameof(branch), branch, null),
     };
 
-    public Node Visit(Region region) => region switch
+    public Region Visit(Region region) => region switch
     {
         CatchRegion catchRegion => Visit(catchRegion),
         FaultRegion faultRegion => Visit(faultRegion),
@@ -41,140 +41,140 @@ internal class RewriteVisitor
         HandlerRegion handlerRegion => Visit(handlerRegion),
         ProtectedRegion protectedRegion => Visit(protectedRegion),
         RootRegion rootRegion => Visit(rootRegion),
-        _ => throw new ArgumentOutOfRangeException(nameof(region)),
+        _ => throw new ArgumentOutOfRangeException(nameof(region), region, null),
     };
 
     protected virtual Op DefaultVisit(Op op) => op;
 
-    public virtual Node Visit(AssignmentOp op)
+    protected virtual Op Visit(AssignmentOp op)
     {
-        var input = (Op)this.Visit(op.Input);
-        var output = (Variable)this.Visit(op.Output);
+        var input = Visit(op.Input);
+        var output = (Variable)Visit(op.Output);
         if (input == op.Input && output == op.Output)
             return DefaultVisit(op);
         return DefaultVisit(new AssignmentOp(output, input));
     }
 
-    public virtual Node Visit(ILOp op)
+    protected virtual Op Visit(ILOp op)
     {
-        var inputs = op.Inputs.Select(input => (Op)this.Visit(input)).ToList();
+        var inputs = op.Inputs.Select(Visit).ToList();
         if (inputs.SequenceEqual(op.Inputs))
             return DefaultVisit(op);
         return DefaultVisit(new ILOp(op.IL, inputs, op.Type));
     }
 
-    public virtual Node Visit(StackSlot op) => DefaultVisit(op);
-    public virtual Node Visit(Argument op) => DefaultVisit(op);
-    public virtual Node Visit(Local op) => DefaultVisit(op);
-    public virtual Node Visit(Temporary op) => DefaultVisit(op);
-    public virtual Node Visit(VoidOp op) => DefaultVisit(op);
-    public virtual Node Visit(RootRegion region) => region;
+    protected virtual Op Visit(StackSlot op) => DefaultVisit(op);
+    protected virtual Op Visit(Argument op) => DefaultVisit(op);
+    protected virtual Op Visit(Local op) => DefaultVisit(op);
+    protected virtual Op Visit(Temporary op) => DefaultVisit(op);
+    protected virtual Op Visit(VoidOp op) => DefaultVisit(op);
+    protected virtual Region Visit(RootRegion region) => region;
 
-    public virtual Node Visit(ProtectedRegion region)
+    protected virtual Region Visit(ProtectedRegion region)
     {
-        var parent = (Region)Visit(region.Parent);
-        var group = (ExceptionGroup)this.Visit(region.Group);
+        var parent = Visit(region.Parent);
+        var group = Visit(region.Group);
         if (parent == region.Parent && group == region.Group)
             return region;
         return new ProtectedRegion(region.EntryLabel, parent, group);
     }
 
-    public virtual Node Visit(CatchRegion region)
+    protected virtual Region Visit(CatchRegion region)
     {
-        var parent = (Region)this.Visit(region.Parent);
-        var incomingException = (StackSlot)this.Visit((Op)region.IncomingException);
+        var parent = Visit(region.Parent);
+        var incomingException = (StackSlot)Visit(region.IncomingException);
         if (parent == region.Parent && incomingException == region.IncomingException)
             return region;
         return new CatchRegion(region.EntryLabel, parent, incomingException);
     }
 
-    public virtual Node Visit(FinallyRegion region)
+    protected virtual Region Visit(FinallyRegion region)
     {
-        var parent = (Region)this.Visit(region.Parent);
+        var parent = Visit(region.Parent);
         if (parent == region.Parent)
             return region;
         return new FinallyRegion(region.EntryLabel, parent);
     }
 
-    public virtual Node Visit(FaultRegion region)
+    protected virtual Region Visit(FaultRegion region)
     {
-        var parent = (Region)this.Visit(region.Parent);
+        var parent = Visit(region.Parent);
         if (parent == region.Parent)
             return region;
         return new FaultRegion(region.EntryLabel, parent);
     }
 
-    public virtual Node Visit(ExceptionGroup group)
+    public virtual ExceptionGroup Visit(ExceptionGroup group)
     {
-        var handlerRegions = group.HandlerRegions.Select(region => (HandlerRegion)this.Visit(region)).ToList();
+        var handlerRegions = group.HandlerRegions.Select(region => (HandlerRegion)Visit(region)).ToList();
         if (handlerRegions.SequenceEqual(group.HandlerRegions))
             return group;
         return new ExceptionGroup(handlerRegions);
     }
 
-    public virtual Node Visit(UnconditionalBranch branch) => branch;
-    public virtual Node Visit(Leave branch) => branch;
+    protected virtual Branch Visit(UnconditionalBranch branch) => branch;
+    protected virtual Branch Visit(Leave branch) => branch;
 
-    public virtual Node Visit(ConditionalBranch branch)
+    protected virtual Branch Visit(ConditionalBranch branch)
     {
-        var inputs = branch.Inputs.Select(input => (Op)this.Visit(input)).ToList();
+        var inputs = branch.Inputs.Select(Visit).ToList();
         if (inputs.SequenceEqual(branch.Inputs))
             return branch;
         return new ConditionalBranch(branch.OpCode, inputs, branch.Labels);
     }
 
-    public virtual Node Visit(Throw branch)
+    protected virtual Branch Visit(Throw branch)
     {
-        var exception = (Op)this.Visit(branch.Exception);
+        var exception = Visit(branch.Exception);
         if (exception == branch.Exception)
             return branch;
         return new Throw(exception);
     }
 
-    public virtual Node Visit(Rethrow branch) => branch;
+    protected virtual Branch Visit(Rethrow branch) => branch;
 
-    public virtual Node Visit(Return branch)
+    protected virtual Branch Visit(Return branch)
     {
-        var value = (Op)this.Visit(branch.Value);
+        var value = Visit(branch.Value);
         if (value == branch.Value)
             return branch;
         return new Return(branch.IL, value);
     }
 
-    public virtual Node Visit(Jump branch)
+    protected virtual Branch Visit(Jump branch)
     {
-        var value = (Op)this.Visit(branch.Value);
+        var value = Visit(branch.Value);
         if (value == branch.Value)
             return branch;
         return new Jump(value);
     }
 
-    public virtual Node Visit(BasicBlock block)
+    public virtual BasicBlock Visit(BasicBlock block)
     {
-        var ops = block.Ops.Select(op => (Op)this.Visit(op)).ToList();
-        var branch = (Branch)this.Visit(block.Branch);
-        var region = (Region)this.Visit(block.Region);
+        var ops = block.Ops.Select(Visit).ToList();
+        var branch = Visit(block.Branch);
+        var region = Visit(block.Region);
         if (ops.SequenceEqual(block.Ops) && branch == block.Branch && region == block.Region)
             return block;
         return new BasicBlock(block.Label, ops, region, branch);
     }
 
-    public virtual Node Visit(Edge edge)
+    public virtual Edge Visit(Edge edge)
     {
-        var edgeAssignments = edge.EdgeAssignments.Select(op => (AssignmentOp)this.Visit((Op)op)).Where(op => op.Input != op.Output)
+        var edgeAssignments = edge.EdgeAssignments.Select(op => (AssignmentOp)Visit(op)).Where(op => op.Input != op.Output)
             .ToList();
         if (edgeAssignments.SequenceEqual(edge.EdgeAssignments))
             return edge;
         return new Edge(edge.Source, edge.Destination, edgeAssignments);
     }
 
-    public virtual Node Visit(ControlFlowGraph cfg)
+    public virtual ControlFlowGraph Visit(ControlFlowGraph cfg)
     {
-        var rootRegion = (RootRegion)this.Visit((Region)cfg.RootRegion);
-        var blocks = cfg.BasicBlocks.Select(block => (BasicBlock)this.Visit(block)).ToList();
-        var edges = cfg.Edges.Select(edge => (Edge)this.Visit(edge)).ToList();
-        var arguments = cfg.Arguments.Select(argument => (Argument)this.Visit((Op)argument)).ToList();
-        var locals = cfg.Locals.Select(local => (Local)this.Visit((Op)local)).ToList();
+        var rootRegion = (RootRegion)Visit(cfg.RootRegion);
+        var blocks = cfg.BasicBlocks.Select(Visit).ToList();
+        var edges = cfg.Edges.Select(Visit).ToList();
+        var arguments = cfg.Arguments.Select(argument => (Argument)Visit(argument)).ToList();
+        var locals = cfg.Locals.Select(local => (Local)Visit(local)).ToList();
 
         if (rootRegion == cfg.RootRegion && blocks.SequenceEqual(cfg.BasicBlocks) && edges.SequenceEqual(cfg.Edges) &&
             arguments.SequenceEqual(cfg.Arguments) && locals.SequenceEqual(cfg.Locals))

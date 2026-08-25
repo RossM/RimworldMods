@@ -418,12 +418,12 @@ internal class ProtectedRegionRewriteVisitor(Dictionary<ProtectedRegion, Excepti
 {
     private readonly Dictionary<ProtectedRegion, ProtectedRegion> replacements = [];
 
-    public override Node Visit(ProtectedRegion region)
+    protected override Region Visit(ProtectedRegion region)
     {
         if (replacements.TryGetValue(region, out var value))
             return value;
 
-        var parent = (Region)this.Visit(region.Parent);
+        var parent = (Region)Visit(region.Parent);
         var exceptionGroup = (ExceptionGroup)(this).Visit(exceptionGroups[region]);
 
         return replacements[region] = new ProtectedRegion(region.EntryLabel, parent, exceptionGroup);

@@ -8,7 +8,7 @@ public sealed class RewriteVisitorTests
 
     private sealed class RootRegionReplacingVisitor(RootRegion original, RootRegion replacement) : RewriteVisitor
     {
-        public override Node Visit(RootRegion region) => ReferenceEquals(region, original) ? replacement : region;
+        protected override Region Visit(RootRegion region) => ReferenceEquals(region, original) ? replacement : region;
     }
 
     [Test]

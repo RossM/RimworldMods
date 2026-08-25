@@ -15,9 +15,9 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
 
     private readonly Dictionary<int, StackSlot> stackSlots = [];
 
-    public override Node Visit(AssignmentOp op)
+    protected override Op Visit(AssignmentOp op)
     {
-        var input = (Op)this.Visit(op.Input);
+        var input = (Op)Visit(op.Input);
 
         if (op.Output is StackSlot stackSlot)
         {
@@ -30,16 +30,16 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
             }
         }
 
-        var output = (Variable)this.Visit(op.Output);
+        var output = (Variable)Visit(op.Output);
 
         if (input == op.Input && output == op.Output)
             return DefaultVisit(op);
         return DefaultVisit(new AssignmentOp(output, input));
     }
 
-    public override Node Visit(ILOp op)
+    protected override Op Visit(ILOp op)
     {
-        var inputs = op.Inputs.Select(input => (Op)this.Visit(input)).ToList();
+        var inputs = op.Inputs.Select(input => (Op)Visit(input)).ToList();
 
         var data = OpCodeData.Get(op.IL.OpCode);
 
@@ -60,11 +60,11 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
         return DefaultVisit(new ILOp(op.IL, inputs, resultType));
     }
 
-    public override Node Visit(StackSlot op) => GetReplacement(op);
+    protected override Op Visit(StackSlot op) => GetReplacement(op);
 
     private StackSlot GetReplacement(StackSlot op) => stackSlots.TryGetValue(op.Id, out StackSlot replacement) ? replacement : op;
 
-    public override Node Visit(ControlFlowGraph cfg)
+    public override ControlFlowGraph Visit(ControlFlowGraph cfg)
     {
         while (true)
         {
