@@ -5,17 +5,6 @@ public sealed class ControlFlowGraphTests
 {
     private static readonly ILInstruction Ret = new(OpCodes.Ret, null!, []);
 
-    private sealed class RecordingVisitor : Visitor
-    {
-        public ControlFlowGraph? VisitedGraph { get; private set; }
-
-        public override Node Visit(ControlFlowGraph cfg)
-        {
-            VisitedGraph = cfg;
-            return cfg;
-        }
-    }
-
     [Test]
     public void Constructor_PreservesComponentsAndIndexesBlocks()
     {
@@ -257,23 +246,6 @@ public sealed class ControlFlowGraphTests
         {
             Assert.That(graph.GetBlock(block.Label), Is.SameAs(block));
             Assert.That(graph.OutgoingEdges(block), Is.Empty);
-        });
-    }
-
-    [Test]
-    public void Accept_DispatchesToControlFlowGraphVisitor()
-    {
-        RootRegion root = new(new BlockLabel(0));
-        BasicBlock block = new(root.EntryLabel, [], root, new Return(Ret, new VoidOp()));
-        ControlFlowGraph graph = new(root, [block], [], [], []);
-        RecordingVisitor visitor = new();
-
-        Node result = graph.Accept(visitor);
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(visitor.VisitedGraph, Is.SameAs(graph));
-            Assert.That(result, Is.SameAs(graph));
         });
     }
 

@@ -231,8 +231,6 @@ internal record ControlFlowGraph : Node
         }
     }
 
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override void DebugPrint()
     {
         FileLog.LogBuffered("ControlFlowGraph {");

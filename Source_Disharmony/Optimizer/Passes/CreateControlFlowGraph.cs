@@ -423,8 +423,8 @@ internal class ProtectedRegionRewriteVisitor(Dictionary<ProtectedRegion, Excepti
         if (replacements.TryGetValue(region, out var value))
             return value;
 
-        var parent = (Region)region.Parent.Accept(this);
-        var exceptionGroup = (ExceptionGroup)exceptionGroups[region].Accept(this);
+        var parent = (Region)this.Visit(region.Parent);
+        var exceptionGroup = (ExceptionGroup)(this).Visit(exceptionGroups[region]);
 
         return replacements[region] = new ProtectedRegion(region.EntryLabel, parent, exceptionGroup);
     }

@@ -19,8 +19,6 @@ internal abstract record Op(Type Type) : Node;
 /// <param name="Input">The <see cref="Op" /> that produces the value.</param>
 internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void))
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"{Output} := {Input}";
 }
 
@@ -95,8 +93,6 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
 /// <param name="Type">The type of value produced by the instruction.</param>
 internal sealed record ILOp(ILInstruction IL, IReadOnlyList<Op> Inputs, Type Type) : Op(Type)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => Inputs.Count > 0 ? $"{IL} ({string.Join(", ", Inputs)}) :{Type}" : $"{IL} :{Type}";
 
     public bool Equals(ILOp? other)
@@ -135,8 +131,6 @@ internal abstract record Variable(Type Type) : Op(Type);
 /// <param name="Type">The type of value stored in the slot.</param>
 internal sealed record StackSlot(int Depth, Type Type, int Id) : Variable(Type)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"Stack{Id}_{Depth} :{Type}";
 }
 
@@ -157,7 +151,6 @@ internal abstract record MemoryVariable(Type Type) : Variable(Type)
 internal sealed record Argument(int Index, Type Type) : MemoryVariable(Type)
 {
     public override int Index { get; } = Index;
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => $"Arg{Index} :{Type}";
 }
@@ -194,7 +187,6 @@ internal sealed record Local : MemoryVariable
     }
 
     public LocalTracker Tracker { get; }
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => $"Local{Index} :{Type}";
 }
@@ -210,8 +202,6 @@ internal sealed record Local : MemoryVariable
 /// <param name="Type">The type of value stored by the temporary.</param>
 internal sealed record Temporary(Type Type, int Id) : Variable(Type)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"Temp{Id} :{Type}";
 }
 
@@ -220,7 +210,5 @@ internal sealed record Temporary(Type Type, int Id) : Variable(Type)
 /// </summary>
 internal sealed record VoidOp() : Op(typeof(void))
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => "Void";
 }

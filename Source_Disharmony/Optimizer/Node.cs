@@ -2,8 +2,6 @@
 
 internal abstract record Node
 {
-    public abstract T Accept<T>(IVisitor<T> visitor);
-
     public virtual void DebugPrint() => FileLog.LogBuffered(ToString());
 }
 
@@ -26,8 +24,6 @@ internal abstract record Region(BlockLabel EntryLabel) : Node;
 /// <param name="EntryLabel">The <see cref="BlockLabel" /> of the method's entry <see cref="BasicBlock" />.</param>
 internal sealed record RootRegion(BlockLabel EntryLabel) : Region(EntryLabel)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => "root";
 }
 
@@ -50,8 +46,6 @@ internal abstract record ExceptionRegion(BlockLabel EntryLabel, Region Parent) :
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record ProtectedRegion(BlockLabel EntryLabel, Region Parent, ExceptionGroup Group) : ExceptionRegion(EntryLabel, Parent)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => "try";
 }
 
@@ -71,7 +65,6 @@ internal abstract record HandlerRegion(BlockLabel EntryLabel, Region Parent) : E
 internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSlot IncomingException) : HandlerRegion(EntryLabel, Parent)
 {
     public Type ExceptionType => IncomingException.Type;
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
 
     public override string ToString() => $"catch ({IncomingException})";
 }
@@ -94,8 +87,6 @@ internal sealed record CatchRegion(BlockLabel EntryLabel, Region Parent, StackSl
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => "finally";
 }
 
@@ -111,8 +102,6 @@ internal sealed record FinallyRegion(BlockLabel EntryLabel, Region Parent) : Han
 /// <param name="Parent">The <see cref="Region" /> that contains this region.</param>
 internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : HandlerRegion(EntryLabel, Parent)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => "fault";
 }
 
@@ -136,8 +125,6 @@ internal sealed record FaultRegion(BlockLabel EntryLabel, Region Parent) : Handl
 /// <param name="HandlerRegions"></param>
 internal sealed record ExceptionGroup(IReadOnlyList<HandlerRegion> HandlerRegions) : Node
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public bool Equals(ExceptionGroup? group)
     {
         if (group is null)
@@ -216,8 +203,6 @@ internal record UnconditionalBranch : Branch
     /// <param name="label">The <see cref="BlockLabel" /> of the branch target.</param>
     public UnconditionalBranch(BlockLabel label) : base([label]) { }
 
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"br {Labels[0]}";
 }
 
@@ -231,8 +216,6 @@ internal record UnconditionalBranch : Branch
 /// <param name="Label">The <see cref="BlockLabel" /> of the branch target.</param>
 internal record Leave(BlockLabel Label) : UnconditionalBranch(Label)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"leave {Labels[0]}";
 }
 
@@ -248,8 +231,6 @@ internal record Leave(BlockLabel Label) : UnconditionalBranch(Label)
 /// <param name="OpCode">The conditional branch or switch opcode.</param>
 internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs, IReadOnlyList<BlockLabel> Labels) : Branch(Labels)
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"{OpCode} ({string.Join(", ", Inputs)}) {{ {string.Join(", ", Labels)} }}";
 
     public bool Equals(ConditionalBranch? branch)
@@ -284,15 +265,11 @@ internal sealed record ConditionalBranch(OpCode OpCode, IReadOnlyList<Op> Inputs
 /// <param name="Exception">The <see cref="Op" /> that produces the exception to throw.</param>
 internal sealed record Throw(Op Exception) : Branch([])
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"throw {Exception}";
 }
 
 internal sealed record Rethrow() : Branch([])
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => "rethrow";
 }
 
@@ -306,8 +283,6 @@ internal sealed record Rethrow() : Branch([])
 /// <param name="Value">The <see cref="Op" /> that produces the return value, or a <see cref="VoidOp" /> for a void return.</param>
 internal sealed record Return(ILInstruction IL, Op Value) : Branch([])
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"{IL.OpCode} {Value}";
 }
 
@@ -317,8 +292,6 @@ internal sealed record Return(ILInstruction IL, Op Value) : Branch([])
 /// <param name="Value"></param>
 internal sealed record Jump(Op Value) : Branch([])
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override string ToString() => $"jmp {Value}";
 }
 
@@ -331,8 +304,6 @@ internal sealed record Jump(Op Value) : Branch([])
 /// <param name="Branch">The transfer of control at the end of the block.</param>
 internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Region Region, Branch Branch) : Node
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public override void DebugPrint()
     {
         FileLog.ChangeIndent(-1);
@@ -384,8 +355,6 @@ internal sealed record BasicBlock(BlockLabel Label, IReadOnlyList<Op> Ops, Regio
 /// <param name="EdgeAssignments">The <see cref="AssignmentOp" />s performed while control transfers across the edge.</param>
 internal sealed record Edge(BlockLabel Source, BlockLabel Destination, IReadOnlyList<AssignmentOp> EdgeAssignments) : Node
 {
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.Visit(this);
-
     public bool Equals(Edge? other)
     {
         if (other is null)

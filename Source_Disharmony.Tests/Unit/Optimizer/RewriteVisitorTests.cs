@@ -26,8 +26,8 @@ public sealed class RewriteVisitorTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(original.Accept(visitor), Is.SameAs(replacement));
-            Assert.That(replacement.Accept(visitor), Is.SameAs(replacement));
+            Assert.That(visitor.Visit((Op)original), Is.SameAs(replacement));
+            Assert.That(visitor.Visit((Op)replacement), Is.SameAs(replacement));
         });
     }
 
@@ -48,7 +48,7 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewritten = (AssignmentOp)assignment.Accept(visitor);
+        var rewritten = (AssignmentOp)visitor.Visit((Op)assignment);
 
         Assert.Multiple(() =>
         {
@@ -72,7 +72,7 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewritten = (ILOp)operation.Accept(visitor);
+        var rewritten = (ILOp)visitor.Visit((Op)operation);
 
         Assert.Multiple(() =>
         {
@@ -96,9 +96,9 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewrittenThrow = (Throw)new Throw(original).Accept(visitor);
-        var rewrittenReturn = (Return)new Return(Ret, original).Accept(visitor);
-        var rewrittenJump = (Jump)new Jump(original).Accept(visitor);
+        var rewrittenThrow = (Throw)visitor.Visit((Branch)new Throw(original));
+        var rewrittenReturn = (Return)visitor.Visit((Branch)new Return(Ret, original));
+        var rewrittenJump = (Jump)visitor.Visit((Branch)new Jump(original));
 
         Assert.Multiple(() =>
         {
@@ -122,7 +122,7 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewritten = (ConditionalBranch)branch.Accept(visitor);
+        var rewritten = (ConditionalBranch)visitor.Visit((Branch)branch);
 
         Assert.Multiple(() =>
         {
@@ -148,7 +148,7 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewritten = (BasicBlock)block.Accept(visitor);
+        var rewritten = (BasicBlock)(visitor).Visit(block);
 
         Assert.Multiple(() =>
         {
@@ -176,7 +176,7 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewritten = (Edge)edge.Accept(visitor);
+        var rewritten = (Edge)(visitor).Visit(edge);
 
         Assert.Multiple(() =>
         {
@@ -205,7 +205,7 @@ public sealed class RewriteVisitorTests
             },
         };
 
-        var rewritten = (ExceptionGroup)group.Accept(visitor);
+        var rewritten = (ExceptionGroup)(visitor).Visit(group);
 
         Assert.Multiple(() =>
         {
@@ -228,10 +228,10 @@ public sealed class RewriteVisitorTests
         FaultRegion faultRegion = new(new BlockLabel(6), originalParent);
         RootRegionReplacingVisitor visitor = new(originalParent, replacementParent);
 
-        var rewrittenProtected = (ProtectedRegion)protectedRegion.Accept(visitor);
-        var rewrittenCatch = (CatchRegion)catchRegion.Accept(visitor);
-        var rewrittenFinally = (FinallyRegion)finallyRegion.Accept(visitor);
-        var rewrittenFault = (FaultRegion)faultRegion.Accept(visitor);
+        var rewrittenProtected = (ProtectedRegion)visitor.Visit((Region)protectedRegion);
+        var rewrittenCatch = (CatchRegion)visitor.Visit((Region)catchRegion);
+        var rewrittenFinally = (FinallyRegion)visitor.Visit((Region)finallyRegion);
+        var rewrittenFault = (FaultRegion)visitor.Visit((Region)faultRegion);
 
         Assert.Multiple(() =>
         {
@@ -256,16 +256,16 @@ public sealed class RewriteVisitorTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(assignment.Accept(visitor), Is.SameAs(assignment));
-            Assert.That(operation.Accept(visitor), Is.SameAs(operation));
-            Assert.That(conditional.Accept(visitor), Is.SameAs(conditional));
-            Assert.That(block.Accept(visitor), Is.SameAs(block));
-            Assert.That(edge.Accept(visitor), Is.SameAs(edge));
-            Assert.That(root.Accept(visitor), Is.SameAs(root));
-            Assert.That(new UnconditionalBranch(new BlockLabel(1)).Accept(visitor),
+            Assert.That(visitor.Visit((Op)assignment), Is.SameAs(assignment));
+            Assert.That(visitor.Visit((Op)operation), Is.SameAs(operation));
+            Assert.That(visitor.Visit((Branch)conditional), Is.SameAs(conditional));
+            Assert.That((visitor).Visit(block), Is.SameAs(block));
+            Assert.That((visitor).Visit(edge), Is.SameAs(edge));
+            Assert.That(visitor.Visit((Region)root), Is.SameAs(root));
+            Assert.That(visitor.Visit((Branch)new UnconditionalBranch(new BlockLabel(1))),
                 Is.TypeOf<UnconditionalBranch>());
-            Assert.That(new Leave(new BlockLabel(2)).Accept(visitor), Is.TypeOf<Leave>());
-            Assert.That(new Rethrow().Accept(visitor), Is.TypeOf<Rethrow>());
+            Assert.That(visitor.Visit((Branch)new Leave(new BlockLabel(2))), Is.TypeOf<Leave>());
+            Assert.That(visitor.Visit((Branch)new Rethrow()), Is.TypeOf<Rethrow>());
         });
     }
 
