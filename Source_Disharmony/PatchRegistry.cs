@@ -336,13 +336,12 @@ internal class PatchRegistry
 
     private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
     {
-        MethodBaseInvocation outer = target switch
+        return target switch
         {
             MethodInfo outerMethod => new MethodInvocation(outerMethod),
             ConstructorInfo outerConstructor => new OuterConstructorInvocation(outerConstructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
-        return outer;
     }
 
     private void AddPatch(
