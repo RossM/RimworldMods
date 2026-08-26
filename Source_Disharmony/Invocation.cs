@@ -47,17 +47,6 @@ internal abstract record Invocation
     public virtual IEnumerable<CodeInstruction> GetCodeInstructions() => [GetCodeInstruction()];
 
     public override string ToString() => $"[{GetType().FullName}({FullName})]";
-
-    public virtual bool Equals(Invocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return EqualityComparer<Type>.Default.Equals(EqualityContract, other.EqualityContract);
-    }
-
-    public override int GetHashCode() => EqualityComparer<Type>.Default.GetHashCode(EqualityContract);
 }
 
 internal record EmptyInvocation : Invocation
@@ -80,9 +69,6 @@ internal record EmptyInvocation : Invocation
 
     protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
     public override IEnumerable<CodeInstruction> GetCodeInstructions() => [];
-
-    public virtual bool Equals(EmptyInvocation? other) => base.Equals(other);
-    public override int GetHashCode() => base.GetHashCode();
 }
 
 internal record FieldInvocation(FieldInfo FieldInfo) : Invocation
@@ -136,9 +122,6 @@ internal record SetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldI
 internal abstract record MethodBaseInvocation : Invocation
 {
     public abstract MethodBase MethodBase { get; }
-
-    public virtual bool Equals(MethodBaseInvocation? other) => base.Equals(other);
-    public override int GetHashCode() => base.GetHashCode();
 }
 
 internal record MethodInvocation(MethodInfo MethodInfo) : MethodBaseInvocation
@@ -254,9 +237,6 @@ internal abstract record ConstantInvocation : Invocation
     public override Type[] ParameterTypes => [];
 
     public override string[] ParameterNames => [];
-
-    public virtual bool Equals(ConstantInvocation? other) => base.Equals(other);
-    public override int GetHashCode() => base.GetHashCode();
 }
 
 internal record ConstantIntInvocation(int Value) : ConstantInvocation
@@ -279,23 +259,6 @@ internal record ConstantIntInvocation(int Value) : ConstantInvocation
         >= -128 and <= 127 => new(OpCodes.Ldc_I4_S, Value),
         _ => new(OpCodes.Ldc_I4, Value),
     };
-
-    public virtual bool Equals(ConstantIntInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ Value;
-        }
-    }
 }
 
 internal record ConstantLongInvocation(long Value) : ConstantInvocation
@@ -304,23 +267,6 @@ internal record ConstantLongInvocation(long Value) : ConstantInvocation
     public override Type ReturnType => typeof(long);
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_I8, Value);
-
-    public virtual bool Equals(ConstantLongInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
-        }
-    }
 }
 
 internal record ConstantStringInvocation(string Value) : ConstantInvocation
@@ -329,23 +275,6 @@ internal record ConstantStringInvocation(string Value) : ConstantInvocation
     public override Type ReturnType => typeof(string);
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldstr, Value);
-
-    public virtual bool Equals(ConstantStringInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
-        }
-    }
 }
 
 internal record ConstantFloatInvocation(float Value) : ConstantInvocation
@@ -354,23 +283,6 @@ internal record ConstantFloatInvocation(float Value) : ConstantInvocation
     public override Type ReturnType => typeof(float);
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R4, Value);
-
-    public virtual bool Equals(ConstantFloatInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
-        }
-    }
 }
 
 internal record ConstantDoubleInvocation(double Value) : ConstantInvocation
@@ -379,21 +291,4 @@ internal record ConstantDoubleInvocation(double Value) : ConstantInvocation
     public override Type ReturnType => typeof(double);
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Ldc_R8, Value);
-
-    public virtual bool Equals(ConstantDoubleInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ Value.GetHashCode();
-        }
-    }
 }
