@@ -71,44 +71,33 @@ internal record EmptyInvocation : Invocation
     public override IEnumerable<CodeInstruction> GetCodeInstructions() => [];
 }
 
-internal record GetFieldInvocation(FieldInfo FieldInfo) : Invocation
+internal abstract record FieldInvocation(FieldInfo FieldInfo) : Invocation
 {
     public override string FullName => FieldInfo.FullName;
+    public override bool IsStatic => FieldInfo.IsStatic;
+    public override Type InstanceType => FieldInfo.DeclaringType;
+}
+
+internal record GetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldInfo)
+{
     public override Type ReturnType => FieldInfo.FieldType;
     public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [] : [FieldInfo.DeclaringType];
-    public override bool IsStatic => FieldInfo.IsStatic;
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
-    public override Type InstanceType => FieldInfo.DeclaringType;
-
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo);
 
-    public virtual bool Equals(GetFieldInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && FieldInfo.Equals(other.FieldInfo);
-    }
+    public virtual bool Equals(GetFieldInvocation? other) => base.Equals(other);
 
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ FieldInfo.GetHashCode();
-        }
-    }
+    public override int GetHashCode() => base.GetHashCode();
 }
 
-internal record SetFieldInvocation(FieldInfo FieldInfo) : GetFieldInvocation(FieldInfo)
+internal record SetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldInfo)
 {
     public override Type ReturnType => typeof(void);
 
     public override Type[] ParameterTypes =>
         field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType.CallableType, FieldInfo.FieldType];
 
-    public override bool IsStatic => FieldInfo.IsStatic;
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [ValueFieldName] : [InstanceParameterName, ValueFieldName];
     public const string ValueFieldName = "value";
 
