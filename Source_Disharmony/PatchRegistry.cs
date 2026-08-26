@@ -249,7 +249,7 @@ internal class PatchRegistry
             try
             {
                 Invocation inner = innerTarget != null
-                    ? InnerInvocation(innerTarget, innerMemberType)
+                    ? GetInnerInvocation(innerTarget, innerMemberType)
                     : EmptyInvocation.Instance;
 
                 foreach (var target in targets)
@@ -279,21 +279,21 @@ internal class PatchRegistry
                 MemberInfo inner = ReflectionTools.GetMember(innerMember.type, innerMember.memberName,
                     innerMember.memberType, innerMember.parameterTypes, innerMember.genericTypes);
 
-                return InnerInvocation(inner, innerMember.memberType);
+                return GetInnerInvocation(inner, innerMember.memberType);
             }
             default: throw new InvalidOperationException();
         }
     }
 
-    private static Invocation InnerInvocation(MemberInfo? inner, MemberType memberType)
+    private static Invocation GetInnerInvocation(MemberInfo? inner, MemberType memberType)
     {
         return inner switch
         {
             FieldInfo field => memberType is MemberType.Setter
                 ? new SetFieldInvocation(field)
-                : new FieldInvocation(field),
+                : new GetFieldInvocation(field),
             MethodInfo method => new MethodInvocation(method),
-            ConstructorInfo constructor => new ConstructorInvocation(constructor),
+            ConstructorInfo constructor => new InnerConstructorInvocation(constructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
     }
@@ -339,7 +339,7 @@ internal class PatchRegistry
         MethodBaseInvocation outer = target switch
         {
             MethodInfo outerMethod => new MethodInvocation(outerMethod),
-            ConstructorInfo outerConstructor => new PatchableConstructorInvocation(outerConstructor),
+            ConstructorInfo outerConstructor => new OuterConstructorInvocation(outerConstructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
         return outer;

@@ -11,7 +11,7 @@ namespace Disharmony;
 ///         Invocation represents a very generic idea of an IL instruction that takes zero or more inputs and
 ///         produces a result.
 ///         Method calls are represented with <see cref="MethodInvocation" />, and field references are represented with
-///         <see cref="FieldInvocation" />.
+///         <see cref="GetFieldInvocation" />.
 ///         For convenience there is also a singleton <see cref="EmptyInvocation" /> which represents something that takes
 ///         no inputs and returns void, intended for use instead of <see langword="null" /> when there is no actual value.
 ///     </para>
@@ -71,7 +71,7 @@ internal record EmptyInvocation : Invocation
     public override IEnumerable<CodeInstruction> GetCodeInstructions() => [];
 }
 
-internal record FieldInvocation(FieldInfo FieldInfo) : Invocation
+internal record GetFieldInvocation(FieldInfo FieldInfo) : Invocation
 {
     public override string FullName => FieldInfo.FullName;
     public override Type ReturnType => FieldInfo.FieldType;
@@ -83,7 +83,7 @@ internal record FieldInvocation(FieldInfo FieldInfo) : Invocation
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo);
 
-    public virtual bool Equals(FieldInvocation? other)
+    public virtual bool Equals(GetFieldInvocation? other)
     {
         if (other is null)
             return false;
@@ -101,7 +101,7 @@ internal record FieldInvocation(FieldInfo FieldInfo) : Invocation
     }
 }
 
-internal record SetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldInfo)
+internal record SetFieldInvocation(FieldInfo FieldInfo) : GetFieldInvocation(FieldInfo)
 {
     public override Type ReturnType => typeof(void);
 
@@ -166,40 +166,29 @@ internal record MethodInvocation(MethodInfo MethodInfo) : MethodBaseInvocation
     }
 }
 
+internal abstract record ConstructorInvocation(ConstructorInfo ConstructorInfo) : MethodBaseInvocation
+{
+    public override string FullName => ConstructorInfo.FullName;
+    public override Type InstanceType => ConstructorInfo.DeclaringType;
+    public override MethodBase MethodBase => ConstructorInfo;
+}
+
 /// <summary>
 ///     This class represents a <see cref="OpCodes.Newobj" /> call of a constructor.
 /// </summary>
 /// <param name="ConstructorInfo"></param>
-internal record ConstructorInvocation(ConstructorInfo ConstructorInfo) : MethodBaseInvocation
+internal record InnerConstructorInvocation(ConstructorInfo ConstructorInfo) : ConstructorInvocation(ConstructorInfo)
 {
-    public override string FullName => ConstructorInfo.FullName;
     public override Type ReturnType => ConstructorInfo.DeclaringType;
     public override Type[] ParameterTypes => field ??= [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override bool IsStatic => true;
     public override string[] ParameterNames => field ??= [.. ConstructorInfo.GetParameters().Select(p => p.Name)];
-    public override Type InstanceType => ConstructorInfo.DeclaringType;
-
-    public override MethodBase MethodBase => ConstructorInfo;
 
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Newobj, ConstructorInfo);
 
-    public virtual bool Equals(ConstructorInvocation? other)
-    {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return base.Equals(other) && ConstructorInfo.Equals(other.ConstructorInfo);
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return (base.GetHashCode() * 397) ^ ConstructorInfo.GetHashCode();
-        }
-    }
+    public virtual bool Equals(InnerConstructorInvocation? other) => base.Equals(other);
+    public override int GetHashCode() => base.GetHashCode();
 }
 
 /// <summary>
@@ -207,7 +196,7 @@ internal record ConstructorInvocation(ConstructorInfo ConstructorInfo) : MethodB
 ///     functions like an ordinary instance method returning void.
 /// </summary>
 /// <param name="ConstructorInfo"></param>
-internal record PatchableConstructorInvocation(ConstructorInfo ConstructorInfo) : ConstructorInvocation(ConstructorInfo)
+internal record OuterConstructorInvocation(ConstructorInfo ConstructorInfo) : ConstructorInvocation(ConstructorInfo)
 {
     public override Type ReturnType => typeof(void);
     public override bool IsStatic => ConstructorInfo.IsStatic;
@@ -225,7 +214,7 @@ internal record PatchableConstructorInvocation(ConstructorInfo ConstructorInfo) 
 
     protected override CodeInstruction GetCodeInstruction() => throw new NotSupportedException();
 
-    public virtual bool Equals(PatchableConstructorInvocation? other) => base.Equals(other);
+    public virtual bool Equals(OuterConstructorInvocation? other) => base.Equals(other);
     public override int GetHashCode() => base.GetHashCode();
 }
 
