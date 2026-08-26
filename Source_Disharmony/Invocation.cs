@@ -48,8 +48,16 @@ internal abstract record Invocation
 
     public override string ToString() => $"[{GetType().FullName}({FullName})]";
 
-    public virtual bool Equals(Invocation? other) => other is not null && GetType() == other.GetType();
-    public override int GetHashCode() => GetType().GetHashCode();
+    public virtual bool Equals(Invocation? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return EqualityComparer<Type>.Default.Equals(EqualityContract, other.EqualityContract);
+    }
+
+    public override int GetHashCode() => EqualityComparer<Type>.Default.GetHashCode(EqualityContract);
 }
 
 internal record EmptyInvocation : Invocation
