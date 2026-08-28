@@ -17,6 +17,50 @@ public static class MethodBindingPatches
         ResultObserved = BoundInstanceMethod(5);
 
     [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_PrivateInstanceMethod_Invokes(
+        [Method("BoundPrivateInstanceMethod")] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_PrivateStaticMethod_Invokes(
+        [Method("BoundPrivateStaticMethod")] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_VirtualMethod_DispatchesOnRuntimeInstance(
+        [Method(nameof(MethodBindingVirtualBaseTargets.BoundVirtualMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Target(typeof(MethodBindingStructTargets), nameof(MethodBindingStructTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_StructInstanceMethod_BindsStructInstance(
+        [Method(nameof(MethodBindingStructTargets.BoundInstanceMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException(
+        [Method(nameof(MethodBindingInstanceTargets.BoundOverloadedMethod))] Func<int, int> method) { }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_MissingMethod_IsRejected(
+        [Method("MissingMethod")] Func<int, int> method) { }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetStaticMethod))]
+    public static void Prefix_MethodAttribute_InstanceMethodOnStaticTarget_IsRejected(
+        [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, int> method) { }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_InnerScopeWithoutInnerPatch_IsRejected(
+        [Method(nameof(MethodBindingInnerTargets.BoundInstanceMethod), Scope.Inner)] Func<int, int> method) { }
+
+    [Prefix]
     [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
     public static void InnerPrefix_MethodAttribute_StaticMethodOnInnerInstanceType_Invokes(
@@ -31,6 +75,13 @@ public static class MethodBindingPatches
         ResultObserved = method(5);
 
     [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
+    public static void InnerPrefix_MethodAttribute_InnerScope_InstanceMethodOnInnerInstance_BindsInnerInstance(
+        [Method(nameof(MethodBindingInnerTargets.BoundInstanceMethod), Scope.Inner)] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
     [Target(typeof(MethodBindingStaticTargets), nameof(MethodBindingStaticTargets.TargetStaticMethod))]
     public static void Prefix_MethodAttribute_StaticMethodOnStaticType_Invokes(
         [Method(nameof(MethodBindingStaticTargets.BoundStaticMethod))] Func<int, int> method) =>
@@ -40,6 +91,27 @@ public static class MethodBindingPatches
     [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
     public static void InnerPrefix_MethodAttribute_OuterScope_InstanceMethodOnOuterInstance_Invokes(
+        [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod), Scope.Outer)] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingIteratorTargets), nameof(MethodBindingIteratorTargets.EnumerateInnerInstanceMethod))]
+    public static void IteratorInnerPrefix_MethodAttribute_InnerScope_BindsInnerInstance(
+        [Method(nameof(MethodBindingInnerTargets.BoundInstanceMethod), Scope.Inner)] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingIteratorTargets), nameof(MethodBindingIteratorTargets.EnumerateInnerInstanceMethod))]
+    public static void IteratorInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance(
+        [Method(nameof(MethodBindingIteratorTargets.BoundInstanceMethod), Scope.Outer)] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Inner(typeof(MethodBindingInstanceTargets), "CallLocalFunction.LocalFunction")]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallLocalFunction))]
+    public static void LocalFunctionInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance(
         [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod), Scope.Outer)] Func<int, int> method) =>
         ResultObserved = method(5);
 }
@@ -84,6 +156,125 @@ public sealed class MethodBindingTests : PatchTestBase
     }
 
     [Test]
+    public void Prefix_MethodAttribute_PrivateInstanceMethod_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_PrivateInstanceMethod_Invokes));
+        MethodBindingInstanceTargets target = new();
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(105));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_PrivateStaticMethod_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_PrivateStaticMethod_Invokes));
+        MethodBindingInstanceTargets target = new();
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(205));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_VirtualMethod_DispatchesOnRuntimeInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_VirtualMethod_DispatchesOnRuntimeInstance));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets();
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(605));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_StructInstanceMethod_BindsStructInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_StructInstanceMethod_BindsStructInstance));
+        MethodBindingStructTargets target = new() { InstanceValue = 40 };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(40));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<AmbiguousMatchException>());
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_MissingMethod_IsRejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.Prefix_MethodAttribute_MissingMethod_IsRejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Method not found"));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_InstanceMethodOnStaticTarget_IsRejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.Prefix_MethodAttribute_InstanceMethodOnStaticTarget_IsRejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Instance required"));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_InnerScopeWithoutInnerPatch_IsRejected()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.Prefix_MethodAttribute_InnerScopeWithoutInnerPatch_IsRejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Invalid scope"));
+    }
+
+    [Test]
     public void InnerPrefix_MethodAttribute_StaticMethodOnInnerInstanceType_Invokes()
     {
         MethodBindingPatches.ResultObserved = 0;
@@ -109,6 +300,25 @@ public sealed class MethodBindingTests : PatchTestBase
         ApplyPatch(
             typeof(MethodBindingPatches),
             nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_InstanceMethodOnInnerInstance_BindsInnerInstance));
+        MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
+        MethodBindingInnerTargets inner = new() { InstanceValue = 40 };
+
+        int result = target.CallInnerInstanceMethod(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_InnerScope_InstanceMethodOnInnerInstance_BindsInnerInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_InnerScope_InstanceMethodOnInnerInstance_BindsInnerInstance));
         MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
         MethodBindingInnerTargets inner = new() { InstanceValue = 40 };
 
@@ -153,6 +363,62 @@ public sealed class MethodBindingTests : PatchTestBase
         Assert.Multiple(() =>
         {
             Assert.That(result, Is.EqualTo(20));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
+        });
+    }
+
+    [Test]
+    public void IteratorInnerPrefix_MethodAttribute_InnerScope_BindsInnerInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.IteratorInnerPrefix_MethodAttribute_InnerScope_BindsInnerInstance));
+        MethodBindingIteratorTargets target = new() { InstanceValue = 7 };
+        MethodBindingInnerTargets inner = new() { InstanceValue = 40 };
+
+        int result = target.EnumerateInnerInstanceMethod(inner).Single();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
+        });
+    }
+
+    [Test]
+    public void IteratorInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.IteratorInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance));
+        MethodBindingIteratorTargets target = new() { InstanceValue = 7 };
+        MethodBindingInnerTargets inner = new();
+
+        int result = target.EnumerateInnerInstanceMethod(inner).Single();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
+        });
+    }
+
+    [Test]
+    public void LocalFunctionInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.LocalFunctionInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance));
+        MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
+
+        int result = target.CallLocalFunction();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(8));
             Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
         });
     }

@@ -59,6 +59,18 @@ public static class BaseMethodBindingPatches
         result = baseMethod(value);
         return false;
     }
+
+    [Prefix]
+    [Target(typeof(BaseMethodOverloadDerivedTargets), nameof(BaseMethodOverloadDerivedTargets.Describe),
+        parameterTypes: [typeof(int)])]
+    public static bool Prefix_BaseMethod_OverloadedMethod_SelectsMatchingBaseOverload(
+        int value,
+        Func<int, string> __base,
+        ref string __result)
+    {
+        __result = __base(value);
+        return false;
+    }
 }
 
 [TestFixture]
@@ -167,5 +179,18 @@ public sealed class BaseMethodBindingTests : PatchTestBase
         string result = target.Describe(41);
 
         Assert.That(result, Is.EqualTo("base:41:1"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_OverloadedMethod_SelectsMatchingBaseOverload()
+    {
+        ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethod_OverloadedMethod_SelectsMatchingBaseOverload));
+        var target = new BaseMethodOverloadDerivedTargets();
+
+        string result = target.Describe(41);
+
+        Assert.That(result, Is.EqualTo("base-int:41"));
     }
 }
