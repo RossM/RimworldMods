@@ -36,7 +36,7 @@ public static class MethodBindingPatches
 
     [Prefix]
     [Target(typeof(MethodBindingStructTargets), nameof(MethodBindingStructTargets.TargetInstanceMethod))]
-    public static void Prefix_MethodAttribute_StructInstanceMethod_BindsStructInstance(
+    public static void Prefix_MethodAttribute_StructInstanceMethod_IsRejected(
         [Method(nameof(MethodBindingStructTargets.BoundInstanceMethod))] Func<int, int> method) =>
         ResultObserved = method(5);
 
@@ -104,7 +104,7 @@ public static class MethodBindingPatches
     [Prefix]
     [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
     [Target(typeof(MethodBindingIteratorTargets), nameof(MethodBindingIteratorTargets.EnumerateInnerInstanceMethod))]
-    public static void IteratorInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance(
+    public static void IteratorInnerPrefix_MethodAttribute_OuterScopeInstanceMethod_IsRejected(
         [Method(nameof(MethodBindingIteratorTargets.BoundInstanceMethod), Scope.Outer)] Func<int, int> method) =>
         ResultObserved = method(5);
 
@@ -210,21 +210,15 @@ public sealed class MethodBindingTests : PatchTestBase
     }
 
     [Test]
-    public void Prefix_MethodAttribute_StructInstanceMethod_BindsStructInstance()
+    public void Prefix_MethodAttribute_StructInstanceMethod_IsRejected()
     {
-        MethodBindingPatches.ResultObserved = 0;
-        ApplyPatch(
-            typeof(MethodBindingPatches),
-            nameof(MethodBindingPatches.Prefix_MethodAttribute_StructInstanceMethod_BindsStructInstance));
-        MethodBindingStructTargets target = new() { InstanceValue = 40 };
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.Prefix_MethodAttribute_StructInstanceMethod_IsRejected)));
 
-        int result = target.TargetInstanceMethod();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.EqualTo(40));
-            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
-        });
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: [Method] is not supported for non-static methods on structs"));
     }
 
     [Test]
@@ -387,22 +381,16 @@ public sealed class MethodBindingTests : PatchTestBase
     }
 
     [Test]
-    public void IteratorInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance()
+    public void IteratorInnerPrefix_MethodAttribute_OuterScopeInstanceMethod_IsRejected()
     {
-        MethodBindingPatches.ResultObserved = 0;
-        ApplyPatch(
-            typeof(MethodBindingPatches),
-            nameof(MethodBindingPatches.IteratorInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance));
-        MethodBindingIteratorTargets target = new() { InstanceValue = 7 };
-        MethodBindingInnerTargets inner = new();
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.IteratorInnerPrefix_MethodAttribute_OuterScopeInstanceMethod_IsRejected)));
 
-        int result = target.EnumerateInnerInstanceMethod(inner).Single();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(result, Is.EqualTo(20));
-            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
-        });
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo(
+                "method: [Method] is not supported for iterator state machines"));
     }
 
     [Test]
