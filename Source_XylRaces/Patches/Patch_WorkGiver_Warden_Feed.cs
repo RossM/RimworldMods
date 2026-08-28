@@ -6,12 +6,18 @@ public static class Patch_WorkGiver_Warden_Feed
     [Feature(typeof(Hediff_DietDependency))]
     [Postfix]
     [Target(nameof(WorkGiver_Warden_Feed.JobOnThing))]
-    public static void JobOnThing_Postfix(WorkGiver_Warden_Feed __instance, Pawn pawn, Thing t, bool forced, ref Job? __result)
+    public static void JobOnThing_Postfix(
+        WorkGiver_Warden_Feed __instance,
+        Pawn pawn,
+        Thing t,
+        bool forced,
+        ref Job? __result,
+        [Method] Func<Pawn, Thing, bool, bool> ShouldTakeCareOfPrisoner)
     {
         if (__result != null)
             return;
 
-        if (!__instance.ShouldTakeCareOfPrisoner(pawn, t, forced))
+        if (!ShouldTakeCareOfPrisoner(pawn, t, forced))
             return;
 
         Pawn prisoner = (Pawn)t;

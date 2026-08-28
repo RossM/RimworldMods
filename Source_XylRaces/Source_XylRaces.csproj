@@ -30,7 +30,6 @@
   <ItemGroup>
     <Publicize Include="Assembly-CSharp:RimWorld.GameConditionManager.AllowEnjoyableOutsideNow" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
-    <Publicize Include="Assembly-CSharp:RimWorld.WorkGiver_Warden.ShouldTakeCareOfPrisoner" />
     <Publicize Include="Assembly-CSharp:RimWorld.XenotypeSet.xenotypeChances" />
     <Publicize Include="Assembly-CSharp:Verse.HediffComp_TendDuration.totalTendQuality" />
     <Publicize Include="Assembly-CSharp:Verse.PawnGenerator.tmpXenotypeChances" />
