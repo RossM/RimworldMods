@@ -72,6 +72,9 @@ public struct MethodBindingStructTargets
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public int BoundInstanceMethod(int value) => InstanceValue + value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int BoundStaticMethod(int value) => 400 + value;
 }
 
 public class MethodBindingVirtualBaseTargets

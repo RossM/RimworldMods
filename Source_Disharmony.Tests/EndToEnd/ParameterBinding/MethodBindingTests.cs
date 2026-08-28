@@ -41,6 +41,12 @@ public static class MethodBindingPatches
         ResultObserved = method(5);
 
     [Prefix]
+    [Target(typeof(MethodBindingStructTargets), nameof(MethodBindingStructTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_StaticMethodOnStruct_Invokes(
+        [Method(nameof(MethodBindingStructTargets.BoundStaticMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
     public static void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException(
         [Method(nameof(MethodBindingInstanceTargets.BoundOverloadedMethod))] Func<int, int> method) { }
@@ -219,6 +225,24 @@ public sealed class MethodBindingTests : PatchTestBase
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
             .With.Message.EqualTo("method: [Method] is not supported for non-static methods on structs"));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_StaticMethodOnStruct_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_StaticMethodOnStruct_Invokes));
+        MethodBindingStructTargets target = new() { InstanceValue = 40 };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(40));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(405));
+        });
     }
 
     [Test]
