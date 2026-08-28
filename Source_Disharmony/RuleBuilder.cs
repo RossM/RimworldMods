@@ -100,7 +100,12 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         if (parameter.methodInfo!.IsStatic)
             output.Add(new(OpCodes.Ldnull));
         else
-            EmitParameterLookup(parameter.scope, 0, parameter.methodInfo.DeclaringType.CallableType);
+        {
+            EmitParameterLookup(parameter.scope, 0, parameter.methodInfo.DeclaringType);
+            if (parameter.methodInfo.DeclaringType!.IsValueType)
+                output.Add(new(OpCodes.Box, parameter.methodInfo.DeclaringType));
+        }
+
         output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
         output.Add(new(OpCodes.Newobj, delegateConstructor));
     }
