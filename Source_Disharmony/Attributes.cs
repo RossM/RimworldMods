@@ -702,3 +702,18 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
+
+/// <summary>
+///     Binds a patch parameter to a delegate that invokes a given method on the class of the inner or outer instance.
+/// </summary>
+/// <remarks>
+///     This can be used to access otherwise-inaccessible methods on the classes of the instance.
+/// </remarks>
+/// <param name="methodName"></param>
+/// <param name="scope"></param>
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class MethodAttribute(string methodName, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+{
+    public string MethodName { get; } = methodName;
+}

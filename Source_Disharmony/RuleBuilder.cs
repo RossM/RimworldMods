@@ -97,7 +97,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         ConstructorInfo delegateConstructor = parameter.parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
 
         // Create a delegate
-        output.Add(CodeInstruction.LoadArgument(0));
+        output.Add(parameter.methodInfo!.IsStatic ? new(OpCodes.Ldnull) : CodeInstruction.LoadArgument(0));
         output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
         output.Add(new(OpCodes.Newobj, delegateConstructor));
     }

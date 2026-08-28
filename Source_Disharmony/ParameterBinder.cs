@@ -55,6 +55,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case BaseMethodAttribute: return BindBaseMethod(parameter);
 
+            case MethodAttribute { MethodName: var name }: return BindMethod(parameter, invocation, scope, name);
+
             case null: break;
 
             default: throw new NotSupportedException();
@@ -111,12 +113,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
 
         // Validate the delegate type has the right parameter types
-        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke") ??
-                             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
-        if (!delegateInvoke.GetParameters().Types().SequenceEqual(method.MethodInfo.GetParameters().Types()))
-            throw new ParameterBindingException(parameter.Name, "Parameter type mismatch");
-        if (delegateInvoke.ReturnType != method.MethodInfo.ReturnType)
-            throw new ParameterBindingException(parameter.Name, "Return type mismatch");
+        ValidateInvoke(parameter, method.MethodInfo);
 
         MethodInfo? baseMethod = null;
         for (Type? parent = method.InstanceType.BaseType; parent != typeof(object) && parent != null; parent = parent.BaseType)
@@ -133,6 +130,32 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new ParameterBindingException(parameter.Name, "Base method not found");
 
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = Scope.Outer, methodInfo = baseMethod };
+    }
+
+    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name)
+    {
+        var instanceType = invocation.InstanceType;
+        var methodInfo = instanceType.GetMethod(name, AccessTools.all);
+
+        if (methodInfo is null)
+            throw new ParameterBindingException(parameter.Name, "Method not found");
+        if (invocation.IsStatic && !methodInfo.IsStatic)
+            throw new ParameterBindingException(parameter.Name, "Instance required");
+
+        ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
+        ValidateInvoke(parameter, methodInfo);
+
+        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo };
+    }
+
+    private static void ValidateInvoke(ParameterInfo parameter, MethodInfo methodInfo)
+    {
+        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke") ??
+                             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
+        if (!delegateInvoke.GetParameters().Types().SequenceEqual(methodInfo.GetParameters().Types()))
+            throw new ParameterBindingException(parameter.Name, "Parameter type mismatch");
+        if (delegateInvoke.ReturnType != methodInfo.ReturnType)
+            throw new ParameterBindingException(parameter.Name, "Return type mismatch");
     }
 
     private ParameterBinding BindReturnValue(ParameterInfo parameter, Invocation invocation, Scope scope)
