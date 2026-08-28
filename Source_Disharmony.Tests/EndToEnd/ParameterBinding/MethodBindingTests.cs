@@ -24,6 +24,13 @@ public static class MethodBindingPatches
         ResultObserved = method(5);
 
     [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
+    public static void InnerPrefix_MethodAttribute_InstanceMethodOnInnerInstance_BindsInnerInstance(
+        [Method(nameof(MethodBindingInnerTargets.BoundInstanceMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
     [Target(typeof(MethodBindingStaticTargets), nameof(MethodBindingStaticTargets.TargetStaticMethod))]
     public static void Prefix_MethodAttribute_StaticMethodOnStaticType_Invokes(
         [Method(nameof(MethodBindingStaticTargets.BoundStaticMethod))] Func<int, int> method) =>
@@ -92,6 +99,25 @@ public sealed class MethodBindingTests : PatchTestBase
         {
             Assert.That(result, Is.EqualTo(20));
             Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(205));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_InstanceMethodOnInnerInstance_BindsInnerInstance()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_InstanceMethodOnInnerInstance_BindsInnerInstance));
+        MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
+        MethodBindingInnerTargets inner = new() { InstanceValue = 40 };
+
+        int result = target.CallInnerInstanceMethod(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
         });
     }
 

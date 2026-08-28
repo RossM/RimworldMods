@@ -16,8 +16,13 @@ public sealed class MethodBindingInstanceTargets
 
 public sealed class MethodBindingInnerTargets
 {
+    public int InstanceValue { get; set; }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public int TargetInstanceMethod() => 20;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int BoundInstanceMethod(int value) => InstanceValue + value;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int BoundStaticMethod(int value) => 200 + value;
