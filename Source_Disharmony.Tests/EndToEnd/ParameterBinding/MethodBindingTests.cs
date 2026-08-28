@@ -11,6 +11,12 @@ public static class MethodBindingPatches
         ResultObserved = method(5);
 
     [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_NullName_UsesParameterName(
+        [Method(null)] Func<int, int> BoundInstanceMethod) =>
+        ResultObserved = BoundInstanceMethod(5);
+
+    [Prefix]
     [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
     public static void InnerPrefix_MethodAttribute_StaticMethodOnInnerInstanceType_Invokes(
@@ -41,6 +47,24 @@ public sealed class MethodBindingTests : PatchTestBase
         ApplyPatch(
             typeof(MethodBindingPatches),
             nameof(MethodBindingPatches.Prefix_MethodAttribute_InstanceMethodOnOuterInstance_Invokes));
+        MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_NullName_UsesParameterName()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_NullName_UsesParameterName));
         MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
 
         int result = target.TargetInstanceMethod();
