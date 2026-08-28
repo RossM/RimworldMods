@@ -54,7 +54,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                         desiredType = desiredType.GetElementType();
                 }
 
-                EmitParameterLookup(parameter, desiredType);
+                EmitParameterLookup(parameter.scope, parameter.index, desiredType);
                 resultType = desiredType;
 
                 break;
@@ -97,7 +97,10 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         ConstructorInfo delegateConstructor = parameter.parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
 
         // Create a delegate
-        output.Add(parameter.methodInfo!.IsStatic ? new(OpCodes.Ldnull) : CodeInstruction.LoadArgument(0));
+        if (parameter.methodInfo!.IsStatic)
+            output.Add(new(OpCodes.Ldnull));
+        else
+            EmitParameterLookup(parameter.scope, 0, parameter.methodInfo.DeclaringType.CallableType);
         output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
         output.Add(new(OpCodes.Newobj, delegateConstructor));
     }
@@ -137,12 +140,12 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         };
     }
 
-    protected virtual void EmitParameterLookup(ParameterBinding parameter, Type resultType)
+    protected virtual void EmitParameterLookup(Scope scope, int index, Type resultType)
     {
-        switch (parameter.scope)
+        switch (scope)
         {
-            case Scope.Outer: EmitOuterParameter(parameter.index, resultType); break;
-            default: throw new ArgumentOutOfRangeException(nameof(parameter.scope));
+            case Scope.Outer: EmitOuterParameter(index, resultType); break;
+            default: throw new ArgumentOutOfRangeException(nameof(scope));
         }
     }
 

@@ -115,15 +115,15 @@ internal class InfixRuleBuilder : RuleBuilder
         };
     }
 
-    protected override void EmitParameterLookup(ParameterBinding parameter, Type resultType)
+    protected override void EmitParameterLookup(Scope scope, int index, Type resultType)
     {
-        switch (parameter.scope)
+        switch (scope)
         {
-            case Scope.Outer: EmitOuterParameter(parameter.index, resultType); break;
-            case Scope.Inner: EmitInnerParameter(parameter.index, resultType); break;
+            case Scope.Outer: EmitOuterParameter(index, resultType); break;
+            case Scope.Inner: EmitInnerParameter(index, resultType); break;
             case Scope.Any:
             default:
-                throw new ArgumentOutOfRangeException(nameof(parameter.scope));
+                throw new ArgumentOutOfRangeException(nameof(scope));
         }
     }
 
