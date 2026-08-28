@@ -36,7 +36,7 @@ public enum PatchType
 ///     </para>
 ///     <para>
 ///         For assembly discovery, place patch methods in a class marked with <see cref="PatchAttribute" />.
-///         <see cref="PatchAttribute.type" /> can provide a default declaring type for the class's targets, and
+///         <see cref="PatchAttribute.Type" /> can provide a default declaring type for the class's targets, and
 ///         <see cref="CategoryAttribute" /> can restrict category-specific discovery. Harmony's
 ///         <see cref="HarmonyLib.HarmonyPatch" /> and <see cref="HarmonyLib.HarmonyPatchCategory" /> attributes are also
 ///         recognized for compatibility, but the Disharmony attributes are preferred for new patches. Direct

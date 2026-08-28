@@ -124,7 +124,7 @@ internal class PatchRegistry
                 if (type.GetCustomAttribute<PatchAttribute>() == null && type.GetCustomAttribute<HarmonyPatch>() == null)
                     continue;
 
-                if ((type.GetCustomAttribute<CategoryAttribute>()?.category ??
+                if ((type.GetCustomAttribute<CategoryAttribute>()?.Category ??
                      type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
                     continue;
 
@@ -151,29 +151,29 @@ internal class PatchRegistry
                 List<Attribute> attributes = GetAttributes(method);
 
                 var defaultTargetType =
-                    attributes.OfType<PatchAttribute>().Select(p => p.type).FirstOrDefault(t => t is not null) ??
+                    attributes.OfType<PatchAttribute>().Select(p => p.Type).FirstOrDefault(t => t is not null) ??
                     attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
-                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
+                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.Options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
                     return;
 
-                PatchType patchType = patchTypeAttribute.patchType;
+                PatchType patchType = patchTypeAttribute.PatchType;
 
                 Invocation inner = GetInnerInvocation(innerAttribute);
 
                 foreach (var targetAttribute in targetAttributes)
                 {
-                    var patchedType = targetAttribute.type ?? defaultTargetType ??
+                    var patchedType = targetAttribute.Type ?? defaultTargetType ??
                         throw new NotSupportedException("No target type");
 
-                    List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.methodName,
-                        targetAttribute.memberType, targetAttribute.parameterTypes, targetAttribute.genericTypes);
+                    List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
+                        targetAttribute.MemberType, targetAttribute.ParameterTypes, targetAttribute.GenericTypes);
 
-                    var nameForErrors = targetAttribute.memberType == MemberType.Constructor ? ".ctor" : targetAttribute.methodName;
+                    var nameForErrors = targetAttribute.MemberType == MemberType.Constructor ? ".ctor" : targetAttribute.MethodName;
 
                     switch (candidates.Count)
                     {
@@ -207,12 +207,12 @@ internal class PatchRegistry
 
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
-                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.options ?? PatchOptions.Default;
+                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.Options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
                     return;
 
-                PatchType patchType = patchTypeAttribute.patchType;
+                PatchType patchType = patchTypeAttribute.PatchType;
 
                 Invocation inner = GetInnerInvocation(innerAttribute);
 
@@ -269,17 +269,17 @@ internal class PatchRegistry
 
         switch (patchTypeAttribute)
         {
-            case InnerConstantAttribute { value: int value }: return new ConstantIntInvocation(value);
-            case InnerConstantAttribute { value: long value }: return new ConstantLongInvocation(value);
-            case InnerConstantAttribute { value: float value }: return new ConstantFloatInvocation(value);
-            case InnerConstantAttribute { value: double value }: return new ConstantDoubleInvocation(value);
-            case InnerConstantAttribute { value: string value }: return new ConstantStringInvocation(value);
+            case InnerConstantAttribute { Value: int value }: return new ConstantIntInvocation(value);
+            case InnerConstantAttribute { Value: long value }: return new ConstantLongInvocation(value);
+            case InnerConstantAttribute { Value: float value }: return new ConstantFloatInvocation(value);
+            case InnerConstantAttribute { Value: double value }: return new ConstantDoubleInvocation(value);
+            case InnerConstantAttribute { Value: string value }: return new ConstantStringInvocation(value);
             case InnerAttribute innerMember:
             {
-                MemberInfo inner = ReflectionTools.GetMember(innerMember.type, innerMember.memberName,
-                    innerMember.memberType, innerMember.parameterTypes, innerMember.genericTypes);
+                MemberInfo inner = ReflectionTools.GetMember(innerMember.Type, innerMember.MemberName,
+                    innerMember.MemberType, innerMember.ParameterTypes, innerMember.GenericTypes);
 
-                return GetInnerInvocation(inner, innerMember.memberType);
+                return GetInnerInvocation(inner, innerMember.MemberType);
             }
             default: throw new InvalidOperationException();
         }

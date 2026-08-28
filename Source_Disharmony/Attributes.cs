@@ -143,7 +143,7 @@ public enum PatchOptions
 [AttributeUsage(AttributeTargets.Class)]
 public class PatchAttribute(Type? type = null) : Attribute
 {
-    public readonly Type? type = type;
+    public Type? Type { get; } = type;
 }
 
 /// <summary>
@@ -167,12 +167,12 @@ public class PatchAttribute(Type? type = null) : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class CategoryAttribute(string category) : Attribute
 {
-    public readonly string category = category;
+    public string Category { get; } = category;
 }
 
 public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 {
-    public readonly PatchType patchType = patchType;
+    public PatchType PatchType { get; } = patchType;
 }
 
 /// <summary>
@@ -236,11 +236,11 @@ public class InnerAttribute(
     Type[]? parameterTypes = null,
     Type[]? genericTypes = null) : InnerAttributeBase
 {
-    public readonly Type type = type;
-    public readonly string? memberName = memberName;
-    public readonly MemberType memberType = memberType;
-    public readonly Type[]? parameterTypes = parameterTypes;
-    public readonly Type[]? genericTypes = genericTypes;
+    public Type Type { get; } = type;
+    public string? MemberName { get; } = memberName;
+    public MemberType MemberType { get; } = memberType;
+    public Type[]? ParameterTypes { get; } = parameterTypes;
+    public Type[]? GenericTypes { get; } = genericTypes;
 
     /// <summary>
     ///     Runs the patch before each access or call to the named inner member.
@@ -278,7 +278,7 @@ public class InnerAttribute(
 [AttributeUsage(AttributeTargets.Method)]
 public class InnerConstantAttribute : InnerAttributeBase
 {
-    public readonly object value;
+    public object Value { get; }
 
     /// <summary>
     ///     Runs the patch after each matching 32-bit integer constant in IL.
@@ -292,7 +292,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(int value)
     {
-        this.value = value;
+        Value = value;
     }
 
     /// <summary>
@@ -301,7 +301,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(long value)
     {
-        this.value = value;
+        Value = value;
     }
 
     /// <summary>
@@ -310,7 +310,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(float value)
     {
-        this.value = value;
+        Value = value;
     }
 
     /// <summary>
@@ -319,7 +319,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(double value)
     {
-        this.value = value;
+        Value = value;
     }
 
     /// <summary>
@@ -328,7 +328,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(string value)
     {
-        this.value = value;
+        Value = value;
     }
 }
 
@@ -345,7 +345,7 @@ public class InnerConstantAttribute : InnerAttributeBase
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class PatchOptionsAttribute(PatchOptions options) : Attribute
 {
-    public PatchOptions options = options;
+    public PatchOptions Options { get; } = options;
 }
 
 /// <summary>
@@ -389,11 +389,11 @@ public class TargetAttribute(
     Type[]? genericTypes = null)
     : Attribute
 {
-    public readonly Type? type = type;
-    public readonly string? methodName = methodName;
-    public readonly MemberType memberType = memberType;
-    public readonly Type[]? parameterTypes = parameterTypes;
-    public readonly Type[]? genericTypes = genericTypes;
+    public Type? Type { get; } = type;
+    public string? MethodName { get; } = methodName;
+    public MemberType MemberType { get; } = memberType;
+    public Type[]? ParameterTypes { get; } = parameterTypes;
+    public Type[]? GenericTypes { get; } = genericTypes;
 
     /// <summary>
     ///     Applies the patch to a named member on the specified type.
@@ -566,7 +566,7 @@ public class TargetsAttribute(
 
 public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 {
-    public readonly Scope scope = scope;
+    public Scope Scope { get; } = scope;
 }
 
 /// <summary>
@@ -582,8 +582,8 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 [AttributeUsage(AttributeTargets.Parameter)]
 public class ParameterAttribute : ParameterBindingAttribute
 {
-    public readonly int? index = null;
-    public readonly string? name = null;
+    public int? Index { get; } = null;
+    public string? Name { get; } = null;
 
     /// <summary>
     ///     Binds to the source parameter having the same name as the attributed patch parameter.
@@ -606,7 +606,7 @@ public class ParameterAttribute : ParameterBindingAttribute
     /// </param>
     public ParameterAttribute(string? name, Scope scope = Scope.Any) : base(scope)
     {
-        this.name = name;
+        Name = name;
     }
 
     /// <summary>
@@ -619,7 +619,7 @@ public class ParameterAttribute : ParameterBindingAttribute
     /// </param>
     public ParameterAttribute(int index, Scope scope = Scope.Any) : base(scope)
     {
-        this.index = index;
+        Index = index;
     }
 }
 
@@ -656,7 +656,7 @@ public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 [AttributeUsage(AttributeTargets.Parameter)]
 public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer)
 {
-    public readonly string? key = key;
+    public string? Key { get; } = key;
 
     /// <summary>
     ///     Binds temporary state using the attributed patch parameter's name as the key.
@@ -679,7 +679,7 @@ public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer
 [AttributeUsage(AttributeTargets.Parameter)]
 public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
-    public readonly string? name = name;
+    public string? Name { get; } = name;
 
     /// <summary>
     ///     Binds to the field having the same name as the attributed patch parameter.
@@ -709,13 +709,13 @@ public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
 /// <remarks>
 ///     This can be used to access otherwise-inaccessible methods on the classes of the instance.
 /// </remarks>
-/// <param name="methodName"></param>
+/// <param name="name"></param>
 /// <param name="scope"></param>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class MethodAttribute(string? methodName, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
-    public string? MethodName { get; } = methodName;
+    public string? Name { get; } = name;
 
     public MethodAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 }

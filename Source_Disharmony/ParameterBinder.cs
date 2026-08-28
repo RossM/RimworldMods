@@ -20,7 +20,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         var attributes = parameter.GetCustomAttributes();
         var parameterBindingAttribute = attributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
 
-        Scope scope = (parameterBindingAttribute?.scope ?? Scope.Any) switch
+        Scope scope = (parameterBindingAttribute?.Scope ?? Scope.Any) switch
         {
             Scope.Any => infix ? Scope.Inner : Scope.Outer,
             Scope.Inner => Scope.Inner,
@@ -39,23 +39,23 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         switch (parameterBindingAttribute)
         {
-            case ParameterAttribute { index: int index }: return BindParameterByIndex(parameter, invocation, scope, index);
+            case ParameterAttribute { Index: int index }: return BindParameterByIndex(parameter, invocation, scope, index);
 
-            case ParameterAttribute { name: var name, scope: var attributeScope }:
+            case ParameterAttribute { Name: var name, Scope: var attributeScope }:
                 return BindParameterByName(parameter, name ?? parameterName, attributeScope);
 
             case InstanceAttribute: return BindInstance(parameter, invocation, scope);
 
             case ReturnValueAttribute: return BindReturnValue(parameter, invocation, scope);
 
-            case StateAttribute { key: var key }: return BindState(parameter, key ?? parameterName);
+            case StateAttribute { Key: var key }: return BindState(parameter, key ?? parameterName);
 
-            case FieldAttribute { name: var name, scope: var attributeScope }:
+            case FieldAttribute { Name: var name, Scope: var attributeScope }:
                 return BindFieldByName(parameter, name ?? parameterName, attributeScope);
 
             case BaseMethodAttribute: return BindBaseMethod(parameter);
 
-            case MethodAttribute { MethodName: var name }: return BindMethod(parameter, invocation, scope, name ?? parameterName);
+            case MethodAttribute { Name: var name }: return BindMethod(parameter, invocation, scope, name ?? parameterName);
 
             case null: break;
 
