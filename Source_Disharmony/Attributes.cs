@@ -713,7 +713,9 @@ public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
 /// <param name="scope"></param>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class MethodAttribute(string methodName, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+public class MethodAttribute(string? methodName, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
-    public string MethodName { get; } = methodName;
+    public string? MethodName { get; } = methodName;
+
+    public MethodAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 }

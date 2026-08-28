@@ -55,7 +55,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case BaseMethodAttribute: return BindBaseMethod(parameter);
 
-            case MethodAttribute { MethodName: var name }: return BindMethod(parameter, invocation, scope, name);
+            case MethodAttribute { MethodName: var name }: return BindMethod(parameter, invocation, scope, name ?? parameterName);
 
             case null: break;
 
