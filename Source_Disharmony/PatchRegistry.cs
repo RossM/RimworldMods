@@ -67,6 +67,8 @@ internal class ParameterBinding
     public string? stateKey;
 
     public MethodBase? methodInfo;
+
+    public bool useVirtualDispatch;
 }
 
 internal struct PatchInfo

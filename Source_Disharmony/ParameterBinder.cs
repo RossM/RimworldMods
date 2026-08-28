@@ -134,6 +134,10 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name)
     {
+        // Getting the instance for an iterator state machine isn't implemented for BindingType.Delegate
+        if (isIterator && scope == Scope.Outer)
+            throw new ParameterBindingException(parameter.Name, "[Method] is not supported for iterator state machines");
+
         var instanceType = invocation.InstanceType;
         var methodInfo = instanceType.GetMethod(name, AccessTools.all);
 
@@ -142,10 +146,15 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (invocation.IsStatic && !methodInfo.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Instance required");
 
+        // Calling a struct method through a delegate requires boxing the struct, which means that any writes
+        // by the method won't affect the original struct.
+        if (instanceType.IsValueType && !methodInfo.IsStatic)
+            throw new ParameterBindingException(parameter.Name, "[Method] is not supported for non-static methods on structs");
+
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
         ValidateInvoke(parameter, methodInfo);
 
-        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo };
+        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo, useVirtualDispatch = methodInfo.IsVirtual };
     }
 
     private static void ValidateInvoke(ParameterInfo parameter, MethodInfo methodInfo)

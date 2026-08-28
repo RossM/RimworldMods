@@ -106,7 +106,16 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 output.Add(new(OpCodes.Box, parameter.methodInfo.DeclaringType));
         }
 
-        output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
+        if (parameter.useVirtualDispatch)
+        {
+            output.Add(new(OpCodes.Dup));
+            output.Add(new(OpCodes.Ldvirtftn, parameter.methodInfo));
+        }
+        else
+        {
+            output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
+        }
+
         output.Add(new(OpCodes.Newobj, delegateConstructor));
     }
 
