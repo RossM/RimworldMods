@@ -300,6 +300,8 @@ internal class Processor(
         if (rule.pattern is null)
             throw new InvalidOperationException();
 
+        bool noOutput = rule.output is { Length: 0 };
+
         for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
         {
             if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match,
@@ -308,14 +310,14 @@ internal class Processor(
 
             // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
             // which would be lost when the instructions are replaced
-            if (rule is { mode: OutputMode.Replace, output.Length: > 0 })
+            if (rule is { mode: OutputMode.Replace, output: not null })
             {
                 CodeInstruction inst = instructions[instructionIndex + patternIndex];
-                if (patternIndex > 0 && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
+                if ((patternIndex > 0 || noOutput) && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
                     return false;
-                if (patternIndex > 0 && inst.labels.Count > 0)
+                if ((patternIndex > 0 || noOutput) && inst.labels.Count > 0)
                     return false;
-                if (patternIndex < rule.pattern.Length - 1 &&
+                if ((patternIndex < rule.pattern.Length - 1 || noOutput) &&
                     inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
                     return false;
             }
