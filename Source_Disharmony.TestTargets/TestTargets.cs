@@ -401,6 +401,22 @@ namespace Disharmony.Tests
         public static ConstructorTargets Create(int value) => new ConstructorTargets(value);
     }
 
+    public static class StaticConstructorObservation
+    {
+        public static bool ConstructorExecuted;
+    }
+
+    public static class StaticConstructorTargets
+    {
+        static StaticConstructorTargets()
+        {
+            StaticConstructorObservation.ConstructorExecuted = true;
+            Value = 42;
+        }
+
+        public static int Value { get; }
+    }
+
     public class BaseMethodTargets
     {
         public int InstanceValue { get; set; }

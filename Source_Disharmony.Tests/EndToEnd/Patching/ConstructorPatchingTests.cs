@@ -15,6 +15,8 @@ public static class ConstructorPatchingPatches
     [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
     public static void Postfix_Constructor_ReferenceType_Parameterless_Executes() => executionCount++;
 
+    public static void Prefix_StaticConstructor_ReferenceType_Parameterless_Executes() => executionCount++;
+
     [Prefix] [Inner(
         typeof(ConstructorTargets),
         memberType: MemberType.Constructor,
@@ -155,6 +157,34 @@ public sealed class ConstructorPatchingTests : PatchTestBase
 
         Assert.That(ConstructorPatchingPatches.executionCount, Is.EqualTo(1));
         Assert.That(result.ConstructorExecuted, Is.True);
+    }
+
+    [Test]
+    [Ignore("Harmony/MonoMod initializes the type while compiling its static constructor for patching")]
+    public void Prefix_StaticConstructor_ReferenceType_Parameterless_Executes()
+    {
+        ConstructorPatchingPatches.executionCount = 0;
+        StaticConstructorObservation.ConstructorExecuted = false;
+        ConstructorInfo target = typeof(StaticConstructorTargets).TypeInitializer!;
+        MethodInfo patch = typeof(ConstructorPatchingPatches)
+            .GetMethod(nameof(ConstructorPatchingPatches.Prefix_StaticConstructor_ReferenceType_Parameterless_Executes))!;
+        bool constructorExecutedDuringReflection = StaticConstructorObservation.ConstructorExecuted;
+        PatchConfig config = Patch.Of(target).Prefix.With(patch);
+        bool constructorExecutedDuringConfiguration = StaticConstructorObservation.ConstructorExecuted;
+
+        Patcher.Patch(config);
+        bool constructorExecutedDuringPatching = StaticConstructorObservation.ConstructorExecuted;
+        int result = StaticConstructorTargets.Value;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(constructorExecutedDuringReflection, Is.False);
+            Assert.That(constructorExecutedDuringConfiguration, Is.False);
+            Assert.That(constructorExecutedDuringPatching, Is.False);
+            Assert.That(ConstructorPatchingPatches.executionCount, Is.EqualTo(1));
+            Assert.That(StaticConstructorObservation.ConstructorExecuted, Is.True);
+            Assert.That(result, Is.EqualTo(42));
+        });
     }
 
     [Test]
