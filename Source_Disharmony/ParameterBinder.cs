@@ -3,11 +3,6 @@ using System.Text.RegularExpressions;
 
 namespace Disharmony;
 
-public class ParameterBindingException(string argumentName, string message) : Exception(message)
-{
-    public override string Message => $"{argumentName}: {base.Message}";
-}
-
 /// <summary>
 ///     A helper class that analyzes patch method parameters and determines how their values should be emitted in code
 ///     generation.
