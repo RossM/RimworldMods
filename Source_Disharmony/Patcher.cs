@@ -135,10 +135,11 @@ public static class Patcher
     /// <remarks>
     ///     Categories are ignored. Use <see cref="PatchCategory" /> to select a single category.
     /// </remarks>
-    public static void PatchAll(Assembly assembly)
+    public static PatchHandle PatchAll(Assembly assembly)
     {
-        RegisterAll(assembly);
+        var handle = RegisterAll(assembly);
         Apply();
+        return handle;
     }
 
     /// <summary>
@@ -151,9 +152,11 @@ public static class Patcher
     /// <remarks>
     ///     Categories are ignored. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
     /// </remarks>
-    public static void RegisterAll(Assembly assembly)
+    internal static PatchHandle RegisterAll(Assembly assembly)
     {
-        registry.ProcessAssembly(assembly);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessAssembly(assembly, handle.id);
+        return handle;
     }
 
     /// <summary>
@@ -167,10 +170,11 @@ public static class Patcher
     ///     Categories are supplied by <see cref="CategoryAttribute" /> or
     ///     <see cref="HarmonyLib.HarmonyPatchCategory" />. Classes must also have a recognized patch marker.
     /// </remarks>
-    public static void PatchCategory(Assembly assembly, string? category)
+    public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
-        RegisterCategory(assembly, category);
+        var handle = RegisterCategory(assembly, category);
         Apply();
+        return handle;
     }
 
     /// <summary>
@@ -185,9 +189,11 @@ public static class Patcher
     ///     <see cref="HarmonyLib.HarmonyPatchCategory" />. Classes must also have a recognized patch marker. Call
     ///     <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
     /// </remarks>
-    public static void RegisterCategory(Assembly assembly, string? category)
+    internal static PatchHandle RegisterCategory(Assembly assembly, string? category)
     {
-        registry.ProcessAssembly(assembly, category, 0);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessAssembly(assembly, category, handle.id);
+        return handle;
     }
 
     /// <summary>
@@ -198,9 +204,11 @@ public static class Patcher
     ///     The type does not need a <see cref="PatchAttribute" /> when registered directly. Inherited methods are not
     ///     processed. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
     /// </remarks>
-    public static void Register(Type type)
+    internal static PatchHandle RegisterAll(Type type)
     {
-        registry.ProcessType(type.GetTypeInfo(), 0);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessType(type.GetTypeInfo(), handle.id);
+        return handle;
     }
 
     /// <summary>
@@ -211,10 +219,11 @@ public static class Patcher
     ///     The type does not need a <see cref="PatchAttribute" /> when patched directly. Inherited methods are not
     ///     processed.
     /// </remarks>
-    public static void PatchAll(Type type)
+    public static PatchHandle PatchAll(Type type)
     {
-        Register(type);
+        var handle = RegisterAll(type);
         Apply();
+        return handle;
     }
 
     /// <summary>

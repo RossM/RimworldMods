@@ -105,14 +105,14 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessAssembly(Assembly assembly)
+    public void ProcessAssembly(Assembly assembly, int unpatchKey)
     {
         lock (syncRoot)
         {
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
-                    ProcessType(type, 0);
+                    ProcessType(type, unpatchKey);
             }
         }
     }
