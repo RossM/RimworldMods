@@ -199,35 +199,6 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessMethod(MethodInfo method, IEnumerable<MethodBase> targets, int unpatchKey)
-    {
-        lock (syncRoot)
-        {
-            try
-            {
-                List<Attribute> attributes = GetAttributes(method);
-
-                var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
-                var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
-                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.Options ?? PatchOptions.Default;
-
-                if (patchTypeAttribute == null)
-                    return;
-
-                PatchType patchType = patchTypeAttribute.PatchType;
-
-                Invocation inner = GetInnerInvocation(innerAttribute);
-
-                foreach (var target in targets)
-                    AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName, unpatchKey);
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException($"Error processing {method.FullName}", e);
-            }
-        }
-    }
-
     private static List<Attribute> GetAttributes(MethodInfo method)
     {
         var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
