@@ -49,14 +49,6 @@ public enum PatchType
 ///         <see cref="TargetAttribute" /> applies the same patch method to multiple outer members.
 ///     </para>
 ///     <para>
-///         When the patch method uses attributes to describe how it runs but the outer targets are chosen in code, pass
-///         those targets to the method-level overloads of
-///         <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> and
-///         <see cref="Patch(MethodInfo, IEnumerable{MethodBase})" /> instead of adding target attributes. To configure the
-///         entire patch in code, use an overload that also accepts a <see cref="PatchType" />. Parameter-binding
-///         attributes on the patch method work with either approach.
-///     </para>
-///     <para>
 ///         A target's declaring type is resolved from the target attribute first, then from the containing
 ///         <see cref="PatchAttribute" /> or Harmony patch metadata, and finally from the member name. When the name must
 ///         supply the type, write the type and member as a dotted name, such as <c>Namespace.Type.Member</c>. The
@@ -219,7 +211,7 @@ public static class Patcher
     ///     The type does not need a <see cref="PatchAttribute" /> when patched directly. Inherited methods are not
     ///     processed.
     /// </remarks>
-    public static void Patch(Type type)
+    public static void PatchAll(Type type)
     {
         Register(type);
         Apply();
@@ -234,7 +226,7 @@ public static class Patcher
     ///     <see cref="PatchAttribute" /> when the method is registered directly. Call <see cref="Apply" /> or
     ///     <see cref="ForceApply" /> after completing registration.
     /// </remarks>
-    public static PatchHandle Register(MethodInfo method)
+    internal static PatchHandle Register(MethodInfo method)
     {
         PatchHandle handle = new PatchHandle();
         registry.ProcessMethod(method, handle.id);
@@ -253,7 +245,7 @@ public static class Patcher
     ///     needed and are ignored. <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply.
     ///     Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been registered.
     /// </remarks>
-    public static PatchHandle Register(MethodInfo method, params IEnumerable<MethodBase> targets)
+    internal static PatchHandle Register(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
         PatchHandle handle = new PatchHandle();
         registry.ProcessMethod(method, targets, handle.id);
@@ -285,7 +277,7 @@ public static class Patcher
     ///     parameters remain effective. Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been
     ///     registered.
     /// </remarks>
-    public static PatchHandle Register(
+    internal static PatchHandle Register(
         MethodInfo method,
         PatchType patchType,
         MemberInfo? innerTarget = null,
@@ -309,27 +301,6 @@ public static class Patcher
     public static PatchHandle Patch(MethodInfo method)
     {
         var handle = Register(method);
-        Apply();
-        return handle;
-    }
-
-    /// <summary>
-    ///     Patches the supplied outer targets using an attributed patch method.
-    /// </summary>
-    /// <param name="method">The static method that implements the patch.</param>
-    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
-    /// <remarks>
-    ///     Use this overload when <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" />, optionally combined
-    ///     with <see cref="InnerAttribute" /> or <see cref="InnerConstantAttribute" />, describes how the patch runs, but
-    ///     the targets are chosen in code. <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not
-    ///     needed and are ignored. <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply.
-    ///     This call also makes all patches registered so far take effect. Use
-    ///     <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> when more patches will be registered before
-    ///     applying them together.
-    /// </remarks>
-    public static PatchHandle Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
-    {
-        var handle = Register(method, targets);
         Apply();
         return handle;
     }
@@ -360,7 +331,7 @@ public static class Patcher
     ///     <see cref="Register(MethodInfo, PatchType, MemberInfo, MemberType, PatchOptions, IEnumerable{MethodBase})" />
     ///     when more patches will be registered before applying them together.
     /// </remarks>
-    public static PatchHandle Patch(
+    internal static PatchHandle Patch(
         MethodInfo method,
         PatchType patchType,
         MemberInfo? innerTarget = null,
@@ -419,7 +390,7 @@ public static class Patcher
     ///         in more detail.
     ///     </para>
     /// </remarks>
-    public static void Apply()
+    internal static void Apply()
     {
         registry.ApplyImpl(useTrampolines: true);
     }

@@ -158,7 +158,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchTypeProcessesEveryPatchMethodOnType()
     {
-        Patcher.Patch(typeof(PatchTypeProcessesEveryPatchMethodOnTypePatches));
+        Patcher.PatchAll(typeof(PatchTypeProcessesEveryPatchMethodOnTypePatches));
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
@@ -185,7 +185,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     {
         ClassTargetAttributePatches.firstPatchCalls = 0;
         ClassTargetAttributePatches.secondPatchCalls = 0;
-        Patcher.Patch(typeof(ClassTargetAttributePatches));
+        Patcher.PatchAll(typeof(ClassTargetAttributePatches));
 
         StaticMethodTargets.RegistrationResultA();
 
@@ -198,7 +198,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     {
         ClassTargetsAttributePatches.firstPatchCalls = 0;
         ClassTargetsAttributePatches.secondPatchCalls = 0;
-        Patcher.Patch(typeof(ClassTargetsAttributePatches));
+        Patcher.PatchAll(typeof(ClassTargetsAttributePatches));
 
         StaticMethodTargets.OverloadedVoid(1);
         StaticMethodTargets.OverloadedVoid("value");
@@ -252,19 +252,6 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
-    }
-
-    [Test]
-    public void Patch_TargetsOnly_UsesAttributesForInnerPatch()
-    {
-        MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Patch_TargetsOnly_UsesAttributesForInnerPatch))!;
-        MethodInfo target = typeof(OuterStaticMethodTargets)
-            .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
-
-        Patcher.Patch(patch, target);
-
-        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 
     [Test]
