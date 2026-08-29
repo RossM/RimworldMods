@@ -10,10 +10,10 @@ public class ParameterBindingException(string argumentName, string message) : Ex
 
 internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
 {
+    private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
+
     private readonly bool infix = inner is not EmptyInvocation;
     private readonly bool isIterator = outer != target;
-
-    private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
 
     public ParameterBinding Bind(ParameterInfo parameter)
     {
@@ -159,7 +159,11 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
         ValidateInvoke(parameter, methodInfo);
 
-        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo, useVirtualDispatch = methodInfo.IsVirtual };
+        return new()
+        {
+            parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo,
+            useVirtualDispatch = methodInfo.IsVirtual,
+        };
     }
 
     private static void ValidateInvoke(ParameterInfo parameter, MethodInfo methodInfo)
@@ -362,9 +366,11 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (IsWriteableRef(parameter) && !type.IsByRef)
         {
             if (scope == Scope.Outer && !(patchType == PatchType.Prefix && inner is EmptyInvocation))
-                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access outer method {bindingType} by writeable reference");
+                throw new ParameterBindingException(parameter.Name,
+                    $"{patchType} can't access outer method {bindingType} by writeable reference");
             if (scope == Scope.Inner && !(patchType == PatchType.Prefix && inner is not EmptyInvocation))
-                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access inner method {bindingType} by writeable reference");
+                throw new ParameterBindingException(parameter.Name,
+                    $"{patchType} can't access inner method {bindingType} by writeable reference");
         }
     }
 
