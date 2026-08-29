@@ -10,12 +10,12 @@ public class ParameterBindingException(string argumentName, string message) : Ex
 
 internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
 {
+    private bool IsInfix => inner is not EmptyInvocation;
+    private bool IsIterator => outer != target;
+
     private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
     private const string ThisRegexPattern = "^<>[\\d+]__this$";
-
-    private readonly bool infix = inner is not EmptyInvocation;
-    private readonly bool isIterator = outer != target;
-
+    
     public ParameterBinding Bind(ParameterInfo parameter)
     {
         var parameterName = parameter.Name;
@@ -25,7 +25,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         Scope scope = (parameterBindingAttribute?.Scope ?? Scope.Any) switch
         {
-            Scope.Any => infix ? Scope.Inner : Scope.Outer,
+            Scope.Any => IsInfix ? Scope.Inner : Scope.Outer,
             Scope.Inner => Scope.Inner,
             Scope.Outer => Scope.Outer,
             _ => throw new ArgumentOutOfRangeException(),
@@ -69,7 +69,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             case "__caller":
             {
-                if (!infix)
+                if (!IsInfix)
                     throw new ParameterBindingException(parameterName, "Can only be used with inner patches");
                 return BindInstance(parameter, outer, Scope.Outer);
             }
@@ -93,7 +93,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (invocation.HasThis)
             index++;
 
-        if (isIterator && scope == Scope.Outer)
+        if (IsIterator && scope == Scope.Outer)
             return BindParameterByName(parameter, target.ParameterNames[index], scope);
 
         Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
@@ -138,7 +138,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name)
     {
         // Getting the instance for an iterator state machine isn't implemented for BindingType.Delegate
-        if (isIterator && scope == Scope.Outer)
+        if (IsIterator && scope == Scope.Outer)
             throw new ParameterBindingException(parameter.Name, "[Method] is not supported for iterator state machines");
 
         var instanceType = invocation.InstanceType;
@@ -187,7 +187,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindInstance(ParameterInfo parameter, Invocation invocation, Scope scope)
     {
-        if (isIterator && scope == Scope.Outer)
+        if (IsIterator && scope == Scope.Outer)
         {
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
@@ -225,7 +225,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
         {
-            if (isIterator)
+            if (IsIterator)
             {
                 var iteratorType = outer.InstanceType;
                 var field = iteratorType.GetField(name, AccessTools.all);
@@ -324,7 +324,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             Type curType = outer.InstanceType;
             List<FieldInfo> fields = [];
-            if (isIterator)
+            if (IsIterator)
             {
                 var thisField = GetThisField(curType);
                 curType = thisField.FieldType;
@@ -366,10 +366,10 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
         if (IsWriteableRef(parameter) && !type.IsByRef)
         {
-            if (scope == Scope.Outer && !(patchType == PatchType.Prefix && inner is EmptyInvocation))
+            if (scope == Scope.Outer && !(patchType == PatchType.Prefix && !IsInfix))
                 throw new ParameterBindingException(parameter.Name,
                     $"{patchType} can't access outer method {bindingType} by writeable reference");
-            if (scope == Scope.Inner && !(patchType == PatchType.Prefix && inner is not EmptyInvocation))
+            if (scope == Scope.Inner && !(patchType == PatchType.Prefix && IsInfix))
                 throw new ParameterBindingException(parameter.Name,
                     $"{patchType} can't access inner method {bindingType} by writeable reference");
         }
