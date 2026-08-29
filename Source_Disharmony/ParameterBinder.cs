@@ -11,6 +11,7 @@ public class ParameterBindingException(string argumentName, string message) : Ex
 internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
 {
     private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
+    private const string ThisRegexPattern = "^<>[\\d+]__this$";
 
     private readonly bool infix = inner is not EmptyInvocation;
     private readonly bool isIterator = outer != target;
@@ -344,12 +345,12 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private static FieldInfo GetThisField(Type iteratorType)
     {
-        return iteratorType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
+        return iteratorType.GetFields(AccessTools.all).Single(f => Regex.IsMatch(f.Name, ThisRegexPattern));
     }
 
     private static bool TryGetThisField(Type iteratorType, [NotNullWhen(true)] out FieldInfo? field)
     {
-        field = iteratorType.GetFields(AccessTools.all).SingleOrDefault(f => Regex.IsMatch(f.Name, "^<>[\\d+]__this$"));
+        field = iteratorType.GetFields(AccessTools.all).SingleOrDefault(f => Regex.IsMatch(f.Name, ThisRegexPattern));
         return field != null;
     }
 
