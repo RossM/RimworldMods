@@ -99,8 +99,8 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     public void Clear()
     {
         valuesByKey.Clear();
-        Array.Clear(emptyLists, 0, emptyLists.Length);
-        emptyListCount = 0;
+        // Entries beyond emptyListCount may still have references to non-empty lists, so clear them
+        Array.Clear(emptyLists, emptyListCount, emptyLists.Length - emptyListCount);
     }
 
     public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => EnumerableImplementation.GetEnumerator();
