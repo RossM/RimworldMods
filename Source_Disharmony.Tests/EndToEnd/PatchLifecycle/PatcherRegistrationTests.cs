@@ -6,14 +6,6 @@ public static class PatcherRegistrationPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void RegisterMethodDefersPatchUntilApply(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void ForceApplyAppliesRegisteredMethod(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultB))]
     public static void MultipleTargetAttributesPatchEachTarget(ref int __result) => __result = 42;
 
@@ -21,13 +13,8 @@ public static class PatcherRegistrationPatches
     [Targets(typeof(StaticMethodTargets), nameof(StaticMethodTargets.OverloadedVoid))]
     public static void TargetsAttributePatchesEveryOverload() => overloadPatchCalls++;
 
-    [Postfix]
-    public static void Register_TargetsOnly_UsesAttributesAndDefersUntilApply(ref int __result) => __result = 42;
-
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     public static void Patch_TargetsOnly_UsesAttributesForInnerPatch(ref int __result) => __result = 42;
-
-    public static bool Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply() => false;
 
     public static void Patch_PatchConfig_UsesExplicitPostfixForEveryTarget(ref int __result) => __result = 42;
 
@@ -99,10 +86,6 @@ public static class IncludedCategoryPatches
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultA))]
     public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void RegisterAllDefersAssemblyPatchesUntilApply_Included(ref int __result) => __result = 42;
 }
 
 [HarmonyPatch(typeof(StaticMethodTargets))]
@@ -116,10 +99,6 @@ public static class ExcludedCategoryPatches
     [Postfix]
     [Target(nameof(StaticMethodTargets.RegistrationResultB))]
     public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void RegisterAllDefersAssemblyPatchesUntilApply_Excluded(ref int __result) => __result = 42;
 }
 
 [TestFixture]
@@ -127,33 +106,6 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 {
     // TODO: Put assembly-scanning patch fixtures in a dedicated test assembly so RegisterAll/PatchAll do not scan unrelated patches.
     private static readonly Assembly TestAssembly = typeof(PatcherRegistrationTests).Assembly;
-
-    [Test]
-    public void RegisterMethodDefersPatchUntilApply()
-    {
-        MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.RegisterMethodDefersPatchUntilApply))!;
-
-        Patcher.Register(patch);
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
-
-        Patcher.Apply();
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
-    }
-
-    [Test]
-    public void ForceApplyAppliesRegisteredMethod()
-    {
-        MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.ForceApplyAppliesRegisteredMethod))!;
-
-        Patcher.Register(patch);
-        Patcher.ForceApply();
-
-        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
-    }
 
     [Test]
     public void PatchTypeProcessesEveryPatchMethodOnType()
@@ -231,44 +183,6 @@ public sealed class PatcherRegistrationTests : PatchTestBase
         StaticMethodTargets.OverloadedVoid("value");
 
         Assert.That(PatcherRegistrationPatches.overloadPatchCalls, Is.EqualTo(2));
-    }
-
-    [Test]
-    public void Register_TargetsOnly_UsesAttributesAndDefersUntilApply()
-    {
-        MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Register_TargetsOnly_UsesAttributesAndDefersUntilApply))!;
-        MethodInfo firstTarget = typeof(StaticMethodTargets)
-            .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
-        MethodInfo secondTarget = typeof(StaticMethodTargets)
-            .GetMethod(nameof(StaticMethodTargets.RegistrationResultB))!;
-
-        Patcher.Register(patch, [firstTarget, secondTarget]);
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
-        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
-
-        Patcher.Apply();
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
-        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
-    }
-
-    [Test]
-    public void Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply()
-    {
-        MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply))!;
-        MethodInfo target = typeof(StaticMethodTargets)
-            .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
-
-        Patcher.Register(patch, PatchType.Prefix, targets: [target]);
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
-
-        Patcher.Apply();
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.Zero);
     }
 
     [Test]
@@ -359,20 +273,6 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
-    }
-
-    [Test]
-    public void RegisterAllDefersAssemblyPatchesUntilApply()
-    {
-        Patcher.RegisterAll(TestAssembly);
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(1));
-        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
-
-        Patcher.Apply();
-
-        Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
-        Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
     }
 
     [Test]
