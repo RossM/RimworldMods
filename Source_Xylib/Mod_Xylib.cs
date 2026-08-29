@@ -34,7 +34,6 @@ public static class LateInit
     {
         using (new ProfileBlock("Xylib apply patches"))
         {
-            Patcher.Apply();
             Task.Factory.StartNew(Patcher.ForceApply, TaskCreationOptions.LongRunning);
         }
     }
