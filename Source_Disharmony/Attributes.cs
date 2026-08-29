@@ -127,8 +127,8 @@ public enum PatchOptions
 /// </param>
 /// <remarks>
 ///     <para>
-///         <see cref="Patcher.PatchAll" />, <see cref="Patcher.RegisterAll" />,
-///         <see cref="Patcher.PatchCategory" />, and <see cref="Patcher.RegisterCategory" /> discover classes marked
+///         <see cref="Patcher.PatchAll(Assembly)" /> and
+///         <see cref="Patcher.PatchCategory" /> discover classes marked
 ///         with this attribute. Direct registration by type or method does not require it.
 ///     </para>
 ///     <para>
@@ -152,8 +152,8 @@ public class PatchAttribute(Type? type = null) : Attribute
 /// <param name="category">The category name used to select the patch class.</param>
 /// <remarks>
 ///     <para>
-///         <see cref="Patcher.PatchCategory" /> and <see cref="Patcher.RegisterCategory" /> compare this name with
-///         the requested category. <see cref="Patcher.PatchAll" /> and <see cref="Patcher.RegisterAll" /> ignore
+///         <see cref="Patcher.PatchCategory" /> compares this name with
+///         the requested category. <see cref="Patcher.PatchAll(Assembly)" /> ignores
 ///         categories.
 ///     </para>
 ///     <para>

@@ -106,26 +106,9 @@ public static class Patcher
     /// <returns>A handle for removing the patches added by this call.</returns>
     public static PatchHandle PatchAll(Assembly assembly)
     {
-        var handle = RegisterAll(assembly);
-        Apply();
-        return handle;
-    }
-
-    /// <summary>
-    ///     Discovers and registers every patch class in an assembly without applying the pending changes.
-    /// </summary>
-    /// <param name="assembly">
-    ///     The assembly to scan for classes marked with <see cref="PatchAttribute" /> or
-    ///     <see cref="HarmonyLib.HarmonyPatch" />.
-    /// </param>
-    /// <remarks>
-    ///     Categories are ignored. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
-    /// </remarks>
-    /// <returns>A handle that owns every patch registered by this call.</returns>
-    internal static PatchHandle RegisterAll(Assembly assembly)
-    {
         PatchHandle handle = new PatchHandle();
         registry.ProcessAssembly(assembly, handle.id);
+        Apply();
         return handle;
     }
 
@@ -143,44 +126,9 @@ public static class Patcher
     /// <returns>A handle for removing the patches added by this call.</returns>
     public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
-        var handle = RegisterCategory(assembly, category);
-        Apply();
-        return handle;
-    }
-
-    /// <summary>
-    ///     Discovers and registers patch classes in one category without applying the pending changes.
-    /// </summary>
-    /// <param name="assembly">The assembly to scan for patch classes.</param>
-    /// <param name="category">
-    ///     The category to select, or <see langword="null" /> to select classes without a category.
-    /// </param>
-    /// <remarks>
-    ///     Categories are supplied by <see cref="CategoryAttribute" /> or
-    ///     <see cref="HarmonyLib.HarmonyPatchCategory" />. Classes must also have a recognized patch marker. Call
-    ///     <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
-    /// </remarks>
-    /// <returns>A handle that owns every patch registered by this call.</returns>
-    internal static PatchHandle RegisterCategory(Assembly assembly, string? category)
-    {
         PatchHandle handle = new PatchHandle();
         registry.ProcessAssembly(assembly, category, handle.id);
-        return handle;
-    }
-
-    /// <summary>
-    ///     Registers every patch method declared by a type without applying the pending changes.
-    /// </summary>
-    /// <param name="type">The type that declares the patch methods to register.</param>
-    /// <remarks>
-    ///     The type does not need a <see cref="PatchAttribute" /> when registered directly. Inherited methods are not
-    ///     processed. Call <see cref="Apply" /> or <see cref="ForceApply" /> after completing registration.
-    /// </remarks>
-    /// <returns>A handle that owns every patch registered by this call.</returns>
-    internal static PatchHandle RegisterAll(Type type)
-    {
-        PatchHandle handle = new PatchHandle();
-        registry.ProcessType(type.GetTypeInfo(), handle.id);
+        Apply();
         return handle;
     }
 
@@ -195,7 +143,8 @@ public static class Patcher
     /// <returns>A handle for removing the patches added by this call.</returns>
     public static PatchHandle PatchAll(Type type)
     {
-        var handle = RegisterAll(type);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessType(type.GetTypeInfo(), handle.id);
         Apply();
         return handle;
     }
