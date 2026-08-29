@@ -37,16 +37,36 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         values.Add(value);
     }
 
-    public bool Remove(TKey key, TElement value) => valuesByKey.TryGetValue(key, out var values) && values.Remove(value);
+    public bool Remove(TKey key, TElement value)
+    {
+        if (!valuesByKey.TryGetValue(key, out var values))
+            return false;
+        bool result = values.Remove(value);
+        if (values.Count == 0)
+            valuesByKey.Remove(key);
+        return result;
+    }
 
-    public int RemoveAll(TKey key, Predicate<TElement> predicate) =>
-        valuesByKey.TryGetValue(key, out var values) ? values.RemoveAll(predicate) : 0;
+    public int RemoveAll(TKey key, Predicate<TElement> predicate)
+    {
+        if (!valuesByKey.TryGetValue(key, out var values))
+            return 0;
+        int result = values.RemoveAll(predicate);
+        if (values.Count == 0)
+            valuesByKey.Remove(key);
+        return result;
+    }
 
     public int RemoveAll(Func<TKey, TElement, bool> predicate)
     {
         int removed = 0;
-        foreach (var kvp in valuesByKey)
+        foreach (var kvp in valuesByKey.ToList())
+        {
             removed += kvp.Value.RemoveAll(value => predicate(kvp.Key, value));
+            if (kvp.Value.Count == 0)
+                valuesByKey.Remove(kvp.Key);
+        }
+
         return removed;
     }
 
