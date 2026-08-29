@@ -6,7 +6,11 @@ public class PatchException : Exception
     public PatchException(string message, Exception innerException) : base(message, innerException) { }
 }
 
-public class ParameterBindingException(string argumentName, string message) : PatchException($"{argumentName}: {message}");
+public class ParameterBindingException : PatchException
+{
+    public ParameterBindingException(string argumentName, string message) : base($"{argumentName}: {message}") { }
+    public ParameterBindingException(string argumentName, string message, Exception innerException) : base($"{argumentName}: {message}", innerException) { }
+}
 
 public class PatchDefinitionException(MethodInfo method, string message) : PatchException($"{method.FullName}: {message}");
 

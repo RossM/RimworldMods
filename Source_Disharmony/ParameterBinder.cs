@@ -29,7 +29,15 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         var parameterName = parameter.Name;
 
         var parameterAttributes = parameter.GetCustomAttributes().ToList();
-        var parameterBindingAttribute = parameterAttributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
+        ParameterBindingAttribute? parameterBindingAttribute;
+        try
+        {
+            parameterBindingAttribute = parameterAttributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
+        }
+        catch (InvalidOperationException e)
+        {
+            throw new ParameterBindingException(parameterName, "Multiple parameter binding attributes", e);
+        }
 
         Scope scope = (parameterBindingAttribute?.Scope ?? Scope.Any) switch
         {
