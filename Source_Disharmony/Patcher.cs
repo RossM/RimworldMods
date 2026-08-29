@@ -107,7 +107,16 @@ public static class Patcher
     public static PatchHandle PatchAll(Assembly assembly)
     {
         PatchHandle handle = new PatchHandle();
-        Registry.ProcessAssembly(assembly, handle.id);
+        try
+        {
+            Registry.ProcessAssembly(assembly, handle.id);
+        }
+        catch (Exception)
+        {
+            Registry.Unpatch(handle.id);
+            throw;
+        }
+
         Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
@@ -127,7 +136,15 @@ public static class Patcher
     public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
         PatchHandle handle = new PatchHandle();
-        Registry.ProcessAssembly(assembly, category, handle.id);
+        try
+        {
+            Registry.ProcessAssembly(assembly, category, handle.id);
+        }
+        catch (Exception)
+        {
+            Registry.Unpatch(handle.id);
+            throw;
+        }
         Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
@@ -144,7 +161,15 @@ public static class Patcher
     public static PatchHandle PatchAll(Type type)
     {
         PatchHandle handle = new PatchHandle();
-        Registry.ProcessType(type.GetTypeInfo(), handle.id);
+        try
+        {
+            Registry.ProcessType(type.GetTypeInfo(), handle.id);
+        }
+        catch (Exception)
+        {
+            Registry.Unpatch(handle.id);
+            throw;
+        }
         Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
@@ -161,7 +186,15 @@ public static class Patcher
     public static PatchHandle Patch(MethodInfo method)
     {
         PatchHandle handle = new PatchHandle();
-        Registry.ProcessMethod(method, handle.id);
+        try
+        {
+            Registry.ProcessMethod(method, handle.id);
+        }
+        catch (Exception)
+        {
+            Registry.Unpatch(handle.id);
+            throw;
+        }
         Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
@@ -212,8 +245,16 @@ public static class Patcher
     {
         PatchHandle handle = new PatchHandle();
         var stateKey = $"handle!{handle.id}";
-        foreach (var patch in patches)
-            Registry.ProcessPatch(patch, stateKey, handle.id);
+        try
+        {
+            foreach (var patch in patches)
+                Registry.ProcessPatch(patch, stateKey, handle.id);
+        }
+        catch (Exception)
+        {
+            Registry.Unpatch(handle.id);
+            throw;
+        }
         Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
