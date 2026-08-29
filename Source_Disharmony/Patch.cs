@@ -71,7 +71,6 @@ public static class Patch
             },
         };
 
-        public PatchConfig Inner(ConstructorInfo member) => patchConfig with { InnerTarget = new InnerConstructorInvocation(member) };
         public PatchConfig InnerGet(PropertyInfo member) => patchConfig with { InnerTarget = new MethodInvocation(member.GetMethod) };
         public PatchConfig InnerGet(FieldInfo member) => patchConfig with { InnerTarget = new GetFieldInvocation(member) };
         public PatchConfig InnerSet(PropertyInfo member) => patchConfig with { InnerTarget = new MethodInvocation(member.SetMethod) };
