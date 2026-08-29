@@ -342,6 +342,7 @@ public static class Patcher
     public static void Unpatch(PatchHandle handle)
     {
         registry.Unpatch(handle.id);
+        Apply();
     }
 
     /// <summary>
