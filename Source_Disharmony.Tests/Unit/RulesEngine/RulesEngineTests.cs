@@ -639,6 +639,214 @@ public sealed class RulesEngineTests
     }
 
     [Test]
+    public void Pattern_Switch_RepeatedPatternLabel_DifferentInstructionLabels_DoesNotMatch()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label patternTarget = generator.DefineLabel();
+        Label instructionTarget0 = generator.DefineLabel();
+        Label instructionTarget1 = generator.DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget, patternTarget })],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Switch, new[] { instructionTarget0, instructionTarget1 })]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_Switch_FewerInstructionTargets_DoesNotMatch()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label patternTarget0 = generator.DefineLabel();
+        Label patternTarget1 = generator.DefineLabel();
+        Label instructionTarget = generator.DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget0, patternTarget1 })],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Switch, new[] { instructionTarget })]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_Switch_MoreInstructionTargets_DoesNotMatch()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label patternTarget = generator.DefineLabel();
+        Label instructionTarget0 = generator.DefineLabel();
+        Label instructionTarget1 = generator.DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget })],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Switch, new[] { instructionTarget0, instructionTarget1 })]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_BranchAndSwitch_SharedPatternLabel_ConsistentInstructionLabel_Matches()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label patternTarget = generator.DefineLabel();
+        Label instructionTarget = generator.DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern =
+            [
+                new CodeInstruction(OpCodes.Br, patternTarget),
+                new CodeInstruction(OpCodes.Switch, new[] { patternTarget }),
+            ],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Br, instructionTarget),
+                new CodeInstruction(OpCodes.Switch, new[] { instructionTarget }),
+            ]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_BranchAndSwitch_SharedPatternLabel_InconsistentInstructionLabels_DoesNotMatch()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label patternTarget = generator.DefineLabel();
+        Label instructionBranchTarget = generator.DefineLabel();
+        Label instructionSwitchTarget = generator.DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern =
+            [
+                new CodeInstruction(OpCodes.Br, patternTarget),
+                new CodeInstruction(OpCodes.Switch, new[] { patternTarget }),
+            ],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Br, instructionBranchTarget),
+                new CodeInstruction(OpCodes.Switch, new[] { instructionSwitchTarget }),
+            ]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_RepeatedBranchLabel_DifferentInstructionLabels_DoesNotMatch()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label patternTarget = generator.DefineLabel();
+        Label instructionTarget0 = generator.DefineLabel();
+        Label instructionTarget1 = generator.DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern =
+            [
+                new CodeInstruction(OpCodes.Br, patternTarget),
+                new CodeInstruction(OpCodes.Br, patternTarget),
+            ],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Br, instructionTarget0),
+                new CodeInstruction(OpCodes.Br, instructionTarget1),
+            ]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_LdcR8_NaN_Instruction_LdcR8_NaN_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_R8, double.NaN)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_R8, double.NaN)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_NopWithoutOperand_InstructionAnnotation_DoesNotMatch()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Nop)],
+            output = [new CodeInstruction(OpCodes.Pop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [CodeInstruction.Annotation("metadata")]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_LdcI8_InstructionLdcI8_WithSameOperand_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I8, 42L)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I8, 42L)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
+    }
+
+    [Test]
+    public void Pattern_LdcR4_InstructionLdcR4_WithDifferentOperand_DoesNotMatch()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_R4, 1.5f)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Ldc_R4, 2.5f)]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
     public void Pattern_BrtrueS_Instruction_Brtrue_Matches()
     {
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
@@ -737,6 +945,40 @@ public sealed class RulesEngineTests
         LocalBuilder loadedLocal = (LocalBuilder)instructions.Single(instruction => instruction.IsLdloc()).operand;
         Assert.That(loadedLocal, Is.SameAs(storedLocal));
         Assert.That(storedLocal, Is.Not.SameAs(sourceLocal));
+    }
+
+    [Test]
+    public void Pattern_RepeatedLocal_DifferentInstructionLocals_DoesNotMatch()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [CodeInstruction.StoreLocal(3), CodeInstruction.LoadLocal(4)]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void Pattern_DifferentLocals_SameInstructionLocal_Matches()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(1)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [CodeInstruction.StoreLocal(3), CodeInstruction.LoadLocal(3)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop }));
     }
 
     [Test]
@@ -1005,6 +1247,618 @@ public sealed class RulesEngineTests
             OpCodes.Ldc_I4_2,
             OpCodes.Ldc_I4_1,
         }));
+    }
+
+    [Test]
+    public void AdjacentMultiInstructionMatchesAreBothReplaced()
+    {
+        var rule = new Rule
+        {
+            min = 2,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Pop),
+                new CodeInstruction(OpCodes.Ldc_I4_1),
+                new CodeInstruction(OpCodes.Pop),
+            ]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Nop, OpCodes.Nop }));
+    }
+
+    [Test]
+    public void OverlappingMatchesThrow()
+    {
+        var rule = new Rule
+        {
+            min = 2,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Nop), new CodeInstruction(OpCodes.Nop)],
+            output = [new CodeInstruction(OpCodes.Pop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Nop),
+                new CodeInstruction(OpCodes.Nop),
+                new CodeInstruction(OpCodes.Nop),
+            ]));
+
+        Assert.That(exception!.Message, Is.EqualTo("Overlapping matches"));
+    }
+
+    [Test]
+    public void SamePhaseNonOverlappingRulesBothApply()
+    {
+        var replaceOne = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+        };
+        var replaceTwo = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [replaceTwo, replaceOne],
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Ldc_I4_2)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ldc_I4_3, OpCodes.Ldc_I4_4 }));
+    }
+
+    [Test]
+    public void OptionalUnmatchedRuleDoesNotPreventAnotherRuleFromApplying()
+    {
+        var optionalRule = new Rule
+        {
+            min = 0,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_5)],
+        };
+        var matchingRule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [optionalRule, matchingRule],
+            [new CodeInstruction(OpCodes.Ldc_I4_1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ldc_I4_2 }));
+    }
+
+    [Test]
+    public void OptionalUnmatchedRuleWithoutAnyTransformationThrowsNoMatches()
+    {
+        var rule = new Rule
+        {
+            min = 0,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Ret)]));
+
+        Assert.That(exception!.Message, Is.EqualTo("No matches"));
+    }
+
+    [Test]
+    public void SamePhaseRuleDoesNotMatchOutputFromAnotherRule()
+    {
+        var firstRule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+        var secondRule = new Rule
+        {
+            min = 0,
+            max = 0,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [firstRule, secondRule],
+            [new CodeInstruction(OpCodes.Ldc_I4_1)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ldc_I4_2 }));
+    }
+
+    [Test]
+    public void MatchOnlyRuleValidatesInputAlongsideReplacement()
+    {
+        var matchOnly = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = null!,
+        };
+        var replacement = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Pop)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [matchOnly, replacement],
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ldc_I4_1, OpCodes.Nop }));
+    }
+
+    [Test]
+    public void MatchOnlyRuleCanValidateBranchTargetAlongsideReplacement()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var matchOnly = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = null!,
+        };
+        var replacement = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Pop)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [matchOnly, replacement],
+            [new CodeInstruction(OpCodes.Ldc_I4_1).WithLabels(target), new CodeInstruction(OpCodes.Pop)]);
+
+        Assert.That(result.Single(instruction => instruction.labels.Contains(target)).opcode,
+            Is.EqualTo(OpCodes.Ldc_I4_1));
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ldc_I4_1, OpCodes.Nop }));
+    }
+
+    [Test]
+    public void MethodPrefixAndReplacementAtMethodStartBothApplyRegardlessOfPriority()
+    {
+        var prefix = new Rule
+        {
+            priority = 1,
+            mode = OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+        };
+        var replacement = new Rule
+        {
+            priority = 2,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ret)],
+            output = [new CodeInstruction(OpCodes.Pop)],
+        };
+
+        List<CodeInstruction> result = Run([prefix, replacement], [new CodeInstruction(OpCodes.Ret)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ldc_I4_1, OpCodes.Pop }));
+    }
+
+    [Test]
+    public void MethodPostfixAndReplacementAtMethodEndBothApply()
+    {
+        var replacement = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ret)],
+            output = [new CodeInstruction(OpCodes.Pop)],
+        };
+        var postfix = new Rule
+        {
+            mode = OutputMode.MethodPostfix,
+            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+        };
+
+        List<CodeInstruction> result = Run([postfix, replacement], [new CodeInstruction(OpCodes.Ret)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Pop, OpCodes.Ldc_I4_1 }));
+    }
+
+    [Test]
+    public void EmptyRulesetPreservesInstructions()
+    {
+        List<CodeInstruction> result = Run(
+            [],
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop), new CodeInstruction(OpCodes.Ret)]);
+
+        Assert.That(MeaningfulOpCodes(result),
+            Is.EqualTo(new[] { OpCodes.Ldc_I4_1, OpCodes.Pop, OpCodes.Ret }));
+    }
+
+    [Test]
+    public void ReplaceWithEmptyOutputDeletesUnmarkedMatch()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Ret)]);
+
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ret }));
+    }
+
+    [Test]
+    public void ReplaceWithEmptyOutputDoesNotDeleteBranchTarget()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [new CodeInstruction(OpCodes.Ldc_I4_1).WithLabels(target)]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void ReplaceSingleInstructionMovesLabelAndBothExceptionBoundariesAroundOutput()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1)
+                    .WithLabels(target)
+                    .WithBlocks(
+                        new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock),
+                        new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
+            ]);
+
+        CodeInstruction entryCarrier = result.Single(instruction => instruction.labels.Contains(target));
+        CodeInstruction replacement = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_2);
+        CodeInstruction endCarrier = result.Single(instruction =>
+            instruction.blocks.Any(block => block.blockType == ExceptionBlockType.EndExceptionBlock));
+        Assert.That(entryCarrier.opcode, Is.EqualTo(OpCodes.Nop));
+        Assert.That(entryCarrier.blocks.Select(block => block.blockType),
+            Does.Contain(ExceptionBlockType.BeginExceptionBlock));
+        Assert.That(result.IndexOf(entryCarrier), Is.LessThan(result.IndexOf(replacement)));
+        Assert.That(result.IndexOf(endCarrier), Is.GreaterThan(result.IndexOf(replacement)));
+    }
+
+    [Test]
+    public void ReplaceSingleInstructionMovesExceptionStartWithoutLabelAheadOfOutput()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
+            ]);
+
+        CodeInstruction beginCarrier = result.Single(instruction =>
+            instruction.blocks.Any(block => block.blockType == ExceptionBlockType.BeginExceptionBlock));
+        CodeInstruction replacement = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_2);
+        Assert.That(beginCarrier.opcode, Is.EqualTo(OpCodes.Nop));
+        Assert.That(result.IndexOf(beginCarrier), Is.LessThan(result.IndexOf(replacement)));
+    }
+
+    [Test]
+    public void ReplacementDoesNotConsumeExceptionEndBeforeEndOfMatch()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() => Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
+                new CodeInstruction(OpCodes.Pop),
+            ]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void InsertBeforeMultiInstructionMatchMovesEntryMetadataAndPreservesEndMetadata()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.InsertBefore,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1)
+                    .WithLabels(target)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
+                new CodeInstruction(OpCodes.Pop)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
+            ]);
+
+        CodeInstruction entryCarrier = result.Single(instruction => instruction.labels.Contains(target));
+        CodeInstruction inserted = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_2);
+        CodeInstruction originalStart = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_1);
+        CodeInstruction originalEnd = result.Single(instruction => instruction.opcode == OpCodes.Pop);
+        Assert.That(entryCarrier.opcode, Is.EqualTo(OpCodes.Nop));
+        Assert.That(entryCarrier.blocks.Select(block => block.blockType),
+            Does.Contain(ExceptionBlockType.BeginExceptionBlock));
+        Assert.That(originalStart.labels, Is.Empty);
+        Assert.That(originalStart.blocks, Is.Empty);
+        Assert.That(originalEnd.blocks.Select(block => block.blockType),
+            Does.Contain(ExceptionBlockType.EndExceptionBlock));
+        Assert.That(result.IndexOf(entryCarrier), Is.LessThan(result.IndexOf(inserted)));
+        Assert.That(result.IndexOf(inserted), Is.LessThan(result.IndexOf(originalStart)));
+    }
+
+    [Test]
+    public void InsertAfterMultiInstructionMatchPreservesEntryMetadataAndMovesEndMetadata()
+    {
+        Label target = PatchProcessor.CreateILGenerator().DefineLabel();
+        var rule = new Rule
+        {
+            mode = OutputMode.InsertAfter,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+
+        List<CodeInstruction> result = Run(
+            [rule],
+            [
+                new CodeInstruction(OpCodes.Ldc_I4_1)
+                    .WithLabels(target)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
+                new CodeInstruction(OpCodes.Pop)
+                    .WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
+            ]);
+
+        CodeInstruction originalStart = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_1);
+        CodeInstruction originalEnd = result.Single(instruction => instruction.opcode == OpCodes.Pop);
+        CodeInstruction inserted = result.Single(instruction => instruction.opcode == OpCodes.Ldc_I4_2);
+        CodeInstruction endCarrier = result.Single(instruction =>
+            instruction.blocks.Any(block => block.blockType == ExceptionBlockType.EndExceptionBlock));
+        Assert.That(originalStart.labels, Does.Contain(target));
+        Assert.That(originalStart.blocks.Select(block => block.blockType),
+            Does.Contain(ExceptionBlockType.BeginExceptionBlock));
+        Assert.That(originalEnd.blocks, Is.Empty);
+        Assert.That(result.IndexOf(originalEnd), Is.LessThan(result.IndexOf(inserted)));
+        Assert.That(result.IndexOf(inserted), Is.LessThan(result.IndexOf(endCarrier)));
+    }
+
+    [Test]
+    public void CrossRuleLabelIsReusedWithinSamePhase()
+    {
+        var dynamicMethod = new DynamicMethod("InstructionMatcherSamePhaseCrossRuleLabelTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        Label sourceLabel = PatchProcessor.CreateILGenerator().DefineLabel();
+        var ruleset = new Ruleset(new()
+        {
+            mode = OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
+        }, new()
+        {
+            mode = OutputMode.MethodPostfix,
+            output = [new CodeInstruction(OpCodes.Nop).WithLabels(sourceLabel)],
+        });
+        ruleset.crossRuleLabels.Add(sourceLabel);
+        List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
+
+        ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
+
+        Label branchTarget = (Label)instructions.Single(instruction => instruction.opcode == OpCodes.Br).operand;
+        Assert.That(instructions.Single(instruction => instruction.labels.Contains(branchTarget)).opcode,
+            Is.EqualTo(OpCodes.Nop));
+    }
+
+    [Test]
+    public void CrossRuleLocalIsReusedWithinSamePhase()
+    {
+        var dynamicMethod = new DynamicMethod("InstructionMatcherSamePhaseCrossRuleLocalTest", typeof(void), Type.EmptyTypes);
+        ILGenerator generator = dynamicMethod.GetILGenerator();
+        LocalBuilder sourceLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
+        var ruleset = new Ruleset(new()
+        {
+            mode = OutputMode.MethodPrefix,
+            output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
+        }, new()
+        {
+            mode = OutputMode.MethodPostfix,
+            output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
+        });
+        ruleset.crossRuleLocals.Add(sourceLocal);
+        List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
+
+        ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
+
+        LocalBuilder storedLocal = (LocalBuilder)instructions.Single(instruction => instruction.IsStloc()).operand;
+        LocalBuilder loadedLocal = (LocalBuilder)instructions.Single(instruction => instruction.IsLdloc()).operand;
+        Assert.That(loadedLocal, Is.SameAs(storedLocal));
+    }
+
+    [Test]
+    public void MatchAndReplaceDoesNotMutateInputOrOutputInstructionMetadata()
+    {
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+        Label inputLabel = generator.DefineLabel();
+        Label outputLabel = generator.DefineLabel();
+        var input = new CodeInstruction(OpCodes.Ldc_I4_1)
+            .WithLabels(inputLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
+        var output = new CodeInstruction(OpCodes.Ldc_I4_2)
+            .WithLabels(outputLabel)
+            .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [output],
+        };
+
+        List<CodeInstruction> result = Run([rule], [input]);
+
+        Assert.That(input.labels, Is.EqualTo(new[] { inputLabel }));
+        Assert.That(input.blocks.Select(block => block.blockType),
+            Is.EqualTo(new[] { ExceptionBlockType.BeginExceptionBlock }));
+        Assert.That(output.labels, Is.EqualTo(new[] { outputLabel }));
+        Assert.That(output.blocks.Select(block => block.blockType),
+            Is.EqualTo(new[] { ExceptionBlockType.BeginFinallyBlock }));
+        Assert.That(result, Has.None.SameAs(input));
+        Assert.That(result, Has.None.SameAs(output));
+    }
+
+    [Test]
+    public void FailureInLaterPhaseDoesNotPublishEarlierPhaseOutput()
+    {
+        var firstPhase = new Rule
+        {
+            phase = 1,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+        };
+        var failingPhase = new Rule
+        {
+            phase = 2,
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+            output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+        };
+        var originalInstruction = new CodeInstruction(OpCodes.Ldc_I4_1);
+        List<CodeInstruction> instructions = [originalInstruction];
+        var ruleset = new Ruleset(firstPhase, failingPhase);
+        ILGenerator generator = PatchProcessor.CreateILGenerator();
+
+        Assert.Throws<InvalidOperationException>(() =>
+            ruleset.MatchAndReplace(TargetMethod, ref instructions, generator));
+
+        Assert.That(instructions, Has.Count.EqualTo(1));
+        Assert.That(instructions[0], Is.SameAs(originalInstruction));
+        Assert.That(instructions[0].opcode, Is.EqualTo(OpCodes.Ldc_I4_1));
+    }
+
+    [Test]
+    public void Pattern_Call_DifferentMethodOperand_DoesNotMatch()
+    {
+        MethodInfo patternMethod = typeof(object).GetMethod(nameof(ToString))!;
+        MethodInfo instructionMethod = typeof(string).GetMethod(nameof(ToString), Type.EmptyTypes)!;
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Call, patternMethod)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Call, instructionMethod)]));
+
+        Assert.That(exception!.Message, Does.StartWith("Not enough matches found"));
+    }
+
+    [Test]
+    public void ReplacementUsingUnboundLocalThrows()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            pattern = [new CodeInstruction(OpCodes.Nop)],
+            output = [new CodeInstruction(OpCodes.Ldloc_S, 4)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Nop)]));
+
+        Assert.That(exception!.Message, Does.StartWith("Can't replace local"));
+    }
+
+    [Test]
+    public void MethodPrefixWithPatternThrows()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.MethodPrefix,
+            pattern = [new CodeInstruction(OpCodes.Ret)],
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Ret)]));
+
+        Assert.That(exception!.Message, Is.EqualTo("MethodPrefix cannot have a Pattern"));
+    }
+
+    [Test]
+    public void ReplaceWithoutPatternThrows()
+    {
+        var rule = new Rule
+        {
+            mode = OutputMode.Replace,
+            output = [new CodeInstruction(OpCodes.Nop)],
+        };
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Ret)]));
+
+        Assert.That(exception!.Message, Is.EqualTo("Replace rule must have a Pattern"));
+    }
+
+    [Test]
+    public void UnknownOutputModeThrows()
+    {
+        var rule = new Rule
+        {
+            mode = (OutputMode)int.MaxValue,
+            pattern = [new CodeInstruction(OpCodes.Nop)],
+            output = [new CodeInstruction(OpCodes.Pop)],
+        };
+
+        Assert.Throws<InvalidOperationException>(() =>
+            Run([rule], [new CodeInstruction(OpCodes.Nop)]));
     }
 
     [TestCaseSource(nameof(NewLocalReplacementCases))]
