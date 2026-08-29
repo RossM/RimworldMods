@@ -308,7 +308,7 @@ internal class Processor(
 
             // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
             // which would be lost when the instructions are replaced
-            if (rule is { mode: OutputMode.Replace, output: { Length: > 0 } })
+            if (rule is { mode: OutputMode.Replace, output.Length: > 0 })
             {
                 CodeInstruction inst = instructions[instructionIndex + patternIndex];
                 if (patternIndex > 0 && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
