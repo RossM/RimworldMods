@@ -201,43 +201,6 @@ public static class Patcher
     }
 
     /// <summary>
-    ///     Registers one patch method without applying the pending changes.
-    /// </summary>
-    /// <param name="method">The patch method to register.</param>
-    /// <remarks>
-    ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
-    ///     <see cref="PatchAttribute" /> when the method is registered directly. Call <see cref="Apply" /> or
-    ///     <see cref="ForceApply" /> after completing registration.
-    /// </remarks>
-    /// <returns>A handle that owns every patch registered for <paramref name="method" /> by this call.</returns>
-    internal static PatchHandle Register(MethodInfo method)
-    {
-        PatchHandle handle = new PatchHandle();
-        registry.ProcessMethod(method, handle.id);
-        return handle;
-    }
-
-    /// <summary>
-    ///     Registers an attributed patch method for the supplied outer targets without making the patch take effect.
-    /// </summary>
-    /// <param name="method">The static method that implements the patch.</param>
-    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
-    /// <remarks>
-    ///     Use this overload when <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" />, optionally combined
-    ///     with <see cref="InnerAttribute" /> or <see cref="InnerConstantAttribute" />, describes how the patch runs, but
-    ///     the targets are chosen in code. <see cref="TargetAttribute" /> and <see cref="TargetsAttribute" /> are not
-    ///     needed and are ignored. <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply.
-    ///     Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been registered.
-    /// </remarks>
-    /// <returns>A handle that owns every patch registered for <paramref name="method" /> by this call.</returns>
-    internal static PatchHandle Register(MethodInfo method, params IEnumerable<MethodBase> targets)
-    {
-        PatchHandle handle = new PatchHandle();
-        registry.ProcessMethod(method, targets, handle.id);
-        return handle;
-    }
-
-    /// <summary>
     ///     Registers a patch described in code without making it take effect.
     /// </summary>
     /// <param name="method">The static method that implements the patch.</param>
@@ -287,7 +250,8 @@ public static class Patcher
     /// <returns>A handle for removing the patches added by this call.</returns>
     public static PatchHandle Patch(MethodInfo method)
     {
-        var handle = Register(method);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessMethod(method, handle.id);
         Apply();
         return handle;
     }
