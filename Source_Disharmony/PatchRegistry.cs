@@ -188,7 +188,8 @@ internal class PatchRegistry
                     {
                         MethodBase target = result as MethodBase ??
                                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
-                        AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName, unpatchKey);
+                        AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options,
+                            method.DeclaringType!.FullName, unpatchKey);
                     }
                 }
             }
@@ -227,7 +228,8 @@ internal class PatchRegistry
                     : EmptyInvocation.Instance;
 
                 foreach (var target in targets)
-                    AddPatch(method, patchType, target, inner, options, stateGroupKey, unpatchKey);
+                    AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, stateGroupKey,
+                        unpatchKey);
             }
             catch (Exception e)
             {
@@ -242,14 +244,15 @@ internal class PatchRegistry
         {
             if (patch.PatchMethod is null)
                 throw new InvalidOperationException("Patch method not set; call Patch.With()");
-            if (patch.Type is not {} patchType)
+            if (patch.Type is not { } patchType)
                 throw new InvalidOperationException("Patch type not set; call Patch.Prefix or Patch.Postfix");
             if (patch.Target is not MethodBaseInvocation targetInvocation)
                 throw new InvalidOperationException("Patch target not set; call Patch.Of()");
 
             try
             {
-                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, stateKey, unpatchKey);
+                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, stateKey,
+                    unpatchKey);
             }
             catch (Exception e)
             {
@@ -294,15 +297,26 @@ internal class PatchRegistry
         };
     }
 
+    private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
+    {
+        return target switch
+        {
+            MethodInfo outerMethod => new MethodInvocation(outerMethod),
+            ConstructorInfo outerConstructor => new OuterConstructorInvocation(outerConstructor),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+    }
+
     private void AddPatch(
-        MethodInfo method,
+        MethodInvocation patchMethod,
         PatchType patchType,
-        MethodBase target,
+        MethodBaseInvocation target,
         Invocation inner,
         PatchOptions options,
         string stateGroupKey,
         int unpatchKey)
     {
+        var method = patchMethod.MethodInfo;
         if (method.ContainsGenericParameters)
             throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
         if (!method.IsStatic)
@@ -324,32 +338,9 @@ internal class PatchRegistry
             default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
         }
 
-        if (target.IsGenericMethod)
+        if (target.MethodBase.IsGenericMethod)
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
 
-        MethodBaseInvocation outer = GetOuterInvocation(target);
-        AddPatch(new MethodInvocation(method), patchType, outer, inner, options, stateGroupKey, unpatchKey);
-    }
-
-    private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
-    {
-        return target switch
-        {
-            MethodInfo outerMethod => new MethodInvocation(outerMethod),
-            ConstructorInfo outerConstructor => new OuterConstructorInvocation(outerConstructor),
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-    }
-
-    private void AddPatch(
-        MethodInvocation patchMethod,
-        PatchType patchType,
-        MethodBaseInvocation target,
-        Invocation inner,
-        PatchOptions options,
-        string stateGroupKey,
-        int unpatchKey)
-    {
         MethodBaseInvocation outer = target;
         bool isIterator = false;
 
