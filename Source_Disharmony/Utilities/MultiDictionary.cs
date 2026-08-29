@@ -23,7 +23,8 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     private readonly Dictionary<TKey, List<TElement>> valuesByKey = [];
 
     // Creating and destroying empty lists causes GC pressure, so save any lists that become empty to reuse
-    private readonly Stack<List<TElement>> emptyLists = [];
+    private readonly List<TElement>[] emptyLists = new List<TElement>[4];
+    private int emptyListCount = 0;
     
     public IEnumerable<TElement> this[TKey key] => Get(key);
 
@@ -35,7 +36,7 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     {
         if (!valuesByKey.TryGetValue(key, out List<TElement>? values))
         {
-            values = emptyLists.Count > 0 ? emptyLists.Pop() : [];
+            values = emptyListCount > 0 ? emptyLists[--emptyListCount] : [];
             valuesByKey.Add(key, values);
         }
 
@@ -77,7 +78,8 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         if (values.Count != 0)
             return;
         valuesByKey.Remove(key);
-        emptyLists.Push(values);
+        if (emptyListCount < emptyLists.Length)
+            emptyLists[emptyListCount++] = values;
     }
 
     public bool TryGetValues(
@@ -94,11 +96,7 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         return false;
     }
 
-    public void Clear()
-    {
-        valuesByKey.Clear();
-        emptyLists.Clear();
-    }
+    public void Clear() => valuesByKey.Clear();
 
     public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => EnumerableImplementation.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)EnumerableImplementation).GetEnumerator();
