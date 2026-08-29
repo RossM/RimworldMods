@@ -305,45 +305,6 @@ public static class Patcher
         return handle;
     }
 
-    /// <summary>
-    ///     Applies a patch whose behavior and targets are described in code.
-    /// </summary>
-    /// <param name="method">The static method that implements the patch.</param>
-    /// <param name="patchType">
-    ///     Whether the patch runs before or after the selected operation.
-    /// </param>
-    /// <param name="innerTarget">
-    ///     The method call, constructor call, or field access to match within each outer target, or
-    ///     <see langword="null" /> to patch the outer targets themselves.
-    /// </param>
-    /// <param name="innerMemberType">
-    ///     For an inner field, use <see cref="MemberType.Setter" /> to match writes; any other value matches reads. This has
-    ///     no effect on inner methods or constructors, or on non-inner patches.
-    /// </param>
-    /// <param name="options">Additional behaviors, such as inlining the patch or producing debug output.</param>
-    /// <param name="targets">The methods and constructors whose behavior should be patched.</param>
-    /// <remarks>
-    ///     Use this overload when the patch timing, inner operation, targets, and options are chosen in code. The patch
-    ///     method does not need <see cref="PrefixAttribute" />, <see cref="PostfixAttribute" />,
-    ///     <see cref="InnerAttribute" />, <see cref="InnerConstantAttribute" />, target, or
-    ///     <see cref="PatchOptionsAttribute" /> attributes; if present, they are ignored. Attributes that bind patch
-    ///     parameters remain effective. This call also makes all patches registered so far take effect. Use
-    ///     <see cref="Register(MethodInfo, PatchType, MemberInfo, MemberType, PatchOptions, IEnumerable{MethodBase})" />
-    ///     when more patches will be registered before applying them together.
-    /// </remarks>
-    internal static PatchHandle Patch(
-        MethodInfo method,
-        PatchType patchType,
-        MemberInfo? innerTarget = null,
-        MemberType innerMemberType = MemberType.Any,
-        PatchOptions options = PatchOptions.Default,
-        params IEnumerable<MethodBase> targets)
-    {
-        var handle = Register(method, patchType, innerTarget, innerMemberType, options, targets);
-        Apply();
-        return handle;
-    }
-
     public static PatchHandle Patch(PatchConfig patch)
     {
         return Patch([patch]);
