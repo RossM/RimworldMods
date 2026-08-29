@@ -209,15 +209,15 @@ internal class PatchRegistry
 
     public void ProcessPatch(PatchConfig patch, string stateKey, int unpatchKey)
     {
+        if (patch.PatchMethod is null)
+            throw new ArgumentException("Patch method not set; call Patch.With()", nameof(patch));
+        if (patch.Type is not { } patchType)
+            throw new ArgumentException("Patch type not set; call Patch.Prefix or Patch.Postfix", nameof(patch));
+        if (patch.Target is not MethodBaseInvocation targetInvocation)
+            throw new ArgumentException("Patch target not set; call Patch.Of()", nameof(patch));
+
         lock (syncRoot)
         {
-            if (patch.PatchMethod is null)
-                throw new PatchException("Patch method not set; call Patch.With()");
-            if (patch.Type is not { } patchType)
-                throw new PatchException("Patch type not set; call Patch.Prefix or Patch.Postfix");
-            if (patch.Target is not MethodBaseInvocation targetInvocation)
-                throw new PatchException("Patch target not set; call Patch.Of()");
-           
             try
             {
                 AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, stateKey,
