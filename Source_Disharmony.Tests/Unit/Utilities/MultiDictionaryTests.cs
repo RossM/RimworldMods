@@ -39,6 +39,35 @@ public sealed class MultiDictionaryTests
     }
 
     [Test]
+    public void Get_ExistingAndMissingKeys_ReturnReadOnlyLists()
+    {
+        MultiDictionary<string, int> dictionary = new()
+        {
+            { "present", 1 },
+            { "present", 2 },
+        };
+
+        IReadOnlyList<int> present = dictionary.Get("present");
+        IReadOnlyList<int> missing = dictionary.Get("missing");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(present, Is.EqualTo(new[] { 1, 2 }));
+            Assert.That(missing, Is.Empty);
+        });
+    }
+
+    [Test]
+    public void Get_AfterRemovingLastValue_ReturnsEmptyList()
+    {
+        MultiDictionary<string, int> dictionary = new() { { "key", 1 } };
+
+        dictionary.Remove("key", 1);
+
+        Assert.That(dictionary.Get("key"), Is.Empty);
+    }
+
+    [Test]
     public void Count_CountsKeysRatherThanValues()
     {
         MultiDictionary<string, int> dictionary = new()
