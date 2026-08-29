@@ -161,7 +161,7 @@ internal class PatchRegistry
                 foreach (var targetAttribute in targetAttributes)
                 {
                     var patchedType = targetAttribute.Type ?? defaultTargetType ??
-                        throw new NotSupportedException("No target type");
+                        throw new PatchDefinitionException(method, "No target type");
 
                     List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
                         targetAttribute.MemberType, targetAttribute.ParameterTypes, targetAttribute.GenericTypes);
@@ -172,13 +172,13 @@ internal class PatchRegistry
                     {
                         case > 1 when targetAttribute is not TargetsAttribute:
                             throw new AmbiguousMatchException($"{nameForErrors}: Ambiguous match");
-                        case 0: throw new InvalidOperationException($"{nameForErrors}: Member not found");
+                        case 0: throw new ReflectionException($"{nameForErrors}: Member not found");
                     }
 
                     foreach (var result in candidates)
                     {
                         MethodBase target = result as MethodBase ??
-                                            throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
+                                            throw new ReflectionException($"{nameForErrors}: Couldn't locate method");
                         AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options,
                             method.DeclaringType!.FullName, unpatchKey);
                     }
