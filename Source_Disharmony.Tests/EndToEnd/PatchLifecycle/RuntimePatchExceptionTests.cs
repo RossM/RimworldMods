@@ -64,7 +64,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -79,7 +79,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -94,7 +94,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Postfix, targets: [target]);
+            Patcher.Patch(Patch.Postfix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -109,7 +109,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -125,7 +125,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -140,7 +140,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, (PatchType)int.MaxValue, targets: [target]);
+            Patcher.Patch(Patch.With(patch).Of(target) with { Type = (PatchType)int.MaxValue });
             Patcher.ForceApply();
         });
     }
@@ -155,7 +155,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -170,7 +170,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -185,7 +185,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+        Patcher.Patch(Patch.Prefix.With(patch).Of(target));
         Patcher.ForceApply();
 
         StaticMethodTargets.Void();
@@ -203,7 +203,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -218,7 +218,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.DoesNotThrow(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -233,7 +233,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
@@ -250,11 +250,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<InvalidOperationException>(() =>
         {
-            Patcher.Register(
-                patch,
-                PatchType.Prefix,
-                innerTarget: innerTarget,
-                targets: [outerTarget]);
+            Patcher.Patch(Patch.Prefix.Inner(innerTarget).With(patch).Of(outerTarget));
             Patcher.ForceApply();
         });
     }
@@ -367,7 +363,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.DoesNotThrow(() =>
         {
-            Patcher.Register(patch, PatchType.Prefix, targets: [target]);
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
         });
     }
