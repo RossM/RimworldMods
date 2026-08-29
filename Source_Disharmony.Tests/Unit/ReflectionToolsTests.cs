@@ -246,7 +246,7 @@ public sealed class ReflectionToolsTests
     [Test]
     public void GetMemberDoesNotMatchGenericMethodUsingOnlyConstructedParameterTypes()
     {
-        Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+        Assert.Throws<ReflectionException>(() => ReflectionTools.GetMember(
             typeof(LookupTarget),
             nameof(LookupTarget.GenericMethod),
             MemberType.Method,
@@ -289,7 +289,7 @@ public sealed class ReflectionToolsTests
     [Test]
     public void GetMemberDoesNotMatchGenericMethodWithWrongGenericArity()
     {
-        Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+        Assert.Throws<ReflectionException>(() => ReflectionTools.GetMember(
             typeof(LookupTarget),
             nameof(LookupTarget.GenericMethod),
             MemberType.Method,
@@ -300,7 +300,7 @@ public sealed class ReflectionToolsTests
     [Test]
     public void GetMemberDoesNotMatchNonGenericMethodWhenGenericTypesAreProvided()
     {
-        Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+        Assert.Throws<ReflectionException>(() => ReflectionTools.GetMember(
             typeof(LookupTarget),
             nameof(LookupTarget.NonGenericMethod),
             MemberType.Method,
@@ -431,7 +431,7 @@ public sealed class ReflectionToolsTests
     [Test]
     public void GetMemberReportsMissingGetterForWriteOnlyProperty()
     {
-        Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+        Assert.Throws<ReflectionException>(() => ReflectionTools.GetMember(
             typeof(LookupTarget),
             nameof(LookupTarget.WriteOnlyProperty),
             MemberType.Getter,
@@ -442,7 +442,7 @@ public sealed class ReflectionToolsTests
     [Test]
     public void GetMemberReportsMissingSetterForReadOnlyProperty()
     {
-        Assert.Throws<InvalidOperationException>(() => ReflectionTools.GetMember(
+        Assert.Throws<ReflectionException>(() => ReflectionTools.GetMember(
             typeof(LookupTarget),
             nameof(LookupTarget.ReadOnlyProperty),
             MemberType.Setter,

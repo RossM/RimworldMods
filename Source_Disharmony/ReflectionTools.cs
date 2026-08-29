@@ -11,7 +11,7 @@ internal static class ReflectionTools
         switch (candidates.Count)
         {
             case > 1: throw new AmbiguousMatchException($"Ambiguous match: {name}");
-            case 0: throw new InvalidOperationException($"Member not found: {name}");
+            case 0: throw new ReflectionException($"Member not found: {name}");
         }
 
         var result = candidates.Single();
@@ -33,7 +33,7 @@ internal static class ReflectionTools
         if (name?.Split([':'], 2) is [string typeName, string memberName])
         {
             type = AccessTools.TypeByName(typeName) ??
-                   throw new InvalidOperationException($"Type not found: {typeName}");
+                   throw new ReflectionException($"Type not found: {typeName}");
             name = memberName;
         }
 
@@ -53,7 +53,7 @@ internal static class ReflectionTools
             }
 
         if (type is null)
-            throw new InvalidOperationException($"type not found: {name}");
+            throw new ReflectionException($"type not found: {name}");
 
         // Look for nested types
         while (nameParts.Count > 1)
