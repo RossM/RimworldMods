@@ -1,5 +1,8 @@
-﻿namespace Disharmony;
+﻿using JetBrains.Annotations;
 
+namespace Disharmony;
+
+[PublicAPI]
 public record PatchConfig
 {
     public MethodBase? TargetMethod => (Target as MethodBaseInvocation)?.MethodBase;
@@ -12,6 +15,7 @@ public record PatchConfig
     public PatchOptions Options { get; init; } = PatchOptions.Default;
 }
 
+[PublicAPI]
 public class PatchHandle
 {
     private static int _nextId = 0;
@@ -24,6 +28,7 @@ public class PatchHandle
     }
 }
 
+[PublicAPI]
 public static class Patch
 {
     public static PatchConfig Prefix => new PatchConfig().Prefix;
