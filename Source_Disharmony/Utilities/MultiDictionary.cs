@@ -25,7 +25,7 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     // Creating and destroying empty lists causes GC pressure, so save any lists that become empty to reuse
     private readonly Stack<List<TElement>> emptyLists = [];
     
-    public IEnumerable<TElement> this[TKey key] => valuesByKey.TryGetValue(key, out var values) ? values : Array.Empty<TElement>();
+    public IEnumerable<TElement> this[TKey key] => Get(key);
 
     public IReadOnlyList<TElement> Get(TKey key) => valuesByKey.TryGetValue(key, out var values) ? values : Array.Empty<TElement>();
 
