@@ -47,8 +47,8 @@ public sealed class MultiDictionaryTests
             { "present", 2 },
         };
 
-        IReadOnlyList<int> present = dictionary.Get("present");
-        IReadOnlyList<int> missing = dictionary.Get("missing");
+        IReadOnlyList<int> present = dictionary["present"];
+        IReadOnlyList<int> missing = dictionary["missing"];
 
         Assert.Multiple(() =>
         {
@@ -64,7 +64,7 @@ public sealed class MultiDictionaryTests
 
         dictionary.Remove("key", 1);
 
-        Assert.That(dictionary.Get("key"), Is.Empty);
+        Assert.That(dictionary["key"], Is.Empty);
     }
 
     [Test]

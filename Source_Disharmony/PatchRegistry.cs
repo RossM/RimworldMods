@@ -390,7 +390,7 @@ internal class PatchRegistry
                 var patchedMethod = methodsToUpdate.First();
                 try
                 {
-                    IReadOnlyList<PatchInfo> patches = patchesByMethod.Get(patchedMethod);
+                    IReadOnlyList<PatchInfo> patches = patchesByMethod[patchedMethod];
 
                     if (patches.Count == 0)
                     {
