@@ -118,7 +118,7 @@ internal class Processor(
                     throw new InvalidOperationException($"Not enough matches found for substitution {rule.name}");
             }
 
-            var sortedMatches = matches.OrderBy(m => m.start).ThenByDescending(m => m.rule.priority).ToList();
+            var sortedMatches = matches.OrderBy(m => m.start).ThenBy(m => m.end).ThenByDescending(m => m.rule.priority).ToList();
             for (var i = 0; i < sortedMatches.Count - 1; i++)
             {
                 if (sortedMatches[i].end > sortedMatches[i + 1].start)
