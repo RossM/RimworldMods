@@ -209,35 +209,6 @@ internal class PatchRegistry
         return attributes;
     }
 
-    public void ProcessMethod(
-        MethodInfo method,
-        PatchType patchType,
-        MemberInfo? innerTarget,
-        MemberType innerMemberType,
-        PatchOptions options,
-        IEnumerable<MethodBase> targets,
-        string stateGroupKey,
-        int unpatchKey)
-    {
-        lock (syncRoot)
-        {
-            try
-            {
-                Invocation inner = innerTarget != null
-                    ? GetInnerInvocation(innerTarget, innerMemberType)
-                    : EmptyInvocation.Instance;
-
-                foreach (var target in targets)
-                    AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, stateGroupKey,
-                        unpatchKey);
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException($"Error processing {method.FullName}", e);
-            }
-        }
-    }
-
     public void ProcessPatch(PatchConfig patch, string stateKey, int unpatchKey)
     {
         lock (syncRoot)
