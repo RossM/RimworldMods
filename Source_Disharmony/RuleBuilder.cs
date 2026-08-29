@@ -98,7 +98,9 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
         // Create a delegate
         if (parameter.methodInfo!.IsStatic)
+        {
             output.Add(new(OpCodes.Ldnull));
+        }
         else
         {
             EmitParameterLookup(parameter.scope, 0, parameter.methodInfo.DeclaringType);
