@@ -13,12 +13,14 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     private readonly bool infix = inner is not EmptyInvocation;
     private readonly bool isIterator = outer != target;
 
+    private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
+
     public ParameterBinding Bind(ParameterInfo parameter)
     {
         var parameterName = parameter.Name;
 
-        var attributes = parameter.GetCustomAttributes();
-        var parameterBindingAttribute = attributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
+        var parameterAttributes = parameter.GetCustomAttributes().ToList();
+        var parameterBindingAttribute = parameterAttributes.OfType<ParameterBindingAttribute>().SingleOrDefault();
 
         Scope scope = (parameterBindingAttribute?.Scope ?? Scope.Any) switch
         {
@@ -146,9 +148,12 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         if (invocation.IsStatic && !methodInfo.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Instance required");
 
+        bool isReadonly = methodInfo.CustomAttributes.Any(a => a.AttributeType.FullName == ReadonlyAttributeName) ||
+                          instanceType.CustomAttributes.Any(a => a.AttributeType.FullName == ReadonlyAttributeName);
+
         // Calling a struct method through a delegate requires boxing the struct, which means that any writes
         // by the method won't affect the original struct.
-        if (instanceType.IsValueType && !methodInfo.IsStatic)
+        if (instanceType.IsValueType && !methodInfo.IsStatic && !isReadonly)
             throw new ParameterBindingException(parameter.Name, "[Method] is not supported for non-static methods on structs");
 
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
@@ -181,7 +186,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
-            if (parameter.ParameterType.IsByRef)
+            if (IsWriteableRef(parameter))
                 throw new ParameterBindingException(parameter.Name,
                     "Accessing 'this' by reference is not supported for iterator state machine methods");
 
@@ -354,12 +359,12 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     {
         // Don't allow writing through a ref parameter to an argument of the outer method. This would
         // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
-        if (parameter.ParameterType.IsByRef && !type.IsByRef)
+        if (IsWriteableRef(parameter) && !type.IsByRef)
         {
             if (scope == Scope.Outer && !(patchType == PatchType.Prefix && inner is EmptyInvocation))
-                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access outer method {bindingType} by reference");
+                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access outer method {bindingType} by writeable reference");
             if (scope == Scope.Inner && !(patchType == PatchType.Prefix && inner is not EmptyInvocation))
-                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access inner method {bindingType} by reference");
+                throw new ParameterBindingException(parameter.Name, $"{patchType} can't access inner method {bindingType} by writeable reference");
         }
     }
 
@@ -368,4 +373,6 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         ValidateReference(parameter, type, scope, bindingType);
         ValidateCast(parameter.ParameterType, type, parameter.Name);
     }
+
+    private static bool IsWriteableRef(ParameterInfo parameter) => parameter.ParameterType.IsByRef && !parameter.IsIn;
 }
