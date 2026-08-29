@@ -8,6 +8,7 @@
     <AssemblyName>Disharmony</AssemblyName>
     <RootNamespace>Disharmony</RootNamespace>
     <EnableDisassembly Condition="'$(EnableDisassembly)' == ''">true</EnableDisassembly>
+    <DeployToMods Condition="'$(DeployToMods)' == ''">true</DeployToMods>
     <DefineConstants Condition="'$(EnableDisassembly)' == 'true'">$(DefineConstants);ENABLE_DISASSEMBLY</DefineConstants>
   </PropertyGroup>
 
@@ -32,7 +33,7 @@
     </Reference>
   </ItemGroup>
 
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent" Condition="'$(DeployToMods)' == 'true'">
     <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Disharmony.dll&quot;" />
     <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylXenos\Assemblies\Disharmony.dll&quot;" />
     <Exec Condition="'$(EnableDisassembly)' == 'true' And Exists('bin\$(Configuration)\net4.7.2\Iced.dll')" Command="copy &quot;bin\$(Configuration)\net4.7.2\Iced.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Iced.dll&quot;" />
