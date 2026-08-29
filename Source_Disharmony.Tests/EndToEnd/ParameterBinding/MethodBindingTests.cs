@@ -47,6 +47,33 @@ public static class MethodBindingPatches
         ResultObserved = method(5);
 
     [Prefix]
+    [Target(typeof(MethodBindingStructTargets), nameof(MethodBindingStructTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_ReadonlyInstanceMethodOnMutableStruct_Invokes(
+        [Method(nameof(MethodBindingStructTargets.BoundReadonlyInstanceMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Target(typeof(MethodBindingReadonlyStructTargets), nameof(MethodBindingReadonlyStructTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_InstanceMethodOnReadonlyStruct_Invokes(
+        [Method(nameof(MethodBindingReadonlyStructTargets.BoundInstanceMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Inner(typeof(MethodBindingReadonlyStructTargets), nameof(MethodBindingReadonlyStructTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingStaticTargets), nameof(MethodBindingStaticTargets.CallReadonlyStructInstanceMethod))]
+    public static void InnerPrefix_MethodAttribute_InstanceMethodOnReadonlyInnerStruct_Invokes(
+        [Method(nameof(MethodBindingReadonlyStructTargets.BoundInstanceMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Inner(typeof(MethodBindingStructTargets), nameof(MethodBindingStructTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingReadonlyStructTargets),
+        nameof(MethodBindingReadonlyStructTargets.CallMutableStructInstanceMethod))]
+    public static void InnerPrefix_MethodAttribute_ReadonlyOuterDoesNotAllowMutableInnerStructMethod(
+        [Method(nameof(MethodBindingStructTargets.BoundMutatingInstanceMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
     public static void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException(
         [Method(nameof(MethodBindingInstanceTargets.BoundOverloadedMethod))] Func<int, int> method) { }
@@ -243,6 +270,72 @@ public sealed class MethodBindingTests : PatchTestBase
             Assert.That(result, Is.EqualTo(40));
             Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(405));
         });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_ReadonlyInstanceMethodOnMutableStruct_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_ReadonlyInstanceMethodOnMutableStruct_Invokes));
+        MethodBindingStructTargets target = new() { InstanceValue = 40 };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(40));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_InstanceMethodOnReadonlyStruct_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_InstanceMethodOnReadonlyStruct_Invokes));
+        MethodBindingReadonlyStructTargets target = new(40);
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(60));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_InstanceMethodOnReadonlyInnerStruct_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_InstanceMethodOnReadonlyInnerStruct_Invokes));
+        MethodBindingReadonlyStructTargets inner = new(40);
+
+        int result = MethodBindingStaticTargets.CallReadonlyStructInstanceMethod(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(60));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(45));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_ReadonlyOuterDoesNotAllowMutableInnerStructMethod()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            ApplyPatch(
+                typeof(MethodBindingPatches),
+                nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_ReadonlyOuterDoesNotAllowMutableInnerStructMethod)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: [Method] is not supported for non-static methods on structs"));
     }
 
     [Test]

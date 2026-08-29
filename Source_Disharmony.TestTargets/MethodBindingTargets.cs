@@ -61,6 +61,10 @@ public static class MethodBindingStaticTargets
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int BoundStaticMethod(int value) => 300 + value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int CallReadonlyStructInstanceMethod(MethodBindingReadonlyStructTargets inner) =>
+        inner.TargetInstanceMethod();
 }
 
 public struct MethodBindingStructTargets
@@ -74,7 +78,37 @@ public struct MethodBindingStructTargets
     public int BoundInstanceMethod(int value) => InstanceValue + value;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public readonly int BoundReadonlyInstanceMethod(int value) => InstanceValue + value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int BoundMutatingInstanceMethod(int value)
+    {
+        InstanceValue += value;
+        return InstanceValue;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int BoundStaticMethod(int value) => 400 + value;
+}
+
+public readonly struct MethodBindingReadonlyStructTargets
+{
+    public MethodBindingReadonlyStructTargets(int instanceValue)
+    {
+        InstanceValue = instanceValue;
+    }
+
+    public int InstanceValue { get; }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int TargetInstanceMethod() => 60;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int BoundInstanceMethod(int value) => InstanceValue + value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int CallMutableStructInstanceMethod(MethodBindingStructTargets inner) =>
+        inner.TargetInstanceMethod();
 }
 
 public class MethodBindingVirtualBaseTargets
