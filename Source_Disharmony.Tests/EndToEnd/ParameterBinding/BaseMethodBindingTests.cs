@@ -71,6 +71,33 @@ public static class BaseMethodBindingPatches
         __result = __base(value);
         return false;
     }
+
+    [Prefix]
+    [Target(typeof(BaseMethodGrandchildTargets), nameof(BaseMethodGrandchildTargets.Describe))]
+    public static bool Prefix_BaseMethod_InheritedGrandparentImplementation_Invokes(
+        int value,
+        Func<int, string> __base,
+        ref string __result)
+    {
+        __result = __base(value);
+        return false;
+    }
+
+    [Prefix]
+    [Target(typeof(MethodBindingStaticTargets), nameof(MethodBindingStaticTargets.TargetStaticMethod))]
+    public static void Prefix_BaseMethod_StaticTarget_RejectedByPatch(Func<int> __base) { }
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntResult))]
+    public static void Prefix_BaseMethod_NoBaseImplementation_RejectedByPatch(Func<int> __base) { }
+
+    [Prefix]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [])]
+    public static void Prefix_BaseMethod_ConstructorTarget_RejectedByPatch(Action __base) { }
+
+    [Prefix]
+    [Target(typeof(BaseMethodAbstractDerivedTargets), nameof(BaseMethodAbstractDerivedTargets.Describe))]
+    public static void Prefix_BaseMethod_AbstractBaseImplementation_RejectedByPatch(Func<int, string> __base) { }
 }
 
 [TestFixture]
@@ -192,5 +219,61 @@ public sealed class BaseMethodBindingTests : PatchTestBase
         string result = target.Describe(41);
 
         Assert.That(result, Is.EqualTo("base-int:41"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_InheritedGrandparentImplementation_Invokes()
+    {
+        ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethod_InheritedGrandparentImplementation_Invokes));
+        var target = new BaseMethodGrandchildTargets();
+
+        string result = target.Describe(42);
+
+        Assert.That(result, Is.EqualTo("grandparent:42"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_StaticTarget_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethod_StaticTarget_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("__base: Must be an instance method"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_NoBaseImplementation_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethod_NoBaseImplementation_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("__base: Base method not found"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_ConstructorTarget_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethod_ConstructorTarget_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("__base: Must be an instance method"));
+    }
+
+    [Test]
+    public void Prefix_BaseMethod_AbstractBaseImplementation_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.Prefix_BaseMethod_AbstractBaseImplementation_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 }

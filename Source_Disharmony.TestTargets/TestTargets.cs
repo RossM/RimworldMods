@@ -244,6 +244,13 @@ namespace Disharmony.Tests
             get => 1;
         }
         public static int Field = 1;
+        public static int MutableProperty
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            get;
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            set;
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Void() { }
@@ -440,6 +447,10 @@ namespace Disharmony.Tests
         public static int ReadStructProperty(InnerStructMethodTargets inner) => inner.Property;
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SetStaticField(int value) => InnerStaticMethodTargets.Field = value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int MutablePropertyResult() => InnerStaticMethodTargets.MutableProperty;
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void SetStaticProperty(int value) => InnerStaticMethodTargets.MutableProperty = value;
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void SetInstanceField(InnerInstanceMethodTargets inner, int value) => inner.foo = value;
         [MethodImpl(MethodImplOptions.NoInlining)]

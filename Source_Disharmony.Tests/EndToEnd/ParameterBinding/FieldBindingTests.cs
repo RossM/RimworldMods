@@ -121,6 +121,11 @@ public static class FieldBindingPatches
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void Prefix_FieldAttribute_NullName_UsesParameterName([Field] int primitiveField) =>
+        observed = primitiveField;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_FieldAttribute_ReferenceType_ReadByValue([Field("referenceField")] BindingReference field) =>
         referenceObserved = field;
 
@@ -563,6 +568,20 @@ public sealed class FieldBindingTests : PatchTestBase
         FieldBindingPatches.observed = 0;
         ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_FieldAttribute_Primitive_ReadByReference));
         var target = new ClassMethodTargets { foo = 42 };
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_FieldAttribute_NullName_UsesParameterName()
+    {
+        FieldBindingPatches.observed = 0;
+        ApplyPatch(
+            typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.Prefix_FieldAttribute_NullName_UsesParameterName));
+        var target = new ClassMethodTargets { primitiveField = 42 };
 
         target.Void();
 

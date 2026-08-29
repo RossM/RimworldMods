@@ -1,5 +1,7 @@
 namespace Disharmony.Tests;
 
+public delegate int RefIntMethod(ref int value);
+
 public sealed class MethodBindingInstanceTargets
 {
     public int InstanceValue { get; set; }
@@ -15,6 +17,16 @@ public sealed class MethodBindingInstanceTargets
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public int BoundInstanceMethod(int value) => InstanceValue + value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public void BoundVoidMethod() => InstanceValue++;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int BoundRefMethod(ref int value)
+    {
+        value += InstanceValue;
+        return value;
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private int BoundPrivateInstanceMethod(int value) => 100 + value;
@@ -159,4 +171,30 @@ public sealed class BaseMethodOverloadDerivedTargets : BaseMethodOverloadBaseTar
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public override string Describe(string value) => $"derived-string:{value}";
+}
+
+public class BaseMethodGrandparentTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public virtual string Describe(int value) => $"grandparent:{value}";
+}
+
+public class BaseMethodIntermediateTargets : BaseMethodGrandparentTargets;
+
+public sealed class BaseMethodGrandchildTargets : BaseMethodIntermediateTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public override string Describe(int value) => $"grandchild:{value}";
+}
+
+public abstract class BaseMethodAbstractBaseTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public abstract string Describe(int value);
+}
+
+public sealed class BaseMethodAbstractDerivedTargets : BaseMethodAbstractBaseTargets
+{
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public override string Describe(int value) => $"derived:{value}";
 }

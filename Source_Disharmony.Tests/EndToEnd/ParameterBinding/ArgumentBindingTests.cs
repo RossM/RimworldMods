@@ -189,6 +189,11 @@ public static partial class ArgumentBindingPatches
         valueObserved = argument;
 
     [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
+    public static void Prefix_ParameterAttribute_NullName_UsesParameterName([Parameter] int value) =>
+        valueObserved = value;
+
+    [Prefix]
     [Target(typeof(LocalFunctionTargets), "InvokeAnonymousLambda.*")]
     public static void Prefix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByValue([Parameter(0)] int argument) =>
         valueObserved = argument;
@@ -1136,6 +1141,19 @@ public sealed partial class ArgumentBindingTests
         ArgumentBindingPatches.valueObserved = 0;
         ApplyPatch(typeof(ArgumentBindingPatches),
             nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByValue));
+
+        StaticMethodTargets.IntArgument(42);
+
+        Assert.That(ArgumentBindingPatches.valueObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_ParameterAttribute_NullName_UsesParameterName()
+    {
+        ArgumentBindingPatches.valueObserved = 0;
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_ParameterAttribute_NullName_UsesParameterName));
 
         StaticMethodTargets.IntArgument(42);
 

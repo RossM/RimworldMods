@@ -3,6 +3,7 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 public static class MethodBindingPatches
 {
     public static int ResultObserved;
+    public static int ArgumentObserved;
 
     [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
@@ -15,6 +16,41 @@ public static class MethodBindingPatches
     public static void Prefix_MethodAttribute_NullName_UsesParameterName(
         [Method(null)] Func<int, int> BoundInstanceMethod) =>
         ResultObserved = BoundInstanceMethod(5);
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_VoidInstanceMethod_Invokes(
+        [Method(nameof(MethodBindingInstanceTargets.BoundVoidMethod))] Action method) => method();
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_RefParameter_Invokes(
+        [Method(nameof(MethodBindingInstanceTargets.BoundRefMethod))] RefIntMethod method)
+    {
+        int argument = 5;
+        ResultObserved = method(ref argument);
+        ArgumentObserved = argument;
+    }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_Delegate_ParameterTypeMismatch_RejectedByPatch(
+        [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<string, int> method) { }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_Delegate_ParameterCountMismatch_RejectedByPatch(
+        [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, int, int> method) { }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_Delegate_ReturnTypeMismatch_RejectedByPatch(
+        [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, string> method) { }
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_DelegateWithoutInvoke_RejectedByPatch(
+        [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Delegate method) { }
 
     [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
@@ -193,6 +229,84 @@ public sealed class MethodBindingTests : PatchTestBase
             Assert.That(result, Is.EqualTo(10));
             Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
         });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_VoidInstanceMethod_Invokes()
+    {
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_VoidInstanceMethod_Invokes));
+        MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.That(result, Is.EqualTo(10));
+        Assert.That(target.InstanceValue, Is.EqualTo(8));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_RefParameter_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        MethodBindingPatches.ArgumentObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_RefParameter_Invokes));
+        MethodBindingInstanceTargets target = new() { InstanceValue = 7 };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(12));
+            Assert.That(MethodBindingPatches.ArgumentObserved, Is.EqualTo(12));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_Delegate_ParameterTypeMismatch_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_Delegate_ParameterTypeMismatch_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Parameter type mismatch"));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_Delegate_ParameterCountMismatch_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_Delegate_ParameterCountMismatch_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Parameter type mismatch"));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_Delegate_ReturnTypeMismatch_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_Delegate_ReturnTypeMismatch_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Return type mismatch"));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_DelegateWithoutInvoke_RejectedByPatch()
+    {
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_DelegateWithoutInvoke_RejectedByPatch)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("method: Delegate.Invoke not found"));
     }
 
     [Test]
