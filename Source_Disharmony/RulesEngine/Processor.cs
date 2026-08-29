@@ -395,9 +395,16 @@ internal class Processor(
         return Type.GetTypeCode(a.GetType()) switch
         {
             >= TypeCode.Boolean and <= TypeCode.Int64 => Convert.ToInt64(a) == Convert.ToInt64(b),
-            TypeCode.Single or TypeCode.Double => Convert.ToDouble(a) == Convert.ToDouble(b),
+            TypeCode.Single or TypeCode.Double => OperandsMatch(Convert.ToDouble(a), Convert.ToDouble(b)),
             _ => Equals(a, b),
         };
+    }
+
+    private static bool OperandsMatch(double a, double b)
+    {
+        if (a == b)
+            return true;
+        return BitConverter.DoubleToInt64Bits(a) == BitConverter.DoubleToInt64Bits(b);
     }
 
     private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
