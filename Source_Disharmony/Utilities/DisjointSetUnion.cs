@@ -16,6 +16,7 @@ namespace Disharmony.Utilities;
 internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>>
 {
     private IEnumerable<IGrouping<T, T>> Groups => parents.Keys.ToArray().GroupBy(GetRoot);
+
     private readonly Dictionary<T, T> parents = [];
 
     public T this[T value] => GetRoot(value);
@@ -41,7 +42,7 @@ internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>>
     {
         var rootLeft = GetRoot(left);
         var rootRight = GetRoot(right);
-        if (!Equals(rootLeft, rootRight))
+        if (!EqualityComparer<T>.Default.Equals(rootLeft, rootRight))
             parents[rootLeft] = rootRight;
     }
 
