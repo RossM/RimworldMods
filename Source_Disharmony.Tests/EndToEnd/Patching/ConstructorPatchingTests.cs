@@ -36,6 +36,22 @@ public static class ConstructorPatchingPatches
         parameterTypes: [typeof(int)])]
     public static void Prefix_Constructor_ReferenceType_Parameter_Primitive_ReadByValue(int value) => parameterObserved = value;
 
+    [Prefix]
+    [Target(
+        typeof(ConstructorTargets),
+        memberType: MemberType.Constructor,
+        parameterTypes: [typeof(int)])]
+    public static void Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_ReadByValue(
+        [Parameter(0)] int argument) => parameterObserved = argument;
+
+    [Prefix]
+    [Target(
+        typeof(ConstructorTargets),
+        memberType: MemberType.Constructor,
+        parameterTypes: [typeof(int)])]
+    public static void Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_WriteByReference(
+        [Parameter(0)] ref int argument) => argument = 42;
+
     [Postfix]
     [Target(
         typeof(ConstructorTargets),
@@ -181,6 +197,34 @@ public sealed class ConstructorPatchingTests : PatchTestBase
 
         Assert.That(result.Value, Is.EqualTo(42));
         Assert.That(ConstructorPatchingPatches.parameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_ReadByValue()
+    {
+        ConstructorPatchingPatches.parameterObserved = 0;
+        ApplyPatch(
+            typeof(ConstructorPatchingPatches),
+            nameof(ConstructorPatchingPatches
+                .Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_ReadByValue));
+
+        var result = new ConstructorTargets(42);
+
+        Assert.That(result.Value, Is.EqualTo(42));
+        Assert.That(ConstructorPatchingPatches.parameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_WriteByReference()
+    {
+        ApplyPatch(
+            typeof(ConstructorPatchingPatches),
+            nameof(ConstructorPatchingPatches
+                .Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_WriteByReference));
+
+        var result = new ConstructorTargets(1);
+
+        Assert.That(result.Value, Is.EqualTo(42));
     }
 
     [Test]
