@@ -311,12 +311,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         try
         {
-            Patcher.Register(
-                patch,
-                PatchType.Prefix,
-                innerTarget: innerTarget,
-                targets: [outerTarget]);
-            Patcher.Apply();
+            Patcher.Patch(Patch.Prefix.Inner(innerTarget).With(patch).Of(outerTarget));
 
             Assert.That(reportedExceptions, Is.Empty);
             Assert.That(() => Patcher.ForceApply(), Throws.Nothing);
@@ -347,12 +342,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         try
         {
-            Patcher.Register(
-                patch,
-                PatchType.Prefix,
-                innerTarget: innerTarget,
-                targets: [outerTarget]);
-            Patcher.Apply();
+            Patcher.Patch(Patch.Prefix.Inner(innerTarget).With(patch).Of(outerTarget));
 
             Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
             Assert.That(reportedExceptions, Has.Count.EqualTo(1));
