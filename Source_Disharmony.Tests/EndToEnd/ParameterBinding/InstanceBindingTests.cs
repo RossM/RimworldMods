@@ -186,7 +186,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void Postfix_InstanceParameter_ReferenceType_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_ReadByReference_Rejected)));
@@ -197,7 +197,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void InnerPrefix_CallerParameter_ReferenceType_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_ReadByReference_Rejected)));
@@ -222,7 +222,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void InnerPostfix_CallerParameter_ReferenceType_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_ReadByReference_Rejected)));
@@ -346,7 +346,7 @@ public sealed partial class InstanceBindingTests : PatchTestBase
     [Test]
     public void Postfix_InstanceParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.Postfix_InstanceParameter_ReferenceType_WriteByReference_Rejected)));
@@ -412,7 +412,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_ReadByReference_Rejected)));
@@ -423,7 +423,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.InnerPostfix_InstanceAttribute_InnerScope_ReferenceType_WriteByReference_Rejected)));
@@ -462,7 +462,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void InnerPrefix_CallerParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.InnerPrefix_CallerParameter_ReferenceType_WriteByReference_Rejected)));
@@ -498,7 +498,7 @@ public sealed partial class InstanceBindingTests
     [Test]
     public void InnerPostfix_CallerParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InstanceBindingPatches),
                 nameof(InstanceBindingPatches.InnerPostfix_CallerParameter_ReferenceType_WriteByReference_Rejected)));

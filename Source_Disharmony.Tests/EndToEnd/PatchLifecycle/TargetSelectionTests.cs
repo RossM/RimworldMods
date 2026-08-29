@@ -45,7 +45,7 @@ public sealed class TargetSelectionTests : PatchTestBase
     [Test]
     public void TargetAttributeCanSelectClosedGenericMethod()
     {
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
             ApplyPatch(typeof(TargetSelectionPatches), nameof(TargetSelectionPatches.TargetAttributeCanSelectClosedGenericMethod)));
     }
 }

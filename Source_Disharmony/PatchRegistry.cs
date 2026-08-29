@@ -1,6 +1,12 @@
 ﻿namespace Disharmony;
 
-public class RuntimePatchException(string message, Exception innerException) : Exception(message, innerException);
+public class RuntimePatchException(string message, Exception innerException) : PatchException(message, innerException);
+
+public class PatchException : Exception
+{
+    public PatchException(string message) : base(message) { }
+    public PatchException(string message, Exception innerException) : base(message, innerException) { }
+}
 
 internal enum BindingType
 {
@@ -195,7 +201,7 @@ internal class PatchRegistry
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException($"Error processing {method.FullName}", e);
+                throw new PatchException($"Error processing {method.FullName}", e);
             }
         }
     }
@@ -214,11 +220,11 @@ internal class PatchRegistry
         lock (syncRoot)
         {
             if (patch.PatchMethod is null)
-                throw new InvalidOperationException("Patch method not set; call Patch.With()");
+                throw new PatchException("Patch method not set; call Patch.With()");
             if (patch.Type is not { } patchType)
-                throw new InvalidOperationException("Patch type not set; call Patch.Prefix or Patch.Postfix");
+                throw new PatchException("Patch type not set; call Patch.Prefix or Patch.Postfix");
             if (patch.Target is not MethodBaseInvocation targetInvocation)
-                throw new InvalidOperationException("Patch target not set; call Patch.Of()");
+                throw new PatchException("Patch target not set; call Patch.Of()");
 
             try
             {
@@ -227,7 +233,7 @@ internal class PatchRegistry
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException($"Error processing {patch.PatchMethod.FullName}", e);
+                throw new PatchException($"Error processing {patch.PatchMethod.FullName}", e);
             }
         }
     }

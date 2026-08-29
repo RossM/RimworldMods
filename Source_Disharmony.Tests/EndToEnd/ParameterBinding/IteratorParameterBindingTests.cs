@@ -162,7 +162,7 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Primitive_WriteByReference_Rejected)));
@@ -188,7 +188,7 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_ReferenceType_WriteByReference_Rejected)));
@@ -213,7 +213,7 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Struct_WriteByReference_Rejected)));
@@ -239,7 +239,7 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPostfix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPostfix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected)));
@@ -405,7 +405,7 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_ReferenceType_WriteByReference()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_ReferenceType_WriteByReference)));
@@ -433,7 +433,7 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_Struct_WriteByReference()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_Struct_WriteByReference)));
@@ -479,7 +479,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Primitive_ReadByReference_Rejected)));
@@ -490,7 +490,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_ReferenceType_ReadByReference_Rejected)));
@@ -501,7 +501,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorOriginalParameter_Struct_ReadByReference_Rejected)));
@@ -512,7 +512,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_ReferenceType_ReadByReference()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_ReferenceType_ReadByReference)));
@@ -526,7 +526,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_IteratorDeclaringInstance_Struct_ReadByReference()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_IteratorDeclaringInstance_Struct_ReadByReference)));
@@ -611,7 +611,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected)));
@@ -622,7 +622,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_LocalIteratorEnclosingParameter_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Primitive_WriteByReference_Rejected)));
@@ -633,7 +633,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPostfix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPostfix_LocalIteratorEnclosingParameter_Primitive_ReadByReference_Rejected)));
@@ -659,7 +659,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches
@@ -671,7 +671,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_LocalIteratorEnclosingParameter_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches
@@ -697,7 +697,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_ReadByReference_Rejected)));
@@ -708,7 +708,7 @@ public sealed partial class IteratorParameterBindingTests
     [Test]
     public void InnerPrefix_LocalIteratorEnclosingParameter_Struct_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(IteratorParameterBindingPatches),
                 nameof(IteratorParameterBindingPatches.InnerPrefix_LocalIteratorEnclosingParameter_Struct_WriteByReference_Rejected)));

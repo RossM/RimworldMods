@@ -17,7 +17,7 @@ public sealed partial class PatchReturnTypeValidationTests : PatchTestBase
     [Test]
     public void PostfixReturningNonVoidIsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(PatchReturnTypeValidationPatches),
                 nameof(PatchReturnTypeValidationPatches.PostfixReturningNonVoidIsRejected)));
@@ -33,7 +33,7 @@ public sealed partial class PatchReturnTypeValidationTests
     [Test]
     public void InnerPostfixReturningNonVoidIsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(PatchReturnTypeValidationPatches),
                 nameof(PatchReturnTypeValidationPatches.InnerPostfixReturningNonVoidIsRejected)));

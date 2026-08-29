@@ -135,7 +135,7 @@ public sealed class BaseMethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_BaseMethod_Delegate_ParameterTypeMismatch_RejectedByPatch()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(BaseMethodBindingPatches),
                 nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ParameterTypeMismatch_RejectedByPatch)));
@@ -147,7 +147,7 @@ public sealed class BaseMethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_BaseMethod_Delegate_ParameterCountMismatch_RejectedByPatch()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(BaseMethodBindingPatches),
                 nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ParameterCountMismatch_RejectedByPatch)));
@@ -159,7 +159,7 @@ public sealed class BaseMethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(BaseMethodBindingPatches),
                 nameof(BaseMethodBindingPatches.Prefix_BaseMethod_Delegate_ReturnTypeMismatch_RejectedByPatch)));

@@ -336,7 +336,7 @@ public sealed class InnerMemberAccessTests : PatchTestBase
     [Test]
     public void InnerPostfix_InstanceProperty_ReferenceType_Instance_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(InnerMemberAccessPatches),
                 nameof(InnerMemberAccessPatches.InnerPostfix_InstanceProperty_ReferenceType_Instance_ReadByReference_Rejected)));

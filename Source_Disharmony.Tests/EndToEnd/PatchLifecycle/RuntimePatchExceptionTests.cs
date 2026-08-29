@@ -62,7 +62,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -77,7 +77,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -92,7 +92,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Postfix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -107,7 +107,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -123,7 +123,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(InstanceMethodTargetsWithoutFields)
             .GetMethod(nameof(InstanceMethodTargetsWithoutFields.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -138,7 +138,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.With(patch).Of(target) with { Type = (PatchType)int.MaxValue });
             Patcher.ForceApply();
@@ -153,7 +153,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -168,7 +168,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -201,7 +201,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -231,7 +231,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.With(patch).Of(target));
             Patcher.ForceApply();
@@ -248,7 +248,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Assert.Throws<InvalidOperationException>(() =>
+        Assert.Throws<PatchException>(() =>
         {
             Patcher.Patch(Patch.Prefix.Inner(innerTarget).With(patch).Of(outerTarget));
             Patcher.ForceApply();

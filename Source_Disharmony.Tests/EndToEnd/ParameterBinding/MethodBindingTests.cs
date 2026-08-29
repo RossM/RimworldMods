@@ -252,7 +252,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_MethodAttribute_StructInstanceMethod_IsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.Prefix_MethodAttribute_StructInstanceMethod_IsRejected)));
@@ -336,7 +336,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void InnerPrefix_MethodAttribute_ReadonlyOuterDoesNotAllowMutableInnerStructMethod()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_ReadonlyOuterDoesNotAllowMutableInnerStructMethod)));
@@ -348,7 +348,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException)));
@@ -359,7 +359,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_MethodAttribute_MissingMethod_IsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.Prefix_MethodAttribute_MissingMethod_IsRejected)));
@@ -371,7 +371,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_MethodAttribute_InstanceMethodOnStaticTarget_IsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.Prefix_MethodAttribute_InstanceMethodOnStaticTarget_IsRejected)));
@@ -383,7 +383,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void Prefix_MethodAttribute_InnerScopeWithoutInnerPatch_IsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.Prefix_MethodAttribute_InnerScopeWithoutInnerPatch_IsRejected)));
@@ -507,7 +507,7 @@ public sealed class MethodBindingTests : PatchTestBase
     [Test]
     public void IteratorInnerPrefix_MethodAttribute_OuterScopeInstanceMethod_IsRejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(MethodBindingPatches),
                 nameof(MethodBindingPatches.IteratorInnerPrefix_MethodAttribute_OuterScopeInstanceMethod_IsRejected)));

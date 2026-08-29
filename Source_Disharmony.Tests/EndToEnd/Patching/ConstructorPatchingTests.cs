@@ -200,7 +200,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ConstructorPatchingPatches),
                 nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected)));
@@ -239,7 +239,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ConstructorPatchingPatches),
                 nameof(ConstructorPatchingPatches.InnerPostfix_Constructor_ReferenceType_Parameter_Primitive_ReadByReference_Rejected)));
@@ -276,7 +276,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ConstructorPatchingPatches),
                 nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameterless_Instance_ReadByReference_Rejected)));
@@ -287,7 +287,7 @@ public sealed class ConstructorPatchingTests : PatchTestBase
     [Test]
     public void Postfix_Constructor_ReferenceType_Parameterless_Instance_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ConstructorPatchingPatches),
                 nameof(ConstructorPatchingPatches.Postfix_Constructor_ReferenceType_Parameterless_Instance_WriteByReference_Rejected)));

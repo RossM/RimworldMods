@@ -288,7 +288,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void Postfix_ValueArgument_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.Postfix_ValueArgument_Primitive_ReadByReference_Rejected)));
@@ -299,7 +299,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void Postfix_ParameterAttribute_ValueArgument_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.Postfix_ParameterAttribute_ValueArgument_Primitive_WriteByReference_Rejected)));
@@ -310,7 +310,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected)));
@@ -321,7 +321,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected)));
@@ -332,7 +332,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected)));
@@ -343,7 +343,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPostfix_InnerValueArgument_Primitive_ReadByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPostfix_InnerValueArgument_Primitive_ReadByReference_Rejected)));
@@ -354,7 +354,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPostfix_InnerValueArgument_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(
                 typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPostfix_InnerValueArgument_Primitive_WriteByReference_Rejected)));
@@ -587,7 +587,7 @@ public sealed partial class ArgumentBindingTests
 {
     private static void AssertOuterReferenceBindingRejected(string patchName)
     {
-        var exception = Assert.Throws<InvalidOperationException>(() => ApplyPatch(typeof(ArgumentBindingPatches), patchName));
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(typeof(ArgumentBindingPatches), patchName));
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>());
     }
 
@@ -910,7 +910,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Primitive_WriteByReference_Rejected)));
 
@@ -920,7 +920,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_ReferenceType_WriteByReference_Rejected)));
 
@@ -930,7 +930,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPrefix_OuterArgument_Struct_WriteByReference_Rejected)));
 
@@ -940,7 +940,7 @@ public sealed partial class ArgumentBindingTests
     [Test]
     public void InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected()
     {
-        var exception = Assert.Throws<InvalidOperationException>(() =>
+        var exception = Assert.Throws<PatchException>(() =>
             ApplyPatch(typeof(ArgumentBindingPatches),
                 nameof(ArgumentBindingPatches.InnerPostfix_OuterArgument_Primitive_WriteByReference_Rejected)));
 
