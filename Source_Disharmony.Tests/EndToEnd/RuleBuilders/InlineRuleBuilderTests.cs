@@ -11,11 +11,7 @@ public sealed class InlineRuleBuilderTests : PatchTestBase
             .GetMethod(nameof(InlineRuleBuilderPatches.Prefix_BranchAndRefWrite_AreInlined))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            options: PatchOptions.Inline,
-            targets: [target]);
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
 
         int negativeResult = StaticMethodTargets.IntIdentity(-42);
         int positiveResult = StaticMethodTargets.IntIdentity(7);
@@ -38,11 +34,7 @@ public sealed class InlineRuleBuilderTests : PatchTestBase
         Assert.That(instructions.Any(instruction => instruction.opcode == OpCodes.Starg_S), Is.True);
         MethodInfo target = typeof(InlineRuleBuilderTargets)
             .GetMethod(nameof(InlineRuleBuilderTargets.FiveArguments))!;
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            options: PatchOptions.Inline,
-            targets: [target]);
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
 
         InlineRuleBuilderTargets.FiveArguments(1, 2, 3, 4, 5);
 
@@ -64,11 +56,7 @@ public sealed class InlineRuleBuilderTests : PatchTestBase
         Assert.That(instructions.Any(instruction => instruction.opcode == OpCodes.Ldloc_S), Is.True);
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            options: PatchOptions.Inline,
-            targets: [target]);
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
 
         StaticMethodTargets.Void();
 
@@ -86,11 +74,7 @@ public sealed class InlineRuleBuilderTests : PatchTestBase
         Assert.That(instructions.Any(instruction => instruction.opcode == OpCodes.Switch), Is.True);
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            options: PatchOptions.Inline,
-            targets: [target]);
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
 
         Assert.That(StaticMethodTargets.IntIdentity(0), Is.EqualTo(0));
         Assert.That(InlineRuleBuilderPatches.SwitchObserved, Is.EqualTo(10));

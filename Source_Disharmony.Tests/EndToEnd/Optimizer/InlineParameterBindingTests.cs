@@ -23,16 +23,30 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         MethodInfo? innerTarget = innerMethodName == null
             ? null
             : typeof(InlineParameterBindingTargets).GetMethod(innerMethodName)!;
-        Patcher.Patch(patch, patchType, innerTarget: innerTarget,
-            options: PatchOptions.Optimize | PatchOptions.Inline, targets: [target]);
+        PatchConfig patchConfig = patchType switch
+        {
+            PatchType.Prefix => Patch.Prefix,
+            PatchType.Postfix => Patch.Postfix,
+            _ => throw new ArgumentOutOfRangeException(nameof(patchType)),
+        };
+        if (innerTarget is not null)
+            patchConfig = patchConfig.Inner(innerTarget);
+        Patcher.Patch(patchConfig.With(patch)
+            .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
     }
 
     private static void ApplyInlinePatch(string patchMethodName, PatchType patchType,
         MethodBase target)
     {
         MethodInfo patch = typeof(InlineParameterBindingPatches).GetMethod(patchMethodName)!;
-        Patcher.Patch(patch, patchType,
-            options: PatchOptions.Optimize | PatchOptions.Inline, targets: [target]);
+        PatchConfig patchConfig = patchType switch
+        {
+            PatchType.Prefix => Patch.Prefix,
+            PatchType.Postfix => Patch.Postfix,
+            _ => throw new ArgumentOutOfRangeException(nameof(patchType)),
+        };
+        Patcher.Patch(patchConfig.With(patch)
+            .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
     }
 
     [Test]
@@ -328,14 +342,18 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         InlineParameterBindingPatches.StateObserved = 0;
         InlineParameterBindingPatches.ResultObserved = 0;
-        ApplyInlinePatch(
-            nameof(InlineParameterBindingPatches.PrefixPostfix_StateAndResult_PreservesValues_Prefix),
-            PatchType.Prefix,
-            typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.PrimitiveIdentity))!);
-        ApplyInlinePatch(
-            nameof(InlineParameterBindingPatches.PrefixPostfix_StateAndResult_PreservesValues_Postfix),
-            PatchType.Postfix,
-            typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.PrimitiveIdentity))!);
+        MethodInfo prefix = typeof(InlineParameterBindingPatches)
+            .GetMethod(nameof(InlineParameterBindingPatches.PrefixPostfix_StateAndResult_PreservesValues_Prefix))!;
+        MethodInfo postfix = typeof(InlineParameterBindingPatches)
+            .GetMethod(nameof(InlineParameterBindingPatches.PrefixPostfix_StateAndResult_PreservesValues_Postfix))!;
+        MethodInfo target = typeof(InlineParameterBindingTargets)
+            .GetMethod(nameof(InlineParameterBindingTargets.PrimitiveIdentity))!;
+        PatchOptions options = PatchOptions.Optimize | PatchOptions.Inline;
+
+        Patcher.Patch(
+            target,
+            Patch.Prefix.With(prefix).Options(options),
+            Patch.Postfix.With(postfix).Options(options));
 
         int result = InlineParameterBindingTargets.PrimitiveIdentity(7);
 

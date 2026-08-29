@@ -15,7 +15,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     public void DisableOptimizer() =>
         HarmonyInterface.Instance.optimizerEnabled = false;
 
-    private static void ApplyInlinePatch(string patchMethodName, PatchType patchType,
+    private static void ApplyInlinePatch(string patchMethodName, PatchConfig patchConfig,
         string targetMethodName, string? innerMethodName = null)
     {
         MethodInfo patch = typeof(InlineExecutionControlPatches).GetMethod(patchMethodName)!;
@@ -23,8 +23,10 @@ public sealed class InlineExecutionControlTests : PatchTestBase
         MethodInfo? innerTarget = innerMethodName == null
             ? null
             : typeof(InlineExecutionControlTargets).GetMethod(innerMethodName)!;
-        Patcher.Patch(patch, patchType, innerTarget: innerTarget,
-            options: PatchOptions.Optimize | PatchOptions.Inline, targets: [target]);
+        if (innerTarget is not null)
+            patchConfig = patchConfig.Inner(innerTarget);
+        Patcher.Patch(patchConfig.With(patch)
+            .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
     }
 
     [Test]
@@ -32,7 +34,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineExecutionControlPatches.OuterPrefix_AlwaysTrue_RunsTarget),
-            PatchType.Prefix,
+            Patch.Prefix,
             nameof(InlineExecutionControlTargets.OuterPrefix_AlwaysTrue_RunsTarget));
 
         int result = InlineExecutionControlTargets.OuterPrefix_AlwaysTrue_RunsTarget();
@@ -49,7 +51,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineExecutionControlPatches.InnerPrefix_AlwaysTrue_RunsTarget),
-            PatchType.Prefix,
+            Patch.Prefix,
             nameof(InlineExecutionControlTargets.InnerPrefix_AlwaysTrue_RunsTarget),
             nameof(InlineExecutionControlTargets.InnerPrefix_AlwaysTrue_RunsTarget_Inner));
 
@@ -67,7 +69,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineExecutionControlPatches.OuterPrefix_AlwaysFalse_SkipsTarget),
-            PatchType.Prefix,
+            Patch.Prefix,
             nameof(InlineExecutionControlTargets.OuterPrefix_AlwaysFalse_SkipsTarget));
 
         int result = InlineExecutionControlTargets.OuterPrefix_AlwaysFalse_SkipsTarget();
@@ -84,7 +86,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineExecutionControlPatches.InnerPrefix_AlwaysFalse_SkipsTarget),
-            PatchType.Prefix,
+            Patch.Prefix,
             nameof(InlineExecutionControlTargets.InnerPrefix_AlwaysFalse_SkipsTarget),
             nameof(InlineExecutionControlTargets.InnerPrefix_AlwaysFalse_SkipsTarget_Inner));
 
@@ -102,7 +104,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineExecutionControlPatches.OuterPrefix_ParameterControlsWhetherTargetRuns),
-            PatchType.Prefix,
+            Patch.Prefix,
             nameof(InlineExecutionControlTargets.OuterPrefix_ParameterControlsWhetherTargetRuns));
 
         int skippedResult = InlineExecutionControlTargets.OuterPrefix_ParameterControlsWhetherTargetRuns(false);
@@ -121,7 +123,7 @@ public sealed class InlineExecutionControlTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineExecutionControlPatches.InnerPrefix_ParameterControlsWhetherTargetRuns),
-            PatchType.Prefix,
+            Patch.Prefix,
             nameof(InlineExecutionControlTargets.InnerPrefix_ParameterControlsWhetherTargetRuns),
             nameof(InlineExecutionControlTargets.InnerPrefix_ParameterControlsWhetherTargetRuns_Inner));
 

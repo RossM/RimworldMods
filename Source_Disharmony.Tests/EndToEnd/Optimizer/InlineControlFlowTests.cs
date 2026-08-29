@@ -12,12 +12,12 @@ public sealed class InlineControlFlowTests : PatchTestBase
     public void DisableOptimizer() =>
         HarmonyInterface.Instance.optimizerEnabled = false;
 
-    private static void ApplyInlinePatch(string patchMethodName, PatchType patchType,
+    private static void ApplyInlinePatch(string patchMethodName, PatchConfig patchConfig,
         MethodBase target)
     {
         MethodInfo patch = typeof(InlineControlFlowPatches).GetMethod(patchMethodName)!;
-        Patcher.Patch(patch, patchType,
-            options: PatchOptions.Optimize | PatchOptions.Inline, targets: [target]);
+        Patcher.Patch(patchConfig.With(patch)
+            .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
     }
 
     [Test]
@@ -25,7 +25,7 @@ public sealed class InlineControlFlowTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineControlFlowPatches.Prefix_ControlFlow_MultipleReturns),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(InlineControlFlowTargets).GetMethod(nameof(InlineControlFlowTargets.PrimitiveIdentity))!);
 
         Assert.That(InlineControlFlowTargets.PrimitiveIdentity(-10), Is.EqualTo(-1));
@@ -39,7 +39,7 @@ public sealed class InlineControlFlowTests : PatchTestBase
         InlineControlFlowPatches.FinallyExecutions = 0;
         ApplyInlinePatch(
             nameof(InlineControlFlowPatches.Prefix_ExceptionHandling_TryFinally),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(InlineControlFlowTargets).GetMethod(nameof(InlineControlFlowTargets.PrimitiveIdentity))!);
 
         int result = InlineControlFlowTargets.PrimitiveIdentity(7);

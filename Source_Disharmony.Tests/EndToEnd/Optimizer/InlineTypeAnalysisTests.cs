@@ -12,12 +12,12 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     public void DisableOptimizer() =>
         HarmonyInterface.Instance.optimizerEnabled = false;
 
-    private static void ApplyInlinePatch(string patchMethodName, PatchType patchType,
+    private static void ApplyInlinePatch(string patchMethodName, PatchConfig patchConfig,
         MethodBase target)
     {
         MethodInfo patch = typeof(InlineTypeAnalysisPatches).GetMethod(patchMethodName)!;
-        Patcher.Patch(patch, patchType,
-            options: PatchOptions.Optimize | PatchOptions.Inline, targets: [target]);
+        Patcher.Patch(patchConfig.With(patch)
+            .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
     }
 
     [Test]
@@ -25,7 +25,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_Is_Local_KnownSuccess),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(false), Is.True);
@@ -37,7 +37,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_Is_Local_KnownFailure),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnLocal(false), Is.False);
@@ -49,7 +49,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_Is_EvaluationStack_KnownSuccess),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(false), Is.True);
@@ -61,7 +61,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_Is_EvaluationStack_KnownFailure),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.IsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.IsOperatorOnEvaluationStack(false), Is.False);
@@ -73,7 +73,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_As_Local_KnownSuccess),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(false), Is.EqualTo(7));
@@ -85,7 +85,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_As_Local_KnownFailure),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnLocal))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnLocal(false), Is.Null);
@@ -97,7 +97,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_As_EvaluationStack_KnownSuccess),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(false), Is.EqualTo(7));
@@ -109,7 +109,7 @@ public sealed class InlineTypeAnalysisTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineTypeAnalysisPatches.Prefix_As_EvaluationStack_KnownFailure),
-            PatchType.Prefix,
+            Patch.Prefix,
             typeof(OptimizerMixedTargets).GetMethod(nameof(OptimizerMixedTargets.AsOperatorOnEvaluationStack))!);
 
         Assert.That(OptimizerMixedTargets.AsOperatorOnEvaluationStack(false), Is.Null);
