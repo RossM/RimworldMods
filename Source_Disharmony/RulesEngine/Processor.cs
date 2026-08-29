@@ -30,6 +30,12 @@ internal class Processor(
         if (debug)
             FileLog.Log($"## InfixPatcher {method.FullName}");
 
+        if (ruleset.rules.Count == 0)
+        {
+            outInstructions = instructions;
+            return;
+        }
+
         foreach (var phase in ruleset.rules.GroupBy(r => r.phase).OrderBy(p => p.Key))
         {
             matches.Clear();
@@ -290,8 +296,6 @@ internal class Processor(
         localMap_Match = [];
         labelMap_Match = [];
 
-        bool noOutput = rule.output is not { Length: > 0 };
-
         // rule.Pattern is checked to be non-null before this is called
         if (rule.pattern is null)
             throw new InvalidOperationException();
@@ -302,15 +306,16 @@ internal class Processor(
                     labelMap_Match))
                 return false;
 
-            if (rule.mode == OutputMode.Replace)
+            // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
+            // which would be lost when the instructions are replaced
+            if (rule is { mode: OutputMode.Replace, output: { Length: > 0 } })
             {
-                // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
                 CodeInstruction inst = instructions[instructionIndex + patternIndex];
-                if ((patternIndex > 0 || noOutput) && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
+                if (patternIndex > 0 && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
                     return false;
-                if ((patternIndex > 0 || noOutput) && inst.labels.Count > 0)
+                if (patternIndex > 0 && inst.labels.Count > 0)
                     return false;
-                if ((patternIndex < rule.pattern.Length - 1 || noOutput) &&
+                if (patternIndex < rule.pattern.Length - 1 &&
                     inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
                     return false;
             }

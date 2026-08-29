@@ -75,6 +75,6 @@ public class Rule
     public int phase = 1;
     public OutputMode mode = OutputMode.Replace;
     public CodeInstruction[]? pattern;
-    public required CodeInstruction[] output;
+    public required CodeInstruction[]? output;
     public string? name;
 }
