@@ -62,10 +62,10 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     public int RemoveAll(Func<TKey, TElement, bool> predicate)
     {
         int removed = 0;
-        foreach (var kvp in valuesByKey.ToList())
+        foreach (var (key, values) in valuesByKey.ToList())
         {
-            removed += kvp.Value.RemoveAll(value => predicate(kvp.Key, value));
-            FreeIfEmpty(kvp.Key, kvp.Value);
+            removed += values.RemoveAll(value => predicate(key, value));
+            FreeIfEmpty(key, values);
         }
 
         return removed;
