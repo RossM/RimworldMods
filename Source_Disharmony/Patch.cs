@@ -21,11 +21,6 @@ public class PatchHandle
     {
         id = _nextId++;
     }
-
-    public void Unpatch()
-    {
-        throw new NotImplementedException();
-    }
 }
 
 public static class Patch

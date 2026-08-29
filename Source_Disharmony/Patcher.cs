@@ -384,6 +384,11 @@ public static class Patcher
         throw new NotImplementedException();
     }
 
+    public static void Unpatch(PatchHandle handle)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     ///     Activates all pending patch changes while deferring their expensive preparation until needed.
     /// </summary>
