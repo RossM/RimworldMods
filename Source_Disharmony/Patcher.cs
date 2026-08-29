@@ -301,7 +301,7 @@ public static class Patcher
     public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
     {
         PatchHandle handle = new PatchHandle();
-        var stateKey = Guid.NewGuid().ToString();
+        var stateKey = $"handle!{handle.id}";
         foreach (var patch in patches)
             registry.ProcessPatch(patch, stateKey, handle.id);
         Apply();
