@@ -373,6 +373,9 @@ internal class Processor(
             {
                 var targetLabels = (Label[])inst.operand;
 
+                if (labels.Length != targetLabels.Length)
+                    return false;
+
                 for (int i = 0; i < labels.Length; i++)
                 {
                     if (labelMap_Match.TryGetValue(labels[i], out var substituteLabel) && substituteLabel != targetLabels[i])
