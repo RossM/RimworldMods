@@ -376,10 +376,14 @@ internal class Processor(
                 if (labels.Length != targetLabels.Length)
                     return false;
 
+                Dictionary<Label, Label> tempLabelMap = [];
                 for (int i = 0; i < labels.Length; i++)
                 {
                     if (labelMap_Match.TryGetValue(labels[i], out var substituteLabel) && substituteLabel != targetLabels[i])
                         return false;
+                    if (tempLabelMap.TryGetValue(labels[i], out substituteLabel) && substituteLabel != targetLabels[i])
+                        return false;
+                    tempLabelMap[labels[i]] = targetLabels[i];
                 }
 
                 for (int i = 0; i < labels.Length; i++)
