@@ -1,9 +1,8 @@
 ﻿namespace Disharmony;
 
-public class ParameterBindingException(string argumentName, string message) : Exception(message)
-{
-    public override string Message => $"{argumentName}: {base.Message}";
-}
+public class ParameterBindingException(string argumentName, string message) : PatchException($"{argumentName}: {message}");
+
+public class PatchDefinitionException(MethodInfo method, string message) : PatchException($"{method.FullName}: {message}");
 
 public class PatchException : Exception
 {

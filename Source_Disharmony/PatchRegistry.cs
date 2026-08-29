@@ -217,7 +217,7 @@ internal class PatchRegistry
                 throw new PatchException("Patch type not set; call Patch.Prefix or Patch.Postfix");
             if (patch.Target is not MethodBaseInvocation targetInvocation)
                 throw new PatchException("Patch target not set; call Patch.Of()");
-
+           
             try
             {
                 AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, stateKey,
@@ -285,30 +285,7 @@ internal class PatchRegistry
         string stateGroupKey,
         int unpatchKey)
     {
-        var method = patchMethod.MethodInfo;
-        if (method.ContainsGenericParameters)
-            throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
-        if (!method.IsStatic)
-            throw new InvalidOperationException($"{method.FullName}: Patch methods must be static");
-        switch (patchType)
-        {
-            case PatchType.Prefix:
-            {
-                if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
-                    throw new InvalidOperationException($"{method.FullName}: {patchType} must return 'bool' or 'void'");
-                break;
-            }
-            case PatchType.Postfix:
-            {
-                if (method.ReturnType != typeof(void))
-                    throw new InvalidOperationException($"{method.FullName}: {patchType} must return 'void'");
-                break;
-            }
-            default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
-        }
-
-        if (target.MethodBase.IsGenericMethod)
-            throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
+        Validate(patchType, patchMethod.MethodInfo, target.MethodBase);
 
         MethodBaseInvocation outer = target;
         bool isIterator = false;
@@ -345,6 +322,33 @@ internal class PatchRegistry
         if (!patchesByMethod.TryGetValue(outer, out var patchList))
             patchList = patchesByMethod[outer] = [];
         patchList.Add(patch);
+    }
+
+    private static void Validate(PatchType patchType, MethodInfo method, MethodBase target)
+    {
+        if (method.ContainsGenericParameters)
+            throw new PatchDefinitionException(method, "Generic patch functions are not supported");
+        if (!method.IsStatic)
+            throw new PatchDefinitionException(method, "Patch methods must be static");
+        switch (patchType)
+        {
+            case PatchType.Prefix:
+            {
+                if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
+                    throw new PatchDefinitionException(method, "Prefix must return 'bool' or 'void'");
+                break;
+            }
+            case PatchType.Postfix:
+            {
+                if (method.ReturnType != typeof(void))
+                    throw new PatchDefinitionException(method, "Postfix must return 'void'");
+                break;
+            }
+            default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
+        }
+
+        if (target.IsGenericMethod)
+            throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
     }
 
     public void UnpatchAll()

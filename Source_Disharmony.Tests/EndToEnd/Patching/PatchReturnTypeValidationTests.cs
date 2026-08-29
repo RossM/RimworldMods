@@ -22,7 +22,7 @@ public sealed partial class PatchReturnTypeValidationTests : PatchTestBase
                 typeof(PatchReturnTypeValidationPatches),
                 nameof(PatchReturnTypeValidationPatches.PostfixReturningNonVoidIsRejected)));
 
-        Assert.That(exception!.InnerException, Is.TypeOf<InvalidOperationException>());
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
         Assert.That(exception.InnerException!.Message, Does.EndWith("Postfix must return 'void'"));
     }
 }
@@ -38,7 +38,7 @@ public sealed partial class PatchReturnTypeValidationTests
                 typeof(PatchReturnTypeValidationPatches),
                 nameof(PatchReturnTypeValidationPatches.InnerPostfixReturningNonVoidIsRejected)));
 
-        Assert.That(exception!.InnerException, Is.TypeOf<InvalidOperationException>());
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
         Assert.That(exception.InnerException!.Message, Does.EndWith("Postfix must return 'void'"));
     }
 }
