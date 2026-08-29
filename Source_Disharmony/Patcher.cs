@@ -70,8 +70,8 @@ public static class Patcher
 {
     // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
     private static readonly object applyLock = new();
-    private static readonly PatchRegistry registry = PatchRegistry.Instance;
-    internal static readonly HarmonyInterface harmonyInterface = HarmonyInterface.Instance;
+    private static PatchRegistry Registry => PatchRegistry.Instance;
+    internal static HarmonyInterface Harmony => HarmonyInterface.Instance;
 
     /// <summary>
     ///     Notifies subscribers when Disharmony encounters a recoverable patching error.
@@ -107,8 +107,8 @@ public static class Patcher
     public static PatchHandle PatchAll(Assembly assembly)
     {
         PatchHandle handle = new PatchHandle();
-        registry.ProcessAssembly(assembly, handle.id);
-        registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.ProcessAssembly(assembly, handle.id);
+        Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -127,8 +127,8 @@ public static class Patcher
     public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
         PatchHandle handle = new PatchHandle();
-        registry.ProcessAssembly(assembly, category, handle.id);
-        registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.ProcessAssembly(assembly, category, handle.id);
+        Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -144,8 +144,8 @@ public static class Patcher
     public static PatchHandle PatchAll(Type type)
     {
         PatchHandle handle = new PatchHandle();
-        registry.ProcessType(type.GetTypeInfo(), handle.id);
-        registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.ProcessType(type.GetTypeInfo(), handle.id);
+        Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -161,8 +161,8 @@ public static class Patcher
     public static PatchHandle Patch(MethodInfo method)
     {
         PatchHandle handle = new PatchHandle();
-        registry.ProcessMethod(method, handle.id);
-        registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.ProcessMethod(method, handle.id);
+        Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -213,8 +213,8 @@ public static class Patcher
         PatchHandle handle = new PatchHandle();
         var stateKey = $"handle!{handle.id}";
         foreach (var patch in patches)
-            registry.ProcessPatch(patch, stateKey, handle.id);
-        registry.ApplyPendingChanges(useTrampolines: true);
+            Registry.ProcessPatch(patch, stateKey, handle.id);
+        Registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -227,8 +227,8 @@ public static class Patcher
     /// </remarks>
     public static void Unpatch(PatchHandle handle)
     {
-        registry.Unpatch(handle.id);
-        registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.Unpatch(handle.id);
+        Registry.ApplyPendingChanges(useTrampolines: true);
     }
 
     /// <summary>
@@ -240,8 +240,8 @@ public static class Patcher
     /// </remarks>
     public static void ForceApply()
     {
-        registry.ApplyPendingChanges(useTrampolines: false);
-        harmonyInterface.ResolveAllTrampolines();
+        Registry.ApplyPendingChanges(useTrampolines: false);
+        Harmony.ResolveAllTrampolines();
     }
 
     /// <summary>
@@ -252,7 +252,7 @@ public static class Patcher
     /// </remarks>
     internal static void UnpatchAll()
     {
-        registry.UnpatchAll();
-        registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.UnpatchAll();
+        Registry.ApplyPendingChanges(useTrampolines: true);
     }
 }

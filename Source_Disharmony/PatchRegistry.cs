@@ -425,13 +425,13 @@ internal class PatchRegistry
 
                     if (patches.Count == 0)
                     {
-                        Patcher.harmonyInterface.Unpatch(patchedMethod.MethodBase);
+                        Patcher.Harmony.Unpatch(patchedMethod.MethodBase);
                     }
                     else
                     {
                         Ruleset ruleset = RulesetGenerator.MakeRuleset(patchedMethod, patches);
 
-                        Patcher.harmonyInterface.ApplyPatch(patchedMethod, ruleset, useTrampolines);
+                        Patcher.Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines);
                     }
                 }
                 catch (Exception e)
