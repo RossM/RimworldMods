@@ -8,6 +8,19 @@ public class ParameterBindingException(string argumentName, string message) : Ex
     public override string Message => $"{argumentName}: {base.Message}";
 }
 
+/// <summary>
+///     A helper class that analyzes patch method parameters and determines how their values should be emitted in code
+///     generation.
+/// </summary>
+/// <remarks>
+///     For patches targeting a compiler-generated iterator state machine, <paramref name="target" /> refers to
+///     the declared target, while <paramref name="inner" /> refers to the compiler-generated <c>MoveNext</c> method.
+/// </remarks>
+/// <param name="target">The declared target of the patch.</param>
+/// <param name="outer">The outer method being patched.</param>
+/// <param name="inner">The inner invocation being patched, or <see cref="EmptyInvocation" /> for an outer patch.</param>
+/// <param name="patchType">The patch type.</param>
+/// <param name="stateGroupKey">A string for grouping together <see cref="StateAttribute">state</see> parameters.</param>
 internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
 {
     private bool IsInfix => inner is not EmptyInvocation;
@@ -15,7 +28,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
     private const string ThisRegexPattern = "^<>[\\d+]__this$";
-    
+
     public ParameterBinding Bind(ParameterInfo parameter)
     {
         var parameterName = parameter.Name;
