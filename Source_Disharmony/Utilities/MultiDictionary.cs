@@ -21,6 +21,9 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
 
     
     private readonly Dictionary<TKey, List<TElement>> valuesByKey = [];
+
+    // Creating and destroying empty lists causes GC pressure, so save any lists that become empty to reuse
+    private readonly Stack<List<TElement>> emptyLists = [];
     
     public IEnumerable<TElement> this[TKey key] => valuesByKey.TryGetValue(key, out var values) ? values : Array.Empty<TElement>();
 
@@ -30,7 +33,7 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     {
         if (!valuesByKey.TryGetValue(key, out List<TElement>? values))
         {
-            values = [];
+            values = emptyLists.Count > 0 ? emptyLists.Pop() : [];
             valuesByKey.Add(key, values);
         }
 
@@ -42,8 +45,7 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         if (!valuesByKey.TryGetValue(key, out var values))
             return false;
         bool result = values.Remove(value);
-        if (values.Count == 0)
-            valuesByKey.Remove(key);
+        FreeIfEmpty(key, values);
         return result;
     }
 
@@ -52,8 +54,7 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         if (!valuesByKey.TryGetValue(key, out var values))
             return 0;
         int result = values.RemoveAll(predicate);
-        if (values.Count == 0)
-            valuesByKey.Remove(key);
+        FreeIfEmpty(key, values);
         return result;
     }
 
@@ -63,11 +64,18 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         foreach (var kvp in valuesByKey.ToList())
         {
             removed += kvp.Value.RemoveAll(value => predicate(kvp.Key, value));
-            if (kvp.Value.Count == 0)
-                valuesByKey.Remove(kvp.Key);
+            FreeIfEmpty(kvp.Key, kvp.Value);
         }
 
         return removed;
+    }
+
+    private void FreeIfEmpty(TKey key, List<TElement> values)
+    {
+        if (values.Count != 0)
+            return;
+        valuesByKey.Remove(key);
+        emptyLists.Push(values);
     }
 
     public bool TryGetValues(
@@ -84,7 +92,11 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         return false;
     }
 
-    public void Clear() => valuesByKey.Clear();
+    public void Clear()
+    {
+        valuesByKey.Clear();
+        emptyLists.Clear();
+    }
 
     public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => EnumerableImplementation.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)EnumerableImplementation).GetEnumerator();
