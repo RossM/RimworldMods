@@ -96,7 +96,12 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
         return false;
     }
 
-    public void Clear() => valuesByKey.Clear();
+    public void Clear()
+    {
+        valuesByKey.Clear();
+        Array.Clear(emptyLists, 0, emptyLists.Length);
+        emptyListCount = 0;
+    }
 
     public IEnumerator<IGrouping<TKey, TElement>> GetEnumerator() => EnumerableImplementation.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)EnumerableImplementation).GetEnumerator();
