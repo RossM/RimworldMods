@@ -102,7 +102,15 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             index++;
 
         if (IsIterator && scope == Scope.Outer)
+        {
+            if (index < 0 || index >= target.ParameterTypes.Length)
+                throw new ParameterBindingException(parameter.Name, "Index is out of range");
+
             return BindParameterByName(parameter, target.ParameterNames[index], scope);
+        }
+
+        if (index < 0 || index >= invocation.ParameterTypes.Length)
+            throw new ParameterBindingException(parameter.Name, "Index is out of range");
 
         Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
         return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = scope, index = index };
