@@ -195,7 +195,7 @@ public static class Patcher
     /// </remarks>
     public static void RegisterCategory(Assembly assembly, string? category)
     {
-        registry.ProcessAssembly(assembly, category);
+        registry.ProcessAssembly(assembly, category, 0);
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ public static class Patcher
     /// </remarks>
     public static void Register(Type type)
     {
-        registry.ProcessType(type.GetTypeInfo());
+        registry.ProcessType(type.GetTypeInfo(), 0);
     }
 
     /// <summary>
@@ -234,9 +234,11 @@ public static class Patcher
     ///     <see cref="PatchAttribute" /> when the method is registered directly. Call <see cref="Apply" /> or
     ///     <see cref="ForceApply" /> after completing registration.
     /// </remarks>
-    public static void Register(MethodInfo method)
+    public static PatchHandle Register(MethodInfo method)
     {
-        registry.ProcessMethod(method);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessMethod(method, handle.id);
+        return handle;
     }
 
     /// <summary>
@@ -251,9 +253,11 @@ public static class Patcher
     ///     needed and are ignored. <see cref="PatchOptionsAttribute" /> and parameter-binding attributes still apply.
     ///     Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been registered.
     /// </remarks>
-    public static void Register(MethodInfo method, params IEnumerable<MethodBase> targets)
+    public static PatchHandle Register(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
-        registry.ProcessMethod(method, targets);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessMethod(method, targets, handle.id);
+        return handle;
     }
 
     /// <summary>
@@ -281,7 +285,7 @@ public static class Patcher
     ///     parameters remain effective. Call <see cref="Apply" /> or <see cref="ForceApply" /> when all patches have been
     ///     registered.
     /// </remarks>
-    public static void Register(
+    public static PatchHandle Register(
         MethodInfo method,
         PatchType patchType,
         MemberInfo? innerTarget = null,
@@ -289,7 +293,9 @@ public static class Patcher
         PatchOptions options = PatchOptions.Default,
         params IEnumerable<MethodBase> targets)
     {
-        registry.ProcessMethod(method, patchType, innerTarget, innerMemberType, options, targets, method.DeclaringType!.FullName);
+        PatchHandle handle = new PatchHandle();
+        registry.ProcessMethod(method, patchType, innerTarget, innerMemberType, options, targets, method.DeclaringType!.FullName, handle.id);
+        return handle;
     }
 
     /// <summary>
@@ -300,10 +306,11 @@ public static class Patcher
     ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
     ///     <see cref="PatchAttribute" /> when the method is patched directly.
     /// </remarks>
-    public static void Patch(MethodInfo method)
+    public static PatchHandle Patch(MethodInfo method)
     {
-        Register(method);
+        var handle = Register(method);
         Apply();
+        return handle;
     }
 
     /// <summary>
@@ -320,10 +327,11 @@ public static class Patcher
     ///     <see cref="Register(MethodInfo, IEnumerable{MethodBase})" /> when more patches will be registered before
     ///     applying them together.
     /// </remarks>
-    public static void Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
+    public static PatchHandle Patch(MethodInfo method, params IEnumerable<MethodBase> targets)
     {
-        Register(method, targets);
+        var handle = Register(method, targets);
         Apply();
+        return handle;
     }
 
     /// <summary>
@@ -352,7 +360,7 @@ public static class Patcher
     ///     <see cref="Register(MethodInfo, PatchType, MemberInfo, MemberType, PatchOptions, IEnumerable{MethodBase})" />
     ///     when more patches will be registered before applying them together.
     /// </remarks>
-    public static void Patch(
+    public static PatchHandle Patch(
         MethodInfo method,
         PatchType patchType,
         MemberInfo? innerTarget = null,
@@ -360,8 +368,9 @@ public static class Patcher
         PatchOptions options = PatchOptions.Default,
         params IEnumerable<MethodBase> targets)
     {
-        Register(method, patchType, innerTarget, innerMemberType, options, targets);
+        var handle = Register(method, patchType, innerTarget, innerMemberType, options, targets);
         Apply();
+        return handle;
     }
 
     public static PatchHandle Patch(PatchConfig patch)
@@ -381,12 +390,17 @@ public static class Patcher
 
     public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
     {
-        throw new NotImplementedException();
+        PatchHandle handle = new PatchHandle();
+        var stateKey = Guid.NewGuid().ToString();
+        foreach (var patch in patches)
+            registry.ProcessPatch(patch, stateKey, handle.id);
+        Apply();
+        return handle;
     }
 
     public static void Unpatch(PatchHandle handle)
     {
-        throw new NotImplementedException();
+        registry.Unpatch(handle.id);
     }
 
     /// <summary>

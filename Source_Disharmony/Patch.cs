@@ -1,14 +1,15 @@
-﻿using System.Collections;
-
-namespace Disharmony;
+﻿namespace Disharmony;
 
 public record PatchConfig
 {
-    internal PatchType? Type { get; init; } = null;
+    public MethodBase? TargetMethod => (Target as MethodBaseInvocation)?.MethodBase;
+    public MethodBase? InnerTargetMethod => (InnerTarget as MethodBaseInvocation)?.MethodBase;
+
+    public PatchType? Type { get; init; } = null;
     internal Invocation Target { get; init; } = EmptyInvocation.Instance;
     internal Invocation InnerTarget { get; init; } = EmptyInvocation.Instance;
-    internal MethodInfo? PatchMethod { get; init; } = null;
-    public PatchOptions Options { get; set; } = PatchOptions.Default;
+    public MethodInfo? PatchMethod { get; init; } = null;
+    public PatchOptions Options { get; init; } = PatchOptions.Default;
 }
 
 public class PatchHandle
@@ -28,8 +29,7 @@ public static class Patch
     public static PatchConfig Prefix => new PatchConfig().Prefix;
     public static PatchConfig Postfix => new PatchConfig().Postfix;
     public static PatchConfig Of(MethodBase method) => new PatchConfig().Of(method);
-    public static PatchConfig Inner(MethodInfo member) => new PatchConfig().Inner(member);
-    public static PatchConfig Inner(ConstructorInfo member) => new PatchConfig().Inner(member);
+    public static PatchConfig Inner(MethodBase member) => new PatchConfig().Inner(member);
     public static PatchConfig InnerGet(PropertyInfo member) => new PatchConfig().InnerGet(member);
     public static PatchConfig InnerGet(FieldInfo member) => new PatchConfig().InnerGet(member);
     public static PatchConfig InnerSet(PropertyInfo member) => new PatchConfig().InnerSet(member);
@@ -46,6 +46,7 @@ public static class Patch
     {
         public PatchConfig Prefix => patchConfig with { Type = PatchType.Prefix };
         public PatchConfig Postfix => patchConfig with { Type = PatchType.Postfix };
+
         public PatchConfig Of(MethodBase method) => patchConfig with
         {
             Target = method switch
@@ -55,7 +56,16 @@ public static class Patch
                 _ => throw new ArgumentOutOfRangeException(nameof(method), method, null),
             },
         };
-        public PatchConfig Inner(MethodInfo member) => patchConfig with { InnerTarget = new MethodInvocation(member) };
+        public PatchConfig Inner(MethodBase method) => patchConfig with
+        {
+            InnerTarget = method switch
+            {
+                MethodInfo methodInfo => new MethodInvocation(methodInfo),
+                ConstructorInfo constructorInfo => new InnerConstructorInvocation(constructorInfo),
+                _ => throw new ArgumentOutOfRangeException(nameof(method), method, null),
+            },
+        };
+
         public PatchConfig Inner(ConstructorInfo member) => patchConfig with { InnerTarget = new InnerConstructorInvocation(member) };
         public PatchConfig InnerGet(PropertyInfo member) => patchConfig with { InnerTarget = new MethodInvocation(member.GetMethod) };
         public PatchConfig InnerGet(FieldInfo member) => patchConfig with { InnerTarget = new GetFieldInvocation(member) };

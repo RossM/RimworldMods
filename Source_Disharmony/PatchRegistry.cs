@@ -73,7 +73,7 @@ internal class ParameterBinding
 
 internal struct PatchInfo
 {
-    public required object unpatchKey;
+    public required int unpatchKey;
     public required Invocation inner;
     public required Invocation patch;
     public required PatchType patchType;
@@ -112,12 +112,12 @@ internal class PatchRegistry
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
-                    ProcessType(type);
+                    ProcessType(type, 0);
             }
         }
     }
 
-    public void ProcessAssembly(Assembly assembly, string? category)
+    public void ProcessAssembly(Assembly assembly, string? category, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -130,21 +130,21 @@ internal class PatchRegistry
                      type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
                     continue;
 
-                ProcessType(type);
+                ProcessType(type, unpatchKey);
             }
         }
     }
 
-    public void ProcessType(TypeInfo type)
+    public void ProcessType(TypeInfo type, int unpatchKey)
     {
         lock (syncRoot)
         {
             foreach (MethodInfo method in type.DeclaredMethods)
-                ProcessMethod(method);
+                ProcessMethod(method, unpatchKey);
         }
     }
 
-    public void ProcessMethod(MethodInfo method)
+    public void ProcessMethod(MethodInfo method, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -188,7 +188,7 @@ internal class PatchRegistry
                     {
                         MethodBase target = result as MethodBase ??
                                             throw new InvalidOperationException($"{nameForErrors}: Couldn't locate method");
-                        AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName);
+                        AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName, unpatchKey);
                     }
                 }
             }
@@ -199,7 +199,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessMethod(MethodInfo method, IEnumerable<MethodBase> targets)
+    public void ProcessMethod(MethodInfo method, IEnumerable<MethodBase> targets, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -219,7 +219,7 @@ internal class PatchRegistry
                 Invocation inner = GetInnerInvocation(innerAttribute);
 
                 foreach (var target in targets)
-                    AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName);
+                    AddPatch(method, patchType, target, inner, options, method.DeclaringType!.FullName, unpatchKey);
             }
             catch (Exception e)
             {
@@ -244,7 +244,8 @@ internal class PatchRegistry
         MemberType innerMemberType,
         PatchOptions options,
         IEnumerable<MethodBase> targets,
-        string stateGroupKey)
+        string stateGroupKey,
+        int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -255,11 +256,33 @@ internal class PatchRegistry
                     : EmptyInvocation.Instance;
 
                 foreach (var target in targets)
-                    AddPatch(method, patchType, target, inner, options, stateGroupKey);
+                    AddPatch(method, patchType, target, inner, options, stateGroupKey, unpatchKey);
             }
             catch (Exception e)
             {
                 throw new InvalidOperationException($"Error processing {method.FullName}", e);
+            }
+        }
+    }
+
+    public void ProcessPatch(PatchConfig patch, string stateKey, int unpatchKey)
+    {
+        lock (syncRoot)
+        {
+            if (patch.PatchMethod is null)
+                throw new InvalidOperationException("Patch method not set; call Patch.With()");
+            if (patch.Type is not {} patchType)
+                throw new InvalidOperationException("Patch type not set; call Patch.Prefix or Patch.Postfix");
+            if (patch.Target is not MethodBaseInvocation targetInvocation)
+                throw new InvalidOperationException("Patch target not set; call Patch.Of()");
+
+            try
+            {
+                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, stateKey, unpatchKey);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Error processing {patch.PatchMethod.FullName}", e);
             }
         }
     }
@@ -306,7 +329,8 @@ internal class PatchRegistry
         MethodBase target,
         Invocation inner,
         PatchOptions options,
-        string stateGroupKey)
+        string stateGroupKey,
+        int unpatchKey)
     {
         if (method.ContainsGenericParameters)
             throw new NotSupportedException($"{method.FullName}: Generic patch functions are not supported");
@@ -333,7 +357,7 @@ internal class PatchRegistry
             throw new InvalidOperationException($"{target.FullName}: Can't patch instantiated generic method");
 
         MethodBaseInvocation outer = GetOuterInvocation(target);
-        AddPatch(new MethodInvocation(method), patchType, outer, inner, options, stateGroupKey);
+        AddPatch(new MethodInvocation(method), patchType, outer, inner, options, stateGroupKey, unpatchKey);
     }
 
     private static MethodBaseInvocation GetOuterInvocation(MethodBase target)
@@ -352,7 +376,8 @@ internal class PatchRegistry
         MethodBaseInvocation target,
         Invocation inner,
         PatchOptions options,
-        string stateGroupKey)
+        string stateGroupKey,
+        int unpatchKey)
     {
         MethodBaseInvocation outer = target;
         bool isIterator = false;
@@ -376,7 +401,7 @@ internal class PatchRegistry
 
         PatchInfo patch = new()
         {
-            unpatchKey = patchMethod.MethodInfo.Module.Assembly,
+            unpatchKey = unpatchKey,
             inner = inner,
             patch = patchMethod,
             patchType = patchType,
@@ -402,6 +427,22 @@ internal class PatchRegistry
                 if (patchList.Count > 0)
                     methodsToUpdate.Add(outer);
                 patchList.Clear();
+            }
+        }
+    }
+
+    public void Unpatch(int unpatchKey)
+    {
+        lock (syncRoot)
+        {
+            foreach (var kvp in patchesByMethod)
+            {
+                // TODO This is very slow, optimize by keeping an index by unpatch key
+                var outer = kvp.Key;
+                var patchList = kvp.Value;
+                int count = patchList.RemoveAll(p => p.unpatchKey == unpatchKey);
+                if (count > 0)
+                    methodsToUpdate.Add(outer);
             }
         }
     }
