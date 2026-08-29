@@ -231,14 +231,11 @@ internal class HarmonyInterface
             generator.Emit(OpCodes.Ldarg, i);
     }
 
-    public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines)
+    public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines, bool debug, bool optimize)
     {
         lock (HarmonyInternals.locker)
         {
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
-
-            bool debug = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.Debug);
-            bool optimize = PatchRegistry.Instance.GetPatchesFor(original).Any(p => p.Optimize);
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {

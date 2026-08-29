@@ -96,14 +96,6 @@ internal class PatchRegistry
 
     private PatchRegistry() { }
 
-    public List<PatchInfo> GetPatchesFor(MethodBaseInvocation method)
-    {
-        lock (syncRoot)
-        {
-            return [.. patchesByMethod[method]];
-        }
-    }
-
     public void ProcessAssembly(Assembly assembly, int unpatchKey)
     {
         lock (syncRoot)
@@ -368,6 +360,7 @@ internal class PatchRegistry
                     methodsToUpdate.Add(method);
                 patchList.Clear();
             }
+
             methodsByUnpatchKey.Clear();
         }
     }
@@ -403,7 +396,7 @@ internal class PatchRegistry
                 var patchedMethod = methodsToUpdate.First();
                 try
                 {
-                    var patches = GetPatchesFor(patchedMethod);
+                    List<PatchInfo> patches = patchesByMethod[patchedMethod];
 
                     if (patches.Count == 0)
                     {
@@ -413,7 +406,10 @@ internal class PatchRegistry
                     {
                         Ruleset ruleset = RulesetGenerator.MakeRuleset(patchedMethod, patches);
 
-                        Patcher.Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines);
+                        bool debug = patches.Any(p => p.Debug);
+                        bool optimize = patches.Any(p => p.Optimize);
+
+                        Patcher.Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines, debug, optimize);
                     }
                 }
                 catch (Exception e)
