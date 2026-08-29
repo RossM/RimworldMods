@@ -27,6 +27,8 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
     
     public IEnumerable<TElement> this[TKey key] => valuesByKey.TryGetValue(key, out var values) ? values : Array.Empty<TElement>();
 
+    public IReadOnlyList<TElement> Get(TKey key) => valuesByKey.TryGetValue(key, out var values) ? values : Array.Empty<TElement>();
+
     public bool Contains(TKey key) => valuesByKey.ContainsKey(key);
 
     public void Add(TKey key, TElement value)

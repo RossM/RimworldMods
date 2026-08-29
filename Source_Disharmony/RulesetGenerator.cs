@@ -2,7 +2,7 @@
 
 internal static class RulesetGenerator
 {
-    public static Ruleset MakeRuleset(MethodBaseInvocation outer, List<PatchInfo> patches)
+    public static Ruleset MakeRuleset(MethodBaseInvocation outer, IReadOnlyList<PatchInfo> patches)
     {
         List<RuleBuilder> ruleBuilders = [];
 

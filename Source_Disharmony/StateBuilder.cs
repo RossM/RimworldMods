@@ -38,7 +38,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
         };
     }
 
-    public void AssignStateVariableIndexes(List<PatchInfo> patches)
+    public void AssignStateVariableIndexes(IReadOnlyList<PatchInfo> patches)
     {
         foreach (var patch in patches)
         {

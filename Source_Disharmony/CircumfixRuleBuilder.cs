@@ -16,7 +16,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
     public CircumfixRuleBuilder(
         RuleBuilderContext context,
         Invocation outer,
-        List<PatchInfo> patches) : base(context, outer)
+        IReadOnlyList<PatchInfo> patches) : base(context, outer)
     {
         prefixes = [.. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: EmptyInvocation })];
         postfixes = [.. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: EmptyInvocation })];
