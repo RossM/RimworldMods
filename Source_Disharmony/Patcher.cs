@@ -108,7 +108,7 @@ public static class Patcher
     {
         PatchHandle handle = new PatchHandle();
         registry.ProcessAssembly(assembly, handle.id);
-        Apply();
+        registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -128,7 +128,7 @@ public static class Patcher
     {
         PatchHandle handle = new PatchHandle();
         registry.ProcessAssembly(assembly, category, handle.id);
-        Apply();
+        registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -145,7 +145,7 @@ public static class Patcher
     {
         PatchHandle handle = new PatchHandle();
         registry.ProcessType(type.GetTypeInfo(), handle.id);
-        Apply();
+        registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -162,7 +162,7 @@ public static class Patcher
     {
         PatchHandle handle = new PatchHandle();
         registry.ProcessMethod(method, handle.id);
-        Apply();
+        registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -214,7 +214,7 @@ public static class Patcher
         var stateKey = $"handle!{handle.id}";
         foreach (var patch in patches)
             registry.ProcessPatch(patch, stateKey, handle.id);
-        Apply();
+        registry.ApplyPendingChanges(useTrampolines: true);
         return handle;
     }
 
@@ -228,28 +228,7 @@ public static class Patcher
     public static void Unpatch(PatchHandle handle)
     {
         registry.Unpatch(handle.id);
-        Apply();
-    }
-
-    /// <summary>
-    ///     Activates all pending patch changes while deferring their expensive preparation until needed.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         Patches are effective when this method returns; calling <see cref="ForceApply" /> afterward is not required
-    ///         for correctness. Most preparation is postponed until each affected method is first called, which keeps
-    ///         initialization fast but can make that first call take longer.
-    ///     </para>
-    ///     <para>
-    ///         Deferred preparation can also combine patches registered by multiple mods before the target is used. Call
-    ///         <see cref="ForceApply" /> when the application would rather complete the deferred work during a chosen idle
-    ///         period than during first use. Its remarks describe the just-in-time behavior and scheduling considerations
-    ///         in more detail.
-    ///     </para>
-    /// </remarks>
-    internal static void Apply()
-    {
-        registry.ApplyImpl(useTrampolines: true);
+        registry.ApplyPendingChanges(useTrampolines: true);
     }
 
     /// <summary>
@@ -261,7 +240,7 @@ public static class Patcher
     /// </remarks>
     public static void ForceApply()
     {
-        registry.ApplyImpl(useTrampolines: false);
+        registry.ApplyPendingChanges(useTrampolines: false);
         harmonyInterface.ResolveAllTrampolines();
     }
 
@@ -274,6 +253,6 @@ public static class Patcher
     internal static void UnpatchAll()
     {
         registry.UnpatchAll();
-        registry.ApplyImpl(useTrampolines: true);
+        registry.ApplyPendingChanges(useTrampolines: true);
     }
 }

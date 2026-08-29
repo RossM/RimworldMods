@@ -409,7 +409,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ApplyImpl(bool useTrampolines)
+    public void ApplyPendingChanges(bool useTrampolines)
     {
         while (true)
         {
