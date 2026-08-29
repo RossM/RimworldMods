@@ -438,14 +438,13 @@ public static class Patcher
     /// <summary>
     ///     Removes every registered Disharmony patch declared in an assembly and reapplies the affected targets.
     /// </summary>
-    /// <param name="assembly">The assembly that declares the patch methods to remove.</param>
     /// <remarks>
     ///     This removes patches by the assembly containing each patch method, regardless of how those methods were
     ///     registered. It does not remove patches installed independently through Harmony.
     /// </remarks>
-    public static void UnpatchAll(Assembly assembly)
+    internal static void UnpatchAll()
     {
-        registry.UnpatchAll(assembly);
+        registry.UnpatchAll();
         registry.ApplyImpl(useTrampolines: true);
     }
 }

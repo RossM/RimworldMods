@@ -247,7 +247,7 @@ internal class HarmonyInterface
                 patchInfo.transpilers =
                 [
                     .. patchInfo.transpilers,
-                    new PatchConfig(patcher, patchInfo.transpilers.Length, HarmonyID),
+                    new HarmonyLib.Patch(patcher, patchInfo.transpilers.Length, HarmonyID),
                 ];
             }
 

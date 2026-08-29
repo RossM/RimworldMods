@@ -57,7 +57,7 @@ internal class UnpatchTests
         Assert.That(UnpatchPatchTargets.TargetA(), Is.EqualTo(42));
         Assert.That(UnpatchPatchTargets.TargetB(), Is.EqualTo(42));
 
-        Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
+        Patcher.UnpatchAll();
 
         Assert.That(UnpatchPatchTargets.TargetA(), Is.EqualTo(1));
         Assert.That(UnpatchPatchTargets.TargetB(), Is.EqualTo(2));
@@ -66,17 +66,17 @@ internal class UnpatchTests
     [Test]
     public void ApplyUnpatchApply_ExecutesSecondPatch()
     {
-        Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
+        Patcher.UnpatchAll();
         UnpatchPatches.observedPatch = 0;
 
         ApplyPatch(nameof(UnpatchPatches.ApplyUnpatchApply_ExecutesSecondPatch_First));
-        Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
+        Patcher.UnpatchAll();
         ApplyPatch(nameof(UnpatchPatches.ApplyUnpatchApply_ExecutesSecondPatch_Second));
 
         UnpatchPatchTargets.ApplyUnpatchApplyTarget();
         int observedPatch = UnpatchPatches.observedPatch;
 
-        Patcher.UnpatchAll(typeof(UnpatchPatches).Assembly);
+        Patcher.UnpatchAll();
         Assert.That(observedPatch, Is.EqualTo(2));
     }
 }

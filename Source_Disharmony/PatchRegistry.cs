@@ -391,7 +391,7 @@ internal class PatchRegistry
         patchList.Add(patch);
     }
 
-    public void UnpatchAll(Assembly assembly)
+    public void UnpatchAll()
     {
         lock (syncRoot)
         {
@@ -399,10 +399,9 @@ internal class PatchRegistry
             {
                 var outer = kvp.Key;
                 var patchList = kvp.Value;
-
-                int count = patchList.RemoveAll(p => ReferenceEquals(p.unpatchKey, assembly));
-                if (count > 0)
+                if (patchList.Count > 0)
                     methodsToUpdate.Add(outer);
+                patchList.Clear();
             }
         }
     }

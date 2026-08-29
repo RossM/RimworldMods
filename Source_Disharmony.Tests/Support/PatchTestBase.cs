@@ -11,8 +11,7 @@ public abstract class PatchTestBase
         Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
         Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         HarmonyInterface.Instance.optimizerEnabled = false;
-        Patcher.UnpatchAll(typeof(PatchTestBase).Assembly);
-        Patcher.UnpatchAll(typeof(StaticMethodTargets).Assembly);
+        Patcher.UnpatchAll();
     }
 
     [TearDown]
