@@ -91,7 +91,7 @@ internal class PatchRegistry
     // and before Harmony's lock.
     private readonly object syncRoot = new();
     private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
-    private readonly Dictionary<MethodBaseInvocation, List<PatchInfo>> patchesByMethod = [];
+    private readonly MultiDictionary<MethodBaseInvocation, PatchInfo> patchesByMethod = [];
     private readonly Dictionary<int, HashSet<MethodBaseInvocation>> methodsByUnpatchKey = [];
 
     private PatchRegistry() { }
@@ -311,10 +311,7 @@ internal class PatchRegistry
         };
 
         methodsToUpdate.Add(outer);
-
-        if (!patchesByMethod.TryGetValue(outer, out var patchList))
-            patchList = patchesByMethod[outer] = [];
-        patchList.Add(patch);
+        patchesByMethod.Add(outer, patch);
 
         if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methodSet))
             methodSet = methodsByUnpatchKey[unpatchKey] = [];
@@ -352,15 +349,13 @@ internal class PatchRegistry
     {
         lock (syncRoot)
         {
-            foreach (var kvp in patchesByMethod)
+            foreach (var group in patchesByMethod)
             {
-                var method = kvp.Key;
-                var patchList = kvp.Value;
-                if (patchList.Count > 0)
-                    methodsToUpdate.Add(method);
-                patchList.Clear();
+                if (group.Any())
+                    methodsToUpdate.Add(group.Key);
             }
 
+            patchesByMethod.Clear();
             methodsByUnpatchKey.Clear();
         }
     }
@@ -374,8 +369,7 @@ internal class PatchRegistry
 
             foreach (var method in methods)
             {
-                var patchList = patchesByMethod[method];
-                int count = patchList.RemoveAll(p => p.unpatchKey == unpatchKey);
+                int count = patchesByMethod.RemoveAll(method, p => p.unpatchKey == unpatchKey);
                 if (count > 0)
                     methodsToUpdate.Add(method);
             }
@@ -396,7 +390,7 @@ internal class PatchRegistry
                 var patchedMethod = methodsToUpdate.First();
                 try
                 {
-                    List<PatchInfo> patches = patchesByMethod[patchedMethod];
+                    List<PatchInfo> patches = [.. patchesByMethod[patchedMethod]];
 
                     if (patches.Count == 0)
                     {
