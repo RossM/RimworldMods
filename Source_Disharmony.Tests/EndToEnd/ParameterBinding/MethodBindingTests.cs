@@ -142,6 +142,13 @@ public static class MethodBindingPatches
         ResultObserved = method(5);
 
     [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingIteratorTargets), nameof(MethodBindingIteratorTargets.EnumerateInnerInstanceMethod))]
+    public static void IteratorInnerPrefix_MethodAttribute_OuterScopeStaticMethod_Invokes(
+        [Method(nameof(MethodBindingIteratorTargets.BoundStaticMethod), Scope.Outer)] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
     [Inner(typeof(MethodBindingInstanceTargets), "CallLocalFunction.LocalFunction")]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallLocalFunction))]
     public static void LocalFunctionInnerPrefix_MethodAttribute_OuterScope_BindsDeclaringInstance(
@@ -508,6 +515,25 @@ public sealed class MethodBindingTests : PatchTestBase
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
             .With.Message.EqualTo(
                 "method: [Method] is not supported for iterator state machines"));
+    }
+
+    [Test]
+    public void IteratorInnerPrefix_MethodAttribute_OuterScopeStaticMethod_Invokes()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(
+            typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.IteratorInnerPrefix_MethodAttribute_OuterScopeStaticMethod_Invokes));
+        MethodBindingIteratorTargets target = new();
+        MethodBindingInnerTargets inner = new();
+
+        int result = target.EnumerateInnerInstanceMethod(inner).Single();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(705));
+        });
     }
 
     [Test]

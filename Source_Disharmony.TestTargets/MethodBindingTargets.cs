@@ -138,6 +138,9 @@ public sealed class MethodBindingIteratorTargets
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public int BoundInstanceMethod(int value) => InstanceValue + value;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int BoundStaticMethod(int value) => 700 + value;
 }
 
 public class BaseMethodOverloadBaseTargets
