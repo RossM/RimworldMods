@@ -19,7 +19,6 @@ internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
 
     public int Count => valuesByKey.Count;
 
-
     private readonly Dictionary<TKey, List<TElement>> valuesByKey = [];
 
     // Creating and destroying empty lists causes GC pressure, so save any lists that become empty to reuse
