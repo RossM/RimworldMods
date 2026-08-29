@@ -364,6 +364,26 @@ public static class Patcher
         Apply();
     }
 
+    public static PatchHandle Patch(PatchConfig patch)
+    {
+        return Patch([patch]);
+    }
+
+    public static PatchHandle Patch(PatchConfig patch, params IEnumerable<MethodBase> methods)
+    {
+        return Patch(methods.Select(patch.Of));
+    }
+
+    public static PatchHandle Patch(MethodBase method, params IEnumerable<PatchConfig> patches)
+    {
+        return Patch(patches.Select(patch => patch.Of(method)));
+    }
+
+    public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     ///     Activates all pending patch changes while deferring their expensive preparation until needed.
     /// </summary>
