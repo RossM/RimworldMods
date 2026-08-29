@@ -29,13 +29,13 @@ public static class PatcherRegistrationPatches
 
     public static bool Register_AllInformation_UsesExplicitPrefixAndDefersUntilApply() => false;
 
-    public static void Patch_AllInformation_UsesExplicitPostfixForEveryTarget(ref int __result) => __result = 42;
+    public static void Patch_PatchConfig_UsesExplicitPostfixForEveryTarget(ref int __result) => __result = 42;
 
-    public static bool Patch_AllInformation_UsesExplicitInnerPrefix() => false;
+    public static bool Patch_PatchConfig_UsesExplicitInnerPrefix() => false;
 
-    public static void Patch_AllInformation_UsesExplicitInnerPostfix(ref int __result) => __result = 42;
+    public static void Patch_PatchConfig_UsesExplicitInnerPostfix(ref int __result) => __result = 42;
 
-    public static void Patch_AllInformation_UsesExplicitFieldSetter(ref int value) => value = 42;
+    public static void Patch_PatchConfig_UsesExplicitFieldSetter(ref int value) => value = 42;
 }
 
 public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
@@ -285,76 +285,63 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     }
 
     [Test]
-    public void Patch_AllInformation_UsesExplicitPostfixForEveryTarget()
+    public void Patch_PatchConfig_UsesExplicitPostfixForEveryTarget()
     {
         MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Patch_AllInformation_UsesExplicitPostfixForEveryTarget))!;
+            .GetMethod(nameof(PatcherRegistrationPatches.Patch_PatchConfig_UsesExplicitPostfixForEveryTarget))!;
         MethodInfo firstTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
         MethodInfo secondTarget = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultB))!;
 
-        Patcher.Patch(patch, PatchType.Postfix, targets: [firstTarget, secondTarget]);
+        Patcher.Patch(Patch.Postfix.With(patch), firstTarget, secondTarget);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
     }
 
     [Test]
-    public void Patch_AllInformation_UsesExplicitInnerPrefix()
+    public void Patch_PatchConfig_UsesExplicitInnerPrefix()
     {
         MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Patch_AllInformation_UsesExplicitInnerPrefix))!;
+            .GetMethod(nameof(PatcherRegistrationPatches.Patch_PatchConfig_UsesExplicitInnerPrefix))!;
         MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
             .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            innerTarget: innerTarget,
-            targets: [outerTarget]);
+        Patcher.Patch(Patch.Prefix.Inner(innerTarget).With(patch).Of(outerTarget));
 
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.Zero);
     }
 
     [Test]
-    public void Patch_AllInformation_UsesExplicitInnerPostfix()
+    public void Patch_PatchConfig_UsesExplicitInnerPostfix()
     {
         MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Patch_AllInformation_UsesExplicitInnerPostfix))!;
+            .GetMethod(nameof(PatcherRegistrationPatches.Patch_PatchConfig_UsesExplicitInnerPostfix))!;
         MethodInfo innerTarget = typeof(InnerStaticMethodTargets)
             .GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Patcher.Patch(
-            patch,
-            PatchType.Postfix,
-            innerTarget: innerTarget,
-            targets: [outerTarget]);
+        Patcher.Patch(Patch.Postfix.Inner(innerTarget).With(patch).Of(outerTarget));
 
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(42));
     }
 
     [Test]
-    public void Patch_AllInformation_UsesExplicitFieldSetter()
+    public void Patch_PatchConfig_UsesExplicitFieldSetter()
     {
         MethodInfo patch = typeof(PatcherRegistrationPatches)
-            .GetMethod(nameof(PatcherRegistrationPatches.Patch_AllInformation_UsesExplicitFieldSetter))!;
+            .GetMethod(nameof(PatcherRegistrationPatches.Patch_PatchConfig_UsesExplicitFieldSetter))!;
         FieldInfo innerTarget = typeof(InnerStaticMethodTargets)
             .GetField(nameof(InnerStaticMethodTargets.Field))!;
         MethodInfo outerTarget = typeof(OuterStaticMethodTargets)
             .GetMethod(nameof(OuterStaticMethodTargets.SetStaticField))!;
         InnerStaticMethodTargets.Field = 0;
 
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            innerTarget: innerTarget,
-            innerMemberType: MemberType.Setter,
-            targets: [outerTarget]);
+        Patcher.Patch(Patch.Prefix.InnerSet(innerTarget).With(patch).Of(outerTarget));
 
         OuterStaticMethodTargets.SetStaticField(1);
 
@@ -362,19 +349,15 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     }
 
     [Test]
-    public void Patch_AllInformation_UsesInlineOption()
+    public void Patch_PatchConfig_UsesInlineOption()
     {
         MethodInfo patch = typeof(PatcherRegistrationInlinePatches)
-            .GetMethod(nameof(PatcherRegistrationInlinePatches.Patch_AllInformation_UsesInlineOption))!;
+            .GetMethod(nameof(PatcherRegistrationInlinePatches.Patch_PatchConfig_UsesInlineOption))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.RegistrationResultA))!;
         PatcherRegistrationInlinePatches.ObservedMethod = null;
 
-        Patcher.Patch(
-            patch,
-            PatchType.Prefix,
-            options: PatchOptions.Inline,
-            targets: [target]);
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
 
         StaticMethodTargets.RegistrationResultA();
 

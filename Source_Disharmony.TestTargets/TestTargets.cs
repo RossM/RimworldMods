@@ -15,7 +15,7 @@ namespace Disharmony.Tests
         public static MethodBase? ObservedMethod;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void Patch_AllInformation_UsesInlineOption() => ObservedMethod = MethodBase.GetCurrentMethod();
+        public static void Patch_PatchConfig_UsesInlineOption() => ObservedMethod = MethodBase.GetCurrentMethod();
     }
 
     public static class StaticMethodTargets
