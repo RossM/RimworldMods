@@ -92,6 +92,7 @@ internal class PatchRegistry
     private readonly object syncRoot = new();
     private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
     private readonly Dictionary<MethodBaseInvocation, List<PatchInfo>> patchesByMethod = [];
+    private readonly Dictionary<int, HashSet<MethodBaseInvocation>> methodsByUnpatchKey = [];
 
     private PatchRegistry() { }
 
@@ -322,6 +323,10 @@ internal class PatchRegistry
         if (!patchesByMethod.TryGetValue(outer, out var patchList))
             patchList = patchesByMethod[outer] = [];
         patchList.Add(patch);
+
+        if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methodSet))
+            methodSet = methodsByUnpatchKey[unpatchKey] = [];
+        methodSet.Add(outer);
     }
 
     private static void Validate(PatchType patchType, MethodInfo method, MethodBase target)
@@ -357,12 +362,13 @@ internal class PatchRegistry
         {
             foreach (var kvp in patchesByMethod)
             {
-                var outer = kvp.Key;
+                var method = kvp.Key;
                 var patchList = kvp.Value;
                 if (patchList.Count > 0)
-                    methodsToUpdate.Add(outer);
+                    methodsToUpdate.Add(method);
                 patchList.Clear();
             }
+            methodsByUnpatchKey.Clear();
         }
     }
 
@@ -370,15 +376,18 @@ internal class PatchRegistry
     {
         lock (syncRoot)
         {
-            foreach (var kvp in patchesByMethod)
+            if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methods))
+                return;
+
+            foreach (var method in methods)
             {
-                // TODO This is very slow, optimize by keeping an index by unpatch key
-                var outer = kvp.Key;
-                var patchList = kvp.Value;
+                var patchList = patchesByMethod[method];
                 int count = patchList.RemoveAll(p => p.unpatchKey == unpatchKey);
                 if (count > 0)
-                    methodsToUpdate.Add(outer);
+                    methodsToUpdate.Add(method);
             }
+
+            methodsByUnpatchKey.Remove(unpatchKey);
         }
     }
 
