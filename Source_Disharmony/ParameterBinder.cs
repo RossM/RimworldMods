@@ -147,6 +147,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         if (baseMethod is null)
             throw new ParameterBindingException(parameter.Name, "Base method not found");
+        if (baseMethod.IsAbstract)
+            throw new ParameterBindingException(parameter.Name, "Base method is abstract");
 
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = Scope.Outer, methodInfo = baseMethod };
     }
