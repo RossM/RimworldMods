@@ -71,7 +71,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case BaseMethodAttribute: return BindBaseMethod(parameter);
 
-            case MethodAttribute { Name: var name }: return BindMethod(parameter, invocation, scope, name ?? parameterName);
+            case MethodAttribute { Name: var name }: return BindMethod(parameter, scope, name ?? parameterName);
 
             case null: break;
 
@@ -148,12 +148,13 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = Scope.Outer, methodInfo = baseMethod };
     }
 
-    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name)
+    private ParameterBinding BindMethod(ParameterInfo parameter, Scope scope, string name)
     {
-        // Getting the instance for an iterator state machine isn't implemented for BindingType.Delegate
-        if (IsIterator && scope == Scope.Outer)
-            throw new ParameterBindingException(parameter.Name, "[Method] is not supported for iterator state machines");
-
+        var invocation = scope switch {
+            Scope.Inner => inner,
+            Scope.Outer => target,
+            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
+        };
         var instanceType = invocation.InstanceType;
         var methodInfo = instanceType.GetMethod(name, AccessTools.all);
 
@@ -161,6 +162,10 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new ParameterBindingException(parameter.Name, "Method not found");
         if (invocation.IsStatic && !methodInfo.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Instance required");
+
+        // Getting the instance for an iterator state machine isn't implemented for BindingType.Delegate
+        if (IsIterator && scope == Scope.Outer && !methodInfo.IsStatic)
+            throw new ParameterBindingException(parameter.Name, "[Method] is not supported for iterator state machines");
 
         bool isReadonly = methodInfo.CustomAttributes.Any(a => a.AttributeType.FullName == ReadonlyAttributeName) ||
                           instanceType.CustomAttributes.Any(a => a.AttributeType.FullName == ReadonlyAttributeName);
