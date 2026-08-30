@@ -311,7 +311,7 @@ internal class CreateControlFlowGraph : Pass
             // Avoid stack underflow. This is invalid but can happen in unreachable basic blocks if something before
             // us messes up.
             while (curStack.Count < popCount)
-                curStack.Insert(0, CreateStackSlot(-1, TypeLattice.Any));
+                curStack.Insert(0, CreateStackSlot(-1, TypeLattice.Unknown));
 
             List<StackSlot> popped = curStack.GetRange(curStack.Count - popCount, popCount);
             curStack.RemoveRange(curStack.Count - popCount, popCount);
