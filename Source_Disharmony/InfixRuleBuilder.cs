@@ -4,12 +4,8 @@
 ///     This class generates rules implementing inner <see cref="PatchType.Prefix" /> and
 ///     <see cref="PatchType.Postfix" /> patches for a method.
 /// </summary>
-internal class InfixRuleBuilder : RuleBuilder
+internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
 {
-    private readonly Type targetType;
-
-    private readonly List<PatchInfo> innerPrefixes;
-    private readonly List<PatchInfo> innerPostfixes;
     private readonly Invocation inner;
 
     private readonly Type[] innerParameterTypes;
@@ -21,14 +17,14 @@ internal class InfixRuleBuilder : RuleBuilder
         Invocation inner,
         List<PatchInfo> patches) : base(context, outer)
     {
-        innerPrefixes =
+        prefixes =
         [
             // Prefixes are sorted by priority and then reversed, so prefix-postfix pairs will nest naturally
             // even if priority isn't set
             .. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: not EmptyInvocation })
                 .OrderBy(patch => patch.priority).Reverse(),
         ];
-        innerPostfixes =
+        postfixes =
         [
             .. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: not EmptyInvocation })
                 .OrderBy(patch => patch.priority),
@@ -45,22 +41,9 @@ internal class InfixRuleBuilder : RuleBuilder
     private void EmitReplacement()
     {
         EmitPrelude();
+        InitializeResultLocal();
 
-        var prefixesUsingResult = innerPrefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-        var postfixesUsingResult = innerPostfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-        bool canSkip = innerPrefixes.Any(patch => patch.patch.ReturnType != typeof(void));
-
-        if ((canSkip && targetType != typeof(void)) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
-        {
-            resultLocal = output.AddLocal(targetType);
-
-            if (prefixesUsingResult.Count > 0 &&
-                !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
-                output.EmitLocalInitializer(resultLocal);
-        }
-
-        Label? skipLabel = null;
-        foreach (var prefix in innerPrefixes)
+        foreach (var prefix in prefixes)
         {
             foreach (var parameter in prefix.parameters)
                 EmitParameterValue(parameter);
@@ -80,7 +63,7 @@ internal class InfixRuleBuilder : RuleBuilder
 
         output.AddRange(inner.GetCodeInstructions());
 
-        if (skipLabel != null || innerPostfixes.Count > 0)
+        if (skipLabel != null || postfixes.Count > 0)
         {
             if (resultLocal != null)
                 output.Add(resultLocal.Store());
@@ -88,7 +71,7 @@ internal class InfixRuleBuilder : RuleBuilder
             if (skipLabel is Label label)
                 output.Add(new(OpCodes.Nop) { labels = [label] });
 
-            foreach (var postfix in innerPostfixes)
+            foreach (var postfix in postfixes)
             {
                 foreach (var parameter in postfix.parameters)
                     EmitParameterValue(parameter);

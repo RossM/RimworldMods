@@ -4,14 +4,9 @@
 ///     This class generates rules implementing <see cref="PatchType.Prefix" /> and <see cref="PatchType.Postfix" />
 ///     patches for a method.
 /// </summary>
-internal class CircumfixRuleBuilder : RuleBuilder
+internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
 {
-    private readonly Type targetType;
-
-    private readonly List<PatchInfo> prefixes;
-    private readonly List<PatchInfo> postfixes;
-    private Label? skipLabel = null;
-    private Label? returnLabel = null;
+    protected Label? returnLabel = null;
 
     public CircumfixRuleBuilder(
         RuleBuilderContext context,
@@ -47,18 +42,7 @@ internal class CircumfixRuleBuilder : RuleBuilder
 
     public override IEnumerable<Rule> BuildRules()
     {
-        var prefixesUsingResult = prefixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-        var postfixesUsingResult = postfixes.Where(patch => patch.HasBindingType(BindingType.Result)).ToList();
-        bool canSkip = prefixes.Any(patch => patch.patch.ReturnType != typeof(void));
-
-        if ((canSkip && targetType != typeof(void)) || prefixesUsingResult.Count > 0 || postfixesUsingResult.Count > 0)
-        {
-            resultLocal = output.AddLocal(targetType);
-
-            if (prefixesUsingResult.Count > 0 &&
-                !prefixesUsingResult[0].parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut))
-                output.EmitLocalInitializer(resultLocal);
-        }
+        InitializeResultLocal();
 
         foreach (var prefix in prefixes)
         {
