@@ -4,14 +4,14 @@ internal class PromoteVariables(Optimizer optimizer) : Pass(optimizer)
 {
     protected internal override void RunInternal()
     {
-        var escapingVariables = new FindEscapingVariablesVisitor(ControlFlowGraph).GetEscapingVariables();
+        var escapingVariables = new EscapingVariablesVisitor(ControlFlowGraph).GetEscapingVariables();
 
         var rewriter = new PromoteVariablesVisitor(ControlFlowGraph, escapingVariables);
         Optimizer.cfg = rewriter.Visit(ControlFlowGraph);
     }
 }
 
-internal class FindEscapingVariablesVisitor(ControlFlowGraph cfg) : RecursiveVisitor
+internal class EscapingVariablesVisitor(ControlFlowGraph cfg) : RecursiveVisitor
 {
     public HashSet<Variable> EscapingVariables { get; } = [];
     private int handlerDepth = 0;
