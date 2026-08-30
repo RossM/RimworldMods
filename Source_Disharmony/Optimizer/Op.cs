@@ -39,7 +39,7 @@ internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void)
 /// <param name="Type"></param>
 internal sealed record ConversionOp(Op Input, Type Type) : Op(Type)
 {
-    public override string ToString() => $"convert {{{Input}}} :{Type}";
+    public override string ToString() => $".convert ({Input}) :{Type}";
 
     public bool IsNarrowing =>
         System.Runtime.InteropServices.Marshal.SizeOf(Type) < System.Runtime.InteropServices.Marshal.SizeOf(Input.Type);
