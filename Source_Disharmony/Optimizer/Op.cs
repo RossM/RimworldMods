@@ -40,6 +40,9 @@ internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void)
 internal sealed record ConversionOp(Op Input, Type Type) : Op(Type)
 {
     public override string ToString() => $"convert {{{Input.ToString()}}} :{Type}";
+
+    public bool IsNarrowing =>
+        System.Runtime.InteropServices.Marshal.SizeOf(Type) < System.Runtime.InteropServices.Marshal.SizeOf(Input.Type);
 }
 
 /// <summary>
