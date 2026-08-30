@@ -349,6 +349,28 @@ public class PatchOptionsAttribute(PatchOptions options) : Attribute
 }
 
 /// <summary>
+///     Sets the priority of a patch. The meaning of priority depends on the patch type. For <see cref="PrefixAttribute">prefix</see>
+///     patches, higher priority patches run later, while for other patch types higher priority patches run earlier.
+/// </summary>
+/// <param name="priority"></param>
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+public class PriorityAttribute(int priority) : Attribute
+{
+    public int Priority { get; } = priority;
+}
+
+[PublicAPI]
+public static class PatchPriority
+{
+    public const int VeryLow = 0;
+    public const int Low = 500;
+    public const int Default = 1000;
+    public const int High = 1500;
+    public const int VeryHigh = 2000;
+}
+
+/// <summary>
 ///     Selects exactly one outer method, constructor, or property accessor for the attributed patch method or methods.
 /// </summary>
 /// <param name="type">

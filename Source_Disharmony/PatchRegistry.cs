@@ -77,6 +77,8 @@ internal struct PatchInfo
     public required PatchType patchType;
     public required ParameterBinding[] parameters;
     public required PatchOptions options;
+    public required int priority;
+
     public readonly bool Inline => (options & PatchOptions.Inline) != 0;
     public readonly bool Debug => (options & PatchOptions.Debug) != 0;
     public readonly bool Optimize => (options & PatchOptions.Optimize) != 0;
@@ -149,6 +151,7 @@ internal class PatchRegistry
                 var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
                 var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
                 var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
+                var priority = attributes.OfType<PriorityAttribute>().FirstOrDefault()?.Priority ?? PatchPriority.Default;
                 var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.Options ?? PatchOptions.Default;
 
                 if (patchTypeAttribute == null)
@@ -179,7 +182,7 @@ internal class PatchRegistry
                     {
                         MethodBase target = result as MethodBase ??
                                             throw new ReflectionException($"{nameForErrors}: Couldn't locate method");
-                        AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options,
+                        AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, priority,
                             method.DeclaringType!.FullName, unpatchKey);
                     }
                 }
@@ -213,8 +216,8 @@ internal class PatchRegistry
         {
             try
             {
-                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, stateKey,
-                    unpatchKey);
+                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, patch.Priority,
+                    stateKey, unpatchKey);
             }
             catch (Exception e)
             {
@@ -275,6 +278,7 @@ internal class PatchRegistry
         MethodBaseInvocation target,
         Invocation inner,
         PatchOptions options,
+        int priority,
         string stateGroupKey,
         int unpatchKey)
     {
@@ -308,6 +312,7 @@ internal class PatchRegistry
             patchType = patchType,
             parameters = arguments,
             options = options,
+            priority = priority,
         };
 
         methodsToUpdate.Add(outer);

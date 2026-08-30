@@ -21,8 +21,18 @@ internal class InfixRuleBuilder : RuleBuilder
         Invocation inner,
         List<PatchInfo> patches) : base(context, outer)
     {
-        innerPrefixes = [.. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: not EmptyInvocation })];
-        innerPostfixes = [.. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: not EmptyInvocation })];
+        innerPrefixes =
+        [
+            // Prefixes are sorted by priority and then reversed, so prefix-postfix pairs will nest naturally
+            // even if priority isn't set
+            .. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: not EmptyInvocation })
+                .OrderByDescending(patch => patch.priority).Reverse(),
+        ];
+        innerPostfixes =
+        [
+            .. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: not EmptyInvocation })
+                .OrderByDescending(patch => patch.priority),
+        ];
 
         this.inner = inner;
 

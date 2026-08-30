@@ -13,6 +13,7 @@ public record PatchConfig
     internal Invocation InnerTarget { get; init; } = EmptyInvocation.Instance;
     public MethodInfo? PatchMethod { get; init; } = null;
     public PatchOptions Options { get; init; } = PatchOptions.Default;
+    public int Priority { get; init; } = PatchPriority.Default;
 }
 
 [PublicAPI]
@@ -82,5 +83,6 @@ public static class Patch
         public PatchConfig InnerConstant(string value) => patchConfig with { InnerTarget = new ConstantStringInvocation(value) };
         public PatchConfig With(MethodInfo method) => patchConfig with { PatchMethod = method };
         public PatchConfig Options(PatchOptions options) => patchConfig with { Options = options };
+        public PatchConfig Priority(int priority) => patchConfig with { Priority = priority };
     }
 }

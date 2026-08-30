@@ -18,8 +18,18 @@ internal class CircumfixRuleBuilder : RuleBuilder
         Invocation outer,
         IReadOnlyList<PatchInfo> patches) : base(context, outer)
     {
-        prefixes = [.. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: EmptyInvocation })];
-        postfixes = [.. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: EmptyInvocation })];
+        prefixes =
+        [
+            // Prefixes are sorted by priority and then reversed, so prefix-postfix pairs will nest naturally
+            // even if priority isn't set
+            .. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: EmptyInvocation })
+                .OrderByDescending(patch => patch.priority).Reverse(),
+        ];
+        postfixes =
+        [
+            .. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: EmptyInvocation })
+                .OrderByDescending(patch => patch.priority),
+        ];
 
         targetType = outer.ReturnType;
     }
