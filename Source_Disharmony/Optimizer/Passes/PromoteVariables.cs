@@ -22,27 +22,11 @@ internal class EscapingVariablesVisitor(ControlFlowGraph cfg) : RecursiveVisitor
 
         switch (OpCodeData.GetCanonicalOpcode(op.IL))
         {
+            case OpCodeValues.Ldloc: if (handlerDepth > 0) EscapingVariables.Add(cfg.GetLocal(op.IL)); break;
             case OpCodeValues.Ldloca: EscapingVariables.Add(cfg.GetLocal(op.IL)); break;
+            case OpCodeValues.Ldarg: if (handlerDepth > 0) EscapingVariables.Add(cfg.GetArgument(op.IL)); break;
             case OpCodeValues.Ldarga: EscapingVariables.Add(cfg.GetArgument(op.IL)); break;
         }
-    }
-
-    protected override void Visit(Argument op)
-    {
-        base.Visit(op);
-        CheckEscape(op);
-    }
-
-    protected override void Visit(Local op)
-    {
-        base.Visit(op);
-        CheckEscape(op);
-    }
-
-    private void CheckEscape(Variable op)
-    {
-        if (handlerDepth > 0)
-            EscapingVariables.Add(op);
     }
 
     public override void Visit(BasicBlock block)
