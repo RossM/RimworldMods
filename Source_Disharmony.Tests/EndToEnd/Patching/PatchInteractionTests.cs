@@ -51,6 +51,26 @@ public static class PatchInteractionPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
     public static void PostfixObservesPrefixResultWhenPrefixWritesResultAndTargetIsSkipped_Postfix(int __result) => observed = __result;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
+    public static bool Outer_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Prefix() => false;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowingIntResult))]
+    public static void Outer_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Postfix(int __result) =>
+        observed = __result;
+
+    [Prefix]
+    [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
+    public static bool Inner_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Prefix() => false;
+
+    [Postfix]
+    [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntResult))]
+    public static void Inner_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Postfix(int __result) =>
+        observed = __result;
     [Prefix]
     [Priority(PatchPriority.High)]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.PriorityTarget))]
@@ -211,6 +231,34 @@ public sealed class PatchInteractionTests : PatchTestBase
         StaticMethodTargets.ThrowingIntResult();
 
         Assert.That(PatchInteractionPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Outer_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult()
+    {
+        PatchInteractionPatches.observed = 42;
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.Outer_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Prefix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.Outer_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Postfix));
+        int result = StaticMethodTargets.ThrowingIntResult();
+
+        Assert.That(PatchInteractionPatches.observed, Is.Zero);
+        Assert.That(result, Is.Zero);
+    }
+
+    [Test]
+    public void Inner_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult()
+    {
+        PatchInteractionPatches.observed = 42;
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.Inner_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Prefix));
+        ApplyPatch(typeof(PatchInteractionPatches),
+            nameof(PatchInteractionPatches.Inner_PostfixObservesDefaultResultWhenPrefixSkipsWithoutBindingResult_Postfix));
+        int result = OuterStaticMethodTargets.IntResult();
+
+        Assert.That(PatchInteractionPatches.observed, Is.Zero);
+        Assert.That(result, Is.Zero);
     }
     [Test]
     public void Outer_AttributePriority_NestsHigherPriorityOutsideLowerPriority()
