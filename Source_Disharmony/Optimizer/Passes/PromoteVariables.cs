@@ -6,7 +6,8 @@ internal class PromoteVariables(Optimizer optimizer) : Pass(optimizer)
     {
         var escapingVariables = new FindEscapingVariablesVisitor(ControlFlowGraph).GetEscapingVariables();
 
-        throw new NotImplementedException();
+        var rewriter = new PromoteVariablesVisitor(ControlFlowGraph, escapingVariables);
+        Optimizer.cfg = rewriter.Visit(ControlFlowGraph);
     }
 }
 
@@ -60,5 +61,44 @@ internal class FindEscapingVariablesVisitor(ControlFlowGraph cfg) : RecursiveVis
     {
         Visit(cfg);
         return EscapingVariables;
+    }
+}
+
+internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> escapingVariables) : RewriteVisitor
+{
+    protected override Op Visit(ILOp op)
+    {
+        switch (OpCodeData.GetCanonicalOpcode(op.IL))
+        {
+            case OpCodeValues.Ldarg:
+            {
+                var variable = cfg.GetArgument(op.IL);
+                if (escapingVariables.Contains(variable))
+                    return base.Visit(op);
+                return variable;
+            }
+            case OpCodeValues.Ldloc:
+            {
+                var variable = cfg.GetLocal(op.IL);
+                if (escapingVariables.Contains(variable))
+                    return base.Visit(op);
+                return variable;
+            }
+            case OpCodeValues.Starg:
+            {
+                var variable = cfg.GetArgument(op.IL);
+                if (escapingVariables.Contains(variable))
+                    return base.Visit(op);
+                return new AssignmentOp(variable, op.Inputs[0]);
+            }
+            case OpCodeValues.Stloc:
+            {
+                var variable = cfg.GetLocal(op.IL);
+                if (escapingVariables.Contains(variable))
+                    return base.Visit(op);
+                return new AssignmentOp(variable, op.Inputs[0]);
+            }
+            default: return base.Visit(op);
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Disharmony.Optimizer;
 
-internal class RecursiveVisitor
+internal abstract class RecursiveVisitor
 {
     public void Visit(Op op)
     {

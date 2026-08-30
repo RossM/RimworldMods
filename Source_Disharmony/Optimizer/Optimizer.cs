@@ -43,6 +43,8 @@ internal class Optimizer
 
         new DeduceTypes(this).Run();
 
+        new PromoteVariables(this).Run();
+
         if (debug)
         {
             FileLog.LogBuffered($"# {method.FullName}");
