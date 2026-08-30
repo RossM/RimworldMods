@@ -48,10 +48,8 @@ internal class CreateControlFlowGraph : Pass
         }
     }
 
-    private StackSlot CreateStackSlot(int depth, Type type)
-    {
-        return new StackSlot(depth, type, NextStackSlotId++);
-    }
+    private StackSlot CreateStackSlot(int depth, Type type) => new(depth, type, NextStackSlotId++);
+    private StackSlot CreateStackSlot(int depth) => CreateStackSlot(depth, TypeLattice.Unknown);
 
     protected internal override void RunInternal()
     {
@@ -292,7 +290,7 @@ internal class CreateControlFlowGraph : Pass
     {
         List<StackSlot> incomingStack = [];
         for (int i = 0; i < incomingStackSize; i++)
-            incomingStack.Add(CreateStackSlot(i, TypeLattice.Unknown));
+            incomingStack.Add(CreateStackSlot(i));
         List<StackSlot> curStack = [.. incomingStack];
 
         List<Op> ops = [];
@@ -311,7 +309,7 @@ internal class CreateControlFlowGraph : Pass
             // Avoid stack underflow. This is invalid but can happen in unreachable basic blocks if something before
             // us messes up.
             while (curStack.Count < popCount)
-                curStack.Insert(0, CreateStackSlot(-1, TypeLattice.Unknown));
+                curStack.Insert(0, CreateStackSlot(-1));
 
             List<StackSlot> popped = curStack.GetRange(curStack.Count - popCount, popCount);
             curStack.RemoveRange(curStack.Count - popCount, popCount);
@@ -320,7 +318,7 @@ internal class CreateControlFlowGraph : Pass
             if (instruction.opcode == OpCodes.Dup)
             {
                 curStack.Add(popped[0]);
-                var result = CreateStackSlot(curStack.Count, TypeLattice.Unknown);
+                var result = CreateStackSlot(curStack.Count);
                 ops.Add(new AssignmentOp(result, popped[0]));
                 curStack.Add(result);
                 continue;
@@ -345,7 +343,7 @@ internal class CreateControlFlowGraph : Pass
                 }
                 default:
                 {
-                    StackSlot result = CreateStackSlot(curStack.Count, TypeLattice.Unknown);
+                    StackSlot result = CreateStackSlot(curStack.Count);
                     ops.Add(new AssignmentOp(result, new ILOp(il, popped, TypeLattice.Unknown)));
                     curStack.Add(result);
                     break;
