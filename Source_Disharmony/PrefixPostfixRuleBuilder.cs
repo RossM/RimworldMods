@@ -19,7 +19,7 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
 
             // No initialization is needed if there are no prefixes (the function will initialize), or if 
             // there is a prefix which can't be skipped and definitely sets the result using an out variable.
-            // Honestly this is overkill as the result local will be zero-initialized anyways.
+            // Honestly this is overkill as the result local will be zero-initialized anyway.
             var firstResultRelevantPrefix = prefixes.FirstOrDefault(patch =>
                 patch.patch.ReturnType != typeof(void) || patch.HasBindingType(BindingType.Result));
             if (firstResultRelevantPrefix.parameters != null && !firstResultRelevantPrefix.parameters
