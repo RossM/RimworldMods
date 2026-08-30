@@ -68,45 +68,31 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
 {
     protected override Op Visit(ILOp op)
     {
-        switch (OpCodeData.GetCanonicalOpcode(op.IL))
+        return OpCodeData.GetCanonicalOpcode(op.IL) switch
         {
-            case OpCodeValues.Ldarg:
-            {
-                var variable = cfg.GetArgument(op.IL);
-                if (escapingVariables.Contains(variable))
-                    return base.Visit(op);
-                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
-                    return new ConversionOp(variable, OpcodeUtilities.GetStackType(variable.Type));
-                return variable;
-            }
-            case OpCodeValues.Ldloc:
-            {
-                var variable = cfg.GetLocal(op.IL);
-                if (escapingVariables.Contains(variable))
-                    return base.Visit(op);
-                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
-                    return new ConversionOp(variable, OpcodeUtilities.GetStackType(variable.Type));
-                return variable;
-            }
-            case OpCodeValues.Starg:
-            {
-                var variable = cfg.GetArgument(op.IL);
-                if (escapingVariables.Contains(variable))
-                    return base.Visit(op);
-                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
-                    return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
-                return new AssignmentOp(variable, op.Inputs[0]);
-            }
-            case OpCodeValues.Stloc:
-            {
-                var variable = cfg.GetLocal(op.IL);
-                if (escapingVariables.Contains(variable))
-                    return base.Visit(op);
-                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
-                    return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
-                return new AssignmentOp(variable, op.Inputs[0]);
-            }
-            default: return base.Visit(op);
-        }
+            OpCodeValues.Ldarg => VisitLoad(op, cfg.GetArgument(op.IL)),
+            OpCodeValues.Ldloc => VisitLoad(op, cfg.GetLocal(op.IL)),
+            OpCodeValues.Starg => VisitStore(op, cfg.GetArgument(op.IL)),
+            OpCodeValues.Stloc => VisitStore(op, cfg.GetLocal(op.IL)),
+            _ => base.Visit(op)
+        };
+    }
+
+    private Op VisitLoad(ILOp op, Variable variable)
+    {
+        if (escapingVariables.Contains(variable))
+            return base.Visit(op);
+        if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+            return new ConversionOp(variable, OpcodeUtilities.GetStackType(variable.Type));
+        return variable;
+    }
+
+    private Op VisitStore(ILOp op, Variable variable)
+    {
+        if (escapingVariables.Contains(variable))
+            return base.Visit(op);
+        if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+            return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
+        return new AssignmentOp(variable, op.Inputs[0]);
     }
 }
