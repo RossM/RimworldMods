@@ -22,6 +22,11 @@ internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void)
     public override string ToString() => $"{Output} := {Input}";
 }
 
+internal sealed record ConversionOp(Op Input, Type Type) : Op(Type)
+{
+    public override string ToString() => $"convert {{{Input.ToString()}}} :{Type}";
+}
+
 /// <summary>
 ///     Represents an IL prefix.
 /// </summary>

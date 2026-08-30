@@ -8,6 +8,7 @@ internal abstract class RecursiveVisitor
         {
             case AssignmentOp assignmentOp: Visit(assignmentOp); break;
             case Argument argument: Visit(argument); break;
+            case ConversionOp conversionOp: Visit(conversionOp); break;
             case ILOp ilOp: Visit(ilOp); break;
             case Local local: Visit(local); break;
             case StackSlot stackSlot: Visit(stackSlot); break;
@@ -52,6 +53,11 @@ internal abstract class RecursiveVisitor
     {
         Visit(op.Input);
         Visit(op.Output);
+    }
+
+    protected virtual void Visit(ConversionOp op)
+    {
+        Visit(op.Input);
     }
 
     protected virtual void Visit(ILOp op)

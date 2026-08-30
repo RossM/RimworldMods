@@ -13,6 +13,7 @@ internal class RewriteVisitor
     {
         AssignmentOp assignmentOp => Visit(assignmentOp),
         Argument argument => Visit(argument),
+        ConversionOp conversionOp => Visit(conversionOp),
         ILOp ilOp => Visit(ilOp),
         Local local => Visit(local),
         StackSlot stackSlot => Visit(stackSlot),
@@ -53,6 +54,14 @@ internal class RewriteVisitor
         if (input == op.Input && output == op.Output)
             return DefaultVisit(op);
         return DefaultVisit(new AssignmentOp(output, input));
+    }
+
+    protected virtual Op Visit(ConversionOp op)
+    {
+        var input = Visit(op.Input);
+        if (input == op.Input)
+            return DefaultVisit(op);
+        return DefaultVisit(new ConversionOp(input, op.Type));
     }
 
     protected virtual Op Visit(ILOp op)

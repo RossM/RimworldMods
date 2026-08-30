@@ -41,7 +41,7 @@ internal class FindEscapingVariablesVisitor(ControlFlowGraph cfg) : RecursiveVis
 
     private void CheckEscape(Variable op)
     {
-        if (handlerDepth > 0 || op.Type != OpcodeUtilities.GetStackType(op.Type))
+        if (handlerDepth > 0)
             EscapingVariables.Add(op);
     }
 
@@ -75,6 +75,8 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
                 var variable = cfg.GetArgument(op.IL);
                 if (escapingVariables.Contains(variable))
                     return base.Visit(op);
+                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+                    return new ConversionOp(variable, OpcodeUtilities.GetStackType(variable.Type));
                 return variable;
             }
             case OpCodeValues.Ldloc:
@@ -82,6 +84,8 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
                 var variable = cfg.GetLocal(op.IL);
                 if (escapingVariables.Contains(variable))
                     return base.Visit(op);
+                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+                    return new ConversionOp(variable, OpcodeUtilities.GetStackType(variable.Type));
                 return variable;
             }
             case OpCodeValues.Starg:
@@ -89,6 +93,8 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
                 var variable = cfg.GetArgument(op.IL);
                 if (escapingVariables.Contains(variable))
                     return base.Visit(op);
+                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+                    return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
                 return new AssignmentOp(variable, op.Inputs[0]);
             }
             case OpCodeValues.Stloc:
@@ -96,6 +102,8 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
                 var variable = cfg.GetLocal(op.IL);
                 if (escapingVariables.Contains(variable))
                     return base.Visit(op);
+                if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+                    return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
                 return new AssignmentOp(variable, op.Inputs[0]);
             }
             default: return base.Visit(op);
