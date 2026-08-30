@@ -23,12 +23,12 @@ internal class CircumfixRuleBuilder : RuleBuilder
             // Prefixes are sorted by priority and then reversed, so prefix-postfix pairs will nest naturally
             // even if priority isn't set
             .. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: EmptyInvocation })
-                .OrderByDescending(patch => patch.priority).Reverse(),
+                .OrderBy(patch => patch.priority).Reverse(),
         ];
         postfixes =
         [
             .. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: EmptyInvocation })
-                .OrderByDescending(patch => patch.priority),
+                .OrderBy(patch => patch.priority),
         ];
 
         targetType = outer.ReturnType;

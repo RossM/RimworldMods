@@ -350,7 +350,7 @@ public class PatchOptionsAttribute(PatchOptions options) : Attribute
 
 /// <summary>
 ///     Sets the priority of a patch. The meaning of priority depends on the patch type. For <see cref="PrefixAttribute">prefix</see>
-///     patches, higher priority patches run later, while for other patch types higher priority patches run earlier.
+///     patches, higher priority patches run earlier, while for other patch types higher priority patches run later.
 /// </summary>
 /// <param name="priority"></param>
 [PublicAPI]

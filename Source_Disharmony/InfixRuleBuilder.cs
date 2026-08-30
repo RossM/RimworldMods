@@ -26,12 +26,12 @@ internal class InfixRuleBuilder : RuleBuilder
             // Prefixes are sorted by priority and then reversed, so prefix-postfix pairs will nest naturally
             // even if priority isn't set
             .. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: not EmptyInvocation })
-                .OrderByDescending(patch => patch.priority).Reverse(),
+                .OrderBy(patch => patch.priority).Reverse(),
         ];
         innerPostfixes =
         [
             .. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: not EmptyInvocation })
-                .OrderByDescending(patch => patch.priority),
+                .OrderBy(patch => patch.priority),
         ];
 
         this.inner = inner;
