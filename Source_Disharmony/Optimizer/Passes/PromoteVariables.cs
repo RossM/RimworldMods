@@ -66,7 +66,7 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
     {
         if (escapingVariables.Contains(variable))
             return base.Visit(op);
-        if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+        if (OpcodeUtilities.RequiresConversion(variable.Type))
             return new ConversionOp(variable, OpcodeUtilities.GetStackType(variable.Type));
         return variable;
     }
@@ -75,7 +75,7 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
     {
         if (escapingVariables.Contains(variable))
             return base.Visit(op);
-        if (variable.Type != OpcodeUtilities.GetStackType(variable.Type))
+        if (OpcodeUtilities.RequiresConversion(variable.Type))
             return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
         return new AssignmentOp(variable, op.Inputs[0]);
     }

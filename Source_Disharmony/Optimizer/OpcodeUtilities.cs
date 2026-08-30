@@ -37,6 +37,22 @@ internal static class OpcodeUtilities
         };
     }
 
+    /// <summary>
+    ///     Determines whether storing a value from the stack to a local of this type, or
+    ///     vice versa, could change the bits of the value.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool RequiresConversion(Type type)
+    {
+        return Type.GetTypeCode(type) switch
+        {
+            >= TypeCode.Boolean and <= TypeCode.UInt16 => true,
+            TypeCode.Single or TypeCode.Double => true,
+            _ => false,
+        };
+    }
+
     private static Type GetOutputTypeCore(ILInstruction op, Type[] inputTypes)
     {
         OpCodeData data = OpCodeData.Get(op.OpCode);
