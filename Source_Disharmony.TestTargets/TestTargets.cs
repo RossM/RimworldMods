@@ -20,6 +20,17 @@ namespace Disharmony.Tests
 
     public static class StaticMethodTargets
     {
+        public static List<string> PriorityEvents { get; } = [];
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void PriorityTarget() => PriorityEvents.Add("target");
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void PriorityOuter() => PriorityInner();
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void PriorityInner() => PriorityEvents.Add("inner-target");
+
         public static int MutableProperty
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
