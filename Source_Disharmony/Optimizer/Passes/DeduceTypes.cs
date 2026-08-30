@@ -46,9 +46,9 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
         IEnumerable<Type> inputTypes = inputs.Select(input => input.Type);
 
         Type[] types;
-        if (data.flags.HasFlag(OpCodeFlags.Argument))
+        if ((data.flags & OpCodeFlags.Argument) != 0)
             types = [optimizer.cfg.Arguments[OpCodeData.GetIntOperand(op.IL)].Type, .. inputTypes];
-        else if (data.flags.HasFlag(OpCodeFlags.Local))
+        else if ((data.flags & OpCodeFlags.Local) != 0)
             types = [optimizer.cfg.Locals[LocalTracker.IndexFrom(op.IL)].Type, .. inputTypes];
         else
             types = [.. inputTypes];

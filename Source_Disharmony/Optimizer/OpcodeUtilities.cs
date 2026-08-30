@@ -43,7 +43,7 @@ internal static class OpcodeUtilities
         if (data.resultType is { } resultType)
             return resultType;
 
-        if (data.flags.HasFlag(OpCodeFlags.Load | OpCodeFlags.Indirect))
+        if ((data.flags & (OpCodeFlags.Load | OpCodeFlags.Indirect)) == (OpCodeFlags.Load | OpCodeFlags.Indirect))
         {
             if (inputTypes[0] == TypeLattice.Null)
                 return TypeLattice.Unknown;
@@ -52,13 +52,13 @@ internal static class OpcodeUtilities
             return inputTypes[0].GetElementType();
         }
 
-        if (data.flags.HasFlag(OpCodeFlags.Load) || data.flags.HasFlag(OpCodeFlags.Shift) || data.flags.HasFlag(OpCodeFlags.PushesInput))
+        if ((data.flags & (OpCodeFlags.Load | OpCodeFlags.Shift | OpCodeFlags.PushesInput)) != 0)
             return inputTypes[0];
-        if (data.flags.HasFlag(OpCodeFlags.LoadAddress))
+        if ((data.flags & OpCodeFlags.LoadAddress) != 0)
             return inputTypes[0].MakeByRefType();
 
         // See comments on OpCodeFlags.Arithmetic
-        if (data.flags.HasFlag(OpCodeFlags.Arithmetic))
+        if ((data.flags & OpCodeFlags.Arithmetic) != 0)
         {
             if (inputTypes.Length == 1)
                 return inputTypes[0];
@@ -85,9 +85,9 @@ internal static class OpcodeUtilities
             return inputTypes[0];
         }
 
-        if (data.flags.HasFlag(OpCodeFlags.TypeFromOperand) && op.Operand is Type operandType)
+        if ((data.flags & OpCodeFlags.TypeFromOperand) != 0 && op.Operand is Type operandType)
             return operandType;
-        if (data.flags.HasFlag(OpCodeFlags.TypeFromOperandRef) && op.Operand is Type operandType2)
+        if ((data.flags & OpCodeFlags.TypeFromOperandRef) != 0 && op.Operand is Type operandType2)
             return operandType2.MakeByRefType();
 
         return data.canonical switch

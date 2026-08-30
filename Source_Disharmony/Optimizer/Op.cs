@@ -43,8 +43,8 @@ internal sealed record ILInstruction(OpCode OpCode, object? Operand, IReadOnlyLi
         return operand switch
         {
             LocalBuilder b => $"Local{b.LocalIndex} :{b.LocalType}",
-            _ when data.flags.HasFlag(OpCodeFlags.Argument) => $"Arg{OpCodeData.GetIntOperand(this)}",
-            _ when data.flags.HasFlag(OpCodeFlags.Local) => $"Local{OpCodeData.GetIntOperand(this)}",
+            _ when (data.flags & OpCodeFlags.Argument) != 0 => $"Arg{OpCodeData.GetIntOperand(this)}",
+            _ when (data.flags & OpCodeFlags.Local) != 0 => $"Local{OpCodeData.GetIntOperand(this)}",
             _ => operand.ToString(),
         };
     }

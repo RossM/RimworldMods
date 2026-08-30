@@ -189,7 +189,7 @@ internal struct OpCodeData
     private static int GetIntOperand(OpCode opcode, object? operand)
     {
         var opcodeData = Get(opcode);
-        return opcodeData.flags.HasFlag(OpCodeFlags.FixedOperand) ? opcodeData.operand : Convert.ToInt32(operand);
+        return (opcodeData.flags & OpCodeFlags.FixedOperand) != 0 ? opcodeData.operand : Convert.ToInt32(operand);
     }
 
     private static int GetIndex(ushort value) => value >= 0xFE00 ? value - (0xFE00 - 0x100) : value;
