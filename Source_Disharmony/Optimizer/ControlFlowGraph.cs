@@ -322,4 +322,7 @@ internal record ControlFlowGraph : Node
             return hashCode;
         }
     }
+
+    public Argument GetArgument(ILInstruction ilInstruction) => Arguments[OpCodeData.GetIntOperand(ilInstruction)];
+    public Local GetLocal(ILInstruction ilInstruction) => Locals[LocalTracker.IndexFrom(ilInstruction)];
 }
