@@ -79,8 +79,8 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
         {
             output.Add(new(OpCodes.Nop) { labels = [label] });
 
-            // If returnLabel is null then we can never fall through to the skip label. Adding the store
-            // here would result in a basic block with no entry, so it will be assumed to have an empty stack,
+            // If returnLabel is null then we can never fall through to the skip label. Adding the store in that
+            // case would result in a basic block with no entry, so it will be assumed to have an empty stack,
             // which causes problems in the optimizer.
             if (resultLocal != null)
                 output.Add(resultLocal.Store());
