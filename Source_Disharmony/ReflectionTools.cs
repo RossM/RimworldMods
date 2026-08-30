@@ -4,6 +4,20 @@ internal static class ReflectionTools
 {
     public static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
 
+    private static Assembly[]? _allAssemblies = null;
+    private static Dictionary<string, Type>? _typesByName = null;
+
+    private static void AssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
+    {
+        _allAssemblies = null;
+        _typesByName = null;
+    }
+
+    static ReflectionTools()
+    {
+        AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoadHandler;
+    }
+
     public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
     {
         List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes);
@@ -33,7 +47,7 @@ internal static class ReflectionTools
         if (name?.Split([':'], 2) is [string typeName, string memberName])
         {
             // TODO AccessTools.TypeByName is horribly inefficient, reimplement
-            type = AccessTools.TypeByName(typeName) ??
+            type = GetTypeByName(typeName) ??
                    throw new ReflectionException($"Type not found: {typeName}");
             name = memberName;
         }
@@ -45,7 +59,7 @@ internal static class ReflectionTools
             for (int i = 1; i <= nameParts.Count - 1; i++)
             {
                 typeName = string.Join(".", nameParts.Take(i));
-                type = AccessTools.TypeByName(typeName);
+                type = GetTypeByName(typeName);
                 if (type is not null)
                 {
                     nameParts.RemoveRange(0, i);
@@ -103,6 +117,44 @@ internal static class ReflectionTools
         ).Where(m => m is not null);
 
         return [.. candidates];
+    }
+
+    // This is equivalent to AccessTools.GetTypeByName but it caches the assembly list
+    // and precomputes a dictionary matching type names to types.
+    private static Type? GetTypeByName(string name)
+    {
+        {
+            if (Type.GetType(name, throwOnError: false) is { } type)
+                return type;
+        }
+
+        if (_typesByName is null)
+        {
+            // Calling AccessTools.AllTypes can result in assemblies being loaded which clears _typesByName,
+            // so this must happen before _typesByName is initialized.
+            Type[] allTypes = [.. AccessTools.AllTypes()];
+
+            _typesByName = [];
+            foreach (var type in allTypes)
+                _typesByName[type.Name] = type;
+            foreach (var type in allTypes)
+                _typesByName[type.FullName] = type;
+        }
+
+        {
+            if (_typesByName.TryGetValue(name, out var type))
+                return type;
+        }
+
+        _allAssemblies ??= [.. AccessTools.AllAssemblies()];
+
+        foreach (Assembly item in _allAssemblies)
+        {
+            if (item.GetType(name, throwOnError: false) is { } type)
+                return type;
+        }
+
+        return null;
     }
 
     private static IEnumerable<MethodBase> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)
