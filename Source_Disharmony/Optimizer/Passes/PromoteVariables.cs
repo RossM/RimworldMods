@@ -22,11 +22,17 @@ internal class EscapingVariablesVisitor(ControlFlowGraph cfg) : RecursiveVisitor
 
         switch (OpCodeData.GetCanonicalOpcode(op.IL))
         {
-            case OpCodeValues.Ldloc: if (handlerDepth > 0) EscapingVariables.Add(cfg.GetLocal(op.IL)); break;
+            case OpCodeValues.Ldloc: CheckEscape(cfg.GetLocal(op.IL)); break;
             case OpCodeValues.Ldloca: EscapingVariables.Add(cfg.GetLocal(op.IL)); break;
-            case OpCodeValues.Ldarg: if (handlerDepth > 0) EscapingVariables.Add(cfg.GetArgument(op.IL)); break;
+            case OpCodeValues.Ldarg: CheckEscape(cfg.GetArgument(op.IL)); break;
             case OpCodeValues.Ldarga: EscapingVariables.Add(cfg.GetArgument(op.IL)); break;
         }
+    }
+
+    private void CheckEscape(Variable variable)
+    {
+        if (handlerDepth > 0 || variable.Type == TypeLattice.Any) 
+            EscapingVariables.Add(variable);
     }
 
     public override void Visit(BasicBlock block)
@@ -75,8 +81,9 @@ internal class PromoteVariablesVisitor(ControlFlowGraph cfg, HashSet<Variable> e
     {
         if (escapingVariables.Contains(variable))
             return base.Visit(op);
+        Op input = Visit(op.Inputs[0]);
         if (OpcodeUtilities.RequiresConversion(variable.Type))
-            return new AssignmentOp(variable, new ConversionOp(op.Inputs[0], variable.Type));
-        return new AssignmentOp(variable, op.Inputs[0]);
+            return new AssignmentOp(variable, new ConversionOp(input, variable.Type));
+        return new AssignmentOp(variable, input);
     }
 }
