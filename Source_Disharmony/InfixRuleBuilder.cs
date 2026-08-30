@@ -42,18 +42,7 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
     {
         EmitPrelude();
         InitializeResultLocal();
-
-        foreach (var prefix in prefixes)
-        {
-            foreach (var parameter in prefix.parameters)
-                EmitParameterValue(parameter);
-
-            output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
-            output.AddRange(prefix.patch.GetCodeInstructions());
-
-            if (prefix.patch.ReturnType != typeof(void))
-                output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
-        }
+        EmitPrefixes();
 
         for (int i = 0; i < innerParameterTypes.Length; i++)
         {
@@ -63,28 +52,13 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
 
         output.AddRange(inner.GetCodeInstructions());
 
-        if (skipLabel != null || postfixes.Count > 0)
-        {
-            if (resultLocal != null)
-                output.Add(resultLocal.Store());
+        if (skipLabel == null && postfixes.Count == 0)
+            return;
 
-            if (skipLabel is Label label)
-                output.Add(new(OpCodes.Nop) { labels = [label] });
+        if (resultLocal != null)
+            output.Add(resultLocal.Store());
 
-            foreach (var postfix in postfixes)
-            {
-                foreach (var parameter in postfix.parameters)
-                    EmitParameterValue(parameter);
-
-                output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-                output.AddRange(postfix.patch.GetCodeInstructions());
-                if (postfix.patch.ReturnType != typeof(void))
-                    output.Add(new(OpCodes.Pop));
-            }
-
-            if (resultLocal != null)
-                output.Add(resultLocal.Load());
-        }
+        EmitPostfixes();
     }
 
     private void EmitPrelude()

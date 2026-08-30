@@ -44,17 +44,7 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
     {
         InitializeResultLocal();
 
-        foreach (var prefix in prefixes)
-        {
-            foreach (var parameter in prefix.parameters)
-                EmitParameterValue(parameter);
-
-            output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
-            output.AddRange(prefix.patch.GetCodeInstructions());
-
-            if (prefix.patch.ReturnType != typeof(void))
-                output.Add(new(OpCodes.Brfalse, skipLabel ??= generator.DefineLabel()));
-        }
+        EmitPrefixes();
 
         if (output.instructions.Count > 0)
         {
@@ -66,6 +56,9 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
             };
             output.instructions.Clear();
         }
+
+        if (skipLabel == null && postfixes.Count == 0)
+            yield break;
 
         if (postfixes.Count > 0)
         {
@@ -82,9 +75,6 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
             };
         }
 
-        if (skipLabel == null && returnLabel == null && postfixes.Count == 0)
-            yield break;
-
         if (returnLabel is { } label)
         {
             output.Add(new(OpCodes.Nop) { labels = [label] });
@@ -93,23 +83,7 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
                 output.Add(resultLocal.Store());
         }
 
-        if (skipLabel is { } label2)
-            output.Add(new(OpCodes.Nop) { labels = [label2] });
-
-        foreach (var postfix in postfixes)
-        {
-            foreach (var parameter in postfix.parameters)
-                EmitParameterValue(parameter);
-
-            output.Add(CodeInstruction.Annotation($"{postfix.patchType} {postfix.patch.FullName}"));
-            output.AddRange(postfix.patch.GetCodeInstructions());
-
-            if (postfix.patch.ReturnType != typeof(void))
-                output.Add(new(OpCodes.Pop));
-        }
-
-        if (resultLocal != null)
-            output.Add(resultLocal.Load());
+        EmitPostfixes();
 
         output.Add(new(OpCodes.Ret));
 
