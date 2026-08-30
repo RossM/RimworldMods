@@ -22,6 +22,21 @@ internal sealed record AssignmentOp(Variable Output, Op Input) : Op(typeof(void)
     public override string ToString() => $"{Output} := {Input}";
 }
 
+/// <summary>
+///     Represents a potentially bit-changing conversion, such as integer widening or narrowing.
+/// </summary>
+/// <remarks>
+///     <para>
+///         <c>ConversionOp</c> is generated when promoting locals and arguments that have a different
+///         storage type from their stack type.
+///     </para>
+///     <para>
+///         Conversions between different managed reference types (for example, a class and a subclass)
+///         don't use <c>ConversionOp</c>.
+///     </para>
+/// </remarks>
+/// <param name="Input"></param>
+/// <param name="Type"></param>
 internal sealed record ConversionOp(Op Input, Type Type) : Op(Type)
 {
     public override string ToString() => $"convert {{{Input.ToString()}}} :{Type}";
