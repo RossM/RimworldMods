@@ -16,7 +16,7 @@ namespace Disharmony;
 /// <param name="inner">The inner invocation being patched, or <see cref="EmptyInvocation" /> for an outer patch.</param>
 /// <param name="patchType">The patch type.</param>
 /// <param name="stateGroupKey">A string for grouping together <see cref="StateAttribute">state</see> parameters.</param>
-internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, string stateGroupKey)
+internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, PatchOptions options, string stateGroupKey)
 {
     private bool IsInfix => inner is not EmptyInvocation;
     private bool IsIterator => outer != target;
@@ -211,6 +211,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     {
         if (invocation.ReturnType == typeof(void))
             throw new ParameterBindingException(parameter.Name, "Method returns void");
+        if (patchType == PatchType.Prefix && (options & PatchOptions.AlwaysRun) != 0)
+            throw new ParameterBindingException(parameter.Name, "Binding return value not allowed for Prefix with AlwaysRun option");
         ValidateCast(parameter.ParameterType, invocation.ReturnType, parameter.Name);
         return new() { parameter = parameter, bindingType = BindingType.Result, scope = scope };
     }

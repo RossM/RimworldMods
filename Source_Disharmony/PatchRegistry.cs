@@ -283,7 +283,7 @@ internal class PatchRegistry
         string stateGroupKey,
         int unpatchKey)
     {
-        Validate(patchType, patchMethod.MethodInfo, target.MethodBase);
+        Validate(patchType, options, patchMethod.MethodInfo, target.MethodBase);
 
         MethodBaseInvocation outer = target;
         bool isIterator = false;
@@ -298,7 +298,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, stateGroupKey);
+        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, options, stateGroupKey);
 
         var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
@@ -324,7 +324,7 @@ internal class PatchRegistry
         methodSet.Add(outer);
     }
 
-    private static void Validate(PatchType patchType, MethodInfo method, MethodBase target)
+    private static void Validate(PatchType patchType, PatchOptions options, MethodInfo method, MethodBase target)
     {
         if (method.ContainsGenericParameters)
             throw new PatchDefinitionException(method, "Generic patch functions are not supported");
@@ -334,6 +334,8 @@ internal class PatchRegistry
         {
             case PatchType.Prefix:
             {
+                if ((options & PatchOptions.AlwaysRun) != 0 && method.ReturnType != typeof(void))
+                    throw new PatchDefinitionException(method, "Prefix with AlwaysRun option must return 'void'");
                 if (method.ReturnType != typeof(void) && method.ReturnType != typeof(bool))
                     throw new PatchDefinitionException(method, "Prefix must return 'bool' or 'void'");
                 break;
