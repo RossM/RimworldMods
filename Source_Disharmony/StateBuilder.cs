@@ -14,7 +14,11 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
         localType = localType.NoRefType;
 
         if (stateMap.TryGetValue(stateKey, out var local))
+        {
+            if (localType != local.Type)
+                throw new InvalidOperationException($"Incompatible state types: {localType} and {local.Type}");
             return local;
+        }
 
         local = output.AddLocal(localType);
         stateMap.Add(stateKey, local);
