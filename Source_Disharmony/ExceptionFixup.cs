@@ -42,8 +42,14 @@ internal static class ExceptionFixup
             if (newBlock)
             {
                 stack.Clear();
-                if (instruction.labels.Count > 0 && branchStacks.TryGetValue(instruction.labels[0], out var branchStack))
+                foreach (var label in instruction.labels)
+                {
+                    if (!branchStacks.TryGetValue(label, out var branchStack))
+                        continue;
+
                     stack.AddRange(branchStack);
+                    break;
+                }
             }
 
             foreach (var _ in instruction.blocks.Where(b => b.blockType is ExceptionBlockType.BeginExceptionBlock))
