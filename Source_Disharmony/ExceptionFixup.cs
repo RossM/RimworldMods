@@ -82,34 +82,7 @@ internal static class ExceptionFixup
                 case 0: break;
                 case 1:
                 {
-                    var data = OpCodeData.Get(instruction.opcode);
-                    Type[] inputTypes;
-                    if ((data.flags & OpCodeFlags.Argument) != 0)
-                    {
-                        int argumentIndex = instruction.ArgumentIndex();
-                        Type parameterType;
-                        if (method.HasThis && argumentIndex == 0)
-                            parameterType = method.DeclaringType.CallableType;
-                        else if (method.HasThis)
-                            parameterType = parameters[argumentIndex - 1].ParameterType;
-                        else
-                            parameterType = parameters[argumentIndex].ParameterType;
-                        inputTypes = [parameterType, .. poppedTypes];
-                    }
-                    else if ((data.flags & OpCodeFlags.Local) != 0)
-                    {
-                        int localIndex = instruction.LocalIndex();
-                        Type localType;
-                        if (localIndex < locals.Count)
-                            localType = locals[localIndex].LocalType;
-                        else if (instruction.operand is LocalBuilder builder)
-                            localType = builder.LocalType;
-                        else
-                            localType = fallbackType;
-                        inputTypes = [localType, .. poppedTypes];
-                    }
-                    else
-                        inputTypes = [.. poppedTypes];
+                    Type[] inputTypes = GetInputTypes(instruction, poppedTypes, method, parameters, locals);
 
                     Type pushType = OpcodeUtilities.GetOutputType(instruction.opcode, instruction.operand, inputTypes);
 
@@ -127,6 +100,7 @@ internal static class ExceptionFixup
                 }
                 case 2:
                 {
+                    // Dup is the only instruction that pushes two values
                     stack.Add(poppedTypes[0]);
                     stack.Add(poppedTypes[0]);
                     break;
@@ -164,5 +138,44 @@ internal static class ExceptionFixup
         }
 
         instructions = output;
+    }
+
+    private static Type[] GetInputTypes(
+        CodeInstruction instruction,
+        List<Type> poppedTypes,
+        MethodBase method,
+        ParameterInfo[] parameters,
+        IList<LocalVariableInfo> locals)
+    {
+        var data = OpCodeData.Get(instruction.opcode);
+        Type[] inputTypes;
+        if ((data.flags & OpCodeFlags.Argument) != 0)
+        {
+            int argumentIndex = instruction.ArgumentIndex();
+            Type parameterType;
+            if (method.HasThis && argumentIndex == 0)
+                parameterType = method.DeclaringType.CallableType;
+            else if (method.HasThis)
+                parameterType = parameters[argumentIndex - 1].ParameterType;
+            else
+                parameterType = parameters[argumentIndex].ParameterType;
+            inputTypes = [parameterType, .. poppedTypes];
+        }
+        else if ((data.flags & OpCodeFlags.Local) != 0)
+        {
+            int localIndex = instruction.LocalIndex();
+            Type localType;
+            if (localIndex < locals.Count)
+                localType = locals[localIndex].LocalType;
+            else if (instruction.operand is LocalBuilder builder)
+                localType = builder.LocalType;
+            else
+                localType = fallbackType;
+            inputTypes = [localType, .. poppedTypes];
+        }
+        else
+            inputTypes = [.. poppedTypes];
+
+        return inputTypes;
     }
 }
