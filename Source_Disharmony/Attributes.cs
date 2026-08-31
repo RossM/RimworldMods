@@ -685,14 +685,22 @@ public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttrib
 public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 
 /// <summary>
-///     Binds a patch parameter to temporary state for the current invocation of the outer member. Patch methods in the
-///     same class can share state by using the same key and value type.
+///     Binds a patch parameter to temporary state for the current invocation of the outer member.
 /// </summary>
 /// <param name="key">
 ///     The key used to identify the shared state, or <see langword="null" /> to use the attributed patch parameter's name.
 /// </param>
 /// <remarks>
-///     State is not supported when an inner patch targets an iterator state-machine method.
+///     <para>
+///         State is not supported when an inner patch targets an iterator state-machine method.
+///     </para>
+///     <para>
+///         Patches applied with <see cref="Patcher.PatchAll(Assembly)"/>, <see cref="Patcher.PatchAll(Type)"/>, or
+///         <see cref="Patcher.Patch(MethodInfo)"/> will share state with other patch methods in the same containing type
+///         that use the same key.
+///         Patches applied using <see cref="PatchConfig"/> will share state with other methods applied during the same
+///         <c>Patcher.Patch</c> call that use the same key.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
