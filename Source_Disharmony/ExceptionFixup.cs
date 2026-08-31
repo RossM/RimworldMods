@@ -11,6 +11,10 @@ internal static class ExceptionFixup
     ///     Fix up a method which may try to keep stack variables live across an exception block
     ///     by saving and restoring the stack before and after the block.
     /// </summary>
+    /// <remarks>
+    ///     This currently can't handle exception blocks with an explicit 'leave' instruction,
+    ///     so it works for infix patches but can fail for inlining.
+    /// </remarks>
     /// <param name="method"></param>
     /// <param name="instructions"></param>
     /// <param name="generator"></param>
