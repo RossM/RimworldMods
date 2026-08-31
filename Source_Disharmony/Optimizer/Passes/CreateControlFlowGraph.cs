@@ -304,7 +304,7 @@ internal class CreateControlFlowGraph : Pass
                 continue;
             }
 
-            int popCount = PopCount(instruction);
+            int popCount = CodeInstructionExtensions.PopCount(instruction, ReturnType);
             
             // Avoid stack underflow. This is invalid but can happen in unreachable basic blocks if something before
             // us messes up.
@@ -333,21 +333,21 @@ internal class CreateControlFlowGraph : Pass
                 break;
             }
 
-            switch (instruction.opcode.StackBehaviourPush)
+            switch (instruction.PushCount())
             {
-                case StackBehaviour.Push0:
-                case StackBehaviour.Varpush when instruction.operand is MethodInfo method && method.ReturnType == typeof(void):
+                case 0:
                 {
                     ops.Add(new ILOp(il, popped, typeof(void)));
                     break;
                 }
-                default:
+                case 1:
                 {
                     StackSlot result = CreateStackSlot(curStack.Count);
                     ops.Add(new AssignmentOp(result, new ILOp(il, popped, TypeLattice.Unknown)));
                     curStack.Add(result);
                     break;
                 }
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -380,41 +380,6 @@ internal class CreateControlFlowGraph : Pass
             },
         };
         return branch;
-    }
-
-    private int PopCount(CodeInstruction instruction)
-    {
-        return instruction.opcode.StackBehaviourPop switch
-        {
-            StackBehaviour.Pop0 => 0,
-            StackBehaviour.Pop1 => 1,
-            StackBehaviour.Pop1_pop1 => 2,
-            StackBehaviour.Popi => 1,
-            StackBehaviour.Popi_pop1 => 2,
-            StackBehaviour.Popi_popi => 2,
-            StackBehaviour.Popi_popi8 => 2,
-            StackBehaviour.Popi_popi_popi => 3,
-            StackBehaviour.Popi_popr4 => 2,
-            StackBehaviour.Popi_popr8 => 2,
-            StackBehaviour.Popref => 1,
-            StackBehaviour.Popref_pop1 => 2,
-            StackBehaviour.Popref_popi => 2,
-            StackBehaviour.Popref_popi_popi => 3,
-            StackBehaviour.Popref_popi_popi8 => 3,
-            StackBehaviour.Popref_popi_popr4 => 3,
-            StackBehaviour.Popref_popi_popr8 => 3,
-            StackBehaviour.Popref_popi_popref => 3,
-            StackBehaviour.Popref_popi_pop1 => 3,
-            StackBehaviour.Varpop when instruction.operand is MethodInfo methodInfo => methodInfo.GetParameters().Length +
-                                                                                       (methodInfo.HasThis ? 1 : 0),
-            StackBehaviour.Varpop when instruction.operand is ConstructorInfo constructorInfo => constructorInfo.GetParameters().Length,
-            StackBehaviour.Varpop => OpCodeData.GetCanonicalOpcode(instruction) switch
-            {
-                OpCodeValues.Ret => ReturnType == typeof(void) ? 0 : 1,
-                _ => throw new ArgumentOutOfRangeException(),
-            },
-            _ => throw new ArgumentOutOfRangeException(),
-        };
     }
 }
 
