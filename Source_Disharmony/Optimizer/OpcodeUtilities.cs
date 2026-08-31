@@ -21,7 +21,13 @@ internal static class OpcodeUtilities
     /// <exception cref="NotImplementedException"></exception>
     public static Type GetOutputType(ILInstruction op, params Type[] inputTypes)
     {
-        Type outputType = GetOutputTypeCore(op, inputTypes);
+        Type outputType = GetOutputTypeCore(op.OpCode, op.Operand, inputTypes);
+        return GetStackType(outputType);
+    }
+
+    public static Type GetOutputType(OpCode opcode, object? operand, params Type[] inputTypes)
+    {
+        Type outputType = GetOutputTypeCore(opcode, operand, inputTypes);
         return GetStackType(outputType);
     }
 
@@ -53,9 +59,9 @@ internal static class OpcodeUtilities
         };
     }
 
-    private static Type GetOutputTypeCore(ILInstruction op, Type[] inputTypes)
+    private static Type GetOutputTypeCore(OpCode opcode, object? operand, Type[] inputTypes)
     {
-        OpCodeData data = OpCodeData.Get(op.OpCode);
+        OpCodeData data = OpCodeData.Get(opcode);
         if (data.resultType is { } resultType)
             return resultType;
 
@@ -101,24 +107,24 @@ internal static class OpcodeUtilities
             return inputTypes[0];
         }
 
-        if ((data.flags & OpCodeFlags.TypeFromOperand) != 0 && op.Operand is Type operandType)
+        if ((data.flags & OpCodeFlags.TypeFromOperand) != 0 && operand is Type operandType)
             return operandType;
-        if ((data.flags & OpCodeFlags.TypeFromOperandRef) != 0 && op.Operand is Type operandType2)
+        if ((data.flags & OpCodeFlags.TypeFromOperandRef) != 0 && operand is Type operandType2)
             return operandType2.MakeByRefType();
 
         return data.canonical switch
         {
-            OpCodeValues.Call or OpCodeValues.Callvirt when op.Operand is MethodInfo method => method.ReturnType,
+            OpCodeValues.Call or OpCodeValues.Callvirt when operand is MethodInfo method => method.ReturnType,
             OpCodeValues.Ldelem_Ref when inputTypes[0].IsArray => inputTypes[0].GetElementType()!,
             OpCodeValues.Ldelem_Ref when inputTypes[0] == TypeLattice.Unknown || inputTypes[0] == TypeLattice.Null => TypeLattice.Unknown,
             OpCodeValues.Ldelem_Ref when inputTypes[0] == TypeLattice.Any => TypeLattice.Any,
-            OpCodeValues.Ldfld or OpCodeValues.Ldsfld when op.Operand is FieldInfo field => field.FieldType,
-            OpCodeValues.Ldflda or OpCodeValues.Ldsflda when op.Operand is FieldInfo field => field.FieldType.MakeByRefType(),
-            OpCodeValues.Ldtoken when op.Operand is FieldInfo => typeof(RuntimeFieldHandle),
-            OpCodeValues.Ldtoken when op.Operand is MethodBase => typeof(RuntimeMethodHandle),
-            OpCodeValues.Ldtoken when op.Operand is Type => typeof(RuntimeTypeHandle),
-            OpCodeValues.Newarr when op.Operand is Type type => type.MakeArrayType(),
-            OpCodeValues.Newobj when op.Operand is ConstructorInfo constructor => constructor.DeclaringType!,
+            OpCodeValues.Ldfld or OpCodeValues.Ldsfld when operand is FieldInfo field => field.FieldType,
+            OpCodeValues.Ldflda or OpCodeValues.Ldsflda when operand is FieldInfo field => field.FieldType.MakeByRefType(),
+            OpCodeValues.Ldtoken when operand is FieldInfo => typeof(RuntimeFieldHandle),
+            OpCodeValues.Ldtoken when operand is MethodBase => typeof(RuntimeMethodHandle),
+            OpCodeValues.Ldtoken when operand is Type => typeof(RuntimeTypeHandle),
+            OpCodeValues.Newarr when operand is Type type => type.MakeArrayType(),
+            OpCodeValues.Newobj when operand is ConstructorInfo constructor => constructor.DeclaringType!,
             _ => throw new NotImplementedException(),
         };
     }
