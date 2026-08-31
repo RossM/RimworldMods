@@ -217,7 +217,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new ParameterBindingException(parameter.Name, "Method returns void");
         if (patchType == PatchType.Prefix && (options & PatchOptions.AlwaysRun) != 0)
             throw new ParameterBindingException(parameter.Name, "Binding return value not allowed for Prefix with AlwaysRun option");
-        ValidateCast(parameter.ParameterType, invocation.ReturnType, parameter.Name);
+        ValidateCast(parameter, invocation.ReturnType);
         return new() { parameter = parameter, bindingType = BindingType.Result, scope = scope };
     }
 
@@ -241,7 +241,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         if (!invocation.InstanceType.IsValueType && invocation is not FieldInvocation)
             ValidateReference(parameter, invocation.InstanceType, scope, "instance");
-        ValidateCast(parameter.ParameterType, invocation.InstanceType, parameter.Name);
+        ValidateCast(parameter, invocation.InstanceType);
         return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope };
     }
 
@@ -325,7 +325,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             if (field != null)
             {
-                ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
+                ValidateCast(parameter, field.FieldType);
                 parameterBinding = new()
                 {
                     parameter = parameter,
@@ -350,7 +350,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             var field = inner.InstanceType.GetField(name, AccessTools.all);
             if (field != null)
             {
-                ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
+                ValidateCast(parameter, field.FieldType);
                 return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Inner, fields = [field] };
             }
         }
@@ -371,7 +371,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             if (field != null)
             {
                 fields.Add(field);
-                ValidateCast(parameter.ParameterType, field.FieldType, parameter.Name);
+                ValidateCast(parameter, field.FieldType);
                 return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [.. fields] };
             }
         }
@@ -383,7 +383,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     {
         if (patchType != PatchType.Postfix || (options & PatchOptions.AlwaysRun) == 0)
             throw new ParameterBindingException(parameter.Name, "Accessing exception is only supported for Postfix with AlwaysRun option");
-        ValidateCast(parameter.ParameterType, typeof(Exception), parameter.Name);
+        ValidateCast(parameter, typeof(Exception));
         return new() { parameter = parameter, bindingType = BindingType.Exception, scope = Scope.Any };
     }
 
@@ -404,6 +404,38 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
     }
 
+    private static void ValidateCast(ParameterInfo parameter, Type from)
+    {
+        Type to = parameter.ParameterType;
+        string parameterName = parameter.Name;
+
+        if (to.IsByRef && from.NoRefType.IsValueType)
+        {
+            if (to.NoRefType != from.NoRefType)
+                throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
+        }
+        else if (parameter.IsIn)
+        {
+            if (!to.NoRefType.IsAssignableFrom(from.NoRefType))
+                throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to 'in' {to.FullName}");
+        }
+        else if (parameter.IsOut)
+        {
+            if (!from.NoRefType.IsAssignableFrom(to.NoRefType))
+                throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to 'out' {to.FullName}");
+        }
+        else if (to.IsByRef)
+        {
+            if (to.NoRefType != from.NoRefType)
+                throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to 'ref' {to.FullName}");
+        }
+        else
+        {
+            if (!to.NoRefType.IsAssignableFrom(from.NoRefType))
+                throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
+        }
+    }
+
     private void ValidateReference(ParameterInfo parameter, Type type, Scope scope, string bindingType)
     {
         // Don't allow writing through a ref parameter to an argument of the outer method. This would
@@ -422,7 +454,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     private void Validate(ParameterInfo parameter, Type type, Scope scope, string bindingType)
     {
         ValidateReference(parameter, type, scope, bindingType);
-        ValidateCast(parameter.ParameterType, type, parameter.Name);
+        ValidateCast(parameter, type);
     }
 
     private static bool IsWriteableRef(ParameterInfo parameter) => parameter.ParameterType.IsByRef && !parameter.IsIn;
