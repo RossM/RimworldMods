@@ -291,7 +291,7 @@ internal sealed class GetOutputTypeTests
         new("LdindRef_Unknown", OpCodes.Ldind_Ref,
             [TypeLattice.Unknown], TypeLattice.Unknown),
         new("LdindRef_Any", OpCodes.Ldind_Ref,
-            [TypeLattice.Any], TypeLattice.Any),
+            [TypeLattice.Any], typeof(object)),
         new("LdindRef_Null", OpCodes.Ldind_Ref,
             [TypeLattice.Null], TypeLattice.Unknown),
 
@@ -320,11 +320,11 @@ internal sealed class GetOutputTypeTests
         new("LdelemRef_Unknown_Int", OpCodes.Ldelem_Ref,
             [TypeLattice.Unknown, typeof(int)], TypeLattice.Unknown),
         new("LdelemRef_Any_Int", OpCodes.Ldelem_Ref,
-            [TypeLattice.Any, typeof(int)], TypeLattice.Any),
+            [TypeLattice.Any, typeof(int)], typeof(object)),
         new("LdelemRef_ClassArray_Any", OpCodes.Ldelem_Ref,
             [ClassType.MakeArrayType(), TypeLattice.Any], ClassType),
         new("LdelemRef_Any_Unknown", OpCodes.Ldelem_Ref,
-            [TypeLattice.Any, TypeLattice.Unknown], TypeLattice.Any),
+            [TypeLattice.Any, TypeLattice.Unknown], typeof(object)),
 
         // Type-operand instructions with representative numeric, struct, class, and managed-reference cases.
         new("Ldobj_Byte_ByteRef", OpCodes.Ldobj,

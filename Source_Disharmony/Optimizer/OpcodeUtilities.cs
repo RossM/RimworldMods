@@ -70,11 +70,10 @@ internal static class OpcodeUtilities
 
         if ((data.flags & (OpCodeFlags.Load | OpCodeFlags.Indirect)) == (OpCodeFlags.Load | OpCodeFlags.Indirect))
         {
-            if (inputTypes[0] == TypeLattice.Null)
+            if (inputTypes[0] == TypeLattice.Null || inputTypes[0] == TypeLattice.Unknown)
                 return TypeLattice.Unknown;
-            if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == TypeLattice.Unknown)
-                return inputTypes[0];
-            // ldind.ref on IntPtr is valid and will have a null GetElementType()
+            if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == typeof(IntPtr))
+                return typeof(object);
             return inputTypes[0].GetElementType() ?? typeof(object);
         }
 
@@ -122,7 +121,6 @@ internal static class OpcodeUtilities
             OpCodeValues.Call when operand is ConstructorInfo => typeof(void),
             OpCodeValues.Ldelem_Ref when inputTypes[0].IsArray => inputTypes[0].GetElementType()!,
             OpCodeValues.Ldelem_Ref when inputTypes[0] == TypeLattice.Unknown || inputTypes[0] == TypeLattice.Null => TypeLattice.Unknown,
-            OpCodeValues.Ldelem_Ref when inputTypes[0] == TypeLattice.Any => TypeLattice.Any,
             OpCodeValues.Ldelem_Ref => typeof(object),
             OpCodeValues.Ldfld or OpCodeValues.Ldsfld when operand is FieldInfo field => field.FieldType,
             OpCodeValues.Ldflda or OpCodeValues.Ldsflda when operand is FieldInfo field => field.FieldType.MakeByRefType(),
