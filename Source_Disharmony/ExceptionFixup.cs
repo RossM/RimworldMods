@@ -134,8 +134,10 @@ internal static class ExceptionFixup
                 case Label label: branchStacks[label] = [.. stack]; break;
                 case Label[] labels:
                 {
+                    Type[] stackCopy = [.. stack];
                     foreach (var label in labels)
-                        branchStacks[label] = [.. stack];
+                        branchStacks[label] = stackCopy;
+
                     break;
                 }
             }
