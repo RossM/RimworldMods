@@ -87,6 +87,10 @@ namespace Disharmony.Tests
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void ThrowInvalidOperationException() =>
+            throw new InvalidOperationException("target");
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static string ThrowingStringResult()
         {
             Assert.Fail("The target should have been skipped.");
@@ -289,6 +293,9 @@ namespace Disharmony.Tests
         public static string StringResult() => "original";
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructResult() => new BindingStruct { Value = 1 };
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void ThrowInvalidOperationException() =>
+            throw new InvalidOperationException("inner");
     }
 
     public static class ExceptionHandlingTargets
@@ -456,6 +463,12 @@ namespace Disharmony.Tests
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntResult() => InnerStaticMethodTargets.IntResult();
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int CallThrowingVoid()
+        {
+            InnerStaticMethodTargets.ThrowInvalidOperationException();
+            return 42;
+        }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => InnerStaticMethodTargets.StringResult();
         [MethodImpl(MethodImplOptions.NoInlining)]
