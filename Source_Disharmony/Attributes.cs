@@ -762,6 +762,22 @@ public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterB
     public MethodAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 }
 
+/// <summary>
+///     Binds a patch parameter to the exception thrown by the method.
+/// </summary>
+/// <remarks>
+///     <para>
+///         If no exception is thrown, the value is <see langword="null"/>. If the parameter is <see langword="ref"/>
+///         the method can replace the exception, or set it to <see langword="null"/> to suppress the exception.
+///     </para>
+///     <para>
+///         This is only valid for <see cref="PostfixAttribute">postfixes</see> with the <see cref="PatchOptions.AlwaysRun"/>
+///         option set.
+///     </para>
+///     <para>
+///         A parameter named <c>__exception</c> will be bound to the exception automatically.
+///     </para>
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);
