@@ -18,7 +18,7 @@ public static class LateInit
                 try
                 {
                     var extraType = typeof(PawnExtraData<>).MakeGenericType(type);
-                    RuntimeHelpers.RunClassConstructor(extraType.TypeHandle);
+                    System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(extraType.TypeHandle);
                 }
                 catch (Exception ex)
                 {
