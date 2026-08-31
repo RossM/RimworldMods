@@ -82,6 +82,7 @@ internal struct PatchInfo
     public readonly bool Inline => (options & PatchOptions.Inline) != 0;
     public readonly bool Debug => (options & PatchOptions.Debug) != 0;
     public readonly bool Optimize => (options & PatchOptions.Optimize) != 0;
+    public readonly bool AlwaysRun => (options & PatchOptions.AlwaysRun) != 0;
     public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.bindingType == bindingType);
 }
 

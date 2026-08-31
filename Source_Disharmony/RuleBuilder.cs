@@ -7,6 +7,8 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
     protected readonly InstructionList output = context.NewInstructionList();
     protected LocalTrackerBuilder? resultLocal = null;
+    protected LocalTrackerBuilder? exceptionLocal = null;
+    protected LocalTrackerBuilder? dispatchInfoLocal = null;
     protected readonly ILGenerator generator = context.generator;
 
     public abstract IEnumerable<Rule> BuildRules();

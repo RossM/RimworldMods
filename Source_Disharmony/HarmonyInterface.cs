@@ -5,19 +5,6 @@ namespace Disharmony;
 
 internal class HarmonyInterface
 {
-    private static class InfoOf
-    {
-        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-        public static readonly MethodInfo GetMethodFromHandle
-            = SymbolExtensions.GetMethodInfo(() => MethodBase.GetMethodFromHandle(new RuntimeMethodHandle()));
-
-        // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => HarmonyInterface.ResolveTrampoline);
-
-        // ReSharper disable once MemberHidesStaticFromOuterClass
-        public static readonly MethodInfo Transpiler = SymbolExtensions.GetMethodInfo(() => HarmonyInterface.Transpiler);
-    }
-
     private static class HarmonyInternals
     {
         public static readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
@@ -156,7 +143,7 @@ internal class HarmonyInterface
     }
 
     [UsedImplicitly]
-    private static List<CodeInstruction> Transpiler(
+    internal static List<CodeInstruction> Transpiler(
         MethodBase method,
         IEnumerable<CodeInstruction> instructions,
         ILGenerator generator)

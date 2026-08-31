@@ -110,6 +110,26 @@ public enum PatchOptions
     Optimize = 0x2,
 
     /// <summary>
+    ///     Requires that a patch always runs.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         On a prefix, this flag causes the prefix to always run before other prefixes. Prefixes with
+    ///         this flag must return void and can't modify the function return value.
+    ///     </para>
+    ///     <para>
+    ///         On a postfix, this flag causes the postfix to run even if the method or another patch throws
+    ///         an exception. The method may use <c>__exception</c> or <see cref="ExceptionAttribute"/> to
+    ///         inspect or change the exception.
+    ///     </para>
+    ///     <para>
+    ///         A patch method with this flag should never throw an exception itself. If it does, other prefixes
+    ///         and postfixes with this flag will be skipped.
+    ///     </para>
+    /// </remarks>
+    AlwaysRun = 0x4,
+
+    /// <summary>
     ///     Logs the modified IL and, when available, the generated Mono JIT assembly.
     /// </summary>
     /// <remarks>
@@ -741,3 +761,7 @@ public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterB
 
     public MethodAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 }
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);

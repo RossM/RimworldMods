@@ -41,7 +41,7 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
     private void EmitReplacement()
     {
         EmitPrelude();
-        InitializeResultLocal();
+        InitializeLocals();
         EmitPrefixes();
 
         for (int i = 0; i < innerParameterTypes.Length; i++)

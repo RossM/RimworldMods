@@ -42,7 +42,7 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
 
     public override IEnumerable<Rule> BuildRules()
     {
-        InitializeResultLocal();
+        InitializeLocals();
 
         EmitPrefixes();
 
