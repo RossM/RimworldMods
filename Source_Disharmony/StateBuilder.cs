@@ -15,6 +15,9 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 
         if (stateMap.TryGetValue(stateKey, out var local))
         {
+            // This error surfaces as a RuntimePatchException at patch application. Unfortunately we don't check
+            // all the patches together before then.
+            // TODO Consider validating state types earlier
             if (localType != local.Type)
                 throw new InvalidOperationException($"Incompatible state types: {localType} and {local.Type}");
             return local;
