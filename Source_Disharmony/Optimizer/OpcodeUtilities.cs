@@ -33,6 +33,9 @@ internal static class OpcodeUtilities
 
     public static Type GetStackType(Type type)
     {
+        if (type.IsEnum)
+            type = type.GetEnumUnderlyingType();
+
         return Type.GetTypeCode(type) switch
         {
             >= TypeCode.Boolean and <= TypeCode.UInt32 => typeof(int),
