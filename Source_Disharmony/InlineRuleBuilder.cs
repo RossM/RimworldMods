@@ -40,6 +40,11 @@ internal class InlineRuleBuilder : RuleBuilder
         if (instructions == null)
             return false;
 
+        // Inlining a method containing exception blocks may result in a stack slot being live
+        // across an exception region boundary, which the CLI rejects.
+        if (instructions.Any(i => i.blocks.Count > 0))
+            return false;
+
         Label returnLabel = generator.DefineLabel();
 
         output.Add(CodeInstruction.Annotation("Begin inlined method body"));
