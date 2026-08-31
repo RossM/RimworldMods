@@ -115,7 +115,7 @@ public enum PatchOptions
     /// <remarks>
     ///     <para>
     ///         On a prefix, this flag causes the prefix to always run before other prefixes. Prefixes with
-    ///         this flag must return void and can't modify the function return value.
+    ///         this flag must return void and can't access the function return value.
     ///     </para>
     ///     <para>
     ///         On a postfix, this flag causes the postfix to run even if the method or another patch throws
