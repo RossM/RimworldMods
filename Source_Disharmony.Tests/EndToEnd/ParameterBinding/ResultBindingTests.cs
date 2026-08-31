@@ -190,6 +190,28 @@ public static partial class ResultBindingPatches
 {
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
+    public static void Prefix_Result_Primitive_AsObjectByWriteableReference_Rejected(ref object __result) { }
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
+    public static void Prefix_Result_Primitive_AsObjectByReadonlyReference_Rejected(in object __result) { }
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
+    public static void Postfix_Result_ReferenceType_AsObjectByWriteableReference_Rejected(ref object __result) { }
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
+    public static void Postfix_Result_ReferenceType_AsObjectByReadonlyReference(in object __result) =>
+        referenceObserved = (string)__result;
+
+    [Postfix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ObjectIdentity))]
+    public static void Postfix_Result_ReferenceType_AsStringByOutReference(out string __result) =>
+        __result = "patched";
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void Prefix_Result_Primitive_ReadByReference(ref int __result) => valueObserved = __result;
 
     [Prefix]
@@ -267,6 +289,56 @@ public static partial class ResultBindingPatches
 [TestFixture]
 public sealed partial class ResultBindingTests
 {
+    [Test]
+    public void Prefix_Result_Primitive_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(ResultBindingPatches),
+            nameof(ResultBindingPatches.Prefix_Result_Primitive_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_Result_Primitive_AsObjectByReadonlyReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(ResultBindingPatches),
+            nameof(ResultBindingPatches.Prefix_Result_Primitive_AsObjectByReadonlyReference_Rejected)));
+    }
+
+    [Test]
+    public void Postfix_Result_ReferenceType_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(ResultBindingPatches),
+            nameof(ResultBindingPatches.Postfix_Result_ReferenceType_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Postfix_Result_ReferenceType_AsObjectByReadonlyReference()
+    {
+        ResultBindingPatches.referenceObserved = null;
+        ApplyPatch(
+            typeof(ResultBindingPatches),
+            nameof(ResultBindingPatches.Postfix_Result_ReferenceType_AsObjectByReadonlyReference));
+
+        string result = StaticMethodTargets.StringResult();
+
+        Assert.That(result, Is.EqualTo("original"));
+        Assert.That(ResultBindingPatches.referenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void Postfix_Result_ReferenceType_AsStringByOutReference()
+    {
+        ApplyPatch(
+            typeof(ResultBindingPatches),
+            nameof(ResultBindingPatches.Postfix_Result_ReferenceType_AsStringByOutReference));
+
+        object result = StaticMethodTargets.ObjectIdentity(new object());
+
+        Assert.That(result, Is.EqualTo("patched"));
+    }
+
     [Test]
     public void Prefix_Result_Primitive_ReadByReference()
     {

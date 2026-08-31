@@ -251,6 +251,20 @@ public static partial class ArgumentBindingPatches
 
 public static partial class ArgumentBindingPatches
 {
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
+    public static void Prefix_Argument_ReferenceType_AsObjectByWriteableReference_Rejected(ref object value) { }
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
+    public static void Prefix_Argument_ReferenceType_AsObjectByReadonlyReference(in object value) =>
+        referenceObserved = (string)value;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ObjectIdentity))]
+    public static void Prefix_Argument_ReferenceType_AsStringByOutReference(out string value) =>
+        value = "patched";
+
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Postfix_ValueArgument_Primitive_ReadByReference_Rejected(ref int value) =>
@@ -290,6 +304,39 @@ public static partial class ArgumentBindingPatches
 [TestFixture]
 public sealed partial class ArgumentBindingTests
 {
+    [Test]
+    public void Prefix_Argument_ReferenceType_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_Argument_ReferenceType_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_Argument_ReferenceType_AsObjectByReadonlyReference()
+    {
+        ArgumentBindingPatches.referenceObserved = null;
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_Argument_ReferenceType_AsObjectByReadonlyReference));
+
+        StaticMethodTargets.StringArgument("original");
+
+        Assert.That(ArgumentBindingPatches.referenceObserved, Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void Prefix_Argument_ReferenceType_AsStringByOutReference()
+    {
+        ApplyPatch(
+            typeof(ArgumentBindingPatches),
+            nameof(ArgumentBindingPatches.Prefix_Argument_ReferenceType_AsStringByOutReference));
+
+        object result = StaticMethodTargets.ObjectIdentity(new object());
+
+        Assert.That(result, Is.EqualTo("patched"));
+    }
+
     [Test]
     public void Postfix_ValueArgument_Primitive_ReadByReference_Rejected()
     {

@@ -275,6 +275,21 @@ public sealed partial class CapturedVariableBindingTests : PatchTestBase
 public static partial class CapturedVariableBindingPatches
 {
     [Prefix]
+    [Target(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    public static void Prefix_LocalFunctionCapturedVariable_ReferenceType_AsObjectByWriteableReference_Rejected(
+        ref object captured) { }
+
+    [Prefix]
+    [Target(typeof(LocalFunctionTargets), "CapturedReferenceVariableMethod.LocalMethod")]
+    public static void Prefix_LocalFunctionCapturedVariable_ReferenceType_AsObjectByReadonlyReference(
+        in object captured) => referenceObserved = (BindingReference)captured;
+
+    [Prefix]
+    [Target(typeof(LocalFunctionTargets), "CapturedObjectVariableMethod.LocalMethod")]
+    public static void Prefix_LocalFunctionCapturedVariable_ReferenceType_AsStringByOutReference(
+        out string captured) => captured = "patched";
+
+    [Prefix]
     [Target(typeof(LocalFunctionTargets), "CapturedVariableMethod.LocalMethod")]
     public static void Prefix_LocalFunctionCapturedVariable_Primitive_ReadByReference(ref int captured) => observed = captured;
 
@@ -316,6 +331,43 @@ public static partial class CapturedVariableBindingPatches
 [TestFixture]
 public sealed partial class CapturedVariableBindingTests
 {
+    [Test]
+    public void Prefix_LocalFunctionCapturedVariable_ReferenceType_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches
+                .Prefix_LocalFunctionCapturedVariable_ReferenceType_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_LocalFunctionCapturedVariable_ReferenceType_AsObjectByReadonlyReference()
+    {
+        CapturedVariableBindingPatches.referenceObserved = null;
+        var value = new BindingReference { Value = 42 };
+        ApplyPatch(
+            typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches
+                .Prefix_LocalFunctionCapturedVariable_ReferenceType_AsObjectByReadonlyReference));
+
+        LocalFunctionTargets.CapturedReferenceVariableMethod(value);
+
+        Assert.That(CapturedVariableBindingPatches.referenceObserved, Is.SameAs(value));
+    }
+
+    [Test]
+    public void Prefix_LocalFunctionCapturedVariable_ReferenceType_AsStringByOutReference()
+    {
+        ApplyPatch(
+            typeof(CapturedVariableBindingPatches),
+            nameof(CapturedVariableBindingPatches
+                .Prefix_LocalFunctionCapturedVariable_ReferenceType_AsStringByOutReference));
+
+        object result = LocalFunctionTargets.CapturedObjectVariableMethod(new object());
+
+        Assert.That(result, Is.EqualTo("patched"));
+    }
+
     [Test]
     public void Prefix_LocalFunctionCapturedVariable_Primitive_ReadByReference()
     {

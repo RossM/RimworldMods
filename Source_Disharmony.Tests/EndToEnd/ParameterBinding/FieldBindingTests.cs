@@ -162,6 +162,31 @@ public static class FieldBindingPatches
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
     public static void InnerPrefix_FieldAttribute_InnerScope_Primitive_ReadByValue([Field("foo", Scope.Inner)] int field) =>
         observed = field;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void Prefix_FieldAttribute_Struct_AsObjectByWriteableReference_Rejected(
+        [Field("structField")] ref object field) { }
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void Prefix_FieldAttribute_Struct_AsObjectByReadonlyReference_Rejected(
+        [Field("structField")] in object field) { }
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void Prefix_FieldAttribute_ReferenceType_AsObjectByWriteableReference_Rejected(
+        [Field("referenceField")] ref object field) { }
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void Prefix_FieldAttribute_ReferenceType_AsObjectByReadonlyReference(
+        [Field("referenceField")] in object field) => referenceObserved = (BindingReference)field;
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
+    public static void Prefix_FieldAttribute_ReferenceType_AsStringByOutReference(
+        [Field("objectField")] out string field) => field = "patched";
 }
 
 [TestFixture]
@@ -611,5 +636,57 @@ public sealed class FieldBindingTests : PatchTestBase
         target.Void();
 
         Assert.That(FieldBindingPatches.structObserved.Value, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void Prefix_FieldAttribute_Struct_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.Prefix_FieldAttribute_Struct_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_FieldAttribute_Struct_AsObjectByReadonlyReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.Prefix_FieldAttribute_Struct_AsObjectByReadonlyReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_FieldAttribute_ReferenceType_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.Prefix_FieldAttribute_ReferenceType_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_FieldAttribute_ReferenceType_AsObjectByReadonlyReference()
+    {
+        FieldBindingPatches.referenceObserved = null;
+        var field = new BindingReference { Value = 42 };
+        var target = new ClassMethodTargets { referenceField = field };
+        ApplyPatch(
+            typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.Prefix_FieldAttribute_ReferenceType_AsObjectByReadonlyReference));
+
+        target.Void();
+
+        Assert.That(FieldBindingPatches.referenceObserved, Is.SameAs(field));
+    }
+
+    [Test]
+    public void Prefix_FieldAttribute_ReferenceType_AsStringByOutReference()
+    {
+        ApplyPatch(
+            typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.Prefix_FieldAttribute_ReferenceType_AsStringByOutReference));
+        var target = new ClassMethodTargets { objectField = new object() };
+
+        target.Void();
+
+        Assert.That(target.objectField, Is.EqualTo("patched"));
     }
 }

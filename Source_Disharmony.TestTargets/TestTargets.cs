@@ -71,6 +71,8 @@ namespace Disharmony.Tests
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static BindingStruct StructIdentity(BindingStruct value) => value;
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public static object ObjectIdentity(object value) => value;
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static int IntResult() => 1;
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => "original";
@@ -134,6 +136,7 @@ namespace Disharmony.Tests
         public int primitiveField;
         public BindingReference referenceField = new BindingReference();
         public BindingStruct structField;
+        public object objectField = new object();
         public int Value { get; private set; }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -651,6 +654,17 @@ namespace Disharmony.Tests
 
             [MethodImpl(MethodImplOptions.NoInlining)]
             BindingStruct LocalMethod() => captured;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static object CapturedObjectVariableMethod(object value)
+        {
+            object captured = value;
+            _ = LocalMethod();
+            return captured;
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            object LocalMethod() => captured;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]

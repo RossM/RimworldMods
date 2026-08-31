@@ -115,6 +115,21 @@ public static partial class InstanceBindingPatches
 {
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
+    public static void Prefix_InstanceParameter_ReferenceType_AsObjectByWriteableReference_Rejected(
+        ref object __instance) { }
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
+    public static void Prefix_InstanceParameter_ReferenceType_AsObjectByReadonlyReference(
+        in object __instance) => instanceObserved = (ClassMethodTargets)__instance;
+
+    [Prefix]
+    [Target(typeof(BaseMethodTargets), nameof(BaseMethodTargets.Describe))]
+    public static void Prefix_InstanceParameter_ReferenceType_AsDerivedByOutReference(
+        out DerivedMethodTargets __instance) => __instance = new DerivedMethodTargets { InstanceValue = 42 };
+
+    [Prefix]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Self))]
     public static void Prefix_InstanceParameter_ReferenceType_ReadByReference(ref ClassMethodTargets __instance) =>
         instanceObserved = __instance;
 
@@ -163,6 +178,41 @@ public static partial class InstanceBindingPatches
 [TestFixture]
 public sealed partial class InstanceBindingTests
 {
+    [Test]
+    public void Prefix_InstanceParameter_ReferenceType_AsObjectByWriteableReference_Rejected()
+    {
+        Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(InstanceBindingPatches),
+            nameof(InstanceBindingPatches.Prefix_InstanceParameter_ReferenceType_AsObjectByWriteableReference_Rejected)));
+    }
+
+    [Test]
+    public void Prefix_InstanceParameter_ReferenceType_AsObjectByReadonlyReference()
+    {
+        InstanceBindingPatches.instanceObserved = null;
+        var target = new ClassMethodTargets();
+        ApplyPatch(
+            typeof(InstanceBindingPatches),
+            nameof(InstanceBindingPatches.Prefix_InstanceParameter_ReferenceType_AsObjectByReadonlyReference));
+
+        target.Self();
+
+        Assert.That(InstanceBindingPatches.instanceObserved, Is.SameAs(target));
+    }
+
+    [Test]
+    public void Prefix_InstanceParameter_ReferenceType_AsDerivedByOutReference()
+    {
+        ApplyPatch(
+            typeof(InstanceBindingPatches),
+            nameof(InstanceBindingPatches.Prefix_InstanceParameter_ReferenceType_AsDerivedByOutReference));
+        var target = new BaseMethodTargets { InstanceValue = 1 };
+
+        string result = target.Describe(7);
+
+        Assert.That(result, Is.EqualTo("base:7:42"));
+    }
+
     [Test]
     public void Prefix_InstanceParameter_ReferenceType_ReadByReference()
     {

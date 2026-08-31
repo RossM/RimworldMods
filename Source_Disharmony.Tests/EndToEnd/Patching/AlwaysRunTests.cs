@@ -82,9 +82,9 @@ public static class AlwaysRunPatches
 
     [Postfix]
     [PatchOptions(PatchOptions.AlwaysRun)]
-    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
-    public static void Validation_ExceptionBindingWithVariantReadonlyReferenceIsRejected(
-        [ExceptionAttribute] in object? exception) { }
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowInvalidOperationException))]
+    public static void ExceptionBinding_ThrownException_ReadAsObjectByReadonlyReference(
+        [ExceptionAttribute] in object? exception) => observedObject = exception;
 
     [Postfix]
     [PatchOptions(PatchOptions.AlwaysRun)]
@@ -128,6 +128,16 @@ public static class AlwaysRunPatches
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowInvalidOperationException))]
     public static void ExceptionBinding_ThrownException_ReadAsObjectByValue(
         [ExceptionAttribute] object? exception) => observedObject = exception;
+
+    [Postfix]
+    [PatchOptions(PatchOptions.AlwaysRun)]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.ThrowInvalidOperationException))]
+    public static void ExceptionBinding_ThrownException_WriteDerivedByOutReference(
+        [ExceptionAttribute] out InvalidOperationException? exception)
+    {
+        exception = new InvalidOperationException("derived-replacement");
+        replacementException = exception;
+    }
 
     [Postfix]
     [PatchOptions(PatchOptions.AlwaysRun)]
@@ -662,14 +672,6 @@ public sealed class AlwaysRunTests : PatchTestBase
     }
 
     [Test]
-    public void Validation_ExceptionBindingWithVariantReadonlyReferenceIsRejected()
-    {
-        Assert.Throws<PatchException>(() => ApplyPatch(
-            typeof(AlwaysRunPatches),
-            nameof(AlwaysRunPatches.Validation_ExceptionBindingWithVariantReadonlyReferenceIsRejected)));
-    }
-
-    [Test]
     public void ExceptionBinding_ThrownException_ReadByReadonlyReference()
     {
         AlwaysRunPatches.observedException = null;
@@ -691,6 +693,31 @@ public sealed class AlwaysRunTests : PatchTestBase
         var exception = Assert.Throws<InvalidOperationException>(StaticMethodTargets.ThrowInvalidOperationException);
 
         Assert.That(AlwaysRunPatches.observedObject, Is.SameAs(exception));
+    }
+
+    [Test]
+    public void ExceptionBinding_ThrownException_ReadAsObjectByReadonlyReference()
+    {
+        AlwaysRunPatches.observedObject = null;
+        ApplyPatch(typeof(AlwaysRunPatches),
+            nameof(AlwaysRunPatches.ExceptionBinding_ThrownException_ReadAsObjectByReadonlyReference));
+
+        var exception = Assert.Throws<InvalidOperationException>(StaticMethodTargets.ThrowInvalidOperationException);
+
+        Assert.That(AlwaysRunPatches.observedObject, Is.SameAs(exception));
+    }
+
+    [Test]
+    public void ExceptionBinding_ThrownException_WriteDerivedByOutReference()
+    {
+        AlwaysRunPatches.replacementException = null;
+        ApplyPatch(typeof(AlwaysRunPatches),
+            nameof(AlwaysRunPatches.ExceptionBinding_ThrownException_WriteDerivedByOutReference));
+
+        var exception = Assert.Throws<InvalidOperationException>(StaticMethodTargets.ThrowInvalidOperationException);
+
+        Assert.That(exception, Is.SameAs(AlwaysRunPatches.replacementException));
+        Assert.That(exception!.Message, Is.EqualTo("derived-replacement"));
     }
 
     [Test]
