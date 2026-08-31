@@ -287,7 +287,7 @@ internal sealed class GetOutputTypeTests
         new("LdindRef_UnknownRef", OpCodes.Ldind_Ref,
             [TypeLattice.Unknown.MakeByRefType()], TypeLattice.Unknown),
         new("LdindRef_AnyRef", OpCodes.Ldind_Ref,
-            [TypeLattice.Any.MakeByRefType()], TypeLattice.Any),
+            [TypeLattice.Any.MakeByRefType()], typeof(object)),
         new("LdindRef_Unknown", OpCodes.Ldind_Ref,
             [TypeLattice.Unknown], TypeLattice.Unknown),
         new("LdindRef_Any", OpCodes.Ldind_Ref,

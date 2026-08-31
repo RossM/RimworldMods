@@ -72,7 +72,7 @@ internal static class OpcodeUtilities
         {
             if (inputTypes[0] == TypeLattice.Null || inputTypes[0] == TypeLattice.Unknown)
                 return TypeLattice.Unknown;
-            if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == typeof(IntPtr))
+            if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == TypeLattice.AnyRef || inputTypes[0] == typeof(IntPtr))
                 return typeof(object);
             return inputTypes[0].GetElementType() ?? typeof(object);
         }
