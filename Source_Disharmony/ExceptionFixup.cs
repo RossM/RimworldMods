@@ -46,7 +46,7 @@ internal static class ExceptionFixup
                     stack.AddRange(branchStack);
             }
 
-            foreach (var block in instruction.blocks.Where(b => b.blockType is ExceptionBlockType.BeginExceptionBlock))
+            foreach (var _ in instruction.blocks.Where(b => b.blockType is ExceptionBlockType.BeginExceptionBlock))
             {
                 if (stack.Count == 0)
                     exceptionStacks.Add([]);
@@ -136,7 +136,7 @@ internal static class ExceptionFixup
 
             output.Add(instruction);
 
-            foreach (var block in instruction.blocks.Where(b => b.blockType is ExceptionBlockType.EndExceptionBlock))
+            foreach (var _ in instruction.blocks.Where(b => b.blockType is ExceptionBlockType.EndExceptionBlock))
             {
                 LocalTrackerBuilder[] savedStack = exceptionStacks[^1];
                 exceptionStacks.RemoveAt(exceptionStacks.Count - 1);
