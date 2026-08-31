@@ -9,7 +9,8 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
     private bool ResultLocalNeeded =>
         prefixes.Any(patch => patch.patch.ReturnType != typeof(void)) ||
         prefixes.Any(patch => patch.HasBindingType(BindingType.Result)) ||
-        postfixes.Any(patch => patch.HasBindingType(BindingType.Result));
+        postfixes.Any(patch => patch.HasBindingType(BindingType.Result)) ||
+        ExceptionBlockNeeded;
 
     protected Type targetType = null!;
     protected List<PatchInfo> prefixes = null!;
