@@ -70,7 +70,7 @@ internal static class OpcodeUtilities
 
         if ((data.flags & (OpCodeFlags.Load | OpCodeFlags.Indirect)) == (OpCodeFlags.Load | OpCodeFlags.Indirect))
         {
-            if (inputTypes[0] == TypeLattice.Null || inputTypes[0] == TypeLattice.Unknown)
+            if (inputTypes[0] == TypeLattice.Null || inputTypes[0] == TypeLattice.Unknown || inputTypes[0] == TypeLattice.UnknownRef)
                 return TypeLattice.Unknown;
             if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == TypeLattice.AnyRef || inputTypes[0] == typeof(IntPtr))
                 return typeof(object);
