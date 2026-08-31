@@ -76,6 +76,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
             case MethodAttribute { Name: var name }: return BindMethod(parameter, scope, name ?? parameterName);
 
+            case ExceptionAttribute: return BindException(parameter);
+
             case null: break;
 
             default: throw new NotSupportedException();
@@ -97,6 +99,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             case "__state": return BindState(parameter, parameterName);
 
             case "__base": return BindBaseMethod(parameter);
+
+            case "__exception": return BindException(parameter);
 
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
@@ -373,6 +377,14 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         }
 
         throw new ParameterBindingException(parameter.Name, "Field not found");
+    }
+
+    private ParameterBinding BindException(ParameterInfo parameter)
+    {
+        if (patchType != PatchType.Postfix || (options & PatchOptions.AlwaysRun) == 0)
+            throw new ParameterBindingException(parameter.Name, "Accessing exception is only supported for Postfix with AlwaysRun option");
+        ValidateCast(parameter.ParameterType, typeof(Exception), parameter.Name);
+        return new() { parameter = parameter, bindingType = BindingType.Exception, scope = Scope.Any };
     }
 
     private static FieldInfo GetThisField(Type iteratorType)

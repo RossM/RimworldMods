@@ -13,7 +13,7 @@ internal enum BindingType
     Instance,
 
     /// <summary>
-    ///     Access to the result of calling the inner method.
+    ///     Access to the result of calling the method.
     /// </summary>
     Result,
 
@@ -26,6 +26,11 @@ internal enum BindingType
     ///     Gets a delegate based on a given MethodInfo.
     /// </summary>
     Delegate,
+
+    /// <summary>
+    ///     Gets the exception thrown by the method.
+    /// </summary>
+    Exception,
 }
 
 internal class ParameterBinding

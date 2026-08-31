@@ -86,6 +86,15 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 break;
             }
 
+            case BindingType.Exception:
+            {
+                output.Add(exceptionLocal!.Load(wantRef));
+                resultType = exceptionLocal.Type;
+                if (wantRef)
+                    resultType = resultType.MakeByRefType();
+                break;
+            }
+
             default:
             {
                 throw new ArgumentOutOfRangeException();
