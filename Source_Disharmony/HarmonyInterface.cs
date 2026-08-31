@@ -154,6 +154,8 @@ internal class HarmonyInterface
         try
         {
             patch.ruleset.MatchAndReplace(method, ref instructionsList, generator);
+            if (instructionsList.Any(inst => inst.blocks.Count > 0))
+                ExceptionFixup.Fix(method, ref instructionsList, generator);
         }
         catch (Exception e)
         {

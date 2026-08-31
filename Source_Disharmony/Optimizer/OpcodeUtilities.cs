@@ -71,7 +71,8 @@ internal static class OpcodeUtilities
                 return TypeLattice.Unknown;
             if (inputTypes[0] == TypeLattice.Any || inputTypes[0] == TypeLattice.Unknown)
                 return inputTypes[0];
-            return inputTypes[0].GetElementType();
+            // ldind.ref on IntPtr is valid and will have a null GetElementType()
+            return inputTypes[0].GetElementType() ?? typeof(object);
         }
 
         if ((data.flags & (OpCodeFlags.Load | OpCodeFlags.Shift | OpCodeFlags.PushesInput)) != 0)
@@ -115,9 +116,11 @@ internal static class OpcodeUtilities
         return data.canonical switch
         {
             OpCodeValues.Call or OpCodeValues.Callvirt when operand is MethodInfo method => method.ReturnType,
+            OpCodeValues.Call when operand is ConstructorInfo => typeof(void),
             OpCodeValues.Ldelem_Ref when inputTypes[0].IsArray => inputTypes[0].GetElementType()!,
             OpCodeValues.Ldelem_Ref when inputTypes[0] == TypeLattice.Unknown || inputTypes[0] == TypeLattice.Null => TypeLattice.Unknown,
             OpCodeValues.Ldelem_Ref when inputTypes[0] == TypeLattice.Any => TypeLattice.Any,
+            OpCodeValues.Ldelem_Ref => typeof(object),
             OpCodeValues.Ldfld or OpCodeValues.Ldsfld when operand is FieldInfo field => field.FieldType,
             OpCodeValues.Ldflda or OpCodeValues.Ldsflda when operand is FieldInfo field => field.FieldType.MakeByRefType(),
             OpCodeValues.Ldtoken when operand is FieldInfo => typeof(RuntimeFieldHandle),
@@ -125,7 +128,7 @@ internal static class OpcodeUtilities
             OpCodeValues.Ldtoken when operand is Type => typeof(RuntimeTypeHandle),
             OpCodeValues.Newarr when operand is Type type => type.MakeArrayType(),
             OpCodeValues.Newobj when operand is ConstructorInfo constructor => constructor.DeclaringType!,
-            _ => throw new NotImplementedException(),
+            _ => throw new NotImplementedException($"{opcode} ({operand?.GetType()}) is not implemented"),
         };
     }
 }
