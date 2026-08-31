@@ -89,4 +89,39 @@ public sealed class InlineRuleBuilderTests : PatchTestBase
         Assert.That(StaticMethodTargets.IntIdentity(5), Is.EqualTo(5));
         Assert.That(InlineRuleBuilderPatches.SwitchObserved, Is.EqualTo(99));
     }
+
+    [Test]
+    public void Prefix_ExceptionHandling_TryCatch_WithoutCarriedStack()
+    {
+        MethodInfo patch = typeof(InlineRuleBuilderPatches)
+            .GetMethod(nameof(InlineRuleBuilderPatches.Prefix_ExceptionHandling_TryCatch_WithoutCarriedStack))!;
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
+
+        int tryResult = StaticMethodTargets.IntIdentity(7);
+        int catchResult = StaticMethodTargets.IntIdentity(-7);
+
+        Assert.That(tryResult, Is.EqualTo(42));
+        Assert.That(catchResult, Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack()
+    {
+        MethodInfo patch = typeof(InlineRuleBuilderPatches)
+            .GetMethod(nameof(InlineRuleBuilderPatches.InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack))!;
+        MethodInfo target = typeof(InlineRuleBuilderTargets)
+            .GetMethod(nameof(InlineRuleBuilderTargets.InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack))!;
+        MethodInfo inner = typeof(InlineRuleBuilderTargets)
+            .GetMethod(nameof(InlineRuleBuilderTargets.InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack_Inner))!;
+        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch)
+            .Options(PatchOptions.Inline).Of(target));
+
+        int tryResult = InlineRuleBuilderTargets.InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack(false);
+        int catchResult = InlineRuleBuilderTargets.InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack(true);
+
+        Assert.That(tryResult, Is.EqualTo(42));
+        Assert.That(catchResult, Is.EqualTo(42));
+    }
 }

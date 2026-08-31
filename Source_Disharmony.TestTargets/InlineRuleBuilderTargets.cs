@@ -57,10 +57,46 @@ public static class InlineRuleBuilderPatches
             default: SwitchObserved = 99; break;
         }
     }
+
+    public static void Prefix_ExceptionHandling_TryCatch_WithoutCarriedStack(ref int value)
+    {
+        try
+        {
+            if (value < 0)
+                throw new InvalidOperationException();
+            value = 42;
+        }
+        catch (InvalidOperationException)
+        {
+            value = -1;
+        }
+    }
+
+    public static void InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack(bool throwInPatch)
+    {
+        try
+        {
+            if (throwInPatch)
+                throw new InvalidOperationException();
+        }
+        catch (InvalidOperationException)
+        {
+        }
+    }
 }
 
 public static class InlineRuleBuilderTargets
 {
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void FiveArguments(int first, int second, int third, int fourth, int fifth) { }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack(bool throwInPatch) =>
+        Add(10, InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack_Inner());
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int InnerPrefix_ExceptionHandling_TryCatch_WithCarriedStack_Inner() => 32;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int Add(int left, int right) => left + right;
 }

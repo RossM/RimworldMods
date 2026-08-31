@@ -4,6 +4,7 @@ public static class InlineControlFlowTargets
 {
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PrimitiveIdentity(int value) => value;
+
 }
 
 public static class InlineControlFlowPatches
@@ -38,4 +39,5 @@ public static class InlineControlFlowPatches
             FinallyExecutions++;
         }
     }
+
 }
