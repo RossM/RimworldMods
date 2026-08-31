@@ -129,7 +129,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindState(ParameterInfo parameter, string key)
     {
-        string stateKey = $"{stateGroupKey}#{parameter.ParameterType.NoRefType.FullName}#{key}";
+        string stateKey = $"{stateGroupKey}#{key}";
 
         // ValidateCast not needed, the type will be checked in StateBuilder
         return new() { parameter = parameter, bindingType = BindingType.State, scope = Scope.Outer, stateKey = stateKey };
