@@ -18,6 +18,18 @@ namespace Disharmony.Tests
         public static void Patch_PatchConfig_UsesInlineOption() => ObservedMethod = MethodBase.GetCurrentMethod();
     }
 
+    public static class AlwaysRunInlinePatches
+    {
+        public static Exception? ObservedException;
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void ExceptionBinding_InlinePostfix_Suppresses(ref Exception? __exception)
+        {
+            ObservedException = __exception;
+            __exception = null;
+        }
+    }
+
     public static class StaticMethodTargets
     {
         public static List<string> PriorityEvents { get; } = [];
@@ -89,6 +101,17 @@ namespace Disharmony.Tests
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException() =>
             throw new InvalidOperationException("target");
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int ThrowInvalidOperationExceptionWithResult() =>
+            throw new InvalidOperationException("target-result");
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static IEnumerable<int> EnumerateThenThrow()
+        {
+            yield return 1;
+            throw new InvalidOperationException("iterator");
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static string ThrowingStringResult()
@@ -296,6 +319,9 @@ namespace Disharmony.Tests
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void ThrowInvalidOperationException() =>
             throw new InvalidOperationException("inner");
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int ThrowInvalidOperationExceptionWithResult() =>
+            throw new InvalidOperationException("inner-result");
     }
 
     public static class ExceptionHandlingTargets
@@ -410,6 +436,14 @@ namespace Disharmony.Tests
             Value = value;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public ConstructorTargets(bool throwException)
+        {
+            if (throwException)
+                throw new InvalidOperationException("constructor");
+            ConstructorExecuted = true;
+        }
+
         public bool ConstructorExecuted { get; }
         public int Value { get; }
 
@@ -417,6 +451,8 @@ namespace Disharmony.Tests
         public static ConstructorTargets Create() => new ConstructorTargets();
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static ConstructorTargets Create(int value) => new ConstructorTargets(value);
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static ConstructorTargets Create(bool throwException) => new ConstructorTargets(throwException);
     }
 
     public static class StaticConstructorObservation
@@ -468,6 +504,20 @@ namespace Disharmony.Tests
         {
             InnerStaticMethodTargets.ThrowInvalidOperationException();
             return 42;
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int CallThrowingIntResult() =>
+            InnerStaticMethodTargets.ThrowInvalidOperationExceptionWithResult();
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void CallVoidThenThrow()
+        {
+            InnerStaticMethodTargets.Void();
+            throw new InvalidOperationException("outer");
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static IEnumerable<int> EnumerateThrowingInnerResult()
+        {
+            yield return InnerStaticMethodTargets.ThrowInvalidOperationExceptionWithResult();
         }
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static string StringResult() => InnerStaticMethodTargets.StringResult();
