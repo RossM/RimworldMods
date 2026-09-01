@@ -23,14 +23,8 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
         {
             resultLocal = output.AddLocal(targetType);
 
-            // No initialization is needed if there are no prefixes (the function will initialize), or if 
-            // there is a prefix which can't be skipped and definitely sets the result using an out variable.
-            // Honestly this is overkill as the result local will be zero-initialized anyway.
-            var firstResultRelevantPrefix = prefixes.FirstOrDefault(patch =>
-                patch.patch.ReturnType != typeof(void) || patch.HasBindingType(BindingType.Result));
-
-            if (firstResultRelevantPrefix.parameters != null && !DefinitelyInitializesResult(firstResultRelevantPrefix))
-                output.EmitLocalInitializer(resultLocal);
+            // In theory we could skip this initialization in some cases, but there are too many corner cases.
+            output.EmitLocalInitializer(resultLocal);
         }
 
         if (ExceptionBlockNeeded)
@@ -40,12 +34,6 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
             output.EmitLocalInitializer(exceptionLocal);
             output.EmitLocalInitializer(dispatchInfoLocal);
         }
-    }
-
-    private static bool DefinitelyInitializesResult(PatchInfo patch)
-    {
-        var resultParameters = patch.parameters.Where(a => a.bindingType == BindingType.Result).ToList();
-        return resultParameters.Any() && resultParameters.All(a => a.parameter.IsOut);
     }
 
     protected void EmitPrefixes()
