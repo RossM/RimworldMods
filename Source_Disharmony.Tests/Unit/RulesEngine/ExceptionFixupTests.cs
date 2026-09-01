@@ -143,7 +143,7 @@ public sealed class ExceptionFixupTests
     }
 
     [Test]
-    public void ManagedReferenceLiveAcrossExceptionRegion_UsesIntPtrLocal()
+    public void ManagedReferenceLiveAcrossExceptionRegion_PreservesByRefType()
     {
         MethodInfo method = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.IntArgument))!;
@@ -160,7 +160,7 @@ public sealed class ExceptionFixupTests
 
         List<CodeInstruction> result = Fix(method, instructions);
 
-        Assert.That(((LocalBuilder)result[1].operand).LocalType, Is.EqualTo(typeof(IntPtr)));
+        Assert.That(((LocalBuilder)result[1].operand).LocalType, Is.EqualTo(typeof(int).MakeByRefType()));
         Assert.That(result[4].operand, Is.SameAs(result[1].operand));
     }
 
