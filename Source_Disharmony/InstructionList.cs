@@ -23,7 +23,7 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
         if (type.IsByRef)
             throw new NotImplementedException($"IsByRef targetType {type}");
 
-        if (type.IsClass)
+        if (type.IsClass || type.IsInterface)
         {
             Add(new(OpCodes.Ldnull));
             Add(localIndex.Store());
