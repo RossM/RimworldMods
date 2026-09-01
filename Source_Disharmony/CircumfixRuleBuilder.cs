@@ -64,27 +64,27 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
         {
             returnLabel = generator.DefineLabel();
 
+            // We need to do the store before each 'ret', instead of after the label, because
+            // otherwise a method with no 'ret's will result in a dead basic block that pops
+            // a value from an empty stack, which Mono rejects.
+            CodeInstruction[]? retOutput =
+                resultLocal != null ?
+                [resultLocal.Store(), new(OpCodes.Br, returnLabel)] :
+                [new(OpCodes.Br, returnLabel)];
+
             yield return new Rule
             {
                 min = 0,
                 max = 0,
                 mode = OutputMode.Replace,
                 pattern = [new(OpCodes.Ret)],
-                output = [new(OpCodes.Br, returnLabel)],
+                output = retOutput,
                 name = "return",
             };
         }
 
         if (returnLabel is { } label)
-        {
             output.Add(new(OpCodes.Nop) { labels = [label] });
-
-            // If returnLabel is null then we can never fall through to the skip label. Adding the store in that
-            // case would result in a basic block with no entry, so it will be assumed to have an empty stack,
-            // which causes problems in the optimizer.
-            if (resultLocal != null)
-                output.Add(resultLocal.Store());
-        }
 
         EmitPostfixes();
 
