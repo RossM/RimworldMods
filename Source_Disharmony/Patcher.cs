@@ -110,6 +110,7 @@ public static class Patcher
         try
         {
             Registry.ProcessAssembly(assembly, handle.id);
+            Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)
         {
@@ -139,6 +140,7 @@ public static class Patcher
         try
         {
             Registry.ProcessAssembly(assembly, category, handle.id);
+            Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)
         {
@@ -164,6 +166,7 @@ public static class Patcher
         try
         {
             Registry.ProcessType(type.GetTypeInfo(), handle.id);
+            Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)
         {
@@ -189,6 +192,7 @@ public static class Patcher
         {
             foreach (var method in methods)
                 Registry.ProcessMethod(method, handle.id);
+            Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)
         {
@@ -248,6 +252,7 @@ public static class Patcher
         {
             foreach (var patch in patches)
                 Registry.ProcessPatch(patch, handle.id);
+            Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)
         {

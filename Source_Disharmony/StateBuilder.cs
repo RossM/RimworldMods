@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using Disharmony.Optimizer;
+
+namespace Disharmony;
 
 /// <summary>
 ///     This class manages the state variables used by patches and generates rules to initialize them at the beginning of
@@ -52,13 +54,52 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
             ParameterBinding[] parameters = patch.parameters;
             foreach (ParameterBinding parameter in parameters)
             {
-                if (parameter.bindingType == BindingType.State)
-                {
-                    if (parameter.stateKey is null)
-                        throw new InvalidOperationException("Null StateKey");
-                    parameter.local = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType);
-                }
+                if (parameter.bindingType != BindingType.State)
+                    continue;
+
+                if (parameter.stateKey is null)
+                    throw new InvalidOperationException("Null StateKey");
+                
+                parameter.local = GetOrAddStateLocal(parameter.stateKey, parameter.parameter.ParameterType);
             }
         }
+    }
+
+    public static void ValidateState(IReadOnlyList<PatchInfo> patches)
+    {
+        Dictionary<string, Type> stateTypes = [];
+
+        foreach (var patch in patches)
+        {
+            try
+            {
+                ParameterBinding[] parameters = patch.parameters;
+                foreach (ParameterBinding parameter in parameters)
+                {
+                    if (parameter.bindingType != BindingType.State)
+                        continue;
+
+                    if (parameter.stateKey is null)
+                        throw new ParameterBindingException(parameter.parameter.Name, "Null StateKey");
+
+                    var localType = parameter.parameter.ParameterType.NoRefType;
+                    if (stateTypes.TryGetValue(parameter.stateKey, out var existingType))
+                    {
+                        if (localType != existingType)
+                            throw new ParameterBindingException(parameter.parameter.Name,
+                                $"Incompatible state types: {localType} and {existingType}");
+                    }
+                    else
+                    {
+                        stateTypes.Add(parameter.stateKey, localType);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new PatchException($"Error processing {patch.patch.FullName}", e);
+            }
+        }
+
     }
 }

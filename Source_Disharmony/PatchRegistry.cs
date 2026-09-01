@@ -391,6 +391,18 @@ internal class PatchRegistry
         }
     }
 
+    public void ValidatePatchGroup(int unpatchKey)
+    {
+        lock (syncRoot)
+        {
+            if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methods))
+                return;
+
+            var patches = methods.SelectMany(m => patchesByMethod[m].Where(p => p.unpatchKey == unpatchKey)).ToList();
+            StateBuilder.ValidateState(patches);
+        }
+    }
+
     public void ApplyPendingChanges(bool useTrampolines)
     {
         while (true)
