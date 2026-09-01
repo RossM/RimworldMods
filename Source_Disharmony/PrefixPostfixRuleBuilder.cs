@@ -29,9 +29,9 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
             var firstResultRelevantPrefix = prefixes.FirstOrDefault(patch =>
                 patch.patch.ReturnType != typeof(void) || patch.HasBindingType(BindingType.Result));
 
-            if (firstResultRelevantPrefix.parameters == null ||
-                firstResultRelevantPrefix.parameters.All(a => a.bindingType != BindingType.Result) ||
-                firstResultRelevantPrefix.parameters.Where(a => a.bindingType == BindingType.Result).Any(a => !a.parameter.IsOut))
+            if (firstResultRelevantPrefix.parameters != null &&
+                !(firstResultRelevantPrefix.parameters.Any(a => a.bindingType == BindingType.Result) && 
+                  firstResultRelevantPrefix.parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut)))
                 output.EmitLocalInitializer(resultLocal);
         }
 
