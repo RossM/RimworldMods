@@ -35,7 +35,7 @@ public class RuntimePatchExceptionPatches
 
     public static void TrampolineResolution_ApplicationFailure_ReportsAndRestoresOriginalMethod() { }
 
-    public static void StateBuilder_SameKeyWithDifferentTypes_ThrowsRuntimePatchException(
+    public static void StateBuilder_SameKeyWithDifferentTypes_IsRejectedDuringPatch(
         [State("shared")] out int primitive,
         [State("shared")] out string reference)
     {
@@ -351,19 +351,16 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     }
 
     [Test]
-    public void StateBuilder_SameKeyWithDifferentTypes_ThrowsRuntimePatchException()
+    public void StateBuilder_SameKeyWithDifferentTypes_IsRejectedDuringPatch()
     {
         MethodInfo patch = typeof(RuntimePatchExceptionPatches)
-            .GetMethod(nameof(RuntimePatchExceptionPatches.StateBuilder_SameKeyWithDifferentTypes_ThrowsRuntimePatchException))!;
+            .GetMethod(nameof(RuntimePatchExceptionPatches.StateBuilder_SameKeyWithDifferentTypes_IsRejectedDuringPatch))!;
         MethodInfo target = typeof(StaticMethodTargets)
             .GetMethod(nameof(StaticMethodTargets.Void))!;
 
-        RuntimePatchException? exception = Assert.Throws<RuntimePatchException>(() =>
-        {
-            Patcher.Patch(Patch.Prefix.With(patch).Of(target));
-            Patcher.ForceApply();
-        });
-        Assert.That(exception!.InnerException, Is.TypeOf<InvalidOperationException>()
-            .With.Message.EqualTo("Incompatible state types: System.String and System.Int32"));
+        PatchException? exception = Assert.Throws<PatchException>(() =>
+            Patcher.Patch(Patch.Prefix.With(patch).Of(target)));
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("reference: Incompatible state types: System.String and System.Int32"));
     }
 }
