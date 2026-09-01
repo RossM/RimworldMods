@@ -163,6 +163,36 @@ public static class FieldBindingPatches
     public static void InnerPrefix_FieldAttribute_InnerScope_Primitive_ReadByValue([Field("foo", Scope.Inner)] int field) =>
         observed = field;
 
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_ReadByValue(
+        [Field(nameof(ClassMethodTargets.AutoProperty), Scope.Outer)] int field) => observed = field;
+
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_ReadByReference(
+        [Field(nameof(ClassMethodTargets.AutoProperty), Scope.Outer)] ref int field) => observed = field;
+
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_WriteByReference(
+        [Field(nameof(ClassMethodTargets.AutoProperty), Scope.Outer)] ref int field) => field = 42;
+
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_ReadByValue(
+        [Field(nameof(InnerInstanceMethodTargets.AutoProperty), Scope.Inner)] int field) => observed = field;
+
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_ReadByReference(
+        [Field(nameof(InnerInstanceMethodTargets.AutoProperty), Scope.Inner)] ref int field) => observed = field;
+
+    [Prefix] [Inner(typeof(InnerInstanceMethodTargets), nameof(InnerInstanceMethodTargets.Void))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.CallInnerWithField))]
+    public static void InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_WriteByReference(
+        [Field(nameof(InnerInstanceMethodTargets.AutoProperty), Scope.Inner)] ref int field) => field = 42;
+
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
     public static void Prefix_FieldAttribute_Struct_AsObjectByWriteableReference_Rejected(
@@ -480,6 +510,90 @@ public sealed class FieldBindingTests : PatchTestBase
         outer.CallInnerWithField(inner);
 
         Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var outer = new ClassMethodTargets { AutoProperty = 42 };
+        var inner = new InnerInstanceMethodTargets { AutoProperty = 1 };
+        ApplyPatch(typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_ReadByValue));
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var outer = new ClassMethodTargets { AutoProperty = 42 };
+        var inner = new InnerInstanceMethodTargets { AutoProperty = 1 };
+        ApplyPatch(typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_ReadByReference));
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_WriteByReference()
+    {
+        var outer = new ClassMethodTargets { AutoProperty = 1 };
+        var inner = new InnerInstanceMethodTargets { AutoProperty = 2 };
+        ApplyPatch(typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_OuterScope_AutoPropertyBackingField_WriteByReference));
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(outer.AutoProperty, Is.EqualTo(42));
+        Assert.That(inner.AutoProperty, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var outer = new ClassMethodTargets { AutoProperty = 1 };
+        var inner = new InnerInstanceMethodTargets { AutoProperty = 42 };
+        ApplyPatch(typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_ReadByValue));
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var outer = new ClassMethodTargets { AutoProperty = 1 };
+        var inner = new InnerInstanceMethodTargets { AutoProperty = 42 };
+        ApplyPatch(typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_ReadByReference));
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(FieldBindingPatches.observed, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_WriteByReference()
+    {
+        var outer = new ClassMethodTargets { AutoProperty = 1 };
+        var inner = new InnerInstanceMethodTargets { AutoProperty = 2 };
+        ApplyPatch(typeof(FieldBindingPatches),
+            nameof(FieldBindingPatches.InnerPrefix_FieldAttribute_InnerScope_AutoPropertyBackingField_WriteByReference));
+
+        outer.CallInnerWithField(inner);
+
+        Assert.That(inner.AutoProperty, Is.EqualTo(42));
+        Assert.That(outer.AutoProperty, Is.EqualTo(1));
     }
 
     [Test]

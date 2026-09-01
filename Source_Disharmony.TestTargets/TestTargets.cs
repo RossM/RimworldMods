@@ -137,6 +137,7 @@ namespace Disharmony.Tests
         public BindingReference referenceField = new BindingReference();
         public BindingStruct structField;
         public object objectField = new object();
+        public int AutoProperty { get; set; }
         public int Value { get; private set; }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -249,6 +250,7 @@ namespace Disharmony.Tests
     public sealed class InnerInstanceMethodTargets
     {
         public int foo;
+        public int AutoProperty { get; set; }
         public int Property
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
