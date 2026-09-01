@@ -61,7 +61,7 @@ An ordinary patch is outer. It becomes inner only when its definition includes a
 
 ### Write an attribute-focused patch
 
-Suppose the game provides `float PriceCalculator.GetPrice(Pawn buyer, int quantity)`. The following patch clamps its
+Suppose a game provides `float PriceCalculator.GetPrice(Character buyer, int quantity)`. The following patch clamps its
 `quantity` argument before the method runs, then discounts the result afterward:
 
 ```csharp
@@ -72,15 +72,15 @@ using Disharmony;
 public static class PriceCalculatorPatches
 {
     [Prefix]
-    [Target(nameof(PriceCalculator.GetPrice), typeof(Pawn), typeof(int))]
+    [Target(nameof(PriceCalculator.GetPrice), typeof(Character), typeof(int))]
     public static void ClampQuantity(ref int quantity)
     {
         quantity = Math.Max(0, quantity);
     }
 
     [Postfix]
-    [Target(nameof(PriceCalculator.GetPrice), typeof(Pawn), typeof(int))]
-    public static void ApplyMemberDiscount(Pawn buyer, [ReturnValue] ref float result)
+    [Target(nameof(PriceCalculator.GetPrice), typeof(Character), typeof(int))]
+    public static void ApplyMemberDiscount(Character buyer, [ReturnValue] ref float result)
     {
         if (buyer.IsColonyMember)
             result *= 0.9f;
@@ -144,7 +144,7 @@ public static class CheckoutPatches
     [Postfix]
     [Target(nameof(Checkout.Total))]
     [Inner(typeof(PriceCalculator), nameof(PriceCalculator.GetPrice),
-        typeof(Pawn), typeof(int))]
+        typeof(Character), typeof(int))]
     public static void DiscountEachPrice([ReturnValue] ref float result)
     {
         result *= 0.9f;
@@ -178,7 +178,7 @@ public static class RuntimePatches
     {
         MethodInfo target = typeof(PriceCalculator).GetMethod(
             nameof(PriceCalculator.GetPrice),
-            new[] { typeof(Pawn), typeof(int) })!;
+            new[] { typeof(Character), typeof(int) })!;
         MethodInfo patchMethod = typeof(RuntimePatches).GetMethod(nameof(CapPrice))!;
 
         return Patcher.Patch(
