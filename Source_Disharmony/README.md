@@ -119,7 +119,7 @@ Binding attributes cover values that cannot be identified by an ordinary paramet
 * `[Instance]` binds the target instance. The familiar `__instance` convention also works; in an inner patch,
   `__caller` names the outer instance.
 * `[Field("name")]` binds one of the target instance's fields, even if it isn't public. The  `___fieldName` convention
-*  works here too.
+  works here too.
 * `[ReturnValue]` binds the current result. The conventional name `__result` works without the attribute.
 * `[State]` passes per-invocation data between patches applied in the same `Patch` or `PatchAll` call. The conventional
   name `__state` also works.
