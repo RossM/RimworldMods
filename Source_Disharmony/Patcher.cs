@@ -34,7 +34,7 @@ public enum PatchType
 ///             <description>
 ///                 Attribute-defined patches use <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" /> with
 ///                 <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Apply one with
-///                 <see cref="Patch(MethodInfo)" />, all patches declared by a type with <see cref="PatchAll(Type)" />, or
+///                 <see cref="Patch(IEnumerable{MethodInfo})" />, all patches declared by a type with <see cref="PatchAll(Type)" />, or
 ///                 marked patch classes from an assembly with <see cref="PatchAll(Assembly)" /> or
 ///                 <see cref="PatchCategory" />.
 ///             </description>
