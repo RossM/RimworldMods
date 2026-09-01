@@ -116,12 +116,15 @@ it by `ref` allows the patch to replace it.
 Binding attributes cover values that cannot be identified by an ordinary parameter name:
 
 * `[Parameter("name")]` or `[Parameter(index)]` binds an argument.
-* `[Instance]` binds the target instance, and `[Field("name")]` binds one of its fields. The familiar `__instance`
-  and `___fieldName` conventions also work; in an inner patch, `__caller` names the outer instance.
+* `[Instance]` binds the target instance. The familiar `__instance` convention also works; in an inner patch,
+  `__caller` names the outer instance.
+* `[Field("name")]` binds one of the target instance's fields, even if it isn't public. The  `___fieldName` convention
+*  works here too.
 * `[ReturnValue]` binds the current result. The conventional name `__result` works without the attribute.
 * `[State]` passes per-invocation data between patches applied in the same `Patch` or `PatchAll` call. The conventional
   name `__state` also works.
-* `[BaseMethod]` and `[Method]` bind delegates for calling otherwise awkward base or inaccessible methods.
+* `[BaseMethod]` binds a delegate for calling the base method of the method being patched.
+* `[Method]` binds a delegate for calling a possibly non-public method on the target instance.
 * `[Exception]` binds an exception in an `AlwaysRun` postfix.
 
 Prefixes may return `bool`: returning `false` skips the selected operation, while its postfixes still run. A prefix can
