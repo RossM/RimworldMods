@@ -347,7 +347,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // Look in inner instance fields
         if (scope is Scope.Inner or Scope.Any && !inner.IsStatic)
         {
-            var field = inner.InstanceType.GetField(name, AccessTools.all);
+            var field = inner.InstanceType.GetField(name, AccessTools.all) ??
+                        inner.InstanceType.GetField($"<{name}>k__BackingField", AccessTools.all);
             if (field != null)
             {
                 ValidateCast(parameter, field.FieldType);
@@ -367,7 +368,8 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
                 fields.Add(thisField);
             }
 
-            var field = curType.GetField(name, AccessTools.all);
+            var field = curType.GetField(name, AccessTools.all) ??
+                        curType.GetField($"<{name}>k__BackingField", AccessTools.all);
             if (field != null)
             {
                 fields.Add(field);
