@@ -711,11 +711,10 @@ public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 ///         State is not supported when an inner patch targets an iterator state-machine method.
 ///     </para>
 ///     <para>
-///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" />, <see cref="Patcher.PatchAll(Type)" />, or
-///         <see cref="Patcher.Patch(MethodInfo)" /> will share state with other patch methods in the same containing type
-///         that use the same key.
-///         Patches applied using <see cref="PatchConfig" /> will share state with other methods applied during the same
-///         <c>Patcher.Patch</c> call that use the same key.
+///         Patches only share state with other patches applied in the same <c>Patcher.Patch</c> or
+///         <c>Patcher.PatchAll</c> call. 
+///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" /> additionally require that the
+///         patch methods be defined in the same class to share state.
 ///     </para>
 ///     <para>
 ///         A parameter named <c>__state</c> with no binding attribute will be treated as if it has this attribute.

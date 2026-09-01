@@ -177,18 +177,18 @@ public static class Patcher
     /// <summary>
     ///     Applies the patch described by an attributed method.
     /// </summary>
-    /// <param name="method">The method that defines the patch.</param>
     /// <remarks>
     ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
     ///     <see cref="PatchAttribute" /> when the method is patched directly.
     /// </remarks>
     /// <returns>A handle for removing the patches added by this call.</returns>
-    public static PatchHandle Patch(MethodInfo method)
+    public static PatchHandle Patch(params IEnumerable<MethodInfo> methods)
     {
         PatchHandle handle = new PatchHandle();
         try
         {
-            Registry.ProcessMethod(method, handle.id);
+            foreach (var method in methods)
+                Registry.ProcessMethod(method, handle.id);
         }
         catch (Exception)
         {
@@ -244,11 +244,10 @@ public static class Patcher
     public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
     {
         PatchHandle handle = new PatchHandle();
-        var stateKey = $"handle!{handle.id}";
         try
         {
             foreach (var patch in patches)
-                Registry.ProcessPatch(patch, stateKey, handle.id);
+                Registry.ProcessPatch(patch, handle.id);
         }
         catch (Exception)
         {

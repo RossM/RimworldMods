@@ -111,7 +111,7 @@ internal class PatchRegistry
             foreach (TypeInfo type in assembly.DefinedTypes)
             {
                 if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
-                    ProcessType(type, unpatchKey);
+                    ProcessType(type, unpatchKey, type.FullName);
             }
         }
     }
@@ -129,21 +129,21 @@ internal class PatchRegistry
                      type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
                     continue;
 
-                ProcessType(type, unpatchKey);
+                ProcessType(type, unpatchKey, type.FullName);
             }
         }
     }
 
-    public void ProcessType(TypeInfo type, int unpatchKey)
+    public void ProcessType(TypeInfo type, int unpatchKey, string extraStateKey = "")
     {
         lock (syncRoot)
         {
             foreach (MethodInfo method in type.DeclaredMethods)
-                ProcessMethod(method, unpatchKey);
+                ProcessMethod(method, unpatchKey, extraStateKey);
         }
     }
 
-    public void ProcessMethod(MethodInfo method, int unpatchKey)
+    public void ProcessMethod(MethodInfo method, int unpatchKey, string extraStateKey = "")
     {
         lock (syncRoot)
         {
@@ -189,7 +189,7 @@ internal class PatchRegistry
                         MethodBase target = result as MethodBase ??
                                             throw new ReflectionException($"{nameForErrors}: Couldn't locate method");
                         AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, priority,
-                            method.DeclaringType!.FullName, unpatchKey);
+                            extraStateKey, unpatchKey);
                     }
                 }
             }
@@ -209,7 +209,7 @@ internal class PatchRegistry
         return attributes;
     }
 
-    public void ProcessPatch(PatchConfig patch, string stateKey, int unpatchKey)
+    public void ProcessPatch(PatchConfig patch, int unpatchKey, string extraStateKey = "")
     {
         if (patch.PatchMethod is null)
             throw new ArgumentException("Patch method not set; call Patch.With()", nameof(patch));
@@ -223,7 +223,7 @@ internal class PatchRegistry
             try
             {
                 AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, patch.Priority,
-                    stateKey, unpatchKey);
+                    extraStateKey, unpatchKey);
             }
             catch (Exception e)
             {
@@ -285,7 +285,7 @@ internal class PatchRegistry
         Invocation inner,
         PatchOptions options,
         int priority,
-        string stateGroupKey,
+        string extraStateKey,
         int unpatchKey)
     {
         Validate(patchType, options, patchMethod.MethodInfo, target.MethodBase);
@@ -303,7 +303,7 @@ internal class PatchRegistry
             }
         }
 
-        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, options, stateGroupKey);
+        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, options, $"{extraStateKey}#{unpatchKey}");
 
         var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
