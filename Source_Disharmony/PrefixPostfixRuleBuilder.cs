@@ -29,9 +29,7 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
             var firstResultRelevantPrefix = prefixes.FirstOrDefault(patch =>
                 patch.patch.ReturnType != typeof(void) || patch.HasBindingType(BindingType.Result));
 
-            if (firstResultRelevantPrefix.parameters != null &&
-                !(firstResultRelevantPrefix.parameters.Any(a => a.bindingType == BindingType.Result) && 
-                  firstResultRelevantPrefix.parameters.Where(a => a.bindingType == BindingType.Result).All(a => a.parameter.IsOut)))
+            if (firstResultRelevantPrefix.parameters != null && !DefinitelyInitializesResult(firstResultRelevantPrefix))
                 output.EmitLocalInitializer(resultLocal);
         }
 
@@ -42,6 +40,12 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
             output.EmitLocalInitializer(exceptionLocal);
             output.EmitLocalInitializer(dispatchInfoLocal);
         }
+    }
+
+    private static bool DefinitelyInitializesResult(PatchInfo patch)
+    {
+        var resultParameters = patch.parameters.Where(a => a.bindingType == BindingType.Result).ToList();
+        return resultParameters.Any() && resultParameters.All(a => a.parameter.IsOut);
     }
 
     protected void EmitPrefixes()
