@@ -72,9 +72,10 @@ if ($Profile -and $MonoProfile)
     throw 'Use either -Profile or -MonoProfile, not both.'
 }
 
-$repositoryRoot = $PSScriptRoot
-$testProject = Join-Path $repositoryRoot 'Source_Disharmony.Tests\Source_Disharmony.Tests.csproj'
-$testExecutable = Join-Path $repositoryRoot "Source_Disharmony.Tests\bin\$Configuration\net4.7.2\Source_Disharmony.Tests.exe"
+$testProjectRoot = $PSScriptRoot
+$repositoryRoot = Split-Path -Parent $testProjectRoot
+$testProject = Join-Path $testProjectRoot 'Source_Disharmony.Tests.csproj'
+$testExecutable = Join-Path $testProjectRoot "bin\$Configuration\net4.7.2\Source_Disharmony.Tests.exe"
 $dotnet = Get-Command dotnet -CommandType Application -ErrorAction Stop
 $runnerExitCode = 1
 $expectedProfilePath = $null

@@ -3,16 +3,16 @@
 The test project targets .NET Framework 4.7.2 and supports three ways to run the same tests:
 
 * Visual Studio Test Explorer and `dotnet test` use the Microsoft CLR through the NUnit test adapter.
-* `Run-DisharmonyTests.ps1 -Runtime Clr` uses the embedded NUnitLite runner on the Microsoft CLR.
-* `Run-DisharmonyTests.ps1 -Runtime Mono` uses the embedded NUnitLite runner on Mono.
+* `Source_Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Clr` uses the embedded NUnitLite runner on the Microsoft CLR.
+* `Source_Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono` uses the embedded NUnitLite runner on Mono.
 
 Run the script from the repository root. For Mono, it checks `-MonoExecutable`, then `MONO_EXE`, then `mono` on
 `PATH`, and finally the standard Windows installation directories. NUnitLite arguments can be supplied after the
 script arguments, or explicitly through `-NUnitArguments`.
 
 ```powershell
-.\Run-DisharmonyTests.ps1 -Runtime Mono
-.\Run-DisharmonyTests.ps1 -Runtime Mono --where 'test =~ Optimizer'
+.\Source_Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono
+.\Source_Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono --where 'test =~ Optimizer'
 ```
 
 Pass `-Profile` to request a sampling profile under `TestResults\Disharmony`. `-MonoProfile` accepts another Mono
@@ -22,6 +22,6 @@ module. In particular, the official Mono 6.12 x64 Windows package runs the tests
 profiler used by these examples.
 
 ```powershell
-.\Run-DisharmonyTests.ps1 -Runtime Mono -Configuration Release -Profile
-.\Run-DisharmonyTests.ps1 -Runtime Mono -MonoProfile 'log:alloc,nocalls'
+.\Source_Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono -Configuration Release -Profile
+.\Source_Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono -MonoProfile 'log:alloc,nocalls'
 ```
