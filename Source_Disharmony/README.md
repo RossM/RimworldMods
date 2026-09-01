@@ -1,65 +1,43 @@
 # Disharmony
 
-## Description
+Disharmony is a game-modding patch framework built on Harmony. It keeps the familiar prefix-and-postfix model while
+making patches that would normally require a transpiler easier to write, understand, and maintain.
 
-Disharmony is a game-modding patch framework built on top of Harmony. It keeps the familiar prefix-and-postfix style,
-while making patches that would normally require a transpiler much easier to write and maintain.
+With Disharmony, a patch can wrap an entire method or a particular operation inside it—such as a method call, field or
+property access, or constant. You describe the operation you want to change; Disharmony handles the underlying IL.
 
-## Features
+## Why use Disharmony?
 
-* **Familiar Harmony-style patches.** Prefixes and postfixes can inspect or change arguments and return values, share
-  state, access instances and fields, skip the original method, and target methods, constructors, and properties.
+* **Avoid many hand-written transpilers.** Inner prefixes and postfixes target individual operations without requiring
+  you to search and rewrite raw IL instructions.
+* **Keep the Harmony concepts you already know.** Prefixes and postfixes can inspect or change arguments and return
+  values, share state, access instances and fields, and skip the selected operation.
+* **Reach compiler-generated code more easily.** Disharmony can target local functions, lambdas, nested classes,
+  captured variables, and iterator methods without making you work directly with generated names and state machines.
+* **Make intent explicit.** Attributes identify targets and bind arguments, instances, fields, return values, shared
+  state, and base methods. Overload selectors distinguish ordinary, `ref`, `in`, and `out` parameters.
+* **Use Harmony alongside it.** Disharmony uses Harmony underneath and recognizes selected Harmony patch markers and
+  categories. It extends the Harmony ecosystem rather than replacing it.
 
-* **Patch individual calls inside a method.** Inner prefixes and postfixes run around a particular method call, field
-  or property access, or constant value within the target method. This covers many common transpiler use cases without
-  requiring you to search and rewrite raw IL instructions.
+Disharmony is especially useful when a conventional prefix or postfix is too broad, but a Harmony transpiler would be
+fragile or difficult to review. You can adopt it one patch at a time; existing Harmony patches do not all need to be
+rewritten.
 
-* **Reach compiler-generated code more easily.** Disharmony provides ways to target local functions, lambdas, nested
-  classes, captured variables, and iterator methods. These are possible to patch with Harmony, but often require
-  knowledge of compiler-generated names and state-machine internals.
+## Coming from Harmony?
 
-* **Clearer parameter binding.** Optional attributes explicitly identify arguments, instances, fields, return values,
-  shared state, and base methods. Disharmony also provides convenient ways to distinguish ordinary, `ref`, `in`, and
-  `out` parameters when selecting overloaded methods.
+Straightforward prefixes and postfixes remain conceptually similar. The greatest benefit comes from replacing fragile
+transpilers and awkward patches of compiler-generated code with patches that directly describe the call or behavior
+you want to change.
 
-* **Patch one or many targets.** A patch can target a specific overload, several explicitly named members, or every
-  matching overload. Patches can be registered by method, type, assembly, or Harmony patch category.
+Disharmony can recognize selected Harmony patch classes and categories, so migration can be incremental. Keep the
+Harmony patches that already express their intent well and reach for Disharmony where a transpiler or generated target
+has become hard to understand or maintain.
 
-* **Just-in-time patch application.** Disharmony can defer the more expensive construction of a patch until the
-  affected method is first called, avoiding wasteful redundant work when several mods patch the same method. Patches
-  can also be applied immediately when required.
-
-* **Harmony interoperability.** Disharmony uses Harmony underneath and understands selected Harmony conventions,
-  including patch classes and categories. It is intended as an extension of the Harmony ecosystem rather than an
-  entirely unrelated replacement.
-
-## Getting started
+## Quick start
 
 Add a reference to `Disharmony.dll`, make sure the host provides a compatible `0Harmony`, and import the `Disharmony`
-namespace. Disharmony has an attribute-focused API for patches known at compile time and a fluent API for patches
+namespace. Disharmony offers an attribute-focused API for patches known at compile time and a fluent API for patches
 chosen at runtime. Most patches are simplest to write with attributes.
-
-### The patch model
-
-A patch is a static method that Disharmony inserts around existing code. Each patch definition answers three
-questions:
-
-1. What is the **outer target**? This is the method or constructor Disharmony will modify.
-2. Does the patch surround that outer target, or an **inner operation** such as a call or field access inside it?
-3. Does the patch run before (**prefix**) or after (**postfix**) the selected operation?
-
-Those choices produce four common forms:
-
-| Form | Runs | Typical uses |
-| --- | --- | --- |
-| Outer prefix | Before the selected method or constructor | Inspect or replace arguments, initialize state, or return `false` to skip the target |
-| Outer postfix | After the selected method or constructor | Observe side effects or inspect and replace its return value |
-| Inner prefix | Before each matching call or member access inside the selected outer method | Change inputs to, or return `false` to skip, only that operation |
-| Inner postfix | After each matching call, member access, or constant inside the selected outer method | Inspect or replace that operation's result without changing the rest of the method |
-
-An ordinary patch is outer. It becomes inner only when its definition includes an inner selector.
-
-### Write an attribute-focused patch
 
 Suppose a game provides `float PriceCalculator.GetPrice(Character buyer, int quantity)`. The following patch clamps its
 `quantity` argument before the method runs, then discounts the result afterward:
@@ -106,6 +84,26 @@ Patcher.Unpatch(pricePatches);
 
 `[Target]` must resolve to exactly one member. Apply multiple `[Target]` attributes to name several members, or use
 `[Targets]` when every match, such as every overload, should deliberately be patched.
+
+## How patches work
+
+A patch is a static method that Disharmony inserts around existing code. Each patch definition answers three
+questions:
+
+1. What is the **outer target**? This is the method or constructor Disharmony will modify.
+2. Does the patch surround that outer target, or an **inner operation** such as a call or field access inside it?
+3. Does the patch run before (**prefix**) or after (**postfix**) the selected operation?
+
+Those choices produce four common forms:
+
+| Form | Runs | Typical uses |
+| --- | --- | --- |
+| Outer prefix | Before the selected method or constructor | Inspect or replace arguments, initialize state, or return `false` to skip the target |
+| Outer postfix | After the selected method or constructor | Observe side effects or inspect and replace its return value |
+| Inner prefix | Before each matching call or member access inside the selected outer method | Change inputs to, or return `false` to skip, only that operation |
+| Inner postfix | After each matching call, member access, or constant inside the selected outer method | Inspect or replace that operation's result without changing the rest of the method |
+
+An ordinary patch is outer. It becomes inner only when its definition includes an inner selector.
 
 ### Bind values to patch parameters
 
@@ -160,7 +158,7 @@ skips only its matched operation, not the entire outer method. Use `MemberType.G
 `[Inner]` to select property or field access, and use `[Postfix, InnerConstant(value)]` to select and replace a
 constant.
 
-### Write a patch fluently
+## Write a patch fluently
 
 Use the fluent API when reflection or runtime conditions determine the patch. Build a `PatchConfig` by selecting a
 prefix or postfix, patch method, and outer target, then pass it to `Patcher.Patch`:
@@ -199,7 +197,7 @@ Add `.Inner(innerMethod)` to make the configured patch inner. `.InnerGet(...)`, 
 Several configurations or targets can be supplied to one `Patcher.Patch` call. They share one `PatchHandle`, are
 removed together, and can share `[State]` during each outer invocation.
 
-### Apply and manage patches
+## Apply and manage patches
 
 Choose the narrowest registration method appropriate for the patch set:
 
@@ -217,7 +215,7 @@ the current process; they are not scoped to the mod instance that registered the
 Disharmony may defer expensive preparation until a patched method is first called. The patch is already active, but
 `Patcher.ForceApply()` can move that preparation to a predictable initialization or idle period.
 
-### Advanced features at a glance
+## Advanced features at a glance
 
 * **Precise target selection:** target methods, constructors, property getters and setters, and overloads. Use
   `Ref<T>`, `In<T>`, and `Out<T>` in attribute signatures to distinguish by-reference parameter forms.
@@ -235,9 +233,3 @@ Disharmony may defer expensive preparation until a patched method is first calle
 Inner patches are easier to maintain than raw IL rewrites, but they still match compiled operations. Confirm that the
 call, access, or constant exists in the compiled target, select overloads explicitly when possible, and test alongside
 other mods that patch the same code.
-
-## Migrating from Harmony
-
-For an existing Harmony mod, switching does not mean that every patch must be rewritten. Straightforward prefixes and
-postfixes remain conceptually similar. The greatest benefit comes from replacing fragile transpilers and awkward
-patches of compiler-generated code with patches that directly describe the call or behavior you want to change.
