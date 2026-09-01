@@ -67,10 +67,8 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
             // We need to do the store before each 'ret', instead of after the label, because
             // otherwise a method with no 'ret's will result in a dead basic block that pops
             // a value from an empty stack, which Mono rejects.
-            CodeInstruction[]? retOutput =
-                resultLocal != null ?
-                [resultLocal.Store(), new(OpCodes.Br, returnLabel)] :
-                [new(OpCodes.Br, returnLabel)];
+            CodeInstruction[] retOutput =
+                resultLocal != null ? [resultLocal.Store(), new(OpCodes.Br, returnLabel)] : [new(OpCodes.Br, returnLabel)];
 
             yield return new Rule
             {
