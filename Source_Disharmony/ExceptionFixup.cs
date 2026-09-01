@@ -88,11 +88,9 @@ internal static class ExceptionFixup
 
                     // We need to keep track of stack types so that we can create locals with the right type, but
                     // we don't need to track things in more detail than the CLI supported stack types:
-                    // I4, I8, I, F, O, and structs. GetOutputType already normalizes numeric types to I4, I8, I, and F,
-                    // so here we convert & types to I and reference types to O.
-                    if (pushType.IsByRef)
-                        pushType = typeof(IntPtr);
-                    else if (!pushType.IsValueType)
+                    // I4, I8, I, F, O, &, and structs. GetOutputType already normalizes numeric types to I4, I8, I, and F,
+                    // so here we convert reference types to O.
+                    if (pushType is { IsByRef: false, IsValueType: false })
                         pushType = typeof(object);
 
                     stack.Add(pushType);
