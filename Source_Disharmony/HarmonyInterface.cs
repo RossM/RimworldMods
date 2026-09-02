@@ -111,6 +111,16 @@ internal class HarmonyInterface
         Instance.ResolveTrampolineImpl(method);
     }
 
+    /// <summary>
+    ///     Eagerly apply all patches that are currently defered using trampolines.
+    /// </summary>
+    /// <remarks>
+    ///     This method is thread-safe, but its exact behavior when another thread
+    ///     is concurrently accessing Harmony can vary. It will definitely apply
+    ///     all trampolines that exist when it is called, but may or may not apply
+    ///     trampolines added after that point.
+    /// </remarks>
+    /// <exception cref="RuntimePatchException"></exception>
     public void ResolveAllTrampolines()
     {
         while (true)
@@ -144,6 +154,9 @@ internal class HarmonyInterface
         return trampoline;
     }
 
+    // This method is called from within Harmony from UpdateWrapper, which is only called while
+    // we or Harmony holds the Harmony lock, so it's safe to access internal state without
+    // locking.
     [UsedImplicitly]
     internal static List<CodeInstruction> Transpiler(
         MethodBase method,
