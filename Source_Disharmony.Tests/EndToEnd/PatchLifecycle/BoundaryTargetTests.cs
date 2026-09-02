@@ -14,7 +14,7 @@ public static class BoundaryTargetPatches
 
     public static void GenericMethodDefinition_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
 
-    public static void ConstructedGenericMethod_ExecutesPatch() => PatchExecuted = true;
+    public static void ConstructedGenericMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
 
     public static void ClosedGenericDeclaringType_ExecutesPatch() => PatchExecuted = true;
 
@@ -86,20 +86,15 @@ public sealed class BoundaryTargetTests : PatchTestBase
     }
 
     [Test]
-    public void ConstructedGenericMethod_ExecutesPatch()
+    public void ConstructedGenericMethod_IsRejectedBeforeRuntimePatching()
     {
-        BoundaryTargetPatches.PatchExecuted = false;
         MethodInfo target = typeof(BoundaryTargets)
             .GetMethod(nameof(BoundaryTargets.GenericMethod))!
             .MakeGenericMethod(typeof(int));
         MethodInfo patch = typeof(BoundaryTargetPatches)
-            .GetMethod(nameof(BoundaryTargetPatches.ConstructedGenericMethod_ExecutesPatch))!;
+            .GetMethod(nameof(BoundaryTargetPatches.ConstructedGenericMethod_IsRejectedBeforeRuntimePatching))!;
 
-        Patcher.Patch(Patch.Prefix.With(patch).Of(target));
-        int result = BoundaryTargets.GenericMethod(42);
-
-        Assert.That(result, Is.EqualTo(42));
-        Assert.That(BoundaryTargetPatches.PatchExecuted, Is.True);
+        Assert.Throws<PatchException>(() => Patcher.Patch(Patch.Prefix.With(patch).Of(target)));
     }
 
     [Test]
