@@ -190,8 +190,18 @@ internal class HarmonyInterface
         EmitLoadArguments(generator, parameterTypes);
 
         // Call ResolveTrampoline(), which generates the real patch and applies a detour
-        generator.Emit(OpCodes.Ldtoken, target);
-        generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle);
+        if (target.MethodBase.DeclaringType is { IsGenericType: true })
+        {
+            generator.Emit(OpCodes.Ldtoken, target);
+            generator.Emit(OpCodes.Ldtoken, target.MethodBase.DeclaringType);
+            generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle2);
+        }
+        else
+        {
+            generator.Emit(OpCodes.Ldtoken, target);
+            generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle1);
+        }
+
         generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
 
         // Do a tail call to the original method, which will actually go to the newly installed patch
