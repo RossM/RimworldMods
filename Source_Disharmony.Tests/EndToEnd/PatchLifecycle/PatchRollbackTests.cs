@@ -221,7 +221,15 @@ public sealed class PatchRollbackTests : PatchTestBase
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(40));
 
         var injectedFailure = new InvalidOperationException("Injected application failure");
-        Action hook = () => throw injectedFailure;
+        bool failureInjected = false;
+        Action hook = () =>
+        {
+            if (failureInjected)
+                return;
+
+            failureInjected = true;
+            throw injectedFailure;
+        };
         List<Exception> reportedExceptions = [];
         Action<Exception> handler = reportedExceptions.Add;
         Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
