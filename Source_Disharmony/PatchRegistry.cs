@@ -204,7 +204,7 @@ internal class PatchRegistry
         return attributes;
     }
 
-    internal void ProcessPatch(PatchConfig patch, int unpatchKey, string extraStateKey = "")
+    private void ProcessPatch(PatchConfig patch, int unpatchKey, string extraStateKey = "")
     {
         if (patch.PatchMethod is null)
             throw new ArgumentException("Patch method not set; call Patch.With()", nameof(patch));
@@ -213,18 +213,15 @@ internal class PatchRegistry
         if (patch.Target is not MethodBaseInvocation targetInvocation)
             throw new ArgumentException("Patch target not set; call Patch.Of()", nameof(patch));
 
-        lock (syncRoot)
+        try
         {
-            try
-            {
-                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options,
-                    patch.Priority,
-                    extraStateKey, unpatchKey);
-            }
-            catch (Exception e)
-            {
-                throw new PatchException($"Error processing {patch.PatchMethod.FullName}", e);
-            }
+            AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options,
+                patch.Priority,
+                extraStateKey, unpatchKey);
+        }
+        catch (Exception e)
+        {
+            throw new PatchException($"Error processing {patch.PatchMethod.FullName}", e);
         }
     }
 
@@ -409,7 +406,7 @@ internal class PatchRegistry
         StateBuilder.ValidateState(patches);
     }
 
-    private void ApplyPendingChanges(bool useTrampolines)
+    private void ApplyPendingChanges()
     {
         Exception? patchException = null;
 
@@ -430,7 +427,7 @@ internal class PatchRegistry
                     bool debug = patches.Any(p => p.Debug);
                     bool optimize = patches.Any(p => p.Optimize);
 
-                    Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines, debug, optimize);
+                    Harmony.ApplyPatch(patchedMethod, ruleset, true, debug, optimize);
                 }
             }
             catch (Exception e)
@@ -455,7 +452,7 @@ internal class PatchRegistry
             {
                 ProcessAssembly(assembly, handle.id);
                 ValidatePatchGroup(handle.id);
-                ApplyPendingChanges(useTrampolines: true);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
@@ -473,7 +470,7 @@ internal class PatchRegistry
             {
                 ProcessAssembly(assembly, category, handle.id);
                 ValidatePatchGroup(handle.id);
-                ApplyPendingChanges(useTrampolines: true);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
@@ -491,7 +488,7 @@ internal class PatchRegistry
             {
                 ProcessType(type.GetTypeInfo(), handle.id);
                 ValidatePatchGroup(handle.id);
-                ApplyPendingChanges(useTrampolines: true);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
@@ -509,7 +506,7 @@ internal class PatchRegistry
             {
                 ProcessMethods(methods, handle.id);
                 ValidatePatchGroup(handle.id);
-                ApplyPendingChanges(useTrampolines: true);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
@@ -527,7 +524,7 @@ internal class PatchRegistry
             {
                 ProcessPatches(patches, handle.id);
                 ValidatePatchGroup(handle.id);
-                ApplyPendingChanges(useTrampolines: true);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
@@ -542,7 +539,7 @@ internal class PatchRegistry
         lock (syncRoot)
         {
             UnpatchInternal(handle.id);
-            ApplyPendingChanges(useTrampolines: true);
+            ApplyPendingChanges();
         }
     }
 
@@ -551,16 +548,13 @@ internal class PatchRegistry
         lock (syncRoot)
         {
             UnpatchAllInternal();
-            ApplyPendingChanges(useTrampolines: true);
+            ApplyPendingChanges();
         }
     }
 
     public void ForceApply()
     {
-        lock (syncRoot)
-            ApplyPendingChanges(useTrampolines: false);
-
-        // This function is often called on a background thread to patch eagerly while the main thread is waiting for
+        // This function is typically called on a background thread to patch eagerly while the main thread is waiting for
         // user input. If a trampoline needs to be resolved, we don't want it to block waiting for the background thread,
         // so we don't lock on syncRoot here.
         Harmony.ResolveAllTrampolines();

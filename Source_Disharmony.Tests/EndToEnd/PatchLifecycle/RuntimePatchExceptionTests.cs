@@ -272,8 +272,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         try
         {
-            PatchHandle handle = new PatchHandle();
-            PatchRegistry.Instance.ProcessPatch(Patch.With(patch).Prefix.Inner(innerTarget).Of(outerTarget), handle.id);
+            Patcher.Patch(Patch.With(patch).Prefix.Inner(innerTarget).Of(outerTarget));
 
             Assert.That(() => Patcher.ForceApply(), Throws.Nothing);
             Assert.That(reportedExceptions, Has.Count.EqualTo(1));
