@@ -20,7 +20,7 @@ public static class BoundaryTargetPatches
 
     public static void ExplicitInterfaceImplementation_ExecutesPatch() => PatchExecuted = true;
 
-    public static void RefReturnMethod_ExecutesPatchAndPreservesReference() => PatchExecuted = true;
+    public static void RefReturnMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
 
     public static void PointerParameterMethod_ExecutesPatchAndPreservesPointer() => PatchExecuted = true;
 
@@ -132,21 +132,14 @@ public sealed class BoundaryTargetTests : PatchTestBase
     }
 
     [Test]
-    public void RefReturnMethod_ExecutesPatchAndPreservesReference()
+    public void RefReturnMethod_IsRejectedBeforeRuntimePatching()
     {
-        BoundaryTargetPatches.PatchExecuted = false;
-        BoundaryTargets.RefReturnStorage = 1;
         MethodInfo target = typeof(BoundaryTargets)
             .GetMethod(nameof(BoundaryTargets.RefReturnMethod))!;
         MethodInfo patch = typeof(BoundaryTargetPatches)
-            .GetMethod(nameof(BoundaryTargetPatches.RefReturnMethod_ExecutesPatchAndPreservesReference))!;
+            .GetMethod(nameof(BoundaryTargetPatches.RefReturnMethod_IsRejectedBeforeRuntimePatching))!;
 
-        Patcher.Patch(Patch.Prefix.With(patch).Of(target));
-        ref int result = ref BoundaryTargets.RefReturnMethod();
-        result = 42;
-
-        Assert.That(BoundaryTargetPatches.PatchExecuted, Is.True);
-        Assert.That(BoundaryTargets.RefReturnStorage, Is.EqualTo(42));
+        Assert.Throws<PatchException>(() => Patcher.Patch(Patch.Prefix.With(patch).Of(target)));
     }
 
     [Test]
