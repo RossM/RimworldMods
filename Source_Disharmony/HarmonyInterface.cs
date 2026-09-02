@@ -120,7 +120,7 @@ internal class HarmonyInterface
                 Exception? e = PatchDirectly(method);
                 trampolines.Remove(method);
                 if (e != null)
-                    throw new RuntimePatchException($"{method.FullName}: Patch error", e);
+                    throw new RuntimePatchException($"Error patching {method.FullName}", e);
             }
         }
     }
@@ -267,7 +267,7 @@ internal class HarmonyInterface
                 }
                 catch (Exception e)
                 {
-                    throw new RuntimePatchException("Patch error", e);
+                    throw new RuntimePatchException($"Error patching {original.FullName}", e);
                 }
 
             HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);

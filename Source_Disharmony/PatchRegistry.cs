@@ -411,42 +411,40 @@ internal class PatchRegistry
 
     private void ApplyPendingChanges(bool useTrampolines)
     {
-        while (true)
+        Exception? patchException = null;
+
+        foreach (var patchedMethod in methodsToUpdate)
         {
-            lock (syncRoot)
+            try
             {
-                if (methodsToUpdate.Count == 0)
-                    return;
+                IReadOnlyList<PatchInfo> patches = patchesByMethod[patchedMethod];
 
-                var patchedMethod = methodsToUpdate.First();
-                try
+                if (patches.Count == 0)
                 {
-                    IReadOnlyList<PatchInfo> patches = patchesByMethod[patchedMethod];
-
-                    if (patches.Count == 0)
-                    {
-                        Harmony.Unpatch(patchedMethod.MethodBase);
-                    }
-                    else
-                    {
-                        Ruleset ruleset = RulesetGenerator.MakeRuleset(patchedMethod, patches);
-
-                        bool debug = patches.Any(p => p.Debug);
-                        bool optimize = patches.Any(p => p.Optimize);
-
-                        Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines, debug, optimize);
-                    }
+                    Harmony.Unpatch(patchedMethod.MethodBase);
                 }
-                catch (Exception e)
+                else
                 {
-                    throw new RuntimePatchException($"Error patching {patchedMethod.FullName}", e);
-                }
-                finally
-                {
-                    methodsToUpdate.Remove(patchedMethod);
+                    Ruleset ruleset = RulesetGenerator.MakeRuleset(patchedMethod, patches);
+
+                    bool debug = patches.Any(p => p.Debug);
+                    bool optimize = patches.Any(p => p.Optimize);
+
+                    Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines, debug, optimize);
                 }
             }
+            catch (Exception e)
+            {
+                Patcher.ReportException(e);
+                patchException ??= e;
+            }
         }
+
+        methodsToUpdate.Clear();
+
+        // If any patch failed, throw the exception to indicate that the patching process was not fully successful.
+        if (patchException is not null)
+            throw new RuntimePatchException("Patch failed", patchException);
     }
 
     public void PatchAll(Assembly assembly, PatchHandle handle)
@@ -564,11 +562,12 @@ internal class PatchRegistry
 
     public void ForceApply()
     {
+        lock (syncRoot)
+            ApplyPendingChanges(useTrampolines: false);
+
         // This function is often called on a background thread to patch eagerly while the main thread is waiting for
         // user input. If a trampoline needs to be resolved, we don't want it to block waiting for the background thread,
-        // so we don't lock here and instead rely on locking within ApplyPendingChanges.
-
-        ApplyPendingChanges(useTrampolines: false);
+        // so we don't lock on syncRoot here.
         Harmony.ResolveAllTrampolines();
     }
 }
