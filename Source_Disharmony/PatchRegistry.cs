@@ -357,12 +357,17 @@ internal class PatchRegistry
             throw new PatchDefinitionException(method, "Target method is abstract");
         if (target.ContainsGenericParameters)
             throw new PatchDefinitionException(method, "Can't patch uninstantiated generic method");
+        // This is a limitation of MonoMod
         if (target.IsGenericMethod)
             throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
         if ((target.Attributes & MethodAttributes.PinvokeImpl) != 0)
             throw new PatchDefinitionException(method, "Can't patch native method");
+        // This is a limitation of DynamicMethod
         if (target is MethodInfo { ReturnType.IsByRef: true })
             throw new PatchDefinitionException(method, "Can't patch method with by-ref return");
+        // This is a limitation of Harmony
+        if ((target.CallingConvention & CallingConventions.VarArgs) != 0)
+            throw new PatchDefinitionException(method, "Can't patch varargs method");
 
         switch (patchType)
         {

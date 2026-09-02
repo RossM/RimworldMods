@@ -167,7 +167,7 @@ public sealed class BoundaryTargetTests : PatchTestBase
         MethodInfo patch = typeof(BoundaryTargetPatches)
             .GetMethod(nameof(BoundaryTargetPatches.VarArgsMethod_ExecutesPatchAndPreservesArguments))!;
 
-        Patcher.Patch(Patch.Prefix.With(patch).Of(target));
+        Patcher.Patch(Patch.Prefix.With(patch).Of(target).Options(PatchOptions.Debug));
         int result = BoundaryTargets.CallVarArgsMethod();
 
         Assert.That(result, Is.EqualTo(3));
