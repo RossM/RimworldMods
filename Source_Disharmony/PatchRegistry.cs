@@ -555,12 +555,4 @@ internal class PatchRegistry
             ApplyPendingChanges();
         }
     }
-
-    public void ForceApply()
-    {
-        // This function is typically called on a background thread to patch eagerly while the main thread is waiting for
-        // user input. If a trampoline needs to be resolved, we don't want it to block waiting for the background thread,
-        // so we don't lock on syncRoot here.
-        Harmony.ResolveAllTrampolines();
-    }
 }

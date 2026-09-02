@@ -34,7 +34,8 @@ public enum PatchType
 ///             <description>
 ///                 Attribute-defined patches use <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" /> with
 ///                 <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Apply one with
-///                 <see cref="Patch(IEnumerable{MethodInfo})" />, all patches declared by a type with <see cref="PatchAll(Type)" />, or
+///                 <see cref="Patch(IEnumerable{MethodInfo})" />, all patches declared by a type with
+///                 <see cref="PatchAll(Type)" />, or
 ///                 marked patch classes from an assembly with <see cref="PatchAll(Assembly)" /> or
 ///                 <see cref="PatchCategory" />.
 ///             </description>
@@ -54,7 +55,8 @@ public enum PatchType
 ///         attributes. Passing a bound value by reference can replace it where supported.
 ///     </para>
 ///     <para>
-///         Every call that applies patches returns a <see cref="PatchHandle" />. Keep the handle if the patches may need to
+///         Every call that applies patches returns a <see cref="PatchHandle" />. Keep the handle if the patches may need
+///         to
 ///         be removed later with <see cref="Unpatch" />. A handle returned for several configurations removes them
 ///         together, and those configurations can share <see cref="StateAttribute">state</see>. Patches affect every
 ///         caller in the current process.
@@ -69,6 +71,7 @@ public enum PatchType
 public static class Patcher
 {
     private static PatchRegistry Registry => PatchRegistry.Instance;
+    private static HarmonyInterface Harmony => HarmonyInterface.Instance;
 
     /// <summary>
     ///     Notifies subscribers when Disharmony encounters a recoverable patching error.
@@ -228,6 +231,6 @@ public static class Patcher
     /// </remarks>
     public static void ForceApply()
     {
-        Registry.ForceApply();
+        Harmony.ResolveAllTrampolines();
     }
 }
