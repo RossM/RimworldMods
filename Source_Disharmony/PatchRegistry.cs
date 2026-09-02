@@ -353,6 +353,11 @@ internal class PatchRegistry
             throw new PatchDefinitionException(method, "Generic patch functions are not supported");
         if (!method.IsStatic)
             throw new PatchDefinitionException(method, "Patch methods must be static");
+        if (target.IsAbstract)
+            throw new PatchDefinitionException(method, "Target method is abstract");
+        if (target.IsGenericMethod)
+            throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
+
         switch (patchType)
         {
             case PatchType.Prefix:
@@ -371,9 +376,6 @@ internal class PatchRegistry
             }
             default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
         }
-
-        if (target.IsGenericMethod)
-            throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
     }
 
     public void UnpatchAll()
