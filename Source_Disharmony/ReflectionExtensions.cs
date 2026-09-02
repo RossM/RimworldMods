@@ -1,6 +1,6 @@
 ﻿namespace Disharmony;
 
-public static class ReflectionExtensions
+internal static class ReflectionExtensions
 {
     extension(MemberInfo member)
     {
