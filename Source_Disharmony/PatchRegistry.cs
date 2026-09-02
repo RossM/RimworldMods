@@ -93,6 +93,8 @@ internal struct PatchInfo
 
 internal class PatchRegistry
 {
+    internal static HarmonyInterface Harmony => HarmonyInterface.Instance;
+
     public static readonly PatchRegistry Instance = new();
 
     // When another lock is also needed, this must be taken after Autopatcher's apply lock
@@ -106,107 +108,92 @@ internal class PatchRegistry
 
     private void ProcessAssembly(Assembly assembly, int unpatchKey)
     {
-        lock (syncRoot)
+        foreach (TypeInfo type in assembly.DefinedTypes)
         {
-            foreach (TypeInfo type in assembly.DefinedTypes)
-            {
-                if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
-                    ProcessType(type, unpatchKey, type.FullName);
-            }
+            if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
+                ProcessType(type, unpatchKey, type.FullName);
         }
     }
 
     private void ProcessAssembly(Assembly assembly, string? category, int unpatchKey)
     {
-        lock (syncRoot)
+        foreach (TypeInfo type in assembly.DefinedTypes)
         {
-            foreach (TypeInfo type in assembly.DefinedTypes)
-            {
-                if (type.GetCustomAttribute<PatchAttribute>() == null && type.GetCustomAttribute<HarmonyPatch>() == null)
-                    continue;
+            if (type.GetCustomAttribute<PatchAttribute>() == null && type.GetCustomAttribute<HarmonyPatch>() == null)
+                continue;
 
-                if ((type.GetCustomAttribute<CategoryAttribute>()?.Category ??
-                     type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
-                    continue;
+            if ((type.GetCustomAttribute<CategoryAttribute>()?.Category ??
+                 type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
+                continue;
 
-                ProcessType(type, unpatchKey, type.FullName);
-            }
+            ProcessType(type, unpatchKey, type.FullName);
         }
     }
 
     private void ProcessType(TypeInfo type, int unpatchKey, string extraStateKey = "")
     {
-        lock (syncRoot)
-        {
-            foreach (MethodInfo method in type.DeclaredMethods)
-                ProcessMethod(method, unpatchKey, extraStateKey);
-        }
+        foreach (MethodInfo method in type.DeclaredMethods)
+            ProcessMethod(method, unpatchKey, extraStateKey);
     }
 
     private void ProcessMethod(MethodInfo method, int unpatchKey, string extraStateKey = "")
     {
-        lock (syncRoot)
+        try
         {
-            try
+            List<Attribute> attributes = GetAttributes(method);
+
+            var defaultTargetType =
+                attributes.OfType<PatchAttribute>().Select(p => p.Type).FirstOrDefault(t => t is not null) ??
+                attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
+            var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
+            var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
+            var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
+            var priority = attributes.OfType<PriorityAttribute>().FirstOrDefault()?.Priority ?? PatchPriority.Default;
+            var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.Options ?? PatchOptions.Default;
+
+            if (patchTypeAttribute == null)
+                return;
+
+            PatchType patchType = patchTypeAttribute.PatchType;
+
+            Invocation inner = GetInnerInvocation(innerAttribute);
+
+            foreach (var targetAttribute in targetAttributes)
             {
-                List<Attribute> attributes = GetAttributes(method);
+                var patchedType = targetAttribute.Type ?? defaultTargetType ??
+                    throw new PatchDefinitionException(method, "No target type");
 
-                var defaultTargetType =
-                    attributes.OfType<PatchAttribute>().Select(p => p.Type).FirstOrDefault(t => t is not null) ??
-                    attributes.OfType<HarmonyPatch>().Select(p => p.info.declaringType).FirstOrDefault(t => t is not null);
-                var patchTypeAttribute = attributes.OfType<PatchTypeAttribute>().SingleOrDefault();
-                var innerAttribute = attributes.OfType<InnerAttributeBase>().SingleOrDefault();
-                var targetAttributes = attributes.OfType<TargetAttribute>().ToList();
-                var priority = attributes.OfType<PriorityAttribute>().FirstOrDefault()?.Priority ?? PatchPriority.Default;
-                var options = attributes.OfType<PatchOptionsAttribute>().FirstOrDefault()?.Options ?? PatchOptions.Default;
+                List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
+                    targetAttribute.MemberType, targetAttribute.ParameterTypes, targetAttribute.GenericTypes);
 
-                if (patchTypeAttribute == null)
-                    return;
+                var nameForErrors = targetAttribute.MemberType == MemberType.Constructor ? ".ctor" : targetAttribute.MethodName;
 
-                PatchType patchType = patchTypeAttribute.PatchType;
-
-                Invocation inner = GetInnerInvocation(innerAttribute);
-
-                foreach (var targetAttribute in targetAttributes)
+                switch (candidates.Count)
                 {
-                    var patchedType = targetAttribute.Type ?? defaultTargetType ??
-                        throw new PatchDefinitionException(method, "No target type");
+                    case > 1 when targetAttribute is not TargetsAttribute:
+                        throw new AmbiguousMatchException($"{nameForErrors}: Ambiguous match");
+                    case 0: throw new ReflectionException($"{nameForErrors}: Member not found");
+                }
 
-                    List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
-                        targetAttribute.MemberType, targetAttribute.ParameterTypes, targetAttribute.GenericTypes);
-
-                    var nameForErrors = targetAttribute.MemberType == MemberType.Constructor ? ".ctor" : targetAttribute.MethodName;
-
-                    switch (candidates.Count)
-                    {
-                        case > 1 when targetAttribute is not TargetsAttribute:
-                            throw new AmbiguousMatchException($"{nameForErrors}: Ambiguous match");
-                        case 0: throw new ReflectionException($"{nameForErrors}: Member not found");
-                    }
-
-                    foreach (var result in candidates)
-                    {
-                        MethodBase target = result as MethodBase ??
-                                            throw new ReflectionException($"{nameForErrors}: Couldn't locate method");
-                        AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, priority,
-                            extraStateKey, unpatchKey);
-                    }
+                foreach (var result in candidates)
+                {
+                    MethodBase target = result as MethodBase ??
+                                        throw new ReflectionException($"{nameForErrors}: Couldn't locate method");
+                    AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, priority,
+                        extraStateKey, unpatchKey);
                 }
             }
-            catch (Exception e)
-            {
-                throw new PatchException($"Error processing {method.FullName}", e);
-            }
+        }
+        catch (Exception e)
+        {
+            throw new PatchException($"Error processing {method.FullName}", e);
         }
     }
 
     private void ProcessMethods(IEnumerable<MethodInfo> methods, int unpatchKey)
     {
-        lock (syncRoot)
-        {
-            foreach (var method in methods)
-                ProcessMethod(method, unpatchKey);
-        }
+        foreach (var method in methods)
+            ProcessMethod(method, unpatchKey);
     }
 
     private static List<Attribute> GetAttributes(MethodInfo method)
@@ -231,7 +218,8 @@ internal class PatchRegistry
         {
             try
             {
-                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options, patch.Priority,
+                AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options,
+                    patch.Priority,
                     extraStateKey, unpatchKey);
             }
             catch (Exception e)
@@ -243,11 +231,8 @@ internal class PatchRegistry
 
     private void ProcessPatches(IEnumerable<PatchConfig> patches, int unpatchKey)
     {
-        lock (syncRoot)
-        {
-            foreach (var patch in patches)
-                ProcessPatch(patch, unpatchKey);
-        }
+        foreach (var patch in patches)
+            ProcessPatch(patch, unpatchKey);
     }
 
     private static Invocation GetInnerInvocation(InnerAttributeBase? patchTypeAttribute)
@@ -391,47 +376,38 @@ internal class PatchRegistry
 
     private void UnpatchAllInternal()
     {
-        lock (syncRoot)
+        foreach (var group in patchesByMethod)
         {
-            foreach (var group in patchesByMethod)
-            {
-                if (group.Any())
-                    methodsToUpdate.Add(group.Key);
-            }
-
-            patchesByMethod.Clear();
-            methodsByUnpatchKey.Clear();
+            if (group.Any())
+                methodsToUpdate.Add(group.Key);
         }
+
+        patchesByMethod.Clear();
+        methodsByUnpatchKey.Clear();
     }
 
     private void UnpatchInternal(int unpatchKey)
     {
-        lock (syncRoot)
+        if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methods))
+            return;
+
+        foreach (var method in methods)
         {
-            if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methods))
-                return;
-
-            foreach (var method in methods)
-            {
-                int count = patchesByMethod.RemoveAll(method, p => p.unpatchKey == unpatchKey);
-                if (count > 0)
-                    methodsToUpdate.Add(method);
-            }
-
-            methodsByUnpatchKey.Remove(unpatchKey);
+            int count = patchesByMethod.RemoveAll(method, p => p.unpatchKey == unpatchKey);
+            if (count > 0)
+                methodsToUpdate.Add(method);
         }
+
+        methodsByUnpatchKey.Remove(unpatchKey);
     }
 
     private void ValidatePatchGroup(int unpatchKey)
     {
-        lock (syncRoot)
-        {
-            if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methods))
-                return;
+        if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methods))
+            return;
 
-            var patches = methods.SelectMany(m => patchesByMethod[m].Where(p => p.unpatchKey == unpatchKey)).ToList();
-            StateBuilder.ValidateState(patches);
-        }
+        var patches = methods.SelectMany(m => patchesByMethod[m].Where(p => p.unpatchKey == unpatchKey)).ToList();
+        StateBuilder.ValidateState(patches);
     }
 
     private void ApplyPendingChanges(bool useTrampolines)
@@ -589,10 +565,11 @@ internal class PatchRegistry
 
     public void ForceApply()
     {
-        lock (syncRoot)
-        {
-            ApplyPendingChanges(useTrampolines: false);
-            Patcher.Harmony.ResolveAllTrampolines();
-        }
+        // This function is often called on a background thread to patch eagerly while the main thread is waiting for
+        // user input. If a trampoline needs to be resolved, we don't want it to block waiting for the background thread,
+        // so we don't lock here and instead rely on locking within ApplyPendingChanges.
+
+        ApplyPendingChanges(useTrampolines: false);
+        Harmony.ResolveAllTrampolines();
     }
 }
