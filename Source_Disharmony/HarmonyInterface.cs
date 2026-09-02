@@ -126,7 +126,7 @@ internal class HarmonyInterface
     }
 
     // Must hold HarmonyInternals.locker
-    public MethodInfo ApplyTrampoline(MethodBaseInvocation method)
+    private MethodInfo ApplyTrampoline(MethodBaseInvocation method)
     {
         if (trampolines.TryGetValue(method.MethodBase, out var existingTrampoline))
             return existingTrampoline;
