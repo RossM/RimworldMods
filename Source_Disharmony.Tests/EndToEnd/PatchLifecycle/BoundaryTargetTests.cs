@@ -24,7 +24,7 @@ public static class BoundaryTargetPatches
 
     public static void PointerParameterMethod_ExecutesPatchAndPreservesPointer() => PatchExecuted = true;
 
-    public static void VarArgsMethod_ExecutesPatchAndPreservesArguments() => PatchExecuted = true;
+    public static void VarArgsMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
 }
 
 [TestFixture]
@@ -159,18 +159,13 @@ public sealed class BoundaryTargetTests : PatchTestBase
     }
 
     [Test]
-    public void VarArgsMethod_ExecutesPatchAndPreservesArguments()
+    public void VarArgsMethod_IsRejectedBeforeRuntimePatching()
     {
-        BoundaryTargetPatches.PatchExecuted = false;
         MethodInfo target = typeof(BoundaryTargets)
             .GetMethod(nameof(BoundaryTargets.VarArgsMethod))!;
         MethodInfo patch = typeof(BoundaryTargetPatches)
-            .GetMethod(nameof(BoundaryTargetPatches.VarArgsMethod_ExecutesPatchAndPreservesArguments))!;
+            .GetMethod(nameof(BoundaryTargetPatches.VarArgsMethod_IsRejectedBeforeRuntimePatching))!;
 
-        Patcher.Patch(Patch.Prefix.With(patch).Of(target).Options(PatchOptions.Debug));
-        int result = BoundaryTargets.CallVarArgsMethod();
-
-        Assert.That(result, Is.EqualTo(3));
-        Assert.That(BoundaryTargetPatches.PatchExecuted, Is.True);
+        Assert.Throws<PatchException>(() => Patcher.Patch(Patch.Prefix.With(patch).Of(target)));
     }
 }
