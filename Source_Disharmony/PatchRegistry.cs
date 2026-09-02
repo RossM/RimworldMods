@@ -355,6 +355,8 @@ internal class PatchRegistry
             throw new PatchDefinitionException(method, "Patch methods must be static");
         if (target.IsAbstract)
             throw new PatchDefinitionException(method, "Target method is abstract");
+        if (target.ContainsGenericParameters)
+            throw new PatchDefinitionException(method, "Can't patch uninstantiated generic method");
         if (target.IsGenericMethod)
             throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
 
