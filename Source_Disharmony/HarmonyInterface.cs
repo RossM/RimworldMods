@@ -163,18 +163,19 @@ internal class HarmonyInterface
             return instructionsList;
         }
 
-        if (Instance.optimizerEnabled && patch.optimize)
-            try
-            {
-                var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
-                return optimizer.Optimize();
-            }
-            catch (Exception e)
-            {
-                Patcher.ReportException(e);
-            }
+        if (!Instance.optimizerEnabled || !patch.optimize)
+            return instructionsList;
 
-        return instructionsList;
+        try
+        {
+            var optimizer = new Optimizer.Optimizer(method, instructionsList, generator, debug: patch.debug);
+            return optimizer.Optimize();
+        }
+        catch (Exception e)
+        {
+            Patcher.ReportException(e);
+            return instructionsList;
+        }
     }
 
     private MethodInfo MakeTrampoline(MethodBaseInvocation target)
