@@ -31,10 +31,11 @@ check, with result files retained separately.
 ## Harmony coexistence
 
 Disharmony relies on Harmony/MonoMod, but most tests exercise Disharmony in isolation. Add a small integration fixture
-that deliberately combines public Harmony patches with public Disharmony patches. Use dedicated target and patch
-assemblies rather than scanning the main test assembly.
+that deliberately combines public Harmony patches with public Disharmony patches. Use dedicated target and patch types,
+and select the patch methods explicitly rather than scanning the main test assembly.
 
-Representative cases:
+The initial suite is implemented in `EndToEnd/Interop/HarmonyCoexistenceTests.cs`. It uses Harmony's explicit
+`Harmony.Patch` API with valid patches and a fixture-specific Harmony ID. It covers:
 
 - Apply a Harmony prefix/postfix pair first, then a Disharmony pair to the same method; verify execution order and result.
 - Apply the same patches in the opposite registration order.
@@ -44,7 +45,14 @@ Representative cases:
   verify Disharmony remains active.
 - Repeat an apply, first-call trampoline resolution, unpatch, and reapply cycle while the other library's patch remains
   installed.
+
+Possible follow-up coverage:
+
 - Verify an application failure or rollback on one side does not remove or corrupt the other side's registrations.
+
+Avoid deliberately invalid Harmony patches and throwing Harmony transpilers in this fixture. Harmony may emit invalid
+IL or retain a broken patch state instead of rolling back, so those cases cannot safely provide isolated coexistence
+tests.
 
 The purpose is not to duplicate Harmony's own tests. It is to protect ownership, ordering, wrapper regeneration, and
 cache invalidation at the boundary between the two systems.
