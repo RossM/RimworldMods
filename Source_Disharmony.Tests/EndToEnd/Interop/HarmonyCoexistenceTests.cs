@@ -117,7 +117,7 @@ public sealed class HarmonyCoexistenceTests : PatchTestBase
     [TearDown]
     public void RemoveCoexistingPatchesAfterTest()
     {
-        Patcher.UnpatchAll();
+        PatchRegistry.Instance.UnpatchAll();
         harmony.UnpatchAll(HarmonyId);
     }
 

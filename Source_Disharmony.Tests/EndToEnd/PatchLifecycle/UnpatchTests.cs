@@ -53,7 +53,7 @@ internal class UnpatchTests
     [SetUp]
     public void SetUp()
     {
-        Patcher.UnpatchAll();
+        PatchRegistry.Instance.UnpatchAll();
         Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
         Patcher.RuntimeExceptionHandler += ThrowRuntimeException;
         HarmonyInterface.Instance.optimizerEnabled = false;
@@ -66,7 +66,7 @@ internal class UnpatchTests
     public void TearDown()
     {
         Patcher.RuntimeExceptionHandler -= ThrowRuntimeException;
-        Patcher.UnpatchAll();
+        PatchRegistry.Instance.UnpatchAll();
     }
 
     [Test]

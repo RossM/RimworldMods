@@ -230,15 +230,4 @@ public static class Patcher
     {
         Registry.ForceApply();
     }
-
-    /// <summary>
-    ///     Removes every registered Disharmony patch and reapplies the affected targets.
-    /// </summary>
-    /// <remarks>
-    ///     This does not remove patches installed independently through Harmony.
-    /// </remarks>
-    internal static void UnpatchAll()
-    {
-        Registry.UnpatchAll();
-    }
 }

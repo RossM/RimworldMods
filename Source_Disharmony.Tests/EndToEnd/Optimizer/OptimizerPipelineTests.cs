@@ -261,7 +261,7 @@ public sealed class OptimizerPipelineTests : PatchTestBase
     public void DisableOptimizer()
     {
         HarmonyInterface.Instance.optimizerEnabled = false;
-        Patcher.UnpatchAll();
+        PatchRegistry.Instance.UnpatchAll();
     }
 
     [Test]
