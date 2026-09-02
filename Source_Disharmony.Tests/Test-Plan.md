@@ -119,14 +119,36 @@ layout except in focused reflection unit tests.
 
 ## Boundary targets and validation
 
-Create a compact set of public-API tests around uncommon method shapes that may reach Harmony, reflection, or code
-generation differently. The goal is either correct execution or a specific early Disharmony exception—never a late
-`RuntimePatchException`, process crash, or silently ineffective patch.
+The initial public-API boundary suite is implemented in
+`EndToEnd/PatchLifecycle/BoundaryTargetTests.cs`. Its contract is either correct execution or a specific early
+Disharmony `PatchException`—never a late `RuntimePatchException`, process crash, invalid IL, or silently ineffective
+patch.
 
-Candidates include abstract methods, interface methods, extern/P/Invoke methods, open generic declaring types, generic
-method definitions versus constructed generic methods, varargs methods if representable, methods with function-pointer
-or pointer signatures, and type initializers. The existing ignored static-constructor test should remain documented as a
-Harmony limitation unless the underlying runtime behavior changes.
+The suite records the current support decisions:
+
+- Abstract methods, interface declarations, extern/P/Invoke methods, open generic declaring types, generic method
+  definitions, constructed generic methods, by-ref-returning methods, and varargs methods are rejected during
+  `Patcher.Patch` validation.
+- Constructed generic methods are rejected because MonoMod 1.2.3 cannot detour them on the .NET Framework runtime used
+  by the tests. Without the guard, MonoMod reaches its unimplemented
+  `MethodTable.GetMethodDescForSlot` path while locating the native entry point.
+- Varargs are rejected because Harmony produces invalid IL while resolving the trampoline.
+- Non-generic methods on closed generic declaring types are supported. Trampolines must resolve their method tokens
+  with both the method handle and declaring-type handle.
+- Explicit interface implementations, pointer parameters, and ordinary concrete methods reached through interface
+  calls are supported.
+
+Possible follow-up coverage:
+
+- Function-pointer signatures, if they can be represented safely by the target framework and C# compiler used by the
+  Release-built `TestTargets` project.
+- Additional closed-generic shapes, such as instance methods and nested generic declaring types, if generic trampoline
+  handling changes.
+- Revisit rejected shapes only when the relevant Harmony, MonoMod, or runtime limitation changes; keep validation tests
+  so unsupported inputs cannot regress into late failures.
+
+The existing ignored static-constructor test remains documentation of a separate Harmony/MonoMod limitation:
+preparing the target method runs the type initializer before the patch can be installed.
 
 ## Behavioral preservation corpus
 
