@@ -68,8 +68,6 @@ public enum PatchType
 [PublicAPI]
 public static class Patcher
 {
-    // Lock order: applyLock, PatchRegistry.SyncRoot, Harmony's lock.
-    private static readonly object applyLock = new();
     private static PatchRegistry Registry => PatchRegistry.Instance;
     internal static HarmonyInterface Harmony => HarmonyInterface.Instance;
 

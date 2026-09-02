@@ -97,8 +97,7 @@ internal class PatchRegistry
 
     public static readonly PatchRegistry Instance = new();
 
-    // When another lock is also needed, this must be taken after Autopatcher's apply lock
-    // and before Harmony's lock.
+    // When another lock is also needed, this must be taken before Harmony's lock.
     private readonly object syncRoot = new();
     private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
     private readonly MultiDictionary<MethodBaseInvocation, PatchInfo> patchesByMethod = [];
