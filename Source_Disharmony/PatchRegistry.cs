@@ -99,7 +99,11 @@ internal class PatchRegistry
 
     // When another lock is also needed, this must be taken before Harmony's lock.
     private readonly object syncRoot = new();
+    
+    // A set of methods that need updating in ApplyPendingChanges. This should be empty at the end of
+    // every call of a public method on this class (Patch*/Unpatch*).
     private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
+
     private readonly MultiDictionary<MethodBaseInvocation, PatchInfo> patchesByMethod = [];
     private readonly Dictionary<int, HashSet<MethodBaseInvocation>> methodsByUnpatchKey = [];
 
