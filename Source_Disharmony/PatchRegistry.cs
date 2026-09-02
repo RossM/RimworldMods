@@ -359,6 +359,8 @@ internal class PatchRegistry
             throw new PatchDefinitionException(method, "Can't patch uninstantiated generic method");
         if (target.IsGenericMethod)
             throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
+        if ((target.Attributes & MethodAttributes.PinvokeImpl) != 0)
+            throw new PatchDefinitionException(method, "Can't patch native method");
 
         switch (patchType)
         {
