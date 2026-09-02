@@ -44,6 +44,10 @@ internal class HarmonyInterface
 
     public bool optimizerEnabled = false;
 
+#if DEBUG
+    internal event Action? ApplyPatchHookForTesting = null;
+#endif
+
     public HarmonyInterface()
     {
         module = GetType().Module;
@@ -231,6 +235,10 @@ internal class HarmonyInterface
 
     public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines, bool debug, bool optimize)
     {
+#if DEBUG
+        ApplyPatchHookForTesting?.Invoke();
+#endif
+
         lock (HarmonyInternals.locker)
         {
             HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
