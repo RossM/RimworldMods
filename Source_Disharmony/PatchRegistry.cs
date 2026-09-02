@@ -456,15 +456,13 @@ internal class PatchRegistry
             {
                 ProcessAssembly(assembly, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
-                methodsToUpdate.Clear();
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges();
         }
     }
 
@@ -476,15 +474,13 @@ internal class PatchRegistry
             {
                 ProcessAssembly(assembly, category, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
-                methodsToUpdate.Clear();
+                Unpatch(handle);
                 throw;
             }
-            
-            ApplyPendingChanges();
         }
     }
 
@@ -496,15 +492,13 @@ internal class PatchRegistry
             {
                 ProcessType(type.GetTypeInfo(), handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
-                methodsToUpdate.Clear();
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges();
         }
     }
 
@@ -516,15 +510,13 @@ internal class PatchRegistry
             {
                 ProcessMethods(methods, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
-                methodsToUpdate.Clear();
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges();
         }
     }
 
@@ -536,15 +528,13 @@ internal class PatchRegistry
             {
                 ProcessPatches(patches, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges();
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
-                methodsToUpdate.Clear();
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges();
         }
     }
 
