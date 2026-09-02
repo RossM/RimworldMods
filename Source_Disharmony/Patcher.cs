@@ -88,8 +88,8 @@ public static class Patcher
     /// <param name="exception">The exception to report.</param>
     internal static void ReportException(Exception exception)
     {
-        if (RuntimeExceptionHandler != null)
-            RuntimeExceptionHandler(exception);
+        if (RuntimeExceptionHandler is { } handler)
+            handler(exception);
         else
             FileLog.Log($"!!! Unhandled exception: {exception}");
     }
