@@ -1,6 +1,4 @@
-﻿using Disharmony.Optimizer;
-
-namespace Disharmony;
+﻿namespace Disharmony.RuleBuilders;
 
 /// <summary>
 ///     This class manages the state variables used by patches and generates rules to initialize them at the beginning of

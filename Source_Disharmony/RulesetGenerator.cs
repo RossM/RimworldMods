@@ -1,4 +1,6 @@
-﻿namespace Disharmony;
+﻿using Disharmony.RuleBuilders;
+
+namespace Disharmony;
 
 internal static class RulesetGenerator
 {

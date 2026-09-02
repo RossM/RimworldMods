@@ -1,4 +1,4 @@
-﻿namespace Disharmony;
+﻿namespace Disharmony.RuleBuilders;
 
 internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer)
 {

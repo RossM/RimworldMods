@@ -1,4 +1,4 @@
-﻿namespace Disharmony;
+﻿namespace Disharmony.RuleBuilders;
 
 /// <summary>
 ///     This class generates rules implementing <see cref="PatchType.Prefix" /> and <see cref="PatchType.Postfix" />

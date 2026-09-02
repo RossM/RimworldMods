@@ -1,4 +1,4 @@
-﻿namespace Disharmony;
+﻿namespace Disharmony.RuleBuilders;
 
 /// <summary>
 ///     This class generates rules implementing the <see cref="PatchOptions.Inline" /> patch option for a method.
