@@ -1,6 +1,6 @@
 ﻿using Disharmony.Optimizer;
 
-namespace Disharmony;
+namespace Disharmony.Utilities;
 
 // This was originally intended to just be a way of keeping track of the LocalBuilder associated
 // with a local if we have one, but it turns out to dramatically simplify code dealing with locals.

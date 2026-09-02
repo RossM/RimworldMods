@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Disharmony;
+namespace Disharmony.Utilities;
 
 internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruction>
 {

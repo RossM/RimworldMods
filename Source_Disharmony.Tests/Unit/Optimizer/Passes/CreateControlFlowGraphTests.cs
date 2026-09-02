@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Disharmony.Optimizer.Passes;
+using Disharmony.Utilities;
 
 namespace Disharmony.Tests.Unit.Optimizer.Passes;
 
