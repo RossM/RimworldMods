@@ -104,7 +104,7 @@ internal class PatchRegistry
 
     private PatchRegistry() { }
 
-    public void ProcessAssembly(Assembly assembly, int unpatchKey)
+    private void ProcessAssembly(Assembly assembly, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -116,7 +116,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessAssembly(Assembly assembly, string? category, int unpatchKey)
+    private void ProcessAssembly(Assembly assembly, string? category, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -134,7 +134,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessType(TypeInfo type, int unpatchKey, string extraStateKey = "")
+    private void ProcessType(TypeInfo type, int unpatchKey, string extraStateKey = "")
     {
         lock (syncRoot)
         {
@@ -143,7 +143,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessMethod(MethodInfo method, int unpatchKey, string extraStateKey = "")
+    private void ProcessMethod(MethodInfo method, int unpatchKey, string extraStateKey = "")
     {
         lock (syncRoot)
         {
@@ -200,7 +200,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessMethods(IEnumerable<MethodInfo> methods, int unpatchKey)
+    private void ProcessMethods(IEnumerable<MethodInfo> methods, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -218,7 +218,7 @@ internal class PatchRegistry
         return attributes;
     }
 
-    public void ProcessPatch(PatchConfig patch, int unpatchKey, string extraStateKey = "")
+    internal void ProcessPatch(PatchConfig patch, int unpatchKey, string extraStateKey = "")
     {
         if (patch.PatchMethod is null)
             throw new ArgumentException("Patch method not set; call Patch.With()", nameof(patch));
@@ -241,7 +241,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ProcessPatches(IEnumerable<PatchConfig> patches, int unpatchKey)
+    private void ProcessPatches(IEnumerable<PatchConfig> patches, int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -389,7 +389,7 @@ internal class PatchRegistry
         }
     }
 
-    public void UnpatchAll()
+    private void UnpatchAllInternal()
     {
         lock (syncRoot)
         {
@@ -404,7 +404,7 @@ internal class PatchRegistry
         }
     }
 
-    public void Unpatch(int unpatchKey)
+    private void UnpatchInternal(int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -422,7 +422,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ValidatePatchGroup(int unpatchKey)
+    private void ValidatePatchGroup(int unpatchKey)
     {
         lock (syncRoot)
         {
@@ -434,7 +434,7 @@ internal class PatchRegistry
         }
     }
 
-    public void ApplyPendingChanges(bool useTrampolines)
+    private void ApplyPendingChanges(bool useTrampolines)
     {
         while (true)
         {
@@ -471,6 +471,128 @@ internal class PatchRegistry
                     methodsToUpdate.Remove(patchedMethod);
                 }
             }
+        }
+    }
+
+    public void PatchAll(Assembly assembly, PatchHandle handle)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                ProcessAssembly(assembly, handle.id);
+                ValidatePatchGroup(handle.id);
+            }
+            catch (Exception)
+            {
+                UnpatchInternal(handle.id);
+                throw;
+            }
+
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void PatchCategory(Assembly assembly, string? category, PatchHandle handle)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                ProcessAssembly(assembly, category, handle.id);
+                ValidatePatchGroup(handle.id);
+            }
+            catch (Exception)
+            {
+                UnpatchInternal(handle.id);
+                throw;
+            }
+
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void PatchAll(Type type, PatchHandle handle)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                ProcessType(type.GetTypeInfo(), handle.id);
+                ValidatePatchGroup(handle.id);
+            }
+            catch (Exception)
+            {
+                UnpatchInternal(handle.id);
+                throw;
+            }
+
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void Patch(IEnumerable<MethodInfo> methods, PatchHandle handle)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                ProcessMethods(methods, handle.id);
+                ValidatePatchGroup(handle.id);
+            }
+            catch (Exception)
+            {
+                UnpatchInternal(handle.id);
+                throw;
+            }
+
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void Patch(IEnumerable<PatchConfig> patches, PatchHandle handle)
+    {
+        lock (syncRoot)
+        {
+            try
+            {
+                ProcessPatches(patches, handle.id);
+                ValidatePatchGroup(handle.id);
+            }
+            catch (Exception)
+            {
+                UnpatchInternal(handle.id);
+                throw;
+            }
+
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void Unpatch(PatchHandle handle)
+    {
+        lock (syncRoot)
+        {
+            UnpatchInternal(handle.id);
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void UnpatchAll()
+    {
+        lock (syncRoot)
+        {
+            UnpatchAllInternal();
+            ApplyPendingChanges(useTrampolines: true);
+        }
+    }
+
+    public void ForceApply()
+    {
+        lock (syncRoot)
+        {
+            ApplyPendingChanges(useTrampolines: false);
+            Patcher.Harmony.ResolveAllTrampolines();
         }
     }
 }

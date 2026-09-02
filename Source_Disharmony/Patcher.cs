@@ -107,18 +107,7 @@ public static class Patcher
     public static PatchHandle PatchAll(Assembly assembly)
     {
         PatchHandle handle = new PatchHandle();
-        try
-        {
-            Registry.ProcessAssembly(assembly, handle.id);
-            Registry.ValidatePatchGroup(handle.id);
-        }
-        catch (Exception)
-        {
-            Registry.Unpatch(handle.id);
-            throw;
-        }
-
-        Registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.PatchAll(assembly, handle);
         return handle;
     }
 
@@ -137,17 +126,7 @@ public static class Patcher
     public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
         PatchHandle handle = new PatchHandle();
-        try
-        {
-            Registry.ProcessAssembly(assembly, category, handle.id);
-            Registry.ValidatePatchGroup(handle.id);
-        }
-        catch (Exception)
-        {
-            Registry.Unpatch(handle.id);
-            throw;
-        }
-        Registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.PatchCategory(assembly, category, handle);
         return handle;
     }
 
@@ -163,17 +142,7 @@ public static class Patcher
     public static PatchHandle PatchAll(Type type)
     {
         PatchHandle handle = new PatchHandle();
-        try
-        {
-            Registry.ProcessType(type.GetTypeInfo(), handle.id);
-            Registry.ValidatePatchGroup(handle.id);
-        }
-        catch (Exception)
-        {
-            Registry.Unpatch(handle.id);
-            throw;
-        }
-        Registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.PatchAll(type, handle);
         return handle;
     }
 
@@ -188,17 +157,7 @@ public static class Patcher
     public static PatchHandle Patch(params IEnumerable<MethodInfo> methods)
     {
         PatchHandle handle = new PatchHandle();
-        try
-        {
-            Registry.ProcessMethods(methods, handle.id);
-            Registry.ValidatePatchGroup(handle.id);
-        }
-        catch (Exception)
-        {
-            Registry.Unpatch(handle.id);
-            throw;
-        }
-        Registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.Patch(methods, handle);
         return handle;
     }
 
@@ -247,17 +206,7 @@ public static class Patcher
     public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
     {
         PatchHandle handle = new PatchHandle();
-        try
-        {
-            Registry.ProcessPatches(patches, handle.id);
-            Registry.ValidatePatchGroup(handle.id);
-        }
-        catch (Exception)
-        {
-            Registry.Unpatch(handle.id);
-            throw;
-        }
-        Registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.Patch(patches, handle);
         return handle;
     }
 
@@ -270,8 +219,7 @@ public static class Patcher
     /// </remarks>
     public static void Unpatch(PatchHandle handle)
     {
-        Registry.Unpatch(handle.id);
-        Registry.ApplyPendingChanges(useTrampolines: true);
+        Registry.Unpatch(handle);
     }
 
     /// <summary>
@@ -283,8 +231,7 @@ public static class Patcher
     /// </remarks>
     public static void ForceApply()
     {
-        Registry.ApplyPendingChanges(useTrampolines: false);
-        Harmony.ResolveAllTrampolines();
+        Registry.ForceApply();
     }
 
     /// <summary>
@@ -296,6 +243,5 @@ public static class Patcher
     internal static void UnpatchAll()
     {
         Registry.UnpatchAll();
-        Registry.ApplyPendingChanges(useTrampolines: true);
     }
 }
