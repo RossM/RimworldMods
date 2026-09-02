@@ -107,7 +107,7 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
             output.Add(new(OpCodes.Brfalse_S, noThrowLabel));
             output.Add(exceptionLocal!.Load());
             output.Add(dispatchInfoLocal!.Load());
-            output.Add(new(OpCodes.Call, InfoOf.RethrowException));
+            output.Add(new(OpCodes.Call, InfoOf.RuntimeHelpers_RethrowException));
             output.Add(new CodeInstruction(OpCodes.Nop).WithLabels(noThrowLabel));
         }
 

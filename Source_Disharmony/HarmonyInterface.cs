@@ -189,20 +189,20 @@ internal class HarmonyInterface
 
         EmitLoadArguments(generator, parameterTypes);
 
-        // Call ResolveTrampoline(), which generates the real patch and applies a detour
         if (target.MethodBase.DeclaringType is { IsGenericType: true })
         {
             generator.Emit(OpCodes.Ldtoken, target);
             generator.Emit(OpCodes.Ldtoken, target.MethodBase.DeclaringType);
-            generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle2);
+            generator.Emit(OpCodes.Call, InfoOf.MethodBase_GetMethodFromHandle2);
         }
         else
         {
             generator.Emit(OpCodes.Ldtoken, target);
-            generator.Emit(OpCodes.Call, InfoOf.GetMethodFromHandle1);
+            generator.Emit(OpCodes.Call, InfoOf.MethodBase_GetMethodFromHandle1);
         }
 
-        generator.Emit(OpCodes.Call, InfoOf.ResolveTrampoline);
+        // Call ResolveTrampoline(), which generates the real patch and applies a detour
+        generator.Emit(OpCodes.Call, InfoOf.HarmonyInterface_ResolveTrampoline);
 
         // Do a tail call to the original method, which will actually go to the newly installed patch
         // Jmp doesn't work in the case where the target is an instance method
@@ -238,7 +238,7 @@ internal class HarmonyInterface
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {
-                HarmonyMethod patcher = new(InfoOf.Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
+                HarmonyMethod patcher = new(InfoOf.HarmonyInterface_Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
 
                 patchInfo.transpilers =
                 [
