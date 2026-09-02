@@ -455,14 +455,13 @@ internal class PatchRegistry
             {
                 ProcessAssembly(assembly, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges(useTrampolines: true);
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges(useTrampolines: true);
         }
     }
 
@@ -474,14 +473,13 @@ internal class PatchRegistry
             {
                 ProcessAssembly(assembly, category, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges(useTrampolines: true);
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges(useTrampolines: true);
         }
     }
 
@@ -493,14 +491,13 @@ internal class PatchRegistry
             {
                 ProcessType(type.GetTypeInfo(), handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges(useTrampolines: true);
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges(useTrampolines: true);
         }
     }
 
@@ -512,14 +509,13 @@ internal class PatchRegistry
             {
                 ProcessMethods(methods, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges(useTrampolines: true);
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges(useTrampolines: true);
         }
     }
 
@@ -531,14 +527,13 @@ internal class PatchRegistry
             {
                 ProcessPatches(patches, handle.id);
                 ValidatePatchGroup(handle.id);
+                ApplyPendingChanges(useTrampolines: true);
             }
             catch (Exception)
             {
-                UnpatchInternal(handle.id);
+                Unpatch(handle);
                 throw;
             }
-
-            ApplyPendingChanges(useTrampolines: true);
         }
     }
 
