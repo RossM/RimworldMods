@@ -190,8 +190,7 @@ public static class Patcher
         PatchHandle handle = new PatchHandle();
         try
         {
-            foreach (var method in methods)
-                Registry.ProcessMethod(method, handle.id);
+            Registry.ProcessMethods(methods, handle.id);
             Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)
@@ -250,8 +249,7 @@ public static class Patcher
         PatchHandle handle = new PatchHandle();
         try
         {
-            foreach (var patch in patches)
-                Registry.ProcessPatch(patch, handle.id);
+            Registry.ProcessPatches(patches, handle.id);
             Registry.ValidatePatchGroup(handle.id);
         }
         catch (Exception)

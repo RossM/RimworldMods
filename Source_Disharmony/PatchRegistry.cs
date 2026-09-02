@@ -200,6 +200,15 @@ internal class PatchRegistry
         }
     }
 
+    public void ProcessMethods(IEnumerable<MethodInfo> methods, int unpatchKey)
+    {
+        lock (syncRoot)
+        {
+            foreach (var method in methods)
+                ProcessMethod(method, unpatchKey);
+        }
+    }
+
     private static List<Attribute> GetAttributes(MethodInfo method)
     {
         var typeAttributes = method.DeclaringType?.GetCustomAttributes().ToList() ?? [];
@@ -229,6 +238,15 @@ internal class PatchRegistry
             {
                 throw new PatchException($"Error processing {patch.PatchMethod.FullName}", e);
             }
+        }
+    }
+
+    public void ProcessPatches(IEnumerable<PatchConfig> patches, int unpatchKey)
+    {
+        lock (syncRoot)
+        {
+            foreach (var patch in patches)
+                ProcessPatch(patch, unpatchKey);
         }
     }
 
