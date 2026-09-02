@@ -69,7 +69,6 @@ public enum PatchType
 public static class Patcher
 {
     private static PatchRegistry Registry => PatchRegistry.Instance;
-    internal static HarmonyInterface Harmony => HarmonyInterface.Instance;
 
     /// <summary>
     ///     Notifies subscribers when Disharmony encounters a recoverable patching error.

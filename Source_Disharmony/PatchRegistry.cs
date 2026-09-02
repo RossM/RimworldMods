@@ -425,7 +425,7 @@ internal class PatchRegistry
 
                     if (patches.Count == 0)
                     {
-                        Patcher.Harmony.Unpatch(patchedMethod.MethodBase);
+                        Harmony.Unpatch(patchedMethod.MethodBase);
                     }
                     else
                     {
@@ -434,7 +434,7 @@ internal class PatchRegistry
                         bool debug = patches.Any(p => p.Debug);
                         bool optimize = patches.Any(p => p.Optimize);
 
-                        Patcher.Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines, debug, optimize);
+                        Harmony.ApplyPatch(patchedMethod, ruleset, useTrampolines, debug, optimize);
                     }
                 }
                 catch (Exception e)
