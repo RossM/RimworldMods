@@ -238,7 +238,7 @@ internal class HarmonyInterface
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {
-                HarmonyMethod patcher = new(InfoOf.HarmonyInterface_Transpiler, priority: Priority.LowerThanNormal) { debug = debug };
+                HarmonyMethod patcher = new(InfoOf.HarmonyInterface_Transpiler, priority: Priority.LowerThanNormal - 1) { debug = debug };
 
                 patchInfo.transpilers =
                 [
