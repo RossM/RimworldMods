@@ -111,19 +111,17 @@ internal class HarmonyInterface
     {
         while (true)
         {
-            Exception? e;
             lock (HarmonyInternals.locker)
             {
                 if (trampolines.Count == 0)
                     return;
                 var method = trampolines.Keys.First();
 
-                e = PatchDirectly(method);
+                Exception? e = PatchDirectly(method);
                 trampolines.Remove(method);
+                if (e != null)
+                    throw new RuntimePatchException($"{method.FullName}: Patch error", e);
             }
-
-            if (e != null)
-                throw new RuntimePatchException("Patch error", e);
         }
     }
 
