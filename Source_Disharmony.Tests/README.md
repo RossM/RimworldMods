@@ -41,6 +41,11 @@ hide first-use behavior.
 Reflection-sensitive targets and all inline patch methods belong in `Source_Disharmony.TestTargets`, which is always
 compiled in Release mode so their generated IL is predictable.
 
+At the start of each test run, the assembly-wide setup redirects Harmony's `FileLog` output to
+`disharmony-tests.log` beside the built test executable and truncates the previous file. This captures both Harmony
+logging and Disharmony logging written through `FileLog`. The exact path is printed to the test runner's progress
+output. The writer permits concurrent readers, so the log can be inspected while a test run is still active.
+
 Harmony coexistence tests use explicit, valid `Harmony.Patch` calls and a fixture-specific Harmony ID. Do not use an
 invalid Harmony patch or a throwing Harmony transpiler merely to provoke an error: Harmony can emit invalid IL or retain
 broken global patch state instead of rolling back, contaminating later tests.
