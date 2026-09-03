@@ -1,6 +1,6 @@
 namespace Disharmony.Tests.Support;
 
-internal sealed record TestInvocation(
+internal sealed record MockInvocation(
     Type InstanceType,
     Type ReturnType,
     Type[] ParameterTypes,
@@ -8,11 +8,11 @@ internal sealed record TestInvocation(
     bool IsStatic)
     : Invocation
 {
-    public override string FullName => nameof(TestInvocation);
+    public override string FullName => nameof(MockInvocation);
+    public override Type InstanceType { get; } = InstanceType;
     public override Type ReturnType { get; } = ReturnType;
     public override Type[] ParameterTypes { get; } = ParameterTypes;
-    public override bool IsStatic { get; } = IsStatic;
     public override string[] ParameterNames { get; } = ParameterNames;
-    public override Type InstanceType { get; } = InstanceType;
+    public override bool IsStatic { get; } = IsStatic;
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Nop);
 }

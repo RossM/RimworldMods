@@ -88,16 +88,16 @@ internal static class ParameterBinderPatchMethods
 [TestFixture]
 internal sealed class ParameterBinderBindTests
 {
-    private static readonly TestInvocation StaticVoid =
+    private static readonly MockInvocation StaticVoid =
         new(typeof(void), typeof(void), [], [], true);
 
-    private static readonly TestInvocation StaticIntParameter =
+    private static readonly MockInvocation StaticIntParameter =
         new(typeof(void), typeof(void), [typeof(int)], ["value"], true);
 
-    private static readonly TestInvocation InstanceVoid =
+    private static readonly MockInvocation InstanceVoid =
         new(typeof(ClassMethodTargets), typeof(void), [typeof(ClassMethodTargets)], ["<instance>"], false);
 
-    private static readonly TestInvocation InnerInstanceVoid =
+    private static readonly MockInvocation InnerInstanceVoid =
         new(typeof(InnerInstanceMethodTargets), typeof(void), [typeof(InnerInstanceMethodTargets)], ["<instance>"], false);
 
     private static readonly MethodInfo AsyncTargetMethod = typeof(AsyncMethodTargets).GetMethod(
@@ -107,7 +107,7 @@ internal sealed class ParameterBinderBindTests
     private static readonly MethodInvocation AsyncTarget = new(AsyncTargetMethod);
     private static readonly MethodInvocation AsyncMoveNext = new(AsyncTargetMethod.GetStateMachineImplementation()!);
 
-    private static readonly TestInvocation InnerIntParameter =
+    private static readonly MockInvocation InnerIntParameter =
         new(typeof(void), typeof(void), [typeof(int)], ["value"], true);
 
     private static ParameterInfo GetParameter(string methodName) =>
@@ -162,7 +162,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Parameter_AttributeExplicitName_BindsNamedParameter()
     {
-        var outer = new TestInvocation(typeof(void), typeof(void), [typeof(int)], ["source"], true);
+        var outer = new MockInvocation(typeof(void), typeof(void), [typeof(int)], ["source"], true);
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Parameter_AttributeExplicitName), outer);
 
@@ -173,7 +173,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Parameter_AttributeStaticIndex_BindsRequestedIndex()
     {
-        var outer = new TestInvocation(typeof(void), typeof(void), [typeof(int), typeof(string)], ["first", "second"], true);
+        var outer = new MockInvocation(typeof(void), typeof(void), [typeof(int), typeof(string)], ["first", "second"], true);
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Parameter_AttributeStaticIndex), outer);
 
@@ -184,7 +184,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Parameter_AttributeInstanceIndex_SkipsInstanceArgument()
     {
-        var outer = new TestInvocation(typeof(ClassMethodTargets), typeof(void), [typeof(ClassMethodTargets), typeof(int)], ["<instance>", "value"], false);
+        var outer = new MockInvocation(typeof(ClassMethodTargets), typeof(void), [typeof(ClassMethodTargets), typeof(int)], ["<instance>", "value"], false);
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Parameter_AttributeInstanceIndex), outer);
 
@@ -194,7 +194,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Parameter_InnerNamePrecedence_BindsInnerParameter()
     {
-        var outer = new TestInvocation(typeof(void), typeof(void), [typeof(int)], ["value"], true);
+        var outer = new MockInvocation(typeof(void), typeof(void), [typeof(int)], ["value"], true);
 
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Parameter_InnerNamePrecedence), outer, InnerIntParameter);
@@ -206,7 +206,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Parameter_OuterNameFallback_BindsOuterParameter()
     {
-        var outer = new TestInvocation(typeof(void), typeof(void), [typeof(int)], ["outerValue"], true);
+        var outer = new MockInvocation(typeof(void), typeof(void), [typeof(int)], ["outerValue"], true);
 
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Parameter_OuterNameFallback), outer, InnerIntParameter);
@@ -218,7 +218,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Parameter_ExplicitOuterScope_OverridesInnerNameMatch()
     {
-        var outer = new TestInvocation(typeof(void), typeof(void), [typeof(int)], ["value"], true);
+        var outer = new MockInvocation(typeof(void), typeof(void), [typeof(int)], ["value"], true);
 
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Parameter_ExplicitOuterScope), outer, InnerIntParameter);
@@ -249,7 +249,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void ReturnValue_Attribute_BindsInnerResultForInnerPatch()
     {
-        var inner = new TestInvocation(typeof(void), typeof(int), [], [], true);
+        var inner = new MockInvocation(typeof(void), typeof(int), [], [], true);
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.ReturnValue_Attribute), StaticVoid, inner);
 
@@ -394,7 +394,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Method_ExplicitInnerScope_SelectsMethodOnInnerInstance()
     {
-        var outer = new TestInvocation(typeof(void), typeof(void), [], [], true);
+        var outer = new MockInvocation(typeof(void), typeof(void), [], [], true);
         MethodInfo innerMethod = typeof(MethodBindingInnerTargets)
             .GetMethod(nameof(MethodBindingInnerTargets.TargetInstanceMethod))!;
         MethodInfo expected = typeof(MethodBindingInnerTargets)
@@ -442,7 +442,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void ReservedName_Result_BindsResult()
     {
-        var outer = new TestInvocation(typeof(void), typeof(int), [], [], true);
+        var outer = new MockInvocation(typeof(void), typeof(int), [], [], true);
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.ReservedName_Result), outer);
 
@@ -727,7 +727,7 @@ internal sealed class ParameterBinderBindTests
     [Test]
     public void Error_ReturnValueForAlwaysRunPrefix_ThrowsParameterBindingException()
     {
-        var outer = new TestInvocation(typeof(void), typeof(int), [], [], true);
+        var outer = new MockInvocation(typeof(void), typeof(int), [], [], true);
 
         ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(
