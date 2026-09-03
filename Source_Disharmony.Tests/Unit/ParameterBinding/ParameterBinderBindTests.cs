@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using BoundParameter = Disharmony.ParameterBinding;
-// ReSharper disable InconsistentNaming
 
 namespace Disharmony.Tests.Unit.ParameterBinding;
 
@@ -87,19 +86,38 @@ internal static class ParameterBinderPatchMethods
 }
 
 internal sealed record ParameterBinderTestInvocation(
-    Type returnType,
-    Type[] parameterTypes,
-    bool isStatic,
-    string[] parameterNames,
-    Type instanceType) : Invocation
+    Type ReturnType,
+    Type[] ParameterTypes,
+    bool IsStatic,
+    string[] ParameterNames,
+    Type InstanceType)
+    : Invocation
 {
     public override string FullName => "ParameterBinderTestInvocation";
-    public override Type ReturnType => returnType;
-    public override Type[] ParameterTypes => parameterTypes;
-    public override bool IsStatic => isStatic;
-    public override string[] ParameterNames => parameterNames;
-    public override Type InstanceType => instanceType;
+    public override Type ReturnType { get; } = ReturnType;
+
+    public override Type[] ParameterTypes { get; } = ParameterTypes;
+
+    public override bool IsStatic { get; } = IsStatic;
+
+    public override string[] ParameterNames { get; } = ParameterNames;
+
+    public override Type InstanceType { get; } = InstanceType;
+
     protected override CodeInstruction GetCodeInstruction() => new(OpCodes.Nop);
+    public void Deconstruct(
+        out Type returnType,
+        out Type[] parameterTypes,
+        out bool isStatic,
+        out string[] parameterNames,
+        out Type instanceType)
+    {
+        returnType = ReturnType;
+        parameterTypes = ParameterTypes;
+        isStatic = IsStatic;
+        parameterNames = ParameterNames;
+        instanceType = InstanceType;
+    }
 }
 
 [TestFixture]
