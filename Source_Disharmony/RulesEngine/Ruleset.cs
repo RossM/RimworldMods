@@ -14,7 +14,7 @@ public class Ruleset
     ///     Gets or sets whether debug logging is enabled for every ruleset, regardless of the value passed to
     ///     <see cref="MatchAndReplace(MethodBase, ref List{CodeInstruction}, ILGenerator, bool)" />.
     /// </summary>
-    public static bool forceDebug = false;
+    internal static bool forceDebug = false;
 
     /// <summary>
     ///     The rules to apply.
