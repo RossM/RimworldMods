@@ -6,14 +6,8 @@ the intended public contract, and refine the cases below rather than mechanicall
 
 ## Cross-runtime execution
 
-The same end-to-end suite should run regularly on both the Microsoft CLR and Mono. The local runner is
-`Run-DisharmonyTests.ps1`; it supports both runtimes, but merely having the script does not protect against regressions
-unless both modes are part of the normal validation process or CI.
-
-The Mono run has already demonstrated its value. A throw-only method with a non-void signature, patched by an
-`AlwaysRun` postfix that suppressed the exception and wrote `__result`, produced an unreachable `stloc` with an empty
-stack. The Microsoft CLR accepted the unreachable fragment while Mono rejected the generated method as invalid IL.
-That specific defect is fixed, but it is representative of the differences this coverage should catch.
+The same end-to-end suite should run regularly on both the Microsoft CLR and Mono. Add both modes to the normal
+validation process or CI; an available local runner alone does not protect against regressions.
 
 Suggested coverage:
 
@@ -28,25 +22,9 @@ Suggested coverage:
 Completion criterion: both runtime commands are repeatable and are run automatically or are an explicit required local
 check, with result files retained separately.
 
-## Harmony coexistence
+## Harmony coexistence failure isolation
 
-Disharmony relies on Harmony/MonoMod, but most tests exercise Disharmony in isolation. Add a small integration fixture
-that deliberately combines public Harmony patches with public Disharmony patches. Use dedicated target and patch types,
-and select the patch methods explicitly rather than scanning the main test assembly.
-
-The initial suite is implemented in `EndToEnd/Interop/HarmonyCoexistenceTests.cs`. It uses Harmony's explicit
-`Harmony.Patch` API with valid patches and a fixture-specific Harmony ID. It covers:
-
-- Apply a Harmony prefix/postfix pair first, then a Disharmony pair to the same method; verify execution order and result.
-- Apply the same patches in the opposite registration order.
-- Include a Harmony transpiler that makes a simple observable change, then apply a Disharmony outer patch and inner
-  patch independently.
-- Selectively unpatch the Disharmony `PatchHandle` and verify the Harmony patch remains active; unpatch Harmony and
-  verify Disharmony remains active.
-- Repeat an apply, first-call trampoline resolution, unpatch, and reapply cycle while the other library's patch remains
-  installed.
-
-Possible follow-up coverage:
+Possible future coverage:
 
 - Verify an application failure or rollback on one side does not remove or corrupt the other side's registrations.
 
@@ -54,19 +32,25 @@ Avoid deliberately invalid Harmony patches and throwing Harmony transpilers in t
 IL or retain a broken patch state instead of rolling back, so those cases cannot safely provide isolated coexistence
 tests.
 
-The purpose is not to duplicate Harmony's own tests. It is to protect ownership, ordering, wrapper regeneration, and
-cache invalidation at the boundary between the two systems.
+The purpose is to protect ownership and cache invalidation at the boundary between the two systems, not to duplicate
+Harmony's own tests.
 
 ## Concurrent patch lifecycle and first-use resolution
 
-The registry, trampoline cache, Harmony wrapper update, runtime exception reporting, and `PatchHandle` lifecycle share
-global state. Decide which concurrent operations are supported, then test that contract. Unsupported combinations should
-fail deterministically and early rather than corrupting state or generating invalid IL.
+`ForceApply` now delegates directly to `HarmonyInterface.ResolveAllTrampolines` and does not access patch-registry state.
+Its concurrency tests should therefore exercise `HarmonyInterface` directly. Its public methods serialize access to the
+trampoline and method-patch collections with Harmony's internal locker, but the precise behavior of operations that
+overlap still needs testing and documentation. Separately decide which concurrent registry operations are supported;
+unsupported combinations should fail deterministically and early rather than corrupting state or generating invalid IL.
 
 Candidate scenarios:
 
-- Several threads make the first call to one newly patched method simultaneously.
-- Different threads resolve different newly patched methods simultaneously.
+- Race `ResolveAllTrampolines` with first-call resolution of the same trampoline and verify that it is resolved exactly
+  once.
+- Resolve different newly patched methods simultaneously.
+- Race `ResolveAllTrampolines` with applying and unpatching the same and different methods.
+- Verify and document the non-snapshot behavior when a trampoline is added between iterations of
+  `ResolveAllTrampolines`; ensure continuous additions cannot create unacceptable starvation.
 - Multiple patches for one target are submitted concurrently, where supported, and the final nesting order remains
   deterministic.
 - Patch and selectively unpatch different targets concurrently.
@@ -80,28 +64,24 @@ deadlock produces a useful test failure.
 
 ## Public lifecycle stress and atomicity
 
-Existing lifecycle tests cover individual rollback and unpatch paths. Add combination tests that exercise those paths
-after caches and trampolines have reached different states.
+Future stress sequences include:
 
-Useful sequences include:
-
-- Patch several targets in one call, resolve none/some/all of them, then selectively unpatch the returned handle.
-- Apply overlapping handles to the same and different targets, remove them in both orders, and verify only the selected
-  registrations disappear.
-- Fail a multi-patch call at the first, middle, and final patch after earlier patches have reached both pending and
-  resolved states; verify the whole call is atomic.
-- Repeat successful and failed apply-unpatch-apply cycles to catch stale registry, matcher, trampoline, and thunk cache
-  entries.
-- Exercise `ForceApply` before and after partial target resolution, including a failure affecting one of several pending
-  targets.
+- Inject application failures at different positions after pre-existing patches have reached a mixture of pending and
+  resolved states; verify the call remains atomic and rollback restores every prior registration.
+- Repeatedly cycle successful and failed apply-unpatch-apply operations across several targets to catch stale registry,
+  matcher, trampoline, and thunk cache entries.
+- Resolve several pending trampolines when one resolution fails, then verify that later resolution or unpatch operations
+  handle every remaining trampoline correctly.
+- Throw partway through lazy `MethodInfo` and `PatchConfig` enumerables and verify already-processed entries are rolled
+  back without leaving pending work.
 
 Assertions should cover externally observable method behavior and exception reporting, not private collection counts.
 
 ## Compiler-generated method families
 
-Iterator and local-function coverage is extensive, but other compiler-generated forms can take distinct reflection and
-state-machine paths. The most important candidate is async code. Before writing broad matrices, establish whether each
-form is intended to be supported; if it is not, add patch-time validation tests for the documented rejection.
+Other compiler-generated forms can take distinct reflection and state-machine paths. The most important candidate is
+async code. Before writing broad matrices, establish whether each form is intended to be supported; if it is not, add
+patch-time validation tests for the documented rejection.
 
 Forms worth evaluating:
 
@@ -117,38 +97,15 @@ For supported state machines, write tests from the API user's perspective: patch
 by the public attributes or `PatchConfig`, then assert source-level behavior. Do not assert compiler-generated names or
 layout except in focused reflection unit tests.
 
-## Boundary targets and validation
+## Additional boundary targets
 
-The initial public-API boundary suite is implemented in
-`EndToEnd/PatchLifecycle/BoundaryTargetTests.cs`. Its contract is either correct execution or a specific early
-Disharmony `PatchException`—never a late `RuntimePatchException`, process crash, invalid IL, or silently ineffective
-patch.
-
-The suite records the current support decisions:
-
-- Abstract methods, interface declarations, extern/P/Invoke methods, open generic declaring types, generic method
-  definitions, constructed generic methods, by-ref-returning methods, and varargs methods are rejected during
-  `Patcher.Patch` validation.
-- Constructed generic methods are rejected because MonoMod 1.2.3 cannot detour them on the .NET Framework runtime used
-  by the tests. Without the guard, MonoMod reaches its unimplemented
-  `MethodTable.GetMethodDescForSlot` path while locating the native entry point.
-- Varargs are rejected because Harmony produces invalid IL while resolving the trampoline.
-- Non-generic methods on closed generic declaring types are supported. Trampolines must resolve their method tokens
-  with both the method handle and declaring-type handle.
-- Explicit interface implementations, pointer parameters, and ordinary concrete methods reached through interface
-  calls are supported.
-
-Possible follow-up coverage:
+Possible future coverage:
 
 - Function-pointer signatures, if they can be represented safely by the target framework and C# compiler used by the
   Release-built `TestTargets` project.
 - Additional closed-generic shapes, such as instance methods and nested generic declaring types, if generic trampoline
   handling changes.
-- Revisit rejected shapes only when the relevant Harmony, MonoMod, or runtime limitation changes; keep validation tests
-  so unsupported inputs cannot regress into late failures.
-
-The existing ignored static-constructor test remains documentation of a separate Harmony/MonoMod limitation:
-preparing the target method runs the type initializer before the patch can be installed.
+- Revisit dependency-limited method shapes when the relevant Harmony, MonoMod, or runtime behavior changes.
 
 ## Behavioral preservation corpus
 
