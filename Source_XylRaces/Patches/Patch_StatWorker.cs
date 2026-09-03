@@ -21,6 +21,7 @@ public static class Patch_StatWorker
     [Prefix]
     [Inner(typeof(PawnCapacitiesHandler), nameof(PawnCapacitiesHandler.GetLevel))]
     [Target(nameof(StatWorker.GetOffsetsAndFactorsExplanation))]
+    [Target(nameof(StatWorker.GetValueUnfinalized))]
     public static void GetLevel_Prefix(
         StatRequest req,
         ref PawnCapacityDef capacity,
