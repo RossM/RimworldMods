@@ -130,6 +130,18 @@ public enum PatchOptions
     AlwaysRun = 0x4,
 
     /// <summary>
+    ///     Disable certain safety checks that prevent generating invalid IL.
+    /// </summary>
+    /// <remarks>
+    ///     In some cases Disharmony's validation checks may reject code that generates invalid or unsafe IL
+    ///     that will nevertheless work at runtime. This flag will disable selected validation checks to allow
+    ///     you to do things that you know are safe but Disharmony doesn't. Use this flag at your own risk;
+    ///     patches using it can silently fail to work, generate invalid IL that will be rejected
+    ///     by the JIT compiler or crash when executed, cause memory corruption, break other patches, and so on.
+    /// </remarks>
+    AllowUnsafe = 0x8,
+
+    /// <summary>
     ///     Logs the modified IL and, when available, the generated Mono JIT assembly.
     /// </summary>
     /// <remarks>

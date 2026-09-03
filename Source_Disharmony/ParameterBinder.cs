@@ -16,10 +16,19 @@ namespace Disharmony;
 /// <param name="inner">The inner invocation being patched, or <see cref="EmptyInvocation" /> for an outer patch.</param>
 /// <param name="patchType">The patch type.</param>
 /// <param name="stateGroupKey">A string for grouping together <see cref="StateAttribute">state</see> parameters.</param>
-internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, PatchOptions options, string stateGroupKey)
+internal class ParameterBinder(
+    Invocation target,
+    Invocation outer,
+    Invocation inner,
+    PatchType patchType,
+    PatchOptions options,
+    string stateGroupKey)
 {
     private bool IsInfix => inner is not EmptyInvocation;
     private bool IsStateMachine => outer != target;
+
+    private bool AlwaysRun => (options & PatchOptions.AlwaysRun) != 0;
+    private bool AllowUnsafe => (options & PatchOptions.AllowUnsafe) != 0;
 
     private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
     private const string ThisRegexPattern = "^<>[\\d+]__this$";
@@ -166,10 +175,11 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindMethod(ParameterInfo parameter, Scope scope, string name)
     {
-        var invocation = scope switch {
+        var invocation = scope switch
+        {
             Scope.Inner => inner,
             Scope.Outer => target,
-            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
         };
         var instanceType = invocation.InstanceType;
         var methodInfo = instanceType.GetMethod(name, AccessTools.all);
@@ -188,7 +198,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         // Calling a struct method through a delegate requires boxing the struct, which means that any writes
         // by the method won't affect the original struct.
-        if (instanceType.IsValueType && !methodInfo.IsStatic && !isReadonly)
+        if (instanceType.IsValueType && !methodInfo.IsStatic && !isReadonly && !AllowUnsafe)
             throw new ParameterBindingException(parameter.Name, "[Method] is not supported for non-static methods on structs");
 
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
@@ -215,7 +225,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     {
         if (invocation.ReturnType == typeof(void))
             throw new ParameterBindingException(parameter.Name, "Method returns void");
-        if (patchType == PatchType.Prefix && (options & PatchOptions.AlwaysRun) != 0)
+        if (patchType == PatchType.Prefix && AlwaysRun)
             throw new ParameterBindingException(parameter.Name, "Binding return value not allowed for Prefix with AlwaysRun option");
         ValidateCast(parameter, invocation.ReturnType);
         return new() { parameter = parameter, bindingType = BindingType.Result, scope = scope };
@@ -383,7 +393,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindException(ParameterInfo parameter)
     {
-        if (patchType != PatchType.Postfix || (options & PatchOptions.AlwaysRun) == 0)
+        if (patchType != PatchType.Postfix || !AlwaysRun)
             throw new ParameterBindingException(parameter.Name, "Accessing exception is only supported for Postfix with AlwaysRun option");
         ValidateCast(parameter, typeof(Exception));
         return new() { parameter = parameter, bindingType = BindingType.Exception, scope = Scope.Any };
@@ -406,10 +416,13 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
     }
 
-    private static void ValidateCast(ParameterInfo parameter, Type from)
+    private void ValidateCast(ParameterInfo parameter, Type from)
     {
         Type to = parameter.ParameterType;
         string parameterName = parameter.Name;
+
+        if (AllowUnsafe && !to.NoRefType.IsValueType && !from.NoRefType.IsValueType)
+            return;
 
         if (to.IsByRef && from.NoRefType.IsValueType)
         {
@@ -442,7 +455,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
     {
         // Don't allow writing through a ref parameter to an argument of the outer method. This would
         // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
-        if (IsWriteableRef(parameter) && !type.IsByRef)
+        if (IsWriteableRef(parameter) && !type.IsByRef && !AllowUnsafe)
         {
             if (scope == Scope.Outer && !(patchType == PatchType.Prefix && !IsInfix))
                 throw new ParameterBindingException(parameter.Name,
