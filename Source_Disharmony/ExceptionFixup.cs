@@ -52,17 +52,22 @@ internal static class ExceptionFixup
                 }
             }
 
-            foreach (var _ in instruction.blocks.Where(b => b.blockType is ExceptionBlockType.BeginExceptionBlock))
+            foreach (var block in instruction.blocks)
             {
-                if (stack.Count == 0)
-                    exceptionStacks.Add([]);
-                else
+                switch (block.blockType)
                 {
-                    LocalTrackerBuilder[] savedStack = [.. stack.Select(t => new LocalTrackerBuilder(generator.DeclareLocal(t)))];
-                    for (int i = savedStack.Length - 1; i >= 0; --i)
-                        output.Add(savedStack[i].Store());
-                    exceptionStacks.Add(savedStack);
-                    stack.Clear();
+                    case ExceptionBlockType.BeginExceptionBlock when stack.Count == 0: exceptionStacks.Add([]); break;
+                    case ExceptionBlockType.BeginExceptionBlock:
+                    {
+                        LocalTrackerBuilder[] savedStack = [.. stack.Select(t => new LocalTrackerBuilder(generator.DeclareLocal(t)))];
+                        for (int i = savedStack.Length - 1; i >= 0; --i)
+                            output.Add(savedStack[i].Store());
+                        exceptionStacks.Add(savedStack);
+                        stack.Clear();
+                        break;
+                    }
+                    case ExceptionBlockType.BeginCatchBlock: stack = [block.catchType]; break;
+                    case ExceptionBlockType.BeginFaultBlock or ExceptionBlockType.BeginFinallyBlock: stack = []; break;
                 }
             }
 
