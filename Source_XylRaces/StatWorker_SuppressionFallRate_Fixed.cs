@@ -1,25 +1,15 @@
 ﻿namespace XylXenos;
 
-public class StatWorker_SuppressionFallRate_Fixed : StatWorker
+[UsedFromXml]
+public class StatWorker_SuppressionFallRate_Fixed : StatWorker_SuppressionFallRate
 {
-    public override bool ShouldShowFor(StatRequest req)
-    {
-        if (!base.ShouldShowFor(req))
-            return false;
-
-        if (req.Thing is not Pawn pawn)
-            return false;
-
-        return pawn.IsSlave;
-    }
-
     private static float CurrentFallRateBasedOnSuppression(float suppression)
     {
         return suppression switch
         {
-            > StatWorker_SuppressionFallRate.FastFallRateThreshold => StatWorker_SuppressionFallRate.FastFallRate,
-            > StatWorker_SuppressionFallRate.MediumFallRateThreshold => StatWorker_SuppressionFallRate.MediumFallRate,
-            _ => StatWorker_SuppressionFallRate.SlowFallRate,
+            > FastFallRateThreshold => FastFallRate,
+            > MediumFallRateThreshold => MediumFallRate,
+            _ => SlowFallRate,
         };
     }
 
@@ -51,7 +41,7 @@ public class StatWorker_SuppressionFallRate_Fixed : StatWorker
         return stringBuilder.ToString();
     }
 
-    public string GetExplanationForTooltip(StatRequest req)
+    public new string GetExplanationForTooltip(StatRequest req)
     {
         DebugAssert.NotNull(req.Thing);
 
