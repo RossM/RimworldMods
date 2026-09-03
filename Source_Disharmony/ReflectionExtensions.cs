@@ -11,10 +11,11 @@ public static class ReflectionExtensions
     {
         public bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
 
-        public MethodInfo? GetIteratorImplementation()
+        public MethodInfo? GetStateMachineImplementation()
         {
             // Check if the method is an iterator state machine wrapper. If so, look at the iterator's MoveNext method.
-            Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType;
+            Type? stateMachineType = method.GetCustomAttribute<IteratorStateMachineAttribute>()?.StateMachineType ??
+                                     method.GetCustomAttribute<AsyncStateMachineAttribute>()?.StateMachineType;
             return stateMachineType?.GetMethod("MoveNext", AccessTools.all);
         }
     }

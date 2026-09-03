@@ -19,7 +19,7 @@ namespace Disharmony;
 internal class ParameterBinder(Invocation target, Invocation outer, Invocation inner, PatchType patchType, PatchOptions options, string stateGroupKey)
 {
     private bool IsInfix => inner is not EmptyInvocation;
-    private bool IsIterator => outer != target;
+    private bool IsStateMachine => outer != target;
 
     private const string ReadonlyAttributeName = "System.Runtime.CompilerServices.IsReadOnlyAttribute";
     private const string ThisRegexPattern = "^<>[\\d+]__this$";
@@ -115,7 +115,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
         try
         {
-            if (IsIterator && scope == Scope.Outer)
+            if (IsStateMachine && scope == Scope.Outer)
                 return BindParameterByName(parameter, target.ParameterNames[index], scope);
 
             Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
@@ -180,7 +180,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
             throw new ParameterBindingException(parameter.Name, "Instance required");
 
         // Getting the instance for an iterator state machine isn't implemented for BindingType.Delegate
-        if (IsIterator && scope == Scope.Outer && !methodInfo.IsStatic)
+        if (IsStateMachine && scope == Scope.Outer && !methodInfo.IsStatic)
             throw new ParameterBindingException(parameter.Name, "[Method] is not supported for iterator state machines");
 
         bool isReadonly = methodInfo.CustomAttributes.Any(a => a.AttributeType.FullName == ReadonlyAttributeName) ||
@@ -223,7 +223,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
 
     private ParameterBinding BindInstance(ParameterInfo parameter, Invocation invocation, Scope scope)
     {
-        if (IsIterator && scope == Scope.Outer)
+        if (IsStateMachine && scope == Scope.Outer)
         {
             if (target.IsStatic)
                 throw new ParameterBindingException(parameter.Name, "Method is static");
@@ -261,7 +261,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
         {
-            if (IsIterator)
+            if (IsStateMachine)
             {
                 var iteratorType = outer.InstanceType;
                 var field = iteratorType.GetField(name, AccessTools.all);
@@ -361,7 +361,7 @@ internal class ParameterBinder(Invocation target, Invocation outer, Invocation i
         {
             Type curType = outer.InstanceType;
             List<FieldInfo> fields = [];
-            if (IsIterator)
+            if (IsStateMachine)
             {
                 var thisField = GetThisField(curType);
                 curType = thisField.FieldType;

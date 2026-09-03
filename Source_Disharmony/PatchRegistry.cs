@@ -296,15 +296,15 @@ internal class PatchRegistry
         Validate(patchType, options, patchMethod.MethodInfo, target.MethodBase);
 
         MethodBaseInvocation outer = target;
-        bool isIterator = false;
+        bool isStateMachine = false;
 
         if (inner is not EmptyInvocation && outer is MethodInvocation outerMethod)
         {
-            var iterator = outerMethod.MethodInfo.GetIteratorImplementation();
-            if (iterator != null)
+            var moveNext = outerMethod.MethodInfo.GetStateMachineImplementation();
+            if (moveNext != null)
             {
-                outer = new MethodInvocation(iterator);
-                isIterator = true;
+                outer = new MethodInvocation(moveNext);
+                isStateMachine = true;
             }
         }
 
@@ -312,7 +312,7 @@ internal class PatchRegistry
 
         var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
-        if (isIterator && arguments.Any(p => p.bindingType == BindingType.State))
+        if (isStateMachine && arguments.Any(p => p.bindingType == BindingType.State))
             throw new NotSupportedException("State parameters are not supported for iterator state machine methods");
 
         PatchInfo patch = new()

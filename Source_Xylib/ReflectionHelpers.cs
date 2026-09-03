@@ -73,7 +73,7 @@ public static class ReflectionHelpers
     public static List<CodeInstruction>? GetInstructions(MethodInfo method)
     {
         // Check if the method is an iterator. If so, look inside the iterator
-        MethodInfo innerMethod = method.GetIteratorImplementation() ?? method;
+        MethodInfo innerMethod = method.GetStateMachineImplementation() ?? method;
 
         var instructions = PatchProcessor.GetOriginalInstructions(innerMethod);
         return instructions;
