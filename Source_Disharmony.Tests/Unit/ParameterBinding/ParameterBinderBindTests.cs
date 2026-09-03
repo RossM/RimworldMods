@@ -64,7 +64,13 @@ internal static class ParameterBinderPatchMethods
         [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, int> method) { }
     public static void Error_MethodParameterMismatch(
         [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<string, int> method) { }
+    public static void Error_BaseMethodForNonMethodInvocation(Func<int> __base) { }
     public static void Error_BaseMethodForStaticMethod(Func<int> __base) { }
+    public static void Error_BaseMethodParameterIsNotDelegate(object __base) { }
+    public static void Error_BaseMethodDelegateHasNoInvoke(Delegate __base) { }
+    public static void Error_BaseMethodParameterTypeMismatch(Func<string, string> __base) { }
+    public static void Error_BaseMethodParameterCountMismatch(Func<string> __base) { }
+    public static void Error_BaseMethodReturnTypeMismatch(Func<int, int> __base) { }
     public static void Error_BaseMethodNotFound(Func<int> __base) { }
     public static void Error_BaseMethodIsAbstract([BaseMethod] Func<int, string> method) { }
     public static void StateMachine_ParameterByName([Parameter("outerValue", Scope.Outer)] int value) { }
@@ -344,6 +350,24 @@ internal sealed class ParameterBinderBindTests
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
         Assert.That(binding.methodInfo, Is.SameAs(expected));
+    }
+
+    [Test]
+    public void ReservedName_BaseMethod_SelectsInheritedGrandparentImplementation()
+    {
+        MethodInfo targetMethod = typeof(BaseMethodGrandchildTargets)
+            .GetMethod(nameof(BaseMethodGrandchildTargets.Describe))!;
+        MethodInfo expected = typeof(BaseMethodGrandparentTargets)
+            .GetMethod(nameof(BaseMethodGrandparentTargets.Describe))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.ReservedName_BaseMethod), new MethodInvocation(targetMethod));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.methodInfo!.MethodHandle, Is.EqualTo(expected.MethodHandle));
+            Assert.That(binding.methodInfo!.DeclaringType, Is.EqualTo(typeof(BaseMethodGrandparentTargets)));
+        });
     }
 
     [Test]
@@ -858,12 +882,91 @@ internal sealed class ParameterBinderBindTests
     }
 
     [Test]
-    public void Error_BaseMethodForStaticMethod_ThrowsParameterBindingException()
+    public void Error_BaseMethodForNonMethodInvocation_ThrowsParameterBindingException()
     {
         ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
-            Bind(nameof(ParameterBinderPatchMethods.Error_BaseMethodForStaticMethod), StaticVoid))!;
+            Bind(nameof(ParameterBinderPatchMethods.Error_BaseMethodForNonMethodInvocation), InstanceVoid))!;
 
         Assert.That(exception.Message, Is.EqualTo("__base: Must be an instance method"));
+    }
+
+    [Test]
+    public void Error_BaseMethodForStaticMethod_ThrowsParameterBindingException()
+    {
+        MethodInfo targetMethod = typeof(MethodBindingStaticTargets)
+            .GetMethod(nameof(MethodBindingStaticTargets.TargetStaticMethod))!;
+
+        ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
+            Bind(
+                nameof(ParameterBinderPatchMethods.Error_BaseMethodForStaticMethod),
+                new MethodInvocation(targetMethod)))!;
+
+        Assert.That(exception.Message, Is.EqualTo("__base: Must be an instance method"));
+    }
+
+    [Test]
+    public void Error_BaseMethodParameterIsNotDelegate_ThrowsInvalidCastException()
+    {
+        MethodInfo targetMethod = typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!;
+
+        InvalidCastException exception = Assert.Throws<InvalidCastException>(() =>
+            Bind(
+                nameof(ParameterBinderPatchMethods.Error_BaseMethodParameterIsNotDelegate),
+                new MethodInvocation(targetMethod)))!;
+
+        Assert.That(exception.Message, Is.EqualTo("__base: Can't convert System.Object to System.Delegate"));
+    }
+
+    [Test]
+    public void Error_BaseMethodDelegateHasNoInvoke_ThrowsParameterBindingException()
+    {
+        MethodInfo targetMethod = typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!;
+
+        ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
+            Bind(
+                nameof(ParameterBinderPatchMethods.Error_BaseMethodDelegateHasNoInvoke),
+                new MethodInvocation(targetMethod)))!;
+
+        Assert.That(exception.Message, Is.EqualTo("__base: Delegate.Invoke not found"));
+    }
+
+    [Test]
+    public void Error_BaseMethodParameterTypeMismatch_ThrowsParameterBindingException()
+    {
+        MethodInfo targetMethod = typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!;
+
+        ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
+            Bind(
+                nameof(ParameterBinderPatchMethods.Error_BaseMethodParameterTypeMismatch),
+                new MethodInvocation(targetMethod)))!;
+
+        Assert.That(exception.Message, Is.EqualTo("__base: Parameter type mismatch"));
+    }
+
+    [Test]
+    public void Error_BaseMethodParameterCountMismatch_ThrowsParameterBindingException()
+    {
+        MethodInfo targetMethod = typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!;
+
+        ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
+            Bind(
+                nameof(ParameterBinderPatchMethods.Error_BaseMethodParameterCountMismatch),
+                new MethodInvocation(targetMethod)))!;
+
+        Assert.That(exception.Message, Is.EqualTo("__base: Parameter type mismatch"));
+    }
+
+    [Test]
+    public void Error_BaseMethodReturnTypeMismatch_ThrowsParameterBindingException()
+    {
+        MethodInfo targetMethod = typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!;
+
+        ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
+            Bind(
+                nameof(ParameterBinderPatchMethods.Error_BaseMethodReturnTypeMismatch),
+                new MethodInvocation(targetMethod)))!;
+
+        Assert.That(exception.Message, Is.EqualTo("__base: Return type mismatch"));
     }
 
     [Test]
