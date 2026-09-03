@@ -50,9 +50,9 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
         {
             yield return new Rule
             {
-                mode = OutputMode.MethodPrefix,
-                output = [.. output.instructions],
-                name = "prefixes",
+                Mode = OutputMode.MethodPrefix,
+                Output = [.. output.instructions],
+                Name = "prefixes",
             };
             output.instructions.Clear();
         }
@@ -72,12 +72,12 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
 
             yield return new Rule
             {
-                min = 0,
-                max = 0,
-                mode = OutputMode.Replace,
-                pattern = [new(OpCodes.Ret)],
-                output = retOutput,
-                name = "return",
+                Min = 0,
+                Max = 0,
+                Mode = OutputMode.Replace,
+                Pattern = [new(OpCodes.Ret)],
+                Output = retOutput,
+                Name = "return",
             };
         }
 
@@ -90,9 +90,9 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
 
         yield return new Rule
         {
-            mode = OutputMode.MethodPostfix,
-            output = [.. output.instructions],
-            name = "postfixes",
+            Mode = OutputMode.MethodPostfix,
+            Output = [.. output.instructions],
+            Name = "postfixes",
         };
         output.instructions.Clear();
     }

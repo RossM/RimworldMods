@@ -106,12 +106,12 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
 
         yield return new Rule
         {
-            min = 1,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [.. pattern],
-            output = [.. output.instructions],
-            name = inner.FullName,
+            Min = 1,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [.. pattern],
+            Output = [.. output.instructions],
+            Name = inner.FullName,
         };
     }
 

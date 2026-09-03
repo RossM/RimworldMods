@@ -43,9 +43,9 @@ internal static class RulesetGenerator
 
         var ruleset = new Ruleset
         {
-            rules = rules,
-            crossRuleLocals = [.. context.locals.Select(l => l.Builder)],
-            crossRuleLabels = labels,
+            Rules = rules,
+            CrossRuleLocals = [.. context.locals.Select(l => l.Builder)],
+            CrossRuleLabels = labels,
         };
 
         return ruleset;

@@ -13,9 +13,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -36,9 +36,9 @@ public sealed class RulesEngineTests
         finallyEnd.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [tryStart, finallyStart, finallyEnd],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [tryStart, finallyStart, finallyEnd],
         };
 
         List<CodeInstruction> result = Run(
@@ -60,9 +60,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.InsertBefore,
-            pattern = [new CodeInstruction(OpCodes.Ret)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.InsertBefore,
+            Pattern = [new CodeInstruction(OpCodes.Ret)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ret)]);
@@ -75,9 +75,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.InsertAfter,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Mode = OutputMode.InsertAfter,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -92,13 +92,13 @@ public sealed class RulesEngineTests
     {
         var prefix = new Rule
         {
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
         var postfix = new Rule
         {
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         List<CodeInstruction> result = Run([prefix, postfix], [new CodeInstruction(OpCodes.Ret)]);
@@ -113,12 +113,12 @@ public sealed class RulesEngineTests
         MethodInfo newMethod = typeof(Convert).GetMethod(nameof(Convert.ToString), [typeof(object)])!;
         Rule rule = new Rule
         {
-            min = 1,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new(OpCodes.Call, oldMethod)],
-            output = [new(OpCodes.Call, newMethod)],
-            name = oldMethod.FullName,
+            Min = 1,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new(OpCodes.Call, oldMethod)],
+            Output = [new(OpCodes.Call, newMethod)],
+            Name = oldMethod.FullName,
         };
 
         List<CodeInstruction> result = Run(
@@ -135,9 +135,9 @@ public sealed class RulesEngineTests
         MethodInfo method = typeof(object).GetMethod(nameof(ToString))!;
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Callvirt, method)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Callvirt, method)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -151,9 +151,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
-            output = [CodeInstruction.LoadLocal(0)],
+            Mode = OutputMode.Replace,
+            Pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
+            Output = [CodeInstruction.LoadLocal(0)],
         };
 
         List<CodeInstruction> result = Run(
@@ -173,9 +173,9 @@ public sealed class RulesEngineTests
         target.labels.Add(sourceLabel);
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Br, sourceLabel), target],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Br, sourceLabel), target],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4_1)]);
@@ -198,9 +198,9 @@ public sealed class RulesEngineTests
         case1Target.labels.Add(sourceCase1);
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output =
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output =
             [
                 new CodeInstruction(OpCodes.Switch, new[] { sourceCase0, sourceCase1, sourceCase0 }),
                 case0Target,
@@ -227,11 +227,11 @@ public sealed class RulesEngineTests
         target.labels.Add(sourceLabel);
         var rule = new Rule
         {
-            min = 2,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Br, sourceLabel), target],
+            Min = 2,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Br, sourceLabel), target],
         };
 
         List<CodeInstruction> result = Run(
@@ -259,11 +259,11 @@ public sealed class RulesEngineTests
         target.labels.Add(sourceLabel);
         var rule = new Rule
         {
-            min = 2,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Switch, new[] { sourceLabel, sourceLabel }), target],
+            Min = 2,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Switch, new[] { sourceLabel, sourceLabel }), target],
         };
 
         List<CodeInstruction> result = Run(
@@ -295,16 +295,16 @@ public sealed class RulesEngineTests
         target.labels.Add(sourceLabel);
         var ruleset = new Ruleset(new()
         {
-            phase = 1,
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
+            Phase = 1,
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
         }, new()
         {
-            phase = 2,
-            mode = OutputMode.MethodPostfix,
-            output = [target],
+            Phase = 2,
+            Mode = OutputMode.MethodPostfix,
+            Output = [target],
         });
-        ruleset.crossRuleLabels.Add(sourceLabel);
+        ruleset.CrossRuleLabels.Add(sourceLabel);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
 
         ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
@@ -325,16 +325,16 @@ public sealed class RulesEngineTests
         target.labels.Add(sourceLabel);
         var ruleset = new Ruleset(new()
         {
-            phase = 1,
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Switch, new[] { sourceLabel })],
+            Phase = 1,
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Switch, new[] { sourceLabel })],
         }, new()
         {
-            phase = 2,
-            mode = OutputMode.MethodPostfix,
-            output = [target],
+            Phase = 2,
+            Mode = OutputMode.MethodPostfix,
+            Output = [target],
         });
-        ruleset.crossRuleLabels.Add(sourceLabel);
+        ruleset.CrossRuleLabels.Add(sourceLabel);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
 
         ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
@@ -351,9 +351,9 @@ public sealed class RulesEngineTests
         LocalBuilder targetLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Stloc_S, patternLocal), new CodeInstruction(OpCodes.Ldloc_S, patternLocal)],
-            output = [new CodeInstruction(OpCodes.Ldloc_S, patternLocal)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Stloc_S, patternLocal), new CodeInstruction(OpCodes.Ldloc_S, patternLocal)],
+            Output = [new CodeInstruction(OpCodes.Ldloc_S, patternLocal)],
         };
 
         List<CodeInstruction> result = Run(
@@ -371,9 +371,9 @@ public sealed class RulesEngineTests
         LocalBuilder targetLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
-            output = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
+            Output = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldloca_S, targetLocal)]);
@@ -389,9 +389,9 @@ public sealed class RulesEngineTests
         LocalBuilder targetLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
-            output = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
+            Output = [new CodeInstruction(OpCodes.Ldloca_S, patternLocal)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldloca, targetLocal)]);
@@ -405,9 +405,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldloc_S, 4)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldloc_S, 4)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldloc, 4)]);
@@ -420,9 +420,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldloc_1)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldloc_1)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldloc_S, 1)]);
@@ -435,9 +435,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Stloc_S, 1)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Stloc_S, 1)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Stloc_1)]);
@@ -450,9 +450,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldarg_S, 4)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldarg_S, 4)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldarg, 4)]);
@@ -465,9 +465,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldarg_1)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldarg_1)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldarg_S, 1)]);
@@ -480,9 +480,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldarga_S, 4)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldarga_S, 4)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldarga, 4)]);
@@ -495,9 +495,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Starg_S, 4)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Starg_S, 4)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Starg, 4)]);
@@ -510,9 +510,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4, 1)]);
@@ -525,9 +525,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4, 1)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4, 1)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4_1)]);
@@ -540,9 +540,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_S, (sbyte)42)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_S, (sbyte)42)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I4, 42)]);
@@ -556,9 +556,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Br_S, target)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Br_S, target)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Br, target)]);
@@ -572,9 +572,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Br, target)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Br, target)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Br, target)]);
@@ -592,9 +592,9 @@ public sealed class RulesEngineTests
         targetInstruction.labels.Add(instructionTarget);
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Br, patternTarget)],
-            output = [new CodeInstruction(OpCodes.Br, patternTarget)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Br, patternTarget)],
+            Output = [new CodeInstruction(OpCodes.Br, patternTarget)],
         };
 
         List<CodeInstruction> result = Run(
@@ -619,9 +619,9 @@ public sealed class RulesEngineTests
         case1Target.labels.Add(instructionCase1);
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternCase0, patternCase1, patternCase0 })],
-            output = [new CodeInstruction(OpCodes.Switch, new[] { patternCase0, patternCase1, patternCase0 })],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternCase0, patternCase1, patternCase0 })],
+            Output = [new CodeInstruction(OpCodes.Switch, new[] { patternCase0, patternCase1, patternCase0 })],
         };
 
         List<CodeInstruction> result = Run(
@@ -647,9 +647,9 @@ public sealed class RulesEngineTests
         Label instructionTarget1 = generator.DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget, patternTarget })],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget, patternTarget })],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -668,9 +668,9 @@ public sealed class RulesEngineTests
         Label instructionTarget = generator.DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget0, patternTarget1 })],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget0, patternTarget1 })],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -689,9 +689,9 @@ public sealed class RulesEngineTests
         Label instructionTarget1 = generator.DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget })],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Switch, new[] { patternTarget })],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -709,13 +709,13 @@ public sealed class RulesEngineTests
         Label instructionTarget = generator.DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern =
+            Mode = OutputMode.Replace,
+            Pattern =
             [
                 new CodeInstruction(OpCodes.Br, patternTarget),
                 new CodeInstruction(OpCodes.Switch, new[] { patternTarget }),
             ],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -737,13 +737,13 @@ public sealed class RulesEngineTests
         Label instructionSwitchTarget = generator.DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern =
+            Mode = OutputMode.Replace,
+            Pattern =
             [
                 new CodeInstruction(OpCodes.Br, patternTarget),
                 new CodeInstruction(OpCodes.Switch, new[] { patternTarget }),
             ],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -765,13 +765,13 @@ public sealed class RulesEngineTests
         Label instructionTarget1 = generator.DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern =
+            Mode = OutputMode.Replace,
+            Pattern =
             [
                 new CodeInstruction(OpCodes.Br, patternTarget),
                 new CodeInstruction(OpCodes.Br, patternTarget),
             ],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -789,9 +789,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_R8, double.NaN)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_R8, double.NaN)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_R8, double.NaN)]);
@@ -804,9 +804,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -820,9 +820,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I8, 42L)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I8, 42L)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ldc_I8, 42L)]);
@@ -835,9 +835,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_R4, 1.5f)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_R4, 1.5f)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -852,9 +852,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Brtrue_S, target)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Brtrue_S, target)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Brtrue, target)]);
@@ -868,9 +868,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Beq_S, target)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Beq_S, target)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Beq, target)]);
@@ -884,9 +884,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Leave_S, target)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Leave_S, target)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Leave, target)]);
@@ -900,11 +900,11 @@ public sealed class RulesEngineTests
         LocalBuilder sourceLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var rule = new Rule
         {
-            min = 2,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
+            Min = 2,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Nop), new CodeInstruction(OpCodes.Nop)]);
@@ -927,16 +927,16 @@ public sealed class RulesEngineTests
         LocalBuilder sourceLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var ruleset = new Ruleset(new()
         {
-            phase = 1,
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
+            Phase = 1,
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
         }, new()
         {
-            phase = 2,
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
+            Phase = 2,
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
         });
-        ruleset.crossRuleLocals.Add(sourceLocal);
+        ruleset.CrossRuleLocals.Add(sourceLocal);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
 
         ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
@@ -952,9 +952,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(0)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -969,9 +969,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(1)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [CodeInstruction.StoreLocal(0), CodeInstruction.LoadLocal(1)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -992,9 +992,9 @@ public sealed class RulesEngineTests
         matchEnd.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run([rule], [matchStart, matchEnd, new CodeInstruction(OpCodes.Ret)]);
@@ -1021,9 +1021,9 @@ public sealed class RulesEngineTests
         matchedInstruction.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
         var rule = new Rule
         {
-            mode = OutputMode.InsertBefore,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.InsertBefore,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run([rule], [matchedInstruction, new CodeInstruction(OpCodes.Ret)]);
@@ -1050,9 +1050,9 @@ public sealed class RulesEngineTests
         matchedInstruction.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
         var rule = new Rule
         {
-            mode = OutputMode.InsertAfter,
-            pattern = [new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Mode = OutputMode.InsertAfter,
+            Pattern = [new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
 
         List<CodeInstruction> result = Run([rule], [tryStart, matchedInstruction, new CodeInstruction(OpCodes.Ret)]);
@@ -1076,9 +1076,9 @@ public sealed class RulesEngineTests
         interiorInstruction.labels.Add(interiorLabel);
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -1095,9 +1095,9 @@ public sealed class RulesEngineTests
         interiorInstruction.blocks.Add(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -1112,17 +1112,17 @@ public sealed class RulesEngineTests
     {
         var firstPhase = new Rule
         {
-            phase = 1,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Phase = 1,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
         var secondPhase = new Rule
         {
-            phase = 2,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+            Phase = 2,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1142,9 +1142,9 @@ public sealed class RulesEngineTests
         labelledLocalLoad.labels.Add(sourceLabel);
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Br, sourceLabel), labelledLocalLoad],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Br, sourceLabel), labelledLocalLoad],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Nop)]);
@@ -1165,9 +1165,9 @@ public sealed class RulesEngineTests
         exceptionEnd.blocks.Add(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [localLoad, exceptionEnd],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [localLoad, exceptionEnd],
         };
 
         List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Nop)]);
@@ -1184,27 +1184,27 @@ public sealed class RulesEngineTests
     {
         var lowPriorityPrefix = new Rule
         {
-            priority = 1,
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Priority = 1,
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
         var highPriorityPrefix = new Rule
         {
-            priority = 2,
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Priority = 2,
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
         var lowPriorityPostfix = new Rule
         {
-            priority = 1,
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+            Priority = 1,
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
         };
         var highPriorityPostfix = new Rule
         {
-            priority = 2,
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+            Priority = 2,
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1226,11 +1226,11 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            min = 2,
-            max = 2,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Min = 2,
+            Max = 2,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1254,11 +1254,11 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            min = 2,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Min = 2,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1278,11 +1278,11 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            min = 2,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop), new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Min = 2,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop), new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -1301,15 +1301,15 @@ public sealed class RulesEngineTests
     {
         var replaceOne = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
         };
         var replaceTwo = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1324,17 +1324,17 @@ public sealed class RulesEngineTests
     {
         var optionalRule = new Rule
         {
-            min = 0,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_4)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_5)],
+            Min = 0,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_5)],
         };
         var matchingRule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1349,11 +1349,11 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            min = 0,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Min = 0,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -1367,17 +1367,17 @@ public sealed class RulesEngineTests
     {
         var firstRule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
         var secondRule = new Rule
         {
-            min = 0,
-            max = 0,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+            Min = 0,
+            Max = 0,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_3)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1392,15 +1392,15 @@ public sealed class RulesEngineTests
     {
         var matchOnly = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = null!,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = null!,
         };
         var replacement = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1416,15 +1416,15 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var matchOnly = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = null!,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = null!,
         };
         var replacement = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1441,16 +1441,16 @@ public sealed class RulesEngineTests
     {
         var prefix = new Rule
         {
-            priority = 1,
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Priority = 1,
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
         var replacement = new Rule
         {
-            priority = 2,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ret)],
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Priority = 2,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ret)],
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         List<CodeInstruction> result = Run([prefix, replacement], [new CodeInstruction(OpCodes.Ret)]);
@@ -1463,14 +1463,14 @@ public sealed class RulesEngineTests
     {
         var replacement = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ret)],
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ret)],
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
         var postfix = new Rule
         {
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_1)],
         };
 
         List<CodeInstruction> result = Run([postfix, replacement], [new CodeInstruction(OpCodes.Ret)]);
@@ -1494,9 +1494,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [],
         };
 
         List<CodeInstruction> result = Run(
@@ -1512,9 +1512,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -1530,9 +1530,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1561,9 +1561,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1585,9 +1585,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() => Run(
@@ -1607,9 +1607,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.InsertBefore,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.InsertBefore,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1643,9 +1643,9 @@ public sealed class RulesEngineTests
         Label target = PatchProcessor.CreateILGenerator().DefineLabel();
         var rule = new Rule
         {
-            mode = OutputMode.InsertAfter,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Mode = OutputMode.InsertAfter,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Pop)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
         List<CodeInstruction> result = Run(
@@ -1679,14 +1679,14 @@ public sealed class RulesEngineTests
         Label sourceLabel = PatchProcessor.CreateILGenerator().DefineLabel();
         var ruleset = new Ruleset(new()
         {
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Br, sourceLabel)],
         }, new()
         {
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Nop).WithLabels(sourceLabel)],
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Nop).WithLabels(sourceLabel)],
         });
-        ruleset.crossRuleLabels.Add(sourceLabel);
+        ruleset.CrossRuleLabels.Add(sourceLabel);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
 
         ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
@@ -1704,14 +1704,14 @@ public sealed class RulesEngineTests
         LocalBuilder sourceLocal = PatchProcessor.CreateILGenerator().DeclareLocal(typeof(int));
         var ruleset = new Ruleset(new()
         {
-            mode = OutputMode.MethodPrefix,
-            output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
+            Mode = OutputMode.MethodPrefix,
+            Output = [new CodeInstruction(OpCodes.Stloc_S, sourceLocal)],
         }, new()
         {
-            mode = OutputMode.MethodPostfix,
-            output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
+            Mode = OutputMode.MethodPostfix,
+            Output = [new CodeInstruction(OpCodes.Ldloc_S, sourceLocal)],
         });
-        ruleset.crossRuleLocals.Add(sourceLocal);
+        ruleset.CrossRuleLocals.Add(sourceLocal);
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
 
         ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);
@@ -1735,9 +1735,9 @@ public sealed class RulesEngineTests
             .WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginFinallyBlock));
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [output],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [output],
         };
 
         List<CodeInstruction> result = Run([rule], [input]);
@@ -1757,17 +1757,17 @@ public sealed class RulesEngineTests
     {
         var firstPhase = new Rule
         {
-            phase = 1,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
+            Phase = 1,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_1)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
         var failingPhase = new Rule
         {
-            phase = 2,
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Ldc_I4_3)],
-            output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
+            Phase = 2,
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Ldc_I4_3)],
+            Output = [new CodeInstruction(OpCodes.Ldc_I4_4)],
         };
         var originalInstruction = new CodeInstruction(OpCodes.Ldc_I4_1);
         List<CodeInstruction> instructions = [originalInstruction];
@@ -1789,9 +1789,9 @@ public sealed class RulesEngineTests
         MethodInfo instructionMethod = typeof(string).GetMethod(nameof(ToString), Type.EmptyTypes)!;
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Call, patternMethod)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Call, patternMethod)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -1805,9 +1805,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Ldloc_S, 4)],
+            Mode = OutputMode.Replace,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Ldloc_S, 4)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -1821,9 +1821,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.MethodPrefix,
-            pattern = [new CodeInstruction(OpCodes.Ret)],
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.MethodPrefix,
+            Pattern = [new CodeInstruction(OpCodes.Ret)],
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -1837,8 +1837,8 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = OutputMode.Replace,
-            output = [new CodeInstruction(OpCodes.Nop)],
+            Mode = OutputMode.Replace,
+            Output = [new CodeInstruction(OpCodes.Nop)],
         };
 
         var exception = Assert.Throws<InvalidOperationException>(() =>
@@ -1852,9 +1852,9 @@ public sealed class RulesEngineTests
     {
         var rule = new Rule
         {
-            mode = (OutputMode)int.MaxValue,
-            pattern = [new CodeInstruction(OpCodes.Nop)],
-            output = [new CodeInstruction(OpCodes.Pop)],
+            Mode = (OutputMode)int.MaxValue,
+            Pattern = [new CodeInstruction(OpCodes.Nop)],
+            Output = [new CodeInstruction(OpCodes.Pop)],
         };
 
         Assert.Throws<InvalidOperationException>(() =>
@@ -1964,11 +1964,11 @@ public sealed class RulesEngineTests
 
             new()
             {
-                mode = OutputMode.MethodPrefix,
-                output = [.. replacementOpCodes.Select(opcode => new CodeInstruction(opcode, local))],
+                Mode = OutputMode.MethodPrefix,
+                Output = [.. replacementOpCodes.Select(opcode => new CodeInstruction(opcode, local))],
             },
         ]);
-        ruleset.crossRuleLocals.Add(local);
+        ruleset.CrossRuleLocals.Add(local);
 
         List<CodeInstruction> instructions = [new CodeInstruction(OpCodes.Ret)];
         ruleset.MatchAndReplace(TargetMethod, ref instructions, generator);

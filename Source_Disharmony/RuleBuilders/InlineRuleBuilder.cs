@@ -123,13 +123,13 @@ internal class InlineRuleBuilder : RuleBuilder
 
         yield return new Rule
         {
-            min = 1,
-            max = 0,
-            phase = 2,
-            mode = OutputMode.Replace,
-            pattern = [.. pattern],
-            output = [.. output.instructions],
-            name = method.FullName,
+            Min = 1,
+            Max = 0,
+            Phase = 2,
+            Mode = OutputMode.Replace,
+            Pattern = [.. pattern],
+            Output = [.. output.instructions],
+            Name = method.FullName,
         };
     }
 }

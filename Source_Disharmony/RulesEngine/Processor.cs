@@ -30,13 +30,13 @@ internal class Processor(
         if (debug)
             FileLog.Log($"## InfixPatcher {method.FullName}");
 
-        if (ruleset.rules.Count == 0)
+        if (ruleset.Rules.Count == 0)
         {
             outInstructions = instructions;
             return;
         }
 
-        foreach (var phase in ruleset.rules.GroupBy(r => r.phase).OrderBy(p => p.Key))
+        foreach (var phase in ruleset.Rules.GroupBy(r => r.Phase).OrderBy(p => p.Key))
         {
             matches.Clear();
             extraBlocks.Clear();
@@ -48,13 +48,13 @@ internal class Processor(
             {
                 switch (rule)
                 {
-                    case { mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, pattern.Length: > 0 }:
-                        throw new InvalidOperationException($"{rule.mode} cannot have a Pattern");
-                    case { mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), pattern: not { Length: > 0 } }:
-                        throw new InvalidOperationException($"{rule.mode} rule must have a Pattern");
+                    case { Mode: OutputMode.MethodPrefix or OutputMode.MethodPostfix, Pattern.Length: > 0 }:
+                        throw new InvalidOperationException($"{rule.Mode} cannot have a Pattern");
+                    case { Mode: not (OutputMode.MethodPrefix or OutputMode.MethodPostfix), Pattern: not { Length: > 0 } }:
+                        throw new InvalidOperationException($"{rule.Mode} rule must have a Pattern");
                 }
 
-                switch (rule.mode)
+                switch (rule.Mode)
                 {
                     case OutputMode.MethodPrefix:
                     {
@@ -85,11 +85,11 @@ internal class Processor(
                 var matchCount = 0;
 
                 // rule.Pattern was checked to be non-null during the error checking above
-                if (rule.pattern is null)
+                if (rule.Pattern is null)
                     throw new InvalidOperationException();
 
                 for (int instructionIndex = 0;
-                     instructionIndex <= instructions.Count - rule.pattern.Length;
+                     instructionIndex <= instructions.Count - rule.Pattern.Length;
                      instructionIndex++)
                 {
                     if (!MatchPattern(rule, instructionIndex, out var localMap_Match, out var labelMap_Match))
@@ -99,26 +99,26 @@ internal class Processor(
                     {
                         rule = rule,
                         start = instructionIndex,
-                        end = instructionIndex + rule.pattern.Length,
+                        end = instructionIndex + rule.Pattern.Length,
                         localMap_Match = localMap_Match,
                         labelMap_Match = labelMap_Match,
                     };
                     if (debug)
-                        FileLog.Log($"MATCH {rule.name} ({matchData.start} .. {matchData.end - 1})");
+                        FileLog.Log($"MATCH {rule.Name} ({matchData.start} .. {matchData.end - 1})");
 
-                    if (rule.output != null)
+                    if (rule.Output != null)
                         matches.Add(matchData);
 
                     matchCount++;
-                    if (rule.max > 0 && matchCount >= rule.max)
+                    if (rule.Max > 0 && matchCount >= rule.Max)
                         break;
                 }
 
-                if (matchCount < rule.min)
-                    throw new InvalidOperationException($"Not enough matches found for substitution {rule.name}");
+                if (matchCount < rule.Min)
+                    throw new InvalidOperationException($"Not enough matches found for substitution {rule.Name}");
             }
 
-            var sortedMatches = matches.OrderBy(m => m.start).ThenBy(m => m.end).ThenByDescending(m => m.rule.priority).ToList();
+            var sortedMatches = matches.OrderBy(m => m.start).ThenBy(m => m.end).ThenByDescending(m => m.rule.Priority).ToList();
             for (var i = 0; i < sortedMatches.Count - 1; i++)
             {
                 if (sortedMatches[i].end > sortedMatches[i + 1].start)
@@ -156,7 +156,7 @@ internal class Processor(
                 static bool IsBlockStart(ExceptionBlock b) => b.blockType != ExceptionBlockType.EndExceptionBlock;
                 static bool IsBlockEnd(ExceptionBlock b) => b.blockType == ExceptionBlockType.EndExceptionBlock;
 
-                switch (match.rule.mode)
+                switch (match.rule.Mode)
                 {
                     case OutputMode.Replace:
                     {
@@ -275,16 +275,16 @@ internal class Processor(
 
     private void EmitReplacement(MatchData match)
     {
-        Emit(CodeInstruction.Annotation($"Begin {match.rule.name}"));
+        Emit(CodeInstruction.Annotation($"Begin {match.rule.Name}"));
 
         // Rules with null Output aren't added to matches so should never get here
-        if (match.rule.output is null)
+        if (match.rule.Output is null)
             throw new InvalidOperationException();
 
-        foreach (CodeInstruction replaceInst in match.rule.output)
+        foreach (CodeInstruction replaceInst in match.rule.Output)
             EmitReplacement(replaceInst, match);
 
-        Emit(CodeInstruction.Annotation($"End {match.rule.name}"));
+        Emit(CodeInstruction.Annotation($"End {match.rule.Name}"));
     }
 
     private bool MatchPattern(
@@ -297,27 +297,27 @@ internal class Processor(
         labelMap_Match = [];
 
         // rule.Pattern is checked to be non-null before this is called
-        if (rule.pattern is null)
+        if (rule.Pattern is null)
             throw new InvalidOperationException();
 
-        bool noOutput = rule.output is { Length: 0 };
+        bool noOutput = rule.Output is { Length: 0 };
 
-        for (var patternIndex = 0; patternIndex < rule.pattern.Length; patternIndex++)
+        for (var patternIndex = 0; patternIndex < rule.Pattern.Length; patternIndex++)
         {
-            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.pattern[patternIndex], localMap_Match,
+            if (!MatchInstruction(instructions[instructionIndex + patternIndex], rule.Pattern[patternIndex], localMap_Match,
                     labelMap_Match))
                 return false;
 
             // Check for exception blocks or labels not at the start (or end, for EndExceptionBlock) of the match
             // which would be lost when the instructions are replaced
-            if (rule is { mode: OutputMode.Replace, output: not null })
+            if (rule is { Mode: OutputMode.Replace, Output: not null })
             {
                 CodeInstruction inst = instructions[instructionIndex + patternIndex];
                 if ((patternIndex > 0 || noOutput) && inst.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
                     return false;
                 if ((patternIndex > 0 || noOutput) && inst.labels.Count > 0)
                     return false;
-                if ((patternIndex < rule.pattern.Length - 1 || noOutput) &&
+                if ((patternIndex < rule.Pattern.Length - 1 || noOutput) &&
                     inst.blocks.Any(b => b.blockType == ExceptionBlockType.EndExceptionBlock))
                     return false;
             }
@@ -472,7 +472,7 @@ internal class Processor(
 
     private Label GetReplacementLabel(Label label, MatchData match)
     {
-        Dictionary<Label, Label> labelMap = ruleset.crossRuleLabels.Contains(label) ? labelMap_Method : match.labelMap_Match;
+        Dictionary<Label, Label> labelMap = ruleset.CrossRuleLabels.Contains(label) ? labelMap_Method : match.labelMap_Match;
         if (!labelMap.TryGetValue(label, out Label replacementLabel))
         {
             replacementLabel = generator.DefineLabel();
@@ -488,7 +488,7 @@ internal class Processor(
 
         if (replaceInst.operand is LocalBuilder { LocalType: Type } builder)
         {
-            var localMap = ruleset.crossRuleLocals.Contains(builder) ? localMap_Method : match.localMap_Match;
+            var localMap = ruleset.CrossRuleLocals.Contains(builder) ? localMap_Method : match.localMap_Match;
             if (!localMap.TryGetValue(localIndex, out var substituteLocal))
             {
                 substituteLocal = new LocalTrackerBuilder(generator.DeclareLocal(builder.LocalType));

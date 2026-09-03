@@ -4,7 +4,7 @@
 ///     Applies declarative pattern-matching and replacement rules to a sequence of Harmony IL instructions.
 /// </summary>
 /// <remarks>
-///     Rules are processed in ascending <see cref="Rule.phase" /> order. Rules in the same phase all match against the
+///     Rules are processed in ascending <see cref="Rule.Phase" /> order. Rules in the same phase all match against the
 ///     phase's original input, and their combined output becomes the input to the next phase. Matching accounts for the
 ///     compact and expanded forms of equivalent IL opcodes and remaps local variables and labels used by a pattern.
 /// </remarks>
@@ -19,17 +19,17 @@ public class Ruleset
     /// <summary>
     ///     The rules to apply.
     /// </summary>
-    public List<Rule> rules = [];
+    public List<Rule> Rules { get; init; } = [];
 
     /// <summary>
     ///     Local-variable placeholders that should resolve to the same emitted local across different rule matches.
     /// </summary>
-    public List<LocalBuilder> crossRuleLocals = [];
+    public List<LocalBuilder> CrossRuleLocals { get; init; } = [];
 
     /// <summary>
     ///     Label placeholders that should resolve to the same emitted label across different rule matches.
     /// </summary>
-    public List<Label> crossRuleLabels = [];
+    public List<Label> CrossRuleLabels { get; init; } = [];
 
     /// <summary>
     ///     Initializes an empty ruleset.
@@ -42,7 +42,7 @@ public class Ruleset
     /// <param name="rules">The rules to apply.</param>
     public Ruleset(params List<Rule> rules)
     {
-        this.rules = rules;
+        this.Rules = rules;
     }
 
     /// <summary>
@@ -97,33 +97,33 @@ public class Ruleset
 }
 
 /// <summary>
-///     Specifies where a rule emits its <see cref="Rule.output" /> relative to a match.
+///     Specifies where a rule emits its <see cref="Rule.Output" /> relative to a match.
 /// </summary>
 public enum OutputMode
 {
     /// <summary>
-    ///     <see cref="Rule.output" /> replaces the instructions that match <see cref="Rule.pattern" />.
+    ///     <see cref="Rule.Output" /> replaces the instructions that match <see cref="Rule.Pattern" />.
     /// </summary>
     Replace,
 
     /// <summary>
-    ///     <see cref="Rule.output" /> is inserted before the first instruction of each match of the
-    ///     <see cref="Rule.pattern" />.
+    ///     <see cref="Rule.Output" /> is inserted before the first instruction of each match of the
+    ///     <see cref="Rule.Pattern" />.
     /// </summary>
     InsertBefore,
 
     /// <summary>
-    ///     <see cref="Rule.output" /> is inserted after the last instruction of each match of the <see cref="Rule.pattern" />.
+    ///     <see cref="Rule.Output" /> is inserted after the last instruction of each match of the <see cref="Rule.Pattern" />.
     /// </summary>
     InsertAfter,
 
     /// <summary>
-    ///     <see cref="Rule.output" /> is inserted at the start of the instruction sequence. No pattern matching is done.
+    ///     <see cref="Rule.Output" /> is inserted at the start of the instruction sequence. No pattern matching is done.
     /// </summary>
     MethodPrefix,
 
     /// <summary>
-    ///     <see cref="Rule.output" /> is inserted at the end of the instruction sequence. No pattern matching is done.
+    ///     <see cref="Rule.Output" /> is inserted at the end of the instruction sequence. No pattern matching is done.
     /// </summary>
     MethodPostfix,
 }
@@ -133,7 +133,7 @@ public enum OutputMode
 /// </summary>
 /// <remarks>
 ///     For <see cref="OutputMode.MethodPrefix" /> and <see cref="OutputMode.MethodPostfix" />, leave
-///     <see cref="pattern" /> empty. For other modes, a non-empty pattern is required. Set <see cref="output" /> to
+///     <see cref="Pattern" /> empty. For other modes, a non-empty pattern is required. Set <see cref="Output" /> to
 ///     <see langword="null" /> to require the pattern without changing its matches when another rule in the phase emits
 ///     output, or to an empty array to remove matches in <see cref="OutputMode.Replace" /> mode.
 /// </remarks>
@@ -142,41 +142,41 @@ public class Rule
     /// <summary>
     ///     The minimum number of required matches. The default is 1.
     /// </summary>
-    public int min = 1;
+    public int Min { get; init; } = 1;
 
     /// <summary>
     ///     The maximum number of matches to process, or a value less than or equal to zero for no limit. The default is 1.
     /// </summary>
-    public int max = 1;
+    public int Max { get; init; } = 1;
 
     /// <summary>
     ///     The ordering priority for zero-length rules at the same insertion point. Higher values are emitted first.
     /// </summary>
-    public int priority = 0;
+    public int Priority { get; init; } = 0;
 
     /// <summary>
     ///     The processing phase. Lower-numbered phases run first, and later phases can match output from earlier phases.
     /// </summary>
-    public int phase = 1;
+    public int Phase { get; init; } = 1;
 
     /// <summary>
-    ///     The position at which <see cref="output" /> is emitted relative to each match.
+    ///     The position at which <see cref="Output" /> is emitted relative to each match.
     /// </summary>
-    public OutputMode mode = OutputMode.Replace;
+    public OutputMode Mode { get; init; } = OutputMode.Replace;
 
     /// <summary>
     ///     The instruction pattern to match, or <see langword="null" /> for <see cref="OutputMode.MethodPrefix" /> and
     ///     <see cref="OutputMode.MethodPostfix" /> rules.
     /// </summary>
-    public CodeInstruction[]? pattern;
+    public CodeInstruction[]? Pattern { get; init; }
 
     /// <summary>
     ///     The instructions to emit, or <see langword="null" /> to validate matches without producing output.
     /// </summary>
-    public required CodeInstruction[]? output;
+    public required CodeInstruction[]? Output { get; init; }
 
     /// <summary>
     ///     An optional name used in debug output and error messages.
     /// </summary>
-    public string? name;
+    public string? Name { get; init; }
 }
