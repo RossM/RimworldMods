@@ -85,8 +85,7 @@ public enum Scope
 /// </summary>
 /// <remarks>
 ///     For an attributed patch, pass the desired flags to <see cref="PatchOptionsAttribute" />. When configuring a patch
-///     entirely in code, pass them to the <c>options</c> parameter of the appropriate <c>Register</c> or <c>Patch</c>
-///     overload.
+///     in code, use <see cref="Patch.Options(PatchConfig, PatchOptions)" />.
 /// </remarks>
 [Flags]
 public enum PatchOptions
@@ -115,7 +114,7 @@ public enum PatchOptions
     /// <remarks>
     ///     <para>
     ///         On a prefix, this flag causes the prefix to always run before other prefixes. Prefixes with
-    ///         this flag must return void and can't access the function return value.
+    ///         this flag must return <see langword="void" /> and cannot access the target operation's return value.
     ///     </para>
     ///     <para>
     ///         On a postfix, this flag causes the postfix to run even if the method or another patch throws
@@ -130,14 +129,13 @@ public enum PatchOptions
     AlwaysRun = 0x4,
 
     /// <summary>
-    ///     Disable certain safety checks that prevent generating invalid IL.
+    ///     Disables selected safety checks that prevent Disharmony from generating invalid IL.
     /// </summary>
     /// <remarks>
-    ///     In some cases Disharmony's validation checks may reject code that generates invalid or unsafe IL
-    ///     that will nevertheless work at runtime. This flag will disable selected validation checks to allow
-    ///     you to do things that you know are safe but Disharmony doesn't. Use this flag at your own risk;
-    ///     patches using it can silently fail to work, generate invalid IL that will be rejected
-    ///     by the JIT compiler or crash when executed, cause memory corruption, break other patches, and so on.
+    ///     In some cases, Disharmony may reject an operation that the caller knows is safe in a particular context. This
+    ///     flag allows such operations by bypassing selected validation checks. Use it with care: an unsafe patch can
+    ///     silently malfunction, produce IL that the JIT rejects, crash during execution, corrupt memory, or interfere
+    ///     with other patches.
     /// </remarks>
     AllowUnsafe = 0x8,
 
@@ -175,6 +173,9 @@ public enum PatchOptions
 [AttributeUsage(AttributeTargets.Class)]
 public class PatchAttribute(Type? type = null) : Attribute
 {
+    /// <summary>
+    ///     Gets the default type that declares the outer target members.
+    /// </summary>
     public Type? Type { get; } = type;
 }
 
@@ -199,21 +200,32 @@ public class PatchAttribute(Type? type = null) : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class CategoryAttribute(string category) : Attribute
 {
+    /// <summary>
+    ///     Gets the category name used by <see cref="Patcher.PatchCategory" />.
+    /// </summary>
     public string Category { get; } = category;
 }
 
+/// <summary>
+///     Base class for attributes that identify whether a patch method is a prefix or postfix.
+/// </summary>
+/// <param name="patchType">The point relative to the target operation at which the patch runs.</param>
 public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 {
+    /// <summary>
+    ///     Gets the point relative to the target operation at which the patch runs.
+    /// </summary>
     public PatchType PatchType { get; } = patchType;
 }
 
 /// <summary>
-///     Marks a patch method to run before each selected outer member. A prefix that returns
-///     <see langword="false" /> skips the outer member.
+///     Marks a patch method to run before each selected target operation. A prefix that returns
+///     <see langword="false" /> skips that operation.
 /// </summary>
 /// <remarks>
-///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See
-///     <see cref="Patcher" /> for patch structure, targeting, and parameter binding.
+///     Without an inner-target attribute, the operation is the outer member selected by <see cref="TargetAttribute" />
+///     or <see cref="TargetsAttribute" />. With <see cref="InnerAttribute" /> or <see cref="InnerConstantAttribute" />,
+///     it is each matching operation inside the outer member. See <see cref="Patcher" /> for the complete patch model.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -221,27 +233,30 @@ public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 
 /// <summary>
-///     Marks a patch method to run after each selected outer member.
+///     Marks a patch method to run after each selected target operation.
 /// </summary>
 /// <remarks>
-///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. Bind the outer return
-///     value with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by
-///     reference to replace it. See <see cref="Patcher" /> for the complete patch model.
+///     Without an inner-target attribute, the operation is the outer member selected by <see cref="TargetAttribute" />
+///     or <see cref="TargetsAttribute" />. With <see cref="InnerAttribute" /> or <see cref="InnerConstantAttribute" />,
+///     it is each matching operation inside the outer member. Bind the operation's return value with
+///     <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by reference to
+///     replace it. See <see cref="Patcher" /> for the complete patch model.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
 public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 
+/// <summary>
+///     Base class for attributes that select an operation inside an outer patch target.
+/// </summary>
 public abstract class InnerAttributeBase : Attribute;
 
 /// <summary>
-///     Marks a patch method to run before each matching inner member access or call within the selected outer methods.
-///     A prefix that returns <see langword="false" /> skips the matched access or call.
+///     Selects each matching member access or call inside the outer targets as the operation to patch.
 /// </summary>
 /// <param name="type">
-///     The type that declares the inner member, or <see langword="null" /> to resolve it from
-///     <paramref name="memberName" />.
+///     The type that declares the inner member.
 /// </param>
 /// <param name="memberName">
 ///     The name of the inner member to match, or <see langword="null" /> when matching a constructor.
@@ -255,8 +270,9 @@ public abstract class InnerAttributeBase : Attribute;
 ///     selecting one.
 /// </param>
 /// <remarks>
-///     Select outer members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See
-///     <see cref="Patcher" /> for member-name syntax, overload selection, and inner-versus-outer parameter binding.
+///     Combine this attribute with <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" /> and select the outer
+///     members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See <see cref="Patcher" /> for
+///     member-name syntax, overload selection, and inner-versus-outer parameter binding.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -269,40 +285,60 @@ public class InnerAttribute(
     Type[]? genericTypes = null) : InnerAttributeBase
 {
     /// <summary>
-    ///     Runs the patch before each access or call to the named inner member.
+    ///     Selects each access or call to the named inner member.
     /// </summary>
     /// <param name="type">
-    ///     The type that declares the inner member, or <see langword="null" /> to resolve it from
-    ///     <paramref name="memberName" />.
+    ///     The type that declares the inner member.
     /// </param>
     /// <param name="memberName">The name of the inner member to match.</param>
     public InnerAttribute(Type type, string? memberName) : this(type, memberName, MemberType.Any) { }
 
     /// <summary>
-    ///     Runs the patch before each call to the specified overload of the named inner member.
+    ///     Selects each call to the specified overload of the named inner member.
     /// </summary>
     /// <param name="type">
-    ///     The type that declares the inner member, or <see langword="null" /> to resolve it from
-    ///     <paramref name="memberName" />.
+    ///     The type that declares the inner member.
     /// </param>
     /// <param name="memberName">The name of the inner member to match.</param>
     /// <param name="parameterTypes">The parameter types that identify the overload.</param>
     public InnerAttribute(Type type, string? memberName, params Type[] parameterTypes) : this(type, memberName, MemberType.Any,
         parameterTypes) { }
 
+    /// <summary>
+    ///     Gets the type that declares the inner member.
+    /// </summary>
     public Type Type { get; } = type;
+
+    /// <summary>
+    ///     Gets the name of the inner member, or <see langword="null" /> when selecting a constructor.
+    /// </summary>
     public string? MemberName { get; } = memberName;
+
+    /// <summary>
+    ///     Gets the kind of member access or call to match.
+    /// </summary>
     public MemberType MemberType { get; } = memberType;
+
+    /// <summary>
+    ///     Gets the parameter types used to select an overload, or <see langword="null" /> when the selection does not
+    ///     include a parameter signature.
+    /// </summary>
     public Type[]? ParameterTypes { get; } = parameterTypes;
+
+    /// <summary>
+    ///     Gets the generic type arguments used to select a constructed generic method, or <see langword="null" /> when
+    ///     the selection does not include generic type arguments.
+    /// </summary>
     public Type[]? GenericTypes { get; } = genericTypes;
 }
 
 /// <summary>
-///     Marks a patch method to run after each occurrence of the specified constant in the selected outer methods.
+///     Selects each occurrence of the specified constant inside the outer targets as the operation to patch.
 /// </summary>
 /// <remarks>
-///     Bind the constant value with <see cref="ReturnValueAttribute" /> or the conventional parameter name
-///     <c>__result</c>; pass it by reference to replace it. Select outer members with <see cref="TargetAttribute" /> or
+///     Combine this attribute with <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" />. Bind the constant
+///     value with <see cref="ReturnValueAttribute" /> or the conventional parameter name <c>__result</c>; pass it by
+///     reference to replace it. Select outer members with <see cref="TargetAttribute" /> or
 ///     <see cref="TargetsAttribute" />. See <see cref="Patcher" /> for the complete patch model.
 /// </remarks>
 [PublicAPI]
@@ -311,7 +347,7 @@ public class InnerAttribute(
 public class InnerConstantAttribute : InnerAttributeBase
 {
     /// <summary>
-    ///     Runs the patch after each matching 32-bit integer constant in IL.
+    ///     Selects each matching 32-bit integer constant in IL.
     /// </summary>
     /// <remarks>
     ///     IL provides only 32-bit and 64-bit integer constant forms, so constants of smaller integer types, including
@@ -326,7 +362,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     }
 
     /// <summary>
-    ///     Runs the patch after each matching 64-bit integer constant.
+    ///     Selects each matching 64-bit integer constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(long value)
@@ -335,7 +371,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     }
 
     /// <summary>
-    ///     Runs the patch after each matching single-precision floating-point constant.
+    ///     Selects each matching single-precision floating-point constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(float value)
@@ -344,7 +380,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     }
 
     /// <summary>
-    ///     Runs the patch after each matching double-precision floating-point constant.
+    ///     Selects each matching double-precision floating-point constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(double value)
@@ -353,7 +389,7 @@ public class InnerConstantAttribute : InnerAttributeBase
     }
 
     /// <summary>
-    ///     Runs the patch after each matching string constant.
+    ///     Selects each matching string constant.
     /// </summary>
     /// <param name="value">The constant value to match.</param>
     public InnerConstantAttribute(string value)
@@ -361,6 +397,9 @@ public class InnerConstantAttribute : InnerAttributeBase
         Value = value;
     }
 
+    /// <summary>
+    ///     Gets the constant value to match.
+    /// </summary>
     public object Value { get; }
 }
 
@@ -370,36 +409,70 @@ public class InnerConstantAttribute : InnerAttributeBase
 /// <param name="options">The behaviors to enable. Multiple <see cref="PatchOptions" /> flags can be combined.</param>
 /// <remarks>
 ///     Apply this attribute to a patch class to provide options for every patch method declared by the class. An attribute
-///     on an individual patch method replaces the class-level options for that method. The <c>Register</c> and
-///     <c>Patch</c> overloads that accept a <see cref="PatchOptions" /> argument use that argument instead.
+///     on an individual patch method replaces the class-level options for that method. Programmatic patches instead use
+///     <see cref="Patch.Options(PatchConfig, PatchOptions)" />.
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class PatchOptionsAttribute(PatchOptions options) : Attribute
 {
+    /// <summary>
+    ///     Gets the optional patch behaviors to enable.
+    /// </summary>
     public PatchOptions Options { get; } = options;
 }
 
 /// <summary>
-///     Sets the priority of a patch. The meaning of priority depends on the patch type. For
-///     <see cref="PrefixAttribute">prefix</see>
-///     patches, higher priority patches run earlier, while for other patch types higher priority patches run later.
+///     Sets a patch's execution priority.
 /// </summary>
-/// <param name="priority"></param>
+/// <param name="priority">The priority value. See <see cref="PatchPriority" /> for standard values.</param>
+/// <remarks>
+///     Higher-priority <see cref="PrefixAttribute">prefixes</see> run earlier. Higher-priority patches of other types run
+///     later.
+/// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class PriorityAttribute(int priority) : Attribute
 {
+    /// <summary>
+    ///     Gets the patch priority.
+    /// </summary>
     public int Priority { get; } = priority;
 }
 
+/// <summary>
+///     Provides standard values for ordering patches.
+/// </summary>
+/// <remarks>
+///     Higher-priority <see cref="PrefixAttribute">prefixes</see> run earlier. Higher-priority patches of other types run
+///     later. Use <see cref="Default" /> when no explicit ordering is required.
+/// </remarks>
 [PublicAPI]
 public static class PatchPriority
 {
+    /// <summary>
+    ///     The standard very-low priority.
+    /// </summary>
     public const int VeryLow = 0;
+
+    /// <summary>
+    ///     The standard low priority.
+    /// </summary>
     public const int Low = 500;
+
+    /// <summary>
+    ///     The default priority assigned when none is specified.
+    /// </summary>
     public const int Default = 1000;
+
+    /// <summary>
+    ///     The standard high priority.
+    /// </summary>
     public const int High = 1500;
+
+    /// <summary>
+    ///     The standard very-high priority.
+    /// </summary>
     public const int VeryHigh = 2000;
 }
 
@@ -506,10 +579,32 @@ public class TargetAttribute(
     public TargetAttribute(string methodName, params Type[] parameterTypes)
         : this(null, methodName, MemberType.Any, parameterTypes) { }
 
+    /// <summary>
+    ///     Gets the type that declares the target members, or <see langword="null" /> when the type is supplied by
+    ///     containing patch metadata or resolved from <see cref="MethodName" />.
+    /// </summary>
     public Type? Type { get; } = type;
+
+    /// <summary>
+    ///     Gets the target member name, or <see langword="null" /> when selecting a constructor.
+    /// </summary>
     public string? MethodName { get; } = methodName;
+
+    /// <summary>
+    ///     Gets the kind of member or accessor to select.
+    /// </summary>
     public MemberType MemberType { get; } = memberType;
+
+    /// <summary>
+    ///     Gets the parameter types used to filter overloads, or <see langword="null" /> when the selection does not
+    ///     include a parameter signature.
+    /// </summary>
     public Type[]? ParameterTypes { get; } = parameterTypes;
+
+    /// <summary>
+    ///     Gets the generic type arguments used to identify constructed generic methods, or <see langword="null" /> when
+    ///     the selection does not include generic type arguments.
+    /// </summary>
     public Type[]? GenericTypes { get; } = genericTypes;
 }
 
@@ -619,8 +714,15 @@ public class TargetsAttribute(
         : this(null, methodName, MemberType.Any, parameterTypes) { }
 }
 
+/// <summary>
+///     Base class for attributes that bind a patch-method parameter to data from the patched operation.
+/// </summary>
+/// <param name="scope">The inner or outer operation from which to obtain the bound value.</param>
 public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 {
+    /// <summary>
+    ///     Gets the operation from which to obtain the bound value.
+    /// </summary>
     public Scope Scope { get; } = scope;
 }
 
@@ -674,7 +776,14 @@ public class ParameterAttribute : ParameterBindingAttribute
         Index = index;
     }
 
+    /// <summary>
+    ///     Gets the zero-based source parameter index, or <see langword="null" /> when binding by name.
+    /// </summary>
     public int? Index { get; } = null;
+
+    /// <summary>
+    ///     Gets the source parameter name, or <see langword="null" /> when using the patch parameter's name or an index.
+    /// </summary>
     public string? Name { get; } = null;
 }
 
@@ -687,11 +796,11 @@ public class ParameterAttribute : ParameterBindingAttribute
 /// </param>
 /// <remarks>
 ///     <para>
-///         A parameter named <c>__instance</c> with no binding attribute will be treated as if it has this attribute with
+///         A parameter named <c>__instance</c> with no binding attribute is treated as if it has this attribute with
 ///         <see cref="Scope.Any" />.
 ///     </para>
 ///     <para>
-///         For inner patches, a parameter named <c>__caller</c> with no binding attribute will be treated as if it has
+///         For inner patches, a parameter named <c>__caller</c> with no binding attribute is treated as if it has
 ///         this attribute with <see cref="Scope.Outer" />.
 ///     </para>
 /// </remarks>
@@ -705,7 +814,7 @@ public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttrib
 /// </summary>
 /// <remarks>
 ///     <para>
-///         A parameter named <c>__result</c> with no binding attribute will be treated as if it has this attribute.
+///         A parameter named <c>__result</c> with no binding attribute is treated as if it has this attribute.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -723,13 +832,13 @@ public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 ///         State is not supported when an inner patch targets an iterator state-machine method.
 ///     </para>
 ///     <para>
-///         Patches only share state with other patches applied in the same <c>Patcher.Patch</c> or
-///         <c>Patcher.PatchAll</c> call. 
+///         Patches only share state with other patches applied in the same call to a patching method on
+///         <see cref="Patcher" />.
 ///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" /> additionally require that the
 ///         patch methods be defined in the same class to share state.
 ///     </para>
 ///     <para>
-///         A parameter named <c>__state</c> with no binding attribute will be treated as if it has this attribute.
+///         A parameter named <c>__state</c> with no binding attribute is treated as if it has this attribute.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -741,6 +850,9 @@ public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer
     /// </summary>
     public StateAttribute() : this(null) { }
 
+    /// <summary>
+    ///     Gets the state key, or <see langword="null" /> when the patch parameter's name is used.
+    /// </summary>
     public string? Key { get; } = key;
 }
 
@@ -757,7 +869,7 @@ public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer
 /// </param>
 /// <remarks>
 ///     <para>
-///         A parameter starting with <c>___</c> (three underscores) with no binding attribute will be treated as if it has
+///         A parameter starting with <c>___</c> (three underscores) with no binding attribute is treated as if it has
 ///         this attribute, with the field name starting after the first three underscores.
 ///     </para>
 /// </remarks>
@@ -774,6 +886,9 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
     /// </param>
     public FieldAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 
+    /// <summary>
+    ///     Gets the field name, or <see langword="null" /> when the patch parameter's name is used.
+    /// </summary>
     public string? Name { get; } = name;
 }
 
@@ -784,11 +899,10 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 /// <remarks>
 ///     <para>
 ///         The patch parameter must be a delegate whose parameters and return type match the outer method. Static methods
-///         do
-///         not have a base-method binding.
+///         do not have a base-method binding.
 ///     </para>
 ///     <para>
-///         A parameter named <c>__base</c> with no binding attribute will be treated as if it has this attribute.
+///         A parameter named <c>__base</c> with no binding attribute is treated as if it has this attribute.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -796,28 +910,45 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
 
 /// <summary>
-///     Binds a patch parameter to a delegate that invokes a given method on the class of the inner or outer instance.
+///     Binds a patch parameter to a delegate that invokes a method declared by the inner or outer instance's type.
 /// </summary>
+/// <param name="name">
+///     The method name, or <see langword="null" /> to use the attributed patch parameter's name.
+/// </param>
+/// <param name="scope">
+///     The instance whose type declares the method. The default, <see cref="Scope.Any" />, uses the inner instance for an
+///     inner patch and the outer instance otherwise.
+/// </param>
 /// <remarks>
-///     This can be used to access otherwise-inaccessible methods on the classes of the instance.
+///     The patch parameter must be a delegate whose parameters and return type match the selected method. This binding can
+///     be used to invoke an otherwise-inaccessible method.
 /// </remarks>
-/// <param name="name"></param>
-/// <param name="scope"></param>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
+    /// <summary>
+    ///     Binds to the method having the same name as the attributed patch parameter.
+    /// </summary>
+    /// <param name="scope">
+    ///     The instance whose type declares the method. The default, <see cref="Scope.Any" />, uses the inner instance for
+    ///     an inner patch and the outer instance otherwise.
+    /// </param>
     public MethodAttribute(Scope scope = Scope.Any) : this(null, scope) { }
+
+    /// <summary>
+    ///     Gets the method name, or <see langword="null" /> when the patch parameter's name is used.
+    /// </summary>
     public string? Name { get; } = name;
 }
 
 /// <summary>
-///     Binds a patch parameter to the exception thrown by the method.
+///     Binds a patch parameter to the exception thrown by the patched operation.
 /// </summary>
 /// <remarks>
 ///     <para>
-///         If no exception is thrown, the value is <see langword="null" />. If the parameter is <see langword="ref" />
-///         the method can replace the exception, or set it to <see langword="null" /> to suppress the exception.
+///         If no exception is thrown, the value is <see langword="null" />. A <see langword="ref" /> parameter can
+///         replace the exception or set it to <see langword="null" /> to suppress it.
 ///     </para>
 ///     <para>
 ///         This is only valid for <see cref="PostfixAttribute">postfixes</see> with the
@@ -825,7 +956,7 @@ public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterB
 ///         option set.
 ///     </para>
 ///     <para>
-///         A parameter named <c>__exception</c> with no binding attribute will be treated as if it has this attribute.
+///         A parameter named <c>__exception</c> with no binding attribute is treated as if it has this attribute.
 ///     </para>
 /// </remarks>
 [PublicAPI]

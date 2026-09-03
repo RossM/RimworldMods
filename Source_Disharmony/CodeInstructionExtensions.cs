@@ -1,9 +1,17 @@
 namespace Disharmony;
 
+/// <summary>
+///     Provides helpers for constructing Harmony <see cref="CodeInstruction" /> instances.
+/// </summary>
 public static class CodeInstructionExtensions
 {
     extension(CodeInstruction inst)
     {
+        /// <summary>
+        ///     Creates a non-executable annotation that Disharmony includes in IL debug output.
+        /// </summary>
+        /// <param name="str">The annotation text.</param>
+        /// <returns>A <see cref="OpCodes.Nop" /> instruction carrying the annotation text as its operand.</returns>
         public static CodeInstruction Annotation(string str) => new(OpCodes.Nop, str);
 
         internal int PushCount()

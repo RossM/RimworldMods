@@ -43,9 +43,11 @@ public enum PatchType
 ///         <item>
 ///             <description>
 ///                 Programmatic patches use <see cref="Disharmony.Patch" /> to build a <see cref="PatchConfig" />. Choose
-///                 <c>Prefix</c> or <c>Postfix</c>, add the patch method with <c>With</c>, add the target with <c>Of</c>,
-///                 then pass the result to a <c>Patch</c> overload. Patch-definition attributes are ignored in this form,
-///                 but parameter-binding attributes still apply.
+///                 <see cref="Disharmony.Patch.Prefix" /> or <see cref="Disharmony.Patch.Postfix" />, add the patch
+///                 method with <see cref="Disharmony.Patch.With(MethodInfo)" />, add the target with
+///                 <see cref="Disharmony.Patch.Of(MethodBase)" />, then pass the result to
+///                 <see cref="Patcher.Patch(PatchConfig)" /> or another programmatic patching overload. Patch-definition
+///                 attributes are ignored in this form, but parameter-binding attributes still apply.
 ///             </description>
 ///         </item>
 ///     </list>
@@ -56,8 +58,7 @@ public enum PatchType
 ///     </para>
 ///     <para>
 ///         Every call that applies patches returns a <see cref="PatchHandle" />. Keep the handle if the patches may need
-///         to
-///         be removed later with <see cref="Unpatch" />. A handle returned for several configurations removes them
+///         to be removed later with <see cref="Unpatch" />. A handle returned for several configurations removes them
 ///         together, and those configurations can share <see cref="StateAttribute">state</see>. Patches affect every
 ///         caller in the current process.
 ///     </para>
@@ -74,11 +75,12 @@ public static class Patcher
     private static HarmonyInterface Harmony => HarmonyInterface.Instance;
 
     /// <summary>
-    ///     Notifies subscribers when Disharmony encounters a recoverable patching error.
+    ///     Occurs when Disharmony encounters an error while generating or applying patched IL.
     /// </summary>
     /// <remarks>
-    ///     When the event has no subscribers, the exception is written to Harmony's file log. Errors that Disharmony
-    ///     cannot recover from are thrown to the caller instead.
+    ///     Subscribers receive the underlying exception synchronously. When the event has no subscribers, Disharmony
+    ///     writes the exception to Harmony's file log. This event does not report exceptions thrown by target or patch
+    ///     methods during normal execution.
     /// </remarks>
     public static event Action<Exception>? RuntimeExceptionHandler;
 
@@ -104,6 +106,7 @@ public static class Patcher
     ///     only one.
     /// </remarks>
     /// <returns>A handle for removing the patches added by this call.</returns>
+    /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle PatchAll(Assembly assembly)
     {
         PatchHandle handle = new PatchHandle();
@@ -123,6 +126,7 @@ public static class Patcher
     ///     <see cref="HarmonyLib.HarmonyPatchCategory" />. Classes must also have a recognized patch marker.
     /// </remarks>
     /// <returns>A handle for removing the patches added by this call.</returns>
+    /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
         PatchHandle handle = new PatchHandle();
@@ -139,6 +143,7 @@ public static class Patcher
     ///     processed.
     /// </remarks>
     /// <returns>A handle for removing the patches added by this call.</returns>
+    /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle PatchAll(Type type)
     {
         PatchHandle handle = new PatchHandle();
@@ -149,11 +154,13 @@ public static class Patcher
     /// <summary>
     ///     Applies the patch described by an attributed method.
     /// </summary>
+    /// <param name="methods">The attributed patch methods to apply.</param>
     /// <remarks>
     ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
     ///     <see cref="PatchAttribute" /> when the method is patched directly.
     /// </remarks>
     /// <returns>A handle for removing the patches added by this call.</returns>
+    /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle Patch(params IEnumerable<MethodInfo> methods)
     {
         PatchHandle handle = new PatchHandle();
@@ -166,6 +173,10 @@ public static class Patcher
     /// </summary>
     /// <param name="patch">The patch to apply.</param>
     /// <returns>A handle for removing the patch.</returns>
+    /// <exception cref="ArgumentException">
+    ///     <paramref name="patch" /> does not specify a patch type, patch method, or outer target.
+    /// </exception>
+    /// <exception cref="PatchException">The patch definition is invalid or the patch could not be applied.</exception>
     public static PatchHandle Patch(PatchConfig patch)
     {
         return Patch([patch]);
@@ -177,6 +188,10 @@ public static class Patcher
     /// <param name="patch">The patch to apply. The supplied methods replace any target already in the configuration.</param>
     /// <param name="methods">The methods and constructors to patch.</param>
     /// <returns>A handle for removing the patches added by this call.</returns>
+    /// <exception cref="ArgumentException">
+    ///     <paramref name="patch" /> does not specify a patch type or patch method.
+    /// </exception>
+    /// <exception cref="PatchException">The patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle Patch(PatchConfig patch, params IEnumerable<MethodBase> methods)
     {
         return Patch(methods.Select(patch.Of));
@@ -188,6 +203,10 @@ public static class Patcher
     /// <param name="method">The method or constructor to patch. It replaces any target in the configurations.</param>
     /// <param name="patches">The patches to apply.</param>
     /// <returns>A handle for removing the patches added by this call.</returns>
+    /// <exception cref="ArgumentException">
+    ///     A configuration in <paramref name="patches" /> does not specify a patch type or patch method.
+    /// </exception>
+    /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle Patch(MethodBase method, params IEnumerable<PatchConfig> patches)
     {
         return Patch(patches.Select(patch => patch.Of(method)));
@@ -203,6 +222,10 @@ public static class Patcher
     /// <remarks>
     ///     Patches in the group can share state.
     /// </remarks>
+    /// <exception cref="ArgumentException">
+    ///     A configuration in <paramref name="patches" /> does not specify a patch type, patch method, or outer target.
+    /// </exception>
+    /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
     {
         PatchHandle handle = new PatchHandle();
@@ -217,6 +240,7 @@ public static class Patcher
     /// <remarks>
     ///     Patches added by other calls remain active, even when they patch the same methods.
     /// </remarks>
+    /// <exception cref="RuntimePatchException">One or more affected methods could not be updated.</exception>
     public static void Unpatch(PatchHandle handle)
     {
         Registry.Unpatch(handle);
@@ -229,6 +253,7 @@ public static class Patcher
     ///     Patches are already active without this call. Use it during a convenient idle period when avoiding first-use
     ///     delay matters. Patches added afterward may require another call.
     /// </remarks>
+    /// <exception cref="RuntimePatchException">One or more pending patches could not be prepared.</exception>
     public static void ForceApply()
     {
         Harmony.ResolveAllTrampolines();

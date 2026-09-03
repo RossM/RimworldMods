@@ -1,16 +1,33 @@
 ﻿namespace Disharmony;
 
+/// <summary>
+///     Provides reflection helpers used when inspecting and identifying patch targets.
+/// </summary>
 public static class ReflectionExtensions
 {
     extension(MemberInfo member)
     {
+        /// <summary>
+        ///     Gets the member name qualified by its declaring type, in the form
+        ///     <c>Namespace.DeclaringType::Member</c>.
+        /// </summary>
         public string FullName => $"{member.DeclaringType?.FullName}::{member.Name}";
     }
 
     extension(MethodBase method)
     {
+        /// <summary>
+        ///     Gets a value indicating whether the method's calling convention includes an instance argument.
+        /// </summary>
         public bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
 
+        /// <summary>
+        ///     Gets the generated <c>MoveNext</c> method that implements an iterator or asynchronous method.
+        /// </summary>
+        /// <returns>
+        ///     The state machine's <c>MoveNext</c> method, or <see langword="null" /> if <paramref name="method" /> is
+        ///     not recognized as an iterator or asynchronous state-machine entry point.
+        /// </returns>
         public MethodInfo? GetStateMachineImplementation()
         {
             // Check if the method is an iterator state machine wrapper. If so, look at the iterator's MoveNext method.
@@ -22,16 +39,30 @@ public static class ReflectionExtensions
 
     extension(Type type)
     {
+        /// <summary>
+        ///     Gets a value indicating whether the type is a managed reference or an unmanaged pointer.
+        /// </summary>
         public bool IsPointerLike => type.IsByRef || type.IsPointer;
 
+        /// <summary>
+        ///     Gets a value indicating whether Disharmony treats the type as a pointer-compatible numeric type.
+        /// </summary>
         public bool IsPointerCompatibleNumeric =>
             type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
 
-
+        /// <summary>
+        ///     Gets the element type of a managed reference, or the original type if it is not a managed reference.
+        /// </summary>
         public Type NoRefType => type.IsByRef ? type.GetElementType() : type;
 
+        /// <summary>
+        ///     Gets the type used for an invocation receiver: value types by reference and reference types unchanged.
+        /// </summary>
         public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
 
+        /// <summary>
+        ///     Gets a value indicating whether the type appears to be a compiler-generated closure type.
+        /// </summary>
         public bool IsClosureType
         {
             get
