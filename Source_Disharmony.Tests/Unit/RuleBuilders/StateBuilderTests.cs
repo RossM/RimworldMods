@@ -198,19 +198,15 @@ public sealed class StateBuilderTests
             Assert.That(rule.Mode, Is.EqualTo(OutputMode.MethodPrefix));
             Assert.That(rule.Priority, Is.EqualTo(100));
             Assert.That(rule.Pattern, Is.Null);
-            Assert.That(output.Select(i => i.opcode), Is.EqualTo(new[]
+            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
             {
-                OpCodes.Ldc_I4_0,
-                OpCodes.Stloc_S,
-                OpCodes.Ldnull,
-                OpCodes.Stloc_S,
-                OpCodes.Ldloca_S,
-                OpCodes.Initobj,
+                (OpCodes.Ldc_I4_0, null),
+                (OpCodes.Stloc_S, primitive.local!.Builder),
+                (OpCodes.Ldnull, null),
+                (OpCodes.Stloc_S, reference.local!.Builder),
+                (OpCodes.Ldloca_S, structure.local!.Builder),
+                (OpCodes.Initobj, typeof(BindingStruct)),
             }));
-            Assert.That(output[1].operand, Is.SameAs(primitive.local!.Builder));
-            Assert.That(output[3].operand, Is.SameAs(reference.local!.Builder));
-            Assert.That(output[4].operand, Is.SameAs(structure.local!.Builder));
-            Assert.That(output[5].operand, Is.EqualTo(typeof(BindingStruct)));
         });
     }
 
@@ -246,9 +242,11 @@ public sealed class StateBuilderTests
         {
             Assert.That(primitive.local, Is.SameAs(primitiveByRef.local));
             Assert.That(context.locals, Has.Count.EqualTo(1));
-            Assert.That(output.Select(i => i.opcode),
-                Is.EqualTo(new[] { OpCodes.Ldc_I4_0, OpCodes.Stloc_S }));
-            Assert.That(output[1].operand, Is.SameAs(primitive.local!.Builder));
+            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
+            {
+                (OpCodes.Ldc_I4_0, null),
+                (OpCodes.Stloc_S, primitive.local!.Builder),
+            }));
         });
     }
 
