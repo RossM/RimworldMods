@@ -57,18 +57,17 @@ public sealed class ExceptionFixupTests
 
         List<CodeInstruction> result = Fix(IntResultMethod, instructions);
 
-        Assert.That(result.Select(instruction => instruction.opcode), Is.EqualTo(new[]
-        {
-            OpCodes.Ldc_I4,
-            OpCodes.Stloc_S,
-            OpCodes.Nop,
-            OpCodes.Nop,
-            OpCodes.Ldloc_S,
-            OpCodes.Ret,
-        }));
         var savedValue = (LocalBuilder)result[1].operand;
+        Assert.That(result.Select(instruction => (instruction.opcode, instruction.operand)), Is.EqualTo(new (OpCode, object?)[]
+        {
+            (OpCodes.Ldc_I4, 42),
+            (OpCodes.Stloc_S, savedValue),
+            (OpCodes.Nop, null),
+            (OpCodes.Nop, null),
+            (OpCodes.Ldloc_S, savedValue),
+            (OpCodes.Ret, null),
+        }));
         Assert.That(savedValue.LocalType, Is.EqualTo(typeof(int)));
-        Assert.That(result[4].operand, Is.SameAs(savedValue));
         Assert.That(result[2], Is.SameAs(instructions[1]));
         Assert.That(result[3], Is.SameAs(instructions[2]));
     }
@@ -93,33 +92,30 @@ public sealed class ExceptionFixupTests
 
         List<CodeInstruction> result = Fix(VoidMethod, instructions);
 
-        Assert.That(result.Select(instruction => instruction.opcode), Is.EqualTo(new[]
-        {
-            OpCodes.Ldc_I4_1,
-            OpCodes.Ldc_I8,
-            OpCodes.Ldstr,
-            OpCodes.Stloc_S,
-            OpCodes.Stloc_S,
-            OpCodes.Stloc_S,
-            OpCodes.Nop,
-            OpCodes.Nop,
-            OpCodes.Ldloc_S,
-            OpCodes.Ldloc_S,
-            OpCodes.Ldloc_S,
-            OpCodes.Pop,
-            OpCodes.Pop,
-            OpCodes.Pop,
-            OpCodes.Ret,
-        }));
         var objectValue = (LocalBuilder)result[3].operand;
         var longValue = (LocalBuilder)result[4].operand;
         var intValue = (LocalBuilder)result[5].operand;
+        Assert.That(result.Select(instruction => (instruction.opcode, instruction.operand)), Is.EqualTo(new (OpCode, object?)[]
+        {
+            (OpCodes.Ldc_I4_1, null),
+            (OpCodes.Ldc_I8, 2L),
+            (OpCodes.Ldstr, "three"),
+            (OpCodes.Stloc_S, objectValue),
+            (OpCodes.Stloc_S, longValue),
+            (OpCodes.Stloc_S, intValue),
+            (OpCodes.Nop, null),
+            (OpCodes.Nop, null),
+            (OpCodes.Ldloc_S, intValue),
+            (OpCodes.Ldloc_S, longValue),
+            (OpCodes.Ldloc_S, objectValue),
+            (OpCodes.Pop, null),
+            (OpCodes.Pop, null),
+            (OpCodes.Pop, null),
+            (OpCodes.Ret, null),
+        }));
         Assert.That(objectValue.LocalType, Is.EqualTo(typeof(object)));
         Assert.That(longValue.LocalType, Is.EqualTo(typeof(long)));
         Assert.That(intValue.LocalType, Is.EqualTo(typeof(int)));
-        Assert.That(result[8].operand, Is.SameAs(intValue));
-        Assert.That(result[9].operand, Is.SameAs(longValue));
-        Assert.That(result[10].operand, Is.SameAs(objectValue));
     }
 
     [Test]
@@ -453,28 +449,26 @@ public sealed class ExceptionFixupTests
 
         List<CodeInstruction> result = Fix(VoidMethod, instructions);
 
-        Assert.That(result.Select(instruction => instruction.opcode), Is.EqualTo(new[]
-        {
-            OpCodes.Ldc_I4_1,
-            OpCodes.Stloc_S,
-            OpCodes.Nop,
-            OpCodes.Ldstr,
-            OpCodes.Stloc_S,
-            OpCodes.Nop,
-            OpCodes.Nop,
-            OpCodes.Ldloc_S,
-            OpCodes.Pop,
-            OpCodes.Nop,
-            OpCodes.Ldloc_S,
-            OpCodes.Pop,
-            OpCodes.Ret,
-        }));
         var outerValue = (LocalBuilder)result[1].operand;
         var innerValue = (LocalBuilder)result[4].operand;
+        Assert.That(result.Select(instruction => (instruction.opcode, instruction.operand)), Is.EqualTo(new (OpCode, object?)[]
+        {
+            (OpCodes.Ldc_I4_1, null),
+            (OpCodes.Stloc_S, outerValue),
+            (OpCodes.Nop, null),
+            (OpCodes.Ldstr, "inner"),
+            (OpCodes.Stloc_S, innerValue),
+            (OpCodes.Nop, null),
+            (OpCodes.Nop, null),
+            (OpCodes.Ldloc_S, innerValue),
+            (OpCodes.Pop, null),
+            (OpCodes.Nop, null),
+            (OpCodes.Ldloc_S, outerValue),
+            (OpCodes.Pop, null),
+            (OpCodes.Ret, null),
+        }));
         Assert.That(outerValue.LocalType, Is.EqualTo(typeof(int)));
         Assert.That(innerValue.LocalType, Is.EqualTo(typeof(object)));
-        Assert.That(result[7].operand, Is.SameAs(innerValue));
-        Assert.That(result[10].operand, Is.SameAs(outerValue));
     }
 
     [Test]

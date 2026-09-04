@@ -497,9 +497,11 @@ public sealed class CreateControlFlowGraphTests
             ]);
 
         ILOp load = GetILOp(generator, OpCodes.Ldind_I4);
-        Assert.That(load.IL.Prefixes.Select(prefix => prefix.OpCode),
-            Is.EqualTo(new[] { OpCodes.Unaligned, OpCodes.Volatile }));
-        Assert.That(load.IL.Prefixes[0].Operand, Is.EqualTo((byte)1));
+        Assert.That(load.IL.Prefixes.Select(prefix => (prefix.OpCode, prefix.Operand)), Is.EqualTo(new (OpCode, object?)[]
+        {
+            (OpCodes.Unaligned, (byte)1),
+            (OpCodes.Volatile, null),
+        }));
         Assert.That(GetILOp(generator, OpCodes.Pop).IL.Prefixes, Is.Empty);
     }
 
@@ -540,8 +542,10 @@ public sealed class CreateControlFlowGraphTests
         BasicBlock target = generator.ControlFlowGraph.GetBlock(generator.BlockLabels[targetLabel]);
         ILOp call = GetILOp(generator, OpCodes.Callvirt);
         Assert.That(target.Ops.SelectMany(Flatten), Does.Contain(call));
-        Assert.That(call.IL.Prefixes.Select(prefix => prefix.OpCode), Is.EqualTo(new[] { OpCodes.Constrained }));
-        Assert.That(call.IL.Prefixes[0].Operand, Is.EqualTo(typeof(ControlFlowGraphStructTarget)));
+        Assert.That(call.IL.Prefixes.Select(prefix => (prefix.OpCode, prefix.Operand)), Is.EqualTo(new (OpCode, object?)[]
+        {
+            (OpCodes.Constrained, typeof(ControlFlowGraphStructTarget)),
+        }));
     }
 
     [Test]
