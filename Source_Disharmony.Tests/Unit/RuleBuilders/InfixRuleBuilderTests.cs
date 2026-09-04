@@ -1,6 +1,7 @@
 using System.Runtime.ExceptionServices;
 using Disharmony.RuleBuilders;
 using Disharmony.RulesEngine;
+using static Disharmony.Tests.Support.RuleAssertions;
 using BoundParameter = Disharmony.ParameterBinding;
 
 namespace Disharmony.Tests.Unit.RuleBuilders;
@@ -85,28 +86,26 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         var builder = new InfixRuleBuilder(context, Outer, Combine, []);
 
-        Rule rule = builder.BuildRules().Single();
-        CodeInstruction[] pattern = rule.Pattern!;
-        CodeInstruction[] output = rule.Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
-            Assert.That(rule.Name, Is.EqualTo(Combine.FullName));
-            Assert.That(rule.Min, Is.EqualTo(1));
-            Assert.That(rule.Max, Is.Zero);
-            Assert.That(rule.Mode, Is.EqualTo(OutputMode.Replace));
-            Assert.That(pattern.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Call, Combine.MethodInfo),
-            }));
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Call, Combine.MethodInfo),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = Combine.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, Combine.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Call, Combine.MethodInfo),
+                    ],
+                },
+            ]);
             Assert.That(context.locals.Select(l => l.Type), Is.EqualTo(new[] { typeof(string), typeof(int) }));
         });
     }
@@ -126,19 +125,27 @@ public sealed class InfixRuleBuilderTests
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
-        Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-        {
-            (OpCodes.Nop, $"Prefix {PrefixHigh.FullName}"),
-            (OpCodes.Call, PrefixHigh.MethodInfo),
-            (OpCodes.Nop, $"Prefix {PrefixLow.FullName}"),
-            (OpCodes.Call, PrefixLow.MethodInfo),
-            (OpCodes.Call, InnerVoid.MethodInfo),
-            (OpCodes.Nop, $"Postfix {PostfixLow.FullName}"),
-            (OpCodes.Call, PostfixLow.MethodInfo),
-            (OpCodes.Nop, $"Postfix {PostfixHigh.FullName}"),
-            (OpCodes.Call, PostfixHigh.MethodInfo),
-        }));
+        Rule[] rules = [.. builder.BuildRules()];
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixHigh.FullName}"),
+                    new(OpCodes.Call, PrefixHigh.MethodInfo),
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixHigh.FullName}"),
+                    new(OpCodes.Call, PostfixHigh.MethodInfo),
+                ],
+            },
+        ]);
     }
 
     [Test]
@@ -154,19 +161,27 @@ public sealed class InfixRuleBuilderTests
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
-        Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-        {
-            (OpCodes.Nop, $"Prefix {PrefixHigh.FullName}"),
-            (OpCodes.Call, PrefixHigh.MethodInfo),
-            (OpCodes.Nop, $"Prefix {PrefixLow.FullName}"),
-            (OpCodes.Call, PrefixLow.MethodInfo),
-            (OpCodes.Call, InnerVoid.MethodInfo),
-            (OpCodes.Nop, $"Postfix {PostfixLow.FullName}"),
-            (OpCodes.Call, PostfixLow.MethodInfo),
-            (OpCodes.Nop, $"Postfix {PostfixHigh.FullName}"),
-            (OpCodes.Call, PostfixHigh.MethodInfo),
-        }));
+        Rule[] rules = [.. builder.BuildRules()];
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixHigh.FullName}"),
+                    new(OpCodes.Call, PrefixHigh.MethodInfo),
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixHigh.FullName}"),
+                    new(OpCodes.Call, PostfixHigh.MethodInfo),
+                ],
+            },
+        ]);
     }
 
     [Test]
@@ -176,20 +191,28 @@ public sealed class InfixRuleBuilderTests
         PatchInfo prefix = CreatePatch(PrefixLow, PatchType.Prefix, InnerInt);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
             Assert.That(context.locals, Has.Count.EqualTo(1));
             Assert.That(context.locals[0].Type, Is.EqualTo(typeof(int)));
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Nop, $"Prefix {PrefixLow.FullName}"),
-                (OpCodes.Call, PrefixLow.MethodInfo),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Call, InnerInt.MethodInfo),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = InnerInt.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, InnerInt.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                        new(OpCodes.Call, PrefixLow.MethodInfo),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Call, InnerInt.MethodInfo),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -200,28 +223,34 @@ public sealed class InfixRuleBuilderTests
         PatchInfo prefix = CreatePatch(BooleanPrefix, PatchType.Prefix, InnerInt);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
-        CodeInstruction branch = output.Single(i => i.opcode == OpCodes.Brfalse);
-        CodeInstruction skipTarget = output.Single(i => i.labels.Contains((Label)branch.operand));
+        Rule[] rules = [.. builder.BuildRules()];
+        Label skip = rules[0].Output!.SelectMany(i => i.labels).Single();
 
         Assert.Multiple(() =>
         {
             Assert.That(context.locals.Select(l => l.Type), Is.EqualTo(new[] { typeof(int), typeof(int) }));
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Ldc_I4_0, null),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Nop, $"Prefix {BooleanPrefix.FullName}"),
-                (OpCodes.Call, BooleanPrefix.MethodInfo),
-                (OpCodes.Brfalse, skipTarget.labels.Single()),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Call, InnerInt.MethodInfo),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Nop, null),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-            }));
-            Assert.That(skipTarget, Is.SameAs(output[9]));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = InnerInt.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, InnerInt.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        new(OpCodes.Ldc_I4_0),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        CodeInstruction.Annotation($"Prefix {BooleanPrefix.FullName}"),
+                        new(OpCodes.Call, BooleanPrefix.MethodInfo),
+                        new(OpCodes.Brfalse, skip),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Call, InnerInt.MethodInfo),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        new CodeInstruction(OpCodes.Nop).WithLabels(skip),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -248,22 +277,30 @@ public sealed class InfixRuleBuilderTests
             InnerArgumentsPrefix, PatchType.Prefix, Combine, parameters: [number, text]);
         var builder = new InfixRuleBuilder(context, Outer, Combine, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloca_S, context.locals[0].Builder),
-                (OpCodes.Nop, $"Prefix {InnerArgumentsPrefix.FullName}"),
-                (OpCodes.Call, InnerArgumentsPrefix.MethodInfo),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Call, Combine.MethodInfo),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = Combine.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, Combine.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloca_S, context.locals[0].Builder),
+                        CodeInstruction.Annotation($"Prefix {InnerArgumentsPrefix.FullName}"),
+                        new(OpCodes.Call, InnerArgumentsPrefix.MethodInfo),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Call, Combine.MethodInfo),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -281,21 +318,29 @@ public sealed class InfixRuleBuilderTests
         PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchType.Prefix, Increment, parameters: [value]);
         var builder = new InfixRuleBuilder(context, Outer, Increment, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
             Assert.That(context.locals.Single().Type, Is.EqualTo(typeof(int).MakeByRefType()));
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Ldobj, typeof(int)),
-                (OpCodes.Nop, $"Prefix {ReadIntPrefix.FullName}"),
-                (OpCodes.Call, ReadIntPrefix.MethodInfo),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Call, Increment.MethodInfo),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = Increment.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, Increment.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Ldobj, typeof(int)),
+                        CodeInstruction.Annotation($"Prefix {ReadIntPrefix.FullName}"),
+                        new(OpCodes.Call, ReadIntPrefix.MethodInfo),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Call, Increment.MethodInfo),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -313,15 +358,23 @@ public sealed class InfixRuleBuilderTests
         PatchInfo prefix = CreatePatch(ReadOuterPrefix, PatchType.Prefix, InnerVoid, parameters: [outerValue]);
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
-        Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-        {
-            (OpCodes.Ldarg_0, null),
-            (OpCodes.Nop, $"Prefix {ReadOuterPrefix.FullName}"),
-            (OpCodes.Call, ReadOuterPrefix.MethodInfo),
-            (OpCodes.Call, InnerVoid.MethodInfo),
-        }));
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    new(OpCodes.Ldarg_0),
+                    CodeInstruction.Annotation($"Prefix {ReadOuterPrefix.FullName}"),
+                    new(OpCodes.Call, ReadOuterPrefix.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                ],
+            },
+        ]);
     }
 
     [Test]
@@ -339,23 +392,31 @@ public sealed class InfixRuleBuilderTests
             ReadInstancePrefix, PatchType.Prefix, InstanceInner, parameters: [instance]);
         var builder = new InfixRuleBuilder(context, Outer, InstanceInner, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
             Assert.That(context.locals.Select(l => l.Type),
                 Is.EqualTo(new[] { typeof(int), typeof(InfixRuleBuilderTargets) }));
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-                (OpCodes.Nop, $"Prefix {ReadInstancePrefix.FullName}"),
-                (OpCodes.Call, ReadInstancePrefix.MethodInfo),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Callvirt, InstanceInner.MethodInfo),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = InstanceInner.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Callvirt, InstanceInner.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                        CodeInstruction.Annotation($"Prefix {ReadInstancePrefix.FullName}"),
+                        new(OpCodes.Call, ReadInstancePrefix.MethodInfo),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Callvirt, InstanceInner.MethodInfo),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -372,24 +433,32 @@ public sealed class InfixRuleBuilderTests
         PatchInfo postfix = CreatePatch(ResultPostfix, PatchType.Postfix, InnerInt, parameters: [result]);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [postfix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
             Assert.That(context.locals.Select(l => l.Type), Is.EqualTo(new[] { typeof(int), typeof(int) }));
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Stloc_S, context.locals[0].Builder),
-                (OpCodes.Ldc_I4_0, null),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloc_S, context.locals[0].Builder),
-                (OpCodes.Call, InnerInt.MethodInfo),
-                (OpCodes.Stloc_S, context.locals[1].Builder),
-                (OpCodes.Ldloca_S, context.locals[1].Builder),
-                (OpCodes.Nop, $"Postfix {ResultPostfix.FullName}"),
-                (OpCodes.Call, ResultPostfix.MethodInfo),
-                (OpCodes.Ldloc_S, context.locals[1].Builder),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = InnerInt.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, InnerInt.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Stloc_S, context.locals[0].Builder),
+                        new(OpCodes.Ldc_I4_0),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloc_S, context.locals[0].Builder),
+                        new(OpCodes.Call, InnerInt.MethodInfo),
+                        new(OpCodes.Stloc_S, context.locals[1].Builder),
+                        new(OpCodes.Ldloca_S, context.locals[1].Builder),
+                        CodeInstruction.Annotation($"Postfix {ResultPostfix.FullName}"),
+                        new(OpCodes.Call, ResultPostfix.MethodInfo),
+                        new(OpCodes.Ldloc_S, context.locals[1].Builder),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -409,18 +478,26 @@ public sealed class InfixRuleBuilderTests
         stateBuilder.AssignStateVariableIndexes([prefix]);
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [prefix]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
 
         Assert.Multiple(() =>
         {
             Assert.That(state.local, Is.Not.Null);
-            Assert.That(output.Select(i => (i.opcode, i.operand)), Is.EqualTo(new (OpCode, object?)[]
-            {
-                (OpCodes.Ldloc_S, state.local!.Builder),
-                (OpCodes.Nop, $"Prefix {ReadIntPrefix.FullName}"),
-                (OpCodes.Call, ReadIntPrefix.MethodInfo),
-                (OpCodes.Call, InnerVoid.MethodInfo),
-            }));
+            AssertRules(rules,
+            [
+                new Rule
+                {
+                    Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                    Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                    Output =
+                    [
+                        new(OpCodes.Ldloc_S, state.local!.Builder),
+                        CodeInstruction.Annotation($"Prefix {ReadIntPrefix.FullName}"),
+                        new(OpCodes.Call, ReadIntPrefix.MethodInfo),
+                        new(OpCodes.Call, InnerVoid.MethodInfo),
+                    ],
+                },
+            ]);
         });
     }
 
@@ -452,47 +529,55 @@ public sealed class InfixRuleBuilderTests
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [.. patches]);
 
-        CodeInstruction[] output = builder.BuildRules().Single().Output!;
+        Rule[] rules = [.. builder.BuildRules()];
         LocalBuilder argumentLocal = context.locals[0].Builder;
         LocalBuilder resultLocal = context.locals[1].Builder;
         LocalBuilder exceptionLocal = context.locals[2].Builder;
         LocalBuilder dispatchInfoLocal = context.locals[3].Builder;
-        Label noThrowLabel = output[^2].labels.Single();
-        CodeInstruction[] expected =
+        Label noThrowLabel = rules[0].Output!.SelectMany(i => i.labels).Single();
+        Rule[] expected =
         [
-            new(OpCodes.Stloc_S, argumentLocal),
-            new(OpCodes.Ldc_I4_0),
-            new(OpCodes.Stloc_S, resultLocal),
-            new(OpCodes.Ldnull),
-            new(OpCodes.Stloc_S, exceptionLocal),
-            new(OpCodes.Ldnull),
-            new(OpCodes.Stloc_S, dispatchInfoLocal),
-            CodeInstruction.Annotation($"Prefix {AlwaysPrefix.FullName}"),
-            new(OpCodes.Call, AlwaysPrefix.MethodInfo),
-            new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
-            CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
-            new(OpCodes.Call, PrefixLow.MethodInfo),
-            new(OpCodes.Ldloc_S, argumentLocal),
-            new(OpCodes.Call, InnerInt.MethodInfo),
-            new(OpCodes.Stloc_S, resultLocal),
-            CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
-            new(OpCodes.Call, PostfixLow.MethodInfo),
-            new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception))),
-            new(OpCodes.Dup),
-            new(OpCodes.Stloc_S, exceptionLocal),
-            new(OpCodes.Call, InfoOf.ExceptionDispatchInfo_Capture),
-            new(OpCodes.Stloc_S, dispatchInfoLocal),
-            new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
-            new(OpCodes.Ldloc_S, exceptionLocal),
-            CodeInstruction.Annotation($"Postfix {AlwaysPostfix.FullName}"),
-            new(OpCodes.Call, AlwaysPostfix.MethodInfo),
-            new(OpCodes.Ldloc_S, exceptionLocal),
-            new(OpCodes.Brfalse_S, noThrowLabel),
-            new(OpCodes.Ldloc_S, exceptionLocal),
-            new(OpCodes.Ldloc_S, dispatchInfoLocal),
-            new(OpCodes.Call, InfoOf.RuntimeHelpers_RethrowException),
-            new CodeInstruction(OpCodes.Nop).WithLabels(noThrowLabel),
-            new(OpCodes.Ldloc_S, resultLocal),
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerInt.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerInt.MethodInfo)],
+                Output =
+                [
+                    new(OpCodes.Stloc_S, argumentLocal),
+                    new(OpCodes.Ldc_I4_0),
+                    new(OpCodes.Stloc_S, resultLocal),
+                    new(OpCodes.Ldnull),
+                    new(OpCodes.Stloc_S, exceptionLocal),
+                    new(OpCodes.Ldnull),
+                    new(OpCodes.Stloc_S, dispatchInfoLocal),
+                    CodeInstruction.Annotation($"Prefix {AlwaysPrefix.FullName}"),
+                    new(OpCodes.Call, AlwaysPrefix.MethodInfo),
+                    new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginExceptionBlock)),
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Ldloc_S, argumentLocal),
+                    new(OpCodes.Call, InnerInt.MethodInfo),
+                    new(OpCodes.Stloc_S, resultLocal),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                    new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.BeginCatchBlock, typeof(Exception))),
+                    new(OpCodes.Dup),
+                    new(OpCodes.Stloc_S, exceptionLocal),
+                    new(OpCodes.Call, InfoOf.ExceptionDispatchInfo_Capture),
+                    new(OpCodes.Stloc_S, dispatchInfoLocal),
+                    new CodeInstruction(OpCodes.Nop).WithBlocks(new ExceptionBlock(ExceptionBlockType.EndExceptionBlock)),
+                    new(OpCodes.Ldloc_S, exceptionLocal),
+                    CodeInstruction.Annotation($"Postfix {AlwaysPostfix.FullName}"),
+                    new(OpCodes.Call, AlwaysPostfix.MethodInfo),
+                    new(OpCodes.Ldloc_S, exceptionLocal),
+                    new(OpCodes.Brfalse_S, noThrowLabel),
+                    new(OpCodes.Ldloc_S, exceptionLocal),
+                    new(OpCodes.Ldloc_S, dispatchInfoLocal),
+                    new(OpCodes.Call, InfoOf.RuntimeHelpers_RethrowException),
+                    new CodeInstruction(OpCodes.Nop).WithLabels(noThrowLabel),
+                    new(OpCodes.Ldloc_S, resultLocal),
+                ],
+            },
         ];
 
         Assert.Multiple(() =>
@@ -504,11 +589,7 @@ public sealed class InfixRuleBuilderTests
                 typeof(Exception),
                 typeof(ExceptionDispatchInfo),
             }));
-            Assert.That(output, Is.EqualTo(expected).Using<CodeInstruction>((actual, wanted) =>
-                actual.opcode == wanted.opcode && Equals(actual.operand, wanted.operand) &&
-                actual.labels.SequenceEqual(wanted.labels) &&
-                actual.blocks.Select(b => (b.blockType, b.catchType))
-                    .SequenceEqual(wanted.blocks.Select(b => (b.blockType, b.catchType)))));
+            AssertRules(rules, expected);
         });
     }
 
