@@ -8,6 +8,9 @@
 internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, EmptyInvocation.Instance)
 {
     private readonly Dictionary<string, LocalTrackerBuilder> stateMap = [];
+    
+    // Use a separate list rather than stateMap.Values so that initialization order is deterrministic
+    private readonly List<LocalTrackerBuilder> stateLocals = [];
 
     private LocalTrackerBuilder GetOrAddStateLocal(string stateKey, Type localType)
     {
@@ -22,6 +25,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 
         local = output.AddLocal(localType);
         stateMap.Add(stateKey, local);
+        stateLocals.Add(local);
         return local;
     }
 
@@ -30,7 +34,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
         if (stateMap.Count == 0)
             yield break;
 
-        foreach (var local in stateMap.Values)
+        foreach (var local in stateLocals)
             output.EmitLocalInitializer(local);
 
         yield return new Rule

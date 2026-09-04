@@ -26,6 +26,12 @@ internal class UniqueQueue<T> : IEnumerable<T>
         return item;
     }
 
+    public void Clear()
+    {
+        queue.Clear();
+        hashSet.Clear();
+    }
+
     public IEnumerator<T> GetEnumerator() => queue.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)queue).GetEnumerator();

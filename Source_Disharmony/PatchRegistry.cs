@@ -104,7 +104,7 @@ internal class PatchRegistry
     
     // A set of methods that need updating in ApplyPendingChanges. This should be empty at the end of
     // every call of a public method on this class (Patch*/Unpatch*).
-    private readonly HashSet<MethodBaseInvocation> methodsToUpdate = [];
+    private readonly UniqueQueue<MethodBaseInvocation> methodsToUpdate = [];
 
     private readonly MultiDictionary<MethodBaseInvocation, PatchInfo> patchesByMethod = [];
     private readonly Dictionary<int, HashSet<MethodBaseInvocation>> methodsByUnpatchKey = [];
@@ -326,7 +326,7 @@ internal class PatchRegistry
             priority = priority,
         };
 
-        methodsToUpdate.Add(outer);
+        methodsToUpdate.Enqueue(outer);
         patchesByMethod.Add(outer, patch);
 
         if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methodSet))
@@ -381,7 +381,7 @@ internal class PatchRegistry
         foreach (var group in patchesByMethod)
         {
             if (group.Any())
-                methodsToUpdate.Add(group.Key);
+                methodsToUpdate.Enqueue(group.Key);
         }
 
         patchesByMethod.Clear();
@@ -397,7 +397,7 @@ internal class PatchRegistry
         {
             int count = patchesByMethod.RemoveAll(method, p => p.unpatchKey == unpatchKey);
             if (count > 0)
-                methodsToUpdate.Add(method);
+                methodsToUpdate.Enqueue(method);
         }
 
         methodsByUnpatchKey.Remove(unpatchKey);
