@@ -346,7 +346,7 @@ public static class PatchHelpers
         if (pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>() is { } hediffComp_Lactating)
         {
             stringBuilder.AppendLine(
-                $"{pawn.LactationHediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
+                $"{pawn.LactationHediff!.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
             stringBuilder.AppendLine();
         }
     }
