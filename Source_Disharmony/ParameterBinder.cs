@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Disharmony.Optimizer;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Disharmony;
@@ -138,6 +139,9 @@ internal class ParameterBinder(
 
     private ParameterBinding BindState(ParameterInfo parameter, string key)
     {
+        if (IsStateMachine)
+            throw new NotSupportedException("State parameters are not supported for iterator state machine methods");
+
         string stateKey = $"{stateGroupKey}#{key}";
 
         // ValidateCast not needed, the type will be checked in StateBuilder
