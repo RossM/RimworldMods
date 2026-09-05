@@ -26,3 +26,5 @@ DH0020 | Correctness | Warning | Method binding requires a concrete delegate pas
 DH0021 | Correctness | Warning | Incompatible binding type for exceptions or inner constants
 DH0022 | Correctness | Warning | Conflicting types for a shared state key
 DH0024 | Correctness | Warning | Unavailable instance, argument, or field on an inner constant
+DH0025 | Correctness | Warning | Void prefix binds the result
+DH0026 | Correctness | Warning | Prefix result binding is not ref or out

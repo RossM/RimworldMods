@@ -178,7 +178,6 @@ public partial class PatchMethodAnalyzerTests
     [TestCase("namespace Other { class PrefixAttribute : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] int M() => 0; } }")]
     [TestCase("[PatchOptions(PatchOptions.AlwaysRun)] [Patch, Target(typeof(object), \"M\")] class C { [Patch, Target(typeof(object), \"M\")] class Nested { [Prefix] static bool M() => true; } }")]
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __result) {} }")]
     [TestCase("[PatchOptions(PatchOptions.AlwaysRun)] [Patch, Target(typeof(object), \"M\")] class B {} [PatchOptions(PatchOptions.Default)] [Patch, Target(typeof(object), \"M\")] class C : B { [Prefix] static bool M() => true; }")]
     [TestCase("namespace HarmonyLib { class HarmonyPostfix : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [HarmonyPostfix] static int M() => 0; } }")]
     public async Task ValidOrUnrelatedCodeDoesNotWarn(string source)

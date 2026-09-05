@@ -27,6 +27,8 @@ The analyzer targets .NET Standard 2.0 and does not load Disharmony, Harmony, or
 | DH0021 | Parameter type/modifier is incompatible with an exception or known inner constant result. |
 | DH0022 | Parameters sharing a state key in a patch class have incompatible types. |
 | DH0024 | Parameter requests an instance, argument, or field from an inner constant. |
+| DH0025 | Prefix binds the result but returns void, so it cannot skip the target. |
+| DH0026 | Prefix result parameter is not ref/out, so it cannot set the result. |
 
 The analyzer assumes assembly discovery through Patcher.PatchAll or Patcher.PatchCategory.
 Methods are identified by the built-in Disharmony Prefix/Postfix attributes. User-defined attribute subclasses are ignored.
@@ -68,3 +70,5 @@ Reference this project from each project that contains patches (analyzer project
 
 Run tests with `dotnet test Source_Disharmony.Analyzers.Tests/Source_Disharmony.Analyzers.Tests.csproj`.
 Tests use minimal attribute metadata and do not execute patches or load the game.
+
+DH0025 and DH0026 flag likely mistakes when a prefix binds __result or [ReturnValue]. Both can apply to the same parameter; DH0018 takes precedence for AlwaysRun prefixes.

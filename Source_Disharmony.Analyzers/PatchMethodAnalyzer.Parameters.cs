@@ -40,6 +40,13 @@ public sealed partial class PatchMethodAnalyzer
         "DH0024", "Inner constant cannot supply this binding", "Parameter '{0}' requests an instance, argument, or field from an inner constant",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    private static readonly DiagnosticDescriptor VoidPrefixResultBinding = new(
+        "DH0025", "Prefix binding the result cannot skip the target", "Prefix result parameter '{0}' is used in a void prefix; return bool to allow skipping the target",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    private static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
+        "DH0026", "Prefix result parameter cannot set the result", "Prefix result parameter '{0}' should be ref or out to set the result",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private enum ParameterKind { Argument, Instance, Result, State, Field, BaseMethod, Method, Exception, Caller }
 
     private static void RegisterParameterChecks(CompilationStartAnalysisContext start)
@@ -126,8 +133,18 @@ public sealed partial class PatchMethodAnalyzer
                         ctx.ReportDiagnostic(Diagnostic.Create(InnerBindingWithoutInnerPatch, location, parameter.Name));
                         continue;
                     }
-                    if (kind == ParameterKind.Result && isPrefix && alwaysRun)
-                        ctx.ReportDiagnostic(Diagnostic.Create(AlwaysRunResultBinding, location, parameter.Name));
+                    if (kind == ParameterKind.Result && isPrefix)
+                    {
+                        if (alwaysRun)
+                            ctx.ReportDiagnostic(Diagnostic.Create(AlwaysRunResultBinding, location, parameter.Name));
+                        else
+                        {
+                            if (method.ReturnsVoid)
+                                ctx.ReportDiagnostic(Diagnostic.Create(VoidPrefixResultBinding, location, parameter.Name));
+                            if (parameter.RefKind is not (RefKind.Ref or RefKind.Out))
+                                ctx.ReportDiagnostic(Diagnostic.Create(ReadOnlyPrefixResultBinding, location, parameter.Name));
+                        }
+                    }
                     if (kind == ParameterKind.Exception)
                     {
                         if (!isPostfix || !alwaysRun)

@@ -16,6 +16,7 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
             DuplicateDiscoveryAttributes, MissingMemberName,
             MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
             InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
+            VoidPrefixResultBinding, ReadOnlyPrefixResultBinding,
         ];
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
