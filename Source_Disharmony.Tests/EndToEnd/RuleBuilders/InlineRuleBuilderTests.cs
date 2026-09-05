@@ -5,6 +5,22 @@ namespace Disharmony.Tests.EndToEnd.RuleBuilders;
 public sealed class InlineRuleBuilderTests : PatchTestBase
 {
     [Test]
+    public void Prefix_UnconditionalThrowWithoutReturn_PropagatesException()
+    {
+        MethodInfo patch = typeof(InlineRuleBuilderPatches)
+            .GetMethod(nameof(InlineRuleBuilderPatches.Prefix_UnconditionalThrowWithoutReturn_PropagatesException))!;
+        List<CodeInstruction> instructions = PatchProcessor.GetOriginalInstructions(patch);
+        Assert.That(instructions.Any(instruction => instruction.opcode == OpCodes.Ret), Is.False);
+        MethodInfo target = typeof(StaticMethodTargets)
+            .GetMethod(nameof(StaticMethodTargets.Void))!;
+        Patcher.Patch(Patch.Prefix.With(patch).Options(PatchOptions.Inline).Of(target));
+
+        var exception = Assert.Throws<ApplicationException>(() => StaticMethodTargets.Void());
+
+        Assert.That(exception!.Message, Is.EqualTo("Unconditional inline patch exception"));
+    }
+
+    [Test]
     public void Prefix_BranchAndRefWrite_AreInlined()
     {
         MethodInfo patch = typeof(InlineRuleBuilderPatches)

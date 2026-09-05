@@ -9,6 +9,12 @@ public static class InlineRuleBuilderPatches
     public static int Local4Observed;
     public static int SwitchObserved;
 
+    // A non-void signature exercises the inline return-value store, but there is no ret to supply its value.
+    public static bool Prefix_UnconditionalThrowWithoutReturn_PropagatesException()
+    {
+        throw new ApplicationException("Unconditional inline patch exception");
+    }
+
     public static void Prefix_BranchAndRefWrite_AreInlined(ref int value)
     {
         if (value < 0)
