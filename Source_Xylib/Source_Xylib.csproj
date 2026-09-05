@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Source_Disharmony\Source_Disharmony.csproj" />
+    <ProjectReference Include="..\Source_Disharmony.Analyzers\Source_Disharmony.Analyzers.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">

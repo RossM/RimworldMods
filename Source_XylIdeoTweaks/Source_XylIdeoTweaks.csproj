@@ -25,6 +25,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Source_Xylib\Source_Xylib.csproj" />
     <ProjectReference Include="..\Source_Disharmony\Source_Disharmony.csproj" />
+    <ProjectReference Include="..\Source_Disharmony.Analyzers\Source_Disharmony.Analyzers.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>
