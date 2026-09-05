@@ -51,7 +51,16 @@ internal class InlineRuleBuilder : RuleBuilder
 
         foreach (var inst in instructions)
         {
-            CodeInstruction translated = OpCodeData.GetCanonicalOpcode(inst) switch
+            ushort canonicalOpcode = OpCodeData.GetCanonicalOpcode(inst);
+
+            if (canonicalOpcode == OpCodeValues.Ret && returnLocal != null)
+            {
+                output.Add(returnLocal.Store().WithLabels(inst.labels.Select(GetLabel)));
+                output.Add(new CodeInstruction(OpCodes.Br, returnLabel).WithBlocks(inst.blocks));
+                continue;
+            }
+
+            CodeInstruction translated = canonicalOpcode switch
             {
                 // @formatter:off
                 OpCodeValues.Ldarg    => GetArgument(inst).Load(),
@@ -77,12 +86,8 @@ internal class InlineRuleBuilder : RuleBuilder
 
         output.Add(new(OpCodes.Nop) { labels = [returnLabel] });
 
-        // It's necessary to do a type conversion here to simulate a return correctly. For now, do it by storing to a local.
         if (returnLocal != null)
-        {
-            output.Add(returnLocal.Store());
             output.Add(returnLocal.Load());
-        }
 
         return true;
     }
