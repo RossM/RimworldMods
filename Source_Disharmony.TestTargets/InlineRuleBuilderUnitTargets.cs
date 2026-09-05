@@ -5,56 +5,26 @@ public class InlineRuleBuilderUnitTargets
     public int Value;
     public int InstanceValue() => Value;
     public static void Empty() { }
-    public static byte Narrow(int value) => (byte)value;
-    public static string Coalesce(string value) => value ?? "fallback";
-    public static void Forward(int number, long wide, string text) => Sink(number, wide, text);
-    public static void Sink(int number, long wide, string text) { }
-    public static void Touch(ref int value) { }
 
-    public static int FifthArgument(int first, int second, int third, int fourth, int fifth)
-    {
-        Touch(ref fifth);
-        fifth = first;
-        Touch(ref fifth);
-        return fifth;
-    }
+    // Only signature/local metadata is used by the EmitReplacement unit tests, not these instruction bodies.
+    public static byte IntToByte(int value) => 0;
+    public static string StringIdentity(string value) => value;
+    public static void MixedArguments(int number, long wide, string text) { }
+    public static void RefInt(ref int value) { }
+    public static int FiveIntArguments(int first, int second, int third, int fourth, int fifth) => 0;
+    public static string BoolToString(bool condition) => "";
+    public static int IntIdentity(int value) => value;
 
-    public static int FiveLocals()
+    public static int FiveIntLocals()
     {
-        int a = 1, b = 2, c = 3, d = 4, e = 5;
-        Touch(ref a);
-        Touch(ref b);
-        Touch(ref c);
-        Touch(ref d);
-        Touch(ref e);
-        return a + e;
-    }
-
-    public static string Conditional(bool condition)
-    {
-        if (condition)
-            return "yes";
-        return "no";
-    }
-
-    public static int Loop(int value)
-    {
-        while (value > 0)
-            value--;
-        return value;
-    }
-
-    public static int Switch(int value)
-    {
-        switch (value)
-        {
-            case 0: return 10;
-            case 1: return 11;
-            case 2: return 12;
-            case 3: return 13;
-            case 4: return 14;
-            default: return 99;
-        }
+        int a = 0, b = 0, c = 0, d = 0, e = 0;
+        // Taking their addresses retains five distinct local declarations in the Release-built body.
+        RefInt(ref a);
+        RefInt(ref b);
+        RefInt(ref c);
+        RefInt(ref d);
+        RefInt(ref e);
+        return a;
     }
 
     public static void Catch()
