@@ -219,7 +219,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                     };
                     var identity = (identityKind, identityScope, selector);
                     if (!boundValues.TryGetValue(identity, out var boundParameters))
-                        boundValues.Add(identity, boundParameters = new List<IParameterSymbol>());
+                        boundValues.Add(identity, boundParameters = []);
                     boundParameters.Add(parameter);
                     if (kind == ParameterKind.Result && isPrefix)
                     {
@@ -265,7 +265,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                     {
                         string key = binding is null ? parameter.Name : Argument(binding, "key")?.Value as string ?? parameter.Name;
                         if (!states.TryGetValue(key, out var parameters))
-                            states.Add(key, parameters = new List<IParameterSymbol>());
+                            states.Add(key, parameters = []);
                         parameters.Add(parameter);
                     }
                 }

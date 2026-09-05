@@ -164,7 +164,7 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
 
                 // Reflection's ReturnType distinguishes bool from bool&, unlike Roslyn's ReturnType.
                 bool returnsBool = method.ReturnType.SpecialType == SpecialType.System_Boolean &&
-                                   !method.ReturnsByRef && !method.ReturnsByRefReadonly;
+                                   method is { ReturnsByRef: false, ReturnsByRefReadonly: false };
                 if (isPrefix)
                 {
                     bool runsAlways = alwaysRun is int mask && (GetPatchOptions(method, options) & mask) != 0;
