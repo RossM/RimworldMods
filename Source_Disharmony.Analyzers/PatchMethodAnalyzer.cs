@@ -9,7 +9,7 @@ namespace Disharmony.Analyzers;
 public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn];
+        [GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType];
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
         "DH0001", "Patch method must not contain generic parameters",
@@ -32,6 +32,21 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         "DH0005", "AlwaysRun prefix must return void", "Prefix '{0}' with AlwaysRun must return void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    private static readonly DiagnosticDescriptor MissingPatchClass = new(
+        "DH0006", "Patch method requires a discoverable containing class",
+        "Patch method '{0}' requires [Patch] or [HarmonyPatch] on its containing class",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    private static readonly DiagnosticDescriptor MissingTarget = new(
+        "DH0007", "Patch method requires a target attribute",
+        "Patch method '{0}' requires [Target] or [Targets] on the method or its containing class",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    private static readonly DiagnosticDescriptor MissingPatchType = new(
+        "DH0008", "Disharmony method attributes require a patch type",
+        "Method '{0}' has a Disharmony attribute but no [Prefix] or [Postfix]",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -40,6 +55,9 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         {
             var prefix = start.Compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
             var postfix = start.Compilation.GetTypeByMetadataName("Disharmony.PostfixAttribute");
+            var patch = start.Compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
+            var harmonyPatch = start.Compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
+            var target = start.Compilation.GetTypeByMetadataName("Disharmony.TargetAttribute");
             var options = start.Compilation.GetTypeByMetadataName("Disharmony.PatchOptionsAttribute");
             var flags = start.Compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
             var alwaysRun = flags?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
@@ -51,12 +69,23 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
                 var method = (IMethodSymbol)ctx.Symbol;
                 bool isPrefix = FindAttribute(method, prefix) is not null;
                 bool isPostfix = FindAttribute(method, postfix) is not null;
-                if (!isPrefix && !isPostfix)
-                    return;
-
                 var location = method.Locations.FirstOrDefault(l => l.IsInSource);
                 if (location is null)
                     return;
+                if (!isPrefix && !isPostfix)
+                {
+                    // Class defaults, return attributes, and parameter bindings do not mark a helper as a patch.
+                    if (method.GetAttributes().Any(a => IsDisharmonyAttribute(a, (prefix ?? postfix)!.ContainingAssembly)))
+                        ctx.ReportDiagnostic(Diagnostic.Create(MissingPatchType, location, method.Name));
+                    return;
+                }
+
+                if (FindAttribute(method.ContainingType, patch) is null &&
+                    FindAttribute(method.ContainingType, harmonyPatch) is null)
+                    ctx.ReportDiagnostic(Diagnostic.Create(MissingPatchClass, location, method.Name));
+                // TargetsAttribute derives from TargetAttribute; both participate in runtime target selection.
+                if (FindAttribute(method, target) is null && FindAttribute(method.ContainingType, target) is null)
+                    ctx.ReportDiagnostic(Diagnostic.Create(MissingTarget, location, method.Name));
                 if (HasGenericParameters(method))
                     ctx.ReportDiagnostic(Diagnostic.Create(GenericMethod, location, method.Name));
                 if (!method.IsStatic)
@@ -133,6 +162,19 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         for (var type = attribute.AttributeClass; type is not null; type = type.BaseType)
         {
             if (SymbolEqualityComparer.Default.Equals(type, expected))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsDisharmonyAttribute(AttributeData attribute, IAssemblySymbol assembly)
+    {
+        // Include user-defined attributes derived from Disharmony attributes, but not unrelated namesakes.
+        for (var type = attribute.AttributeClass; type is not null; type = type.BaseType)
+        {
+            if (SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, assembly) &&
+                type.ContainingNamespace.ToDisplayString() == "Disharmony")
                 return true;
         }
 
