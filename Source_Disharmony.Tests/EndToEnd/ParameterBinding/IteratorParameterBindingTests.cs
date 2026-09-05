@@ -3,6 +3,20 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static partial class IteratorParameterBindingPatches
 {
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Name_Primitive_ReadByValue(
+        [Parameter("outerValue", Scope.Outer)] int namedValue) => parameterObserved = namedValue;
+
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefix_ParameterAttribute_StaticIteratorOriginalParameter_Name_Primitive_ReadByValue(
+        [Parameter("outerValue", Scope.Outer)] int namedValue) => parameterObserved = namedValue;
+
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefix_StateAttribute_Iterator_OuterScope_Rejected([State] int state) { }
+
     public static int parameterObserved;
     public static int fieldObserved;
     public static ClassMethodTargets? instanceObserved;
@@ -139,6 +153,47 @@ public static partial class IteratorParameterBindingPatches
 [TestFixture]
 public sealed partial class IteratorParameterBindingTests : PatchTestBase
 {
+    [Test]
+    public void InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Name_Primitive_ReadByValue()
+    {
+        IteratorParameterBindingPatches.parameterObserved = 0;
+        var target = new ClassMethodTargets { foo = 7 };
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Name_Primitive_ReadByValue));
+
+        int result = target.EnumerateIdentity(42).Single();
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.parameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_ParameterAttribute_StaticIteratorOriginalParameter_Name_Primitive_ReadByValue()
+    {
+        IteratorParameterBindingPatches.parameterObserved = 0;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_ParameterAttribute_StaticIteratorOriginalParameter_Name_Primitive_ReadByValue));
+
+        int result = StaticMethodTargets.EnumerateIdentity(42).Single();
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.parameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_StateAttribute_Iterator_OuterScope_Rejected()
+    {
+        // State always has Scope.Outer, but cannot be shared across iterator/MoveNext invocations.
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_StateAttribute_Iterator_OuterScope_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<NotSupportedException>()
+            .With.Message.EqualTo("Not supported for state machine methods"));
+    }
+
     [Test]
     public void InnerPrefix_IteratorOriginalParameter_Primitive_ReadByValue()
     {

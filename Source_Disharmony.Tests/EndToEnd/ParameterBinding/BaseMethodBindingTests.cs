@@ -2,6 +2,16 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class BaseMethodBindingPatches
 {
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.EnumerateDescription))]
+    public static void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_DeclaredSignature_Rejected(
+        [BaseMethod] Func<int, IEnumerable<string>> baseMethod) { }
+
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.EnumerateDescription))]
+    public static void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_MoveNextSignature_Rejected(
+        [BaseMethod] Func<bool> baseMethod) { }
+
     public static string? resultObserved;
 
     [Prefix]
@@ -103,6 +113,32 @@ public static class BaseMethodBindingPatches
 [TestFixture]
 public sealed class BaseMethodBindingTests : PatchTestBase
 {
+    [Test]
+    public void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_DeclaredSignature_Rejected()
+    {
+        // BaseMethod always has Scope.Outer, but is unsupported on an iterator inner patch.
+        // The delegate matches the declared iterator, which has a concrete base implementation.
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.IteratorInnerPrefix_BaseMethodAttribute_OuterScope_DeclaredSignature_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("baseMethod: Not supported for state machine methods"));
+    }
+
+    [Test]
+    public void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_MoveNextSignature_Rejected()
+    {
+        // Func<bool> matches MoveNext rather than the declared iterator. Verify the explicit state-machine
+        // guard rejects it, rather than relying on signature validation or a missing base implementation.
+        var exception = Assert.Throws<PatchException>(() => ApplyPatch(
+            typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.IteratorInnerPrefix_BaseMethodAttribute_OuterScope_MoveNextSignature_Rejected)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
+            .With.Message.EqualTo("baseMethod: Not supported for state machine methods"));
+    }
+
     [Test]
     public void Prefix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes()
     {

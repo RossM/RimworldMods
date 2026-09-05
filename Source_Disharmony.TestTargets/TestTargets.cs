@@ -491,6 +491,12 @@ namespace Disharmony.Tests
 
     public class BaseMethodTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public virtual IEnumerable<string> EnumerateDescription(int value)
+        {
+            yield return $"base:{value}:{InstanceValue}";
+        }
+
         public int InstanceValue { get; set; }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -502,6 +508,13 @@ namespace Disharmony.Tests
 
     public sealed class DerivedMethodTargets : BaseMethodTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public override IEnumerable<string> EnumerateDescription(int value)
+        {
+            InnerStaticMethodTargets.Void();
+            yield return $"derived:{value}:{InstanceValue}";
+        }
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         public override string Describe(int value) => $"derived:{value}:{InstanceValue}";
 
