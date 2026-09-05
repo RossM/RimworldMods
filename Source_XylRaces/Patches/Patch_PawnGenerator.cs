@@ -7,9 +7,14 @@ public static class Patch_PawnGenerator
     [Prefix]
     [Inner(typeof(PawnGenerator), "XenotypesAvailableFor.AddOrAdjust")]
     [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
-    public static bool AddOrAdjust_Prefix(XenotypeChance xenotypeChance, FactionDef? factionDef, Faction? faction)
+    [PatchOptions(PatchOptions.Debug)]
+    public static bool AddOrAdjust_Prefix(
+        XenotypeChance xenotypeChance,
+        FactionDef? factionDef,
+        Faction? faction,
+        [Field(Scope.Outer)] Dictionary<XenotypeDef, float> ___tmpXenotypeChances)
     {
-        DebugAssert.NotNull(PawnGenerator.tmpXenotypeChances);
+        DebugAssert.NotNull(___tmpXenotypeChances);
         DebugAssert.NotNull(xenotypeChance.xenotype);
 
         XenotypeSet? xenotypeSet = (faction?.def ?? factionDef)?.xenotypeSet;
@@ -18,10 +23,10 @@ public static class Patch_PawnGenerator
 
         if (xenotypeChance.xenotype != withDefault.defaultXenotype)
         {
-            if (PawnGenerator.tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
-                PawnGenerator.tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
+            if (___tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
+                ___tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
             else
-                PawnGenerator.tmpXenotypeChances.Add(xenotypeChance.xenotype, xenotypeChance.chance);
+                ___tmpXenotypeChances.Add(xenotypeChance.xenotype, xenotypeChance.chance);
         }
 
         return false;
