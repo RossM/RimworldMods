@@ -55,8 +55,10 @@ internal class InlineRuleBuilder : RuleBuilder
 
             if (canonicalOpcode == OpCodeValues.Ret && returnLocal != null)
             {
-                output.Add(returnLocal.Store().WithLabels(inst.labels.Select(GetLabel)));
-                output.Add(new CodeInstruction(OpCodes.Br, returnLabel).WithBlocks(inst.blocks));
+                output.Add(returnLocal.Store().WithLabels(inst.labels.Select(GetLabel))
+                    .WithBlocks(inst.blocks.Where(b => b.blockType != ExceptionBlockType.EndExceptionBlock)));
+                output.Add(new CodeInstruction(OpCodes.Br, returnLabel).WithBlocks(inst.blocks.Where(b =>
+                    b.blockType == ExceptionBlockType.EndExceptionBlock)));
                 continue;
             }
 
