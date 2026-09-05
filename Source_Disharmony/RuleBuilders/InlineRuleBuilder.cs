@@ -27,15 +27,6 @@ internal class InlineRuleBuilder : RuleBuilder
         if (locals is null)
             throw new InvalidOperationException();
 
-        for (int i = parameterTypes.Length - 1; i >= 0; i--)
-        {
-            argumentLocals[i] = output.AddLocal(parameterTypes[i]);
-            output.Add(argumentLocals[i].Store());
-        }
-
-        if (method is MethodInfo m && m.ReturnType != typeof(void))
-            returnLocal = output.AddLocal(m.ReturnType);
-
         var instructions = PatchProcessor.GetOriginalInstructions(method);
         if (instructions == null)
             return false;
@@ -44,6 +35,21 @@ internal class InlineRuleBuilder : RuleBuilder
         // across an exception region boundary, which the CLI rejects.
         if (instructions.Any(i => i.blocks.Count > 0))
             return false;
+
+        return EmitReplacement(instructions);
+    }
+
+    // Internal for testing
+    internal bool EmitReplacement(List<CodeInstruction> instructions)
+    {
+        for (int i = parameterTypes.Length - 1; i >= 0; i--)
+        {
+            argumentLocals[i] = output.AddLocal(parameterTypes[i]);
+            output.Add(argumentLocals[i].Store());
+        }
+
+        if (method is MethodInfo m && m.ReturnType != typeof(void))
+            returnLocal = output.AddLocal(m.ReturnType);
 
         Label returnLabel = generator.DefineLabel();
 
