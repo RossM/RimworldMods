@@ -8,25 +8,29 @@ namespace Disharmony.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
 {
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        [GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn];
+
     private static readonly DiagnosticDescriptor GenericMethod = new(
         "DH0001", "Patch method must not contain generic parameters",
         "Patch method '{0}' must not contain generic parameters, including those of its containing types",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor StaticMethod = new(
         "DH0002", "Patch method must be static", "Patch method '{0}' must be static",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor PrefixReturn = new(
         "DH0003", "Prefix must return bool or void", "Prefix '{0}' must return bool or void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor PostfixReturn = new(
         "DH0004", "Postfix must return void", "Postfix '{0}' must return void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor AlwaysRunReturn = new(
         "DH0005", "AlwaysRun prefix must return void", "Prefix '{0}' with AlwaysRun must return void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn);
 
     public override void Initialize(AnalysisContext context)
     {
@@ -77,6 +81,7 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
                     else if (!method.ReturnsVoid && !returnsBool)
                         ctx.ReportDiagnostic(Diagnostic.Create(PrefixReturn, location, method.Name));
                 }
+
                 if (isPostfix && !method.ReturnsVoid)
                     ctx.ReportDiagnostic(Diagnostic.Create(PostfixReturn, location, method.Name));
             }, SymbolKind.Method);
@@ -87,7 +92,9 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
     private static AttributeData? FindAttribute(ISymbol symbol, INamedTypeSymbol? expected)
     {
         bool inherited = false;
-        for (ISymbol? current = symbol; current is not null; current = current switch
+        for (ISymbol? current = symbol;
+             current is not null;
+             current = current switch
              {
                  IMethodSymbol method => method.OverriddenMethod,
                  INamedTypeSymbol type => type.BaseType,
@@ -95,10 +102,14 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
              })
         {
             foreach (var attribute in current.GetAttributes())
+            {
                 if (IsAttribute(attribute, expected) && (!inherited || IsInherited(attribute.AttributeClass)))
                     return attribute;
+            }
+
             inherited = true;
         }
+
         return null;
     }
 
@@ -111,6 +122,7 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
             if (usage is not null)
                 return !usage.NamedArguments.Any(a => a.Key == "Inherited" && a.Value.Value is false);
         }
+
         return true;
     }
 
@@ -119,8 +131,11 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         if (expected is null)
             return false;
         for (var type = attribute.AttributeClass; type is not null; type = type.BaseType)
+        {
             if (SymbolEqualityComparer.Default.Equals(type, expected))
                 return true;
+        }
+
         return false;
     }
 
@@ -129,8 +144,11 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         if (method.Arity != 0)
             return true;
         for (var type = method.ContainingType; type is not null; type = type.ContainingType)
+        {
             if (type.Arity != 0)
                 return true;
+        }
+
         return false;
     }
 }
