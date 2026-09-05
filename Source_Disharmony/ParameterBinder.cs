@@ -354,23 +354,31 @@ internal class ParameterBinder(
     private ParameterBinding BindFieldByName(ParameterInfo parameter, string name, Scope scope)
     {
         // Look in inner instance fields
-        if (scope is Scope.Inner or Scope.Any && !inner.IsStatic)
+        if (scope is Scope.Inner or Scope.Any)
         {
             var field = inner.InstanceType.GetField(name, AccessTools.all) ??
                         inner.InstanceType.GetField($"<{name}>k__BackingField", AccessTools.all);
             if (field != null)
             {
-                ValidateCast(parameter, field.FieldType);
-                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Inner, fields = [field] };
+                if (field.IsStatic)
+                {
+                    ValidateCast(parameter, field.FieldType);
+                    return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = Scope.Inner, fields = [field] };
+                }
+                if (!inner.IsStatic)
+                {
+                    ValidateCast(parameter, field.FieldType);
+                    return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Inner, fields = [field] };
+                }
             }
         }
 
         // Look in outer instance fields
-        if (scope is Scope.Outer or Scope.Any && !outer.IsStatic)
+        if (scope is Scope.Outer or Scope.Any)
         {
             Type curType = outer.InstanceType;
             List<FieldInfo> fields = [];
-            if (IsStateMachine)
+            if (IsStateMachine && !outer.IsStatic)
             {
                 var thisField = GetThisField(curType);
                 curType = thisField.FieldType;
@@ -381,9 +389,17 @@ internal class ParameterBinder(
                         curType.GetField($"<{name}>k__BackingField", AccessTools.all);
             if (field != null)
             {
-                fields.Add(field);
-                ValidateCast(parameter, field.FieldType);
-                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [.. fields] };
+                if (field.IsStatic)
+                {
+                    ValidateCast(parameter, field.FieldType);
+                    return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = Scope.Outer, fields = [field] };
+                }
+                if (!outer.IsStatic)
+                {
+                    fields.Add(field);
+                    ValidateCast(parameter, field.FieldType);
+                    return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [.. fields] };
+                }
             }
         }
 

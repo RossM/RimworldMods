@@ -19,7 +19,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         bool wantRef = parameterType.IsByRef;
         EmitRawParameterValue(parameter, wantRef, out Type resultType);
 
-        if (parameter.fields is { Length: > 0 })
+        if (parameter.fields is { Length: > 0 } && parameter.bindingType != BindingType.StaticField)
             EmitFieldLookups(parameter, wantRef, ref resultType);
 
         if (resultType.IsValueType && parameterType != resultType)
@@ -32,7 +32,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
         resultType = parameterType;
 
-        if (parameter is { fields.Length: > 0, bindingType: not (BindingType.Parameter or BindingType.Instance) })
+        if (parameter is { fields.Length: > 0, bindingType: not (BindingType.Parameter or BindingType.Instance or BindingType.StaticField) })
             throw new NotSupportedException();
 
         switch (parameter.bindingType)
@@ -90,6 +90,15 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             {
                 output.Add(exceptionLocal!.Load(wantRef));
                 resultType = exceptionLocal.Type;
+                if (wantRef)
+                    resultType = resultType.MakeByRefType();
+                break;
+            }
+
+            case BindingType.StaticField:
+            {
+                output.Add(new(wantRef ? OpCodes.Ldsflda : OpCodes.Ldsfld, parameter.fields![0]));
+                resultType = parameter.fields![0].FieldType;
                 if (wantRef)
                     resultType = resultType.MakeByRefType();
                 break;

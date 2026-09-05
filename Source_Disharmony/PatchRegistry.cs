@@ -33,6 +33,11 @@ internal enum BindingType
     ///     Gets the exception thrown by the method.
     /// </summary>
     Exception,
+
+    /// <summary>
+    ///     Gets a static field.
+    /// </summary>
+    StaticField,
 }
 
 internal class ParameterBinding
