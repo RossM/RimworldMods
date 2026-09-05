@@ -171,7 +171,7 @@ public enum PatchOptions
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Class)]
-public class PatchAttribute(Type? type = null) : Attribute
+public sealed class PatchAttribute(Type? type = null) : Attribute
 {
     /// <summary>
     ///     Gets the default type that declares the outer target members.
@@ -198,7 +198,7 @@ public class PatchAttribute(Type? type = null) : Attribute
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class)]
-public class CategoryAttribute(string category) : Attribute
+public sealed class CategoryAttribute(string category) : Attribute
 {
     /// <summary>
     ///     Gets the category name used by <see cref="Patcher.PatchCategory" />.
@@ -230,7 +230,7 @@ public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
+public sealed class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 
 /// <summary>
 ///     Marks a patch method to run after each selected target operation.
@@ -245,7 +245,7 @@ public class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
+public sealed class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 
 /// <summary>
 ///     Base class for attributes that select an operation inside an outer patch target.
@@ -277,7 +277,7 @@ public abstract class InnerAttributeBase : Attribute;
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class InnerAttribute(
+public sealed class InnerAttribute(
     Type type,
     string? memberName = null,
     MemberType memberType = MemberType.Any,
@@ -344,7 +344,7 @@ public class InnerAttribute(
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public class InnerConstantAttribute : InnerAttributeBase
+public sealed class InnerConstantAttribute : InnerAttributeBase
 {
     /// <summary>
     ///     Selects each matching 32-bit integer constant in IL.
@@ -414,7 +414,7 @@ public class InnerConstantAttribute : InnerAttributeBase
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class PatchOptionsAttribute(PatchOptions options) : Attribute
+public sealed class PatchOptionsAttribute(PatchOptions options) : Attribute
 {
     /// <summary>
     ///     Gets the optional patch behaviors to enable.
@@ -432,7 +432,7 @@ public class PatchOptionsAttribute(PatchOptions options) : Attribute
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-public class PriorityAttribute(int priority) : Attribute
+public sealed class PriorityAttribute(int priority) : Attribute
 {
     /// <summary>
     ///     Gets the patch priority.
@@ -643,7 +643,7 @@ public class TargetAttribute(
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
-public class TargetsAttribute(
+public sealed class TargetsAttribute(
     Type? type,
     string? methodName = null,
     MemberType memberType = MemberType.Any,
@@ -737,7 +737,7 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class ParameterAttribute : ParameterBindingAttribute
+public sealed class ParameterAttribute : ParameterBindingAttribute
 {
     /// <summary>
     ///     Binds to the source parameter having the same name as the attributed patch parameter.
@@ -806,7 +806,7 @@ public class ParameterAttribute : ParameterBindingAttribute
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
+public sealed class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
 
 /// <summary>
 ///     Binds a patch parameter to the outer member's return value for an ordinary patch or the inner member's return value
@@ -819,7 +819,7 @@ public class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindingAttrib
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
+public sealed class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 
 /// <summary>
 ///     Binds a patch parameter to temporary state for the current invocation of the outer member.
@@ -843,7 +843,7 @@ public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer)
+public sealed class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer)
 {
     /// <summary>
     ///     Binds temporary state using the attributed patch parameter's name as the key.
@@ -875,7 +875,7 @@ public class StateAttribute(string? key) : ParameterBindingAttribute(Scope.Outer
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
     /// <summary>
     ///     Binds to the field having the same name as the attributed patch parameter.
@@ -907,7 +907,7 @@ public class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBi
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
+public sealed class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
 
 /// <summary>
 ///     Binds a patch parameter to a delegate that invokes a method declared by the inner or outer instance's type.
@@ -925,7 +925,7 @@ public class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+public sealed class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
     /// <summary>
     ///     Binds to the method having the same name as the attributed patch parameter.
@@ -961,4 +961,4 @@ public class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterB
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);
+public sealed class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);
