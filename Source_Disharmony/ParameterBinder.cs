@@ -140,7 +140,7 @@ internal class ParameterBinder(
     private ParameterBinding BindState(ParameterInfo parameter, string key)
     {
         if (IsStateMachine)
-            throw new NotSupportedException("State parameters are not supported for iterator state machine methods");
+            throw new NotSupportedException("Not supported for state machine methods");
 
         string stateKey = $"{stateGroupKey}#{key}";
 
@@ -150,6 +150,8 @@ internal class ParameterBinder(
 
     private ParameterBinding BindBaseMethod(ParameterInfo parameter)
     {
+        if (IsStateMachine)
+            throw new ParameterBindingException(parameter.Name, "Not supported for state machine methods");
         if (outer is not MethodInvocation method || outer.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Must be an instance method");
 
