@@ -17,7 +17,17 @@ public static partial class IteratorParameterBindingPatches
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
-    public static void InnerPrefix_ParameterAttribute_IteratorOriginalParameter_Index0_Primitive_ReadByValue(
+    public static void InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Index0_Primitive_ReadByValue(
+        [Parameter(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
+
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumerateIdentity))]
+    public static void InnerPrefix_ParameterAttribute_StaticIteratorSingleParameter_Index0_Primitive_ReadByValue(
+        [Parameter(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
+
+    [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumeratePair))]
+    public static void InnerPrefix_ParameterAttribute_StaticIteratorTwoParameters_Index0_Primitive_ReadByValue(
         [Parameter(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
@@ -145,18 +155,46 @@ public sealed partial class IteratorParameterBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPrefix_ParameterAttribute_IteratorOriginalParameter_Index0_Primitive_ReadByValue()
+    public void InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Index0_Primitive_ReadByValue()
     {
         IteratorParameterBindingPatches.parameterObserved = 0;
         var target = new ClassMethodTargets();
         ApplyPatch(
             typeof(IteratorParameterBindingPatches),
-            nameof(IteratorParameterBindingPatches.InnerPrefix_ParameterAttribute_IteratorOriginalParameter_Index0_Primitive_ReadByValue));
+            nameof(IteratorParameterBindingPatches.InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Index0_Primitive_ReadByValue));
 
         int result = target.EnumerateIdentity(42).Single();
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(IteratorParameterBindingPatches.parameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_ParameterAttribute_StaticIteratorSingleParameter_Index0_Primitive_ReadByValue()
+    {
+        IteratorParameterBindingPatches.parameterObserved = 0;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_ParameterAttribute_StaticIteratorSingleParameter_Index0_Primitive_ReadByValue));
+
+        int result = StaticMethodTargets.EnumerateIdentity(42).Single();
+
+        Assert.That(result, Is.EqualTo(42));
+        Assert.That(IteratorParameterBindingPatches.parameterObserved, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void InnerPrefix_ParameterAttribute_StaticIteratorTwoParameters_Index0_Primitive_ReadByValue()
+    {
+        IteratorParameterBindingPatches.parameterObserved = 0;
+        ApplyPatch(
+            typeof(IteratorParameterBindingPatches),
+            nameof(IteratorParameterBindingPatches.InnerPrefix_ParameterAttribute_StaticIteratorTwoParameters_Index0_Primitive_ReadByValue));
+
+        int[] result = StaticMethodTargets.EnumeratePair(17, 42).ToArray();
+
+        Assert.That(result, Is.EqualTo(new[] { 17, 42 }));
+        Assert.That(IteratorParameterBindingPatches.parameterObserved, Is.EqualTo(17));
     }
 
     [Test]

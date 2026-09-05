@@ -32,6 +32,19 @@ namespace Disharmony.Tests
 
     public static class StaticMethodTargets
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static IEnumerable<int> EnumerateIdentity(int outerValue)
+        {
+            yield return InnerStaticMethodTargets.IntIdentity(outerValue);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static IEnumerable<int> EnumeratePair(int first, int second)
+        {
+            yield return InnerStaticMethodTargets.IntIdentity(first);
+            yield return second;
+        }
+
         public static List<string> PriorityEvents { get; } = [];
 
         [MethodImpl(MethodImplOptions.NoInlining)]
