@@ -834,8 +834,8 @@ public class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any);
 ///     <para>
 ///         Patches only share state with other patches applied in the same call to a patching method on
 ///         <see cref="Patcher" />.
-///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" /> additionally require that the
-///         patch methods be defined in the same class to share state.
+///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" /> or <see cref="Patcher.PatchCategory"/>
+///         additionally require that the patch methods be defined in the same class to share state.
 ///     </para>
 ///     <para>
 ///         A parameter named <c>__state</c> with no binding attribute is treated as if it has this attribute.
