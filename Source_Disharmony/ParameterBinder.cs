@@ -80,7 +80,7 @@ internal class ParameterBinder(
             case StateAttribute { Key: var key }: return BindState(parameter, key ?? parameterName);
 
             case FieldAttribute { Name: var name, Scope: var attributeScope }:
-                return BindFieldByName(parameter, name ?? parameterName, attributeScope);
+                return BindFieldByName(parameter, name ?? (parameterName.StartsWith("___") ? parameterName[3..] : parameterName), attributeScope);
 
             case BaseMethodAttribute: return BindBaseMethod(parameter);
 
