@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -6,10 +7,14 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Disharmony.Analyzers;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
+public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType];
+        [
+            GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType,
+            MultiplePatchTypes, MultipleInnerTargets, MissingTargetType, NullInnerConstant, UnsupportedInnerAttribute,
+            DuplicateDiscoveryAttributes, MissingMemberName,
+        ];
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
         "DH0001", "Patch method must not contain generic parameters",
@@ -64,6 +69,8 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
             if (prefix is null && postfix is null)
                 return;
 
+            RegisterRegistryChecks(start);
+
             start.RegisterSymbolAction(ctx =>
             {
                 var method = (IMethodSymbol)ctx.Symbol;
@@ -117,9 +124,14 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         });
     }
 
-    // Match reflection attribute inheritance without inspecting or executing attribute constructors.
-    private static AttributeData? FindAttribute(ISymbol symbol, INamedTypeSymbol? expected)
+    private static AttributeData? FindAttribute(ISymbol symbol, INamedTypeSymbol? expected) =>
+        GetAttributes(symbol).FirstOrDefault(a => IsAttribute(a, expected));
+
+    // Reflection suppresses a base attribute only when the same concrete attribute type occurs nearer
+    // the declaration and disallows multiple instances. Different subclasses still coexist.
+    private static IEnumerable<AttributeData> GetAttributes(ISymbol symbol)
     {
+        var nearerTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
         bool inherited = false;
         for (ISymbol? current = symbol;
              current is not null;
@@ -130,16 +142,36 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
                  _ => null,
              })
         {
-            foreach (var attribute in current.GetAttributes())
+            var attributes = current.GetAttributes();
+            foreach (var attribute in attributes)
             {
-                if (IsAttribute(attribute, expected) && (!inherited || IsInherited(attribute.AttributeClass)))
-                    return attribute;
+                if (attribute.AttributeClass is not { } type)
+                    continue;
+                if (!inherited || (IsInherited(type) && (!nearerTypes.Contains(type) || AllowsMultiple(type))))
+                    yield return attribute;
+            }
+
+            foreach (var attribute in attributes)
+            {
+                if (attribute.AttributeClass is { } type)
+                    nearerTypes.Add(type);
             }
 
             inherited = true;
         }
+    }
 
-        return null;
+    private static bool AllowsMultiple(INamedTypeSymbol? attributeType)
+    {
+        for (var type = attributeType; type is not null; type = type.BaseType)
+        {
+            var usage = type.GetAttributes().FirstOrDefault(a =>
+                a.AttributeClass?.ToDisplayString() == "System.AttributeUsageAttribute");
+            if (usage is not null)
+                return usage.NamedArguments.Any(a => a.Key == "AllowMultiple" && a.Value.Value is true);
+        }
+
+        return false;
     }
 
     private static bool IsInherited(INamedTypeSymbol? attributeType)

@@ -165,8 +165,7 @@ internal class PatchRegistry
 
             foreach (var targetAttribute in targetAttributes)
             {
-                var patchedType = targetAttribute.Type ?? defaultTargetType ??
-                    throw new PatchDefinitionException(method, "No target type");
+                var patchedType = targetAttribute.Type ?? defaultTargetType;
 
                 List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
                     targetAttribute.MemberType, targetAttribute.ParameterTypes, targetAttribute.GenericTypes);
