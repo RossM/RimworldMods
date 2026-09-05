@@ -29,3 +29,5 @@ DH0024 | Correctness | Warning | Unavailable instance, argument, or field on an 
 DH0025 | Correctness | Warning | Void prefix binds the result
 DH0026 | Correctness | Warning | Prefix result binding is not ref or out
 DH0027 | Correctness | Warning | Unknown special parameter name
+DH0028 | Correctness | Warning | Multiple parameters bind the same value in a patch
+DH0029 | Correctness | Warning | State key has no ref or out parameter in its patch class

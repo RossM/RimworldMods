@@ -30,6 +30,8 @@ The analyzer targets .NET Standard 2.0 and does not load Disharmony, Harmony, or
 | DH0025 | Prefix binds the result but returns void, so it cannot skip the target. |
 | DH0026 | Prefix result parameter is not ref/out, so it cannot set the result. |
 | DH0027 | Parameter starts with __ but is not a recognized special name or ___field binding, and has no explicit binding attribute. |
+| DH0028 | Multiple parameters in one patch bind the same value. |
+| DH0029 | State key has no ref/out binding in any patch declared in the same class. |
 
 The analyzer assumes assembly discovery through Patcher.PatchAll or Patcher.PatchCategory.
 Methods are identified by the built-in Disharmony Prefix/Postfix attributes. User-defined attribute subclasses are ignored.
@@ -55,7 +57,7 @@ and nested-member resolution) and patch application failures remain runtime chec
 Explicit built-in parameter binding attributes override reserved names.
 Known-type checks follow the runtime's ref/in/out rules and AllowUnsafe reference-type bypass; delegate shape and state-type checks do not bypass validation.
 State keys are compared within each declaring patch class across its declared patch methods, including methods with different targets.
-State parameters need not have a writer, and ref/in/out modifiers do not change the stored state type.
+DH0029 warns when no patch in the declaring class binds a state key through ref or out; it checks declarations, not assignments in method bodies. Ref/in/out modifiers do not change the stored state type.
 Ordinary argument index bounds, argument/result/instance/field type compatibility, delegate signatures, iterator-state-machine restrictions,
 and writable-reference restrictions that depend on target parameters remain runtime checks.
 Harmony-only patches are not subject to Disharmony's return-type rules.
@@ -73,3 +75,5 @@ Run tests with `dotnet test Source_Disharmony.Analyzers.Tests/Source_Disharmony.
 Tests use minimal attribute metadata and do not execute patches or load the game.
 
 DH0025 and DH0026 flag likely mistakes when a prefix binds __result or [ReturnValue]. Both can apply to the same parameter; DH0018 takes precedence for AlwaysRun prefixes.
+
+DH0028 compares special bindings, state keys, argument names or indexes, fields, and method names with their scopes. Aliases requiring target reflection (such as an argument name and index) are not compared. On inner patches, named Scope.Any lookups retain their fallback semantics and are distinct from explicit Inner/Outer lookups.

@@ -50,6 +50,13 @@ public sealed partial class PatchMethodAnalyzer
     private static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
         "DH0027", "Unknown special parameter name", "Parameter '{0}' does not match a special parameter name; correct the name or use an explicit binding attribute",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+    private static readonly DiagnosticDescriptor DuplicateBinding = new(
+        "DH0028", "Patch binds the same value more than once", "Parameter '{0}' binds the same value as another parameter in this patch",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    private static readonly DiagnosticDescriptor StateWithoutWriter = new(
+        "DH0029", "State has no writer", "State key '{0}' has no ref or out parameter in any patch in this class",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private enum ParameterKind { Argument, Instance, Result, State, Field, BaseMethod, Method, Exception, Caller }
 
     private static void RegisterParameterChecks(CompilationStartAnalysisContext start)
@@ -97,6 +104,8 @@ public sealed partial class PatchMethodAnalyzer
                 var constantType = innerAttribute is not null && IsAttribute(innerAttribute, constant)
                     ? Argument(innerAttribute, "value")?.Type : null;
 
+                var boundValues = new Dictionary<(ParameterKind Kind, int? Scope, object? Selector), List<IParameterSymbol>>();
+
                 foreach (var parameter in method.Parameters)
                 {
                     var location = parameter.Locations.FirstOrDefault(l => l.IsInSource);
@@ -138,6 +147,32 @@ public sealed partial class PatchMethodAnalyzer
                         ctx.ReportDiagnostic(Diagnostic.Create(InnerBindingWithoutInnerPatch, location, parameter.Name));
                         continue;
                     }
+                    // Named arguments and fields retain Any's fallback semantics on inner patches.
+                    // Index selectors stay distinct from names because equating them needs target metadata.
+                    var identityKind = kind == ParameterKind.Caller ? ParameterKind.Instance : kind;
+                    object? selector = kind switch
+                    {
+                        ParameterKind.Argument => binding is null ? parameter.Name :
+                            Argument(binding, "index")?.Value ?? Argument(binding, "name")?.Value ?? parameter.Name,
+                        ParameterKind.Field => binding is null ? parameter.Name.Substring(3) :
+                            Argument(binding, "name")?.Value ?? parameter.Name,
+                        ParameterKind.Method => Argument(binding!, "name")?.Value ?? parameter.Name,
+                        ParameterKind.State => binding is null ? parameter.Name : Argument(binding, "key")?.Value ?? parameter.Name,
+                        _ => null,
+                    };
+                    int? identityScope = kind switch
+                    {
+                        ParameterKind.Result or ParameterKind.Exception or ParameterKind.State or ParameterKind.BaseMethod => null,
+                        ParameterKind.Caller => outerScope,
+                        _ when !isInner => outerScope,
+                        ParameterKind.Field => explicitScope ?? 0,
+                        ParameterKind.Argument when selector is string => explicitScope ?? 0,
+                        _ => explicitScope is null or 0 ? innerScope : explicitScope,
+                    };
+                    var identity = (identityKind, identityScope, selector);
+                    if (!boundValues.TryGetValue(identity, out var boundParameters))
+                        boundValues.Add(identity, boundParameters = new List<IParameterSymbol>());
+                    boundParameters.Add(parameter);
                     if (kind == ParameterKind.Result && isPrefix)
                     {
                         if (alwaysRun)
@@ -181,11 +216,22 @@ public sealed partial class PatchMethodAnalyzer
                         parameters.Add(parameter);
                     }
                 }
+
+                foreach (var parameters in boundValues.Values.Where(parameters => parameters.Count > 1))
+                {
+                    foreach (var parameter in parameters)
+                        ctx.ReportDiagnostic(Diagnostic.Create(DuplicateBinding, parameter.Locations.First(l => l.IsInSource), parameter.Name));
+                }
             }
 
             // Assembly registration groups state by declaring patch class, even across different targets.
             foreach (var state in states)
             {
+                if (!state.Value.Any(p => p.RefKind is RefKind.Ref or RefKind.Out))
+                {
+                    foreach (var parameter in state.Value)
+                        ctx.ReportDiagnostic(Diagnostic.Create(StateWithoutWriter, parameter.Locations.First(l => l.IsInSource), state.Key));
+                }
                 if (state.Value.Skip(1).Any(p => !compilation.ClassifyConversion(state.Value[0].Type, p.Type).IsIdentity))
                 {
                     foreach (var parameter in state.Value)

@@ -30,7 +30,6 @@ public partial class PatchMethodAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(out int __result) { __result = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] out int value) { value = 1; return false; } }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __result, [ReturnValue] in int value) {} }")]
     public async Task WritablePrefixResultsAndReadOnlyPostfixResultsDoNotWarn(string source)
     {
         Assert.That(await Analyze(source), Is.Empty);
@@ -109,7 +108,6 @@ public partial class PatchMethodAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Parameter(100)] int other) {} }")]
     [TestCase("class C { static void M(object __caller, System.Exception __exception, [Instance(Scope.Inner)] object value) {} }")]
     [TestCase("class ParameterAttribute : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter, Instance] object value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(object __caller, [Instance(Scope.Outer)] object outer, int value, [Field] int field, [Parameter(0, Scope.Outer)] int x) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int ___field, int ____field, int _value, int value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] int __custom, [Field(\"field\")] int __other) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] int __resut) {} }")]
@@ -119,28 +117,28 @@ public partial class PatchMethodAnalyzerTests
         Assert.That(await Analyze(source), Is.Empty);
     }
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B(string __state) {} }")]
-    [TestCase("[Patch] class C { [Prefix, Target(typeof(object), \"A\")] static void A([State(\"shared\")] int a) {} [Postfix, Target(typeof(object), \"B\")] static void B([State(\"shared\")] object b) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"shared\")] int a, [State(\"shared\")] string b) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] partial class C { [Prefix] static void A(int __state) {} } partial class C { [Postfix] static void B(string __state) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"__state\")] int a) {} [Postfix] static void B(string __state) {} }")]
-    public async Task ConflictingStateTypesWarnOnBothParameters(string source)
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B(string __state) {} }", "DH0022,DH0022,DH0029,DH0029")]
+    [TestCase("[Patch] class C { [Prefix, Target(typeof(object), \"A\")] static void A([State(\"shared\")] int a) {} [Postfix, Target(typeof(object), \"B\")] static void B([State(\"shared\")] object b) {} }", "DH0022,DH0022,DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"shared\")] int a, [State(\"shared\")] string b) {} }", "DH0022,DH0022,DH0029,DH0029,DH0028,DH0028")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] partial class C { [Prefix] static void A(int __state) {} } partial class C { [Postfix] static void B(string __state) {} }", "DH0022,DH0022,DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"__state\")] int a) {} [Postfix] static void B(string __state) {} }", "DH0022,DH0022,DH0029,DH0029")]
+    public async Task ConflictingStateTypesWarnOnBothParameters(string source, string expectedIds)
     {
         var diagnostics = await Analyze(source);
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0022", "DH0022" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(expectedIds.Split(',')));
         Assert.That(diagnostics.All(d => d.Severity == DiagnosticSeverity.Warning), Is.True);
     }
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(ref int __state) {} [Postfix] static void B(int __state) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"a\")] int a) {} [Postfix] static void B([State(\"b\")] string b) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(null)] int a) {} [Postfix] static void B([State] int a) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __state) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B([Parameter] string __state) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] static void A(int __state) {} } class C : B { [Postfix] static void M(string __state) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Patch, Target(typeof(object), \"M\")] class Nested { [Postfix] static void B(string __state) {} } }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A((int a, string b) __state) {} [Postfix] static void B((int x, string y) __state) {} }")]
-    public async Task IndependentOrCompatibleStateBindingsDoNotWarn(string source)
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(ref int __state) {} [Postfix] static void B(int __state) {} }", "")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"a\")] int a) {} [Postfix] static void B([State(\"b\")] string b) {} }", "DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(null)] int a) {} [Postfix] static void B([State] int a) {} }", "DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __state) {} }", "DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B([Parameter] string __state) {} }", "DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] static void A(int __state) {} } class C : B { [Postfix] static void M(string __state) {} }", "DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Patch, Target(typeof(object), \"M\")] class Nested { [Postfix] static void B(string __state) {} } }", "DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A((int a, string b) __state) {} [Postfix] static void B((int x, string y) __state) {} }", "DH0029,DH0029")]
+    public async Task IndependentOrCompatibleStateBindingsCheckForWriters(string source, string expectedIds)
     {
-        Assert.That(await Analyze(source), Is.Empty);
+        Assert.That((await Analyze(source)).Select(d => d.Id), Is.EquivalentTo(expectedIds.Length == 0 ? new string[0] : expectedIds.Split(',')));
     }
 }
