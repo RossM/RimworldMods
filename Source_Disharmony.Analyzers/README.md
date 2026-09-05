@@ -29,6 +29,7 @@ The analyzer targets .NET Standard 2.0 and does not load Disharmony, Harmony, or
 | DH0024 | Parameter requests an instance, argument, or field from an inner constant. |
 | DH0025 | Prefix binds the result but returns void, so it cannot skip the target. |
 | DH0026 | Prefix result parameter is not ref/out, so it cannot set the result. |
+| DH0027 | Parameter starts with __ but is not a recognized special name or ___field binding, and has no explicit binding attribute. |
 
 The analyzer assumes assembly discovery through Patcher.PatchAll or Patcher.PatchCategory.
 Methods are identified by the built-in Disharmony Prefix/Postfix attributes. User-defined attribute subclasses are ignored.

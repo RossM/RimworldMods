@@ -78,6 +78,10 @@ public partial class PatchMethodAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DH0021,DH0025", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(in object __result) {} }", "DH0021,DH0025,DH0026", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, InnerConstant(\"text\")] static void M(ref object __result) {} }", "DH0021", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __resut) {} }", "DH0027", "__resut")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __Result) {} }", "DH0027", "__Result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __) {} }", "DH0027", "__")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __0) {} }", "DH0027", "__0")]
     public async Task InvalidParameterBindingReportsWarningAtParameter(string source, string expectedId, string expectedName)
     {
         var diagnostics = await Analyze(source);
@@ -106,6 +110,10 @@ public partial class PatchMethodAnalyzerTests
     [TestCase("class C { static void M(object __caller, System.Exception __exception, [Instance(Scope.Inner)] object value) {} }")]
     [TestCase("class ParameterAttribute : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter, Instance] object value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(object __caller, [Instance(Scope.Outer)] object outer, int value, [Field] int field, [Parameter(0, Scope.Outer)] int x) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int ___field, int ____field, int _value, int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] int __custom, [Field(\"field\")] int __other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] int __resut) {} }")]
+    [TestCase("class C { static void M(int __resut) {} }")]
     public async Task ValidOrTargetDependentParameterBindingDoesNotWarn(string source)
     {
         Assert.That(await Analyze(source), Is.Empty);

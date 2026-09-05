@@ -28,3 +28,4 @@ DH0022 | Correctness | Warning | Conflicting types for a shared state key
 DH0024 | Correctness | Warning | Unavailable instance, argument, or field on an inner constant
 DH0025 | Correctness | Warning | Void prefix binds the result
 DH0026 | Correctness | Warning | Prefix result binding is not ref or out
+DH0027 | Correctness | Warning | Unknown special parameter name

@@ -47,6 +47,9 @@ public sealed partial class PatchMethodAnalyzer
     private static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
         "DH0026", "Prefix result parameter cannot set the result", "Prefix result parameter '{0}' should be ref or out to set the result",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+    private static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
+        "DH0027", "Unknown special parameter name", "Parameter '{0}' does not match a special parameter name; correct the name or use an explicit binding attribute",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private enum ParameterKind { Argument, Instance, Result, State, Field, BaseMethod, Method, Exception, Caller }
 
     private static void RegisterParameterChecks(CompilationStartAnalysisContext start)
@@ -120,6 +123,8 @@ public sealed partial class PatchMethodAnalyzer
                             _ when parameter.Name.StartsWith("___") => ParameterKind.Field,
                             _ => ParameterKind.Argument,
                         };
+                        if (kind == ParameterKind.Argument && parameter.Name.StartsWith("__"))
+                            ctx.ReportDiagnostic(Diagnostic.Create(UnknownSpecialParameter, location, parameter.Name));
                     }
                     else
                     {
