@@ -10,7 +10,10 @@ internal static class RuleAssertions
     {
         Assert.That(actual, Has.Length.EqualTo(expected.Length));
         Func<CodeInstruction, CodeInstruction, bool> sameInstruction = (a, b) =>
-            a.opcode == b.opcode && Equals(a.operand, b.operand) &&
+            a.opcode == b.opcode &&
+            (a.operand is Label[] aLabels && b.operand is Label[] bLabels
+                ? aLabels.SequenceEqual(bLabels)
+                : Equals(a.operand, b.operand)) &&
             a.labels.SequenceEqual(b.labels) &&
             a.blocks.Select(block => (block.blockType, block.catchType))
                 .SequenceEqual(b.blocks.Select(block => (block.blockType, block.catchType)));
