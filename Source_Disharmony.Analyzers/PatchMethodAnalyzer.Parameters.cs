@@ -13,49 +13,49 @@ public sealed partial class PatchMethodAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor InnerBindingWithoutInnerPatch = new(
-        "DH0017", "Parameter binding requires an inner patch", "Parameter '{0}' requires an inner patch",
+        "DH0017", "Parameter binding requires an inner patch", "Parameter '{0}' uses __caller or Scope.Inner without an inner patch; add [Inner]/[InnerConstant] or change the parameter binding",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor AlwaysRunResultBinding = new(
-        "DH0018", "AlwaysRun prefix cannot bind the result", "Parameter '{0}' binds the result in an AlwaysRun prefix",
+        "DH0018", "AlwaysRun prefix cannot bind the result", "Parameter '{0}' binds the result in an AlwaysRun prefix, which is unsupported; remove the result binding or remove AlwaysRun",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor InvalidExceptionBinding = new(
-        "DH0019", "Exception binding requires an AlwaysRun postfix", "Parameter '{0}' can bind an exception only in an AlwaysRun postfix",
+        "DH0019", "Exception binding requires an AlwaysRun postfix", "Parameter '{0}' binds an exception outside an AlwaysRun postfix; use [Postfix] with PatchOptions.AlwaysRun or remove the exception binding",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor InvalidDelegateBinding = new(
-        "DH0020", "Method binding requires a delegate value", "Parameter '{0}' must be a concrete delegate type passed by value",
+        "DH0020", "Method binding requires a delegate value", "Parameter '{0}' binds a method; use a concrete delegate type such as Action or Func and remove any ref, in, or out modifier",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor IncompatibleBindingType = new(
-        "DH0021", "Incompatible parameter binding type", "Parameter '{0}' cannot bind '{1}' with its declared type and modifier",
+        "DH0021", "Incompatible parameter binding type", "Parameter '{0}' cannot bind a value of type '{1}'; use a compatible parameter type and ref/in/out modifier",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor IncompatibleStateTypes = new(
-        "DH0022", "Incompatible shared state types", "Parameter '{0}' uses state key '{1}' with a different type from another parameter in this patch class",
+        "DH0022", "Incompatible shared state types", "Parameter '{0}' shares state key '{1}' with a parameter of a different type; use the same type for this key or choose a different state key",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor ConstantBindingUnavailable = new(
-        "DH0024", "Inner constant cannot supply this binding", "Parameter '{0}' requests an instance, argument, or field from an inner constant",
+        "DH0024", "Inner constant cannot supply this binding", "Parameter '{0}' requests an instance, argument, or field from [InnerConstant], which has none; use Scope.Outer to bind from the outer target or remove the parameter",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor VoidPrefixResultBinding = new(
-        "DH0025", "Prefix binding the result cannot skip the target", "Prefix result parameter '{0}' is used in a void prefix; return bool to allow skipping the target",
+        "DH0025", "Prefix binding the result cannot skip the target", "Prefix binds the result through '{0}' but returns void; return bool and return false when supplying a replacement result to skip the target",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
-        "DH0026", "Prefix result parameter cannot set the result", "Prefix result parameter '{0}' should be ref or out to set the result",
+        "DH0026", "Prefix result parameter cannot set the result", "Prefix result parameter '{0}' cannot set the result; declare it ref or out",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
-        "DH0027", "Unknown special parameter name", "Parameter '{0}' does not match a special parameter name; correct the name or use an explicit binding attribute",
+        "DH0027", "Unknown special parameter name", "Parameter '{0}' starts with '__' but is not a recognized special name; correct the name or use an explicit binding attribute such as [Parameter]",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private static readonly DiagnosticDescriptor DuplicateBinding = new(
-        "DH0028", "Patch binds the same value more than once", "Parameter '{0}' binds the same value as another parameter in this patch",
+        "DH0028", "Patch binds the same value more than once", "Parameter '{0}' binds the same value as another parameter in this patch; remove the duplicate parameter or change its binding",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor StateWithoutWriter = new(
-        "DH0029", "State has no writer", "State key '{0}' has no ref or out parameter in any patch in this class",
+        "DH0029", "State has no writer", "State key '{0}' has no writer in this patch class; declare a parameter for this key ref or out in a patch that supplies the state",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private enum ParameterKind { Argument, Instance, Result, State, Field, BaseMethod, Method, Exception, Caller }
 

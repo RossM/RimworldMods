@@ -21,11 +21,11 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
         "DH0001", "Patch method must not contain generic parameters",
-        "Patch method '{0}' must not contain generic parameters, including those of its containing types",
+        "Patch method '{0}' has generic parameters on the method or a containing type; use a non-generic method in a non-generic type",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor StaticMethod = new(
-        "DH0002", "Patch method must be static", "Patch method '{0}' must be static",
+        "DH0002", "Patch method must be static", "Patch method '{0}' is not static; add the static modifier",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor PrefixReturn = new(
@@ -52,7 +52,7 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
 
     private static readonly DiagnosticDescriptor MissingPatchType = new(
         "DH0008", "Disharmony method attributes require a patch type",
-        "Method '{0}' has a Disharmony attribute but no [Prefix] or [Postfix]",
+        "Method '{0}' has a Disharmony attribute but no [Prefix] or [Postfix]; add the appropriate patch attribute or remove the unused Disharmony attribute",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public override void Initialize(AnalysisContext context)

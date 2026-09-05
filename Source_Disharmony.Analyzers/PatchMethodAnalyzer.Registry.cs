@@ -8,21 +8,21 @@ public sealed partial class PatchMethodAnalyzer
 {
     private static readonly DiagnosticDescriptor MultiplePatchTypes = new(
         "DH0009", "Patch method has multiple patch type attributes",
-        "Method '{0}' has multiple PatchType attributes; exactly one is supported",
+        "Method '{0}' has multiple prefix/postfix attributes; keep exactly one [Prefix] or [Postfix], including inherited attributes",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor MultipleInnerTargets = new(
         "DH0010", "Patch method has multiple inner target attributes",
-        "Method '{0}' has multiple inner target attributes; at most one is supported",
+        "Method '{0}' has multiple inner target attributes; keep only one [Inner] or [InnerConstant] across the method and its class",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor MissingTargetType = new(
         "DH0011", "Member selector has no declaring type",
-        "Patch method '{0}' has a selector without a declaring type or a qualified member name",
+        "Selector for patch '{0}' has no declaring type; supply a type or use a qualified member name such as Namespace.Type.Member",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor NullInnerConstant = new(
-        "DH0012", "Inner constant cannot be null", "Patch method '{0}' has a null inner constant",
+        "DH0012", "Inner constant cannot be null", "Patch '{0}' uses [InnerConstant] with null, which is unsupported; supply a non-null constant",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor DuplicateDiscoveryAttributes = new(
@@ -32,7 +32,7 @@ public sealed partial class PatchMethodAnalyzer
 
     private static readonly DiagnosticDescriptor MissingMemberName = new(
         "DH0015", "Member selector requires a name",
-        "Patch method '{0}' has a target or inner selector without a member name and does not select a constructor",
+        "Selector for patch '{0}' has no member name; supply a name or specify MemberType.Constructor to select a constructor",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static void RegisterRegistryChecks(CompilationStartAnalysisContext start)
