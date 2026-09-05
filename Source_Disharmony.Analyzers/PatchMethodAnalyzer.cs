@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-
 using static Disharmony.Analyzers.AttributeHelpers;
 
 namespace Disharmony.Analyzers;
@@ -11,11 +10,11 @@ namespace Disharmony.Analyzers;
 public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
 {
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [
-            GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType,
-            MultiplePatchTypes, MultipleInnerTargets, MissingTargetType, NullInnerConstant,
-            DuplicateDiscoveryAttributes, MissingMemberName,
-        ];
+    [
+        GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType,
+        MultiplePatchTypes, MultipleInnerTargets, MissingTargetType, NullInnerConstant,
+        DuplicateDiscoveryAttributes, MissingMemberName,
+    ];
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
         "DH0001", "Patch method must not contain generic parameters",
@@ -69,7 +68,8 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor NullInnerConstant = new(
-        "DH0012", "Inner constant cannot be null", "Patch '{0}' uses [InnerConstant] with null, which is unsupported; supply a non-null constant",
+        "DH0012", "Inner constant cannot be null",
+        "Patch '{0}' uses [InnerConstant] with null, which is unsupported; supply a non-null constant",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor DuplicateDiscoveryAttributes = new(
@@ -132,7 +132,8 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
             if (attributes.Count(a => IsAttribute(a, patch) || IsAttribute(a, harmonyPatch)) > 1)
                 ctx.ReportDiagnostic(Diagnostic.Create(DuplicateDiscoveryAttributes, location, type.Name, "[Patch]/[HarmonyPatch]"));
             if (attributes.Count(a => IsAttribute(a, category) || IsAttribute(a, harmonyCategory)) > 1)
-                ctx.ReportDiagnostic(Diagnostic.Create(DuplicateDiscoveryAttributes, location, type.Name, "[Category]/[HarmonyPatchCategory]"));
+                ctx.ReportDiagnostic(Diagnostic.Create(DuplicateDiscoveryAttributes, location, type.Name,
+                    "[Category]/[HarmonyPatchCategory]"));
         }
 
         void AnalyzeMethod(SymbolAnalysisContext ctx)
@@ -193,7 +194,7 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
             bool mayHaveDefaultType = attributes.Any(a =>
                 (IsAttribute(a, patch) && Argument(a, "type") is { IsNull: false }) ||
                 (IsAttribute(a, harmonyPatch) &&
-                    (Argument(a, "typeName") is not null || Argument(a, "declaringType") is { IsNull: false })));
+                 (Argument(a, "typeName") is not null || Argument(a, "declaringType") is { IsNull: false })));
             foreach (var selector in attributes.Where(a => IsAttribute(a, target, targets)))
             {
                 if (!mayHaveDefaultType && HasNoTypeOrQualifiedName(selector))
@@ -204,7 +205,9 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
             foreach (var selector in innerTargets)
             {
                 if (IsAttribute(selector, constant) && Argument(selector, "value") is { IsNull: true })
+                {
                     ctx.ReportDiagnostic(Diagnostic.Create(NullInnerConstant, SelectorLocation(selector, location), method.Name));
+                }
                 else if (IsAttribute(selector, inner))
                 {
                     // Inner selectors do not inherit the outer target's declaring type.
@@ -220,7 +223,7 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
                 // Overloads without memberType default to Any (zero).
                 int value = kind?.Value is int explicitKind ? explicitKind : 0;
                 if (constructorKind is int constructor && value != constructor &&
-                         (Argument(selector, "methodName") ?? Argument(selector, "memberName")) is null or { IsNull: true })
+                    (Argument(selector, "methodName") ?? Argument(selector, "memberName")) is null or { IsNull: true })
                     ctx.ReportDiagnostic(Diagnostic.Create(MissingMemberName, SelectorLocation(selector, location), method.Name));
             }
         }

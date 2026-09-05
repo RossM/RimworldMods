@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
-
 using static Disharmony.Analyzers.AttributeHelpers;
 
 namespace Disharmony.Analyzers;
@@ -12,63 +11,89 @@ namespace Disharmony.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
 {
+    private enum ParameterKind
+    {
+        Argument,
+        Instance,
+        Result,
+        State,
+        Field,
+        BaseMethod,
+        Method,
+        Exception,
+        Caller,
+    }
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [
-            MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
-            InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
-            VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
-        ];
+    [
+        MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
+        InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
+        VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
+    ];
 
     private static readonly DiagnosticDescriptor MultipleParameterBindings = new(
         "DH0016", "Multiple parameter binding attributes", "Parameter '{0}' has multiple binding attributes; use only one",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor InnerBindingWithoutInnerPatch = new(
-        "DH0017", "Parameter binding requires an inner patch", "Parameter '{0}' uses __caller or Scope.Inner without an inner patch; add [Inner]/[InnerConstant] or change the parameter binding",
+        "DH0017", "Parameter binding requires an inner patch",
+        "Parameter '{0}' uses __caller or Scope.Inner without an inner patch; add [Inner]/[InnerConstant] or change the parameter binding",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor AlwaysRunResultBinding = new(
-        "DH0018", "AlwaysRun prefix cannot bind the result", "Parameter '{0}' binds the result in an AlwaysRun prefix, which is unsupported; remove the result binding or remove AlwaysRun",
+        "DH0018", "AlwaysRun prefix cannot bind the result",
+        "Parameter '{0}' binds the result in an AlwaysRun prefix, which is unsupported; remove the result binding or remove AlwaysRun",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor InvalidExceptionBinding = new(
-        "DH0019", "Exception binding requires an AlwaysRun postfix", "Parameter '{0}' binds an exception outside an AlwaysRun postfix; use [Postfix] with PatchOptions.AlwaysRun or remove the exception binding",
+        "DH0019", "Exception binding requires an AlwaysRun postfix",
+        "Parameter '{0}' binds an exception outside an AlwaysRun postfix; use [Postfix] with PatchOptions.AlwaysRun or remove the exception binding",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor InvalidDelegateBinding = new(
-        "DH0020", "Method binding requires a delegate value", "Parameter '{0}' binds a method; use a concrete delegate type such as Action or Func and remove any ref, in, or out modifier",
+        "DH0020", "Method binding requires a delegate value",
+        "Parameter '{0}' binds a method; use a concrete delegate type such as Action or Func and remove any ref, in, or out modifier",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor IncompatibleBindingType = new(
-        "DH0021", "Incompatible parameter binding type", "Parameter '{0}' cannot bind a value of type '{1}'; use a compatible parameter type and ref/in/out modifier",
+        "DH0021", "Incompatible parameter binding type",
+        "Parameter '{0}' cannot bind a value of type '{1}'; use a compatible parameter type and ref/in/out modifier",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor IncompatibleStateTypes = new(
-        "DH0022", "Incompatible shared state types", "Parameter '{0}' shares state key '{1}' with a parameter of a different type; use the same type for this key or choose a different state key",
+        "DH0022", "Incompatible shared state types",
+        "Parameter '{0}' shares state key '{1}' with a parameter of a different type; use the same type for this key or choose a different state key",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor ConstantBindingUnavailable = new(
-        "DH0024", "Inner constant cannot supply this binding", "Parameter '{0}' requests an instance, argument, or field from [InnerConstant], which has none; use Scope.Outer to bind from the outer target or remove the parameter",
+        "DH0024", "Inner constant cannot supply this binding",
+        "Parameter '{0}' requests an instance, argument, or field from [InnerConstant], which has none; use Scope.Outer to bind from the outer target or remove the parameter",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor VoidPrefixResultBinding = new(
-        "DH0025", "Prefix binding the result cannot skip the target", "Prefix binds the result through '{0}' but returns void; return bool and return false when supplying a replacement result to skip the target",
+        "DH0025", "Prefix binding the result cannot skip the target",
+        "Prefix binds the result through '{0}' but returns void; return bool and return false when supplying a replacement result to skip the target",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
-        "DH0026", "Prefix result parameter cannot set the result", "Prefix result parameter '{0}' cannot set the result; declare it ref or out",
+        "DH0026", "Prefix result parameter cannot set the result",
+        "Prefix result parameter '{0}' cannot set the result; declare it ref or out",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
-        "DH0027", "Unknown special parameter name", "Parameter '{0}' starts with '__' but is not a recognized special name; correct the name or use an explicit binding attribute such as [Parameter]",
+        "DH0027", "Unknown special parameter name",
+        "Parameter '{0}' starts with '__' but is not a recognized special name; correct the name or use an explicit binding attribute such as [Parameter]",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor DuplicateBinding = new(
-        "DH0028", "Patch binds the same value more than once", "Parameter '{0}' binds the same value as another parameter in this patch; remove the duplicate parameter or change its binding",
+        "DH0028", "Patch binds the same value more than once",
+        "Parameter '{0}' binds the same value as another parameter in this patch; remove the duplicate parameter or change its binding",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly DiagnosticDescriptor StateWithoutWriter = new(
-        "DH0029", "State has no writer", "State key '{0}' has no writer in this patch class; declare a parameter for this key ref or out in a patch that supplies the state",
+        "DH0029", "State has no writer",
+        "State key '{0}' has no writer in this patch class; declare a parameter for this key ref or out in a patch that supplies the state",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-    private enum ParameterKind { Argument, Instance, Result, State, Field, BaseMethod, Method, Exception, Caller }
 
     public override void Initialize(AnalysisContext context)
     {
@@ -76,6 +101,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(RegisterParameterChecks);
     }
+
     private static void RegisterParameterChecks(CompilationStartAnalysisContext start)
     {
         var compilation = (CSharpCompilation)start.Compilation;
@@ -119,7 +145,8 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                 bool alwaysRun = alwaysRunMask is int mask && (patchOptions & mask) != 0;
                 bool allowUnsafe = unsafeMask is int maskUnsafe && (patchOptions & maskUnsafe) != 0;
                 var constantType = innerAttribute is not null && IsAttribute(innerAttribute, constant)
-                    ? Argument(innerAttribute, "value")?.Type : null;
+                    ? Argument(innerAttribute, "value")?.Type
+                    : null;
 
                 var boundValues = new Dictionary<(ParameterKind Kind, int? Scope, object? Selector), List<IParameterSymbol>>();
 
@@ -134,6 +161,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                         ctx.ReportDiagnostic(Diagnostic.Create(MultipleParameterBindings, location, parameter.Name));
                         continue;
                     }
+
                     var binding = bindings.SingleOrDefault();
                     ParameterKind kind;
                     if (binding is null)
@@ -164,15 +192,18 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                         ctx.ReportDiagnostic(Diagnostic.Create(InnerBindingWithoutInnerPatch, location, parameter.Name));
                         continue;
                     }
+
                     // Named arguments and fields retain Any's fallback semantics on inner patches.
                     // Index selectors stay distinct from names because equating them needs target metadata.
                     var identityKind = kind == ParameterKind.Caller ? ParameterKind.Instance : kind;
                     object? selector = kind switch
                     {
-                        ParameterKind.Argument => binding is null ? parameter.Name :
-                            Argument(binding, "index")?.Value ?? Argument(binding, "name")?.Value ?? parameter.Name,
-                        ParameterKind.Field => binding is null ? parameter.Name.Substring(3) :
-                            Argument(binding, "name")?.Value ?? parameter.Name,
+                        ParameterKind.Argument => binding is null
+                            ? parameter.Name
+                            : Argument(binding, "index")?.Value ?? Argument(binding, "name")?.Value ?? parameter.Name,
+                        ParameterKind.Field => binding is null
+                            ? parameter.Name.Substring(3)
+                            : Argument(binding, "name")?.Value ?? parameter.Name,
                         ParameterKind.Method => Argument(binding!, "name")?.Value ?? parameter.Name,
                         ParameterKind.State => binding is null ? parameter.Name : Argument(binding, "key")?.Value ?? parameter.Name,
                         _ => null,
@@ -193,7 +224,9 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                     if (kind == ParameterKind.Result && isPrefix)
                     {
                         if (alwaysRun)
+                        {
                             ctx.ReportDiagnostic(Diagnostic.Create(AlwaysRunResultBinding, location, parameter.Name));
+                        }
                         else
                         {
                             if (method.ReturnsVoid)
@@ -202,6 +235,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                                 ctx.ReportDiagnostic(Diagnostic.Create(ReadOnlyPrefixResultBinding, location, parameter.Name));
                         }
                     }
+
                     if (kind == ParameterKind.Exception)
                     {
                         if (!isPostfix || !alwaysRun)
@@ -209,6 +243,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                         if (exceptionType is not null && !CanBindKnownType(compilation, parameter, exceptionType, allowUnsafe))
                             ctx.ReportDiagnostic(Diagnostic.Create(IncompatibleBindingType, location, parameter.Name, "System.Exception"));
                     }
+
                     if (kind is ParameterKind.BaseMethod or ParameterKind.Method &&
                         (parameter.RefKind != RefKind.None || parameter.Type is not INamedTypeSymbol { DelegateInvokeMethod: not null }))
                         ctx.ReportDiagnostic(Diagnostic.Create(InvalidDelegateBinding, location, parameter.Name));
@@ -216,12 +251,13 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                     if (constantType is not null)
                     {
                         if (kind == ParameterKind.Result && !CanBindKnownType(compilation, parameter, constantType, allowUnsafe))
-                            ctx.ReportDiagnostic(Diagnostic.Create(IncompatibleBindingType, location, parameter.Name, constantType.ToDisplayString()));
+                            ctx.ReportDiagnostic(Diagnostic.Create(IncompatibleBindingType, location, parameter.Name,
+                                constantType.ToDisplayString()));
                         bool selectsInner = explicitlyInner || explicitScope != outerScope;
                         bool hasIndex = binding is not null && Argument(binding, "index") is not null;
                         if ((kind == ParameterKind.Instance && selectsInner) ||
-                             (kind == ParameterKind.Argument && (explicitlyInner || (hasIndex && selectsInner))) ||
-                             (kind == ParameterKind.Field && explicitlyInner))
+                            (kind == ParameterKind.Argument && (explicitlyInner || (hasIndex && selectsInner))) ||
+                            (kind == ParameterKind.Field && explicitlyInner))
                             ctx.ReportDiagnostic(Diagnostic.Create(ConstantBindingUnavailable, location, parameter.Name));
                     }
 
@@ -237,7 +273,8 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                 foreach (var parameters in boundValues.Values.Where(parameters => parameters.Count > 1))
                 {
                     foreach (var parameter in parameters)
-                        ctx.ReportDiagnostic(Diagnostic.Create(DuplicateBinding, parameter.Locations.First(l => l.IsInSource), parameter.Name));
+                        ctx.ReportDiagnostic(Diagnostic.Create(DuplicateBinding, parameter.Locations.First(l => l.IsInSource),
+                            parameter.Name));
                 }
             }
 
@@ -245,15 +282,13 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
             foreach (var state in states)
             {
                 if (!state.Value.Any(p => p.RefKind is RefKind.Ref or RefKind.Out))
-                {
                     foreach (var parameter in state.Value)
-                        ctx.ReportDiagnostic(Diagnostic.Create(StateWithoutWriter, parameter.Locations.First(l => l.IsInSource), state.Key));
-                }
+                        ctx.ReportDiagnostic(Diagnostic.Create(StateWithoutWriter, parameter.Locations.First(l => l.IsInSource),
+                            state.Key));
                 if (state.Value.Skip(1).Any(p => !compilation.ClassifyConversion(state.Value[0].Type, p.Type).IsIdentity))
-                {
                     foreach (var parameter in state.Value)
-                        ctx.ReportDiagnostic(Diagnostic.Create(IncompatibleStateTypes, parameter.Locations.First(l => l.IsInSource), parameter.Name, state.Key));
-                }
+                        ctx.ReportDiagnostic(Diagnostic.Create(IncompatibleStateTypes, parameter.Locations.First(l => l.IsInSource),
+                            parameter.Name, state.Key));
             }
         }, SymbolKind.NamedType);
     }
@@ -270,6 +305,6 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
         var conversion = compilation.ClassifyConversion(source, destination);
         // Type.IsAssignableFrom permits identity, reference conversions and boxing, but not numeric
         // conversions or user-defined operators. 'in' reads; 'out' writes in the opposite direction.
-        return conversion.IsIdentity || conversion.IsImplicit && (conversion.IsReference || conversion.IsBoxing);
+        return conversion.IsIdentity || (conversion.IsImplicit && (conversion.IsReference || conversion.IsBoxing));
     }
 }
