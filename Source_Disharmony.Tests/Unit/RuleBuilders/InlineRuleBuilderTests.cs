@@ -80,6 +80,48 @@ public sealed class InlineRuleBuilderTests
     }
 
     [Test]
+    public void BuildRules_NullCoalescing_ConditionalBranchToReturnStoresCarriedValue()
+    {
+        var method = Method(nameof(InlineRuleBuilderUnitTargets.Coalesce));
+        var instructions = PatchProcessor.GetOriginalInstructions(method.MethodInfo);
+        Assert.That(instructions.Single(i => i.opcode == OpCodes.Ret).labels, Is.Not.Empty);
+        var context = new RuleBuilderContext();
+        var builder = new InlineRuleBuilder(context, method);
+
+        Rule[] rules = [.. builder.BuildRules()];
+        CodeInstruction[] output = rules.Single().Output!;
+        Label store = (Label)output.Single(i => i.opcode == OpCodes.Brtrue_S).operand;
+        Label exit = output.SelectMany(i => i.labels).Except([store]).Single();
+        Assert.That(context.locals.Select(l => l.Type), Is.EqualTo(new[] { typeof(string), typeof(string) }));
+        LocalBuilder argument = context.locals[0].Builder;
+        LocalBuilder result = context.locals[1].Builder;
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = method.FullName, Min = 1, Max = 0, Phase = 2,
+                Pattern = [new(OpCodes.Call, method.MethodInfo)],
+                Output =
+                [
+                    new(OpCodes.Stloc_S, argument),
+                    CodeInstruction.Annotation("Begin inlined method body"),
+                    new(OpCodes.Ldloc_S, argument),
+                    new(OpCodes.Dup),
+                    new(OpCodes.Brtrue_S, store),
+                    new(OpCodes.Pop),
+                    new(OpCodes.Ldstr, "fallback"),
+                    new CodeInstruction(OpCodes.Stloc_S, result).WithLabels(store),
+                    new(OpCodes.Br, exit),
+                    CodeInstruction.Annotation("End inlined method body"),
+                    new CodeInstruction(OpCodes.Nop).WithLabels(exit),
+                    new(OpCodes.Ldloc_S, result),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
     public void BuildRules_MixedArguments_SavesInReverseOrderAndLoadsByOriginalIndex()
     {
         var method = Method(nameof(InlineRuleBuilderUnitTargets.Forward));

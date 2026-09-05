@@ -6,6 +6,7 @@ public class InlineRuleBuilderUnitTargets
     public int InstanceValue() => Value;
     public static void Empty() { }
     public static byte Narrow(int value) => (byte)value;
+    public static string Coalesce(string value) => value ?? "fallback";
     public static void Forward(int number, long wide, string text) => Sink(number, wide, text);
     public static void Sink(int number, long wide, string text) { }
     public static void Touch(ref int value) { }
