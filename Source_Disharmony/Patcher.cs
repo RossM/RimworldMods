@@ -109,7 +109,7 @@ public static class Patcher
     /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle PatchAll(Assembly assembly)
     {
-        PatchHandle handle = new PatchHandle();
+        PatchHandle handle = new();
         Registry.PatchAll(assembly, handle);
         return handle;
     }
@@ -129,7 +129,7 @@ public static class Patcher
     /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle PatchCategory(Assembly assembly, string? category)
     {
-        PatchHandle handle = new PatchHandle();
+        PatchHandle handle = new();
         Registry.PatchCategory(assembly, category, handle);
         return handle;
     }
@@ -146,7 +146,7 @@ public static class Patcher
     /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle PatchAll(Type type)
     {
-        PatchHandle handle = new PatchHandle();
+        PatchHandle handle = new();
         Registry.PatchAll(type, handle);
         return handle;
     }
@@ -163,7 +163,7 @@ public static class Patcher
     /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle Patch(params IEnumerable<MethodInfo> methods)
     {
-        PatchHandle handle = new PatchHandle();
+        PatchHandle handle = new();
         Registry.Patch(methods, handle);
         return handle;
     }
@@ -228,7 +228,7 @@ public static class Patcher
     /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
     public static PatchHandle Patch(params IEnumerable<PatchConfig> patches)
     {
-        PatchHandle handle = new PatchHandle();
+        PatchHandle handle = new();
         Registry.Patch(patches, handle);
         return handle;
     }

@@ -186,10 +186,9 @@ internal class ParameterBinder(
             _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
         };
         var instanceType = invocation.InstanceType;
-        var methodInfo = instanceType.GetMethod(name, AccessTools.all);
+        var methodInfo = instanceType.GetMethod(name, AccessTools.all) ??
+                         throw new ParameterBindingException(parameter.Name, "Method not found");
 
-        if (methodInfo is null)
-            throw new ParameterBindingException(parameter.Name, "Method not found");
         if (invocation.IsStatic && !methodInfo.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Instance required");
 

@@ -126,9 +126,10 @@ public sealed partial class PatchMethodAnalyzer
     {
         if (Argument(selector, "type") is { IsNull: false })
             return false;
-        var name = (Argument(selector, "methodName") ?? Argument(selector, "memberName"))?.Value as string;
+        if ((Argument(selector, "methodName") ?? Argument(selector, "memberName"))?.Value is not string name)
+            return true;
         // Both Type:Member and Namespace.Type.Member are resolved using loaded assemblies at runtime.
-        return name is null || (name.IndexOf(':') < 0 && name.IndexOf('.') < 0);
+        return name.IndexOf(':') < 0 && name.IndexOf('.') < 0;
     }
 
     private static TypedConstant? Argument(AttributeData attribute, string name)
