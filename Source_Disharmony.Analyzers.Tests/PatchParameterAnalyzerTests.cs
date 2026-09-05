@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using NUnit.Framework;
 
+using static Disharmony.Analyzers.Tests.AnalyzerTestHelper;
+
 namespace Disharmony.Analyzers.Tests;
 
-public partial class PatchMethodAnalyzerTests
+public class PatchParameterAnalyzerTests
 {
     [TestCase("[Patch, Target(typeof(object), \"M\"), PatchOptions(PatchOptions.AlwaysRun)] class C { [Prefix, PatchOptions(PatchOptions.Default)] static void M(int __result) {} }", "DH0025,DH0026")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([ReturnValue] int result) {} }", "DH0025,DH0026")]

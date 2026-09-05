@@ -1,13 +1,24 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
+using static Disharmony.Analyzers.AttributeHelpers;
+
 namespace Disharmony.Analyzers;
 
-public sealed partial class PatchMethodAnalyzer
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
 {
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+        [
+            MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
+            InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
+            VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
+        ];
+
     private static readonly DiagnosticDescriptor MultipleParameterBindings = new(
         "DH0016", "Multiple parameter binding attributes", "Parameter '{0}' has multiple binding attributes; use only one",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
@@ -59,6 +70,12 @@ public sealed partial class PatchMethodAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private enum ParameterKind { Argument, Instance, Result, State, Field, BaseMethod, Method, Exception, Caller }
 
+    public override void Initialize(AnalysisContext context)
+    {
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
+        context.RegisterCompilationStartAction(RegisterParameterChecks);
+    }
     private static void RegisterParameterChecks(CompilationStartAnalysisContext start)
     {
         var compilation = (CSharpCompilation)start.Compilation;
