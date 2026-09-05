@@ -19,7 +19,7 @@ public static class ReflectionExtensions
         /// <summary>
         ///     Gets a value indicating whether the method's calling convention includes an instance argument.
         /// </summary>
-        public bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
+        internal bool HasThis => (method.CallingConvention & CallingConventions.HasThis) != 0;
 
         /// <summary>
         ///     Gets the generated <c>MoveNext</c> method that implements an iterator or asynchronous method.
@@ -53,17 +53,17 @@ public static class ReflectionExtensions
         /// <summary>
         ///     Gets the element type of a managed reference, or the original type if it is not a managed reference.
         /// </summary>
-        public Type NoRefType => type.IsByRef ? type.GetElementType() : type;
+        internal Type NoRefType => type.IsByRef ? type.GetElementType() : type;
 
         /// <summary>
         ///     Gets the type used for an invocation receiver: value types by reference and reference types unchanged.
         /// </summary>
-        public Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
+        internal Type CallableType => type.IsValueType ? type.MakeByRefType() : type;
 
         /// <summary>
         ///     Gets a value indicating whether the type appears to be a compiler-generated closure type.
         /// </summary>
-        public bool IsClosureType
+        internal bool IsClosureType
         {
             get
             {
