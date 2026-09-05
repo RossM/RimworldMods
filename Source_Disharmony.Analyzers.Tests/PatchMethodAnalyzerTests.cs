@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Disharmony.Analyzers.Tests;
 
-public class PatchMethodAnalyzerTests
+public partial class PatchMethodAnalyzerTests
 {
     // Minimal metadata contract: no game or patch execution is needed to analyze source.
     private const string Attributes = """
@@ -56,10 +56,57 @@ public class PatchMethodAnalyzerTests
             }
             [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Method)]
             public class PriorityAttribute : System.Attribute { }
+            public enum Scope { Any, Inner, Outer }
+            public abstract class ParameterBindingAttribute : System.Attribute
+            {
+                protected ParameterBindingAttribute(Scope scope) { }
+            }
             [System.AttributeUsage(System.AttributeTargets.Parameter)]
-            public class ParameterAttribute : System.Attribute { }
+            public class ParameterAttribute : ParameterBindingAttribute
+            {
+                public ParameterAttribute(Scope scope = Scope.Any) : base(scope) { }
+                public ParameterAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
+                public ParameterAttribute(int index, Scope scope = Scope.Any) : base(scope) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class InstanceAttribute : ParameterBindingAttribute
+            {
+                public InstanceAttribute(Scope scope = Scope.Any) : base(scope) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class ReturnValueAttribute : ParameterBindingAttribute
+            {
+                public ReturnValueAttribute() : base(Scope.Any) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class StateAttribute : ParameterBindingAttribute
+            {
+                public StateAttribute(string key = null) : base(Scope.Outer) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class FieldAttribute : ParameterBindingAttribute
+            {
+                public FieldAttribute(Scope scope = Scope.Any) : base(scope) { }
+                public FieldAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class BaseMethodAttribute : ParameterBindingAttribute
+            {
+                public BaseMethodAttribute() : base(Scope.Outer) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class MethodAttribute : ParameterBindingAttribute
+            {
+                public MethodAttribute(Scope scope = Scope.Any) : base(scope) { }
+                public MethodAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class ExceptionAttribute : ParameterBindingAttribute
+            {
+                public ExceptionAttribute() : base(Scope.Any) { }
+            }
             [System.Flags]
-            public enum PatchOptions { Default = 0, Inline = 1, AlwaysRun = 4 }
+            public enum PatchOptions { Default = 0, Inline = 1, AlwaysRun = 4, AllowUnsafe = 8 }
             public abstract class PatchTypeAttribute : System.Attribute { }
             [System.AttributeUsage(System.AttributeTargets.Method)]
             public class PrefixAttribute : PatchTypeAttribute { }
@@ -106,7 +153,6 @@ public class PatchMethodAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, PatchOptions(PatchOptions.Inline | PatchOptions.AlwaysRun)] static bool M() => true; }", "DH0005")]
     [TestCase("[PatchOptions(PatchOptions.Default)] [Patch, Target(typeof(object), \"M\")] class C { [Prefix, PatchOptions(PatchOptions.AlwaysRun)] static bool M() => true; }", "DH0005")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] partial class C { [Prefix] static bool M() => true; } [PatchOptions(PatchOptions.AlwaysRun)] partial class C {}", "DH0005")]
-    [TestCase("class CustomAttribute : PrefixAttribute {} [Patch, Target(typeof(object), \"M\")] class C { [Custom] static int M() => 0; }", "DH0003")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [global::Disharmony.PrefixAttribute] static int M() => 0; }", "DH0003")]
     [TestCase("using P = Disharmony.PrefixAttribute; [Patch, Target(typeof(object), \"M\")] class C { [P] static int M() => 0; }", "DH0003")]
     [TestCase("[PatchOptions(PatchOptions.AlwaysRun)] [Patch, Target(typeof(object), \"M\")] class B {} [Patch, Target(typeof(object), \"M\")] class C : B { [Prefix] static bool M() => true; }", "DH0005")]
@@ -133,9 +179,7 @@ public class PatchMethodAnalyzerTests
     [TestCase("[PatchOptions(PatchOptions.AlwaysRun)] [Patch, Target(typeof(object), \"M\")] class C { [Patch, Target(typeof(object), \"M\")] class Nested { [Prefix] static bool M() => true; } }")]
 
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __result) {} }")]
-    [TestCase("class CustomAttribute : PatchOptionsAttribute { public CustomAttribute() : base(PatchOptions.Default) {} } [PatchOptions(PatchOptions.AlwaysRun)] [Patch, Target(typeof(object), \"M\")] class C { [Prefix, Custom] static bool M() => true; }")]
     [TestCase("[PatchOptions(PatchOptions.AlwaysRun)] [Patch, Target(typeof(object), \"M\")] class B {} [PatchOptions(PatchOptions.Default)] [Patch, Target(typeof(object), \"M\")] class C : B { [Prefix] static bool M() => true; }")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)] class CustomAttribute : PatchOptionsAttribute { public CustomAttribute() : base(PatchOptions.AlwaysRun) {} } [Custom] [Patch, Target(typeof(object), \"M\")] class B {} [Patch, Target(typeof(object), \"M\")] class C : B { [Prefix] static bool M() => true; }")]
     [TestCase("namespace HarmonyLib { class HarmonyPostfix : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [HarmonyPostfix] static int M() => 0; } }")]
     public async Task ValidOrUnrelatedCodeDoesNotWarn(string source)
     {
@@ -169,10 +213,10 @@ public class PatchMethodAnalyzerTests
     }
 
     [Test]
-    public async Task NonInheritedPatchAttributeDoesNotApplyToOverride()
+    public async Task CustomPatchAttributeIsIgnored()
     {
         var diagnostics = await Analyze("[System.AttributeUsage(System.AttributeTargets.Method, Inherited = false)] class CustomAttribute : PrefixAttribute {} [Patch, Target(typeof(object), \"M\")] class B { [Custom] public virtual void M() {} } [Patch, Target(typeof(object), \"M\")] class C : B { public override void M() {} }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0002" }));
+        Assert.That(diagnostics, Is.Empty);
     }
 
     [TestCase("class C { [Prefix, Target(typeof(object), \"M\")] static void M() {} }", "DH0006")]
@@ -191,11 +235,8 @@ public class PatchMethodAnalyzerTests
     [TestCase("class C { [Priority] static void M() {} }", "DH0008")]
     [TestCase("class C { [PatchOptions(PatchOptions.Default)] static void M() {} }", "DH0008")]
     [TestCase("class C { [Target(typeof(object), \"M\"), Inner(typeof(object), \"M\"), Priority] static void M() {} }", "DH0008")]
-    [TestCase("class CustomAttribute : TargetAttribute {} class C { [Custom] static void M() {} }", "DH0008")]
     [TestCase("using T = Disharmony.TargetAttribute; class C { [T] static void M() {} }", "DH0008")]
     [TestCase("class C { [global::Disharmony.TargetsAttribute] static void M() {} }", "DH0008")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)] class CustomAttribute : PatchAttribute {} [Custom] class B {} class C : B { [Prefix, Target(typeof(object), \"M\")] static void M() {} }", "DH0006")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)] class CustomAttribute : TargetAttribute {} [Custom] class B {} [Patch] class C : B { [Prefix] static void M() {} }", "DH0007")]
     public async Task DiscoveryViolationReportsWarningAtMethodName(string source, string expectedId)
     {
         var diagnostics = await Analyze(source);
@@ -218,8 +259,7 @@ public class PatchMethodAnalyzerTests
     [TestCase("class C { [System.Obsolete] static void M() {} }")]
     [TestCase("class C { [HarmonyLib.HarmonyPatch] static void M() {} }")]
     [TestCase("class TargetAttribute : System.Attribute {} class C { [Target] static void M() {} }")]
-    [TestCase("class PatchAttribute : Disharmony.PatchAttribute {} class C : B { [Prefix, Target(typeof(object), \"M\")] static void M() {} } [Patch] class B {}")]
-    [TestCase("class CustomAttribute : TargetsAttribute {} [Patch, Custom] class C { [Prefix] static void M() {} }")]
+    [TestCase("class C : B { [Prefix, Target(typeof(object), \"M\")] static void M() {} } [Patch] class B {}")]
     [TestCase("[Patch] class C { [Prefix, Target(typeof(C), \"DoesNotExist\")] static void M() {} }")]
     [TestCase("[Patch] class C { [Prefix, Target(typeof(object), \"M\"), Targets(typeof(object), \"M\")] static void M() {} }")]
     public async Task DiscoverablePatchesAndUnattributedHelpersDoNotWarn(string source)
@@ -244,10 +284,7 @@ public class PatchMethodAnalyzerTests
     }
 
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Postfix] static void M() {} }", "DH0009", "M")]
-    [TestCase("class CustomAttribute : PrefixAttribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix, Custom] static void M() {} }", "DH0009", "M")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class)] class CustomAttribute : PrefixAttribute {} [Custom] class B {} [Patch, Target(typeof(object), \"M\")] class C : B { [Prefix] static void M() {} }", "DH0009", "M")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"M\"), InnerConstant(1)] static void M() {} }", "DH0010", "M")]
-    [TestCase("class CustomAttribute : InnerAttribute { public CustomAttribute() : base(typeof(object), \"M\") {} } [Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"M\"), Custom] static void M() {} }", "DH0010", "M")]
     [TestCase("[Patch] class C { [Prefix, Target(\"M\")] static void M() {} }", "DH0011", "Target(\"M\")")]
     [TestCase("[Patch] class C { [Prefix, Targets(\"M\")] static void M() {} }", "DH0011", "Targets(\"M\")")]
     [TestCase("[HarmonyLib.HarmonyPatch(\"M\")] class C { [Prefix, Target(\"M\")] static void M() {} }", "DH0011", "Target(\"M\")")]
@@ -255,12 +292,7 @@ public class PatchMethodAnalyzerTests
     [TestCase("[Target(\"M\")] class B {} [Patch] class C : B { [Prefix, Target(typeof(object), \"M\")] static void M() {} }", "DH0011", "Target(\"M\")")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(null)] static void M() {} }", "DH0012", "InnerConstant(null)")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { const string Value = null; [Prefix, InnerConstant(Value)] static void M() {} }", "DH0012", "InnerConstant(Value)")]
-    [TestCase("class CustomAttribute : InnerAttributeBase {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix, Custom] static void M() {} }", "DH0013", "Custom")]
     [TestCase("[HarmonyLib.HarmonyPatch(typeof(object)), HarmonyLib.HarmonyPatch(\"M\")] class C {}", "DH0014", "C")]
-    [TestCase("class CustomAttribute : PatchAttribute {} [Patch, Custom] class C {}", "DH0014", "C")]
-    [TestCase("class CustomAttribute : PatchAttribute {} [Custom] class B {} [Patch] class C : B {}", "DH0014", "C")]
-    [TestCase("class CustomAttribute : CategoryAttribute { public CustomAttribute() : base(\"other\") {} } [Patch, Category(\"test\"), Custom] class C {}", "DH0014", "C")]
-    [TestCase("class CustomAttribute : HarmonyLib.HarmonyPatchCategory { public CustomAttribute() : base(\"other\") {} } [Patch, HarmonyLib.HarmonyPatchCategory(\"test\"), Custom] class C {}", "DH0014", "C")]
     [TestCase("[Patch(typeof(object))] class C { [Prefix, Target] static void M() {} }", "DH0015", "Target")]
     [TestCase("[Patch] class C { [Prefix, Targets(typeof(object))] static void M() {} }", "DH0015", "Targets(typeof(object))")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object))] static void M() {} }", "DH0015", "Inner(typeof(object))")]
@@ -281,8 +313,6 @@ public class PatchMethodAnalyzerTests
     [TestCase("[Patch(typeof(object))] class C { [Prefix, Target(\"M\")] static void M() {} }")]
     [TestCase("[HarmonyLib.HarmonyPatch(typeof(object))] class C { [Prefix, Target(\"M\")] static void M() {} }")]
     [TestCase("[HarmonyLib.HarmonyPatch(\"RuntimeType\", \"M\", HarmonyLib.MethodType.Normal)] class C { [Prefix, Target(\"M\")] static void M() {} }")]
-    [TestCase("class CustomAttribute : PatchAttribute { public CustomAttribute() : base(typeof(object)) {} } [Custom] class C { [Prefix, Target(\"M\")] static void M() {} }")]
-    [TestCase("class CustomAttribute : TargetAttribute { public CustomAttribute() : base(typeof(object), \"M\") {} } [Patch] class C { [Prefix, Custom] static void M() {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(null, \"Namespace.Type:M\")] static void M() {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(null, \"Namespace.Type.M\")] static void M() {} }")]
     [TestCase("[Patch] class C { [Prefix, Target(typeof(object), memberType: MemberType.Constructor)] static void M() {} }")]
@@ -292,9 +322,7 @@ public class PatchMethodAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1F)] static void M() {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1D)] static void M() {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(\"\")] static void M() {} }")]
-    [TestCase("class CustomAttribute : InnerConstantAttribute { public CustomAttribute(string ignored) : base(1) {} } [Patch, Target(typeof(object), \"M\")] class C { [Prefix, Custom(null)] static void M() {} }")]
     [TestCase("[Patch(typeof(object))] class B {} [Patch] class C : B { [Prefix, Target(typeof(object), \"M\")] static void M() {} }")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)] class CustomAttribute : PatchAttribute {} [Custom] class B {} [Patch] class C : B {}")]
     [TestCase("[Patch, Target(typeof(object), \"A\"), Targets(typeof(object), \"B\")] class C { [Prefix, Target(typeof(object), \"C\")] static void M() {} }")]
     public async Task SupportedOrRuntimeDependentRegistryMetadataDoesNotWarn(string source)
     {
@@ -320,18 +348,13 @@ public class PatchMethodAnalyzerTests
     [TestCase("[Patch, HarmonyLib.HarmonyPatch(typeof(object)), HarmonyLib.HarmonyPatch(\"M\")] class C {}", "DH0014")]
     [TestCase("[Patch] class B {} [HarmonyLib.HarmonyPatch] class C : B {}", "DH0014")]
     [TestCase("[HarmonyLib.HarmonyPatch] class B {} [Patch] class C : B {}", "DH0014")]
-    [TestCase("class CustomAttribute : PatchAttribute {} [Custom, HarmonyLib.HarmonyPatch] class C {}", "DH0014")]
     [TestCase("[Patch] partial class C {} [HarmonyLib.HarmonyPatch] partial class C {}", "DH0014")]
     [TestCase("[Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014")]
     [TestCase("[Patch, Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"other\")] class C {}", "DH0014")]
     [TestCase("[Patch, Category(null), HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014")]
     [TestCase("[Category(\"test\")] class B {} [HarmonyLib.HarmonyPatchCategory(\"test\")] class C : B {}", "DH0014")]
-    [TestCase("class CustomAttribute : CategoryAttribute { public CustomAttribute() : base(\"test\") {} } [Custom, HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014")]
     [TestCase("[Category(\"test\")] partial class C {} [HarmonyLib.HarmonyPatchCategory(\"test\")] partial class C {}", "DH0014")]
-    [TestCase("class CustomAttribute : HarmonyLib.HarmonyPatchCategory { public CustomAttribute() : base(\"other\") {} } [Patch, Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"test\"), Custom] class C {}", "DH0014")]
-    [TestCase("class CustomAttribute : HarmonyLib.HarmonyPatchCategory { public CustomAttribute() : base(\"other\") {} } [Patch, Category(null), HarmonyLib.HarmonyPatchCategory(\"test\"), Custom] class C {}", "DH0014")]
     [TestCase("[Patch, HarmonyLib.HarmonyPatch, Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014,DH0014")]
-    [TestCase("class CustomAttribute : CategoryAttribute { public CustomAttribute() : base(\"other\") {} } [Category(\"test\"), Custom] class C {}", "DH0014")]
     public async Task MixedDiscoveryMetadataReportsWarningsOnClass(string source, string expectedIds)
     {
         var diagnostics = await Analyze(source);
@@ -348,8 +371,6 @@ public class PatchMethodAnalyzerTests
     [TestCase("[HarmonyLib.HarmonyPatch, Category(\"test\")] class C {}")]
     [TestCase("[Patch] class Outer { [HarmonyLib.HarmonyPatch] class C {} }")]
     [TestCase("[Category(\"test\")] class Outer { [HarmonyLib.HarmonyPatchCategory(\"test\")] class C {} }")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)] class CustomAttribute : PatchAttribute {} [Custom] class B {} [HarmonyLib.HarmonyPatch] class C : B {}")]
-    [TestCase("[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)] class CustomAttribute : CategoryAttribute { public CustomAttribute() : base(\"test\") {} } [Custom] class B {} [HarmonyLib.HarmonyPatchCategory(\"test\")] class C : B {}")]
     [TestCase("class PatchAttribute : System.Attribute {} [Patch, HarmonyLib.HarmonyPatch] class C {}")]
     [TestCase("class CategoryAttribute : System.Attribute {} [Category, HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}")]
     public async Task SeparateDiscoveryMetadataDoesNotWarn(string source)

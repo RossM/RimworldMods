@@ -16,6 +16,13 @@ DH0009 | Correctness | Warning | Multiple patch type attributes
 DH0010 | Correctness | Warning | Multiple inner target attributes
 DH0011 | Correctness | Warning | Missing selector type and qualified name
 DH0012 | Correctness | Warning | Null inner constant
-DH0013 | Correctness | Warning | Unsupported inner attribute subclass
 DH0014 | Correctness | Warning | Duplicate patch markers or categories, including mixed Disharmony/Harmony attributes
 DH0015 | Correctness | Warning | Missing non-constructor member name
+DH0016 | Correctness | Warning | Multiple parameter binding attributes
+DH0017 | Correctness | Warning | Inner-only binding on an ordinary patch
+DH0018 | Correctness | Warning | Result binding in an AlwaysRun prefix
+DH0019 | Correctness | Warning | Exception binding outside an AlwaysRun postfix
+DH0020 | Correctness | Warning | Method binding requires a concrete delegate passed by value
+DH0021 | Correctness | Warning | Incompatible binding type for exceptions or inner constants
+DH0022 | Correctness | Warning | Conflicting types for a shared state key
+DH0024 | Correctness | Warning | Unavailable instance, argument, or field on an inner constant

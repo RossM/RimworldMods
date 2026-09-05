@@ -25,11 +25,6 @@ public sealed partial class PatchMethodAnalyzer
         "DH0012", "Inner constant cannot be null", "Patch method '{0}' has a null inner constant",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor UnsupportedInnerAttribute = new(
-        "DH0013", "Unsupported inner attribute type",
-        "Patch method '{0}' uses an inner attribute that derives from neither InnerAttribute nor InnerConstantAttribute",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
     private static readonly DiagnosticDescriptor DuplicateDiscoveryAttributes = new(
         "DH0014", "Duplicate patch discovery attributes",
         "Class '{0}' has multiple {1} attributes; use only one",
@@ -46,8 +41,8 @@ public sealed partial class PatchMethodAnalyzer
         var harmonyPatch = start.Compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
         var category = start.Compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
         var harmonyCategory = start.Compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
-        var patchType = start.Compilation.GetTypeByMetadataName("Disharmony.PatchTypeAttribute");
-        var innerBase = start.Compilation.GetTypeByMetadataName("Disharmony.InnerAttributeBase");
+        var prefix = start.Compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
+        var postfix = start.Compilation.GetTypeByMetadataName("Disharmony.PostfixAttribute");
         var inner = start.Compilation.GetTypeByMetadataName("Disharmony.InnerAttribute");
         var constant = start.Compilation.GetTypeByMetadataName("Disharmony.InnerConstantAttribute");
         var target = start.Compilation.GetTypeByMetadataName("Disharmony.TargetAttribute");
@@ -78,8 +73,8 @@ public sealed partial class PatchMethodAnalyzer
             if (method.IsImplicitlyDeclared || method.MethodKind is MethodKind.Constructor or MethodKind.StaticConstructor)
                 return;
             var attributes = GetAttributes(method).Concat(GetAttributes(method.ContainingType)).ToArray();
-            var patchTypes = attributes.Where(a => IsAttribute(a, patchType)).ToArray();
-            var innerTargets = attributes.Where(a => IsAttribute(a, innerBase)).ToArray();
+            var patchTypes = attributes.Where(a => IsAttribute(a, prefix, postfix)).ToArray();
+            var innerTargets = attributes.Where(a => IsAttribute(a, inner, constant)).ToArray();
             var location = method.Locations.FirstOrDefault(l => l.IsInSource);
             if (location is null)
                 return;
@@ -90,18 +85,13 @@ public sealed partial class PatchMethodAnalyzer
             if (patchTypes.Length == 0)
                 return;
 
-            // A custom constructor or Harmony's type-name lookup can supply a type at runtime.
-            // Warn only when every potential default is known not to supply one.
+            // Harmony's type-name constructor resolves its declaring type at runtime.
             bool mayHaveDefaultType = attributes.Any(a =>
-                (IsAttribute(a, patch) && (!IsExactAttribute(a, patch) ||
-                    Argument(a, "type") is not { IsNull: true })) ||
-                (IsAttribute(a, harmonyPatch) && (!IsExactAttribute(a, harmonyPatch) ||
-                    Argument(a, "typeName") is not null ||
-                    Argument(a, "declaringType") is { IsNull: false })));
-            foreach (var selector in attributes.Where(a => IsAttribute(a, target)))
+                (IsAttribute(a, patch) && Argument(a, "type") is { IsNull: false }) ||
+                (IsAttribute(a, harmonyPatch) &&
+                    (Argument(a, "typeName") is not null || Argument(a, "declaringType") is { IsNull: false })));
+            foreach (var selector in attributes.Where(a => IsAttribute(a, target, targets)))
             {
-                if (!IsExactAttribute(selector, target) && !IsExactAttribute(selector, targets))
-                    continue;
                 if (!mayHaveDefaultType && HasNoTypeOrQualifiedName(selector))
                     ctx.ReportDiagnostic(Diagnostic.Create(MissingTargetType, SelectorLocation(selector, location), method.Name));
                 CheckSelector(selector);
@@ -109,11 +99,9 @@ public sealed partial class PatchMethodAnalyzer
 
             foreach (var selector in innerTargets)
             {
-                if (!IsAttribute(selector, inner) && !IsAttribute(selector, constant))
-                    ctx.ReportDiagnostic(Diagnostic.Create(UnsupportedInnerAttribute, SelectorLocation(selector, location), method.Name));
-                else if (IsExactAttribute(selector, constant) && Argument(selector, "value") is { IsNull: true })
+                if (IsAttribute(selector, constant) && Argument(selector, "value") is { IsNull: true })
                     ctx.ReportDiagnostic(Diagnostic.Create(NullInnerConstant, SelectorLocation(selector, location), method.Name));
-                else if (IsExactAttribute(selector, inner))
+                else if (IsAttribute(selector, inner))
                 {
                     // Inner selectors do not inherit the outer target's declaring type.
                     if (HasNoTypeOrQualifiedName(selector))
@@ -142,9 +130,6 @@ public sealed partial class PatchMethodAnalyzer
         // Both Type:Member and Namespace.Type.Member are resolved using loaded assemblies at runtime.
         return name is null || (name.IndexOf(':') < 0 && name.IndexOf('.') < 0);
     }
-
-    private static bool IsExactAttribute(AttributeData attribute, INamedTypeSymbol? expected) =>
-        expected is not null && SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, expected);
 
     private static TypedConstant? Argument(AttributeData attribute, string name)
     {

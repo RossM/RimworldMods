@@ -12,8 +12,10 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         [
             GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType,
-            MultiplePatchTypes, MultipleInnerTargets, MissingTargetType, NullInnerConstant, UnsupportedInnerAttribute,
+            MultiplePatchTypes, MultipleInnerTargets, MissingTargetType, NullInnerConstant,
             DuplicateDiscoveryAttributes, MissingMemberName,
+            MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
+            InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
         ];
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
@@ -63,13 +65,22 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
             var patch = start.Compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
             var harmonyPatch = start.Compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
             var target = start.Compilation.GetTypeByMetadataName("Disharmony.TargetAttribute");
+            var targets = start.Compilation.GetTypeByMetadataName("Disharmony.TargetsAttribute");
             var options = start.Compilation.GetTypeByMetadataName("Disharmony.PatchOptionsAttribute");
             var flags = start.Compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
             var alwaysRun = flags?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+            var methodAttributes = new[]
+            {
+                prefix, postfix, target, targets, options,
+                start.Compilation.GetTypeByMetadataName("Disharmony.InnerAttribute"),
+                start.Compilation.GetTypeByMetadataName("Disharmony.InnerConstantAttribute"),
+                start.Compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute"),
+            };
             if (prefix is null && postfix is null)
                 return;
 
             RegisterRegistryChecks(start);
+            RegisterParameterChecks(start);
 
             start.RegisterSymbolAction(ctx =>
             {
@@ -82,7 +93,7 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
                 if (!isPrefix && !isPostfix)
                 {
                     // Class defaults, return attributes, and parameter bindings do not mark a helper as a patch.
-                    if (method.GetAttributes().Any(a => IsDisharmonyAttribute(a, (prefix ?? postfix)!.ContainingAssembly)))
+                    if (method.GetAttributes().Any(a => IsAttribute(a, methodAttributes)))
                         ctx.ReportDiagnostic(Diagnostic.Create(MissingPatchType, location, method.Name));
                     return;
                 }
@@ -90,8 +101,7 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
                 if (FindAttribute(method.ContainingType, patch) is null &&
                     FindAttribute(method.ContainingType, harmonyPatch) is null)
                     ctx.ReportDiagnostic(Diagnostic.Create(MissingPatchClass, location, method.Name));
-                // TargetsAttribute derives from TargetAttribute; both participate in runtime target selection.
-                if (FindAttribute(method, target) is null && FindAttribute(method.ContainingType, target) is null)
+                if (FindAttribute(method, target, targets) is null && FindAttribute(method.ContainingType, target, targets) is null)
                     ctx.ReportDiagnostic(Diagnostic.Create(MissingTarget, location, method.Name));
                 if (HasGenericParameters(method))
                     ctx.ReportDiagnostic(Diagnostic.Create(GenericMethod, location, method.Name));
@@ -103,15 +113,7 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
                                    !method.ReturnsByRef && !method.ReturnsByRefReadonly;
                 if (isPrefix)
                 {
-                    var optionAttribute = FindAttribute(method, options) ??
-                                          FindAttribute(method.ContainingType, options);
-                    // Custom derived option attributes can compute their value in arbitrary code.
-                    // Only the built-in constructor exposes an unambiguous constant option value.
-                    bool runsAlways = optionAttribute is not null &&
-                                      SymbolEqualityComparer.Default.Equals(optionAttribute.AttributeClass, options) &&
-                                      optionAttribute.ConstructorArguments.Length == 1 &&
-                                      optionAttribute.ConstructorArguments[0].Value is int value &&
-                                      alwaysRun is int mask && (value & mask) != 0;
+                    bool runsAlways = alwaysRun is int mask && (GetPatchOptions(method, options) & mask) != 0;
                     if (runsAlways && !method.ReturnsVoid)
                         ctx.ReportDiagnostic(Diagnostic.Create(AlwaysRunReturn, location, method.Name));
                     else if (!method.ReturnsVoid && !returnsBool)
@@ -124,11 +126,16 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
         });
     }
 
-    private static AttributeData? FindAttribute(ISymbol symbol, INamedTypeSymbol? expected) =>
-        GetAttributes(symbol).FirstOrDefault(a => IsAttribute(a, expected));
+    private static int GetPatchOptions(IMethodSymbol method, INamedTypeSymbol? options)
+    {
+        var attribute = FindAttribute(method, options) ?? FindAttribute(method.ContainingType, options);
+        return attribute is not null && Argument(attribute, "options")?.Value is int value ? value : 0;
+    }
 
-    // Reflection suppresses a base attribute only when the same concrete attribute type occurs nearer
-    // the declaration and disallows multiple instances. Different subclasses still coexist.
+    private static AttributeData? FindAttribute(ISymbol symbol, params INamedTypeSymbol?[] types) =>
+        GetAttributes(symbol).FirstOrDefault(a => IsAttribute(a, types));
+
+    // All supported attributes are inherited. Only target selectors and HarmonyPatch allow multiples.
     private static IEnumerable<AttributeData> GetAttributes(ISymbol symbol)
     {
         var nearerTypes = new HashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
@@ -147,7 +154,7 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
             {
                 if (attribute.AttributeClass is not { } type)
                     continue;
-                if (!inherited || (IsInherited(type) && (!nearerTypes.Contains(type) || AllowsMultiple(type))))
+                if (!inherited || !nearerTypes.Contains(type) || AllowsMultiple(type))
                     yield return attribute;
             }
 
@@ -161,57 +168,11 @@ public sealed partial class PatchMethodAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static bool AllowsMultiple(INamedTypeSymbol? attributeType)
-    {
-        for (var type = attributeType; type is not null; type = type.BaseType)
-        {
-            var usage = type.GetAttributes().FirstOrDefault(a =>
-                a.AttributeClass?.ToDisplayString() == "System.AttributeUsageAttribute");
-            if (usage is not null)
-                return usage.NamedArguments.Any(a => a.Key == "AllowMultiple" && a.Value.Value is true);
-        }
+    private static bool AllowsMultiple(INamedTypeSymbol type) =>
+        type.ToDisplayString() is "Disharmony.TargetAttribute" or "Disharmony.TargetsAttribute" or "HarmonyLib.HarmonyPatch";
 
-        return false;
-    }
-
-    private static bool IsInherited(INamedTypeSymbol? attributeType)
-    {
-        for (var type = attributeType; type is not null; type = type.BaseType)
-        {
-            var usage = type.GetAttributes().FirstOrDefault(a =>
-                a.AttributeClass?.ToDisplayString() == "System.AttributeUsageAttribute");
-            if (usage is not null)
-                return !usage.NamedArguments.Any(a => a.Key == "Inherited" && a.Value.Value is false);
-        }
-
-        return true;
-    }
-
-    private static bool IsAttribute(AttributeData attribute, INamedTypeSymbol? expected)
-    {
-        if (expected is null)
-            return false;
-        for (var type = attribute.AttributeClass; type is not null; type = type.BaseType)
-        {
-            if (SymbolEqualityComparer.Default.Equals(type, expected))
-                return true;
-        }
-
-        return false;
-    }
-
-    private static bool IsDisharmonyAttribute(AttributeData attribute, IAssemblySymbol assembly)
-    {
-        // Include user-defined attributes derived from Disharmony attributes, but not unrelated namesakes.
-        for (var type = attribute.AttributeClass; type is not null; type = type.BaseType)
-        {
-            if (SymbolEqualityComparer.Default.Equals(type.ContainingAssembly, assembly) &&
-                type.ContainingNamespace.ToDisplayString() == "Disharmony")
-                return true;
-        }
-
-        return false;
-    }
+    private static bool IsAttribute(AttributeData attribute, params INamedTypeSymbol?[] types) =>
+        types.Any(type => type is not null && SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, type));
 
     private static bool HasGenericParameters(IMethodSymbol method)
     {
