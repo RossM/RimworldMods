@@ -42,12 +42,12 @@ public static class ReflectionExtensions
         /// <summary>
         ///     Gets a value indicating whether the type is a managed reference or an unmanaged pointer.
         /// </summary>
-        public bool IsPointerLike => type.IsByRef || type.IsPointer;
+        internal bool IsPointerLike => type.IsByRef || type.IsPointer;
 
         /// <summary>
         ///     Gets a value indicating whether Disharmony treats the type as a pointer-compatible numeric type.
         /// </summary>
-        public bool IsPointerCompatibleNumeric =>
+        internal bool IsPointerCompatibleNumeric =>
             type == typeof(int) || type == typeof(uint) || type == typeof(IntPtr) || type == typeof(UIntPtr);
 
         /// <summary>
