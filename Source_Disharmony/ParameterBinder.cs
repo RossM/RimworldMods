@@ -56,19 +56,14 @@ internal class ParameterBinder(
             Scope.Outer => Scope.Outer,
             _ => throw new ArgumentOutOfRangeException(),
         };
-        Invocation invocation = scope switch
-        {
-            Scope.Inner => inner,
-            Scope.Outer => outer,
-            _ => throw new ArgumentOutOfRangeException(),
-        };
+        Invocation invocation = TargetInvocation(scope);
 
         if (invocation is EmptyInvocation)
             throw new ParameterBindingException(parameterName, "Invalid scope");
 
         switch (parameterBindingAttribute)
         {
-            case ParameterAttribute { Index: int index }: return BindParameterByIndex(parameter, invocation, scope, index);
+            case ParameterAttribute { Index: int index }: return BindParameterByIndex(parameter, scope, index);
 
             case ParameterAttribute { Name: var name, Scope: var attributeScope }:
                 return BindParameterByName(parameter, name ?? parameterName, attributeScope);
@@ -118,8 +113,10 @@ internal class ParameterBinder(
         }
     }
 
-    private ParameterBinding BindParameterByIndex(ParameterInfo parameter, Invocation invocation, Scope scope, int index)
+    private ParameterBinding BindParameterByIndex(ParameterInfo parameter, Scope scope, int index)
     {
+        var invocation = TargetInvocation(scope);
+
         if (invocation.HasThis)
             index++;
 
@@ -179,12 +176,7 @@ internal class ParameterBinder(
 
     private ParameterBinding BindMethod(ParameterInfo parameter, Scope scope, string name)
     {
-        var invocation = scope switch
-        {
-            Scope.Inner => inner,
-            Scope.Outer => target,
-            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
-        };
+        Invocation invocation = TargetInvocation(scope);
         var instanceType = invocation.InstanceType;
         var methodInfo = instanceType.GetMethod(name, AccessTools.all) ??
                          throw new ParameterBindingException(parameter.Name, "Method not found");
@@ -212,6 +204,18 @@ internal class ParameterBinder(
             parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo,
             useVirtualDispatch = methodInfo.IsVirtual,
         };
+    }
+
+    private Invocation TargetInvocation(Scope scope)
+    {
+        ArgumentOutOfRangeException exception;
+        var invocation = scope switch
+        {
+            Scope.Inner => inner,
+            Scope.Outer => target,
+            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null)
+        };
+        return invocation;
     }
 
     private static void ValidateInvoke(ParameterInfo parameter, MethodInfo methodInfo)
