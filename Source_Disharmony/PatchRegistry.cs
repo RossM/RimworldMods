@@ -132,8 +132,11 @@ internal class PatchRegistry
             if (type.GetCustomAttribute<PatchAttribute>() == null && type.GetCustomAttribute<HarmonyPatch>() == null)
                 continue;
 
-            if ((type.GetCustomAttribute<CategoryAttribute>()?.Category ??
-                 type.GetCustomAttribute<HarmonyPatchCategory>()?.info.category) != category)
+            string[] categories = [
+                .. type.GetCustomAttributes<CategoryAttribute>().Select(c => c.Category),
+                .. type.GetCustomAttributes<HarmonyPatchCategory>().Select(c => c.info.category)];
+
+            if (!categories.Contains(category) && (categories.Length != 0 || category != null))
                 continue;
 
             ProcessType(type, unpatchKey, type.FullName);

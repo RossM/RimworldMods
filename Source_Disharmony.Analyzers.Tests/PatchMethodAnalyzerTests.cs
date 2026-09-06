@@ -225,12 +225,6 @@ public class PatchMethodAnalyzerTests
     [TestCase("[Patch] class B {} [HarmonyLib.HarmonyPatch] class C : B {}", "DH0014")]
     [TestCase("[HarmonyLib.HarmonyPatch] class B {} [Patch] class C : B {}", "DH0014")]
     [TestCase("[Patch] partial class C {} [HarmonyLib.HarmonyPatch] partial class C {}", "DH0014")]
-    [TestCase("[Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014")]
-    [TestCase("[Patch, Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"other\")] class C {}", "DH0014")]
-    [TestCase("[Patch, Category(null), HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014")]
-    [TestCase("[Category(\"test\")] class B {} [HarmonyLib.HarmonyPatchCategory(\"test\")] class C : B {}", "DH0014")]
-    [TestCase("[Category(\"test\")] partial class C {} [HarmonyLib.HarmonyPatchCategory(\"test\")] partial class C {}", "DH0014")]
-    [TestCase("[Patch, HarmonyLib.HarmonyPatch, Category(\"test\"), HarmonyLib.HarmonyPatchCategory(\"test\")] class C {}", "DH0014,DH0014")]
     public async Task MixedDiscoveryMetadataReportsWarningsOnClass(string source, string expectedIds)
     {
         var diagnostics = await Analyze(source);

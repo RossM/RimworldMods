@@ -121,9 +121,6 @@ internal class DiagnosticGenerator
             if (attributes.Count(a => Helpers.IsAttribute(a, _PatchAttribute) || Helpers.IsAttribute(a, _HarmonyPatch)) > 1)
                 ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.DuplicateDiscoveryAttributes, typeLocation, type.Name,
                     "[Patch]/[HarmonyPatch]"));
-            if (attributes.Count(a => Helpers.IsAttribute(a, _CategoryAttribute) || Helpers.IsAttribute(a, _HarmonyPatchCategory)) > 1)
-                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.DuplicateDiscoveryAttributes, typeLocation, type.Name,
-                    "[Category]/[HarmonyPatchCategory]"));
         }
 
         var states = new Dictionary<string, List<IParameterSymbol>>();

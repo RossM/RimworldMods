@@ -197,7 +197,7 @@ public sealed class PatchAttribute(Type? type = null) : Attribute
 ///     </para>
 /// </remarks>
 [PublicAPI]
-[AttributeUsage(AttributeTargets.Class)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public sealed class CategoryAttribute(string category) : Attribute
 {
     /// <summary>
