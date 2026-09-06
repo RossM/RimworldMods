@@ -17,8 +17,6 @@ internal class DiagnosticGenerator
     private readonly CSharpCompilation compilation;
     private readonly INamedTypeSymbol? _PatchAttribute;
     private readonly INamedTypeSymbol? _HarmonyPatch;
-    private readonly INamedTypeSymbol? _CategoryAttribute;
-    private readonly INamedTypeSymbol? _HarmonyPatchCategory;
     private readonly INamedTypeSymbol? _PrefixAttribute;
     private readonly INamedTypeSymbol? _PostfixAttribute;
     private readonly INamedTypeSymbol? _InnerAttribute;
@@ -44,7 +42,6 @@ internal class DiagnosticGenerator
         // Attributes
 
         _PatchAttribute = compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
-        _CategoryAttribute = compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
         _PrefixAttribute = compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
         _PostfixAttribute = compilation.GetTypeByMetadataName("Disharmony.PostfixAttribute");
         _InnerAttribute = compilation.GetTypeByMetadataName("Disharmony.InnerAttribute");
@@ -73,7 +70,6 @@ internal class DiagnosticGenerator
         // Harmony
 
         _HarmonyPatch = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
-        _HarmonyPatchCategory = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
 
         _Exception = compilation.GetTypeByMetadataName("System.Exception");
 
