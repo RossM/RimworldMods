@@ -140,12 +140,12 @@ internal static class AnalyzerTestHelper
     internal static async Task<ImmutableArray<Diagnostic>> Analyze(string source)
     {
         var compilation = CSharpCompilation.Create("Test",
-            new[] { CSharpSyntaxTree.ParseText(Attributes), CSharpSyntaxTree.ParseText("using Disharmony;\n" + source) },
-            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) },
+            [CSharpSyntaxTree.ParseText(Attributes), CSharpSyntaxTree.ParseText("using Disharmony;\n" + source)],
+            [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         Assert.That(compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error), Is.Empty,
             "The fixture must compile before analyzer diagnostics are checked.");
         return await compilation.WithAnalyzers(
-            ImmutableArray.Create<DiagnosticAnalyzer>(new PatchMethodAnalyzer(), new PatchParameterAnalyzer())).GetAnalyzerDiagnosticsAsync();
+            [new PatchAnalyzer()]).GetAnalyzerDiagnosticsAsync();
     }
 }

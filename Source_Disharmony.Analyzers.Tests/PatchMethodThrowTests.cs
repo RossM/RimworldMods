@@ -18,7 +18,7 @@ public class PatchMethodThrowTests
     public async Task ExplicitThrowInAlwaysRunPatchWarns(string source)
     {
         var diagnostics = await Analyze(source);
-        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "DH0032" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(["DH0032"]));
         Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Does.StartWith("throw"));

@@ -22,7 +22,7 @@ public class PatchParameterWriteTests
     public async Task WritingValueParameterWarnsAtWrite(string source)
     {
         var diagnostics = await Analyze(source);
-        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "DH0031" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(["DH0031"]));
         Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo("value"));

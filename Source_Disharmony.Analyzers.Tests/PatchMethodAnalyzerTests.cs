@@ -66,18 +66,18 @@ public class PatchMethodAnalyzerTests
     public async Task IndependentViolationsAreAllReported()
     {
         var diagnostics = await Analyze("[Patch, Target(typeof(object), \"M\")] class C<T> { [Postfix] int M() => 0; }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0001", "DH0002", "DH0004" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0001", "DH0002", "DH0004"]));
     }
 
     [Test]
     public async Task MissingDisharmonyReferenceDoesNotWarn()
     {
         var compilation = CSharpCompilation.Create("Test",
-            new[] { CSharpSyntaxTree.ParseText("class C { int M<T>() => 0; }") },
-            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) },
+            [CSharpSyntaxTree.ParseText("class C { int M<T>() => 0; }")],
+            [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var diagnostics = await compilation.WithAnalyzers(
-            ImmutableArray.Create<DiagnosticAnalyzer>(new PatchMethodAnalyzer(), new PatchParameterAnalyzer())).GetAnalyzerDiagnosticsAsync();
+            [new PatchAnalyzer()]).GetAnalyzerDiagnosticsAsync();
         Assert.That(diagnostics, Is.Empty);
     }
 
@@ -85,7 +85,7 @@ public class PatchMethodAnalyzerTests
     public async Task OverriddenMethodInheritsPatchAttribute()
     {
         var diagnostics = await Analyze("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] public virtual void M() {} } [Patch, Target(typeof(object), \"M\")] class C : B { public override void M() {} }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0002", "DH0002" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0002", "DH0002"]));
     }
 
     [Test]
@@ -147,14 +147,14 @@ public class PatchMethodAnalyzerTests
     public async Task MissingClassAndTargetAreBothReported()
     {
         var diagnostics = await Analyze("class C { [Prefix] static void M() {} }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0006", "DH0007" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0006", "DH0007"]));
     }
 
     [Test]
     public async Task InheritedMethodAttributeDoesNotWarnOnUnattributedOverride()
     {
         var diagnostics = await Analyze("class B { [Target(typeof(object), \"M\")] public virtual void M() {} } class C : B { public override void M() {} }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0008" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0008"]));
         Assert.That(diagnostics[0].Location.SourceSpan.Start, Is.LessThan(
             diagnostics[0].Location.SourceTree!.ToString().IndexOf("class C", StringComparison.Ordinal)));
     }
@@ -209,14 +209,14 @@ public class PatchMethodAnalyzerTests
     public async Task NonMultipleInheritedPatchAttributeIsNotCountedTwice()
     {
         var diagnostics = await Analyze("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] public virtual void M() {} } class C : B { [Prefix] public override void M() {} }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0002", "DH0002" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0002", "DH0002"]));
     }
 
     [Test]
     public async Task MultipleInnerAttributesAreCheckedEvenWithoutPatchType()
     {
         var diagnostics = await Analyze("[Patch] class C { [Inner(typeof(object), \"M\"), InnerConstant(1)] static void M() {} }");
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0008", "DH0010" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0008", "DH0010"]));
     }
 
     [TestCase("[Patch, HarmonyLib.HarmonyPatch] class C {}", "DH0014")]

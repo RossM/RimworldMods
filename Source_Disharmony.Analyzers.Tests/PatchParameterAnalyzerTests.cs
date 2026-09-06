@@ -141,6 +141,6 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A((int a, string b) __state) {} [Postfix] static void B((int x, string y) __state) {} }", "DH0029,DH0029")]
     public async Task IndependentOrCompatibleStateBindingsCheckForWriters(string source, string expectedIds)
     {
-        Assert.That((await Analyze(source)).Select(d => d.Id), Is.EquivalentTo(expectedIds.Length == 0 ? new string[0] : expectedIds.Split(',')));
+        Assert.That((await Analyze(source)).Select(d => d.Id), Is.EquivalentTo(expectedIds.Length == 0 ? [] : expectedIds.Split(',')));
     }
 }

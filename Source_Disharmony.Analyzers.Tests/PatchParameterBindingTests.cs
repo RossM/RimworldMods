@@ -24,7 +24,7 @@ public class PatchParameterBindingTests
     public async Task DuplicateBindingsWarnOnEachParameter(string source)
     {
         var diagnostics = await Analyze(source);
-        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(new[] { "DH0028", "DH0028" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0028", "DH0028"]));
         Assert.That(diagnostics.All(d => d.Severity == DiagnosticSeverity.Warning), Is.True);
         Assert.That(diagnostics.Select(d => d.Location.SourceSpan).Distinct().Count(), Is.EqualTo(2));
     }
@@ -46,7 +46,7 @@ public class PatchParameterBindingTests
     public async Task StateWithoutMatchingPatchWriterWarns(string source)
     {
         var diagnostics = await Analyze(source);
-        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "DH0029" }));
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(["DH0029"]));
         Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
     }
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(out int __state) { __state = 1; } }", 1)]
