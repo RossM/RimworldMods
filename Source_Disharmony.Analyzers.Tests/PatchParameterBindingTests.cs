@@ -69,4 +69,36 @@ public class PatchParameterBindingTests
     {
         Assert.That(await Analyze(source), Is.Empty);
     }
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M(int ___field, [Field(\"field\", Scope.Any)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M([Field] int field, [Field(\"field\")] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M([Field(\"field\", Scope.Inner)] int a, [Field(\"field\", Scope.Inner)] int b) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Field(\"field\", Scope.Outer)] int a, [Field(\"field\", Scope.Outer)] int b) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int ___field, [Field(\"field\", Scope.Outer)] int other) {} }")]
+    public async Task EquivalentFieldBindingsWarnOnBothParameters(string source)
+    {
+        var diagnostics = await Analyze(source);
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0028", "DH0028"]));
+        Assert.That(diagnostics.All(d => d.Severity == DiagnosticSeverity.Warning), Is.True);
+        Assert.That(diagnostics.Select(d => d.Location.SourceSpan).Distinct().Count(), Is.EqualTo(2));
+    }
+
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M(int ___field, [Field(\"field\", Scope.Inner)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M(int ___field, [Field(\"field\", Scope.Outer)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M([Field(\"field\", Scope.Any)] int a, [Field(\"field\", Scope.Inner)] int b, [Field(\"field\", Scope.Outer)] int c) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Field] int field, [Field(\"field\", Scope.Inner)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"I\")] static void M([Field(\"first\")] int a, [Field(\"second\")] int b) {} }")]
+    public async Task DistinctOrRuntimeDependentFieldBindingsDoNotWarn(string source)
+    {
+        Assert.That(await Analyze(source), Is.Empty);
+    }
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int value, [Parameter(\"value\", Scope.Outer)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"value\", Scope.Any)] int a, [Parameter(\"value\", Scope.Outer)] int b) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] int value, [Parameter(\"value\", Scope.Outer)] int other) {} }")]
+    public async Task OrdinaryPatchNamedArgumentAnyAndOuterWarnAsDuplicates(string source)
+    {
+        var diagnostics = await Analyze(source);
+        Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(["DH0028", "DH0028"]));
+        Assert.That(diagnostics.All(d => d.Severity == DiagnosticSeverity.Warning), Is.True);
+        Assert.That(diagnostics.Select(d => d.Location.SourceSpan).Distinct().Count(), Is.EqualTo(2));
+    }
 }
