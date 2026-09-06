@@ -21,27 +21,27 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor StateWithoutReader = new(
         "DH0030", "State has no reader",
-        "State key '{0}' is only bound through out parameters in this patch class; add a value, in, or ref binding that consumes the state, correct the state key, or remove the unused state",
+        "State key '{0}' is only bound through out parameters in this patch class",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
 
     public static readonly DiagnosticDescriptor MultipleParameterBindings = new(
-        "DH0016", "Multiple parameter binding attributes", "Parameter '{0}' has multiple binding attributes; use only one",
+        "DH0016", "Multiple parameter binding attributes", "Parameter '{0}' has multiple binding attributes",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor InnerBindingWithoutInnerPatch = new(
         "DH0017", "Parameter binding requires an inner patch",
-        "Parameter '{0}' uses __caller or Scope.Inner without an inner patch; add [Inner]/[InnerConstant] or change the parameter binding",
+        "Parameter '{0}' uses __caller or Scope.Inner without an inner patch",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor AlwaysRunResultBinding = new(
         "DH0018", "AlwaysRun prefix cannot bind the result",
-        "Parameter '{0}' binds the result in an AlwaysRun prefix, which is unsupported; remove the result binding or remove AlwaysRun",
+        "Parameter '{0}' binds the result in an AlwaysRun prefix, which is unsupported",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor InvalidExceptionBinding = new(
         "DH0019", "Exception binding requires an AlwaysRun postfix",
-        "Parameter '{0}' binds an exception outside an AlwaysRun postfix; use [Postfix] with PatchOptions.AlwaysRun or remove the exception binding",
+        "Parameter '{0}' binds an exception outside an AlwaysRun postfixg",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor InvalidDelegateBinding = new(
@@ -56,12 +56,12 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor IncompatibleStateTypes = new(
         "DH0022", "Incompatible shared state types",
-        "Parameter '{0}' shares state key '{1}' with a parameter of a different type; use the same type for this key or choose a different state key",
+        "Parameter '{0}' shares state key '{1}' with a parameter of a different type",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor ConstantBindingUnavailable = new(
         "DH0024", "Inner constant cannot supply this binding",
-        "Parameter '{0}' requests an instance, argument, or field from [InnerConstant], which has none; use Scope.Outer to bind from the outer target or remove the parameter",
+        "Parameter '{0}' requests an instance, argument, or field from [InnerConstant], which has none",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor VoidPrefixResultBinding = new(
@@ -71,7 +71,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
         "DH0026", "Prefix result parameter cannot set the result",
-        "Prefix result parameter '{0}' cannot set the result; declare it ref or out",
+        "Prefix result parameter '{0}' cannot set the result",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
@@ -81,7 +81,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor DuplicateBinding = new(
         "DH0028", "Patch binds the same value more than once",
-        "Parameter '{0}' binds the same value as another parameter in this patch; remove the duplicate parameter or change its binding",
+        "Parameter '{0}' binds the same value as another parameter in this patch",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor StateWithoutWriter = new(
@@ -100,7 +100,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor StaticMethod = new(
-        "DH0002", "Patch method must be static", "Patch method '{0}' is not static; add the static modifier",
+        "DH0002", "Patch method must be static", "Patch method '{0}' is not static",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor PrefixReturn = new(
@@ -147,12 +147,12 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor NullInnerConstant = new(
         "DH0012", "Inner constant cannot be null",
-        "Patch '{0}' uses [InnerConstant] with null, which is unsupported; supply a non-null constant",
+        "Patch '{0}' uses [InnerConstant] with null, which is unsupported",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor DuplicateDiscoveryAttributes = new(
         "DH0014", "Duplicate patch discovery attributes",
-        "Class '{0}' has multiple {1} attributes; use only one",
+        "Class '{0}' has multiple {1} attributes",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor MissingMemberName = new(
