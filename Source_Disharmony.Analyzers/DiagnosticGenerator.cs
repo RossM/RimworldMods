@@ -39,32 +39,32 @@ internal class DiagnosticGenerator
         this.compilation = compilation;
 
         // Attributes
-        _PatchAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
-        _CategoryAttribute = this.compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
-        _PrefixAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
-        _PostfixAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PostfixAttribute");
-        _InnerAttribute = this.compilation.GetTypeByMetadataName("Disharmony.InnerAttribute");
-        _InnerConstantAttribute = this.compilation.GetTypeByMetadataName("Disharmony.InnerConstantAttribute");
-        _TargetAttribute = this.compilation.GetTypeByMetadataName("Disharmony.TargetAttribute");
-        _TargetsAttribute = this.compilation.GetTypeByMetadataName("Disharmony.TargetsAttribute");
-        _PatchOptionsAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PatchOptionsAttribute");
-        _PriorityAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute");
+        _PatchAttribute = compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
+        _CategoryAttribute = compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
+        _PrefixAttribute = compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
+        _PostfixAttribute = compilation.GetTypeByMetadataName("Disharmony.PostfixAttribute");
+        _InnerAttribute = compilation.GetTypeByMetadataName("Disharmony.InnerAttribute");
+        _InnerConstantAttribute = compilation.GetTypeByMetadataName("Disharmony.InnerConstantAttribute");
+        _TargetAttribute = compilation.GetTypeByMetadataName("Disharmony.TargetAttribute");
+        _TargetsAttribute = compilation.GetTypeByMetadataName("Disharmony.TargetsAttribute");
+        _PatchOptionsAttribute = compilation.GetTypeByMetadataName("Disharmony.PatchOptionsAttribute");
+        _PriorityAttribute = compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute");
 
         // Enums
-        _MemberType = this.compilation.GetTypeByMetadataName("Disharmony.MemberType");
+        _MemberType = compilation.GetTypeByMetadataName("Disharmony.MemberType");
         _MemberType_Constructor = _MemberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _PatchOptions = this.compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
+        _PatchOptions = compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
         _PatchOptions_AlwaysRun = _PatchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _PatchOptions_AllowUnsafe = _PatchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _Scope = this.compilation.GetTypeByMetadataName("Disharmony.Scope");
+        _Scope = compilation.GetTypeByMetadataName("Disharmony.Scope");
         _Scope_Inner = _Scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _Scope_Outer = _Scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
 
         // Harmony
-        _HarmonyPatch = this.compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
-        _HarmonyPatchCategory = this.compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
+        _HarmonyPatch = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
+        _HarmonyPatchCategory = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
 
-        _Exception = this.compilation.GetTypeByMetadataName("System.Exception");
+        _Exception = compilation.GetTypeByMetadataName("System.Exception");
 
         _methodAttributes =
         [
@@ -74,14 +74,14 @@ internal class DiagnosticGenerator
         ];
         _bindingTypes =
         [
-            (Kind: ParameterKind.Argument, Type: this.compilation.GetTypeByMetadataName("Disharmony.ParameterAttribute")),
-            (Kind: ParameterKind.Instance, Type: this.compilation.GetTypeByMetadataName("Disharmony.InstanceAttribute")),
-            (Kind: ParameterKind.Result, Type: this.compilation.GetTypeByMetadataName("Disharmony.ReturnValueAttribute")),
-            (Kind: ParameterKind.State, Type: this.compilation.GetTypeByMetadataName("Disharmony.StateAttribute")),
-            (Kind: ParameterKind.Field, Type: this.compilation.GetTypeByMetadataName("Disharmony.FieldAttribute")),
-            (Kind: ParameterKind.BaseMethod, Type: this.compilation.GetTypeByMetadataName("Disharmony.BaseMethodAttribute")),
-            (Kind: ParameterKind.Method, Type: this.compilation.GetTypeByMetadataName("Disharmony.MethodAttribute")),
-            (Kind: ParameterKind.Exception, Type: this.compilation.GetTypeByMetadataName("Disharmony.ExceptionAttribute")),
+            (Kind: ParameterKind.Argument, Type: compilation.GetTypeByMetadataName("Disharmony.ParameterAttribute")),
+            (Kind: ParameterKind.Instance, Type: compilation.GetTypeByMetadataName("Disharmony.InstanceAttribute")),
+            (Kind: ParameterKind.Result, Type: compilation.GetTypeByMetadataName("Disharmony.ReturnValueAttribute")),
+            (Kind: ParameterKind.State, Type: compilation.GetTypeByMetadataName("Disharmony.StateAttribute")),
+            (Kind: ParameterKind.Field, Type: compilation.GetTypeByMetadataName("Disharmony.FieldAttribute")),
+            (Kind: ParameterKind.BaseMethod, Type: compilation.GetTypeByMetadataName("Disharmony.BaseMethodAttribute")),
+            (Kind: ParameterKind.Method, Type: compilation.GetTypeByMetadataName("Disharmony.MethodAttribute")),
+            (Kind: ParameterKind.Exception, Type: compilation.GetTypeByMetadataName("Disharmony.ExceptionAttribute")),
         ];
     }
 
