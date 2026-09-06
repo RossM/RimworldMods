@@ -152,10 +152,10 @@ public static class PatchHelpers
         }
     }
 
-    [UsedFromReflection]
     public static PawnRenderFlags ModifyRenderFlags(Pawn pawn, PawnRenderFlags flags)
     {
-        DebugAssert.NotNull(pawn.pather);
+        if (pawn.pather is null)
+            return flags;
 
         if (pawn.CurJobDef == DefOf.XylTakeShower && !pawn.pather.Moving)
             flags &= ~(PawnRenderFlags.Clothes | PawnRenderFlags.Headgear);
