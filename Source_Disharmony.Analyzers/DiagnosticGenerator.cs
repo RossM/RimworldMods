@@ -9,23 +9,22 @@ namespace Disharmony.Analyzers;
 
 internal class DiagnosticGenerator
 {
+    public bool CanRun => _PrefixAttribute is not null || _PostfixAttribute is not null;
+
     private readonly CSharpCompilation compilation;
     private readonly INamedTypeSymbol? _PatchAttribute;
     private readonly INamedTypeSymbol? _HarmonyPatch;
     private readonly INamedTypeSymbol? _CategoryAttribute;
     private readonly INamedTypeSymbol? _HarmonyPatchCategory;
-    public readonly INamedTypeSymbol? _PrefixAttribute;
-    public readonly INamedTypeSymbol? _PostfixAttribute;
+    private readonly INamedTypeSymbol? _PrefixAttribute;
+    private readonly INamedTypeSymbol? _PostfixAttribute;
     private readonly INamedTypeSymbol? _InnerAttribute;
     private readonly INamedTypeSymbol? _InnerConstantAttribute;
     private readonly INamedTypeSymbol? _TargetAttribute;
     private readonly INamedTypeSymbol? _TargetsAttribute;
-    private readonly INamedTypeSymbol? _MemberType;
     private readonly int? _MemberType_Constructor;
     private readonly INamedTypeSymbol? _PatchOptionsAttribute;
-    private readonly INamedTypeSymbol? _PatchOptions;
     private readonly int _PatchOptions_AlwaysRun;
-    private readonly INamedTypeSymbol? _Scope;
     private readonly int? _Scope_Inner;
     private readonly int? _Scope_Outer;
     private readonly int _PatchOptions_AllowUnsafe;
@@ -39,6 +38,7 @@ internal class DiagnosticGenerator
         this.compilation = compilation;
 
         // Attributes
+        
         _PatchAttribute = compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
         _CategoryAttribute = compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
         _PrefixAttribute = compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
@@ -51,16 +51,22 @@ internal class DiagnosticGenerator
         _PriorityAttribute = compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute");
 
         // Enums
-        _MemberType = compilation.GetTypeByMetadataName("Disharmony.MemberType");
-        _MemberType_Constructor = _MemberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _PatchOptions = compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
-        _PatchOptions_AlwaysRun = _PatchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
-        _PatchOptions_AllowUnsafe = _PatchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
-        _Scope = compilation.GetTypeByMetadataName("Disharmony.Scope");
-        _Scope_Inner = _Scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _Scope_Outer = _Scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+        
+        INamedTypeSymbol? memberType = compilation.GetTypeByMetadataName("Disharmony.MemberType");
+        _MemberType_Constructor = memberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+        
+        INamedTypeSymbol? patchOptions = compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
+        _PatchOptions_AlwaysRun
+            = patchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
+        _PatchOptions_AllowUnsafe
+            = patchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
+
+        INamedTypeSymbol? scope = compilation.GetTypeByMetadataName("Disharmony.Scope");
+        _Scope_Inner = scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+        _Scope_Outer = scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
 
         // Harmony
+        
         _HarmonyPatch = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
         _HarmonyPatchCategory = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
 
@@ -281,8 +287,10 @@ internal class DiagnosticGenerator
 
             if (state.Value.Skip(1).Any(p => !compilation.ClassifyConversion(state.Value[0].Type, p.Type).IsIdentity))
                 foreach (var parameter in state.Value)
+                {
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleStateTypes, Helpers.GetLocation(parameter),
                         parameter.Name, state.Key));
+                }
         }
     }
 
@@ -318,8 +326,7 @@ internal class DiagnosticGenerator
                                method is { ReturnsByRef: false, ReturnsByRefReadonly: false };
             if (isPrefix)
             {
-                bool runsAlways = _PatchOptions_AlwaysRun is int mask &&
-                                  (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & mask) != 0;
+                bool runsAlways = (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & _PatchOptions_AlwaysRun) != 0;
                 if (runsAlways && !method.ReturnsVoid)
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.AlwaysRunReturn, location, method.Name));
                 else if (!method.ReturnsVoid && !returnsBool)

@@ -177,7 +177,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
     {
         var state = new DiagnosticGenerator((CSharpCompilation)start.Compilation);
 
-        if (state._PrefixAttribute is null && state._PostfixAttribute is null)
+        if (!state.CanRun)
             return;
 
         start.RegisterOperationAction(ctx => state.AnalyzeAssignment(ctx),
