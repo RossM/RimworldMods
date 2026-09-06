@@ -38,7 +38,7 @@ internal class DiagnosticGenerator
         this.compilation = compilation;
 
         // Attributes
-        
+
         _PatchAttribute = compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
         _CategoryAttribute = compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
         _PrefixAttribute = compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
@@ -51,10 +51,10 @@ internal class DiagnosticGenerator
         _PriorityAttribute = compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute");
 
         // Enums
-        
+
         INamedTypeSymbol? memberType = compilation.GetTypeByMetadataName("Disharmony.MemberType");
         _MemberType_Constructor = memberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        
+
         INamedTypeSymbol? patchOptions = compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
         _PatchOptions_AlwaysRun
             = patchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
@@ -66,7 +66,7 @@ internal class DiagnosticGenerator
         _Scope_Outer = scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
 
         // Harmony
-        
+
         _HarmonyPatch = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
         _HarmonyPatchCategory = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
 
@@ -124,8 +124,8 @@ internal class DiagnosticGenerator
         var states = new Dictionary<string, List<IParameterSymbol>>();
         foreach (var method in type.GetMembers().OfType<IMethodSymbol>())
         {
-            bool isPrefix = Helpers.FindAttribute(method, _PrefixAttribute) is not null;
-            bool isPostfix = Helpers.FindAttribute(method, _PostfixAttribute) is not null;
+            bool isPrefix = Helpers.HasAttribute(method, _PrefixAttribute);
+            bool isPostfix = Helpers.HasAttribute(method, _PostfixAttribute);
             if ((!isPrefix && !isPostfix) || (isPrefix && isPostfix))
                 continue;
             var innerAttribute = Helpers.FindAttribute(method, _InnerAttribute, _InnerConstantAttribute) ??
@@ -297,8 +297,8 @@ internal class DiagnosticGenerator
     public void AnalyzeMethod(SymbolAnalysisContext ctx)
     {
         var method = (IMethodSymbol)ctx.Symbol;
-        bool isPrefix = Helpers.FindAttribute(method, _PrefixAttribute) is not null;
-        bool isPostfix = Helpers.FindAttribute(method, _PostfixAttribute) is not null;
+        bool isPrefix = Helpers.HasAttribute(method, _PrefixAttribute);
+        bool isPostfix = Helpers.HasAttribute(method, _PostfixAttribute);
         var location = method.Locations.FirstOrDefault(l => l.IsInSource);
         if (location is null)
             return;
@@ -382,8 +382,7 @@ internal class DiagnosticGenerator
 
     public void AnalyzeThrow(OperationAnalysisContext ctx)
     {
-        if (ctx.ContainingSymbol is not IMethodSymbol method ||
-            Helpers.FindAttribute(method, _PrefixAttribute, _PostfixAttribute) is null ||
+        if (ctx.ContainingSymbol is not IMethodSymbol method || !IsPatchMethod(method) ||
             (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & _PatchOptions_AlwaysRun) == 0)
             return;
 
@@ -399,19 +398,33 @@ internal class DiagnosticGenerator
 
     private void CheckWrite(IOperation target, OperationAnalysisContext ctx)
     {
-        if (target is ITupleOperation tuple)
-            foreach (var element in tuple.Elements)
-                CheckWrite(element, ctx);
-        else if (target is IConversionOperation conversion)
-            CheckWrite(conversion.Operand, ctx);
-        else if (target is IParameterReferenceOperation reference &&
-                 reference.Parameter.RefKind is not (RefKind.Ref or RefKind.Out) &&
-                 reference.Parameter.ContainingSymbol is IMethodSymbol method &&
-                 (Helpers.FindAttribute(method, _PrefixAttribute) is not null ||
-                  Helpers.FindAttribute(method, _PostfixAttribute) is not null))
-            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.WrittenValueParameter, reference.Syntax.GetLocation(),
-                reference.Parameter.Name));
+        switch (target)
+        {
+            case ITupleOperation tuple:
+            {
+                foreach (var element in tuple.Elements)
+                    CheckWrite(element, ctx);
+                break;
+            }
+            case IConversionOperation conversion:
+            {
+                CheckWrite(conversion.Operand, ctx);
+                break;
+            }
+            case IParameterReferenceOperation
+            {
+                Parameter: { RefKind: not (RefKind.Ref or RefKind.Out), ContainingSymbol: IMethodSymbol method },
+            } reference when IsPatchMethod(method):
+            {
+                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.WrittenValueParameter, reference.Syntax.GetLocation(),
+                    reference.Parameter.Name));
+                break;
+            }
+        }
     }
+
+    private bool IsPatchMethod(IMethodSymbol method) =>
+        Helpers.HasAttribute(method, _PrefixAttribute, _PostfixAttribute);
 
     private void CheckSelector(AttributeData selector, SymbolAnalysisContext ctx, Location location, IMethodSymbol method)
     {

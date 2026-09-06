@@ -114,4 +114,6 @@ internal static class Helpers
         // conversions or user-defined operators. 'in' reads; 'out' writes in the opposite direction.
         return conversion.IsIdentity || (conversion.IsImplicit && (conversion.IsReference || conversion.IsBoxing));
     }
+
+    public static bool HasAttribute(IMethodSymbol method, params INamedTypeSymbol?[] types) => FindAttribute(method, types) is not null;
 }
