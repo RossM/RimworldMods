@@ -33,6 +33,7 @@ The analyzer targets .NET Standard 2.0 and does not load Disharmony, Harmony, or
 | DH0028 | Multiple parameters in one patch bind the same value. |
 | DH0029 | State key has no ref/out binding in any patch declared in the same class. |
 | DH0030 | State key is only bound through out parameters in its patch class. |
+| DH0031 | Patch writes to a parameter that is not ref/out. |
 
 The analyzer assumes assembly discovery through Patcher.PatchAll or Patcher.PatchCategory.
 Methods are identified by the built-in Disharmony Prefix/Postfix attributes. User-defined attribute subclasses are ignored.
@@ -80,3 +81,5 @@ DH0025 and DH0026 flag likely mistakes when a prefix binds __result or [ReturnVa
 DH0028 compares special bindings, state keys, argument names or indexes, fields, and method names with their scopes. Aliases requiring target reflection (such as an argument name and index) are not compared. On inner patches, named Scope.Any lookups retain their fallback semantics and are distinct from explicit Inner/Outer lookups.
 
 DH0030 checks state bindings across patches declared in the same class. Value, in, and ref parameters count as readers; out parameters do not. No method-body analysis is performed.
+
+DH0031 checks direct assignments (including compound, coalescing, and deconstruction assignments), increments/decrements, and passing a value parameter as ref/out. Captured patch parameters are checked in lambdas and local functions. Member/array-element writes and writes through local aliases are not analyzed.

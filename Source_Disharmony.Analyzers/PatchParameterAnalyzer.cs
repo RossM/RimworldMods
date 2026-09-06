@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Operations;
 using static Disharmony.Analyzers.AttributeHelpers;
 
 namespace Disharmony.Analyzers;
@@ -32,7 +33,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
     [
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
-        VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter, StateWithoutReader,
+        VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter, StateWithoutReader, WrittenValueParameter,
     ];
 
     private static readonly DiagnosticDescriptor MultipleParameterBindings = new(
@@ -99,6 +100,10 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
         "State key '{0}' has no writer in this patch class; declare a parameter for this key ref or out in a patch that supplies the state",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    private static readonly DiagnosticDescriptor WrittenValueParameter = new(
+        "DH0031", "Patch writes to a parameter passed by value",
+        "Writing to parameter '{0}' changes only the patch's local copy; declare it ref or out to update the bound value, or use a local variable for a temporary value",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -133,6 +138,35 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
             (Kind: ParameterKind.Exception, Type: compilation.GetTypeByMetadataName("Disharmony.ExceptionAttribute")),
         };
 
+        start.RegisterOperationAction(ctx =>
+        {
+            var target = ctx.Operation switch
+            {
+                IAssignmentOperation assignment => assignment.Target,
+                IIncrementOrDecrementOperation increment => increment.Target,
+                IArgumentOperation { Parameter.RefKind: RefKind.Ref or RefKind.Out } argument => argument.Value,
+                _ => null,
+            };
+            if (target is not null)
+                CheckWrite(target, ctx);
+        }, OperationKind.SimpleAssignment, OperationKind.CompoundAssignment, OperationKind.CoalesceAssignment,
+            OperationKind.DeconstructionAssignment, OperationKind.Increment, OperationKind.Decrement, OperationKind.Argument);
+
+        void CheckWrite(IOperation target, OperationAnalysisContext ctx)
+        {
+            if (target is ITupleOperation tuple)
+            {
+                foreach (var element in tuple.Elements)
+                    CheckWrite(element, ctx);
+            }
+            else if (target is IConversionOperation conversion)
+                CheckWrite(conversion.Operand, ctx);
+            else if (target is IParameterReferenceOperation reference &&
+                     reference.Parameter.RefKind is not (RefKind.Ref or RefKind.Out) &&
+                     reference.Parameter.ContainingSymbol is IMethodSymbol method &&
+                     (FindAttribute(method, prefix) is not null || FindAttribute(method, postfix) is not null))
+                ctx.ReportDiagnostic(Diagnostic.Create(WrittenValueParameter, reference.Syntax.GetLocation(), reference.Parameter.Name));
+        }
         start.RegisterSymbolAction(ctx =>
         {
             var type = (INamedTypeSymbol)ctx.Symbol;
