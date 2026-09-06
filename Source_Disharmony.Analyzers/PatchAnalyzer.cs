@@ -81,7 +81,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor DuplicateBinding = new(
         "DH0028", "Patch binds the same value more than once",
-        "Parameter '{0}' binds the same value as another parameter in this patch",
+        "Parameter '{0}' binds the same value as another parameter",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor StateWithoutWriter = new(
