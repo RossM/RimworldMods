@@ -24,11 +24,11 @@ internal class DiagnosticGenerator
     private readonly int? _MemberType_Constructor;
     private readonly INamedTypeSymbol? _PatchOptionsAttribute;
     private readonly INamedTypeSymbol? _PatchOptions;
-    private readonly int? _PatchOptions_AlwaysRun;
+    private readonly int _PatchOptions_AlwaysRun;
     private readonly INamedTypeSymbol? _Scope;
     private readonly int? _Scope_Inner;
     private readonly int? _Scope_Outer;
-    private readonly int? _PatchOptions_AllowUnsafe;
+    private readonly int _PatchOptions_AllowUnsafe;
     private readonly INamedTypeSymbol? _Exception;
     private readonly INamedTypeSymbol? _PriorityAttribute;
     private readonly INamedTypeSymbol?[] _methodAttributes;
@@ -54,8 +54,8 @@ internal class DiagnosticGenerator
         _MemberType = compilation.GetTypeByMetadataName("Disharmony.MemberType");
         _MemberType_Constructor = _MemberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _PatchOptions = compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
-        _PatchOptions_AlwaysRun = _PatchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _PatchOptions_AllowUnsafe = _PatchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+        _PatchOptions_AlwaysRun = _PatchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
+        _PatchOptions_AllowUnsafe = _PatchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
         _Scope = compilation.GetTypeByMetadataName("Disharmony.Scope");
         _Scope_Inner = _Scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _Scope_Outer = _Scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
@@ -126,8 +126,8 @@ internal class DiagnosticGenerator
                                  Helpers.FindAttribute(type, _InnerAttribute, _InnerConstantAttribute);
             bool isInner = innerAttribute is not null;
             var patchOptions = Helpers.GetPatchOptions(method, _PatchOptionsAttribute);
-            bool alwaysRun = _PatchOptions_AlwaysRun is int mask && (patchOptions & mask) != 0;
-            bool allowUnsafe = _PatchOptions_AllowUnsafe is int maskUnsafe && (patchOptions & maskUnsafe) != 0;
+            bool alwaysRun = (patchOptions & _PatchOptions_AlwaysRun) != 0;
+            bool allowUnsafe = (patchOptions & _PatchOptions_AllowUnsafe) != 0;
             var constantType = innerAttribute is not null && Helpers.IsAttribute(innerAttribute, _InnerConstantAttribute)
                 ? Helpers.Argument(innerAttribute, "value")?.Type
                 : null;
@@ -377,7 +377,7 @@ internal class DiagnosticGenerator
     {
         if (ctx.ContainingSymbol is not IMethodSymbol method ||
             Helpers.FindAttribute(method, _PrefixAttribute, _PostfixAttribute) is null ||
-            _PatchOptions_AlwaysRun is not int mask || (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & mask) == 0)
+            (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & _PatchOptions_AlwaysRun) == 0)
             return;
 
         // Nested functions have their own execution; following calls is outside this check.
