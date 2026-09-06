@@ -19,7 +19,7 @@ public static class DebugAssert
         if (value != null)
             return;
 
-        Log.ErrorOnce($"[{filePath}:{lineNumber}] {value} is null",
+        Log.ErrorOnce($"[{filePath}:{lineNumber}] {valueExpression} is null",
             Gen.HashCombineInt(0x59071F35, valueExpression.GetHashCode(), filePath.GetHashCode(), lineNumber));
     }
 #pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
