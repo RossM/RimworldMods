@@ -36,19 +36,6 @@ public static class PatchTypeProcessesEveryPatchMethodOnTypePatches
     public static void PatchTypeProcessesEveryPatchMethodOnType_Second(ref int __result) => __result = 42;
 }
 
-[Patch(typeof(StaticMethodTargets))]
-[Category("preferred-attributes")]
-public static class PreferredRegistrationAttributePatches
-{
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.IntIdentity))]
-    public static void PatchAttributeMarksClassForAssemblyProcessing(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.StringIdentity))]
-    public static void CategoryAttributeMarksClassForCategoryProcessing(ref string __result) => __result = "patched";
-}
-
 [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.RegistrationResultA))]
 public static class ClassTargetAttributePatches
 {
@@ -75,45 +62,17 @@ public static class ClassTargetsAttributePatches
     public static void ClassTargetsAttributeAppliesToEveryPatchMethod_Second() => secondPatchCalls++;
 }
 
-[HarmonyPatch(typeof(StaticMethodTargets))]
-[HarmonyPatchCategory("included")]
-public static class IncludedCategoryPatches
-{
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void PatchAllProcessesAllAssemblyPatchCategories_Included(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultA))]
-    public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
-}
-
-[HarmonyPatch(typeof(StaticMethodTargets))]
-[HarmonyPatchCategory("excluded")]
-public static class ExcludedCategoryPatches
-{
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void PatchAllProcessesAllAssemblyPatchCategories_Excluded(ref int __result) => __result = 42;
-
-    [Postfix]
-    [Target(nameof(StaticMethodTargets.RegistrationResultB))]
-    public static void PatchCategoryProcessesOnlyMatchingCategory(ref int __result) => __result = 42;
-}
-
 [TestFixture]
 public sealed class PatcherRegistrationTests : PatchTestBase
 {
-    // TODO: Put assembly-scanning patch fixtures in a dedicated test assembly so RegisterAll/PatchAll do not scan unrelated patches.
-    private static readonly Assembly TestAssembly = typeof(PatcherRegistrationTests).Assembly;
-    private static readonly Assembly CategoryAssembly = CreateCategoryAssembly();
+    private static readonly Assembly DiscoveryAssembly = CreateDiscoveryAssembly();
 
-    private static Assembly CreateCategoryAssembly()
+    private static Assembly CreateDiscoveryAssembly()
     {
         // Isolate assembly discovery, particularly null-category selection, from unrelated test patches.
         var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
-            new AssemblyName("CategoryPatches"), AssemblyBuilderAccess.Run);
-        var module = assembly.DefineDynamicModule("CategoryPatches");
+            new AssemblyName("RegistrationPatches"), AssemblyBuilderAccess.Run);
+        var module = assembly.DefineDynamicModule("RegistrationPatches");
         (string Target, string[] Categories, string[] HarmonyCategories)[] containers =
         [
             (nameof(CategoryTargets.Multiple), ["first", "second"], []),
@@ -157,13 +116,61 @@ public sealed class PatcherRegistrationTests : PatchTestBase
             type.CreateType();
         }
 
+
+        // These containers exercise class-level default target types with both Disharmony and Harmony markers.
+        (string Name, Type Marker, Type Category, string CategoryName, string[] Targets)[] registrationContainers =
+        [
+            ("Preferred", typeof(PatchAttribute), typeof(CategoryAttribute), "preferred-attributes",
+                [nameof(StaticMethodTargets.IntIdentity), nameof(StaticMethodTargets.StringIdentity)]),
+            ("Included", typeof(HarmonyPatch), typeof(HarmonyPatchCategory), "included",
+                [nameof(StaticMethodTargets.RegistrationResultA)]),
+            ("Excluded", typeof(HarmonyPatch), typeof(HarmonyPatchCategory), "excluded",
+                [nameof(StaticMethodTargets.RegistrationResultB)]),
+        ];
+        foreach (var container in registrationContainers)
+        {
+            var type = module.DefineType(container.Name + "Patches",
+                TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.Sealed);
+            type.SetCustomAttribute(new CustomAttributeBuilder(
+                container.Marker.GetConstructor([typeof(Type)])!, new object[] { typeof(StaticMethodTargets) }));
+            type.SetCustomAttribute(new CustomAttributeBuilder(
+                container.Category.GetConstructor([typeof(string)])!, new object[] { container.CategoryName }));
+
+            foreach (string targetName in container.Targets)
+            {
+                Type resultType = typeof(StaticMethodTargets).GetMethod(targetName)!.ReturnType;
+                var postfix = type.DefineMethod(targetName + "_Postfix", MethodAttributes.Public | MethodAttributes.Static,
+                    typeof(void), [resultType.MakeByRefType()]);
+                postfix.DefineParameter(1, ParameterAttributes.None, "__result");
+                postfix.SetCustomAttribute(new CustomAttributeBuilder(typeof(PostfixAttribute).GetConstructor(Type.EmptyTypes)!, []));
+                // No type on Target: resolution must use the class's Patch/HarmonyPatch attribute.
+                postfix.SetCustomAttribute(new CustomAttributeBuilder(
+                    typeof(TargetAttribute).GetConstructor([typeof(string)])!, new object[] { targetName }));
+
+                ILGenerator il = postfix.GetILGenerator();
+                il.Emit(OpCodes.Ldarg_0);
+                if (resultType == typeof(string))
+                {
+                    il.Emit(OpCodes.Ldstr, "patched");
+                    il.Emit(OpCodes.Stind_Ref);
+                }
+                else
+                {
+                    il.Emit(OpCodes.Ldc_I4, 42);
+                    il.Emit(OpCodes.Stind_I4);
+                }
+                il.Emit(OpCodes.Ret);
+            }
+            type.CreateType();
+        }
+
         return assembly;
     }
 
     [Test]
     public void PatchCategory_CategoryNames_AreCaseSensitive()
     {
-        Patcher.PatchCategory(CategoryAssembly, "First");
+        Patcher.PatchCategory(DiscoveryAssembly, "First");
 
         Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
@@ -172,7 +179,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_MultipleCategories_FirstCategoryMatches()
     {
-        Patcher.PatchCategory(CategoryAssembly, "first");
+        Patcher.PatchCategory(DiscoveryAssembly, "first");
 
         Assert.That(CategoryTargets.Multiple(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Other(), Is.EqualTo("original"));
@@ -182,7 +189,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_MultipleCategories_SecondCategoryMatches()
     {
-        Patcher.PatchCategory(CategoryAssembly, "second");
+        Patcher.PatchCategory(DiscoveryAssembly, "second");
 
         Assert.That(CategoryTargets.Multiple(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Other(), Is.EqualTo("original"));
@@ -192,7 +199,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_UnmatchedCategory_AppliesNothing()
     {
-        Patcher.PatchCategory(CategoryAssembly, "missing");
+        Patcher.PatchCategory(DiscoveryAssembly, "missing");
 
         Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
@@ -205,7 +212,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_NullCategory_AppliesOnlyUncategorizedClasses()
     {
-        Patcher.PatchCategory(CategoryAssembly, null);
+        Patcher.PatchCategory(DiscoveryAssembly, null);
 
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
@@ -218,7 +225,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_EmptyCategory_DoesNotMeanUncategorized()
     {
-        Patcher.PatchCategory(CategoryAssembly, "");
+        Patcher.PatchCategory(DiscoveryAssembly, "");
 
         Assert.That(CategoryTargets.Empty(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
@@ -228,7 +235,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_DuplicateCategories_AppliesPatchOnlyOnce()
     {
-        Patcher.PatchCategory(CategoryAssembly, "duplicate");
+        Patcher.PatchCategory(DiscoveryAssembly, "duplicate");
 
         Assert.That(CategoryTargets.Duplicate(), Is.EqualTo("patched:original"));
     }
@@ -236,7 +243,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_MixedAttributes_DisharmonyCategoryMatches()
     {
-        Patcher.PatchCategory(CategoryAssembly, "disharmony");
+        Patcher.PatchCategory(DiscoveryAssembly, "disharmony");
 
         Assert.That(CategoryTargets.Mixed(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
@@ -245,7 +252,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategory_MixedAttributes_HarmonyCategoryMatches()
     {
-        Patcher.PatchCategory(CategoryAssembly, "harmony");
+        Patcher.PatchCategory(DiscoveryAssembly, "harmony");
 
         Assert.That(CategoryTargets.Mixed(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
@@ -254,7 +261,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchAll_MultipleCategories_AppliesEveryClassOnlyOnce()
     {
-        Patcher.PatchAll(CategoryAssembly);
+        Patcher.PatchAll(DiscoveryAssembly);
 
         Assert.That(CategoryTargets.Multiple(), Is.EqualTo("patched:original"));
         Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("patched:original"));
@@ -276,7 +283,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchAttributeMarksClassForAssemblyProcessing()
     {
-        Patcher.PatchAll(TestAssembly);
+        Patcher.PatchAll(DiscoveryAssembly);
 
         Assert.That(StaticMethodTargets.IntIdentity(1), Is.EqualTo(42));
     }
@@ -284,7 +291,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void CategoryAttributeMarksClassForCategoryProcessing()
     {
-        Patcher.PatchCategory(TestAssembly, "preferred-attributes");
+        Patcher.PatchCategory(DiscoveryAssembly, "preferred-attributes");
 
         Assert.That(StaticMethodTargets.StringIdentity("original"), Is.EqualTo("patched"));
     }
@@ -426,7 +433,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchCategoryProcessesOnlyMatchingCategory()
     {
-        Patcher.PatchCategory(TestAssembly, "included");
+        Patcher.PatchCategory(DiscoveryAssembly, "included");
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(2));
@@ -435,7 +442,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     [Test]
     public void PatchAllProcessesAllAssemblyPatchCategories()
     {
-        Patcher.PatchAll(TestAssembly);
+        Patcher.PatchAll(DiscoveryAssembly);
 
         Assert.That(StaticMethodTargets.RegistrationResultA(), Is.EqualTo(42));
         Assert.That(StaticMethodTargets.RegistrationResultB(), Is.EqualTo(42));
