@@ -19,11 +19,71 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         StateWithoutReader, WrittenValueParameter,
     ];
 
-    public static readonly DiagnosticDescriptor StateWithoutReader = new(
-        "DH0030", "State has no reader",
-        "State key '{0}' is only bound through out parameters in this patch class",
+    public static readonly DiagnosticDescriptor GenericMethod = new(
+        "DH0001", "Patch method must not contain generic parameters",
+        "Patch method '{0}' has generic parameters on the method or a containing type; use a non-generic method in a non-generic type",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor StaticMethod = new(
+        "DH0002", "Patch method must be static", "Patch method '{0}' is not static",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PrefixReturn = new(
+        "DH0003", "Prefix must return bool or void", "Prefix '{0}' must return bool or void",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor PostfixReturn = new(
+        "DH0004", "Postfix must return void", "Postfix '{0}' must return void",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor AlwaysRunReturn = new(
+        "DH0005", "AlwaysRun prefix must return void", "Prefix '{0}' with AlwaysRun must return void",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MissingPatchClass = new(
+        "DH0006", "Patch method requires a discoverable containing class",
+        "Patch method '{0}' requires [Patch] or [HarmonyPatch] on its containing class",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MissingTarget = new(
+        "DH0007", "Patch method requires a target attribute",
+        "Patch method '{0}' requires [Target] or [Targets] on the method or its containing class",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MissingPatchType = new(
+        "DH0008", "Disharmony method attributes require a patch type",
+        "Method '{0}' has a Disharmony attribute but no [Prefix] or [Postfix]; add the appropriate patch attribute or remove the unused Disharmony attribute",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MultiplePatchTypes = new(
+        "DH0009", "Patch method has multiple patch type attributes",
+        "Method '{0}' has multiple prefix/postfix attributes",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MultipleInnerTargets = new(
+        "DH0010", "Patch method has multiple inner target attributes",
+        "Method '{0}' has multiple inner target attributes",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MissingTargetType = new(
+        "DH0011", "Member selector has no declaring type",
+        "Selector for patch '{0}' has no declaring type; supply a type or use a qualified member name such as Namespace.Type.Member",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor NullInnerConstant = new(
+        "DH0012", "Inner constant cannot be null",
+        "Patch '{0}' uses [InnerConstant] with null, which is unsupported",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor DuplicateDiscoveryAttributes = new(
+        "DH0014", "Duplicate patch discovery attributes",
+        "Class '{0}' has multiple {1} attributes",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor MissingMemberName = new(
+        "DH0015", "Member selector requires a name",
+        "Selector for patch '{0}' has no member name; supply a name or specify MemberType.Constructor to select a constructor",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor MultipleParameterBindings = new(
         "DH0016", "Multiple parameter binding attributes", "Parameter '{0}' has multiple binding attributes",
@@ -89,75 +149,14 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "State key '{0}' has no writer in this patch class; declare a parameter for this key ref or out in a patch that supplies the state",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor StateWithoutReader = new(
+        "DH0030", "State has no reader",
+        "State key '{0}' is only bound through out parameters in this patch class",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public static readonly DiagnosticDescriptor WrittenValueParameter = new(
         "DH0031", "Patch writes to a parameter passed by value",
         "Writing to parameter '{0}' changes only the patch's local copy; declare it ref or out to update the bound value, or use a local variable for a temporary value",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor GenericMethod = new(
-        "DH0001", "Patch method must not contain generic parameters",
-        "Patch method '{0}' has generic parameters on the method or a containing type; use a non-generic method in a non-generic type",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor StaticMethod = new(
-        "DH0002", "Patch method must be static", "Patch method '{0}' is not static",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor PrefixReturn = new(
-        "DH0003", "Prefix must return bool or void", "Prefix '{0}' must return bool or void",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor PostfixReturn = new(
-        "DH0004", "Postfix must return void", "Postfix '{0}' must return void",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor AlwaysRunReturn = new(
-        "DH0005", "AlwaysRun prefix must return void", "Prefix '{0}' with AlwaysRun must return void",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MissingPatchClass = new(
-        "DH0006", "Patch method requires a discoverable containing class",
-        "Patch method '{0}' requires [Patch] or [HarmonyPatch] on its containing class",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MissingTarget = new(
-        "DH0007", "Patch method requires a target attribute",
-        "Patch method '{0}' requires [Target] or [Targets] on the method or its containing class",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MissingPatchType = new(
-        "DH0008", "Disharmony method attributes require a patch type",
-        "Method '{0}' has a Disharmony attribute but no [Prefix] or [Postfix]; add the appropriate patch attribute or remove the unused Disharmony attribute",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MultiplePatchTypes = new(
-        "DH0009", "Patch method has multiple patch type attributes",
-        "Method '{0}' has multiple prefix/postfix attributes",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MultipleInnerTargets = new(
-        "DH0010", "Patch method has multiple inner target attributes",
-        "Method '{0}' has multiple inner target attributes",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MissingTargetType = new(
-        "DH0011", "Member selector has no declaring type",
-        "Selector for patch '{0}' has no declaring type; supply a type or use a qualified member name such as Namespace.Type.Member",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor NullInnerConstant = new(
-        "DH0012", "Inner constant cannot be null",
-        "Patch '{0}' uses [InnerConstant] with null, which is unsupported",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor DuplicateDiscoveryAttributes = new(
-        "DH0014", "Duplicate patch discovery attributes",
-        "Class '{0}' has multiple {1} attributes",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor MissingMemberName = new(
-        "DH0015", "Member selector requires a name",
-        "Selector for patch '{0}' has no member name; supply a name or specify MemberType.Constructor to select a constructor",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor AlwaysRunThrow = new(
