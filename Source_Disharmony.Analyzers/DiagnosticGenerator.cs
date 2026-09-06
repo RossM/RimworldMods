@@ -68,7 +68,7 @@ internal class DiagnosticGenerator
         INamedTypeSymbol? scope = compilation.GetTypeByMetadataName("Disharmony.Scope");
         _Scope_Any = scope?.GetMembers("Any").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -1;
         _Scope_Inner = scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -1;
-        _Scope_Outer = scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -2;
+        _Scope_Outer = scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -1;
 
         // Harmony
 
