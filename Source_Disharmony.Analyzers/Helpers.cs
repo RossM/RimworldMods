@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Disharmony.Analyzers;
 
-internal static class AttributeHelpers
+internal static class Helpers
 {
     internal static int GetPatchOptions(IMethodSymbol method, INamedTypeSymbol? options)
     {
@@ -66,5 +67,51 @@ internal static class AttributeHelpers
         }
 
         return null;
+    }
+
+    public static Location? GetLocation(ISymbol type)
+    {
+        return type.Locations.FirstOrDefault(l => l.IsInSource);
+    }
+
+    public static bool HasGenericParameters(IMethodSymbol method)
+    {
+        if (method.Arity != 0)
+            return true;
+        for (var type = method.ContainingType; type is not null; type = type.ContainingType)
+        {
+            if (type.Arity != 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    public static bool HasNoTypeOrQualifiedName(AttributeData selector)
+    {
+        if (Argument(selector, "type") is { IsNull: false })
+            return false;
+        if ((Argument(selector, "methodName") ?? Argument(selector, "memberName"))?.Value is not string name)
+            return true;
+        // Both Type:Member and Namespace.Type.Member are resolved using loaded assemblies at runtime.
+        return name.IndexOf(':') < 0 && name.IndexOf('.') < 0;
+    }
+
+    public static Location SelectorLocation(AttributeData attribute, Location fallback) =>
+        attribute.ApplicationSyntaxReference?.GetSyntax().GetLocation() ?? fallback;
+
+    public static bool CanBindKnownType(CSharpCompilation compilation, IParameterSymbol parameter, ITypeSymbol source, bool allowUnsafe)
+    {
+        if (allowUnsafe && !parameter.Type.IsValueType && !source.IsValueType)
+            return true;
+        var destination = parameter.Type;
+        if ((parameter.RefKind != RefKind.None && source.IsValueType) || parameter.RefKind == RefKind.Ref)
+            return compilation.ClassifyConversion(source, destination).IsIdentity;
+        if (parameter.RefKind == RefKind.Out)
+            (source, destination) = (destination, source);
+        var conversion = compilation.ClassifyConversion(source, destination);
+        // Type.IsAssignableFrom permits identity, reference conversions and boxing, but not numeric
+        // conversions or user-defined operators. 'in' reads; 'out' writes in the opposite direction.
+        return conversion.IsIdentity || (conversion.IsImplicit && (conversion.IsReference || conversion.IsBoxing));
     }
 }
