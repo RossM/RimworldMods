@@ -32,6 +32,7 @@ The analyzer targets .NET Standard 2.0 and does not load Disharmony, Harmony, or
 | DH0027 | Parameter starts with __ but is not a recognized special name or ___field binding, and has no explicit binding attribute. |
 | DH0028 | Multiple parameters in one patch bind the same value. |
 | DH0029 | State key has no ref/out binding in any patch declared in the same class. |
+| DH0030 | State key is only bound through out parameters in its patch class. |
 
 The analyzer assumes assembly discovery through Patcher.PatchAll or Patcher.PatchCategory.
 Methods are identified by the built-in Disharmony Prefix/Postfix attributes. User-defined attribute subclasses are ignored.
@@ -77,3 +78,5 @@ Tests use minimal attribute metadata and do not execute patches or load the game
 DH0025 and DH0026 flag likely mistakes when a prefix binds __result or [ReturnValue]. Both can apply to the same parameter; DH0018 takes precedence for AlwaysRun prefixes.
 
 DH0028 compares special bindings, state keys, argument names or indexes, fields, and method names with their scopes. Aliases requiring target reflection (such as an argument name and index) are not compared. On inner patches, named Scope.Any lookups retain their fallback semantics and are distinct from explicit Inner/Outer lookups.
+
+DH0030 checks state bindings across patches declared in the same class. Value, in, and ref parameters count as readers; out parameters do not. No method-body analysis is performed.

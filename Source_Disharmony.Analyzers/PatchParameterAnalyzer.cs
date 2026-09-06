@@ -11,6 +11,10 @@ namespace Disharmony.Analyzers;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
 {
+    private static readonly DiagnosticDescriptor StateWithoutReader = new(
+        "DH0030", "State has no reader",
+        "State key '{0}' is only bound through out parameters in this patch class; add a value, in, or ref binding that consumes the state, correct the state key, or remove the unused state",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     private enum ParameterKind
     {
         Argument,
@@ -28,7 +32,7 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
     [
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
-        VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
+        VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter, StateWithoutReader,
     ];
 
     private static readonly DiagnosticDescriptor MultipleParameterBindings = new(
@@ -284,6 +288,10 @@ public sealed class PatchParameterAnalyzer : DiagnosticAnalyzer
                 if (!state.Value.Any(p => p.RefKind is RefKind.Ref or RefKind.Out))
                     foreach (var parameter in state.Value)
                         ctx.ReportDiagnostic(Diagnostic.Create(StateWithoutWriter, parameter.Locations.First(l => l.IsInSource),
+                            state.Key));
+                if (state.Value.All(p => p.RefKind == RefKind.Out))
+                    foreach (var parameter in state.Value)
+                        ctx.ReportDiagnostic(Diagnostic.Create(StateWithoutReader, parameter.Locations.First(l => l.IsInSource),
                             state.Key));
                 if (state.Value.Skip(1).Any(p => !compilation.ClassifyConversion(state.Value[0].Type, p.Type).IsIdentity))
                     foreach (var parameter in state.Value)

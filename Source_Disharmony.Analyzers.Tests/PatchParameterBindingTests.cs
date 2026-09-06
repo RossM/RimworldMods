@@ -49,4 +49,24 @@ public class PatchParameterBindingTests
         Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "DH0029" }));
         Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
     }
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(out int __state) { __state = 1; } }", 1)]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"key\")] out int a) { a = 1; } [Postfix] static void B([State(\"key\")] out int b) { b = 2; } }", 2)]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(out int __state) { __state = 1; } static void Helper(int __state) {} }", 1)]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"unused\")] out int a, [State(\"used\")] ref int b) { a = 1; } }", 1)]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] static void A(out int __state) { __state = 1; } } class C : B { [Postfix] static void B(ref int __state) {} }", 1)]
+    public async Task StateOnlyBoundThroughOutWarns(string source, int expectedCount)
+    {
+        var diagnostics = await Analyze(source);
+        Assert.That(diagnostics, Has.Length.EqualTo(expectedCount));
+        Assert.That(diagnostics.All(d => d.Id == "DH0030" && d.Severity == DiagnosticSeverity.Warning), Is.True);
+        Assert.That(diagnostics.Select(d => d.Location.SourceSpan).Distinct().Count(), Is.EqualTo(expectedCount));
+    }
+
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(out int __state) { __state = 1; } [Postfix] static void B(int __state) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(out int __state) { __state = 1; } [Postfix] static void B([State(\"__state\")] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(ref int __state) {} }")]
+    public async Task StateWithReaderDoesNotWarn(string source)
+    {
+        Assert.That(await Analyze(source), Is.Empty);
+    }
 }
