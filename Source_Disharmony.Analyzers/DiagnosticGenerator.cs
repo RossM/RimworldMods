@@ -130,8 +130,7 @@ internal class DiagnosticGenerator
             bool isPostfix = Helpers.HasAttribute(method, _PostfixAttribute);
             if ((!isPrefix && !isPostfix) || (isPrefix && isPostfix))
                 continue;
-            var innerAttribute = Helpers.FindAttribute(method, _InnerAttribute, _InnerConstantAttribute) ??
-                                 Helpers.FindAttribute(type, _InnerAttribute, _InnerConstantAttribute);
+            var innerAttribute = Helpers.FindAttribute(method, _InnerAttribute, _InnerConstantAttribute);
             bool isInner = innerAttribute is not null;
             var patchOptions = Helpers.GetPatchOptions(method, _PatchOptionsAttribute);
             bool alwaysRun = (patchOptions & _PatchOptions_AlwaysRun) != 0;
