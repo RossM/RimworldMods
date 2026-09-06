@@ -131,7 +131,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
         "DH0026", "Prefix result parameter cannot set the result",
-        "Prefix result parameter '{0}' should be declared 'ref' or 'out'",
+        "Prefix result parameter '{0}' should be declared ref or out",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
