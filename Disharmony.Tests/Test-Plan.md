@@ -121,7 +121,7 @@ the optimizer changes without tying expectations to a particular generated opcod
 ## Test-writing constraints
 
 - Keep tests organized by the feature whose public behavior they primarily exercise.
-- Put reflection-sensitive target and inline patch methods in `Source_Disharmony.TestTargets`, which is compiled in
+- Put reflection-sensitive target and inline patch methods in `Disharmony.TestTargets`, which is compiled in
   Release mode.
 - End-to-end fixtures must fail immediately when `Patcher.RuntimeExceptionHandler` reports an unexpected exception.
 - Enable the optimizer only in optimizer fixtures; keep it disabled everywhere else.

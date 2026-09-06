@@ -255,7 +255,7 @@ Beyond the examples above, Disharmony supports:
   execution of the game or patch methods are outside its scope.
 
 The source includes API documentation in the [attribute reference](Attributes.cs), [fluent API](Patch.cs), and
-[patch registration API](Patcher.cs). The optional [Disharmony analyzers](../Source_Disharmony.Analyzers/README.md)
+[patch registration API](Patcher.cs). The optional [Disharmony analyzers](../Disharmony.Analyzers/README.md)
 check patch definitions and some bindings at build time, while target resolution remains a runtime check. For working
 examples of more specialized behavior and instructions for running the suite, see the
-[test project](../Source_Disharmony.Tests/README.md).
+[test project](../Disharmony.Tests/README.md).

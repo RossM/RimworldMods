@@ -69,12 +69,12 @@ Runtime validation remains necessary, including for methods registered through r
 Reference this project from each project that contains patches (analyzer project references are not transitive):
 
 ```xml
-<ProjectReference Include="..\Source_Disharmony.Analyzers\Source_Disharmony.Analyzers.csproj"
+<ProjectReference Include="..\Disharmony.Analyzers\Disharmony.Analyzers.csproj"
                   OutputItemType="Analyzer"
                   ReferenceOutputAssembly="false" />
 ```
 
-Run tests with `dotnet test Source_Disharmony.Analyzers.Tests/Source_Disharmony.Analyzers.Tests.csproj`.
+Run tests with `dotnet test Disharmony.Analyzers.Tests/Disharmony.Analyzers.Tests.csproj`.
 Tests use minimal attribute metadata and do not execute patches or load the game.
 
 DH0025 and DH0026 flag likely mistakes when a prefix binds __result or [ReturnValue]. Both can apply to the same parameter; DH0018 takes precedence for AlwaysRun prefixes.

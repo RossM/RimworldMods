@@ -25,8 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Source_Disharmony\Disharmony.csproj" />
-    <ProjectReference Include="..\Source_Disharmony.TestTargets\Disharmony.TestTargets.csproj">
+    <ProjectReference Include="..\Disharmony\Disharmony.csproj" />
+    <ProjectReference Include="..\Disharmony.TestTargets\Disharmony.TestTargets.csproj">
       <SetConfiguration>Configuration=Release</SetConfiguration>
     </ProjectReference>
   </ItemGroup>

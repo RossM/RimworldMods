@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Source_Disharmony\Disharmony.csproj" />
-    <ProjectReference Include="..\Source_Disharmony.Analyzers\Disharmony.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Disharmony\Disharmony.csproj" />
+    <ProjectReference Include="..\Disharmony.Analyzers\Disharmony.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
