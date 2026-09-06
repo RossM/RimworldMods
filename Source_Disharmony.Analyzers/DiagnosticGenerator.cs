@@ -321,11 +321,11 @@ internal class DiagnosticGenerator
         }
         else
         {
-            if (Helpers.FindAttribute(method.ContainingType, _PatchAttribute) is null &&
-                Helpers.FindAttribute(method.ContainingType, _HarmonyPatch) is null)
+            if (!Helpers.HasAttribute(method.ContainingType, _PatchAttribute) &&
+                !Helpers.HasAttribute(method.ContainingType, _HarmonyPatch))
                 ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingPatchClass, location, method.Name));
-            if (Helpers.FindAttribute(method, _TargetAttribute, _TargetsAttribute) is null &&
-                Helpers.FindAttribute(method.ContainingType, _TargetAttribute, _TargetsAttribute) is null)
+            if (!Helpers.HasAttribute(method, _TargetAttribute, _TargetsAttribute) &&
+                !Helpers.HasAttribute(method.ContainingType, _TargetAttribute, _TargetsAttribute))
                 ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingTarget, location, method.Name));
             if (Helpers.HasGenericParameters(method))
                 ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.GenericMethod, location, method.Name));

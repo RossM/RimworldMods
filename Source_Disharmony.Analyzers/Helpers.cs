@@ -114,5 +114,5 @@ internal static class Helpers
         return conversion.IsIdentity || (conversion.IsImplicit && (conversion.IsReference || conversion.IsBoxing));
     }
 
-    public static bool HasAttribute(IMethodSymbol method, params INamedTypeSymbol?[] types) => FindAttribute(method, types) is not null;
+    public static bool HasAttribute(ISymbol method, params INamedTypeSymbol?[] types) => FindAttribute(method, types) is not null;
 }
