@@ -397,7 +397,7 @@ internal class DiagnosticGenerator
         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.AlwaysRunThrow, ctx.Operation.Syntax.GetLocation(), method.Name));
     }
 
-    public void CheckWrite(IOperation target, OperationAnalysisContext ctx)
+    private void CheckWrite(IOperation target, OperationAnalysisContext ctx)
     {
         if (target is ITupleOperation tuple)
             foreach (var element in tuple.Elements)
@@ -413,7 +413,7 @@ internal class DiagnosticGenerator
                 reference.Parameter.Name));
     }
 
-    public void CheckSelector(AttributeData selector, SymbolAnalysisContext ctx, Location location, IMethodSymbol method)
+    private void CheckSelector(AttributeData selector, SymbolAnalysisContext ctx, Location location, IMethodSymbol method)
     {
         var kind = Helpers.Argument(selector, "memberType");
         // Overloads without memberType default to Any (zero).
