@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -6,6 +7,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 
 namespace Disharmony.Analyzers;
+
+using ParameterKey = (ParameterKind identityKind, int? identityScope, object? selector);
 
 internal class DiagnosticGenerator
 {
@@ -22,11 +25,12 @@ internal class DiagnosticGenerator
     private readonly INamedTypeSymbol? _InnerConstantAttribute;
     private readonly INamedTypeSymbol? _TargetAttribute;
     private readonly INamedTypeSymbol? _TargetsAttribute;
-    private readonly int? _MemberType_Constructor;
+    private readonly int _MemberType_Constructor;
     private readonly INamedTypeSymbol? _PatchOptionsAttribute;
     private readonly int _PatchOptions_AlwaysRun;
-    private readonly int? _Scope_Inner;
-    private readonly int? _Scope_Outer;
+    private readonly int _Scope_Any;
+    private readonly int _Scope_Inner;
+    private readonly int _Scope_Outer;
     private readonly int _PatchOptions_AllowUnsafe;
     private readonly INamedTypeSymbol? _Exception;
     private readonly INamedTypeSymbol? _PriorityAttribute;
@@ -53,7 +57,7 @@ internal class DiagnosticGenerator
         // Enums
 
         INamedTypeSymbol? memberType = compilation.GetTypeByMetadataName("Disharmony.MemberType");
-        _MemberType_Constructor = memberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+        _MemberType_Constructor = memberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -1;
 
         INamedTypeSymbol? patchOptions = compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
         _PatchOptions_AlwaysRun
@@ -62,8 +66,9 @@ internal class DiagnosticGenerator
             = patchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? 0;
 
         INamedTypeSymbol? scope = compilation.GetTypeByMetadataName("Disharmony.Scope");
-        _Scope_Inner = scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _Scope_Outer = scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+        _Scope_Any = scope?.GetMembers("Any").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -1;
+        _Scope_Inner = scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -1;
+        _Scope_Outer = scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int? ?? -2;
 
         // Harmony
 
@@ -138,7 +143,7 @@ internal class DiagnosticGenerator
                 ? Helpers.Argument(innerAttribute, "value")?.Type
                 : null;
 
-            var boundValues = new Dictionary<(ParameterKind Kind, int? Scope, object? Selector), List<IParameterSymbol>>();
+            var boundValues = new Dictionary<ParameterKey, List<IParameterSymbol>>();
 
             foreach (var parameter in method.Parameters)
             {
@@ -158,7 +163,7 @@ internal class DiagnosticGenerator
                 if (binding is null && kind == ParameterKind.Argument && parameter.Name.StartsWith("__"))
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.UnknownSpecialParameter, parameterLocation, parameter.Name));
 
-                int? explicitScope = binding is not null ? Helpers.Argument(binding, "scope")?.Value as int? : null;
+                int? explicitScope = Helpers.Argument(binding, "scope")?.Value as int?;
                 bool explicitlyInner = explicitScope is int selected && selected == _Scope_Inner;
                 if (!isInner && (kind == ParameterKind.Caller || explicitlyInner))
                 {
@@ -166,34 +171,11 @@ internal class DiagnosticGenerator
                     continue;
                 }
 
-                // Named arguments and fields retain Any's fallback semantics on inner patches.
-                // Index selectors stay distinct from names because equating them needs target metadata.
-                var identityKind = kind == ParameterKind.Caller ? ParameterKind.Instance : kind;
-                object? selector = kind switch
-                {
-                    ParameterKind.Argument => binding is null
-                        ? parameter.Name
-                        : Helpers.Argument(binding, "index")?.Value ?? Helpers.Argument(binding, "name")?.Value ?? parameter.Name,
-                    ParameterKind.Field => binding is null
-                        ? parameter.Name.Substring(3)
-                        : Helpers.Argument(binding, "name")?.Value ?? parameter.Name,
-                    ParameterKind.Method => Helpers.Argument(binding!, "name")?.Value ?? parameter.Name,
-                    ParameterKind.State => binding is null ? parameter.Name : Helpers.Argument(binding, "key")?.Value ?? parameter.Name,
-                    _ => null,
-                };
-                int? identityScope = kind switch
-                {
-                    ParameterKind.Result or ParameterKind.Exception or ParameterKind.State or ParameterKind.BaseMethod => null,
-                    ParameterKind.Caller => _Scope_Outer,
-                    _ when !isInner => _Scope_Outer,
-                    ParameterKind.Field => explicitScope ?? 0,
-                    ParameterKind.Argument when selector is string => explicitScope ?? 0,
-                    _ => explicitScope is null or 0 ? _Scope_Inner : explicitScope,
-                };
-                var identity = (identityKind, identityScope, selector);
-                if (!boundValues.TryGetValue(identity, out var boundParameters))
-                    boundValues.Add(identity, boundParameters = []);
+                ParameterKey parameterKey = GetParameterKey(parameter, binding, kind, explicitScope, isInner);
+                if (!boundValues.TryGetValue(parameterKey, out var boundParameters))
+                    boundValues.Add(parameterKey, boundParameters = []);
                 boundParameters.Add(parameter);
+
                 if (kind == ParameterKind.Result && isPrefix)
                 {
                     if (alwaysRun)
@@ -275,6 +257,35 @@ internal class DiagnosticGenerator
                         parameter.Name, state.Key));
                 }
         }
+    }
+
+    private ParameterKey GetParameterKey(
+        IParameterSymbol parameter,
+        AttributeData? binding,
+        ParameterKind kind,
+        int? explicitScope,
+        bool isInner)
+    {
+        // Named arguments and fields retain Any's fallback semantics on inner patches.
+        // Index selectors stay distinct from names because equating them needs target metadata.
+
+        int? defaultScope = !isInner ? _Scope_Outer : explicitScope is null || explicitScope == _Scope_Any ? _Scope_Inner: explicitScope;
+        ParameterKey identity = kind switch
+        {
+            ParameterKind.Argument => Helpers.Argument(binding, "index") is not null ?
+                (ParameterKind.Argument, defaultScope, Helpers.Argument(binding, "index")?.Value) :
+                (ParameterKind.Argument, explicitScope ?? _Scope_Any, Helpers.Argument(binding, "name")?.Value ?? parameter.Name),
+            ParameterKind.Instance => (ParameterKind.Instance, defaultScope, null),
+            ParameterKind.Result => (ParameterKind.Result, null, null),
+            ParameterKind.State => (ParameterKind.State, null, Helpers.Argument(binding, "key")?.Value ?? parameter.Name),
+            ParameterKind.Field => (ParameterKind.Field, defaultScope, RemoveTripleUnderscore(Helpers.Argument(binding, "name")?.Value as string ?? parameter.Name)),
+            ParameterKind.BaseMethod => (ParameterKind.BaseMethod, null, null),
+            ParameterKind.Method => (ParameterKind.Method, defaultScope, Helpers.Argument(binding!, "name")?.Value ?? parameter.Name),
+            ParameterKind.Exception => (ParameterKind.Exception, null, null),
+            ParameterKind.Caller => (ParameterKind.Instance, _Scope_Outer, null),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        return identity;
     }
 
     private ParameterKind GetBindingKind(IParameterSymbol parameter, AttributeData? binding)
@@ -443,5 +454,10 @@ internal class DiagnosticGenerator
             (Helpers.Argument(selector, "methodName") ?? Helpers.Argument(selector, "memberName")) is null or { IsNull: true })
             ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingMemberName, Helpers.SelectorLocation(selector, location),
                 method.Name));
+    }
+
+    private static string RemoveTripleUnderscore(string s)
+    {
+        return s.StartsWith("___") ? s[3..] : s;
     }
 }

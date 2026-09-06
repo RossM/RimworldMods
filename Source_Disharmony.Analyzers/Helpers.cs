@@ -55,14 +55,13 @@ internal static class Helpers
     internal static bool IsAttribute(AttributeData attribute, params INamedTypeSymbol?[] types) =>
         types.Any(type => type is not null && SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, type));
 
-    internal static TypedConstant? Argument(AttributeData attribute, string name)
+    internal static TypedConstant? Argument(AttributeData? attribute, string name)
     {
-        var parameters = attribute.AttributeConstructor?.Parameters;
-        if (parameters is null)
+        if (attribute?.AttributeConstructor?.Parameters is not { } parameters)
             return null;
-        for (int i = 0; i < parameters.Value.Length && i < attribute.ConstructorArguments.Length; i++)
+        for (int i = 0; i < parameters.Length && i < attribute.ConstructorArguments.Length; i++)
         {
-            if (parameters.Value[i].Name == name)
+            if (parameters[i].Name == name)
                 return attribute.ConstructorArguments[i];
         }
 
