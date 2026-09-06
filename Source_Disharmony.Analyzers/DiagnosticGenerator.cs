@@ -37,27 +37,34 @@ class DiagnosticGenerator
     public DiagnosticGenerator(CSharpCompilation compilation)
     {
         this.compilation = compilation;
+
+        // Attributes
         _PatchAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PatchAttribute");
-        _HarmonyPatch = this.compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
         _CategoryAttribute = this.compilation.GetTypeByMetadataName("Disharmony.CategoryAttribute");
-        _HarmonyPatchCategory = this.compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
         _PrefixAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PrefixAttribute");
         _PostfixAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PostfixAttribute");
         _InnerAttribute = this.compilation.GetTypeByMetadataName("Disharmony.InnerAttribute");
         _InnerConstantAttribute = this.compilation.GetTypeByMetadataName("Disharmony.InnerConstantAttribute");
         _TargetAttribute = this.compilation.GetTypeByMetadataName("Disharmony.TargetAttribute");
         _TargetsAttribute = this.compilation.GetTypeByMetadataName("Disharmony.TargetsAttribute");
+        _PatchOptionsAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PatchOptionsAttribute");
+        _PriorityAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute");
+
+        // Enums
         _MemberType = this.compilation.GetTypeByMetadataName("Disharmony.MemberType");
         _MemberType_Constructor = _MemberType?.GetMembers("Constructor").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
-        _PatchOptionsAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PatchOptionsAttribute");
         _PatchOptions = this.compilation.GetTypeByMetadataName("Disharmony.PatchOptions");
         _PatchOptions_AlwaysRun = _PatchOptions?.GetMembers("AlwaysRun").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _PatchOptions_AllowUnsafe = _PatchOptions?.GetMembers("AllowUnsafe").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _Scope = this.compilation.GetTypeByMetadataName("Disharmony.Scope");
         _Scope_Inner = _Scope?.GetMembers("Inner").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
         _Scope_Outer = _Scope?.GetMembers("Outer").OfType<IFieldSymbol>().FirstOrDefault()?.ConstantValue as int?;
+
+        // Harmony
+        _HarmonyPatch = this.compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
+        _HarmonyPatchCategory = this.compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatchCategory");
+
         _Exception = this.compilation.GetTypeByMetadataName("System.Exception");
-        _PriorityAttribute = this.compilation.GetTypeByMetadataName("Disharmony.PriorityAttribute");
 
         _methodAttributes =
         [
