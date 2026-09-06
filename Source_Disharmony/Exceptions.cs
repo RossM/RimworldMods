@@ -1,7 +1,7 @@
 ﻿namespace Disharmony;
 
 /// <summary>
-///     Represents an error encountered while defining, applying, or executing a Disharmony patch.
+///     Represents an error encountered while defining or applying a Disharmony patch.
 /// </summary>
 public class PatchException : Exception
 {
@@ -49,7 +49,7 @@ public class ParameterBindingException : PatchException
 public class PatchDefinitionException(MethodInfo method, string message) : PatchException($"{method.FullName}: {message}");
 
 /// <summary>
-///     Represents an error that occurs while applying or executing a patch at run time.
+///     Represents an error that occurs while applying a patch at run time.
 /// </summary>
 /// <param name="message">The message that describes the run-time error.</param>
 /// <param name="innerException">The exception that caused the run-time error.</param>

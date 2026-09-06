@@ -59,13 +59,12 @@ public enum PatchType
 ///     <para>
 ///         Every call that applies patches returns a <see cref="PatchHandle" />. Keep the handle if the patches may need
 ///         to be removed later with <see cref="Unpatch" />. A handle returned for several configurations removes them
-///         together, and those configurations can share <see cref="StateAttribute">state</see>. Patches affect every
+///         together, and those configurations can share state as described by <see cref="StateAttribute" />. Patches affect every
 ///         caller in the current process.
 ///     </para>
 ///     <para>
-///         Patches take effect before a patching call returns, but Disharmony may postpone some preparation until a
-///         patched method is first called. Use <see cref="ForceApply" /> when that work should happen at a predictable
-///         time instead.
+///         Patches take effect before a patching call returns, but generation of the patched method bodies may be
+///         deferred until the methods are first called. Use <see cref="ForceApply" /> to complete this work immediately.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -152,12 +151,12 @@ public static class Patcher
     }
 
     /// <summary>
-    ///     Applies the patch described by an attributed method.
+    ///     Applies the patches described by the specified attributed methods.
     /// </summary>
     /// <param name="methods">The attributed patch methods to apply.</param>
     /// <remarks>
-    ///     Attributes on the method and its declaring type are both considered. The declaring type does not need a
-    ///     <see cref="PatchAttribute" /> when the method is patched directly.
+    ///     Attributes on each method and its declaring type are both considered. The declaring type does not need a
+    ///     <see cref="PatchAttribute" /> when methods are patched directly.
     /// </remarks>
     /// <returns>A handle for removing the patches added by this call.</returns>
     /// <exception cref="PatchException">A patch definition is invalid or a patch could not be applied.</exception>
@@ -247,13 +246,13 @@ public static class Patcher
     }
 
     /// <summary>
-    ///     Prepares all current patches immediately to avoid work when a patched method is first called.
+    ///     Applies all deferred patches immediately, generating the patched method bodies before their first call.
     /// </summary>
     /// <remarks>
     ///     Patches are already active without this call. Use it during a convenient idle period when avoiding first-use
     ///     delay matters. Patches added afterward may require another call.
     /// </remarks>
-    /// <exception cref="RuntimePatchException">One or more pending patches could not be prepared.</exception>
+    /// <exception cref="RuntimePatchException">One or more deferred patches could not be applied.</exception>
     public static void ForceApply()
     {
         Harmony.ResolveAllTrampolines();

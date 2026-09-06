@@ -14,3 +14,4 @@ DataAnalysis/elo_ratings.csv
 /TestResults
 /Source_Disharmony.Tests/TestResults
 .editorconfig
+/tmp

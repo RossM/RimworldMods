@@ -81,7 +81,7 @@ public enum Scope
 }
 
 /// <summary>
-///     Lists the optional behaviors that can be enabled for a patch.
+///     Specifies optional patch behaviors that can be combined as flags.
 /// </summary>
 /// <remarks>
 ///     For an attributed patch, pass the desired flags to <see cref="PatchOptionsAttribute" />. When configuring a patch
@@ -174,7 +174,7 @@ public enum PatchOptions
 public sealed class PatchAttribute(Type? type = null) : Attribute
 {
     /// <summary>
-    ///     Gets the default type that declares the outer target members.
+    ///     Gets the default declaring type for outer targets, or <see langword="null" /> if none was supplied.
     /// </summary>
     public Type? Type { get; } = type;
 }
@@ -207,7 +207,7 @@ public sealed class CategoryAttribute(string category) : Attribute
 }
 
 /// <summary>
-///     Base class for attributes that identify whether a patch method is a prefix or postfix.
+///     Provides the base class for attributes that identify whether a patch method is a prefix or postfix.
 /// </summary>
 /// <param name="patchType">The point relative to the target operation at which the patch runs.</param>
 public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
@@ -219,13 +219,13 @@ public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 }
 
 /// <summary>
-///     Marks a patch method to run before each selected target operation. A prefix that returns
-///     <see langword="false" /> skips that operation.
+///     Marks a patch method to run before each selected target operation.
 /// </summary>
 /// <remarks>
 ///     Without an inner-target attribute, the operation is the outer member selected by <see cref="TargetAttribute" />
 ///     or <see cref="TargetsAttribute" />. With <see cref="InnerAttribute" /> or <see cref="InnerConstantAttribute" />,
-///     it is each matching operation inside the outer member. See <see cref="Patcher" /> for the complete patch model.
+///     it is each matching operation inside the outer member. A prefix that returns <see langword="false" /> skips
+///     that operation. See <see cref="Patcher" /> for the complete patch model.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -248,7 +248,7 @@ public sealed class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 public sealed class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
 
 /// <summary>
-///     Base class for attributes that select an operation inside an outer patch target.
+///     Provides the base class for attributes that select an operation inside an outer patch target.
 /// </summary>
 public abstract class InnerAttributeBase : Attribute;
 
@@ -271,8 +271,8 @@ public abstract class InnerAttributeBase : Attribute;
 /// </param>
 /// <remarks>
 ///     Combine this attribute with <see cref="PrefixAttribute" /> or <see cref="PostfixAttribute" /> and select the outer
-///     members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See <see cref="Patcher" /> for
-///     member-name syntax, overload selection, and inner-versus-outer parameter binding.
+///     members with <see cref="TargetAttribute" /> or <see cref="TargetsAttribute" />. See <see cref="TargetAttribute" />
+///     for member-name syntax and overload selection, and <see cref="Scope" /> for parameter-binding scope.
 /// </remarks>
 [PublicAPI]
 [MeansImplicitUse]
@@ -504,7 +504,21 @@ public static class PatchPriority
 ///         Constructed generic methods can be identified during lookup but are not currently supported as outer targets.
 ///     </para>
 ///     <para>
-///         See <see cref="Patcher" /> for declaring-type precedence, member-name syntax, and overload selection.
+///         Use <c>Namespace.Type.Member</c> to include the declaring type in the member name. The type is resolved
+///         from the name when neither this attribute nor the containing patch class supplies one.
+///     </para>
+///     <para>
+///         For Harmony compatibility, <c>Namespace.Type:Member</c> is also accepted. The type named before the colon
+///         overrides any type supplied by patch attributes.
+///     </para>
+///     <para>
+///         Use <c>Method.LocalFunction</c> to select a local function or <c>Method.*</c> to select lambdas within a method.
+///     </para>
+///     <para>
+///         A <see langword="null" /> parameter signature omits overload filtering; an empty array selects parameterless overloads.
+///         Use <see cref="Ref{T}" />, <see cref="In{T}" />, and <see cref="Out{T}" /> in the signature for
+///         by-reference parameters. To select a constructor, set <paramref name="memberType" /> to
+///         <see cref="MemberType.Constructor" /> and leave <paramref name="methodName" /> <see langword="null" />.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -638,7 +652,7 @@ public class TargetAttribute(
 ///         targets.
 ///     </para>
 ///     <para>
-///         See <see cref="Patcher" /> for declaring-type precedence, member-name syntax, and overload selection.
+///         See <see cref="TargetAttribute" /> for member-name syntax, overload selection, and constructor selection.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -715,7 +729,7 @@ public sealed class TargetsAttribute(
 }
 
 /// <summary>
-///     Base class for attributes that bind a patch-method parameter to data from the patched operation.
+///     Provides the base class for attributes that bind a patch-method parameter to data from the patched operation.
 /// </summary>
 /// <param name="scope">The inner or outer operation from which to obtain the bound value.</param>
 public abstract class ParameterBindingAttribute(Scope scope) : Attribute
@@ -732,8 +746,7 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 /// </summary>
 /// <remarks>
 ///     Patch parameters bind by name without this attribute. Use it when the patch parameter has a different name, when
-///     positional binding is more stable, or when an inner patch must select a specific scope. See
-///     <see cref="Patcher" /> for implicit binding conventions.
+///     positional binding is more stable, or when an inner patch must select a specific <see cref="Scope" />.
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
@@ -810,11 +823,12 @@ public sealed class InstanceAttribute(Scope scope = Scope.Any) : ParameterBindin
 
 /// <summary>
 ///     Binds a patch parameter to the outer member's return value for an ordinary patch or the inner member's return value
-///     for an inner patch. Pass the parameter by reference to replace the bound return value.
+///     for an inner patch.
 /// </summary>
 /// <remarks>
 ///     <para>
-///         A parameter named <c>__result</c> with no binding attribute is treated as if it has this attribute.
+///         Pass the parameter by reference to replace the bound return value. A parameter named <c>__result</c>
+///         with no binding attribute is treated as if it has this attribute.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -834,7 +848,7 @@ public sealed class ReturnValueAttribute() : ParameterBindingAttribute(Scope.Any
 ///     <para>
 ///         Patches only share state with other patches applied in the same call to a patching method on
 ///         <see cref="Patcher" />.
-///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" /> or <see cref="Patcher.PatchCategory"/>
+///         Patches applied with <see cref="Patcher.PatchAll(Assembly)" /> or <see cref="Patcher.PatchCategory" />
 ///         additionally require that the patch methods be defined in the same class to share state.
 ///     </para>
 ///     <para>

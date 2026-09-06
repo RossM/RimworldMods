@@ -17,17 +17,17 @@ public class Ruleset
     internal static bool forceDebug = false;
 
     /// <summary>
-    ///     The rules to apply.
+    ///     Gets or initializes the collection of rules to apply. The default is an empty collection.
     /// </summary>
     public List<Rule> Rules { get; init; } = [];
 
     /// <summary>
-    ///     Local-variable placeholders that should resolve to the same emitted local across different rule matches.
+    ///     Gets or initializes local-variable placeholders that resolve to the same emitted local across rule matches.
     /// </summary>
     public List<LocalBuilder> CrossRuleLocals { get; init; } = [];
 
     /// <summary>
-    ///     Label placeholders that should resolve to the same emitted label across different rule matches.
+    ///     Gets or initializes label placeholders that resolve to the same emitted label across rule matches.
     /// </summary>
     public List<Label> CrossRuleLabels { get; init; } = [];
 
@@ -57,7 +57,7 @@ public class Ruleset
     /// <param name="debug">Whether to write matching and output details to Harmony's file log.</param>
     /// <exception cref="InvalidOperationException">
     ///     A rule is invalid, does not meet its required match count, overlaps another match, or refers to a local that
-    ///     cannot be resolved.
+    ///     cannot be resolved; or a phase has no matches with a non-null <see cref="Rule.Output" />.
     /// </exception>
     public void MatchAndReplace(
         MethodBase method,
@@ -81,7 +81,7 @@ public class Ruleset
     /// <returns>A new list containing the transformed instruction sequence.</returns>
     /// <exception cref="InvalidOperationException">
     ///     A rule is invalid, does not meet its required match count, overlaps another match, or refers to a local that
-    ///     cannot be resolved.
+    ///     cannot be resolved; or a phase has no matches with a non-null <see cref="Rule.Output" />.
     /// </exception>
     public static List<CodeInstruction> MatchAndReplace(
         List<Rule> rules,
@@ -140,43 +140,48 @@ public enum OutputMode
 public class Rule
 {
     /// <summary>
-    ///     The minimum number of required matches. The default is 1.
+    ///     Gets or initializes the minimum required match count. The default is 1.
     /// </summary>
     public int Min { get; init; } = 1;
 
     /// <summary>
-    ///     The maximum number of matches to process, or a value less than or equal to zero for no limit. The default is 1.
+    ///     Gets or initializes the maximum number of matches to process. Zero or a negative value means no limit.
+    ///     The default is 1.
     /// </summary>
     public int Max { get; init; } = 1;
 
     /// <summary>
-    ///     The ordering priority for zero-length rules at the same insertion point. Higher values are emitted first.
+    ///     Gets or initializes the priority for zero-length rules at the same insertion point. Higher values are emitted
+    ///     first. The default is 0.
     /// </summary>
     public int Priority { get; init; } = 0;
 
     /// <summary>
-    ///     The processing phase. Lower-numbered phases run first, and later phases can match output from earlier phases.
+    ///     Gets or initializes the processing phase. Lower-numbered phases run first; later phases can match earlier
+    ///     output. The default is 1.
     /// </summary>
     public int Phase { get; init; } = 1;
 
     /// <summary>
-    ///     The position at which <see cref="Output" /> is emitted relative to each match.
+    ///     Gets or initializes where <see cref="Output" /> is emitted relative to each match.
+    ///     The default is <see cref="OutputMode.Replace" />.
     /// </summary>
     public OutputMode Mode { get; init; } = OutputMode.Replace;
 
     /// <summary>
-    ///     The instruction pattern to match, or <see langword="null" /> for <see cref="OutputMode.MethodPrefix" /> and
-    ///     <see cref="OutputMode.MethodPostfix" /> rules.
+    ///     Gets or initializes the instruction pattern, or <see langword="null" /> for
+    ///     <see cref="OutputMode.MethodPrefix" /> and <see cref="OutputMode.MethodPostfix" /> rules.
     /// </summary>
     public CodeInstruction[]? Pattern { get; init; }
 
     /// <summary>
-    ///     The instructions to emit, or <see langword="null" /> to validate matches without producing output.
+    ///     Gets or initializes the instructions to emit, or <see langword="null" /> to validate matches without emitting
+    ///     output. An empty array removes matches in <see cref="OutputMode.Replace" /> mode.
     /// </summary>
     public required CodeInstruction[]? Output { get; init; }
 
     /// <summary>
-    ///     An optional name used in debug output and error messages.
+    ///     Gets or initializes the name used in debug output and errors, or <see langword="null" /> for no name.
     /// </summary>
     public string? Name { get; init; }
 }

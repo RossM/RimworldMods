@@ -5,15 +5,20 @@
 /// </summary>
 public static class ReflectionExtensions
 {
+    /// <param name="member">The member to describe.</param>
     extension(MemberInfo member)
     {
         /// <summary>
         ///     Gets the member name qualified by its declaring type, in the form
         ///     <c>Namespace.DeclaringType::Member</c>.
         /// </summary>
+        /// <remarks>
+        ///     If the member has no declaring type, the result starts with <c>::</c>. Parameter types are not included.
+        /// </remarks>
         public string FullName => $"{member.DeclaringType?.FullName}::{member.Name}";
     }
 
+    /// <param name="method">The method or constructor to inspect.</param>
     extension(MethodBase method)
     {
         /// <summary>
@@ -26,7 +31,8 @@ public static class ReflectionExtensions
         /// </summary>
         /// <returns>
         ///     The state machine's <c>MoveNext</c> method, or <see langword="null" /> if <paramref name="method" /> is
-        ///     not recognized as an iterator or asynchronous state-machine entry point.
+        ///     not marked with <see cref="IteratorStateMachineAttribute" /> or <see cref="AsyncStateMachineAttribute" />,
+        ///     or the generated type has no <c>MoveNext</c> method.
         /// </returns>
         public MethodInfo? GetStateMachineImplementation()
         {
