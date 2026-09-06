@@ -178,9 +178,6 @@ internal class DiagnosticGenerator
                         if (method.ReturnsVoid)
                             ctx.ReportDiagnostic(
                                 Diagnostic.Create(PatchAnalyzer.VoidPrefixResultBinding, parameterLocation, parameter.Name));
-                        if (parameter.RefKind is not (RefKind.Ref or RefKind.Out))
-                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ReadOnlyPrefixResultBinding, parameterLocation,
-                                parameter.Name));
                     }
                 }
 

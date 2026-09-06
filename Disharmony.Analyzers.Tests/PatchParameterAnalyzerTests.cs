@@ -9,18 +9,14 @@ namespace Disharmony.Analyzers.Tests;
 
 public class PatchParameterAnalyzerTests
 {
-    [TestCase("[Patch, Target(typeof(object), \"M\"), PatchOptions(PatchOptions.AlwaysRun)] class C { [Prefix, PatchOptions(PatchOptions.Default)] static void M(int __result) {} }", "DH0025,DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([ReturnValue] int result) {} }", "DH0025,DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(int __result) {} }", "DH0025,DH0026")]
+    [TestCase("[Patch, Target(typeof(object), \"M\"), PatchOptions(PatchOptions.AlwaysRun)] class C { [Prefix, PatchOptions(PatchOptions.Default)] static void M(int __result) {} }", "DH0025")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([ReturnValue] int result) {} }", "DH0025")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(int __result) {} }", "DH0025")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref int __result) {} }", "DH0025")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(object __result) {} }", "DH0025,DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(\"text\")] static void M(in object __result) {} }", "DH0025,DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(int __result) => false; }", "DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(in int __result) => true; }", "DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] int value) => false; }", "DH0026")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] in int value) => true; }", "DH0026")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(object __result) {} }", "DH0025")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(\"text\")] static void M(in object __result) {} }", "DH0025")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([ReturnValue] out int value) { value = 1; } }", "DH0025")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __result) {} }", "DH0025,DH0026")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __result) {} }", "DH0025")]
     public async Task PrefixResultBindingReportsLikelyMistakes(string source, string expectedIds)
     {
         var diagnostics = await Analyze(source);
@@ -32,7 +28,11 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(out int __result) { __result = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] out int value) { value = 1; return false; } }")]
-    public async Task WritablePrefixResultsAndReadOnlyPostfixResultsDoNotWarn(string source)
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(int __result) => false; }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(in int __result) => true; }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] int value) => false; }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] in int value) => true; }")]
+    public async Task PrefixResultDeclarationsDoNotWarn(string source)
     {
         Assert.That(await Analyze(source), Is.Empty);
     }
@@ -75,9 +75,9 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(0)] int value) {} }", "DH0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(\"x\", Scope.Inner)] int value) {} }", "DH0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Field(Scope.Inner)] int value) {} }", "DH0024", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(long __result) {} }", "DH0021,DH0025,DH0026", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(long __result) {} }", "DH0021,DH0025", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DH0021,DH0025", "__result")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(in object __result) {} }", "DH0021,DH0025,DH0026", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(in object __result) {} }", "DH0021,DH0025", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, InnerConstant(\"text\")] static void M(ref object __result) {} }", "DH0021", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __resut) {} }", "DH0027", "__resut")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __Result) {} }", "DH0027", "__Result")]

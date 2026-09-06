@@ -15,7 +15,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         DuplicateDiscoveryAttributes, MissingMemberName, AlwaysRunThrow,
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
-        VoidPrefixResultBinding, ReadOnlyPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
+        VoidPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
         StateWithoutReader, WrittenValueParameter,
     ];
 
@@ -127,11 +127,6 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
     public static readonly DiagnosticDescriptor VoidPrefixResultBinding = new(
         "DH0025", "Prefix binding the result cannot skip the target",
         "Prefix binds the result through '{0}' but returns void; return bool and return false when supplying a replacement result to skip the target",
-        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public static readonly DiagnosticDescriptor ReadOnlyPrefixResultBinding = new(
-        "DH0026", "Prefix result parameter cannot set the result",
-        "Prefix result parameter '{0}' should be declared ref or out",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor UnknownSpecialParameter = new(

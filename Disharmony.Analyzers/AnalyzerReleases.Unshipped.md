@@ -27,7 +27,6 @@ DH0021 | Correctness | Warning | Incompatible binding type for exceptions or inn
 DH0022 | Correctness | Warning | Conflicting types for a shared state key
 DH0024 | Correctness | Warning | Unavailable instance, argument, or field on an inner constant
 DH0025 | Correctness | Warning | Void prefix binds the result
-DH0026 | Correctness | Warning | Prefix result binding is not ref or out
 DH0027 | Correctness | Warning | Unknown special parameter name
 DH0028 | Correctness | Warning | Multiple parameters bind the same value in a patch
 DH0029 | Correctness | Warning | State key has no ref or out parameter in its patch class
