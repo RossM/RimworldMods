@@ -132,7 +132,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor MultiplePatchTypes = new(
         "DH0009", "Patch method has multiple patch type attributes",
-        "Method '{0}' has multiple prefix/postfix attributes; keep exactly one [Prefix] or [Postfix], including inherited attributes",
+        "Method '{0}' has multiple prefix/postfix attributes",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor MultipleInnerTargets = new(
