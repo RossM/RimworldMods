@@ -180,7 +180,8 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         if (state._PrefixAttribute is null && state._PostfixAttribute is null)
             return;
 
-        start.RegisterOperationAction(ctx => state.AnalyzeAssignment(ctx), OperationKind.SimpleAssignment, OperationKind.CompoundAssignment, OperationKind.CoalesceAssignment,
+        start.RegisterOperationAction(ctx => state.AnalyzeAssignment(ctx),
+            OperationKind.SimpleAssignment, OperationKind.CompoundAssignment, OperationKind.CoalesceAssignment,
             OperationKind.DeconstructionAssignment, OperationKind.Increment, OperationKind.Decrement, OperationKind.Argument);
 
         start.RegisterSymbolAction(ctx => state.AnalyzeClass(ctx), SymbolKind.NamedType);

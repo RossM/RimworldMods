@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Operations;
 
 namespace Disharmony.Analyzers;
 
-class DiagnosticGenerator
+internal class DiagnosticGenerator
 {
     private readonly CSharpCompilation compilation;
     private readonly INamedTypeSymbol? _PatchAttribute;
@@ -108,7 +108,8 @@ class DiagnosticGenerator
         if (typeLocation is not null)
         {
             if (attributes.Count(a => Helpers.IsAttribute(a, _PatchAttribute) || Helpers.IsAttribute(a, _HarmonyPatch)) > 1)
-                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.DuplicateDiscoveryAttributes, typeLocation, type.Name, "[Patch]/[HarmonyPatch]"));
+                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.DuplicateDiscoveryAttributes, typeLocation, type.Name,
+                    "[Patch]/[HarmonyPatch]"));
             if (attributes.Count(a => Helpers.IsAttribute(a, _CategoryAttribute) || Helpers.IsAttribute(a, _HarmonyPatchCategory)) > 1)
                 ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.DuplicateDiscoveryAttributes, typeLocation, type.Name,
                     "[Category]/[HarmonyPatchCategory]"));
@@ -121,7 +122,8 @@ class DiagnosticGenerator
             bool isPostfix = Helpers.FindAttribute(method, _PostfixAttribute) is not null;
             if ((!isPrefix && !isPostfix) || (isPrefix && isPostfix))
                 continue;
-            var innerAttribute = Helpers.FindAttribute(method, _InnerAttribute, _InnerConstantAttribute) ?? Helpers.FindAttribute(type, _InnerAttribute, _InnerConstantAttribute);
+            var innerAttribute = Helpers.FindAttribute(method, _InnerAttribute, _InnerConstantAttribute) ??
+                                 Helpers.FindAttribute(type, _InnerAttribute, _InnerConstantAttribute);
             bool isInner = innerAttribute is not null;
             var patchOptions = Helpers.GetPatchOptions(method, _PatchOptionsAttribute);
             bool alwaysRun = _PatchOptions_AlwaysRun is int mask && (patchOptions & mask) != 0;
@@ -212,9 +214,11 @@ class DiagnosticGenerator
                     else
                     {
                         if (method.ReturnsVoid)
-                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.VoidPrefixResultBinding, parameterLocation, parameter.Name));
+                            ctx.ReportDiagnostic(
+                                Diagnostic.Create(PatchAnalyzer.VoidPrefixResultBinding, parameterLocation, parameter.Name));
                         if (parameter.RefKind is not (RefKind.Ref or RefKind.Out))
-                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ReadOnlyPrefixResultBinding, parameterLocation, parameter.Name));
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ReadOnlyPrefixResultBinding, parameterLocation,
+                                parameter.Name));
                     }
                 }
 
@@ -223,20 +227,29 @@ class DiagnosticGenerator
                     if (!isPostfix || !alwaysRun)
                         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidExceptionBinding, parameterLocation, parameter.Name));
                     if (_Exception is not null && !Helpers.CanBindKnownType(compilation, parameter, _Exception, allowUnsafe))
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name, "System.Exception"));
+                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name,
+                            "System.Exception"));
                 }
 
-                if (kind is ParameterKind.BaseMethod or ParameterKind.Method && (parameter.RefKind != RefKind.None || parameter.Type is not INamedTypeSymbol { DelegateInvokeMethod: not null }))
+                if (kind is ParameterKind.BaseMethod or ParameterKind.Method && (parameter.RefKind != RefKind.None ||
+                                                                                 parameter.Type is not INamedTypeSymbol
+                                                                                 {
+                                                                                     DelegateInvokeMethod: not null,
+                                                                                 }))
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidDelegateBinding, parameterLocation, parameter.Name));
 
                 if (constantType is not null)
                 {
                     if (kind == ParameterKind.Result && !Helpers.CanBindKnownType(compilation, parameter, constantType, allowUnsafe))
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name, constantType.ToDisplayString()));
+                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name,
+                            constantType.ToDisplayString()));
                     bool selectsInner = explicitlyInner || explicitScope != _Scope_Outer;
                     bool hasIndex = binding is not null && Helpers.Argument(binding, "index") is not null;
-                    if ((kind == ParameterKind.Instance && selectsInner) || (kind == ParameterKind.Argument && (explicitlyInner || (hasIndex && selectsInner))) || (kind == ParameterKind.Field && explicitlyInner))
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ConstantBindingUnavailable, parameterLocation, parameter.Name));
+                    if ((kind == ParameterKind.Instance && selectsInner) ||
+                        (kind == ParameterKind.Argument && (explicitlyInner || (hasIndex && selectsInner))) ||
+                        (kind == ParameterKind.Field && explicitlyInner))
+                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ConstantBindingUnavailable, parameterLocation,
+                            parameter.Name));
                 }
 
                 if (kind == ParameterKind.State)
@@ -251,9 +264,7 @@ class DiagnosticGenerator
             foreach (var parameters in boundValues.Values.Where(parameters => parameters.Count > 1))
             {
                 foreach (var parameter in parameters)
-                {
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.DuplicateBinding, Helpers.GetLocation(parameter), parameter.Name));
-                }
             }
         }
 
@@ -262,21 +273,16 @@ class DiagnosticGenerator
         {
             if (!state.Value.Any(p => p.RefKind is RefKind.Ref or RefKind.Out))
                 foreach (var parameter in state.Value)
-                {
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.StateWithoutWriter, Helpers.GetLocation(parameter), state.Key));
-                }
 
             if (state.Value.All(p => p.RefKind == RefKind.Out))
                 foreach (var parameter in state.Value)
-                {
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.StateWithoutReader, Helpers.GetLocation(parameter), state.Key));
-                }
 
             if (state.Value.Skip(1).Any(p => !compilation.ClassifyConversion(state.Value[0].Type, p.Type).IsIdentity))
                 foreach (var parameter in state.Value)
-                {
-                    ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleStateTypes, Helpers.GetLocation(parameter), parameter.Name, state.Key));
-                }
+                    ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleStateTypes, Helpers.GetLocation(parameter),
+                        parameter.Name, state.Key));
         }
     }
 
@@ -312,7 +318,8 @@ class DiagnosticGenerator
                                method is { ReturnsByRef: false, ReturnsByRefReadonly: false };
             if (isPrefix)
             {
-                bool runsAlways = _PatchOptions_AlwaysRun is int mask && (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & mask) != 0;
+                bool runsAlways = _PatchOptions_AlwaysRun is int mask &&
+                                  (Helpers.GetPatchOptions(method, _PatchOptionsAttribute) & mask) != 0;
                 if (runsAlways && !method.ReturnsVoid)
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.AlwaysRunReturn, location, method.Name));
                 else if (!method.ReturnsVoid && !returnsBool)
@@ -343,7 +350,8 @@ class DiagnosticGenerator
         foreach (var selector in attributes.Where(a => Helpers.IsAttribute(a, _TargetAttribute, _TargetsAttribute)))
         {
             if (!mayHaveDefaultType && Helpers.HasNoTypeOrQualifiedName(selector))
-                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingTargetType, Helpers.SelectorLocation(selector, location), method.Name));
+                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingTargetType, Helpers.SelectorLocation(selector, location),
+                    method.Name));
             CheckSelector(selector, ctx, location, method);
         }
 
@@ -351,13 +359,15 @@ class DiagnosticGenerator
         {
             if (Helpers.IsAttribute(selector, _InnerConstantAttribute) && Helpers.Argument(selector, "value") is { IsNull: true })
             {
-                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.NullInnerConstant, Helpers.SelectorLocation(selector, location), method.Name));
+                ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.NullInnerConstant, Helpers.SelectorLocation(selector, location),
+                    method.Name));
             }
             else if (Helpers.IsAttribute(selector, _InnerAttribute))
             {
                 // Inner selectors do not inherit the outer target's declaring type.
                 if (Helpers.HasNoTypeOrQualifiedName(selector))
-                    ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingTargetType, Helpers.SelectorLocation(selector, location), method.Name));
+                    ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingTargetType, Helpers.SelectorLocation(selector, location),
+                        method.Name));
                 CheckSelector(selector, ctx, location, method);
             }
         }
@@ -390,8 +400,10 @@ class DiagnosticGenerator
         else if (target is IParameterReferenceOperation reference &&
                  reference.Parameter.RefKind is not (RefKind.Ref or RefKind.Out) &&
                  reference.Parameter.ContainingSymbol is IMethodSymbol method &&
-                 (Helpers.FindAttribute(method, _PrefixAttribute) is not null || Helpers.FindAttribute(method, _PostfixAttribute) is not null))
-            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.WrittenValueParameter, reference.Syntax.GetLocation(), reference.Parameter.Name));
+                 (Helpers.FindAttribute(method, _PrefixAttribute) is not null ||
+                  Helpers.FindAttribute(method, _PostfixAttribute) is not null))
+            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.WrittenValueParameter, reference.Syntax.GetLocation(),
+                reference.Parameter.Name));
     }
 
     public void CheckSelector(AttributeData selector, SymbolAnalysisContext ctx, Location location, IMethodSymbol method)
@@ -401,6 +413,7 @@ class DiagnosticGenerator
         int value = kind?.Value is int explicitKind ? explicitKind : 0;
         if (_MemberType_Constructor is int constructor && value != constructor &&
             (Helpers.Argument(selector, "methodName") ?? Helpers.Argument(selector, "memberName")) is null or { IsNull: true })
-            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingMemberName, Helpers.SelectorLocation(selector, location), method.Name));
+            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingMemberName, Helpers.SelectorLocation(selector, location),
+                method.Name));
     }
 }
