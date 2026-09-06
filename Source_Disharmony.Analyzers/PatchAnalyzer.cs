@@ -173,20 +173,20 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         context.RegisterCompilationStartAction(RegisterChecks);
     }
 
-    private void RegisterChecks(CompilationStartAnalysisContext start)
+    private static void RegisterChecks(CompilationStartAnalysisContext start)
     {
         var state = new DiagnosticGenerator((CSharpCompilation)start.Compilation);
 
         if (!state.CanRun)
             return;
 
-        start.RegisterOperationAction(ctx => state.AnalyzeAssignment(ctx),
+        start.RegisterOperationAction(state.AnalyzeAssignment,
             OperationKind.SimpleAssignment, OperationKind.CompoundAssignment, OperationKind.CoalesceAssignment,
             OperationKind.DeconstructionAssignment, OperationKind.Increment, OperationKind.Decrement, OperationKind.Argument);
 
-        start.RegisterSymbolAction(ctx => state.AnalyzeClass(ctx), SymbolKind.NamedType);
-        start.RegisterSymbolAction(ctx => state.AnalyzeMethod(ctx), SymbolKind.Method);
-        start.RegisterOperationAction(ctx => state.AnalyzeThrow(ctx), OperationKind.Throw);
+        start.RegisterSymbolAction(state.AnalyzeClass, SymbolKind.NamedType);
+        start.RegisterSymbolAction(state.AnalyzeMethod, SymbolKind.Method);
+        start.RegisterOperationAction(state.AnalyzeThrow, OperationKind.Throw);
     }
 }
 
