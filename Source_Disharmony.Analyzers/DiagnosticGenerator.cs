@@ -274,7 +274,7 @@ internal class DiagnosticGenerator
             ParameterKind.Instance => (ParameterKind.Instance, defaultScope, null),
             ParameterKind.Result => (ParameterKind.Result, null, null),
             ParameterKind.State => (ParameterKind.State, null, Helpers.Argument(binding, "key")?.Value ?? parameter.Name),
-            ParameterKind.Field => (ParameterKind.Field, defaultScope, RemoveTripleUnderscore(Helpers.Argument(binding, "name")?.Value as string ?? parameter.Name)),
+            ParameterKind.Field => (ParameterKind.Field, explicitScope ?? _Scope_Any, Helpers.Argument(binding, "name")?.Value as string ?? RemoveTripleUnderscore(parameter.Name)),
             ParameterKind.BaseMethod => (ParameterKind.BaseMethod, null, null),
             ParameterKind.Method => (ParameterKind.Method, defaultScope, Helpers.Argument(binding!, "name")?.Value ?? parameter.Name),
             ParameterKind.Exception => (ParameterKind.Exception, null, null),
