@@ -106,6 +106,163 @@ public sealed class PatcherRegistrationTests : PatchTestBase
 {
     // TODO: Put assembly-scanning patch fixtures in a dedicated test assembly so RegisterAll/PatchAll do not scan unrelated patches.
     private static readonly Assembly TestAssembly = typeof(PatcherRegistrationTests).Assembly;
+    private static readonly Assembly CategoryAssembly = CreateCategoryAssembly();
+
+    private static Assembly CreateCategoryAssembly()
+    {
+        // Isolate assembly discovery, particularly null-category selection, from unrelated test patches.
+        var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
+            new AssemblyName("CategoryPatches"), AssemblyBuilderAccess.Run);
+        var module = assembly.DefineDynamicModule("CategoryPatches");
+        (string Target, string[] Categories, string[] HarmonyCategories)[] containers =
+        [
+            (nameof(CategoryTargets.Multiple), ["first", "second"], []),
+            (nameof(CategoryTargets.Uncategorized), [], []),
+            (nameof(CategoryTargets.Other), ["other"], []),
+            (nameof(CategoryTargets.Empty), [""], []),
+            (nameof(CategoryTargets.Duplicate), ["duplicate", "duplicate"], []),
+            (nameof(CategoryTargets.Mixed), ["disharmony"], ["harmony"]),
+        ];
+
+        foreach (var container in containers)
+        {
+            var type = module.DefineType(container.Target + "Patches",
+                TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.Sealed);
+            type.SetCustomAttribute(new CustomAttributeBuilder(
+                typeof(PatchAttribute).GetConstructor([typeof(Type)])!, new object[] { typeof(CategoryTargets) }));
+            foreach (string category in container.Categories)
+                type.SetCustomAttribute(new CustomAttributeBuilder(
+                    typeof(CategoryAttribute).GetConstructor([typeof(string)])!, new object[] { category }));
+            foreach (string category in container.HarmonyCategories)
+                type.SetCustomAttribute(new CustomAttributeBuilder(
+                    typeof(HarmonyPatchCategory).GetConstructor([typeof(string)])!, new object[] { category }));
+
+            var postfix = type.DefineMethod("Postfix", MethodAttributes.Public | MethodAttributes.Static,
+                typeof(void), [typeof(string).MakeByRefType()]);
+            postfix.DefineParameter(1, ParameterAttributes.None, "__result");
+            postfix.SetCustomAttribute(new CustomAttributeBuilder(typeof(PostfixAttribute).GetConstructor(Type.EmptyTypes)!, []));
+            postfix.SetCustomAttribute(new CustomAttributeBuilder(
+                typeof(TargetAttribute).GetConstructor([typeof(Type), typeof(string)])!,
+                new object[] { typeof(CategoryTargets), container.Target }));
+
+            // __result = "patched:" + __result; repeated application is observable in the result.
+            ILGenerator il = postfix.GetILGenerator();
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldstr, "patched:");
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldind_Ref);
+            il.Emit(OpCodes.Call, typeof(string).GetMethod(nameof(string.Concat), [typeof(string), typeof(string)])!);
+            il.Emit(OpCodes.Stind_Ref);
+            il.Emit(OpCodes.Ret);
+            type.CreateType();
+        }
+
+        return assembly;
+    }
+
+    [Test]
+    public void PatchCategory_CategoryNames_AreCaseSensitive()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "First");
+
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_MultipleCategories_FirstCategoryMatches()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "first");
+
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Other(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_MultipleCategories_SecondCategoryMatches()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "second");
+
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Other(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_UnmatchedCategory_AppliesNothing()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "missing");
+
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Other(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Empty(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Duplicate(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Mixed(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_NullCategory_AppliesOnlyUncategorizedClasses()
+    {
+        Patcher.PatchCategory(CategoryAssembly, null);
+
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Other(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Empty(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Duplicate(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Mixed(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_EmptyCategory_DoesNotMeanUncategorized()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "");
+
+        Assert.That(CategoryTargets.Empty(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_DuplicateCategories_AppliesPatchOnlyOnce()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "duplicate");
+
+        Assert.That(CategoryTargets.Duplicate(), Is.EqualTo("patched:original"));
+    }
+
+    [Test]
+    public void PatchCategory_MixedAttributes_DisharmonyCategoryMatches()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "disharmony");
+
+        Assert.That(CategoryTargets.Mixed(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchCategory_MixedAttributes_HarmonyCategoryMatches()
+    {
+        Patcher.PatchCategory(CategoryAssembly, "harmony");
+
+        Assert.That(CategoryTargets.Mixed(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("original"));
+    }
+
+    [Test]
+    public void PatchAll_MultipleCategories_AppliesEveryClassOnlyOnce()
+    {
+        Patcher.PatchAll(CategoryAssembly);
+
+        Assert.That(CategoryTargets.Multiple(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Uncategorized(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Other(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Empty(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Duplicate(), Is.EqualTo("patched:original"));
+        Assert.That(CategoryTargets.Mixed(), Is.EqualTo("patched:original"));
+    }
 
     [Test]
     public void PatchTypeProcessesEveryPatchMethodOnType()
