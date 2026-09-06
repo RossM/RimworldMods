@@ -1,1 +1,1 @@
-[assembly: InternalsVisibleTo("Source_Disharmony.Tests")]
+[assembly: InternalsVisibleTo("Disharmony.Tests")]

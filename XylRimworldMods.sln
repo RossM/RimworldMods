@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_ExposableChecker", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_XylIdeoTweaks", "Source_XylIdeoTweaks\Source_XylIdeoTweaks.csproj", "{17C59BA0-3875-38FE-3411-A0644177718E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disharmony", "Source_Disharmony\Source_Disharmony.csproj", "{C59418CE-8C09-429E-8D71-5A5C17622177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony", "Source_Disharmony\Disharmony.csproj", "{C59418CE-8C09-429E-8D71-5A5C17622177}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylIdeoTweaks", "XylIdeoTweaks\XylIdeoTweaks.csproj", "{A866F0D8-C387-E006-5847-E398E59960F3}"
 EndProject
@@ -29,13 +29,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Xylib", "Source_Xyli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scripts", "Scripts\Scripts.csproj", "{76731B12-15F4-47BE-AFC9-675B8F6D6B43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disharmony.Tests", "Source_Disharmony.Tests\Source_Disharmony.Tests.csproj", "{FBF266F8-A874-4A1C-9918-71580D51B833}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.Tests", "Source_Disharmony.Tests\Disharmony.Tests.csproj", "{FBF266F8-A874-4A1C-9918-71580D51B833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disharmony.TestTargets", "Source_Disharmony.TestTargets\Source_Disharmony.TestTargets.csproj", "{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.TestTargets", "Source_Disharmony.TestTargets\Disharmony.TestTargets.csproj", "{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disharmony.Analyzers", "Source_Disharmony.Analyzers\Source_Disharmony.Analyzers.csproj", "{7358300E-8646-4F80-AE2D-1E0228E151A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.Analyzers", "Source_Disharmony.Analyzers\Disharmony.Analyzers.csproj", "{7358300E-8646-4F80-AE2D-1E0228E151A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Source_Disharmony.Analyzers.Tests", "Source_Disharmony.Analyzers.Tests\Source_Disharmony.Analyzers.Tests.csproj", "{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.Analyzers.Tests", "Source_Disharmony.Analyzers.Tests\Disharmony.Analyzers.Tests.csproj", "{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
