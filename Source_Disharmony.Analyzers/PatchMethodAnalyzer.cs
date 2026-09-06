@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Operations;
 using static Disharmony.Analyzers.AttributeHelpers;
 
 namespace Disharmony.Analyzers;
@@ -13,7 +14,7 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
     [
         GenericMethod, StaticMethod, PrefixReturn, PostfixReturn, AlwaysRunReturn, MissingPatchClass, MissingTarget, MissingPatchType,
         MultiplePatchTypes, MultipleInnerTargets, MissingTargetType, NullInnerConstant,
-        DuplicateDiscoveryAttributes, MissingMemberName,
+        DuplicateDiscoveryAttributes, MissingMemberName, AlwaysRunThrow,
     ];
 
     private static readonly DiagnosticDescriptor GenericMethod = new(
@@ -82,6 +83,10 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
         "Selector for patch '{0}' has no member name; supply a name or specify MemberType.Constructor to select a constructor",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    private static readonly DiagnosticDescriptor AlwaysRunThrow = new(
+        "DH0032", "AlwaysRun patch explicitly throws",
+        "AlwaysRun patch '{0}' explicitly throws; handle the failure without throwing so other AlwaysRun patches can execute",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -118,7 +123,22 @@ public sealed class PatchMethodAnalyzer : DiagnosticAnalyzer
 
         start.RegisterSymbolAction(AnalyzeClass, SymbolKind.NamedType);
         start.RegisterSymbolAction(AnalyzeMethod, SymbolKind.Method);
+        start.RegisterOperationAction(AnalyzeThrow, OperationKind.Throw);
 
+        void AnalyzeThrow(OperationAnalysisContext ctx)
+        {
+            if (ctx.ContainingSymbol is not IMethodSymbol method ||
+                FindAttribute(method, prefix, postfix) is null ||
+                alwaysRun is not int mask || (GetPatchOptions(method, options) & mask) == 0)
+                return;
+
+            // Nested functions have their own execution; following calls is outside this check.
+            for (var parent = ctx.Operation.Parent; parent is not null; parent = parent.Parent)
+                if (parent is IAnonymousFunctionOperation or ILocalFunctionOperation)
+                    return;
+
+            ctx.ReportDiagnostic(Diagnostic.Create(AlwaysRunThrow, ctx.Operation.Syntax.GetLocation(), method.Name));
+        }
         void AnalyzeClass(SymbolAnalysisContext ctx)
         {
             var type = (INamedTypeSymbol)ctx.Symbol;
