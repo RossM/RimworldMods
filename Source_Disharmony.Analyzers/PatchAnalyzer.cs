@@ -137,7 +137,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor MultipleInnerTargets = new(
         "DH0010", "Patch method has multiple inner target attributes",
-        "Method '{0}' has multiple inner target attributes; keep only one [Inner] or [InnerConstant] across the method and its class",
+        "Method '{0}' has multiple inner target attributes",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor MissingTargetType = new(
