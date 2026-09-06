@@ -153,27 +153,10 @@ internal class DiagnosticGenerator
                 }
 
                 var binding = bindings.SingleOrDefault();
-                ParameterKind kind;
-                if (binding is null)
-                {
-                    kind = parameter.Name switch
-                    {
-                        "__caller" => ParameterKind.Caller,
-                        "__instance" => ParameterKind.Instance,
-                        "__result" => ParameterKind.Result,
-                        "__state" => ParameterKind.State,
-                        "__base" => ParameterKind.BaseMethod,
-                        "__exception" => ParameterKind.Exception,
-                        _ when parameter.Name.StartsWith("___") => ParameterKind.Field,
-                        _ => ParameterKind.Argument,
-                    };
-                    if (kind == ParameterKind.Argument && parameter.Name.StartsWith("__"))
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.UnknownSpecialParameter, parameterLocation, parameter.Name));
-                }
-                else
-                {
-                    kind = _bindingTypes.First(pair => Helpers.IsAttribute(binding, pair.Type)).Kind;
-                }
+                ParameterKind kind = GetBindingKind(parameter, binding);
+
+                if (binding is null && kind == ParameterKind.Argument && parameter.Name.StartsWith("__"))
+                    ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.UnknownSpecialParameter, parameterLocation, parameter.Name));
 
                 int? explicitScope = binding is not null ? Helpers.Argument(binding, "scope")?.Value as int? : null;
                 bool explicitlyInner = explicitScope is int selected && selected == _Scope_Inner;
@@ -292,6 +275,31 @@ internal class DiagnosticGenerator
                         parameter.Name, state.Key));
                 }
         }
+    }
+
+    private ParameterKind GetBindingKind(IParameterSymbol parameter, AttributeData? binding)
+    {
+        ParameterKind kind;
+        if (binding is null)
+        {
+            kind = parameter.Name switch
+            {
+                "__caller" => ParameterKind.Caller,
+                "__instance" => ParameterKind.Instance,
+                "__result" => ParameterKind.Result,
+                "__state" => ParameterKind.State,
+                "__base" => ParameterKind.BaseMethod,
+                "__exception" => ParameterKind.Exception,
+                _ when parameter.Name.StartsWith("___") => ParameterKind.Field,
+                _ => ParameterKind.Argument,
+            };
+        }
+        else
+        {
+            kind = _bindingTypes.First(pair => Helpers.IsAttribute(binding, pair.Type)).Kind;
+        }
+
+        return kind;
     }
 
     public void AnalyzeMethod(SymbolAnalysisContext ctx)
