@@ -32,8 +32,8 @@ internal class DiagnosticGenerator
     private readonly int _PatchOptions_AllowUnsafe;
     private readonly INamedTypeSymbol? _Exception;
     private readonly INamedTypeSymbol? _PriorityAttribute;
-    private readonly INamedTypeSymbol?[] _methodAttributes;
-    private readonly (ParameterKind Kind, INamedTypeSymbol? Type)[] _bindingTypes;
+    private readonly INamedTypeSymbol?[] methodAttributes;
+    private readonly (ParameterKind Kind, INamedTypeSymbol? Type)[] bindingTypes;
 
     public DiagnosticGenerator(CSharpCompilation compilation)
     {
@@ -73,13 +73,12 @@ internal class DiagnosticGenerator
 
         _Exception = compilation.GetTypeByMetadataName("System.Exception");
 
-        _methodAttributes =
+        methodAttributes =
         [
             _PrefixAttribute, _PostfixAttribute, _TargetAttribute, _TargetsAttribute, _PatchOptionsAttribute, _InnerAttribute,
-            _InnerConstantAttribute,
-            _PriorityAttribute,
+            _InnerConstantAttribute, _PriorityAttribute,
         ];
-        _bindingTypes =
+        bindingTypes =
         [
             (Kind: ParameterKind.Argument, Type: compilation.GetTypeByMetadataName("Disharmony.ParameterAttribute")),
             (Kind: ParameterKind.Instance, Type: compilation.GetTypeByMetadataName("Disharmony.InstanceAttribute")),
@@ -142,7 +141,7 @@ internal class DiagnosticGenerator
                 var parameterLocation = Helpers.GetLocation(parameter);
                 if (parameterLocation is null || parameter.Type.TypeKind == TypeKind.Error)
                     continue;
-                var bindings = parameter.GetAttributes().Where(a => _bindingTypes.Any(pair => Helpers.IsAttribute(a, pair.Type))).ToArray();
+                var bindings = parameter.GetAttributes().Where(a => bindingTypes.Any(pair => Helpers.IsAttribute(a, pair.Type))).ToArray();
                 if (bindings.Length > 1)
                 {
                     ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MultipleParameterBindings, parameterLocation, parameter.Name));
@@ -300,7 +299,7 @@ internal class DiagnosticGenerator
         }
         else
         {
-            kind = _bindingTypes.First(pair => Helpers.IsAttribute(binding, pair.Type)).Kind;
+            kind = bindingTypes.First(pair => Helpers.IsAttribute(binding, pair.Type)).Kind;
         }
 
         return kind;
@@ -317,7 +316,7 @@ internal class DiagnosticGenerator
         if (!isPrefix && !isPostfix)
         {
             // Class defaults, return attributes, and parameter bindings do not mark a helper as a patch.
-            if (method.GetAttributes().Any(a => Helpers.IsAttribute(a, _methodAttributes)))
+            if (method.GetAttributes().Any(a => Helpers.IsAttribute(a, methodAttributes)))
                 ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingPatchType, location, method.Name));
         }
         else
@@ -443,7 +442,7 @@ internal class DiagnosticGenerator
         var kind = Helpers.Argument(selector, "memberType");
         // Overloads without memberType default to Any (zero).
         int value = kind?.Value is int explicitKind ? explicitKind : 0;
-        if (_MemberType_Constructor is int constructor && value != constructor &&
+        if (value != _MemberType_Constructor &&
             (Helpers.Argument(selector, "methodName") ?? Helpers.Argument(selector, "memberName")) is null or { IsNull: true })
             ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.MissingMemberName, Helpers.SelectorLocation(selector, location),
                 method.Name));
