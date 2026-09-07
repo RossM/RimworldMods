@@ -180,6 +180,9 @@ internal class DiagnosticGenerator
                             if (method.ReturnsVoid)
                                 ctx.ReportDiagnostic(
                                     Diagnostic.Create(PatchAnalyzer.VoidPrefixResultBinding, parameterLocation, parameter.Name));
+                            if (parameter.RefKind == RefKind.Ref)
+                                ctx.ReportDiagnostic(
+                                    Diagnostic.Create(PatchAnalyzer.PrefixResultIsRef, parameterLocation, parameter.Name));
                         }
 
                         break;

@@ -33,3 +33,4 @@ DISHARMONY0029 | Correctness | Warning  | State key has no ref or out parameter 
 DISHARMONY0030 | Correctness | Warning  | State key is only bound through out parameters in its patch class
 DISHARMONY0031 | Correctness | Warning  | Patch writes to a parameter passed by value
 DISHARMONY0032 | Correctness | Warning  | AlwaysRun patch explicitly throws
+DISHARMONY0034 | Style       | Warning  | Prefix result is ref

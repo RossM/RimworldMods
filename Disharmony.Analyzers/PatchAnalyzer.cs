@@ -166,6 +166,11 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     // DISHARMONY0033: Reserved for experimental flag for PatchOptions.Optimize
 
+    public static readonly DiagnosticDescriptor PrefixResultIsRef = new(
+        "DISHARMONY0034", "Prefix result is ref",
+        "Prefix result binding is declared as ref; declare it as out instead",
+        "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
