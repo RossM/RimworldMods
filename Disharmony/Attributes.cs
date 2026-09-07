@@ -1013,3 +1013,17 @@ public sealed class MethodAttribute(string? name, Scope scope = Scope.Any, bool 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);
+
+/// <summary>
+///    Binds a patch parameter to the <see cref="MemberInfo" /> of the target member.
+/// </summary>
+/// <param name="scope"></param>
+/// <remarks>
+///     <para>
+///         This enables a single patch applied to multiple targets with <see cref="TargetsAttribute" /> to
+///         determine which specific method is being patched.
+///     </para>
+/// </remarks>
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public sealed class MemberInfoAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);

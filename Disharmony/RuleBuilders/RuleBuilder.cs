@@ -104,6 +104,13 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 break;
             }
 
+            case BindingType.MemberInfo:
+            {
+                output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
+                resultType = parameter.memberInfo!.GetType();
+                break;
+            }
+
             default:
             {
                 throw new ArgumentOutOfRangeException();
@@ -116,26 +123,28 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         // ParameterType must be a subclass of Delegate here
         ConstructorInfo delegateConstructor = parameter.parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
 
+        MethodBase methodBase = (MethodBase)parameter.memberInfo!;
+
         // Create a delegate
-        if (parameter.methodInfo!.IsStatic)
+        if (methodBase.IsStatic)
         {
             output.Add(new(OpCodes.Ldnull));
         }
         else
         {
-            EmitParameterLookup(parameter.scope, 0, parameter.methodInfo.DeclaringType);
-            if (parameter.methodInfo.DeclaringType!.IsValueType)
-                output.Add(new(OpCodes.Box, parameter.methodInfo.DeclaringType));
+            EmitParameterLookup(parameter.scope, 0, methodBase.DeclaringType);
+            if (methodBase.DeclaringType!.IsValueType)
+                output.Add(new(OpCodes.Box, methodBase.DeclaringType));
         }
 
         if (parameter.useVirtualDispatch)
         {
             output.Add(new(OpCodes.Dup));
-            output.Add(new(OpCodes.Ldvirtftn, parameter.methodInfo));
+            output.Add(new(OpCodes.Ldvirtftn, methodBase));
         }
         else
         {
-            output.Add(new(OpCodes.Ldftn, parameter.methodInfo));
+            output.Add(new(OpCodes.Ldftn, methodBase));
         }
 
         output.Add(new(OpCodes.Newobj, delegateConstructor));

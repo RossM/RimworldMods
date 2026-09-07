@@ -355,7 +355,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
-        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
     }
 
     [Test]
@@ -369,7 +369,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
-        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
     }
 
     [Test]
@@ -383,7 +383,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
-        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
     }
 
     [Test]
@@ -397,7 +397,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
-        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
     }
 
     [Test]
@@ -412,7 +412,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
-        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
     }
 
     [Test]
@@ -445,7 +445,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
         Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
     }
 
     [Test]
@@ -461,8 +461,8 @@ internal sealed class ParameterBinderBindTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(binding.methodInfo!.MethodHandle, Is.EqualTo(expected.MethodHandle));
-            Assert.That(binding.methodInfo!.DeclaringType, Is.EqualTo(typeof(BaseMethodGrandparentTargets)));
+            Assert.That(((MethodBase)binding.memberInfo!).MethodHandle, Is.EqualTo(expected.MethodHandle));
+            Assert.That(binding.memberInfo!.DeclaringType, Is.EqualTo(typeof(BaseMethodGrandparentTargets)));
         });
     }
 
@@ -478,7 +478,7 @@ internal sealed class ParameterBinderBindTests
             nameof(ParameterBinderPatchMethods.Method_AttributeNonVirtual), new MethodInvocation(targetMethod));
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
         Assert.That(binding.useVirtualDispatch, Is.False);
     }
 
@@ -493,7 +493,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Method_AttributeVirtual), new MethodInvocation(targetMethod));
 
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
         Assert.That(binding.useVirtualDispatch, Is.True);
     }
 
@@ -512,7 +512,7 @@ internal sealed class ParameterBinderBindTests
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
             Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
-            Assert.That(binding.methodInfo, Is.SameAs(expected));
+            Assert.That(binding.memberInfo, Is.SameAs(expected));
             Assert.That(binding.useVirtualDispatch, Is.False);
         });
     }
@@ -532,7 +532,7 @@ internal sealed class ParameterBinderBindTests
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
             Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
-            Assert.That(binding.methodInfo, Is.SameAs(expected));
+            Assert.That(binding.memberInfo, Is.SameAs(expected));
             Assert.That(binding.useVirtualDispatch, Is.False);
         });
     }
@@ -548,7 +548,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Method_NullNameUsesParameterName), new MethodInvocation(targetMethod));
 
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
     }
 
     [Test]
@@ -564,7 +564,7 @@ internal sealed class ParameterBinderBindTests
             nameof(ParameterBinderPatchMethods.Method_ExplicitInnerScope), outer, new MethodInvocation(innerMethod));
 
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
     }
 
     [Test]
@@ -627,7 +627,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.ReservedName_BaseMethod), new MethodInvocation(targetMethod));
 
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
     }
 
     [Test]
@@ -795,7 +795,7 @@ internal sealed class ParameterBinderBindTests
             options: PatchOptions.AllowUnsafe);
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-        Assert.That(binding.methodInfo, Is.EqualTo(typeof(MethodBindingStructTargets)
+        Assert.That(binding.memberInfo, Is.EqualTo(typeof(MethodBindingStructTargets)
             .GetMethod(nameof(MethodBindingStructTargets.BoundInstanceMethod))));
     }
 
@@ -1205,7 +1205,7 @@ internal sealed class ParameterBinderBindTests
             target);
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-        Assert.That(binding.methodInfo, Is.SameAs(expected));
+        Assert.That(binding.memberInfo, Is.SameAs(expected));
     }
 
     [Test]

@@ -89,6 +89,8 @@ internal class ParameterBinder(
 
             case ExceptionAttribute: return BindException(parameter);
 
+            case MemberInfoAttribute: return BindMemberInfo(parameter, invocation, scope);
+
             case null: break;
 
             default: throw new NotSupportedException();
@@ -180,7 +182,7 @@ internal class ParameterBinder(
         if (baseMethod.IsAbstract)
             throw new ParameterBindingException(parameter.Name, "Base method is abstract");
 
-        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = baseMethod };
+        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, memberInfo = baseMethod };
     }
 
     private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, bool allowVirtual)
@@ -223,7 +225,7 @@ internal class ParameterBinder(
 
         return new()
         {
-            parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo,
+            parameter = parameter, bindingType = BindingType.Delegate, scope = scope, memberInfo = methodInfo,
             useVirtualDispatch = methodInfo.IsVirtual && allowVirtual,
         };
     }
@@ -432,6 +434,22 @@ internal class ParameterBinder(
             throw new ParameterBindingException(parameter.Name, "Accessing exception is only supported for Postfix with AlwaysRun option");
         ValidateCast(parameter, typeof(Exception));
         return new() { parameter = parameter, bindingType = BindingType.Exception, scope = Scope.Any };
+    }
+
+    private ParameterBinding BindMemberInfo(ParameterInfo parameter, Invocation invocation, Scope scope)
+    {
+        if (parameter.ParameterType.IsByRef)
+            throw new ParameterBindingException(parameter.Name, "[MemberInfo] cannot be bound to a 'ref' parameter");
+
+        MemberInfo memberInfo = invocation switch
+        {
+            FieldInvocation fieldInvocation => fieldInvocation.FieldInfo,
+            MethodBaseInvocation methodBaseInvocation => methodBaseInvocation.MethodBase,
+            _ => throw new ParameterBindingException(parameter.Name, "[MemberInfo] unsupported for this target type"),
+        };
+
+        ValidateCast(parameter, typeof(MemberInfo));
+        return new() { parameter = parameter, bindingType = BindingType.MemberInfo, scope = scope, memberInfo = memberInfo };
     }
 
     private static FieldInfo GetThisField(Type iteratorType)

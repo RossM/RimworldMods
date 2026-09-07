@@ -38,6 +38,11 @@ internal enum BindingType
     ///     Gets a static field.
     /// </summary>
     StaticField,
+
+    /// <summary>
+    ///     Gets a MemberInfo object.
+    /// </summary>
+    MemberInfo,
 }
 
 internal class ParameterBinding
@@ -76,7 +81,7 @@ internal class ParameterBinding
 
     public string? stateKey;
 
-    public MethodBase? methodInfo;
+    public MemberInfo? memberInfo;
 
     public bool useVirtualDispatch;
 }

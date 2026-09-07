@@ -102,7 +102,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -120,7 +120,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -138,7 +138,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -156,7 +156,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -174,7 +174,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -192,7 +192,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -210,7 +210,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -228,7 +228,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -246,7 +246,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -264,7 +264,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -282,7 +282,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -300,7 +300,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -318,7 +318,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -336,7 +336,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -354,7 +354,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -372,7 +372,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -390,7 +390,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -408,7 +408,7 @@ public sealed class MethodLookupBindingTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
-            Assert.That(binding.methodInfo, Is.EqualTo(expectedMethod));
+            Assert.That(binding.memberInfo, Is.EqualTo(expectedMethod));
         });
     }
 
@@ -500,7 +500,7 @@ public sealed class MethodLookupBindingTests
         var binding = Bind(
             nameof(MethodLookupBindingPatches.QualifiedStaticMethodOnStaticTarget_BindsMathAbsWithoutInstance), invocation);
 
-        Assert.That(binding.methodInfo, Is.EqualTo(typeof(Math).GetMethod("Abs", [typeof(int)])));
+        Assert.That(binding.memberInfo, Is.EqualTo(typeof(Math).GetMethod("Abs", [typeof(int)])));
     }
 
     private static Disharmony.ParameterBinding Bind(string patchMethodName, Invocation invocation)
