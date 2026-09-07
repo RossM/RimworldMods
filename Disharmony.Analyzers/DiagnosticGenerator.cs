@@ -169,6 +169,11 @@ internal class DiagnosticGenerator
 
                 switch (kind)
                 {
+                    case ParameterKind.Argument when isPostfix && parameter.RefKind is RefKind.Ref or RefKind.Out:
+                    {
+                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.PostfixArgumentByReference, parameterLocation, parameter.Name));
+                        break;
+                    }
                     case ParameterKind.Result when isPrefix:
                     {
                         if (alwaysRun)

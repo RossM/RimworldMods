@@ -85,3 +85,5 @@ DH0030 checks state bindings across patches declared in the same class. Value, i
 DH0031 checks direct assignments (including compound, coalescing, and deconstruction assignments), increments/decrements, and passing a value parameter as ref/out. Captured patch parameters are checked in lambdas and local functions. Member/array-element writes and writes through local aliases are not analyzed.
 
 DH0032 checks throw statements and expressions directly in an AlwaysRun patch body, including rethrows. It does not follow calls or inspect nested lambda/local-function bodies, and does not determine whether a throw is caught locally.
+
+DISHARMONY0035 warns when a postfix binds an argument through ref or out, including implicit argument names and explicit [Parameter] bindings. Read by value/in, or use a prefix to change arguments before the target runs. This does not apply to result, field, state, or other non-argument bindings.

@@ -34,3 +34,4 @@ DISHARMONY0030 | Correctness | Warning  | State key is only bound through out pa
 DISHARMONY0031 | Correctness | Warning  | Patch writes to a parameter passed by value
 DISHARMONY0032 | Correctness | Warning  | AlwaysRun patch explicitly throws
 DISHARMONY0034 | Style       | Warning  | Prefix result is ref
+DISHARMONY0035 | Correctness | Warning  | Postfix argument binding is ref or out

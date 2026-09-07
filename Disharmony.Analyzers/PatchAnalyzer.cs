@@ -16,7 +16,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
         VoidPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
-        StateWithoutReader, WrittenValueParameter, PrefixResultIsRef,
+        StateWithoutReader, WrittenValueParameter, PrefixResultIsRef, PostfixArgumentByReference,
     ];
 
     public static readonly DiagnosticDescriptor GenericMethod = new(
@@ -171,6 +171,10 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Prefix result binding is declared as ref; declare it as out instead",
         "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor PostfixArgumentByReference = new(
+        "DISHARMONY0035", "Postfix argument binding is ref or out",
+        "Postfix argument '{0}' is declared ref or out; remove the modifier to read the argument, or use a prefix to change it before the target runs",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

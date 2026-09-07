@@ -83,6 +83,13 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __0) {} }", "DISHARMONY0027", "__0")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(ref int __result) { __result = 1; return false; } }", "DISHARMONY0034", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }", "DISHARMONY0034", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Parameter(100)] int other) {} }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"argument\")] ref int value) {} }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Parameter(Scope.Inner)] ref int value) {} }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(ref int value) {} }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] ref int __result) {} }", "DISHARMONY0035", "__result")]
     public async Task InvalidParameterBindingReportsWarningAtParameter(string source, string expectedId, string expectedName)
     {
         var diagnostics = await Analyze(source);
@@ -106,13 +113,17 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(ref object __exception) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(System.Action __base, [Method] System.Func<int, string> method) {} }")]
     [TestCase("delegate void CustomDelegate(); [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Method] CustomDelegate value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Parameter(100)] int other) {} }")]
     [TestCase("class C { static void M(object __caller, System.Exception __exception, [Instance(Scope.Inner)] object value) {} }")]
     [TestCase("class ParameterAttribute : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter, Instance] object value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int ___field, int ____field, int _value, int value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] int __custom, [Field(\"field\")] int __other) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] int __resut) {} }")]
     [TestCase("class C { static void M(int __resut) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(in int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] out int value) { value = 1; } }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Field] out int value) { value = 1; } }")]
     public async Task ValidOrTargetDependentParameterBindingDoesNotWarn(string source)
     {
         Assert.That(await Analyze(source), Is.Empty);
