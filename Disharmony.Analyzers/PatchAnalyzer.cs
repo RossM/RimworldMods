@@ -141,12 +141,12 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor StateWithoutWriter = new(
         "DISHARMONY0029", "State has no writer",
-        "State key '{0}' has no writer in this patch class; declare a parameter for this key ref or out in a patch that supplies the state",
+        "State key '{0}' has no writer in this patch class",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor StateWithoutReader = new(
         "DISHARMONY0030", "State has no reader",
-        "State key '{0}' is only bound through out parameters in this patch class",
+        "State key '{0}' has no reader in this patch class",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor WrittenValueParameter = new(
