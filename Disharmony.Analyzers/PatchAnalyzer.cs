@@ -159,6 +159,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "AlwaysRun patch '{0}' explicitly throws; handle the failure without throwing so other AlwaysRun patches can execute",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    // DISHARMONY0033: Reserved for experimental flag for PatchOptions.Optimize
 
     public override void Initialize(AnalysisContext context)
     {
