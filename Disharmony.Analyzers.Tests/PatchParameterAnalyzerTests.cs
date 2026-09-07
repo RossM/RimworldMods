@@ -92,7 +92,7 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] ref int __result) {} }", "DISHARMONY0035", "__result")]
     public async Task InvalidParameterBindingReportsWarningAtParameter(string source, string expectedId, string expectedName)
     {
-        var diagnostics = await Analyze(source);
+        var diagnostics = await Analyze(source, enabledDiagnostics: ["DISHARMONY0035"]);
         Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(expectedId.Split(',')));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo(expectedName));
@@ -126,7 +126,7 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Field] out int value) { value = 1; } }")]
     public async Task ValidOrTargetDependentParameterBindingDoesNotWarn(string source)
     {
-        Assert.That(await Analyze(source), Is.Empty);
+        Assert.That(await Analyze(source, enabledDiagnostics: ["DISHARMONY0035"]), Is.Empty);
     }
 
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029")]
