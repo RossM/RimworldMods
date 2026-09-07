@@ -20,8 +20,7 @@ internal static class ReflectionTools
 
     public static MethodInfo GetMethod(Type defaultType, string name, ParameterInfo[] parameters)
     {
-        return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, defaultType,
-            searchBaseTypes: true);
+        return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, searchBaseTypes: true);
     }
 
     private static Type WrappedType(ParameterInfo parameter)
@@ -33,8 +32,7 @@ internal static class ReflectionTools
         return marker.MakeGenericType(parameterType.GetElementType()!);
     }
 
-    public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes,
-        Type? defaultType = null, bool searchBaseTypes = false)
+    public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
     {
         List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes, searchBaseTypes);
 
