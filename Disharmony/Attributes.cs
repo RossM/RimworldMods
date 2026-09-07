@@ -909,12 +909,16 @@ public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : Para
 }
 
 /// <summary>
-///     Binds a patch parameter to a delegate that invokes the nearest base-class implementation of the outer instance
+///     Binds a patch parameter to a delegate that invokes the nearest base-class implementation of the instance
 ///     method, allowing the patch to call that implementation directly as if using <see langword="base" />.
 /// </summary>
+/// <param name="scope">
+///     The instance to use. The default, <see cref="Scope.Any" />, uses the inner instance for an
+///     inner patch and the outer instance otherwise.
+/// </param>
 /// <remarks>
 ///     <para>
-///         The patch parameter must be a delegate whose parameters and return type match the outer method. Static methods
+///         The patch parameter must be a delegate whose parameters and return type match the method. Static methods
 ///         do not have a base-method binding.
 ///     </para>
 ///     <para>
