@@ -35,11 +35,13 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor PostfixReturn = new(
-        "DISHARMONY0004", "Postfix must return void", "Postfix '{0}' must return void",
+        "DISHARMONY0004", "Postfix must return void", 
+        "Postfix '{0}' must return void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor AlwaysRunReturn = new(
-        "DISHARMONY0005", "AlwaysRun prefix must return void", "Prefix '{0}' with AlwaysRun must return void",
+        "DISHARMONY0005", "AlwaysRun prefix must return void", 
+        "Prefix '{0}' with AlwaysRun must return void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor MissingPatchClass = new(
