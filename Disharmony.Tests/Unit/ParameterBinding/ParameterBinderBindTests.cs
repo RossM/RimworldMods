@@ -8,6 +8,14 @@ internal sealed class UnsupportedParameterBindingAttribute() : ParameterBindingA
 
 internal static class ParameterBinderPatchMethods
 {
+    public static void MemberInfo_Default([MemberInfo] MemberInfo member) { }
+    public static void MemberInfo_Inner([MemberInfo(Scope.Inner)] MemberInfo member) { }
+    public static void MemberInfo_Outer([MemberInfo(Scope.Outer)] MemberInfo member) { }
+    public static void MemberInfo_Object([MemberInfo] object member) { }
+    public static void MemberInfo_Ref([MemberInfo] ref MemberInfo member) { }
+    public static void MemberInfo_In([MemberInfo] in MemberInfo member) { }
+    public static void MemberInfo_Out([MemberInfo] out MemberInfo member) => member = null!;
+    public static void MemberInfo_IncompatibleType([MemberInfo] int member) { }
     public static void Parameter_ImplicitName(int value) { }
     public static void Parameter_AttributeNullName([Parameter(null)] int value) { }
     public static void Parameter_AttributeExplicitName([Parameter("source", Scope.Outer)] int value) { }
@@ -142,6 +150,223 @@ internal sealed class ParameterBinderBindTests
             options,
             "test-group");
         return binder.Bind(parameter);
+    }
+
+    [Test]
+    public void MemberInfo_Method_SelectsTargetMember()
+    {
+        var expected = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        var invocation = new MethodInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Default),
+            invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_Constructor_SelectsTargetMember()
+    {
+        var expected = typeof(ConstructorTargets).GetConstructor([typeof(int)])!;
+        var invocation = new OuterConstructorInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Default),
+            invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_InnerMethod_SelectsTargetMember()
+    {
+        var expected = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        var invocation = new MethodInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner),
+            InstanceVoid, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_InnerConstructor_SelectsTargetMember()
+    {
+        var expected = typeof(ConstructorTargets).GetConstructor([typeof(int)])!;
+        var invocation = new InnerConstructorInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner),
+            InstanceVoid, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_FieldGetter_SelectsTargetMember()
+    {
+        var expected = typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!;
+        var invocation = new GetFieldInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner),
+            InstanceVoid, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_FieldSetter_SelectsTargetMember()
+    {
+        var expected = typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!;
+        var invocation = new SetFieldInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner),
+            InstanceVoid, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_DefaultScope_OnInnerPatch_SelectsOuterMethod()
+    {
+        var expected = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        var outer = new MethodInvocation(expected);
+        var inner = new GetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Default), outer, inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_OuterScope_OnInnerPatch_SelectsOuterMethod()
+    {
+        var expected = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        var outer = new MethodInvocation(expected);
+        var inner = new GetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Outer), outer, inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void MemberInfo_ObjectParameter_AcceptsMemberInfo()
+    {
+        var expected = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!;
+        var outer = new MethodInvocation(expected);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Object), outer);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_StateMachine_OuterScope_SelectsDeclaredMethod()
+    {
+        MethodInfo expected = typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.EnumerateIdentity))!;
+        var target = new MethodInvocation(expected);
+        var moveNext = new MethodInvocation(expected.GetStateMachineImplementation()!);
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Default),
+            moveNext, InnerIntParameter, target);
+
+        Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_RefParameter_IsRejected()
+    {
+        var invocation = new MethodInvocation(
+            typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Ref), invocation));
+    }
+
+    [Test]
+    public void MemberInfo_InParameter_IsRejected()
+    {
+        var invocation = new MethodInvocation(
+            typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_In), invocation));
+    }
+
+    [Test]
+    public void MemberInfo_OutParameter_IsRejected()
+    {
+        var invocation = new MethodInvocation(
+            typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Out), invocation));
+    }
+
+    [Test]
+    public void MemberInfo_IncompatibleTypeParameter_IsRejected()
+    {
+        var invocation = new MethodInvocation(
+            typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_IncompatibleType), invocation));
+    }
+
+    [Test]
+    public void MemberInfo_InnerConstant_IsRejected()
+    {
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner), StaticIntParameter,
+                new ConstantIntInvocation(42)));
+    }
+
+    [Test]
+    public void MemberInfo_InnerScopeWithoutInnerTarget_IsRejected()
+    {
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner), StaticIntParameter));
     }
 
     [Test]
