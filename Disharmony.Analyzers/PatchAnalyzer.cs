@@ -25,11 +25,13 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor StaticMethod = new(
-        "DISHARMONY0002", "Patch method must be static", "Patch method '{0}' is not static",
+        "DISHARMONY0002", "Patch method must be static", 
+        "Patch method '{0}' is not static",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor PrefixReturn = new(
-        "DISHARMONY0003", "Prefix must return bool or void", "Prefix '{0}' must return bool or void",
+        "DISHARMONY0003", "Prefix must return bool or void", 
+        "Prefix '{0}' must return bool or void",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor PostfixReturn = new(
@@ -86,7 +88,8 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor MultipleParameterBindings = new(
-        "DISHARMONY0016", "Multiple parameter binding attributes", "Parameter '{0}' has multiple binding attributes",
+        "DISHARMONY0016", "Multiple parameter binding attributes", 
+        "Parameter '{0}' has multiple binding attributes",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor InnerBindingWithoutInnerPatch = new(
