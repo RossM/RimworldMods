@@ -207,6 +207,14 @@ internal class DiagnosticGenerator
                         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidDelegateBinding, parameterLocation, parameter.Name));
                         break;
                     }
+                    case ParameterKind.State:
+                    {
+                        string key = binding is null ? parameter.Name : Helpers.Argument(binding, "key")?.Value as string ?? parameter.Name;
+                        if (!states.TryGetValue(key, out var parameters))
+                            states.Add(key, parameters = []);
+                        parameters.Add(parameter);
+                        break;
+                    }
                 }
 
                 if (constantType is not null)
@@ -221,14 +229,6 @@ internal class DiagnosticGenerator
                         (kind == ParameterKind.Field && explicitlyInner))
                         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ConstantBindingUnavailable, parameterLocation,
                             parameter.Name));
-                }
-
-                if (kind == ParameterKind.State)
-                {
-                    string key = binding is null ? parameter.Name : Helpers.Argument(binding, "key")?.Value as string ?? parameter.Name;
-                    if (!states.TryGetValue(key, out var parameters))
-                        states.Add(key, parameters = []);
-                    parameters.Add(parameter);
                 }
             }
 
