@@ -7,7 +7,6 @@ public static class Patch_PawnGenerator
     [Prefix]
     [Inner(typeof(PawnGenerator), "XenotypesAvailableFor.AddOrAdjust")]
     [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
-    [PatchOptions(PatchOptions.Debug)]
     public static bool AddOrAdjust_Prefix(
         XenotypeChance xenotypeChance,
         FactionDef? factionDef,
