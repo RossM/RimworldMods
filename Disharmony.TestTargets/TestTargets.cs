@@ -33,6 +33,12 @@ namespace Disharmony.Tests
     public static class StaticMethodTargets
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public static IEnumerable<string> EnumerateDescription(DerivedMethodTargets inner, int value)
+        {
+            yield return inner.DescribeNonVirtual(value);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static IEnumerable<int> EnumerateIdentity(int outerValue)
         {
             yield return InnerStaticMethodTargets.IntIdentity(outerValue);
@@ -492,6 +498,12 @@ namespace Disharmony.Tests
     public class BaseMethodTargets
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
+        public string DescribeNonVirtual(int value) => $"base:{value}:{InstanceValue}";
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public virtual string CallInner(DerivedMethodTargets inner, int value) => $"outer-base:{value}:{InstanceValue}";
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public virtual IEnumerable<string> EnumerateDescription(int value)
         {
             yield return $"base:{value}:{InstanceValue}";
@@ -508,6 +520,13 @@ namespace Disharmony.Tests
 
     public sealed class DerivedMethodTargets : BaseMethodTargets
     {
+        // The inner call must name this declaration in IL, rather than a base virtual slot.
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public new string DescribeNonVirtual(int value) => $"derived:{value}:{InstanceValue}";
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public override string CallInner(DerivedMethodTargets inner, int value) => inner.DescribeNonVirtual(value);
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         public override IEnumerable<string> EnumerateDescription(int value)
         {

@@ -2,15 +2,45 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class BaseMethodBindingPatches
 {
+    [Prefix] [Inner(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeNonVirtual))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.CallInner))]
+    public static void InnerPrefix_BaseMethod_DefaultScope_UsesInnerInstance(
+        Func<int, string> __base) => resultObserved = __base(5);
+
+    [Postfix] [Inner(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeNonVirtual))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.CallInner))]
+    public static void InnerPostfix_BaseMethod_DefaultScope_UsesInnerInstance(
+        Func<int, string> __base) => resultObserved = __base(5);
+
+    [Prefix] [Inner(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeNonVirtual))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.CallInner))]
+    public static void InnerPrefix_BaseMethodAttribute_DefaultScope_UsesInnerInstance(
+        [BaseMethod] Func<int, string> baseMethod) => resultObserved = baseMethod(5);
+
+    [Prefix] [Inner(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeNonVirtual))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.CallInner))]
+    public static void InnerPrefix_BaseMethodAttribute_InnerScope_UsesInnerInstance(
+        [BaseMethod(Scope.Inner)] Func<int, string> baseMethod) => resultObserved = baseMethod(5);
+
+    [Prefix] [Inner(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeNonVirtual))]
+    [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.CallInner))]
+    public static void InnerPrefix_BaseMethodAttribute_OuterScope_UsesOuterInstance(
+        DerivedMethodTargets inner, [BaseMethod(Scope.Outer)] Func<DerivedMethodTargets, int, string> baseMethod) => resultObserved = baseMethod(inner, 5);
+
+    [Prefix] [Inner(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeNonVirtual))]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumerateDescription))]
+    public static void IteratorInnerPrefix_BaseMethodAttribute_InnerScope_UsesInnerInstance(
+        [BaseMethod(Scope.Inner)] Func<int, string> baseMethod) => resultObserved = baseMethod(5);
+
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.EnumerateDescription))]
     public static void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_DeclaredSignature_Rejected(
-        [BaseMethod] Func<int, IEnumerable<string>> baseMethod) { }
+        [BaseMethod(Scope.Outer)] Func<int, IEnumerable<string>> baseMethod) { }
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.EnumerateDescription))]
     public static void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_MoveNextSignature_Rejected(
-        [BaseMethod] Func<bool> baseMethod) { }
+        [BaseMethod(Scope.Outer)] Func<bool> baseMethod) { }
 
     public static string? resultObserved;
 
@@ -35,16 +65,16 @@ public static class BaseMethodBindingPatches
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeWithInnerCall))]
-    public static void InnerPrefix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes(
+    public static void InnerPrefix_BaseMethodAttribute_OuterScope_Parameter_Primitive_Result_ReferenceType_Invokes(
         int value,
-        Func<int, string> __base) =>
+        [BaseMethod(Scope.Outer)] Func<int, string> __base) =>
         resultObserved = __base(value);
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(DerivedMethodTargets), nameof(DerivedMethodTargets.DescribeWithInnerCall))]
-    public static void InnerPostfix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes(
+    public static void InnerPostfix_BaseMethodAttribute_OuterScope_Parameter_Primitive_Result_ReferenceType_Invokes(
         int value,
-        Func<int, string> __base) =>
+        [BaseMethod(Scope.Outer)] Func<int, string> __base) =>
         resultObserved = __base(value);
 
     [Prefix]
@@ -114,9 +144,98 @@ public static class BaseMethodBindingPatches
 public sealed class BaseMethodBindingTests : PatchTestBase
 {
     [Test]
+    public void InnerPrefix_BaseMethod_DefaultScope_UsesInnerInstance()
+    {
+        BaseMethodBindingPatches.resultObserved = null;
+        var outer = new DerivedMethodTargets { InstanceValue = 7 };
+        var inner = new DerivedMethodTargets { InstanceValue = 19 };
+        ApplyPatch(typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.InnerPrefix_BaseMethod_DefaultScope_UsesInnerInstance));
+
+        string result = outer.CallInner(inner, 41);
+
+        Assert.That(result, Is.EqualTo("derived:41:19"));
+        Assert.That(BaseMethodBindingPatches.resultObserved, Is.EqualTo("base:5:19"));
+    }
+
+    [Test]
+    public void InnerPostfix_BaseMethod_DefaultScope_UsesInnerInstance()
+    {
+        BaseMethodBindingPatches.resultObserved = null;
+        var outer = new DerivedMethodTargets { InstanceValue = 7 };
+        var inner = new DerivedMethodTargets { InstanceValue = 19 };
+        ApplyPatch(typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.InnerPostfix_BaseMethod_DefaultScope_UsesInnerInstance));
+
+        string result = outer.CallInner(inner, 41);
+
+        Assert.That(result, Is.EqualTo("derived:41:19"));
+        Assert.That(BaseMethodBindingPatches.resultObserved, Is.EqualTo("base:5:19"));
+    }
+
+    [Test]
+    public void InnerPrefix_BaseMethodAttribute_DefaultScope_UsesInnerInstance()
+    {
+        BaseMethodBindingPatches.resultObserved = null;
+        var outer = new DerivedMethodTargets { InstanceValue = 7 };
+        var inner = new DerivedMethodTargets { InstanceValue = 19 };
+        ApplyPatch(typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.InnerPrefix_BaseMethodAttribute_DefaultScope_UsesInnerInstance));
+
+        string result = outer.CallInner(inner, 41);
+
+        Assert.That(result, Is.EqualTo("derived:41:19"));
+        Assert.That(BaseMethodBindingPatches.resultObserved, Is.EqualTo("base:5:19"));
+    }
+
+    [Test]
+    public void InnerPrefix_BaseMethodAttribute_InnerScope_UsesInnerInstance()
+    {
+        BaseMethodBindingPatches.resultObserved = null;
+        var outer = new DerivedMethodTargets { InstanceValue = 7 };
+        var inner = new DerivedMethodTargets { InstanceValue = 19 };
+        ApplyPatch(typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.InnerPrefix_BaseMethodAttribute_InnerScope_UsesInnerInstance));
+
+        string result = outer.CallInner(inner, 41);
+
+        Assert.That(result, Is.EqualTo("derived:41:19"));
+        Assert.That(BaseMethodBindingPatches.resultObserved, Is.EqualTo("base:5:19"));
+    }
+
+    [Test]
+    public void InnerPrefix_BaseMethodAttribute_OuterScope_UsesOuterInstance()
+    {
+        BaseMethodBindingPatches.resultObserved = null;
+        var outer = new DerivedMethodTargets { InstanceValue = 7 };
+        var inner = new DerivedMethodTargets { InstanceValue = 19 };
+        ApplyPatch(typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.InnerPrefix_BaseMethodAttribute_OuterScope_UsesOuterInstance));
+
+        string result = outer.CallInner(inner, 41);
+
+        Assert.That(result, Is.EqualTo("derived:41:19"));
+        Assert.That(BaseMethodBindingPatches.resultObserved, Is.EqualTo("outer-base:5:7"));
+    }
+
+    [Test]
+    public void IteratorInnerPrefix_BaseMethodAttribute_InnerScope_UsesInnerInstance()
+    {
+        BaseMethodBindingPatches.resultObserved = null;
+        var inner = new DerivedMethodTargets { InstanceValue = 19 };
+        ApplyPatch(typeof(BaseMethodBindingPatches),
+            nameof(BaseMethodBindingPatches.IteratorInnerPrefix_BaseMethodAttribute_InnerScope_UsesInnerInstance));
+
+        string result = StaticMethodTargets.EnumerateDescription(inner, 41).Single();
+
+        Assert.That(result, Is.EqualTo("derived:41:19"));
+        Assert.That(BaseMethodBindingPatches.resultObserved, Is.EqualTo("base:5:19"));
+    }
+
+    [Test]
     public void IteratorInnerPrefix_BaseMethodAttribute_OuterScope_DeclaredSignature_Rejected()
     {
-        // BaseMethod always has Scope.Outer, but is unsupported on an iterator inner patch.
+        // Explicit outer base binding is unsupported on an iterator inner patch.
         // The delegate matches the declared iterator, which has a concrete base implementation.
         var exception = Assert.Throws<PatchException>(() => ApplyPatch(
             typeof(BaseMethodBindingPatches),
@@ -166,12 +285,12 @@ public sealed class BaseMethodBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPrefix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes()
+    public void InnerPrefix_BaseMethodAttribute_OuterScope_Parameter_Primitive_Result_ReferenceType_Invokes()
     {
         BaseMethodBindingPatches.resultObserved = null;
         ApplyPatch(
             typeof(BaseMethodBindingPatches),
-            nameof(BaseMethodBindingPatches.InnerPrefix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes));
+            nameof(BaseMethodBindingPatches.InnerPrefix_BaseMethodAttribute_OuterScope_Parameter_Primitive_Result_ReferenceType_Invokes));
         var target = new DerivedMethodTargets { InstanceValue = 1 };
 
         string result = target.DescribeWithInnerCall(41);
@@ -181,12 +300,12 @@ public sealed class BaseMethodBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPostfix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes()
+    public void InnerPostfix_BaseMethodAttribute_OuterScope_Parameter_Primitive_Result_ReferenceType_Invokes()
     {
         BaseMethodBindingPatches.resultObserved = null;
         ApplyPatch(
             typeof(BaseMethodBindingPatches),
-            nameof(BaseMethodBindingPatches.InnerPostfix_BaseMethod_Parameter_Primitive_Result_ReferenceType_Invokes));
+            nameof(BaseMethodBindingPatches.InnerPostfix_BaseMethodAttribute_OuterScope_Parameter_Primitive_Result_ReferenceType_Invokes));
         var target = new DerivedMethodTargets { InstanceValue = 1 };
 
         string result = target.DescribeWithInnerCall(41);

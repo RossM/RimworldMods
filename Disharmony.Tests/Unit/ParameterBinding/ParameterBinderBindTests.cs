@@ -27,6 +27,8 @@ internal static class ParameterBinderPatchMethods
     public static void Field_NullName([Field] int foo) { }
     public static void Field_AutoPropertyBackingField([Field(nameof(ClassMethodTargets.AutoProperty))] int value) { }
     public static void BaseMethod_Attribute([BaseMethod] Func<int, string> method) { }
+    public static void BaseMethod_ExplicitInner([BaseMethod(Scope.Inner)] Func<int, string> method) { }
+    public static void BaseMethod_ExplicitOuter([BaseMethod(Scope.Outer)] Func<int, string> method) { }
     public static void Method_AttributeNonVirtual(
         [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, int> method) { }
     public static void Method_AttributeVirtual(
@@ -336,6 +338,96 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Field_AutoPropertyBackingField), InstanceVoid);
 
         Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+    }
+
+    [Test]
+    public void BaseMethod_InnerPatch_DefaultScope_SelectsInnerBaseImplementation()
+    {
+        var outer = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.DescribeWithInnerCall))!);
+        var inner = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!);
+        MethodInfo expected = typeof(BaseMethodTargets).GetMethod(nameof(BaseMethodTargets.Describe))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.BaseMethod_Attribute), outer, inner);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BaseMethod_InnerPatch_ExplicitInnerScope_SelectsInnerBaseImplementation()
+    {
+        var outer = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.DescribeWithInnerCall))!);
+        var inner = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!);
+        MethodInfo expected = typeof(BaseMethodTargets).GetMethod(nameof(BaseMethodTargets.Describe))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.BaseMethod_ExplicitInner), outer, inner);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BaseMethod_InnerPatch_ExplicitOuterScope_SelectsOuterBaseImplementation()
+    {
+        var outer = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.DescribeWithInnerCall))!);
+        var inner = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!);
+        MethodInfo expected = typeof(BaseMethodTargets).GetMethod(nameof(BaseMethodTargets.DescribeWithInnerCall))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.BaseMethod_ExplicitOuter), outer, inner);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void ReservedName_BaseMethod_InnerPatch_SelectsInnerBaseImplementation()
+    {
+        var outer = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.DescribeWithInnerCall))!);
+        var inner = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!);
+        MethodInfo expected = typeof(BaseMethodTargets).GetMethod(nameof(BaseMethodTargets.Describe))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.ReservedName_BaseMethod), outer, inner);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BaseMethod_InnerScope_Iterator_SelectsInnerBaseImplementation()
+    {
+        var target = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.EnumerateDescription))!);
+        var outer = new MethodInvocation(target.MethodInfo.GetStateMachineImplementation()!);
+        var inner = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.DescribeNonVirtual))!);
+        MethodInfo expected = typeof(BaseMethodTargets).GetMethod(nameof(BaseMethodTargets.DescribeNonVirtual))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.BaseMethod_ExplicitInner), outer, inner, target);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+        Assert.That(binding.methodInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BaseMethod_ExplicitInnerScope_WithoutInnerPatch_IsRejected()
+    {
+        var outer = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!);
+
+        Assert.Throws<ParameterBindingException>(() => Bind(
+            nameof(ParameterBinderPatchMethods.BaseMethod_ExplicitInner), outer));
+    }
+
+    [Test]
+    public void BaseMethod_InnerPatch_StaticInner_DoesNotFallBackToOuterBase()
+    {
+        var outer = new MethodInvocation(typeof(DerivedMethodTargets).GetMethod(nameof(DerivedMethodTargets.Describe))!);
+        var inner = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.StringIdentity))!);
+
+        Assert.Throws<ParameterBindingException>(() => Bind(
+            nameof(ParameterBinderPatchMethods.BaseMethod_Attribute), outer, inner));
     }
 
     [Test]
