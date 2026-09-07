@@ -114,6 +114,9 @@ internal class ParameterBinder(
 
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
 
+            case var _ when parameterName.StartsWith("__"):
+                throw new ParameterBindingException(parameterName, "Unrecognized special parameter name");
+
             default: return BindParameterByName(parameter, parameterName, Scope.Any);
         }
     }
