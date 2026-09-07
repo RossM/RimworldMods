@@ -946,6 +946,9 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 ///     The instance used for instance methods and the default type for unqualified method names.
 ///     The default, <see cref="Scope.Any" />, uses the inner instance for an inner patch and the outer instance otherwise.
 /// </param>
+/// <param name="virtualCall">
+///     A value indicating whether to use a virtual call if the method is virtual.
+/// </param>
 /// <remarks>
 ///     The patch parameter must be a delegate whose parameters and return type match the selected method. This binding can
 ///     be used to invoke an otherwise-inaccessible method. Overloads are selected using the delegate's <c>Invoke</c>
@@ -963,7 +966,8 @@ public sealed class MethodAttribute(string? name, Scope scope = Scope.Any, bool 
     ///     The instance used for instance methods and the default type for unqualified method names.
     ///     The default, <see cref="Scope.Any" />, uses the inner instance for an inner patch and the outer instance otherwise.
     /// </param>
-    public MethodAttribute(Scope scope = Scope.Any) : this(null, scope) { }
+    /// <param name="virtualCall">A value indicating whether to use a virtual call if the method is virtual.</param>
+    public MethodAttribute(Scope scope = Scope.Any, bool virtualCall = true) : this(null, scope, virtualCall) { }
 
     /// <summary>
     ///     Gets the optionally type-qualified method name, or <see langword="null" /> when the patch parameter's name is used.
