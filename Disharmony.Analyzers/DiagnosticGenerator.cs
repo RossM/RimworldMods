@@ -167,35 +167,39 @@ internal class DiagnosticGenerator
                     boundValues.Add(parameterKey, boundParameters = []);
                 boundParameters.Add(parameter);
 
-                if (kind == ParameterKind.Result && isPrefix)
+                switch (kind)
                 {
-                    if (alwaysRun)
+                    case ParameterKind.Result when isPrefix:
                     {
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.AlwaysRunResultBinding, parameterLocation, parameter.Name));
+                        if (alwaysRun)
+                        {
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.AlwaysRunResultBinding, parameterLocation, parameter.Name));
+                        }
+                        else
+                        {
+                            if (method.ReturnsVoid)
+                                ctx.ReportDiagnostic(
+                                    Diagnostic.Create(PatchAnalyzer.VoidPrefixResultBinding, parameterLocation, parameter.Name));
+                        }
+
+                        break;
                     }
-                    else
+                    case ParameterKind.Exception:
                     {
-                        if (method.ReturnsVoid)
-                            ctx.ReportDiagnostic(
-                                Diagnostic.Create(PatchAnalyzer.VoidPrefixResultBinding, parameterLocation, parameter.Name));
+                        if (!isPostfix || !alwaysRun)
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidExceptionBinding, parameterLocation, parameter.Name));
+                        if (_Exception is not null && !Helpers.CanBindKnownType(compilation, parameter, _Exception, allowUnsafe))
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name,
+                                "System.Exception"));
+                        break;
+                    }
+                    case ParameterKind.BaseMethod or ParameterKind.Method when 
+                        parameter.RefKind != RefKind.None || parameter.Type is not INamedTypeSymbol { DelegateInvokeMethod: not null }:
+                    {
+                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidDelegateBinding, parameterLocation, parameter.Name));
+                        break;
                     }
                 }
-
-                if (kind == ParameterKind.Exception)
-                {
-                    if (!isPostfix || !alwaysRun)
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidExceptionBinding, parameterLocation, parameter.Name));
-                    if (_Exception is not null && !Helpers.CanBindKnownType(compilation, parameter, _Exception, allowUnsafe))
-                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name,
-                            "System.Exception"));
-                }
-
-                if (kind is ParameterKind.BaseMethod or ParameterKind.Method && (parameter.RefKind != RefKind.None ||
-                                                                                 parameter.Type is not INamedTypeSymbol
-                                                                                 {
-                                                                                     DelegateInvokeMethod: not null,
-                                                                                 }))
-                    ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.InvalidDelegateBinding, parameterLocation, parameter.Name));
 
                 if (constantType is not null)
                 {
