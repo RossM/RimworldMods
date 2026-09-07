@@ -22,15 +22,15 @@ internal static class ReflectionTools
     {
         return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, defaultType,
             searchBaseTypes: true);
+    }
 
-        static Type WrappedType(ParameterInfo parameter)
-        {
-            Type parameterType = parameter.ParameterType;
-            if (!parameterType.IsByRef)
-                return parameterType;
-            Type marker = parameter.IsOut ? typeof(Out<>) : parameter.IsIn ? typeof(In<>) : typeof(Ref<>);
-            return marker.MakeGenericType(parameterType.GetElementType()!);
-        }
+    private static Type WrappedType(ParameterInfo parameter)
+    {
+        Type parameterType = parameter.ParameterType;
+        if (!parameterType.IsByRef)
+            return parameterType;
+        Type marker = parameter.IsOut ? typeof(Out<>) : parameter.IsIn ? typeof(In<>) : typeof(Ref<>);
+        return marker.MakeGenericType(parameterType.GetElementType()!);
     }
 
     public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes,
