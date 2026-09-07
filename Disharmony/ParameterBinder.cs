@@ -192,7 +192,7 @@ internal class ParameterBinder(
         MethodInfo methodInfo;
         try
         {
-            methodInfo = ReflectionTools.GetMethod(instanceType, name, delegateInvoke.GetParameters());
+            methodInfo = ReflectionTools.GetMethod(instanceType, name, delegateInvoke.GetParameters(), true);
         }
         catch (ReflectionException e)
         {

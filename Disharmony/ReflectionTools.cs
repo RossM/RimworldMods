@@ -18,9 +18,9 @@ internal static class ReflectionTools
         AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoadHandler;
     }
 
-    public static MethodInfo GetMethod(Type defaultType, string name, ParameterInfo[] parameters)
+    public static MethodInfo GetMethod(Type defaultType, string name, ParameterInfo[] parameters, bool searchBaseTypes)
     {
-        return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, searchBaseTypes: true);
+        return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, searchBaseTypes);
     }
 
     private static Type WrappedType(ParameterInfo parameter)
