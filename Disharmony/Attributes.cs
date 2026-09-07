@@ -936,7 +936,7 @@ public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : Para
 public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
 
 /// <summary>
-///     Binds a patch parameter to a delegate that invokes a static method or a method on the inner or outer instance.
+///     Binds a patch parameter to a delegate that invokes a method on the selected instance.
 /// </summary>
 /// <param name="name">
 ///     The method name in <c>"Method"</c>, <c>"Type.Method"</c>, or <c>"Namespace.Type.Method"</c> form,
@@ -951,13 +951,17 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 /// </param>
 /// <remarks>
 ///     <para>
-///         The patch parameter must be a delegate whose parameters and return type match the selected method. This binding can
-///         be used to invoke an otherwise-inaccessible method. Overloads are selected using the delegate's <c>Invoke</c>
-///         parameters, including <c>ref</c>, <c>in</c>, and <c>out</c> modifiers. The method must be static or declared by
-///         a type that can accept the selected instance. Instance methods require an instance in the selected scope.
+///         The method can be a method on the selected instance type, a method on a base type, or a static method on any type.
+///         To select a method on a type other than the instance type, include the type name in <paramref name="name"/> in
+///         <c>"Type.Method"</c> or <c>"Namespace.Type.Method"</c> form.
 ///     </para>
 ///     <para>
-///         Set <paramref name="virtualCall" /> to <see langword="false" /> to bypass any overrides and call the exact method.
+///         If the selected method is overloaded, the type of the delegate parameter is used to select the overload.
+///         The delegate's parameters and return type must match the selected method.
+///     </para>
+///     <para>
+///         This binding can be used to invoke an otherwise-inaccessible method, or to call a base class method on a
+///         derived class instance by setting <paramref name="virtualCall" /> to <see langword="false" />.
 ///     </para>
 /// </remarks>
 [PublicAPI]
