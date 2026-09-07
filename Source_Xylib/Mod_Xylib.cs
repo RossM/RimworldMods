@@ -44,13 +44,6 @@ public class Mod_Xylib : Mod
 {
     public Mod_Xylib(ModContentPack content) : base(content)
     {
-        var harmony = new Harmony("Xylthixlm.Xylib");
-
-        using (new ProfileBlock("Xylib Harmony patching"))
-        {
-            harmony.PatchCategory(null);
-        }
-
         using (new ProfileBlock("Xylib Disharmony patching"))
         {
             Patcher.PatchAll(Assembly.GetExecutingAssembly());
