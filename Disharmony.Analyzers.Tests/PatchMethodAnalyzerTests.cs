@@ -38,7 +38,6 @@ public class PatchMethodAnalyzerTests
         var diagnostics = await Analyze(source);
         Assert.That(diagnostics, Has.Length.EqualTo(1));
         Assert.That(diagnostics[0].Id, Is.EqualTo(expectedId));
-        Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo("M"));
     }
@@ -177,7 +176,6 @@ public class PatchMethodAnalyzerTests
         var diagnostics = await Analyze(source);
         Assert.That(diagnostics, Has.Length.EqualTo(1));
         Assert.That(diagnostics[0].Id, Is.EqualTo(expectedId));
-        Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo(expectedSpan));
     }

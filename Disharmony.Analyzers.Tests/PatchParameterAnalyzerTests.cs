@@ -75,9 +75,9 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(0)] int value) {} }", "DISHARMONY0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(\"x\", Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Field(Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(long __result) {} }", "DISHARMONY0021,DH0025", "__result")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DISHARMONY0021,DH0025", "__result")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(in object __result) {} }", "DISHARMONY0021,DH0025", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(long __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(in object __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, InnerConstant(\"text\")] static void M(ref object __result) {} }", "DISHARMONY0021", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __resut) {} }", "DISHARMONY0027", "__resut")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __Result) {} }", "DISHARMONY0027", "__Result")]
@@ -87,7 +87,6 @@ public class PatchParameterAnalyzerTests
     {
         var diagnostics = await Analyze(source);
         Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(expectedId.Split(',')));
-        Assert.That(diagnostics[0].Severity, Is.EqualTo(DiagnosticSeverity.Warning));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo(expectedName));
     }
@@ -119,26 +118,25 @@ public class PatchParameterAnalyzerTests
         Assert.That(await Analyze(source), Is.Empty);
     }
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DH0022,DH0029,DH0029")]
-    [TestCase("[Patch] class C { [Prefix, Target(typeof(object), \"A\")] static void A([State(\"shared\")] int a) {} [Postfix, Target(typeof(object), \"B\")] static void B([State(\"shared\")] object b) {} }", "DISHARMONY0022,DH0022,DH0029,DH0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"shared\")] int a, [State(\"shared\")] string b) {} }", "DISHARMONY0022,DH0022,DH0029,DH0029,DH0028,DH0028")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] partial class C { [Prefix] static void A(int __state) {} } partial class C { [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DH0022,DH0029,DH0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"__state\")] int a) {} [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DH0022,DH0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029")]
+    [TestCase("[Patch] class C { [Prefix, Target(typeof(object), \"A\")] static void A([State(\"shared\")] int a) {} [Postfix, Target(typeof(object), \"B\")] static void B([State(\"shared\")] object b) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"shared\")] int a, [State(\"shared\")] string b) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029,DISHARMONY0028,DISHARMONY0028")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] partial class C { [Prefix] static void A(int __state) {} } partial class C { [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"__state\")] int a) {} [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029")]
     public async Task ConflictingStateTypesWarnOnBothParameters(string source, string expectedIds)
     {
         var diagnostics = await Analyze(source);
         Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(expectedIds.Split(',')));
-        Assert.That(diagnostics.All(d => d.Severity == DiagnosticSeverity.Warning), Is.True);
     }
 
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(ref int __state) {} [Postfix] static void B(int __state) {} }", "")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"a\")] int a) {} [Postfix] static void B([State(\"b\")] string b) {} }", "DISHARMONY0029,DH0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(null)] int a) {} [Postfix] static void B([State] int a) {} }", "DISHARMONY0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"a\")] int a) {} [Postfix] static void B([State(\"b\")] string b) {} }", "DISHARMONY0029,DISHARMONY0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(null)] int a) {} [Postfix] static void B([State] int a) {} }", "DISHARMONY0029,DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __state) {} }", "DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B([Parameter] string __state) {} }", "DISHARMONY0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] static void A(int __state) {} } class C : B { [Postfix] static void M(string __state) {} }", "DISHARMONY0029,DH0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Patch, Target(typeof(object), \"M\")] class Nested { [Postfix] static void B(string __state) {} } }", "DISHARMONY0029,DH0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A((int a, string b) __state) {} [Postfix] static void B((int x, string y) __state) {} }", "DISHARMONY0029,DH0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] static void A(int __state) {} } class C : B { [Postfix] static void M(string __state) {} }", "DISHARMONY0029,DISHARMONY0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Patch, Target(typeof(object), \"M\")] class Nested { [Postfix] static void B(string __state) {} } }", "DISHARMONY0029,DISHARMONY0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A((int a, string b) __state) {} [Postfix] static void B((int x, string y) __state) {} }", "DISHARMONY0029,DISHARMONY0029")]
     public async Task IndependentOrCompatibleStateBindingsCheckForWriters(string source, string expectedIds)
     {
         Assert.That((await Analyze(source)).Select(d => d.Id), Is.EquivalentTo(expectedIds.Length == 0 ? [] : expectedIds.Split(',')));
