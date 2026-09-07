@@ -278,72 +278,71 @@ internal class ParameterBinder(
     {
         // Look in target parameters
         if (scope is Scope.Inner or Scope.Any)
-        {
-            int index = Array.FindIndex(inner.ParameterNames, p => p == name);
-            if (index >= 0)
-            {
-                Validate(parameter, inner.ParameterTypes[index], Scope.Inner, "parameter");
-                return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = Scope.Inner, index = index };
-            }
-        }
+            if (BindParameterByName(parameter, name, inner, Scope.Inner) is { } parameterBinding)
+                return parameterBinding;
 
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
-        {
-            if (IsStateMachine)
-            {
-                var iteratorType = outer.InstanceType;
-                var field = iteratorType.GetField(name, AccessTools.all);
-                if (field != null)
-                {
-                    Validate(parameter, field.FieldType, Scope.Outer, "parameter");
-                    return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [field] };
-                }
-
-                if (TryGetThisField(iteratorType, out var thisField) && thisField.FieldType.IsClosureType)
-                {
-                    var type = thisField.FieldType.NoRefType;
-                    field = type.GetField(name, AccessTools.all);
-                    if (field != null)
-                    {
-                        Validate(parameter, field.FieldType, Scope.Outer, "parameter");
-                        return new()
-                        {
-                            parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [thisField, field],
-                        };
-                    }
-                }
-
-                throw new ParameterBindingException(parameter.Name, "Parameter not found");
-            }
-
-            int index = Array.FindIndex(outer.ParameterNames, p => p == name);
-            if (index >= 0)
-            {
-                Validate(parameter, outer.ParameterTypes[index], Scope.Outer, "parameter");
-                return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = Scope.Outer, index = index };
-            }
-        }
+            if (BindParameterByName(parameter, name, outer, Scope.Outer) is { } parameterBinding)
+                return parameterBinding;
 
         // Look in closure fields
         if (scope is Scope.Inner or Scope.Any)
-            if (TryBindClosureByName(parameter, name, inner.ParameterTypes, Scope.Inner, out var parameterBinding))
+            if (BindClosureByName(parameter, name, inner.ParameterTypes, Scope.Inner) is { } parameterBinding)
                 return parameterBinding;
 
         // Look in closure fields
         if (scope is Scope.Outer or Scope.Any)
-            if (TryBindClosureByName(parameter, name, outer.ParameterTypes, Scope.Outer, out var parameterBinding))
+            if (BindClosureByName(parameter, name, outer.ParameterTypes, Scope.Outer) is { } parameterBinding)
                 return parameterBinding;
 
         throw new ParameterBindingException(parameter.Name, "Parameter not found");
     }
 
-    private bool TryBindClosureByName(
+    private ParameterBinding? BindParameterByName(ParameterInfo parameter, string name, Invocation invocation, Scope scope)
+    {
+        if (scope == Scope.Outer && IsStateMachine)
+        {
+            var iteratorType = invocation.InstanceType;
+            var field = iteratorType.GetField(name, AccessTools.all);
+            if (field != null)
+            {
+                Validate(parameter, field.FieldType, scope, "parameter");
+                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope, fields = [field] };
+            }
+
+            if (TryGetThisField(iteratorType, out var thisField) && thisField.FieldType.IsClosureType)
+            {
+                var type = thisField.FieldType.NoRefType;
+                field = type.GetField(name, AccessTools.all);
+                if (field != null)
+                {
+                    Validate(parameter, field.FieldType, scope, "parameter");
+                    return new()
+                    {
+                        parameter = parameter, bindingType = BindingType.Instance, scope = scope, fields = [thisField, field],
+                    };
+                }
+            }
+
+            throw new ParameterBindingException(parameter.Name, "Parameter not found");
+        }
+
+        int index = Array.FindIndex(invocation.ParameterNames, p => p == name);
+        if (index >= 0)
+        {
+            Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
+            return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = scope, index = index };
+        }
+
+        return null;
+    }
+
+    private ParameterBinding? BindClosureByName(
         ParameterInfo parameter,
         string name,
         Type[] parameterTypes,
-        Scope scope,
-        [NotNullWhen(true)] out ParameterBinding? parameterBinding)
+        Scope scope)
     {
         int closureIndex = Array.FindLastIndex(parameterTypes, p => p.IsClosureType);
         if (closureIndex >= 0)
@@ -355,7 +354,7 @@ internal class ParameterBinder(
             if (field != null)
             {
                 ValidateCast(parameter, field.FieldType);
-                parameterBinding = new()
+                return new()
                 {
                     parameter = parameter,
                     bindingType = BindingType.Parameter,
@@ -363,69 +362,57 @@ internal class ParameterBinder(
                     index = closureIndex,
                     fields = [field],
                 };
-                return true;
             }
         }
 
-        parameterBinding = null;
-        return false;
+        return null;
     }
 
     private ParameterBinding BindFieldByName(ParameterInfo parameter, string name, Scope scope)
     {
         // Look in inner instance fields
         if (scope is Scope.Inner or Scope.Any)
-        {
-            var field = inner.InstanceType.GetField(name, AccessTools.all) ??
-                        inner.InstanceType.GetField($"<{name}>k__BackingField", AccessTools.all);
-            if (field != null)
-            {
-                if (field.IsStatic)
-                {
-                    ValidateCast(parameter, field.FieldType);
-                    return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = Scope.Inner, fields = [field] };
-                }
-
-                if (!inner.IsStatic)
-                {
-                    ValidateCast(parameter, field.FieldType);
-                    return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Inner, fields = [field] };
-                }
-            }
-        }
+            if (BindFieldByName(parameter, name, inner, Scope.Inner) is { } parameterBinding)
+                return parameterBinding;
 
         // Look in outer instance fields
         if (scope is Scope.Outer or Scope.Any)
+            if (BindFieldByName(parameter, name, outer, Scope.Outer) is { } parameterBinding)
+                return parameterBinding;
+
+        throw new ParameterBindingException(parameter.Name, "Field not found");
+    }
+
+    private ParameterBinding? BindFieldByName(ParameterInfo parameter, string name, Invocation invocation, Scope scope)
+    {
+        Type curType = invocation.InstanceType;
+        List<FieldInfo> fields = [];
+        if (scope == Scope.Outer && IsStateMachine && !invocation.IsStatic)
         {
-            Type curType = outer.InstanceType;
-            List<FieldInfo> fields = [];
-            if (IsStateMachine && !outer.IsStatic)
+            var thisField = GetThisField(curType);
+            curType = thisField.FieldType;
+            fields.Add(thisField);
+        }
+
+        var field = curType.GetField(name, AccessTools.all) ??
+                    curType.GetField($"<{name}>k__BackingField", AccessTools.all);
+        if (field != null)
+        {
+            if (field.IsStatic)
             {
-                var thisField = GetThisField(curType);
-                curType = thisField.FieldType;
-                fields.Add(thisField);
+                ValidateCast(parameter, field.FieldType);
+                return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = scope, fields = [field] };
             }
 
-            var field = curType.GetField(name, AccessTools.all) ??
-                        curType.GetField($"<{name}>k__BackingField", AccessTools.all);
-            if (field != null)
+            if (!invocation.IsStatic)
             {
-                if (field.IsStatic)
-                {
-                    ValidateCast(parameter, field.FieldType);
-                    return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = Scope.Outer, fields = [field] };
-                }
-
-                if (!outer.IsStatic)
-                {
-                    fields.Add(field);
-                    ValidateCast(parameter, field.FieldType);
-                    return new() { parameter = parameter, bindingType = BindingType.Instance, scope = Scope.Outer, fields = [.. fields] };
-                }
+                fields.Add(field);
+                ValidateCast(parameter, field.FieldType);
+                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope, fields = [.. fields] };
             }
         }
 
-        throw new ParameterBindingException(parameter.Name, "Field not found");
+        return null;
     }
 
     private ParameterBinding BindException(ParameterInfo parameter)
