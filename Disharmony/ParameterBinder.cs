@@ -82,7 +82,7 @@ internal class ParameterBinder(
             case FieldAttribute { Name: var name, Scope: var attributeScope }:
                 return BindFieldByName(parameter, name ?? (parameterName.StartsWith("___") ? parameterName[3..] : parameterName), attributeScope);
 
-            case BaseMethodAttribute: return BindBaseMethod(parameter);
+            case BaseMethodAttribute: return BindBaseMethod(parameter, invocation, scope);
 
             case MethodAttribute { Name: var name }: return BindMethod(parameter, invocation, scope, name ?? parameterName);
 
@@ -108,7 +108,7 @@ internal class ParameterBinder(
 
             case "__state": return BindState(parameter, parameterName);
 
-            case "__base": return BindBaseMethod(parameter);
+            case "__base": return BindBaseMethod(parameter, invocation, scope);
 
             case "__exception": return BindException(parameter);
 
@@ -151,11 +151,11 @@ internal class ParameterBinder(
         return new() { parameter = parameter, bindingType = BindingType.State, scope = Scope.Outer, stateKey = stateKey };
     }
 
-    private ParameterBinding BindBaseMethod(ParameterInfo parameter)
+    private ParameterBinding BindBaseMethod(ParameterInfo parameter, Invocation invocation, Scope scope)
     {
-        if (IsStateMachine)
+        if (IsStateMachine && scope == Scope.Outer)
             throw new ParameterBindingException(parameter.Name, "Not supported for state machine methods");
-        if (outer is not MethodInvocation method || outer.IsStatic)
+        if (invocation is not MethodInvocation method || method.IsStatic)
             throw new ParameterBindingException(parameter.Name, "Must be an instance method");
 
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
@@ -179,7 +179,7 @@ internal class ParameterBinder(
         if (baseMethod.IsAbstract)
             throw new ParameterBindingException(parameter.Name, "Base method is abstract");
 
-        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = Scope.Outer, methodInfo = baseMethod };
+        return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = baseMethod };
     }
 
     private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name)

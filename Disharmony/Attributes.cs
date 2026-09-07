@@ -923,7 +923,7 @@ public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : Para
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class BaseMethodAttribute() : ParameterBindingAttribute(Scope.Outer);
+public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
 
 /// <summary>
 ///     Binds a patch parameter to a delegate that invokes a method declared by the inner or outer instance's type.
