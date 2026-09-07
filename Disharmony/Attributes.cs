@@ -924,6 +924,11 @@ public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : Para
 ///     <para>
 ///         A parameter named <c>__base</c> with no binding attribute is treated as if it has this attribute.
 ///     </para>
+///     <para>
+///         When patching an inner virtual call, be aware that the C# compiler may generate a call to the base method
+///         even when the declared type is to a derived class. In that case, the inner target must be the base
+///         method, and base-method binding is not available.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
