@@ -394,22 +394,28 @@ internal class ParameterBinder(
             fields.Add(thisField);
         }
 
-        var field = curType.GetField(name, AccessTools.all) ??
-                    curType.GetField($"<{name}>k__BackingField", AccessTools.all);
-        if (field != null)
-        {
-            if (field.IsStatic)
-            {
-                ValidateCast(parameter, field.FieldType);
-                return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = scope, fields = [field] };
-            }
+        var results = ReflectionTools.GetMembers(curType, name, MemberType.Getter, null, null, searchBaseTypes: true);
+        if (results is not [FieldInfo])
+            results = ReflectionTools.GetMembers(curType, $"<{name}>k__BackingField", MemberType.Getter, null, null, searchBaseTypes: true);
+        if (results is not [FieldInfo])
+            return null;
 
-            if (!invocation.IsStatic)
-            {
-                fields.Add(field);
-                ValidateCast(parameter, field.FieldType);
-                return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope, fields = [.. fields] };
-            }
+        var field = (FieldInfo)results[0];
+
+        if (field.IsStatic)
+        {
+            ValidateCast(parameter, field.FieldType);
+            return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = scope, fields = [field] };
+        }
+
+        if (!invocation.IsStatic)
+        {
+            if (!field.DeclaringType!.IsAssignableFrom(curType))
+                throw new ParameterBindingException(parameter.Name, "Instance type mismatch");
+
+            fields.Add(field);
+            ValidateCast(parameter, field.FieldType);
+            return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope, fields = [.. fields] };
         }
 
         return null;
