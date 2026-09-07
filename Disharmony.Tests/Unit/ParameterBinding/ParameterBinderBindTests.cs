@@ -8,6 +8,12 @@ internal sealed class UnsupportedParameterBindingAttribute() : ParameterBindingA
 
 internal static class ParameterBinderPatchMethods
 {
+    public static void Field_QualifiedBase([Field("FieldLookupBaseTargets.Value")] int field) { }
+    public static void Field_FullyQualifiedBase([Field("Disharmony.Tests.FieldLookupBaseTargets.Value")] int field) { }
+    public static void Field_QualifiedDerived([Field("FieldLookupDerivedTargets.Value")] int field) { }
+    public static void Field_QualifiedStatic([Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] int field) { }
+    public static void Field_QualifiedUnrelatedInstance([Field("Disharmony.Tests.ClassMethodTargets.primitiveField")] int field) { }
+    public static void Field_QualifiedMissing([Field("FieldLookupBaseTargets.Missing")] int field) { }
     public static void MemberInfo_Default([MemberInfo] MemberInfo member) { }
     public static void MemberInfo_Inner([MemberInfo(Scope.Inner)] MemberInfo member) { }
     public static void MemberInfo_Outer([MemberInfo(Scope.Outer)] MemberInfo member) { }
@@ -510,6 +516,106 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.State_NullKey), StaticVoid);
 
         Assert.That(binding.stateKey, Is.EqualTo("test-group#namedState"));
+    }
+
+    [Test]
+    public void Field_QualifiedBase_SelectsBaseRatherThanHiddenField()
+    {
+        var invocation = new MethodInvocation(
+            typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+        var expected = typeof(FieldLookupBaseTargets).GetField(nameof(FieldLookupBaseTargets.Value))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedBase), invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Instance));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+        });
+    }
+
+    [Test]
+    public void Field_FullyQualifiedBase_SelectsBaseRatherThanHiddenField()
+    {
+        var invocation = new MethodInvocation(
+            typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+        var expected = typeof(FieldLookupBaseTargets).GetField(nameof(FieldLookupBaseTargets.Value))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Field_FullyQualifiedBase), invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Instance));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+        });
+    }
+
+    [Test]
+    public void Field_QualifiedStatic_OnStaticTarget_BindsUnrelatedField()
+    {
+        var invocation = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.Void))!);
+        var expected = typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedStatic), invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.StaticField));
+            Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+        });
+    }
+
+    [Test]
+    public void Field_QualifiedStatic_OnInstanceTarget_BindsUnrelatedField()
+    {
+        var invocation = new MethodInvocation(typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+        var expected = typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedStatic), invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.StaticField));
+            Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+        });
+    }
+
+    [Test]
+    public void Field_UnrelatedInstance_IsRejected()
+    {
+        var invocation = new MethodInvocation(typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedUnrelatedInstance), invocation));
+    }
+
+    [Test]
+    public void Field_DerivedFieldOnBaseInstance_IsRejected()
+    {
+        var invocation = new MockInvocation(typeof(FieldLookupBaseTargets), typeof(void), [typeof(FieldLookupBaseTargets)], ["<instance>"], false);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedDerived), invocation));
+    }
+
+    [Test]
+    public void Field_InstanceFieldOnStaticTarget_IsRejected()
+    {
+        var invocation = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.Void))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedBase), invocation));
+    }
+
+    [Test]
+    public void Field_MissingQualifiedField_IsRejected()
+    {
+        var invocation = new MethodInvocation(typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Field_QualifiedMissing), invocation));
     }
 
     [Test]

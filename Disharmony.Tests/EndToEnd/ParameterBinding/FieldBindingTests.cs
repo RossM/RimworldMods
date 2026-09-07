@@ -2,6 +2,105 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class FieldBindingPatches
 {
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_QualifiedBaseField_Primitive_ReadByValue(
+        [Field("FieldLookupBaseTargets.Value")] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_QualifiedBaseField_Primitive_ReadByReference(
+        [Field("FieldLookupBaseTargets.Value")] ref int field) =>
+        observed = field;
+
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_QualifiedBaseField_Primitive_WriteByReference(
+        [Field("FieldLookupBaseTargets.Value")] ref int field) =>
+        field = 42;
+
+    [Prefix]
+    [Inner(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.CallInner))]
+    public static void InnerPrefix_QualifiedInnerBaseField_Primitive_ReadByValue(
+        [Field("FieldLookupBaseTargets.Value")] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Inner(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.CallInner))]
+    public static void InnerPrefix_QualifiedInnerBaseField_Primitive_ReadByReference(
+        [Field("FieldLookupBaseTargets.Value")] ref int field) =>
+        observed = field;
+
+    [Prefix]
+    [Inner(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.CallInner))]
+    public static void InnerPrefix_QualifiedInnerBaseField_Primitive_WriteByReference(
+        [Field("FieldLookupBaseTargets.Value")] ref int field) =>
+        field = 42;
+
+    [Prefix]
+    [Inner(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.CallInner))]
+    public static void InnerPrefix_QualifiedOuterBaseField_Primitive_ReadByValue(
+        [Field("FieldLookupBaseTargets.Value", Scope.Outer)] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Inner(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.CallInner))]
+    public static void InnerPrefix_QualifiedOuterBaseField_Primitive_ReadByReference(
+        [Field("FieldLookupBaseTargets.Value", Scope.Outer)] ref int field) =>
+        observed = field;
+
+    [Prefix]
+    [Inner(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.CallInner))]
+    public static void InnerPrefix_QualifiedOuterBaseField_Primitive_WriteByReference(
+        [Field("FieldLookupBaseTargets.Value", Scope.Outer)] ref int field) =>
+        field = 42;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_QualifiedStaticField_Primitive_ReadByValue(
+        [Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_QualifiedStaticField_Primitive_ReadByReference(
+        [Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] ref int field) =>
+        observed = field;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_QualifiedStaticField_Primitive_WriteByReference(
+        [Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] ref int field) =>
+        field = 42;
+
+    [Prefix]
+    [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
+    public static void InnerPrefix_QualifiedInnerStaticField_Primitive_ReadByValue(
+        [Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
+    public static void InnerPrefix_QualifiedInnerStaticField_Primitive_ReadByReference(
+        [Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] ref int field) =>
+        observed = field;
+
+    [Prefix]
+    [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntIdentity))]
+    public static void InnerPrefix_QualifiedInnerStaticField_Primitive_WriteByReference(
+        [Field("Disharmony.Tests.InnerStaticMethodTargets.Field")] ref int field) =>
+        field = 42;
+
     public static int observed;
     public static BindingReference? referenceObserved;
     public static BindingStruct structObserved;
@@ -222,6 +321,283 @@ public static class FieldBindingPatches
 [TestFixture]
 public sealed class FieldBindingTests : PatchTestBase
 {
+    [Test]
+    public void Prefix_QualifiedBaseField_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_QualifiedBaseField_Primitive_ReadByValue));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void Prefix_QualifiedBaseField_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_QualifiedBaseField_Primitive_ReadByReference));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void Prefix_QualifiedBaseField_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_QualifiedBaseField_Primitive_WriteByReference));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(42));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedInnerBaseField_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        var inner = new FieldLookupDerivedTargets { Value = 23 };
+        ((FieldLookupBaseTargets)inner).Value = 13;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedInnerBaseField_Primitive_ReadByValue));
+
+        target.CallInner(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(13));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+            Assert.That(((FieldLookupBaseTargets)inner).Value, Is.EqualTo(13));
+            Assert.That(inner.Value, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedInnerBaseField_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        var inner = new FieldLookupDerivedTargets { Value = 23 };
+        ((FieldLookupBaseTargets)inner).Value = 13;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedInnerBaseField_Primitive_ReadByReference));
+
+        target.CallInner(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(13));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+            Assert.That(((FieldLookupBaseTargets)inner).Value, Is.EqualTo(13));
+            Assert.That(inner.Value, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedInnerBaseField_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        var inner = new FieldLookupDerivedTargets { Value = 23 };
+        ((FieldLookupBaseTargets)inner).Value = 13;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedInnerBaseField_Primitive_WriteByReference));
+
+        target.CallInner(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+            Assert.That(((FieldLookupBaseTargets)inner).Value, Is.EqualTo(42));
+            Assert.That(inner.Value, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedOuterBaseField_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        var inner = new FieldLookupDerivedTargets { Value = 23 };
+        ((FieldLookupBaseTargets)inner).Value = 13;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedOuterBaseField_Primitive_ReadByValue));
+
+        target.CallInner(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+            Assert.That(((FieldLookupBaseTargets)inner).Value, Is.EqualTo(13));
+            Assert.That(inner.Value, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedOuterBaseField_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        var inner = new FieldLookupDerivedTargets { Value = 23 };
+        ((FieldLookupBaseTargets)inner).Value = 13;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedOuterBaseField_Primitive_ReadByReference));
+
+        target.CallInner(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+            Assert.That(((FieldLookupBaseTargets)inner).Value, Is.EqualTo(13));
+            Assert.That(inner.Value, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedOuterBaseField_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        var inner = new FieldLookupDerivedTargets { Value = 23 };
+        ((FieldLookupBaseTargets)inner).Value = 13;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedOuterBaseField_Primitive_WriteByReference));
+
+        target.CallInner(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(42));
+            Assert.That(target.Value, Is.EqualTo(21));
+            Assert.That(((FieldLookupBaseTargets)inner).Value, Is.EqualTo(13));
+            Assert.That(inner.Value, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void Prefix_QualifiedStaticField_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_QualifiedStaticField_Primitive_ReadByValue));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_QualifiedStaticField_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_QualifiedStaticField_Primitive_ReadByReference));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_QualifiedStaticField_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_QualifiedStaticField_Primitive_WriteByReference));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(42));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedInnerStaticField_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedInnerStaticField_Primitive_ReadByValue));
+
+        OuterStaticMethodTargets.IntIdentity(7);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedInnerStaticField_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedInnerStaticField_Primitive_ReadByReference));
+
+        OuterStaticMethodTargets.IntIdentity(7);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_QualifiedInnerStaticField_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.InnerPrefix_QualifiedInnerStaticField_Primitive_WriteByReference));
+
+        OuterStaticMethodTargets.IntIdentity(7);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(42));
+        });
+    }
+
     [Test]
     public void Prefix_TripleUnderscoreField_Primitive_ReadByValue()
     {
