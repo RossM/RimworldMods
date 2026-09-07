@@ -4,6 +4,57 @@ public static class MethodBindingPatches
 {
     public static int ResultObserved;
     public static int ArgumentObserved;
+    public static string? DescriptionObserved;
+    public static string? VirtualDescriptionObserved;
+
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_MixedDispatch_DelegatesRemainIndependent(
+        [Method(nameof(MethodBindingVirtualBaseTargets.Describe), virtualCall: false)] Func<string, string> directMethod,
+        [Method(nameof(MethodBindingVirtualBaseTargets.Describe), virtualCall: true)] Func<string, string> virtualMethod)
+    {
+        DescriptionObserved = directMethod("patch");
+        VirtualDescriptionObserved = virtualMethod("patch");
+    }
+
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_NonVirtualCall_UsesDeclaredImplementation(
+        [Method(nameof(MethodBindingVirtualBaseTargets.Describe), virtualCall: false)] Func<string, string> method) =>
+        DescriptionObserved = method("patch");
+
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_NonVirtualCall_NullNameUsesParameterName(
+        [Method(null, virtualCall: false)] Func<string, string> Describe) =>
+        DescriptionObserved = Describe("patch");
+
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualDerivedTargets), nameof(MethodBindingVirtualDerivedTargets.TargetDerivedInstanceMethod))]
+    public static void Prefix_MethodAttribute_NonVirtualCall_UsesDeclaredOverride(
+        [Method(nameof(MethodBindingVirtualDerivedTargets.Describe), virtualCall: false)] Func<string, string> method) =>
+        DescriptionObserved = method("patch");
+
+    [Prefix]
+    [Inner(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.Describe))]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.CallInnerVirtualMethod))]
+    public static void InnerPrefix_MethodAttribute_NonVirtualCall_InnerScopeUsesInnerInstance(
+        [Method(nameof(MethodBindingVirtualBaseTargets.Describe), Scope.Inner, virtualCall: false)] Func<string, string> method) =>
+        DescriptionObserved = method("patch");
+
+    [Prefix]
+    [Inner(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.Describe))]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.CallInnerVirtualMethod))]
+    public static void InnerPrefix_MethodAttribute_VirtualCall_InnerScopeUsesRuntimeOverride(
+        [Method(nameof(MethodBindingVirtualBaseTargets.Describe), Scope.Inner, virtualCall: true)] Func<string, string> method) =>
+        DescriptionObserved = method("patch");
+
+    [Prefix]
+    [Inner(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.Describe))]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.CallInnerVirtualMethod))]
+    public static void InnerPrefix_MethodAttribute_NonVirtualCall_OuterScopeUsesOuterInstance(
+        [Method(nameof(MethodBindingVirtualBaseTargets.Describe), Scope.Outer, virtualCall: false)] Func<string, string> method) =>
+        DescriptionObserved = method("patch");
 
     [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
@@ -342,6 +393,130 @@ public sealed class MethodBindingTests : PatchTestBase
         {
             Assert.That(result, Is.EqualTo(10));
             Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(205));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_MixedDispatch_DelegatesRemainIndependent()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        MethodBindingPatches.VirtualDescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_MixedDispatch_DelegatesRemainIndependent));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:outer:patch"));
+            Assert.That(MethodBindingPatches.VirtualDescriptionObserved, Is.EqualTo("derived:outer:patch"));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_NonVirtualCall_UsesDeclaredImplementation()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_NonVirtualCall_UsesDeclaredImplementation));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:outer:patch"));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_NonVirtualCall_NullNameUsesParameterName()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_NonVirtualCall_NullNameUsesParameterName));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:outer:patch"));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_NonVirtualCall_UsesDeclaredOverride()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_NonVirtualCall_UsesDeclaredOverride));
+        MethodBindingVirtualDerivedTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+
+        int result = target.TargetDerivedInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(60));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("derived:outer:patch"));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_NonVirtualCall_InnerScopeUsesInnerInstance()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_NonVirtualCall_InnerScopeUsesInnerInstance));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+        MethodBindingVirtualBaseTargets inner = new MethodBindingVirtualDerivedTargets { InstanceName = "inner" };
+
+        string result = target.CallInnerVirtualMethod(inner, "original");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo("derived:inner:original"));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:inner:patch"));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_VirtualCall_InnerScopeUsesRuntimeOverride()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_VirtualCall_InnerScopeUsesRuntimeOverride));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+        MethodBindingVirtualBaseTargets inner = new MethodBindingVirtualDerivedTargets { InstanceName = "inner" };
+
+        string result = target.CallInnerVirtualMethod(inner, "original");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo("derived:inner:original"));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("derived:inner:patch"));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_NonVirtualCall_OuterScopeUsesOuterInstance()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_NonVirtualCall_OuterScopeUsesOuterInstance));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+        MethodBindingVirtualBaseTargets inner = new MethodBindingVirtualDerivedTargets { InstanceName = "inner" };
+
+        string result = target.CallInnerVirtualMethod(inner, "original");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo("derived:inner:original"));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:outer:patch"));
         });
     }
 

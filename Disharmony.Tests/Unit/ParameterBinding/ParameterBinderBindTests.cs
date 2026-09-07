@@ -33,6 +33,10 @@ internal static class ParameterBinderPatchMethods
         [Method(nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, int> method) { }
     public static void Method_AttributeVirtual(
         [Method(nameof(MethodBindingVirtualBaseTargets.BoundVirtualMethod))] Func<int, int> method) { }
+    public static void Method_VirtualMethod_NonVirtualCall(
+        [Method(nameof(MethodBindingVirtualBaseTargets.BoundVirtualMethod), virtualCall: false)] Func<int, int> method) { }
+    public static void Method_VirtualMethod_NullNameNonVirtualCall(
+        [Method(null, virtualCall: false)] Func<int, int> BoundVirtualMethod) { }
     public static void Method_NullNameUsesParameterName(
         [Method(null)] Func<int, int> BoundInstanceMethod) { }
     public static void Method_ExplicitInnerScope(
@@ -491,6 +495,46 @@ internal sealed class ParameterBinderBindTests
 
         Assert.That(binding.methodInfo, Is.SameAs(expected));
         Assert.That(binding.useVirtualDispatch, Is.True);
+    }
+
+    [Test]
+    public void Method_VirtualMethod_NonVirtualCall_DisablesVirtualDispatch()
+    {
+        MethodInfo targetMethod = typeof(MethodBindingVirtualBaseTargets)
+            .GetMethod(nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))!;
+        MethodInfo expected = typeof(MethodBindingVirtualBaseTargets)
+            .GetMethod(nameof(MethodBindingVirtualBaseTargets.BoundVirtualMethod))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.Method_VirtualMethod_NonVirtualCall), new MethodInvocation(targetMethod));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.methodInfo, Is.SameAs(expected));
+            Assert.That(binding.useVirtualDispatch, Is.False);
+        });
+    }
+
+    [Test]
+    public void Method_VirtualMethod_NullNameNonVirtualCall_DisablesVirtualDispatch()
+    {
+        MethodInfo targetMethod = typeof(MethodBindingVirtualBaseTargets)
+            .GetMethod(nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))!;
+        MethodInfo expected = typeof(MethodBindingVirtualBaseTargets)
+            .GetMethod(nameof(MethodBindingVirtualBaseTargets.BoundVirtualMethod))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.Method_VirtualMethod_NullNameNonVirtualCall), new MethodInvocation(targetMethod));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.methodInfo, Is.SameAs(expected));
+            Assert.That(binding.useVirtualDispatch, Is.False);
+        });
     }
 
     [Test]

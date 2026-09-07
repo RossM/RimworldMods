@@ -125,6 +125,14 @@ public readonly struct MethodBindingReadonlyStructTargets
 
 public class MethodBindingVirtualBaseTargets
 {
+    public string InstanceName { get; set; } = "";
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public virtual string Describe(string value) => $"base:{InstanceName}:{value}";
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public string CallInnerVirtualMethod(MethodBindingVirtualBaseTargets inner, string value) => inner.Describe(value);
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public int TargetInstanceMethod() => 50;
 
@@ -134,6 +142,12 @@ public class MethodBindingVirtualBaseTargets
 
 public sealed class MethodBindingVirtualDerivedTargets : MethodBindingVirtualBaseTargets
 {
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public int TargetDerivedInstanceMethod() => 60;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public override string Describe(string value) => $"derived:{InstanceName}:{value}";
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public override int BoundVirtualMethod(int value) => 600 + value;
 }
