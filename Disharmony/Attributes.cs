@@ -927,7 +927,8 @@ public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : Para
 ///     <para>
 ///         When patching an inner virtual call, be aware that the C# compiler may generate a call to the base method
 ///         even when the declared type is a derived class. In that case, the inner target must be the base
-///         method, and base-method binding is not available.
+///         method, and base-method binding is not available. Instead use <see cref="MethodAttribute" /> with
+///         <see cref="MethodAttribute.VirtualCall" /> set to <see langword="false" />.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -950,7 +951,7 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class MethodAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+public sealed class MethodAttribute(string? name, Scope scope = Scope.Any, bool virtualCall = true) : ParameterBindingAttribute(scope)
 {
     /// <summary>
     ///     Binds to the method having the same name as the attributed patch parameter.
@@ -965,6 +966,15 @@ public sealed class MethodAttribute(string? name, Scope scope = Scope.Any) : Par
     ///     Gets the method name, or <see langword="null" /> when the patch parameter's name is used.
     /// </summary>
     public string? Name { get; } = name;
+
+    /// <summary>
+    ///     Gets a value indicating whether to use a virtual call if the method is virtual.
+    /// </summary>
+    /// <remarks>
+    ///     If this is false, the call will be to to exact declared method, bypassing any overrides.
+    ///     If this is true, the call will be dispatched to the most-derived override of the method.
+    /// </remarks>
+    public bool VirtualCall { get; } = virtualCall;
 }
 
 /// <summary>

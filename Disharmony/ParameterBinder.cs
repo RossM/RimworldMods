@@ -1,5 +1,4 @@
-﻿using Disharmony.Optimizer;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Disharmony;
@@ -80,11 +79,13 @@ internal class ParameterBinder(
             case StateAttribute { Key: var key }: return BindState(parameter, key ?? parameterName);
 
             case FieldAttribute { Name: var name, Scope: var attributeScope }:
-                return BindFieldByName(parameter, name ?? (parameterName.StartsWith("___") ? parameterName[3..] : parameterName), attributeScope);
+                return BindFieldByName(parameter, name ?? (parameterName.StartsWith("___") ? parameterName[3..] : parameterName),
+                    attributeScope);
 
             case BaseMethodAttribute: return BindBaseMethod(parameter, invocation, scope);
 
-            case MethodAttribute { Name: var name }: return BindMethod(parameter, invocation, scope, name ?? parameterName);
+            case MethodAttribute { Name: var name, VirtualCall: var virtualCall }:
+                return BindMethod(parameter, invocation, scope, name ?? parameterName, virtualCall);
 
             case ExceptionAttribute: return BindException(parameter);
 
@@ -182,7 +183,7 @@ internal class ParameterBinder(
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = baseMethod };
     }
 
-    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name)
+    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, bool allowVirtual)
     {
         var instanceType = invocation.InstanceType;
         var methodInfo = instanceType.GetMethod(name, AccessTools.all) ??
@@ -209,7 +210,7 @@ internal class ParameterBinder(
         return new()
         {
             parameter = parameter, bindingType = BindingType.Delegate, scope = scope, methodInfo = methodInfo,
-            useVirtualDispatch = methodInfo.IsVirtual,
+            useVirtualDispatch = methodInfo.IsVirtual && allowVirtual,
         };
     }
 
@@ -368,6 +369,7 @@ internal class ParameterBinder(
                     ValidateCast(parameter, field.FieldType);
                     return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = Scope.Inner, fields = [field] };
                 }
+
                 if (!inner.IsStatic)
                 {
                     ValidateCast(parameter, field.FieldType);
@@ -397,6 +399,7 @@ internal class ParameterBinder(
                     ValidateCast(parameter, field.FieldType);
                     return new() { parameter = parameter, bindingType = BindingType.StaticField, scope = Scope.Outer, fields = [field] };
                 }
+
                 if (!outer.IsStatic)
                 {
                     fields.Add(field);
