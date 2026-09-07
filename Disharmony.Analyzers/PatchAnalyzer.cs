@@ -101,7 +101,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor InvalidExceptionBinding = new(
         "DISHARMONY0019", "Exception binding requires an AlwaysRun postfix",
-        "Parameter '{0}' binds an exception outside an AlwaysRun postfixg",
+        "Parameter '{0}' binds an exception outside an AlwaysRun postfix",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor InvalidDelegateBinding = new(
