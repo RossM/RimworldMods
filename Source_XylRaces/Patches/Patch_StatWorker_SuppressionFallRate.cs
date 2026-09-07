@@ -10,7 +10,7 @@ public static class Patch_StatWorker_SuppressionFallRate
         StatRequest req,
         bool applyPostProcess,
         Func<StatRequest, bool, float> __base,
-        ref float __result)
+        out float __result)
     {
         __result = __base(req, applyPostProcess);
         return false;
@@ -22,7 +22,7 @@ public static class Patch_StatWorker_SuppressionFallRate
     public static bool GetExplanationForTooltip_Prefix(
         StatWorker_SuppressionFallRate __instance,
         StatRequest req,
-        ref string __result)
+        out string __result)
     {
         __result = ((StatWorker_SuppressionFallRate_Fixed)__instance).GetExplanationForTooltip(req);
         return false;
