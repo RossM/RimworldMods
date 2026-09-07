@@ -107,6 +107,15 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             case BindingType.MemberInfo:
             {
                 output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
+                switch (parameter.memberInfo)
+                {
+                    case MethodBase:
+                        output.Add(new(OpCodes.Call, InfoOf.MethodBase_GetMethodFromHandle1));
+                        break;
+                    case FieldInfo:
+                        output.Add(new(OpCodes.Call, InfoOf.FieldInfo_GetFieldFromHandle1));
+                        break;
+                }
                 resultType = parameter.memberInfo!.GetType();
                 break;
             }
