@@ -12,7 +12,7 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\"), PatchOptions(PatchOptions.AlwaysRun)] class C { [Prefix, PatchOptions(PatchOptions.Default)] static void M(int __result) {} }", "DISHARMONY0025")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([ReturnValue] int result) {} }", "DISHARMONY0025")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(int __result) {} }", "DISHARMONY0025")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref int __result) {} }", "DISHARMONY0025")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref int __result) {} }", "DISHARMONY0025,DISHARMONY0034")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(object __result) {} }", "DISHARMONY0025")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(\"text\")] static void M(in object __result) {} }", "DISHARMONY0025")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([ReturnValue] out int value) { value = 1; } }", "DISHARMONY0025")]
@@ -24,9 +24,7 @@ public class PatchParameterAnalyzerTests
         Assert.That(diagnostics.All(d => d.Severity == DiagnosticSeverity.Warning), Is.True);
     }
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(ref int __result) { __result = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(out int __result) { __result = 1; return false; } }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] out int value) { value = 1; return false; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(int __result) => false; }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(in int __result) => true; }")]
@@ -76,13 +74,15 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(\"x\", Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Field(Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(long __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DISHARMONY0021,DISHARMONY0025,DISHARMONY0034", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(in object __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, InnerConstant(\"text\")] static void M(ref object __result) {} }", "DISHARMONY0021", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __resut) {} }", "DISHARMONY0027", "__resut")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __Result) {} }", "DISHARMONY0027", "__Result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __) {} }", "DISHARMONY0027", "__")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __0) {} }", "DISHARMONY0027", "__0")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(ref int __result) { __result = 1; return false; } }", "DISHARMONY0034", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }", "DISHARMONY0034", "value")]
     public async Task InvalidParameterBindingReportsWarningAtParameter(string source, string expectedId, string expectedName)
     {
         var diagnostics = await Analyze(source);

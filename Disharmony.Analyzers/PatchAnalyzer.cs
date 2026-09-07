@@ -16,7 +16,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
         VoidPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
-        StateWithoutReader, WrittenValueParameter,
+        StateWithoutReader, WrittenValueParameter, PrefixResultIsRef,
     ];
 
     public static readonly DiagnosticDescriptor GenericMethod = new(
