@@ -63,6 +63,7 @@ internal static class ReflectionTools
             type = GetTypeByName(typeName) ??
                    throw new ReflectionException($"Type not found: {typeName}");
             name = memberName;
+            searchBaseTypes = false;
         }
 
         var nameParts = name?.Split('.').ToList() ?? [];
@@ -78,6 +79,7 @@ internal static class ReflectionTools
 
                 type = foundType;
                 nameParts.RemoveRange(0, i);
+                searchBaseTypes = false;
                 break;
             }
 
