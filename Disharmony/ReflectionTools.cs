@@ -126,6 +126,12 @@ internal static class ReflectionTools
             _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null),
         };
 
+        candidates = candidates as MemberInfo[] ?? [.. candidates];
+
+        // Search the resolved type's hierarchy with the same signature.
+        if (!candidates.Any() && searchBaseTypes && type.BaseType is { } baseType)
+            return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, searchBaseTypes: true);
+
         if (parameterTypes != null || genericTypes != null)
             candidates = FilterMethods(candidates, parameterTypes, genericTypes);
 
@@ -138,10 +144,6 @@ internal static class ReflectionTools
         ).Where(m => m is not null);
 
         List<MemberInfo> results = [.. candidates];
-
-        // Search the resolved type's hierarchy with the same signature.
-        if (results.Count == 0 && searchBaseTypes && type.BaseType is { } baseType)
-            return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, searchBaseTypes: true);
 
         return results;
     }
