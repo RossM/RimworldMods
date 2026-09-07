@@ -162,8 +162,8 @@ public static class MethodBindingPatches
 
     [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
-    public static void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException(
-        [Method(nameof(MethodBindingInstanceTargets.BoundOverloadedMethod))] Func<int, int> method) { }
+    public static void Prefix_MethodAttribute_OverloadedMethod_SelectsDelegateSignature(
+        [Method(nameof(MethodBindingInstanceTargets.BoundOverloadedMethod))] Func<int, int> method) => ResultObserved = method(5);
 
     [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
@@ -324,7 +324,7 @@ public sealed class MethodBindingTests : PatchTestBase
             nameof(MethodBindingPatches.Prefix_MethodAttribute_Delegate_ParameterTypeMismatch_RejectedByPatch)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
-            .With.Message.EqualTo("method: Parameter type mismatch"));
+            .With.Message.EqualTo("method: Method not found"));
     }
 
     [Test]
@@ -335,7 +335,7 @@ public sealed class MethodBindingTests : PatchTestBase
             nameof(MethodBindingPatches.Prefix_MethodAttribute_Delegate_ParameterCountMismatch_RejectedByPatch)));
 
         Assert.That(exception!.InnerException, Is.TypeOf<ParameterBindingException>()
-            .With.Message.EqualTo("method: Parameter type mismatch"));
+            .With.Message.EqualTo("method: Method not found"));
     }
 
     [Test]
@@ -635,14 +635,15 @@ public sealed class MethodBindingTests : PatchTestBase
     }
 
     [Test]
-    public void Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException()
+    public void Prefix_MethodAttribute_OverloadedMethod_SelectsDelegateSignature()
     {
-        var exception = Assert.Throws<PatchException>(() =>
-            ApplyPatch(
-                typeof(MethodBindingPatches),
-                nameof(MethodBindingPatches.Prefix_MethodAttribute_OverloadedMethod_ThrowsAmbiguousMatchException)));
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_OverloadedMethod_SelectsDelegateSignature));
 
-        Assert.That(exception!.InnerException, Is.TypeOf<AmbiguousMatchException>());
+        new MethodBindingInstanceTargets().TargetInstanceMethod();
+
+        Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(5));
     }
 
     [Test]

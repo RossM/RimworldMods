@@ -18,6 +18,38 @@ internal static class ReflectionTools
         AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoadHandler;
     }
 
+    public static MethodInfo GetMethod(Type defaultType, string name, ParameterInfo[] parameters)
+    {
+        Type type = defaultType;
+        int separator = Math.Max(name.LastIndexOf('.'), name.LastIndexOf(':'));
+        if (separator >= 0)
+        {
+            string typeName = name[..separator];
+            type = GetTypeByName(typeName) ?? throw new ReflectionException($"Type not found: {typeName}");
+            name = name[(separator + 1)..];
+        }
+
+        Type[] parameterTypes = parameters.Select(parameter =>
+        {
+            Type parameterType = parameter.ParameterType;
+            if (!parameterType.IsByRef)
+                return parameterType;
+            Type marker = parameter.IsOut ? typeof(Out<>) : parameter.IsIn ? typeof(In<>) : typeof(Ref<>);
+            return marker.MakeGenericType(parameterType.GetElementType()!);
+        }).ToArray();
+
+        for (Type? declaringType = type; declaringType != null; declaringType = declaringType.BaseType)
+        {
+            List<MemberInfo> candidates = GetMembers(declaringType, name, MemberType.Method, parameterTypes, null);
+            if (candidates.Count > 1)
+                throw new AmbiguousMatchException($"Ambiguous match: {name}");
+            if (candidates.Count == 1)
+                return (MethodInfo)candidates[0];
+        }
+
+        throw new ReflectionException($"Method not found: {name}");
+    }
+
     public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
     {
         List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes);

@@ -186,11 +186,26 @@ internal class ParameterBinder(
     private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, bool allowVirtual)
     {
         var instanceType = invocation.InstanceType;
-        var methodInfo = instanceType.GetMethod(name, AccessTools.all) ??
-                         throw new ParameterBindingException(parameter.Name, "Method not found");
+        ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
+        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke") ??
+                             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
+        MethodInfo methodInfo;
+        try
+        {
+            methodInfo = ReflectionTools.GetMethod(instanceType, name, delegateInvoke.GetParameters());
+        }
+        catch (ReflectionException e)
+        {
+            throw new ParameterBindingException(parameter.Name, "Method not found", e);
+        }
 
-        if (invocation.IsStatic && !methodInfo.IsStatic)
-            throw new ParameterBindingException(parameter.Name, "Instance required");
+        if (!methodInfo.IsStatic)
+        {
+            if (invocation.IsStatic)
+                throw new ParameterBindingException(parameter.Name, "Instance required");
+            if (!methodInfo.DeclaringType!.IsAssignableFrom(instanceType))
+                throw new ParameterBindingException(parameter.Name, "Instance type mismatch");
+        }
 
         // Getting the instance for an iterator state machine isn't implemented for BindingType.Delegate
         if (IsStateMachine && scope == Scope.Outer && !methodInfo.IsStatic)
@@ -204,7 +219,6 @@ internal class ParameterBinder(
         if (instanceType.IsValueType && !methodInfo.IsStatic && !isReadonly && !AllowUnsafe)
             throw new ParameterBindingException(parameter.Name, "[Method] is not supported for non-static methods on structs");
 
-        ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
         ValidateInvoke(parameter, methodInfo);
 
         return new()

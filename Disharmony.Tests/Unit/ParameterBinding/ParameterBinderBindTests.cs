@@ -1014,7 +1014,7 @@ internal sealed class ParameterBinderBindTests
         ParameterBindingException exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(ParameterBinderPatchMethods.Error_MethodParameterMismatch), new MethodInvocation(targetMethod)))!;
 
-        Assert.That(exception.Message, Is.EqualTo("method: Parameter type mismatch"));
+        Assert.That(exception.Message, Is.EqualTo("method: Method not found"));
     }
 
     [Test]
