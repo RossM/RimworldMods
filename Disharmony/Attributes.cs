@@ -950,10 +950,15 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 ///     A value indicating whether to use a virtual call if the method is virtual.
 /// </param>
 /// <remarks>
-///     The patch parameter must be a delegate whose parameters and return type match the selected method. This binding can
-///     be used to invoke an otherwise-inaccessible method. Overloads are selected using the delegate's <c>Invoke</c>
-///     parameters, including <c>ref</c>, <c>in</c>, and <c>out</c> modifiers. The method must be static or declared by
-///     a type that can accept the selected instance. Instance methods require an instance in the selected scope.
+///     <para>
+///         The patch parameter must be a delegate whose parameters and return type match the selected method. This binding can
+///         be used to invoke an otherwise-inaccessible method. Overloads are selected using the delegate's <c>Invoke</c>
+///         parameters, including <c>ref</c>, <c>in</c>, and <c>out</c> modifiers. The method must be static or declared by
+///         a type that can accept the selected instance. Instance methods require an instance in the selected scope.
+///     </para>
+///     <para>
+///         Set <paramref name="virtualCall" /> to <see langword="false" /> to bypass any overrides and call the exact method.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
