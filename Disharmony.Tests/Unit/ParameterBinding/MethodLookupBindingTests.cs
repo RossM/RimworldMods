@@ -12,6 +12,16 @@ internal class MethodLookupBase
 
 internal class MethodLookupTarget : MethodLookupBase, IMethodLookupTarget
 {
+    public class Nested : MethodLookupBase
+    {
+        public static int StaticMethod(int value) => value + 2;
+
+        public class DeepNested
+        {
+            public static int StaticMethod(int value) => value + 3;
+        }
+    }
+
     public void Target() { }
     public static void StaticTarget() { }
     public int Convert(int value) => value + 1;
@@ -32,6 +42,14 @@ internal static class MethodLookupPatches
     public delegate int RefMethod(ref int value);
     public delegate int InMethod(in int value);
     public delegate int OutMethod(out int value);
+
+    public static void NestedPatch(
+        [Method("MethodLookupTarget.Nested.StaticMethod")] Func<int, int> shortType,
+        [Method("Disharmony.Tests.Unit.ParameterBinding.MethodLookupTarget.Nested.StaticMethod")] Func<int, int> fullType,
+        [Method("MethodLookupTarget:Nested.StaticMethod")] Func<int, int> colon,
+        [Method("Disharmony.Tests.Unit.ParameterBinding.MethodLookupTarget:Nested.DeepNested.StaticMethod")] Func<int, int> deepColon,
+        [Method("Disharmony.Tests.Unit.ParameterBinding.MethodLookupTarget.Nested.DeepNested.StaticMethod")] Func<int, int> deepDot,
+        [Method("MethodLookupTarget.Nested.Inherited")] Func<int, int> inherited) { }
 
     public static void Patch(
         [Method("Convert")] Func<int, int> unqualified,
@@ -54,6 +72,28 @@ internal static class MethodLookupPatches
 [TestFixture]
 public sealed class MethodLookupBindingTests
 {
+    [TestCase(0, 7)]
+    [TestCase(1, 7)]
+    [TestCase(2, 7)]
+    [TestCase(3, 8)]
+    [TestCase(4, 8)]
+    [TestCase(5, 5)]
+    public void BindMethod_ResolvesNestedTypesThroughSharedLookup(int parameterIndex, int expected)
+    {
+        ParameterInfo parameter = typeof(MethodLookupPatches).GetMethod("NestedPatch")!.GetParameters()[parameterIndex];
+        var invocation = new MockInvocation(typeof(MethodLookupTarget.Nested), typeof(void),
+            [typeof(MethodLookupTarget.Nested)], ["<instance>"], false);
+        var binder = new ParameterBinder(invocation, invocation, EmptyInvocation.Instance,
+            PatchType.Prefix, PatchOptions.Default, "test");
+
+        var binding = binder.Bind(parameter);
+        MethodInfo method = (MethodInfo)binding.methodInfo!;
+        var callable = (Func<int, int>)Delegate.CreateDelegate(parameter.ParameterType,
+            method.IsStatic ? null : new MethodLookupTarget.Nested(), method);
+
+        Assert.That(callable(5), Is.EqualTo(expected));
+    }
+
     [TestCase(0, 6)]
     [TestCase(1, 6)]
     [TestCase(2, 6)]

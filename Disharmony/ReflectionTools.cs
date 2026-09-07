@@ -20,39 +20,23 @@ internal static class ReflectionTools
 
     public static MethodInfo GetMethod(Type defaultType, string name, ParameterInfo[] parameters)
     {
-        Type type = defaultType;
-        int separator = Math.Max(name.LastIndexOf('.'), name.LastIndexOf(':'));
-        if (separator >= 0)
-        {
-            string typeName = name[..separator];
-            type = GetTypeByName(typeName) ?? throw new ReflectionException($"Type not found: {typeName}");
-            name = name[(separator + 1)..];
-        }
+        return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, defaultType,
+            searchBaseTypes: true);
 
-        Type[] parameterTypes = parameters.Select(parameter =>
+        static Type WrappedType(ParameterInfo parameter)
         {
             Type parameterType = parameter.ParameterType;
             if (!parameterType.IsByRef)
                 return parameterType;
             Type marker = parameter.IsOut ? typeof(Out<>) : parameter.IsIn ? typeof(In<>) : typeof(Ref<>);
             return marker.MakeGenericType(parameterType.GetElementType()!);
-        }).ToArray();
-
-        for (Type? declaringType = type; declaringType != null; declaringType = declaringType.BaseType)
-        {
-            List<MemberInfo> candidates = GetMembers(declaringType, name, MemberType.Method, parameterTypes, null);
-            if (candidates.Count > 1)
-                throw new AmbiguousMatchException($"Ambiguous match: {name}");
-            if (candidates.Count == 1)
-                return (MethodInfo)candidates[0];
         }
-
-        throw new ReflectionException($"Method not found: {name}");
     }
 
-    public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
+    public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes,
+        Type? defaultType = null, bool searchBaseTypes = false)
     {
-        List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes);
+        List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes, searchBaseTypes);
 
         switch (candidates.Count)
         {
@@ -64,7 +48,7 @@ internal static class ReflectionTools
         return result;
     }
 
-    public static List<MemberInfo> GetMembers(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes)
+    public static List<MemberInfo> GetMembers(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
     {
         if (name is null && memberType is not MemberType.Constructor)
             throw new ArgumentException("name expected");
@@ -78,7 +62,6 @@ internal static class ReflectionTools
         // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
         if (name?.Split([':'], 2) is [string typeName, string memberName])
         {
-            // TODO AccessTools.TypeByName is horribly inefficient, reimplement
             type = GetTypeByName(typeName) ??
                    throw new ReflectionException($"Type not found: {typeName}");
             name = memberName;
@@ -87,16 +70,17 @@ internal static class ReflectionTools
         var nameParts = name?.Split('.').ToList() ?? [];
 
         // Search for the type by considering foo, then foo.bar, then foo.bar.baz, etc.
-        if (type is null)
+        if (nameParts.Count > 1)
             for (int i = 1; i <= nameParts.Count - 1; i++)
             {
                 typeName = string.Join(".", nameParts.Take(i));
-                type = GetTypeByName(typeName);
-                if (type is not null)
-                {
-                    nameParts.RemoveRange(0, i);
-                    break;
-                }
+                var foundType = GetTypeByName(typeName);
+                if (foundType is null)
+                    continue;
+
+                type = foundType;
+                nameParts.RemoveRange(0, i);
+                break;
             }
 
         if (type is null)
@@ -112,6 +96,11 @@ internal static class ReflectionTools
             nameParts.RemoveAt(0);
         }
 
+        return GetResults(type, nameParts, memberType, parameterTypes, genericTypes, searchBaseTypes);
+    }
+
+    private static List<MemberInfo> GetResults(Type type, List<string> nameParts, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
+    {
         IEnumerable<MemberInfo> candidates = nameParts.Count switch
         {
             0 => type.GetConstructors(),
@@ -148,7 +137,13 @@ internal static class ReflectionTools
             }
         ).Where(m => m is not null);
 
-        return [.. candidates];
+        List<MemberInfo> results = [.. candidates];
+
+        // Search the resolved type's hierarchy with the same signature.
+        if (results.Count == 0 && searchBaseTypes && type.BaseType is { } baseType)
+            return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, searchBaseTypes: true);
+
+        return results;
     }
 
     // This is equivalent to AccessTools.GetTypeByName but it caches the assembly list
