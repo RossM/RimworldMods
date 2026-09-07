@@ -10,6 +10,7 @@
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <RootNamespace>Disharmony.Tests</RootNamespace>
+    <NoWarn>$(NoWarn);DISHARMONY0033</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

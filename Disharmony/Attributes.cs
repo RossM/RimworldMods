@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 namespace Disharmony;
@@ -106,6 +107,7 @@ public enum PatchOptions
     /// <remarks>
     ///     The optimization pass must be enabled separately.
     /// </remarks>
+    [Experimental("DISHARMONY0033")]
     Optimize = 0x2,
 
     /// <summary>

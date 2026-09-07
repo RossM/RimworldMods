@@ -10,6 +10,7 @@
     <EnableDisassembly Condition="'$(EnableDisassembly)' == ''">true</EnableDisassembly>
     <DeployToMods Condition="'$(DeployToMods)' == ''">true</DeployToMods>
     <DefineConstants Condition="'$(EnableDisassembly)' == 'true'">$(DefineConstants);ENABLE_DISASSEMBLY</DefineConstants>
+    <NoWarn>$(NoWarn);DISHARMONY0033</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

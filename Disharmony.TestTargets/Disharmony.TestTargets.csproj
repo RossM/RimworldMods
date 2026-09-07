@@ -9,6 +9,7 @@
     <Optimize>true</Optimize>
     <AssemblyName>Disharmony.TestTargets</AssemblyName>
     <RootNamespace>Disharmony.Tests</RootNamespace>
+    <NoWarn>$(NoWarn);DISHARMONY0033</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
