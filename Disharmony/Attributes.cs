@@ -747,8 +747,14 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 ///     name or zero-based index, and <see cref="Scope" /> selects the member for an inner patch.
 /// </summary>
 /// <remarks>
-///     Patch parameters bind by name without this attribute. Use it when the patch parameter has a different name, when
-///     positional binding is more stable, or when an inner patch must select a specific <see cref="Scope" />.
+///     <para>
+///         Patch parameters bind by name without this attribute. Use it when the patch parameter has a different name, when
+///         positional binding is more stable, or when an inner patch must select a specific <see cref="Scope" />.
+///     </para>
+///     <para>
+///         For inner <see cref="MemberType.Setter" /> patches on a field, the new value being assigned is available as
+///         a parameter named <see langword="value" />.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
