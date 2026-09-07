@@ -137,13 +137,12 @@ internal static class AnalyzerTestHelper
         }
         """;
 
-    internal static async Task<ImmutableArray<Diagnostic>> Analyze(string source, params string[] enabledDiagnostics)
+    internal static async Task<ImmutableArray<Diagnostic>> Analyze(string source)
     {
         var compilation = CSharpCompilation.Create("Test",
             [CSharpSyntaxTree.ParseText(Attributes), CSharpSyntaxTree.ParseText("using Disharmony;\n" + source)],
             [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                .WithSpecificDiagnosticOptions(enabledDiagnostics.ToImmutableDictionary(id => id, _ => ReportDiagnostic.Warn)));
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         Assert.That(compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error), Is.Empty,
             "The fixture must compile before analyzer diagnostics are checked.");
         return await compilation.WithAnalyzers(

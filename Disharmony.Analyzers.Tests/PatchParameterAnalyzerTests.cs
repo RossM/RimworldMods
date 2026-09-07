@@ -83,16 +83,16 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __0) {} }", "DISHARMONY0027", "__0")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(ref int __result) { __result = 1; return false; } }", "DISHARMONY0034", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }", "DISHARMONY0034", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Parameter(100)] int other) {} }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(out int value, [Parameter(100)] int other) { value = 1; } }", "DISHARMONY0035", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(out int value) { value = 1; } }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"argument\")] ref int value) {} }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"argument\")] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Parameter(Scope.Inner)] ref int value) {} }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(ref int value) {} }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] ref int __result) {} }", "DISHARMONY0035", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Parameter(Scope.Inner)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] out int __result) { __result = 1; } }", "DISHARMONY0035", "__result")]
     public async Task InvalidParameterBindingReportsWarningAtParameter(string source, string expectedId, string expectedName)
     {
-        var diagnostics = await Analyze(source, enabledDiagnostics: ["DISHARMONY0035"]);
+        var diagnostics = await Analyze(source);
         Assert.That(diagnostics.Select(d => d.Id), Is.EquivalentTo(expectedId.Split(',')));
         var text = await diagnostics[0].Location.SourceTree!.GetTextAsync();
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo(expectedName));
@@ -124,9 +124,15 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] out int value) { value = 1; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] ref int value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Field] out int value) { value = 1; } }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Parameter(100)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"argument\")] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Parameter(Scope.Inner)] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] ref int __result) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] ref int value) {} }")]
     public async Task ValidOrTargetDependentParameterBindingDoesNotWarn(string source)
     {
-        Assert.That(await Analyze(source, enabledDiagnostics: ["DISHARMONY0035"]), Is.Empty);
+        Assert.That(await Analyze(source), Is.Empty);
     }
 
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B(string __state) {} }", "DISHARMONY0022,DISHARMONY0022,DISHARMONY0029,DISHARMONY0029")]
