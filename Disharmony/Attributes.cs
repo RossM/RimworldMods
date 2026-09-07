@@ -1026,4 +1026,4 @@ public sealed class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class MemberInfoAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
+public sealed class MemberInfoAttribute(Scope scope = Scope.Outer) : ParameterBindingAttribute(scope);
