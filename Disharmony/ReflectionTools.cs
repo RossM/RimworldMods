@@ -2,7 +2,7 @@ namespace Disharmony;
 
 internal static class ReflectionTools
 {
-    public static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
+    private static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
 
     private static Assembly[]? _allAssemblies = null;
     private static Dictionary<string, Type>? _typesByName = null;
