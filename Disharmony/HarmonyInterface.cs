@@ -219,10 +219,10 @@ internal class HarmonyInterface
 
         EmitLoadArguments(generator, parameterTypes);
 
-        if (target.MethodBase.DeclaringType is { IsGenericType: true })
+        if (target.InstanceType is { IsGenericType: true })
         {
             generator.Emit(OpCodes.Ldtoken, target);
-            generator.Emit(OpCodes.Ldtoken, target.MethodBase.DeclaringType);
+            generator.Emit(OpCodes.Ldtoken, target.InstanceType);
             generator.Emit(OpCodes.Call, InfoOf.MethodBase_GetMethodFromHandle2);
         }
         else

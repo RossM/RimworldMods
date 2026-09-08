@@ -15,6 +15,9 @@ internal static class InfoOf
     public static readonly MethodInfo FieldInfo_GetFieldFromHandle1
         = SymbolExtensions.GetMethodInfo(() => FieldInfo.GetFieldFromHandle(new RuntimeFieldHandle()));
 
+    public static readonly MethodInfo FieldInfo_GetFieldFromHandle2
+        = SymbolExtensions.GetMethodInfo(() => FieldInfo.GetFieldFromHandle(new RuntimeFieldHandle(), new RuntimeTypeHandle()));
+
     public static readonly MethodInfo HarmonyInterface_ResolveTrampoline = SymbolExtensions.GetMethodInfo(() => HarmonyInterface.ResolveTrampoline);
 
     public static readonly MethodInfo HarmonyInterface_Transpiler = SymbolExtensions.GetMethodInfo(() => HarmonyInterface.Transpiler);

@@ -94,17 +94,28 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.MemberInfo:
             {
-                output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
                 switch (parameter.memberInfo)
                 {
+                    case MethodBase { DeclaringType.IsGenericType: true }:
+                        output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
+                        output.Add(new(OpCodes.Ldtoken, parameter.memberInfo.DeclaringType));
+                        output.Add(new(OpCodes.Call, InfoOf.MethodBase_GetMethodFromHandle2));
+                        break;
                     case MethodBase:
+                        output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
                         output.Add(new(OpCodes.Call, InfoOf.MethodBase_GetMethodFromHandle1));
                         break;
+                    case FieldInfo { DeclaringType.IsGenericType: true }:
+                        output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
+                        output.Add(new(OpCodes.Ldtoken, parameter.memberInfo.DeclaringType));
+                        output.Add(new(OpCodes.Call, InfoOf.FieldInfo_GetFieldFromHandle2));
+                        break;
                     case FieldInfo:
+                        output.Add(new(OpCodes.Ldtoken, parameter.memberInfo!));
                         output.Add(new(OpCodes.Call, InfoOf.FieldInfo_GetFieldFromHandle1));
                         break;
                 }
-                resultType = parameter.memberInfo!.GetType();
+                    resultType = parameter.memberInfo!.GetType();
                 break;
             }
 
