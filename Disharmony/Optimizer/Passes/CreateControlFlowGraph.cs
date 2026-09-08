@@ -128,12 +128,6 @@ internal class CreateControlFlowGraph : Pass
             if (instruction.opcode == OpCodes.Nop && instruction.labels.Count == 0 && instruction.blocks.Count == 0)
                 continue;
 
-            // Calli requires access to Harmony's InlineSignature class, which is internal. If it becomes necessary
-            // we can access it through reflection, but calli isn't generated in normal C# code. For now, this case
-            // is not supported.
-            if (instruction.opcode == OpCodes.Calli)
-                throw new NotSupportedException("calli is not supported");
-
             if (instruction.labels.Count > 0)
                 newBlock = true;
             if (instruction.blocks.Any(b => b.blockType != ExceptionBlockType.EndExceptionBlock))
@@ -304,7 +298,7 @@ internal class CreateControlFlowGraph : Pass
                 continue;
             }
 
-            int popCount = CodeInstructionExtensions.PopCount(instruction, ReturnType);
+            int popCount = instruction.PopCount(ReturnType);
             
             // Avoid stack underflow. This is invalid but can happen in unreachable basic blocks if something before
             // us messes up.

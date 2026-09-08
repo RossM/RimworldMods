@@ -437,10 +437,8 @@ internal sealed class GetOutputTypeTests
         new("Callvirt_ReturnInstanceInt_Class", OpCodes.Callvirt, [ClassType], typeof(int), Operand: ReturnInstanceInt),
         new("Callvirt_ReturnInstanceInt_Any", OpCodes.Callvirt,
             [TypeLattice.Any], typeof(int), Operand: ReturnInstanceInt),
-        new("Calli_VoidSignature", OpCodes.Calli, [], typeof(void), Operand: CreateInlineSignature(typeof(void)),
-            IgnoreReason: "calli is unsupported"),
-        new("Calli_IntSignature", OpCodes.Calli, [], typeof(int), Operand: CreateInlineSignature(typeof(int)),
-            IgnoreReason: "calli is unsupported"),
+        new("Calli_VoidSignature", OpCodes.Calli, [], typeof(void), Operand: CreateInlineSignature(typeof(void))),
+        new("Calli_IntSignature", OpCodes.Calli, [], typeof(int), Operand: CreateInlineSignature(typeof(int))),
         new("Newobj_ClassConstructor", OpCodes.Newobj, [], ClassType, Operand: ClassConstructor),
         new("Newobj_StructConstructor_Int", OpCodes.Newobj, [typeof(int)], StructType, Operand: StructConstructor),
 

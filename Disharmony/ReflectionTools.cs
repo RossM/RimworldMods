@@ -150,7 +150,7 @@ internal static class ReflectionTools
 
     // This is equivalent to AccessTools.GetTypeByName but it caches the assembly list
     // and precomputes a dictionary matching type names to types.
-    private static Type? GetTypeByName(string name)
+    public static Type? GetTypeByName(string name)
     {
         {
             if (Type.GetType(name, throwOnError: false) is { } type)

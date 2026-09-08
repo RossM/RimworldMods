@@ -404,7 +404,6 @@ public sealed class CreateControlFlowGraphTests
     }
 
     [Test]
-    [Ignore("calli is unsupported")]
     public void StackBehaviour_VarpopAndVarpush_CalliUsesInlineSignature()
     {
         // Harmony decodes InlineSig operands to InlineSignature rather than SignatureHelper. Keep calli coverage separate
@@ -429,7 +428,6 @@ public sealed class CreateControlFlowGraphTests
     }
 
     [Test]
-    [Ignore("calli is unsupported")]
     public void StackBehaviour_VarpopAndVarpush_VoidCalliUsesInlineSignature()
     {
         Type signatureType = typeof(CodeInstruction).Assembly.GetType("HarmonyLib.InlineSignature")!;

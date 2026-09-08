@@ -21,7 +21,22 @@ internal class HarmonyInterface
 
         public static readonly Func<MethodBase, HarmonyPatch, MethodInfo> UpdateWrapper
             = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
+
+        public static readonly MethodInfo InlineSignature_ReturnType_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:ReturnType");
+        public static readonly MethodInfo InlineSignature_Parameters_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:Parameters");
+        public static readonly MethodInfo InlineSignature_HasThis_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:HasThis");
+        public static readonly Type InlineSignature_Type = ReflectionTools.GetTypeByName("HarmonyLib.InlineSignature")!;
     }
+
+    public static List<object> InlineSignature_Parameters(object inlineSignature) =>
+        (List<object>)HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(inlineSignature, []);
+    public static object InlineSignature_ReturnType(object inlineSignature) =>
+        (object)HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(inlineSignature, []);
+    public static bool InlineSignature_HasThis(object inlineSignature) =>
+        (bool)HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(inlineSignature, []);
+
+    public static Type InlineSignature => HarmonyInternals.InlineSignature_Type;
+
 
     private struct MethodPatch
     {

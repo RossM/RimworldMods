@@ -21,6 +21,9 @@ internal static class CodeInstructionExtensions
                 StackBehaviour.Push0 => 0,
                 StackBehaviour.Push1_push1 => 2,
                 StackBehaviour.Varpush when inst.operand is MethodInfo method && method.ReturnType == typeof(void) => 0,
+                StackBehaviour.Varpush when inst.opcode == OpCodes.Call && inst.operand is ConstructorInfo => 0,
+                StackBehaviour.Varpush when inst.operand.GetType() == HarmonyInterface.InlineSignature &&
+                                            (Type)HarmonyInterface.InlineSignature_ReturnType(inst.operand) == typeof(void) => 0,
                 _ => 1,
             };
         }
@@ -51,6 +54,9 @@ internal static class CodeInstructionExtensions
                 StackBehaviour.Varpop when inst.operand is MethodInfo methodInfo => methodInfo.GetParameters().Length +
                                                                                     (methodInfo.HasThis ? 1 : 0),
                 StackBehaviour.Varpop when inst.operand is ConstructorInfo constructorInfo => constructorInfo.GetParameters().Length,
+                StackBehaviour.Varpop when inst.operand?.GetType() == HarmonyInterface.InlineSignature =>
+                    HarmonyInterface.InlineSignature_Parameters(inst.operand).Count +
+                    (HarmonyInterface.InlineSignature_HasThis(inst.operand) ? 2 : 1),
                 StackBehaviour.Varpop => OpCodeData.GetCanonicalOpcode(inst) switch
                 {
                     OpCodeValues.Ret => methodReturnType == typeof(void) ? 0 : 1,
