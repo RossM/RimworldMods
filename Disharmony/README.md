@@ -8,6 +8,10 @@ Disharmony extends this model to operations **inside** a method. You can patch a
 property access, or constant while keeping the surrounding game logic intact. You describe the operation you want
 to change, and Disharmony handles the underlying IL (intermediate language) instructions.
 
+Disharmony patches coexist and interact sensibly with Harmony patches on the same method, and Disharmony understands
+selected Harmony attributes and conventions. You can adopt Disharmony as you need it without rewriting existing
+Harmony patches or compromising compatibility with other mods.
+
 ## Why patch inside a method?
 
 Suppose a game calculates prices in a method called `GetPrice`. A patch that changes its return value changes prices
@@ -23,9 +27,6 @@ For new mod authors, this means you can write such patches in ordinary C# withou
 For experienced Harmony modders, it means less instruction-matching code to maintain and a clearer statement of
 what a patch is intended to change. Disharmony also provides selectors for compiler-generated code, including local
 functions, lambdas, and iterator methods, which can otherwise be awkward to locate and patch.
-
-Disharmony patches coexist and interact sensibly with Harmony patches on the same method, so you can use these
-capabilities alongside existing mods and patches.
 
 The examples below introduce Disharmony's attribute API; [the fluent API](#configure-patches-in-code) provides the
 same model for targets selected at runtime.
