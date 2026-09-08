@@ -62,11 +62,11 @@ internal static class AnalyzerTestHelper
                 protected ParameterBindingAttribute(Scope scope) { }
             }
             [System.AttributeUsage(System.AttributeTargets.Parameter)]
-            public class ParameterAttribute : ParameterBindingAttribute
+            public class ArgumentAttribute : ParameterBindingAttribute
             {
-                public ParameterAttribute(Scope scope = Scope.Any) : base(scope) { }
-                public ParameterAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
-                public ParameterAttribute(int index, Scope scope = Scope.Any) : base(scope) { }
+                public ArgumentAttribute(Scope scope = Scope.Any) : base(scope) { }
+                public ArgumentAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
+                public ArgumentAttribute(int index, Scope scope = Scope.Any) : base(scope) { }
             }
             [System.AttributeUsage(System.AttributeTargets.Parameter)]
             public class InstanceAttribute : ParameterBindingAttribute
@@ -88,22 +88,34 @@ internal static class AnalyzerTestHelper
             {
                 public FieldAttribute(Scope scope = Scope.Any) : base(scope) { }
                 public FieldAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
+                public FieldAttribute(System.Type type, string name, Scope scope = Scope.Any) : base(scope) { }
             }
             [System.AttributeUsage(System.AttributeTargets.Parameter)]
             public class BaseMethodAttribute : ParameterBindingAttribute
             {
-                public BaseMethodAttribute() : base(Scope.Outer) { }
+                public BaseMethodAttribute(Scope scope = Scope.Any) : base(scope) { }
             }
             [System.AttributeUsage(System.AttributeTargets.Parameter)]
             public class MethodAttribute : ParameterBindingAttribute
             {
-                public MethodAttribute(Scope scope = Scope.Any) : base(scope) { }
-                public MethodAttribute(string name, Scope scope = Scope.Any) : base(scope) { }
+                public MethodAttribute(Scope scope = Scope.Any, bool virtualCall = true) : base(scope) { }
+                public MethodAttribute(string name, Scope scope = Scope.Any, bool virtualCall = true) : base(scope) { }
+                public MethodAttribute(System.Type type, string name = null, Scope scope = Scope.Any, bool virtualCall = true) : base(scope) { }
             }
             [System.AttributeUsage(System.AttributeTargets.Parameter)]
             public class ExceptionAttribute : ParameterBindingAttribute
             {
                 public ExceptionAttribute() : base(Scope.Any) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class ArgumentsAttribute : ParameterBindingAttribute
+            {
+                public ArgumentsAttribute(Scope scope = Scope.Any) : base(scope) { }
+            }
+            [System.AttributeUsage(System.AttributeTargets.Parameter)]
+            public class MemberInfoAttribute : ParameterBindingAttribute
+            {
+                public MemberInfoAttribute(Scope scope = Scope.Outer) : base(scope) { }
             }
             [System.Flags]
             public enum PatchOptions { Default = 0, Inline = 1, AlwaysRun = 4, AllowUnsafe = 8 }

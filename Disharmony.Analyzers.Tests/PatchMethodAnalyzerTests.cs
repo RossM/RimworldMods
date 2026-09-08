@@ -130,7 +130,7 @@ public class PatchMethodAnalyzerTests
     [TestCase("[HarmonyLib.HarmonyPatch] class B {} class C : B { [Prefix, Target(typeof(object), \"M\")] static void M() {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] partial class C {} partial class C { [Prefix] static void M() {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\"), Priority, PatchOptions(PatchOptions.AlwaysRun)] class C { static void M() {} }")]
-    [TestCase("class C { static void M([Parameter] int value) {} }")]
+    [TestCase("class C { static void M([Argument] int value) {} }")]
     [TestCase("class C { [System.Obsolete] static void M() {} }")]
     [TestCase("class C { [HarmonyLib.HarmonyPatch] static void M() {} }")]
     [TestCase("class TargetAttribute : System.Attribute {} class C { [Target] static void M() {} }")]

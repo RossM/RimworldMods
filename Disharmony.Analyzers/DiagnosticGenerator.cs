@@ -80,7 +80,9 @@ internal class DiagnosticGenerator
         ];
         bindingTypes =
         [
-            (Kind: ParameterKind.Argument, Type: compilation.GetTypeByMetadataName("Disharmony.ParameterAttribute")),
+            (Kind: ParameterKind.Argument, Type: compilation.GetTypeByMetadataName("Disharmony.ArgumentAttribute")),
+            (Kind: ParameterKind.Arguments, Type: compilation.GetTypeByMetadataName("Disharmony.ArgumentsAttribute")),
+            (Kind: ParameterKind.MemberInfo, Type: compilation.GetTypeByMetadataName("Disharmony.MemberInfoAttribute")),
             (Kind: ParameterKind.Instance, Type: compilation.GetTypeByMetadataName("Disharmony.InstanceAttribute")),
             (Kind: ParameterKind.Result, Type: compilation.GetTypeByMetadataName("Disharmony.ReturnValueAttribute")),
             (Kind: ParameterKind.State, Type: compilation.GetTypeByMetadataName("Disharmony.StateAttribute")),
@@ -174,6 +176,16 @@ internal class DiagnosticGenerator
                         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.PostfixArgumentIsOut, parameterLocation, parameter.Name));
                         break;
                     }
+                    case ParameterKind.Arguments or ParameterKind.MemberInfo:
+                    {
+                        if (parameter.RefKind != RefKind.None)
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.BindingRequiresValue, parameterLocation, parameter.Name));
+                        else if (kind == ParameterKind.Arguments &&
+                                 !Helpers.CanBindKnownType(compilation, parameter,
+                                     compilation.CreateArrayTypeSymbol(compilation.GetSpecialType(SpecialType.System_Object)), false))
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name, "object[]"));
+                        break;
+                    }
                     case ParameterKind.Result when isPrefix:
                     {
                         if (alwaysRun)
@@ -223,10 +235,15 @@ internal class DiagnosticGenerator
                         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name,
                             constantType.ToDisplayString()));
                     bool selectsInner = explicitlyInner || explicitScope != _Scope_Outer;
+                    if (selectsInner && kind is ParameterKind.MemberInfo or ParameterKind.BaseMethod)
+                        ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ConstantMemberUnavailable, parameterLocation, parameter.Name));
                     bool hasIndex = binding is not null && Helpers.Argument(binding, "index") is not null;
+                    string fieldName = Helpers.Argument(binding, "name")?.Value as string ?? RemoveTripleUnderscore(parameter.Name);
                     if ((kind == ParameterKind.Instance && selectsInner) ||
                         (kind == ParameterKind.Argument && (explicitlyInner || (hasIndex && selectsInner))) ||
-                        (kind == ParameterKind.Field && explicitlyInner))
+                        (kind == ParameterKind.Field && explicitlyInner &&
+                         Helpers.Argument(binding, "type") is not { IsNull: false } &&
+                         fieldName.IndexOfAny(['.', ':']) < 0))
                         ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.ConstantBindingUnavailable, parameterLocation,
                             parameter.Name));
                 }
@@ -279,9 +296,9 @@ internal class DiagnosticGenerator
             ParameterKind.Instance => (ParameterKind.Instance, defaultScope, null),
             ParameterKind.Result => (ParameterKind.Result, null, null),
             ParameterKind.State => (ParameterKind.State, null, Helpers.Argument(binding, "key")?.Value ?? parameter.Name),
-            ParameterKind.Field => (ParameterKind.Field, contextualScope, Helpers.Argument(binding, "name")?.Value as string ?? RemoveTripleUnderscore(parameter.Name)),
-            ParameterKind.BaseMethod => (ParameterKind.BaseMethod, null, null),
-            ParameterKind.Method => (ParameterKind.Method, defaultScope, Helpers.Argument(binding!, "name")?.Value ?? parameter.Name),
+            ParameterKind.Field => (ParameterKind.Field, contextualScope, (Helpers.Argument(binding, "type")?.Value, Helpers.Argument(binding, "name")?.Value as string ?? RemoveTripleUnderscore(parameter.Name))),
+            ParameterKind.BaseMethod or ParameterKind.Arguments or ParameterKind.MemberInfo => (kind, defaultScope, null),
+            ParameterKind.Method => (ParameterKind.Method, defaultScope, (Helpers.Argument(binding, "type")?.Value, Helpers.Argument(binding, "name")?.Value ?? parameter.Name, DelegateSignature(parameter.Type), Helpers.Argument(binding, "virtualCall")?.Value as bool? ?? true)),
             ParameterKind.Exception => (ParameterKind.Exception, null, null),
             ParameterKind.Caller => (ParameterKind.Instance, _Scope_Outer, null),
             _ => throw new ArgumentOutOfRangeException()
@@ -289,6 +306,14 @@ internal class DiagnosticGenerator
         return identity;
     }
 
+    private static string? DelegateSignature(ITypeSymbol type)
+    {
+        if (type is not INamedTypeSymbol { DelegateInvokeMethod: { } invoke })
+            return null;
+        return $"{invoke.RefKind}:{invoke.ReturnType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}(" +
+               string.Join(",", invoke.Parameters.Select(p =>
+                   $"{p.RefKind}:{p.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}")) + ")";
+    }
     private ParameterKind GetBindingKind(IParameterSymbol parameter, AttributeData? binding)
     {
         ParameterKind kind;
@@ -302,6 +327,7 @@ internal class DiagnosticGenerator
                 "__state" => ParameterKind.State,
                 "__base" => ParameterKind.BaseMethod,
                 "__exception" => ParameterKind.Exception,
+                "__args" => ParameterKind.Arguments,
                 _ when parameter.Name.StartsWith("___") => ParameterKind.Field,
                 _ => ParameterKind.Argument,
             };

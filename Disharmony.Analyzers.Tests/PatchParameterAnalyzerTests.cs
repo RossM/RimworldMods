@@ -36,17 +36,17 @@ public class PatchParameterAnalyzerTests
     }
 
     [TestCase("class CustomAttribute : ParameterBindingAttribute { public CustomAttribute() : base(Scope.Inner) {} } [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Custom] int value) {} }")]
-    [TestCase("class CustomAttribute : ParameterAttribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter, Custom] int value) {} }")]
+    [TestCase("class CustomAttribute : ArgumentAttribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument, Custom] int value) {} }")]
     public async Task CustomParameterAttributesAreIgnored(string source)
     {
         Assert.That(await Analyze(source), Is.Empty);
     }
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter, Instance] int value) {} }", "DISHARMONY0016", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument, Instance] int value) {} }", "DISHARMONY0016", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(object __caller) {} }", "DISHARMONY0017", "__caller")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Instance(Scope.Inner)] object value) {} }", "DISHARMONY0017", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter(0, Scope.Inner)] int value) {} }", "DISHARMONY0017", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter(\"x\", Scope.Inner)] int value) {} }", "DISHARMONY0017", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument(0, Scope.Inner)] int value) {} }", "DISHARMONY0017", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument(\"x\", Scope.Inner)] int value) {} }", "DISHARMONY0017", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Field(Scope.Inner)] int value) {} }", "DISHARMONY0017", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Method(Scope.Inner)] System.Action value) {} }", "DISHARMONY0017", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, PatchOptions(PatchOptions.AlwaysRun)] static void M(int __result) {} }", "DISHARMONY0018", "__result")]
@@ -70,8 +70,8 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(int __exception) {} }", "DISHARMONY0021", "__exception")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(object __instance) {} }", "DISHARMONY0024", "__instance")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Instance] object value) {} }", "DISHARMONY0024", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(0)] int value) {} }", "DISHARMONY0024", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Parameter(\"x\", Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Argument(0)] int value) {} }", "DISHARMONY0024", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Argument(\"x\", Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M([Field(Scope.Inner)] int value) {} }", "DISHARMONY0024", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(long __result) {} }", "DISHARMONY0021,DISHARMONY0025", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, InnerConstant(1)] static void M(ref object __result) {} }", "DISHARMONY0021,DISHARMONY0025,DISHARMONY0034", "__result")]
@@ -83,13 +83,13 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int __0) {} }", "DISHARMONY0027", "__0")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M(ref int __result) { __result = 1; return false; } }", "DISHARMONY0034", "__result")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static bool M([ReturnValue] ref int value) { value = 1; return false; } }", "DISHARMONY0034", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(out int value, [Parameter(100)] int other) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(out int value, [Argument(100)] int other) { value = 1; } }", "DISHARMONY0035", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(out int value) { value = 1; } }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"argument\")] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Parameter(Scope.Inner)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument(\"argument\")] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument(0)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Argument(Scope.Inner)] out int value) { value = 1; } }", "DISHARMONY0035", "value")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(out int value) { value = 1; } }", "DISHARMONY0035", "value")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] out int __result) { __result = 1; } }", "DISHARMONY0035", "__result")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument] out int __result) { __result = 1; } }", "DISHARMONY0035", "__result")]
     public async Task InvalidParameterBindingReportsWarningAtParameter(string source, string expectedId, string expectedName)
     {
         var diagnostics = await Analyze(source);
@@ -98,11 +98,11 @@ public class PatchParameterAnalyzerTests
         Assert.That(text.ToString(diagnostics[0].Location.SourceSpan), Is.EqualTo(expectedName));
     }
 
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] object __caller) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, PatchOptions(PatchOptions.AlwaysRun)] static void M([Parameter(\"result\")] int __result) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument] object __caller) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, PatchOptions(PatchOptions.AlwaysRun)] static void M([Argument(\"result\")] int __result) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Field] int __exception) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Instance] object __base) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"Inner\")] static void M(object __caller, [Parameter(Scope.Inner)] int x) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix, Inner(typeof(object), \"Inner\")] static void M(object __caller, [Argument(Scope.Inner)] int x) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Instance(Scope.Outer)] object value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun)] static void M([Exception] System.Exception value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun)] static void M(object __exception) {} }")]
@@ -114,22 +114,22 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(System.Action __base, [Method] System.Func<int, string> method) {} }")]
     [TestCase("delegate void CustomDelegate(); [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Method] CustomDelegate value) {} }")]
     [TestCase("class C { static void M(object __caller, System.Exception __exception, [Instance(Scope.Inner)] object value) {} }")]
-    [TestCase("class ParameterAttribute : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter, Instance] object value) {} }")]
+    [TestCase("class ArgumentAttribute : System.Attribute {} [Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument, Instance] object value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M(int ___field, int ____field, int _value, int value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] int __custom, [Field(\"field\")] int __other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument] int __custom, [Field(\"field\")] int __other) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] int __resut) {} }")]
     [TestCase("class C { static void M(int __resut) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(in int value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] int value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Parameter] out int value) { value = 1; } }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument(0)] int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void M([Argument] out int value) { value = 1; } }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([ReturnValue] ref int value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Field] out int value) { value = 1; } }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Parameter(100)] int other) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(\"argument\")] ref int value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Parameter(Scope.Inner)] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(ref int value, [Argument(100)] int other) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument(\"argument\")] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, Inner(typeof(object), \"I\")] static void M([Argument(Scope.Inner)] ref int value) {} }")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix, PatchOptions(PatchOptions.AlwaysRun | PatchOptions.AllowUnsafe)] static void M(ref int value) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter] ref int __result) {} }")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Parameter(0)] ref int value) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument] ref int __result) {} }")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M([Argument(0)] ref int value) {} }")]
     public async Task ValidOrTargetDependentParameterBindingDoesNotWarn(string source)
     {
         Assert.That(await Analyze(source), Is.Empty);
@@ -150,7 +150,7 @@ public class PatchParameterAnalyzerTests
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(\"a\")] int a) {} [Postfix] static void B([State(\"b\")] string b) {} }", "DISHARMONY0029,DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A([State(null)] int a) {} [Postfix] static void B([State] int a) {} }", "DISHARMONY0029,DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Postfix] static void M(int __state) {} }", "DISHARMONY0029")]
-    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B([Parameter] string __state) {} }", "DISHARMONY0029")]
+    [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Postfix] static void B([Argument] string __state) {} }", "DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class B { [Prefix] static void A(int __state) {} } class C : B { [Postfix] static void M(string __state) {} }", "DISHARMONY0029,DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A(int __state) {} [Patch, Target(typeof(object), \"M\")] class Nested { [Postfix] static void B(string __state) {} } }", "DISHARMONY0029,DISHARMONY0029")]
     [TestCase("[Patch, Target(typeof(object), \"M\")] class C { [Prefix] static void A((int a, string b) __state) {} [Postfix] static void B((int x, string y) __state) {} }", "DISHARMONY0029,DISHARMONY0029")]

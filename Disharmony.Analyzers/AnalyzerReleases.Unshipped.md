@@ -35,3 +35,5 @@ DISHARMONY0031 | Correctness | Warning  | Patch writes to a parameter passed by 
 DISHARMONY0032 | Correctness | Warning  | AlwaysRun patch explicitly throws
 DISHARMONY0034 | Style       | Warning  | Prefix result is ref
 DISHARMONY0035 | Correctness | Warning  | Postfix argument binding is out
+DISHARMONY0036 | Correctness | Error | Arguments and MemberInfo bindings must be passed by value
+DISHARMONY0037 | Correctness | Error | Inner constant cannot supply member metadata or a base method

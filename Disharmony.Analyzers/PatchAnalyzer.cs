@@ -16,7 +16,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
         VoidPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
-        StateWithoutReader, WrittenValueParameter, PrefixResultIsRef, PostfixArgumentIsOut,
+        StateWithoutReader, WrittenValueParameter, BindingRequiresValue, ConstantMemberUnavailable, PrefixResultIsRef, PostfixArgumentIsOut,
     ];
 
     public static readonly DiagnosticDescriptor GenericMethod = new(
@@ -136,7 +136,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 
     public static readonly DiagnosticDescriptor UnknownSpecialParameter = new(
         "DISHARMONY0027", "Unknown special parameter name",
-        "Parameter '{0}' starts with '__' but is not a recognized special name; correct the name or use an explicit binding attribute such as [Parameter]",
+        "Parameter '{0}' starts with '__' but is not a recognized special name; correct the name or use an explicit binding attribute such as [Argument]",
         "Correctness", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor DuplicateBinding = new(
@@ -177,6 +177,16 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Postfix argument '{0}' is declared out; did you mean to write a prefix?",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor BindingRequiresValue = new(
+        "DISHARMONY0036", "Binding requires a parameter passed by value",
+        "Parameter '{0}' binds [Arguments] or [MemberInfo] by reference, which is unsupported",
+        "Correctness", DiagnosticSeverity.Error, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor ConstantMemberUnavailable = new(
+        "DISHARMONY0037", "Inner constant has no member metadata or base method",
+        "Parameter '{0}' requests member metadata or a base method from [InnerConstant], which has neither",
+        "Correctness", DiagnosticSeverity.Error, isEnabledByDefault: true);
+
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -204,6 +214,8 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
 internal enum ParameterKind
 {
     Argument,
+    Arguments,
+    MemberInfo,
     Instance,
     Result,
     State,
