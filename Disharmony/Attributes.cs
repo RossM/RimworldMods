@@ -897,8 +897,10 @@ public sealed class StateAttribute(string? key) : ParameterBindingAttribute(Scop
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
+public sealed class FieldAttribute(Type? type, string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
+    public FieldAttribute(string? name, Scope scope = Scope.Any) : this(null, name, scope) { }
+
     /// <summary>
     ///     Binds to the field having the same name as the attributed patch parameter.
     /// </summary>
@@ -912,6 +914,8 @@ public sealed class FieldAttribute(string? name, Scope scope = Scope.Any) : Para
     ///     Gets the field name, or <see langword="null" /> when the patch parameter's name is used.
     /// </summary>
     public string? Name { get; } = name;
+
+    public Type? Type { get; } = type;
 }
 
 /// <summary>
@@ -972,8 +976,10 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class MethodAttribute(string? name, Scope scope = Scope.Any, bool virtualCall = true) : ParameterBindingAttribute(scope)
+public sealed class MethodAttribute(Type? type, string? name = null, Scope scope = Scope.Any, bool virtualCall = true) : ParameterBindingAttribute(scope)
 {
+    public MethodAttribute(string? name, Scope scope = Scope.Any, bool virtualCall = true) : this(null, name, scope, virtualCall) { }
+
     /// <summary>
     ///     Binds to the method having the same name as the attributed patch parameter.
     /// </summary>
@@ -997,6 +1003,8 @@ public sealed class MethodAttribute(string? name, Scope scope = Scope.Any, bool 
     ///     If this is true, the call will be dispatched to the most-derived override of the method.
     /// </remarks>
     public bool VirtualCall { get; } = virtualCall;
+
+    public Type? Type { get; } = type;
 }
 
 /// <summary>

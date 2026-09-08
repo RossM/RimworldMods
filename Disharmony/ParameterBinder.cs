@@ -78,14 +78,14 @@ internal class ParameterBinder(
 
             case StateAttribute { Key: var key }: return BindState(parameter, key ?? parameterName);
 
-            case FieldAttribute { Name: var name, Scope: var attributeScope }:
+            case FieldAttribute { Name: var name, Scope: var attributeScope, Type: var type }:
                 return BindFieldByName(parameter, name ?? (parameterName.StartsWith("___") ? parameterName[3..] : parameterName),
-                    attributeScope);
+                    attributeScope, type);
 
             case BaseMethodAttribute: return BindBaseMethod(parameter, invocation, scope);
 
-            case MethodAttribute { Name: var name, VirtualCall: var virtualCall }:
-                return BindMethod(parameter, invocation, scope, name ?? parameterName, virtualCall);
+            case MethodAttribute { Name: var name, VirtualCall: var virtualCall, Type: var type }:
+                return BindMethod(parameter, invocation, scope, name ?? parameterName, virtualCall, type);
 
             case ExceptionAttribute: return BindException(parameter);
 
@@ -115,7 +115,7 @@ internal class ParameterBinder(
 
             case "__exception": return BindException(parameter);
 
-            case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any);
+            case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any, null);
 
             case var _ when parameterName.StartsWith("__"):
                 throw new ParameterBindingException(parameterName, "Unrecognized special parameter name");
@@ -185,7 +185,7 @@ internal class ParameterBinder(
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, memberInfo = baseMethod };
     }
 
-    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, bool allowVirtual)
+    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, bool allowVirtual, Type? type)
     {
         var instanceType = invocation.InstanceType;
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
@@ -194,7 +194,7 @@ internal class ParameterBinder(
         MethodInfo methodInfo;
         try
         {
-            methodInfo = ReflectionTools.GetMethod(instanceType, name, delegateInvoke.GetParameters(), true);
+            methodInfo = ReflectionTools.GetMethod(type ?? instanceType, name, delegateInvoke.GetParameters(), true);
         }
         catch (ReflectionException e)
         {
@@ -368,22 +368,22 @@ internal class ParameterBinder(
         return null;
     }
 
-    private ParameterBinding BindFieldByName(ParameterInfo parameter, string name, Scope scope)
+    private ParameterBinding BindFieldByName(ParameterInfo parameter, string name, Scope scope, Type? type)
     {
         // Look in inner instance fields
         if (scope is Scope.Inner or Scope.Any)
-            if (BindFieldByName(parameter, name, inner, Scope.Inner) is { } parameterBinding)
+            if (BindFieldByName(parameter, name, inner, Scope.Inner, type) is { } parameterBinding)
                 return parameterBinding;
 
         // Look in outer instance fields
         if (scope is Scope.Outer or Scope.Any)
-            if (BindFieldByName(parameter, name, outer, Scope.Outer) is { } parameterBinding)
+            if (BindFieldByName(parameter, name, outer, Scope.Outer, type) is { } parameterBinding)
                 return parameterBinding;
 
         throw new ParameterBindingException(parameter.Name, "Field not found");
     }
 
-    private ParameterBinding? BindFieldByName(ParameterInfo parameter, string name, Invocation invocation, Scope scope)
+    private ParameterBinding? BindFieldByName(ParameterInfo parameter, string name, Invocation invocation, Scope scope, Type? type)
     {
         Type curType = invocation.InstanceType;
         List<FieldInfo> fields = [];
@@ -394,7 +394,7 @@ internal class ParameterBinder(
             fields.Add(thisField);
         }
 
-        var results = ReflectionTools.GetMembers(curType, name, MemberType.Getter, null, null, searchBaseTypes: true);
+        var results = ReflectionTools.GetMembers(type ?? curType, name, MemberType.Getter, null, null, searchBaseTypes: true);
         if (results is not [FieldInfo])
             results = ReflectionTools.GetMembers(curType, $"<{name}>k__BackingField", MemberType.Getter, null, null, searchBaseTypes: true);
         if (results is not [FieldInfo])

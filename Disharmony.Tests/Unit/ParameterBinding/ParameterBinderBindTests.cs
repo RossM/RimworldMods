@@ -50,9 +50,9 @@ internal static class ParameterBinderPatchMethods
     public static void Method_VirtualMethod_NonVirtualCall(
         [Method(nameof(MethodBindingVirtualBaseTargets.BoundVirtualMethod), virtualCall: false)] Func<int, int> method) { }
     public static void Method_VirtualMethod_NullNameNonVirtualCall(
-        [Method(null, virtualCall: false)] Func<int, int> BoundVirtualMethod) { }
+        [Method((string?)null, virtualCall: false)] Func<int, int> BoundVirtualMethod) { }
     public static void Method_NullNameUsesParameterName(
-        [Method(null)] Func<int, int> BoundInstanceMethod) { }
+        [Method((string?)null)] Func<int, int> BoundInstanceMethod) { }
     public static void Method_ExplicitInnerScope(
         [Method(nameof(MethodBindingInnerTargets.BoundInstanceMethod), Scope.Inner)] Func<int, int> method) { }
     public static void Method_MutableStructInstance(

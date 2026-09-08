@@ -26,7 +26,7 @@ public static class MethodBindingPatches
     [Prefix]
     [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
     public static void Prefix_MethodAttribute_NonVirtualCall_NullNameUsesParameterName(
-        [Method(null, virtualCall: false)] Func<string, string> Describe) =>
+        [Method((string?)null, virtualCall: false)] Func<string, string> Describe) =>
         DescriptionObserved = Describe("patch");
 
     [Prefix]
@@ -65,7 +65,7 @@ public static class MethodBindingPatches
     [Prefix]
     [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
     public static void Prefix_MethodAttribute_NullName_UsesParameterName(
-        [Method(null)] Func<int, int> BoundInstanceMethod) =>
+        [Method((string?)null)] Func<int, int> BoundInstanceMethod) =>
         ResultObserved = BoundInstanceMethod(5);
 
     [Prefix]
