@@ -161,7 +161,7 @@ internal static class ReflectionTools
         {
             // Calling AccessTools.AllTypes can result in assemblies being loaded which clears _typesByName,
             // so this must happen before _typesByName is initialized.
-            Type[] allTypes = [.. AccessTools.AllTypes()];
+            Type[] allTypes = [.. AllTypes()];
 
             Dictionary<string, Type> typesByName = [];
             foreach (var type in allTypes)
@@ -187,6 +187,11 @@ internal static class ReflectionTools
         }
 
         return null;
+    }
+
+    private static IEnumerable<Type> AllTypes()
+    {
+        return AccessTools.AllAssemblies().AsParallel().SelectMany(AccessTools.GetTypesFromAssembly).AsUnordered();
     }
 
     private static IEnumerable<MethodBase> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)
