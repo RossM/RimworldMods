@@ -163,12 +163,14 @@ internal static class ReflectionTools
             // so this must happen before _typesByName is initialized.
             Type[] allTypes = [.. AccessTools.AllTypes()];
 
-            _typesByName = [];
+            Dictionary<string, Type> typesByName = [];
             foreach (var type in allTypes)
-                _typesByName[type.Name] = type;
+                typesByName[type.Name] = type;
             foreach (var type in allTypes)
                 // RuntimeType.FullName is expensive on Mono because it calls RuntimeType.ContainsGenericParameters
-                _typesByName[$"{type.Namespace}.{type.Name}"] = type;
+                typesByName[$"{type.Namespace}.{type.Name}"] = type;
+            _typesByName = typesByName;
+
         }
 
         {
