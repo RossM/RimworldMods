@@ -141,7 +141,7 @@ explicit binding attributes and several familiar Harmony parameter names:
 | --- | --- | --- |
 | Argument | `[Argument("name")]` or `[Argument(index)]` | *`name`* |
 | Argument values as an array | `[Arguments]` | `__args` |
-| Target instance | `[Instance]` | `__instance` |
+| Target instance | `[Instance]` | `__instance`, `__caller` |
 | Instance or static field, including a non-public field | `[Field("name")]` | *`___name`* |
 | Return value | `[ReturnValue]` | `__result` |
 | Per-invocation shared state | `[State("name")]` | `__state` |
@@ -156,7 +156,7 @@ outer invocation.
 
 In an inner patch, bindings generally refer to the inner operation. Name-based argument and field bindings fall back
 to the outer target when there is no inner match. Use `Scope.Inner` or `Scope.Outer` on a binding attribute to make
-the source explicit; `__caller` also provides access to the outer instance.
+the source explicit.
 
 Instance-method delegates from `[Method]` and `[BaseMethod]` bind to the selected scope's instance and can call
 methods on its type or base types. The [attribute reference](Attributes.cs) describes these bindings and their constraints.
