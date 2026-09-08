@@ -27,6 +27,14 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
 
         if (type.IsByRef)
         {
+            // We need a managed reference to a location that stores of the value of the correct type,
+            // and for safety it needs to be a stored on the managed heap so that it won't go out of
+            // scope when the function returns. We allocate a Box<T> object and take a reference to
+            // its value field.
+
+            // Emitted code:
+            //      var box = new Box<T>();
+            //      local = &box.value;
             var boxType = typeof(Box<>).MakeGenericType(type.NoRefType);
             var constructor = boxType.GetConstructor([]);
             var field = boxType.GetField(nameof(Box<>.value));
