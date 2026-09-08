@@ -147,8 +147,8 @@ explicit binding attributes and several familiar Harmony parameter names:
 | Instance or static field | `[Field("name")]` | *`___name`* |
 | Delegate to an instance or static method | `[Method("name")]` | None |
 | Delegate to the nearest base-class implementation | `[BaseMethod]` | `__base` |
-| Exception in an `AlwaysRun` postfix | `[Exception]` | `__exception` |
-| Target member metadata (outer by default) | `[MemberInfo]` | None |
+| Exception, in an `AlwaysRun` postfix | `[Exception]` | `__exception` |
+| Target member metadata | `[MemberInfo]` | None |
 
 Passing a bound value by value lets the patch read it; passing it by `ref` lets the patch replace it where supported.
 State bindings share data between patches registered together in the same `Patch` or `PatchAll` call, during each
