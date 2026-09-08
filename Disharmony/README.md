@@ -139,11 +139,16 @@ explicit binding attributes and several familiar Harmony parameter names:
 
 | Value | Attribute | Parameter-name convention |
 | --- | --- | --- |
-| Argument | `[Parameter("name")]` or `[Parameter(index)]` | The target parameter's name |
+| Argument | `[Argument("name")]` or `[Argument(index)]` | The target parameter's name |
+| Argument values as an array | `[Arguments]` | `__args` |
 | Target instance | `[Instance]` | `__instance` |
-| Instance field, including a non-public field | `[Field("name")]` | `___fieldName` |
+| Instance or static field, including a non-public field | `[Field("name")]` | `___fieldName` |
 | Return value | `[ReturnValue]` | `__result` |
 | Per-invocation shared state | `[State]` | `__state` |
+| Delegate to an instance or static method | `[Method]` | None |
+| Delegate to the nearest base-class implementation | `[BaseMethod]` | `__base` |
+| Exception in an `AlwaysRun` postfix | `[Exception]` | `__exception` |
+| Target member metadata (outer by default) | `[MemberInfo]` | None |
 
 Passing a bound value by value lets the patch read it; passing it by `ref` lets the patch replace it where supported.
 State bindings share data between patches registered together in the same `Patch` or `PatchAll` call, during each
@@ -153,9 +158,8 @@ In an inner patch, bindings generally refer to the inner operation. Name-based a
 to the outer target when there is no inner match. Use `Scope.Inner` or `Scope.Outer` on a binding attribute to make
 the source explicit; `__caller` also provides access to the outer instance.
 
-For more specialized patches, `[Method]` binds a delegate to a possibly non-public method on the target instance,
-and `[BaseMethod]` binds a delegate for calling the patched method's base method. The
-[attribute reference](Attributes.cs) describes these bindings and their constraints.
+Instance-method delegates from `[Method]` and `[BaseMethod]` bind to the selected scope's instance and can call
+methods on its type or base types. The [attribute reference](Attributes.cs) describes these bindings and their constraints.
 
 ## Configure patches in code
 
