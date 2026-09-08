@@ -25,18 +25,15 @@ changes that would otherwise require a hand-written transpiler.
 
 For new mod authors, this means you can write such patches in ordinary C# without first learning to manipulate IL.
 For experienced Harmony modders, it means less instruction-matching code to maintain and a clearer statement of
-what a patch is intended to change. Disharmony also provides selectors for compiler-generated code, including local
-functions, lambdas, and iterator methods, which can otherwise be awkward to locate and patch.
+what a patch is intended to change.
 
 The examples below introduce Disharmony's attribute API; [the fluent API](#configure-patches-in-code) provides the
 same model for targets selected at runtime.
 
 ## Write your first patch
 
-To use Disharmony, your mod project needs references to `Disharmony.dll` and the relevant game assemblies. The game
-must also load Disharmony and a compatible `0Harmony.dll`. The current Disharmony project targets .NET Framework
-4.7.2 and references Harmony 2.4.2; the details of loading these assemblies and initializing your mod depend on the
-game's mod loader.
+Disharmony targets .NET Framework 4.7.2. Reference `Disharmony.dll` and the relevant game assemblies in your mod
+project, and ensure the game loads Disharmony and a compatible `0Harmony.dll`.
 
 The following examples use fictional game types to illustrate the API. Suppose `PriceCalculator` has a method
 `float GetPrice(Character buyer, int quantity)`, and you want colony members to receive a 10% discount:
@@ -63,7 +60,7 @@ run `ApplyMemberDiscount` after that method returns.
 
 Disharmony supplies the patch's arguments. The `buyer` parameter receives the game method's argument with the same
 name, and `[ReturnValue]` binds `result` to its return value. Passing `result` by `ref` lets the patch change the price
-returned to the caller. Patch methods must be static, and only need to declare the values they use.
+returned to the caller. Patch methods must be static and only need to declare the values they use.
 
 To activate the patch, call this once from your mod's initialization code:
 
@@ -107,13 +104,8 @@ For this version, register `CheckoutPatches` in place of `PriceCalculatorPatches
 PatchHandle pricePatches = Patcher.PatchAll(typeof(CheckoutPatches));
 ```
 
-Calls to `GetPrice` elsewhere keep their original behavior. Within `Total`, the patch runs each time a matching call
-executes, including repeated calls in a loop. This is the central distinction between outer and inner patches: an
-outer patch surrounds the whole method, while an inner patch surrounds a selected operation within it.
-
-Inner selectors also support field and property access through `MemberType.Getter` and `MemberType.Setter`.
-For constants, a postfix can use `[InnerConstant(value)]` and a return-value binding to replace the selected value.
-All of these selectors match compiled operations, so the call, access, or constant must exist in the compiled target.
+The discount now applies only to calls within `Total`; calls to `GetPrice` elsewhere keep their original behavior.
+Inner patches can also target field and property accesses with `[Inner]`, or constants with `[InnerConstant]`.
 
 ## Control inputs and execution
 
@@ -146,7 +138,7 @@ explicit binding attributes and several familiar Harmony parameter names:
 | Argument | `[Argument("name")]` or `[Argument(index)]` | *`name`* |
 | Argument values as an array | `[Arguments]` | `__args` |
 | Return value | `[ReturnValue]` | `__result` |
-| Target instance | `[Instance]` | `__instance`, `__caller` |
+| Target instance | `[Instance]` | `__instance` (selected scope), `__caller` (outer) |
 | Per-invocation shared state | `[State("name")]` | `__state` |
 | Instance or static field | `[Field("name")]` | *`___name`* |
 | Delegate to an instance or static method | `[Method("name")]` | None |
@@ -155,115 +147,54 @@ explicit binding attributes and several familiar Harmony parameter names:
 | Target member metadata | `[MemberInfo]` | None |
 
 Passing a bound value by value lets the patch read it; passing it by `ref` lets the patch replace it where supported.
-State bindings share data between patches registered together in the same `Patch` or `PatchAll` call, during each
-outer invocation.
-
-In an inner patch, bindings generally refer to the inner operation. Name-based argument and field bindings fall back
-to the outer target when there is no inner match. Use `Scope.Inner` or `Scope.Outer` on a binding attribute to make
-the source explicit.
-
-Instance-method delegates from `[Method]` and `[BaseMethod]` bind to the selected scope's instance and can call
-methods on its type or base types. The [attribute reference](Attributes.cs) describes these bindings and their constraints.
+Bindings such as `[Argument]` and `[Instance]` accept `Scope.Inner` or `Scope.Outer` to choose the source in an inner patch.
+The [attribute reference](Attributes.cs) describes each binding's behavior and constraints.
 
 ## Configure patches in code
 
-When reflection or runtime conditions determine which method to patch, the fluent API lets you build the patch
-configuration in code. This example selects `GetPrice` through reflection and applies a postfix that caps its result:
+When targets are selected at runtime, the fluent API lets you configure patches using reflection objects. With
+`targetMethod` and `patchMethod` holding the `MethodInfo` objects for `GetPrice` and `ApplyMemberDiscount`, the
+same discount patch can be registered as:
 
 ```csharp
-using System;
-using System.Reflection;
-using Disharmony;
-
-public static class RuntimePatches
-{
-    public static void CapPrice([ReturnValue] ref float result)
-    {
-        result = Math.Min(result, 100f);
-    }
-
-    public static PatchHandle Apply()
-    {
-        MethodInfo target = typeof(PriceCalculator).GetMethod(
-            nameof(PriceCalculator.GetPrice),
-            new[] { typeof(Character), typeof(int) })!;
-        MethodInfo patchMethod = typeof(RuntimePatches).GetMethod(nameof(CapPrice))!;
-
-        return Patcher.Patch(
-            Patch.Postfix
-                .With(patchMethod)
-                .Of(target));
-    }
-}
+PatchHandle pricePatches = Patcher.Patch(
+    Patch.Postfix.With(patchMethod).Of(targetMethod));
 ```
 
-`Patch.Postfix.With(...).Of(...)` builds a `PatchConfig`, which `Patcher.Patch` applies. Adding `.Inner(innerMethod)`
-selects calls inside the outer target; `.InnerGet(...)`, `.InnerSet(...)`, and `.InnerConstant(...)` select the other
-kinds of inner operation.
-
-In this form, the configuration supplies the patch definition, so attributes such as `[Postfix]`, `[Target]`, and
-`[Inner]` are ignored. Parameter-binding attributes such as `[ReturnValue]` still apply to the patch method.
+The builder creates a `PatchConfig`, which `Patcher.Patch` applies. Add `.Inner(innerMethod)` to target calls inside
+the outer method; the fluent API also supports fields, properties, and constants. Parameter-binding attributes such
+as `[ReturnValue]` still apply, while the configuration supplies the patch type and targets.
 
 ## Select and manage patches
 
-The examples register one class or configuration at a time. For larger patch sets, `Patcher` also supports discovery
-across an assembly and registration by category:
+For larger patch sets, `Patcher.PatchAll(assembly)` discovers patch classes marked with `[Patch]` or `[HarmonyPatch]`.
+Group classes with `[Category("name")]` and use `Patcher.PatchCategory(assembly, category)` to apply selected groups.
+A patch can also use `[Targets]` to select multiple targets, such as every overload of a method.
 
-| Registration | Applies |
-| --- | --- |
-| `Patcher.Patch(config)` | A fluent configuration |
-| `Patcher.Patch(methodInfos)` | Selected attributed patch methods |
-| `Patcher.PatchAll(type)` | All attributed patch methods declared by one type |
-| `Patcher.PatchAll(assembly)` | Patches in containers marked with `[Patch]` or `[HarmonyPatch]` |
-| `Patcher.PatchCategory(assembly, category)` | Marked containers in the selected category |
-
-Direct registration by type or method does not require a `[Patch]` container marker. For assembly discovery,
-`[Category("name")]` can group containers for selective registration.
-
-Within a patch definition, `[Target]` must resolve to exactly one member. Parameter types distinguish overloads, and
-`Ref<T>`, `In<T>`, and `Out<T>` distinguish by-reference parameter forms in attribute signatures. Multiple `[Target]`
-attributes select several members; `[Targets]` selects every match, such as every overload of a method.
-
-Each registration call returns a `PatchHandle`. Several configurations can be registered together to share a handle
-and per-invocation state. To remove the patches associated with a handle, call:
+Each registration call returns a `PatchHandle`. To remove the patches associated with a handle, call:
 
 ```csharp
 Patcher.Unpatch(pricePatches);
 ```
 
-Patches registered by other calls remain active. All patches affect the current process, so their effects are visible
-to other mods and game code that use the patched methods.
-
-Patches take effect before registration returns, although Disharmony may defer generating the modified method bodies
-until their first call. `Patcher.ForceApply()` completes that preparation during initialization or another suitable
-period.
+Patches registered by other calls remain active.
 
 ### Use alongside Harmony
 
-Continue registering Harmony patches through Harmony's API and Disharmony patches through `Patcher`, even when
-they target the same method. Both sets of patches remain active and work together, allowing you to introduce inner
-patches or generated-code selectors without converting existing Harmony patches.
-
-When writing Disharmony patches, use its `[Prefix]` or `[Postfix]` and `[Target]` or `[Targets]` attributes.
-Some familiar Harmony conventions are also available: `[HarmonyPatch]` can mark a container and supply its default
-target type, `[HarmonyPatchCategory]` can assign a category, and the parameter names listed above provide bindings.
+Register Harmony patches through Harmony's API and Disharmony patches through `Patcher`, even when they target
+the same method. Both sets of patches remain active and work together.
 
 ## Explore further
 
 Beyond the examples above, Disharmony supports:
 
-* **Compiler-generated targets.** Select nested types with dotted names, a local function with
-  `OuterMethod.LocalFunction`, or lambdas with `OuterMethod.*`. Disharmony also exposes captured variables and
-  understands iterator state-machine methods.
-* **Patch ordering and execution options.** `[Priority]` or `.Priority(...)` orders interacting patches.
-  `[PatchOptions]` or `.Options(...)` controls inlining and `AlwaysRun` behavior, including postfixes that can inspect
-  or change an exception through `[Exception]`. An experimental optimization pass is also available.
-* **Diagnostics.** The `Debug` option writes modified IL and available Mono JIT assembly to Harmony's debug log.
-  `Patcher.RuntimeExceptionHandler` reports errors during IL generation or patch application; exceptions from normal
-  execution of the game or patch methods are outside its scope.
+* **Build-time checks.** The optional [Disharmony analyzers](../Disharmony.Analyzers/README.md) catch mistakes in
+  patch definitions and parameter bindings while you write your mod.
+* **Compiler-generated targets.** Patch local functions, lambdas, and iterator methods, and access captured variables.
+* **Patch ordering and execution options.** Control patch order, inline patch code, or use `AlwaysRun` postfixes to
+  inspect and handle exceptions.
+* **Diagnostics.** Inspect generated code and report errors encountered while applying patches.
 
-The source includes API documentation in the [attribute reference](Attributes.cs), [fluent API](Patch.cs), and
-[patch registration API](Patcher.cs). The optional [Disharmony analyzers](../Disharmony.Analyzers/README.md)
-check patch definitions and some bindings at build time, while target resolution remains a runtime check. For working
-examples of more specialized behavior and instructions for running the suite, see the
-[test project](../Disharmony.Tests/README.md).
+For API details, see the [attribute reference](Attributes.cs), [fluent API](Patch.cs), and
+[patch registration API](Patcher.cs). The [test project](../Disharmony.Tests/README.md) provides examples of more
+specialized patches and instructions for running the suite.
