@@ -8,6 +8,14 @@ internal sealed class UnsupportedParameterBindingAttribute() : ParameterBindingA
 
 internal static class ParameterBinderPatchMethods
 {
+    public static void MemberInfo_TypedMethodInfo([MemberInfo] MethodInfo member) { }
+    public static void MemberInfo_InnerTypedMethodInfo([MemberInfo(Scope.Inner)] MethodInfo member) { }
+    public static void MemberInfo_TypedConstructorInfo([MemberInfo] ConstructorInfo member) { }
+    public static void MemberInfo_InnerTypedConstructorInfo([MemberInfo(Scope.Inner)] ConstructorInfo member) { }
+    public static void MemberInfo_TypedFieldInfo([MemberInfo] FieldInfo member) { }
+    public static void MemberInfo_InnerTypedFieldInfo([MemberInfo(Scope.Inner)] FieldInfo member) { }
+    public static void MemberInfo_TypedMethodBase([MemberInfo] MethodBase member) { }
+    public static void MemberInfo_InnerTypedMethodBase([MemberInfo(Scope.Inner)] MethodBase member) { }
     public static void Arguments_Default([Arguments] object[] values) { }
     public static void Arguments_ReservedName(object[] __args) { }
     public static void Arguments_Outer([Arguments(Scope.Outer)] object[] values) { }
@@ -179,6 +187,230 @@ internal sealed class ParameterBinderBindTests
             options,
             "test-group");
         return binder.Bind(parameter);
+    }
+
+    [Test]
+    public void MemberInfo_Method_MethodInfoParameter_IsAccepted()
+    {
+        var invocation = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+        MemberInfo expected = invocation.MethodInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedMethodInfo),
+            invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_Method_ConstructorInfoParameter_IsRejected()
+    {
+        var invocation = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedConstructorInfo),
+                invocation));
+    }
+
+    [Test]
+    public void MemberInfo_Method_FieldInfoParameter_IsRejected()
+    {
+        var invocation = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedFieldInfo),
+                invocation));
+    }
+
+    [Test]
+    public void MemberInfo_Method_MethodBaseParameter_IsAccepted()
+    {
+        var invocation = new MethodInvocation(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!);
+        MemberInfo expected = invocation.MethodInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedMethodBase),
+            invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_Constructor_MethodInfoParameter_IsRejected()
+    {
+        var invocation = new OuterConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedMethodInfo),
+                invocation));
+    }
+
+    [Test]
+    public void MemberInfo_Constructor_ConstructorInfoParameter_IsAccepted()
+    {
+        var invocation = new OuterConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+        MemberInfo expected = invocation.ConstructorInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedConstructorInfo),
+            invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_Constructor_FieldInfoParameter_IsRejected()
+    {
+        var invocation = new OuterConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedFieldInfo),
+                invocation));
+    }
+
+    [Test]
+    public void MemberInfo_Constructor_MethodBaseParameter_IsAccepted()
+    {
+        var invocation = new OuterConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+        MemberInfo expected = invocation.ConstructorInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_TypedMethodBase),
+            invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_InnerConstructor_MethodInfoParameter_IsRejected()
+    {
+        var invocation = new InnerConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedMethodInfo),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_InnerConstructor_ConstructorInfoParameter_IsAccepted()
+    {
+        var invocation = new InnerConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+        MemberInfo expected = invocation.ConstructorInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedConstructorInfo),
+            StaticIntParameter, invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_InnerConstructor_FieldInfoParameter_IsRejected()
+    {
+        var invocation = new InnerConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedFieldInfo),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_InnerConstructor_MethodBaseParameter_IsAccepted()
+    {
+        var invocation = new InnerConstructorInvocation(typeof(ConstructorTargets).GetConstructor([typeof(int)])!);
+        MemberInfo expected = invocation.ConstructorInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedMethodBase),
+            StaticIntParameter, invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_FieldGetter_MethodInfoParameter_IsRejected()
+    {
+        var invocation = new GetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedMethodInfo),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_FieldGetter_ConstructorInfoParameter_IsRejected()
+    {
+        var invocation = new GetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedConstructorInfo),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_FieldGetter_FieldInfoParameter_IsAccepted()
+    {
+        var invocation = new GetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+        MemberInfo expected = invocation.FieldInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedFieldInfo),
+            StaticIntParameter, invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_FieldGetter_MethodBaseParameter_IsRejected()
+    {
+        var invocation = new GetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedMethodBase),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_FieldSetter_MethodInfoParameter_IsRejected()
+    {
+        var invocation = new SetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedMethodInfo),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_FieldSetter_ConstructorInfoParameter_IsRejected()
+    {
+        var invocation = new SetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedConstructorInfo),
+                StaticIntParameter, invocation));
+    }
+
+    [Test]
+    public void MemberInfo_FieldSetter_FieldInfoParameter_IsAccepted()
+    {
+        var invocation = new SetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+        MemberInfo expected = invocation.FieldInfo;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedFieldInfo),
+            StaticIntParameter, invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.MemberInfo));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void MemberInfo_FieldSetter_MethodBaseParameter_IsRejected()
+    {
+        var invocation = new SetFieldInvocation(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!);
+
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.MemberInfo_InnerTypedMethodBase),
+                StaticIntParameter, invocation));
     }
 
     [Test]

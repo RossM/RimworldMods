@@ -2,6 +2,19 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class MemberInfoBindingPatches
 {
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
+    public static void Prefix_Method_TypedMethodInfo([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Target(typeof(ConstructorTargets), memberType: MemberType.Constructor, parameterTypes: [typeof(int)])]
+    public static void Prefix_Constructor_TypedConstructorInfo([MemberInfo] ConstructorInfo member) => Observed = member;
+
+    [Prefix]
+    [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field), memberType: MemberType.Getter)]
+    [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.FieldResult))]
+    public static void InnerPrefix_Field_TypedFieldInfo([MemberInfo(Scope.Inner)] FieldInfo member) => Observed = member;
+
     public static MemberInfo? Observed;
     public static MemberInfo? InnerObserved;
     public static MemberInfo? OuterObserved;
@@ -151,6 +164,41 @@ public static class MemberInfoBindingPatches
 [TestFixture]
 public sealed class MemberInfoBindingTests : PatchTestBase
 {
+    [Test]
+    public void Prefix_Method_TypedMethodInfo()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Method_TypedMethodInfo));
+
+        Assert.That(StaticMethodTargets.IntIdentity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(typeof(StaticMethodTargets).GetMethod(nameof(StaticMethodTargets.IntIdentity))!));
+    }
+
+    [Test]
+    public void Prefix_Constructor_TypedConstructorInfo()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Constructor_TypedConstructorInfo));
+
+        var instance = new ConstructorTargets(42);
+        Assert.That(instance.Value, Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(typeof(ConstructorTargets).GetConstructor([typeof(int)])!));
+    }
+
+    [Test]
+    public void InnerPrefix_Field_TypedFieldInfo()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPrefix_Field_TypedFieldInfo));
+
+        InnerStaticMethodTargets.Field = 42;
+        Assert.That(OuterStaticMethodTargets.FieldResult(), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(typeof(InnerStaticMethodTargets).GetField(nameof(InnerStaticMethodTargets.Field))!));
+    }
+
     [Test]
     public void Prefix_Method_Static()
     {
