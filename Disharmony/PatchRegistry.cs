@@ -362,7 +362,7 @@ internal class PatchRegistry
         // MonoMod can sometimes patch methods in instantiated generic types, but only if all type arguments
         // are value types. We don't want to rely on this, so reject all generic types.
         if (TypeOrAnyContainingTypeIsGeneric(target.DeclaringType))
-            throw new PatchDefinitionException(method, "Can't patch method with generic type");
+            throw new PatchDefinitionException(method, "Can't patch method on generic type");
         
         if ((target.Attributes & MethodAttributes.PinvokeImpl) != 0)
             throw new PatchDefinitionException(method, "Can't patch native method");
