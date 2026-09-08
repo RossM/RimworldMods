@@ -122,7 +122,26 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.ArgumentArray:
             {
-                throw new NotImplementedException();
+                var invocation = GetInvocation(parameter);
+                int argOffset = invocation.HasThis ? 1 : 0;
+                int argCount = invocation.ParameterTypes.Length - argOffset;
+
+                output.Add(new(OpCodes.Ldc_I4, argCount));
+                output.Add(new(OpCodes.Newarr, typeof(object)));
+
+                for (int i = 0; i < argCount; i++)
+                {
+                    var type = invocation.ParameterTypes[argOffset + i].NoRefType;
+                    output.Add(new(OpCodes.Dup));
+                    output.Add(new(OpCodes.Ldc_I4, i));
+                    EmitParameterLookup(parameter.scope, argOffset + i, type);
+                    if (type.IsValueType)
+                        EmitConversion(typeof(object), type);
+                    output.Add(new(OpCodes.Stelem_Ref));
+                }
+
+                resultType = typeof(object[]);
+                break;
             }
 
             default:
@@ -190,14 +209,17 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             throw new NotImplementedException($"Can't convert {resultType.FullName} to {parameterType.FullName}");
     }
 
-    protected virtual Type GetParameterType(ParameterBinding parameter)
+    protected virtual Type GetParameterType(ParameterBinding parameter) => parameter.scope switch
     {
-        return parameter.scope switch
-        {
-            Scope.Outer => outerParameterTypes[parameter.index],
-            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
-        };
-    }
+        Scope.Outer => outerParameterTypes[parameter.index],
+        _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
+    };
+
+    protected virtual Invocation GetInvocation(ParameterBinding parameter) => parameter.scope switch
+    {
+        Scope.Outer => outer,
+        _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
+    };
 
     protected virtual void EmitParameterLookup(Scope scope, int index, Type resultType)
     {

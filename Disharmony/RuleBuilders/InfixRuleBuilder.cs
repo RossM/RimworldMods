@@ -72,15 +72,18 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
         }
     }
 
-    protected override Type GetParameterType(ParameterBinding parameter)
+    protected override Type GetParameterType(ParameterBinding parameter) => parameter.scope switch
     {
-        return parameter.scope switch
-        {
-            Scope.Outer => outerParameterTypes[parameter.index],
-            Scope.Inner => innerParameterTypes[parameter.index],
-            _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
-        };
-    }
+        Scope.Outer => outerParameterTypes[parameter.index],
+        Scope.Inner => innerParameterTypes[parameter.index],
+        _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
+    };
+
+    protected override Invocation GetInvocation(ParameterBinding parameter) => parameter.scope switch
+    {
+        Scope.Inner => inner,
+        _ => base.GetInvocation(parameter),
+    };
 
     protected override void EmitParameterLookup(Scope scope, int index, Type resultType)
     {

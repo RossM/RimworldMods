@@ -151,7 +151,7 @@ internal class ParameterBinder(
     {
         if (parameter.ParameterType.IsByRef)
             throw new ParameterBindingException(parameter.Name, "[Arguments] cannot be bound to a 'ref' parameter");
-        ValidateCast(typeof(object[]), parameter.ParameterType, parameter.Name);
+        ValidateCast(parameter.ParameterType, typeof(object[]), parameter.Name);
         return new() { parameter = parameter, bindingType = BindingType.ArgumentArray, scope = scope };
     }
 
