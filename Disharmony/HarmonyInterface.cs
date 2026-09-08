@@ -32,9 +32,11 @@ internal class HarmonyInterface
 
     private const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
-    public static readonly HarmonyInterface Instance = new();
+    private static readonly AssemblyBuilder dynamicMethodAssembly
+        = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("DynamicMethods"), AssemblyBuilderAccess.Run);
+    private static readonly ModuleBuilder module = dynamicMethodAssembly.DefineDynamicModule("DynamicModule");
 
-    private readonly Module module;
+    public static readonly HarmonyInterface Instance = new();
 
     // These variables must only be accessed while HarmonyInternals.locker is held
     private readonly Dictionary<MethodBase, MethodInfo> trampolines = [];
@@ -47,11 +49,6 @@ internal class HarmonyInterface
 #if DEBUG
     internal event Action? ApplyPatchHookForTesting = null;
 #endif
-
-    public HarmonyInterface()
-    {
-        module = GetType().Module;
-    }
 
     /// <summary>
     ///     This does the same thing as <see cref="Harmony.Patch" />> but must be called
