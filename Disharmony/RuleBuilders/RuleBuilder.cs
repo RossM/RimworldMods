@@ -64,32 +64,13 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.Result:
             {
-                if (wantRef && !resultLocal!.Type.IsByRef)
-                {
-                    output.Add(resultLocal!.Load(true));
-                    resultType = resultLocal.Type.MakeByRefType();
-                }
-                else if (!wantRef && resultLocal!.Type.IsByRef)
-                {
-                    output.Add(resultLocal!.Load());
-                    output.Add(new(OpCodes.Ldobj, resultLocal.Type.GetElementType()));
-                    resultType = resultLocal.Type.GetElementType();
-                }
-                else
-                {
-                    output.Add(resultLocal!.Load());
-                    resultType = resultLocal.Type;
-                }
-
+                EmitLocal(resultLocal!, wantRef, out resultType);
                 break;
             }
 
             case BindingType.State:
             {
-                output.Add(parameter.local!.Load(wantRef));
-                resultType = parameter.local.Type;
-                if (wantRef)
-                    resultType = resultType.MakeByRefType();
+                EmitLocal(parameter.local!, wantRef, out resultType);
                 break;
             }
 
@@ -101,10 +82,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.Exception:
             {
-                output.Add(exceptionLocal!.Load(wantRef));
-                resultType = exceptionLocal.Type;
-                if (wantRef)
-                    resultType = resultType.MakeByRefType();
+                EmitLocal(exceptionLocal!, wantRef, out resultType);
                 break;
             }
 
@@ -161,6 +139,26 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
             {
                 throw new ArgumentOutOfRangeException();
             }
+        }
+    }
+
+    private void EmitLocal(LocalTrackerBuilder local, bool wantRef, out Type resultType)
+    {
+        if (wantRef && !local.Type.IsByRef)
+        {
+            output.Add(local.Load(true));
+            resultType = local.Type.MakeByRefType();
+        }
+        else if (!wantRef && local.Type.IsByRef)
+        {
+            output.Add(local.Load());
+            output.Add(new(OpCodes.Ldobj, local.Type.GetElementType()));
+            resultType = local.Type.GetElementType();
+        }
+        else
+        {
+            output.Add(local.Load());
+            resultType = local.Type;
         }
     }
 
