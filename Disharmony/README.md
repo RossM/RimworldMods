@@ -24,8 +24,11 @@ For experienced Harmony modders, it means less instruction-matching code to main
 what a patch is intended to change. Disharmony also provides selectors for compiler-generated code, including local
 functions, lambdas, and iterator methods, which can otherwise be awkward to locate and patch.
 
-Disharmony can be adopted alongside existing Harmony patches. The examples below introduce its attribute API;
-[the fluent API](#configure-patches-in-code) provides the same model for targets selected at runtime.
+Disharmony patches coexist and interact sensibly with Harmony patches on the same method, so you can use these
+capabilities alongside existing mods and patches.
+
+The examples below introduce Disharmony's attribute API; [the fluent API](#configure-patches-in-code) provides the
+same model for targets selected at runtime.
 
 ## Write your first patch
 
@@ -236,13 +239,13 @@ period.
 
 ### Use alongside Harmony
 
-Existing Harmony patches can continue to use Harmony's registration API while Disharmony patches use `Patcher`.
-Disharmony recognizes `[HarmonyPatch]` for container discovery and a default declaring type, and
-`[HarmonyPatchCategory]` for categories. Patch definitions still use Disharmony's `[Prefix]` or `[Postfix]` and
-`[Target]` or `[Targets]`; the discovery support does not import Harmony patch definitions wholesale.
+Continue registering Harmony patches through Harmony's API and Disharmony patches through `Patcher`, even when
+they target the same method. Both sets of patches remain active and work together, allowing you to introduce inner
+patches or generated-code selectors without converting existing Harmony patches.
 
-This allows gradual adoption where inner patches or generated-code selectors are useful. As with any runtime patch,
-test the result alongside other mods that modify the same code.
+When writing Disharmony patches, use its `[Prefix]` or `[Postfix]` and `[Target]` or `[Targets]` attributes.
+Some familiar Harmony conventions are also available: `[HarmonyPatch]` can mark a container and supply its default
+target type, `[HarmonyPatchCategory]` can assign a category, and the parameter names listed above provide bindings.
 
 ## Explore further
 
