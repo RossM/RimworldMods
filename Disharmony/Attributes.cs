@@ -506,8 +506,8 @@ public static class PatchPriority
 ///         Constructed generic methods can be identified during lookup but are not currently supported as outer targets.
 ///     </para>
 ///     <para>
-///         Use <c>Namespace.Type.Member</c> to include the declaring type in the member name. The type is resolved
-///         from the name when neither this attribute nor the containing patch class supplies one.
+///         Use <c>Namespace.Type.Member</c> to include the declaring type in the member name. A type resolved
+///         from the name overrides the type supplied by this attribute or the containing patch class.
 ///     </para>
 ///     <para>
 ///         For Harmony compatibility, <c>Namespace.Type:Member</c> is also accepted. The type named before the colon
@@ -809,12 +809,20 @@ public sealed class ArgumentAttribute : ParameterBindingAttribute
 }
 
 /// <summary>
-///     Binds a patch parameter to an array of all parameters of the outer or inner member.
+///     Binds a patch parameter to an <see cref="object" /> array containing the argument values of the outer or inner
+///     member, excluding the instance argument.
 /// </summary>
-/// <param name="scope"></param>
+/// <param name="scope">
+///     The member whose arguments are bound. The default, <see cref="Scope.Any" />, uses the inner member for an
+///     inner patch and the outer member otherwise.
+/// </param>
 /// <remarks>
 ///     <para>
-///         Modifying the elements of the array does not modify the corresponding parameter.
+///         Assigning array elements does not change the corresponding arguments. Value-type arguments are boxed.
+///         The patch parameter cannot be passed by reference.
+///     </para>
+///     <para>
+///         A parameter named <c>__args</c> with no binding attribute is treated as if it has this attribute.
 ///     </para>
 /// </remarks>
 [PublicAPI]
@@ -892,15 +900,20 @@ public sealed class StateAttribute(string? key) : ParameterBindingAttribute(Scop
 }
 
 /// <summary>
-///     Binds a patch parameter to an instance field associated with either the outer or inner member. The field can be
-///     selected by name, and <see cref="Scope" /> selects the member for an inner patch.
+///     Binds a patch parameter to an instance or static field. For instance fields, <see cref="Scope" /> selects the
+///     instance from the outer or inner member.
 /// </summary>
+/// <param name="type">
+///     The type on which to look up the field, or <see langword="null" /> to use the type associated with the selected
+///     scope. A type-qualified field name overrides this type.
+/// </param>
 /// <param name="name">
-///     The field name, or <see langword="null" /> to use the attributed patch parameter's name.
+///     The optionally type-qualified field name, or <see langword="null" /> to use the attributed patch parameter's name
+///     with any leading <c>___</c> prefix removed.
 /// </param>
 /// <param name="scope">
-///     The member whose instance is searched in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
-///     member's instance first and then the outer member's instance.
+///     The member supplying the instance and default field lookup type. The default, <see cref="Scope.Any" />, searches the inner
+///     member first and then the outer member.
 /// </param>
 /// <remarks>
 ///     <para>
@@ -912,22 +925,38 @@ public sealed class StateAttribute(string? key) : ParameterBindingAttribute(Scop
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class FieldAttribute(Type? type, string? name, Scope scope = Scope.Any) : ParameterBindingAttribute(scope)
 {
+    /// <summary>
+    ///     Binds to a field by name, using the selected scope for an unqualified name.
+    /// </summary>
+    /// <param name="name">
+    ///     The optionally type-qualified field name, or <see langword="null" /> to use the attributed patch parameter's
+    ///     name with any leading <c>___</c> prefix removed.
+    /// </param>
+    /// <param name="scope">
+    ///     The member supplying the instance and default lookup type. The default, <see cref="Scope.Any" />, searches
+    ///     the inner member first and then the outer member.
+    /// </param>
     public FieldAttribute(string? name, Scope scope = Scope.Any) : this(null, name, scope) { }
 
     /// <summary>
-    ///     Binds to the field having the same name as the attributed patch parameter.
+    ///     Binds to the field named by the attributed patch parameter, with any leading <c>___</c> prefix removed.
     /// </summary>
     /// <param name="scope">
-    ///     The member whose instance is searched in an inner patch. The default, <see cref="Scope.Any" />, searches the
-    ///     inner member's instance first and then the outer member's instance.
+    ///     The member supplying the instance and default field lookup type. The default, <see cref="Scope.Any" />, searches the
+    ///     inner member first and then the outer member.
     /// </param>
     public FieldAttribute(Scope scope = Scope.Any) : this(null, scope) { }
 
     /// <summary>
-    ///     Gets the field name, or <see langword="null" /> when the patch parameter's name is used.
+    ///     Gets the optionally type-qualified field name, or <see langword="null" /> when the patch parameter's name is used
+    ///     with any leading <c>___</c> prefix removed.
     /// </summary>
     public string? Name { get; } = name;
 
+    /// <summary>
+    ///     Gets the field lookup type, or <see langword="null" /> to use the type associated with the selected scope.
+    ///     A type-qualified field name overrides this type.
+    /// </summary>
     public Type? Type { get; } = type;
 }
 
@@ -941,8 +970,9 @@ public sealed class FieldAttribute(Type? type, string? name, Scope scope = Scope
 /// </param>
 /// <remarks>
 ///     <para>
-///         The patch parameter must be a delegate whose parameters and return type match the method. Static methods
-///         do not have a base-method binding.
+///         The delegate is bound to the instance from the selected scope and invokes the nearest implementation in
+///         that instance type's base-class hierarchy. The patch parameter must be a delegate whose parameters and
+///         return type match the method. Static methods do not have a base-method binding.
 ///     </para>
 ///     <para>
 ///         A parameter named <c>__base</c> with no binding attribute is treated as if it has this attribute.
@@ -959,8 +989,12 @@ public sealed class FieldAttribute(Type? type, string? name, Scope scope = Scope
 public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
 
 /// <summary>
-///     Binds a patch parameter to a delegate that invokes a method on the selected instance.
+///     Binds a patch parameter to a delegate that invokes an instance or static method.
 /// </summary>
+/// <param name="type">
+///     The type on which to look up the method, or <see langword="null" /> to use the type associated with the selected
+///     scope. A type-qualified method name overrides this type.
+/// </param>
 /// <param name="name">
 ///     The method name in <c>"Method"</c>, <c>"Type.Method"</c>, or <c>"Namespace.Type.Method"</c> form,
 ///     or <see langword="null" /> to use the attributed patch parameter's name.
@@ -974,9 +1008,10 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 /// </param>
 /// <remarks>
 ///     <para>
-///         The method can be a method on the selected instance type, a method on a base type, or a static method on any type.
-///         To select a method on a type other than the instance type, include the type name in <paramref name="name"/> in
-///         <c>"Type.Method"</c> or <c>"Namespace.Type.Method"</c> form.
+///         For an instance method, the delegate is bound to the instance from the selected scope. The method must be
+///         declared on that instance's type or one of its base types. Static methods can be declared on any type.
+///         Supply <paramref name="type" /> or a type-qualified <paramref name="name" /> to choose the lookup type;
+///         this does not change the instance to which the delegate is bound.
 ///     </para>
 ///     <para>
 ///         If the selected method is overloaded, the type of the delegate parameter is used to select the overload.
@@ -991,6 +1026,17 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class MethodAttribute(Type? type, string? name = null, Scope scope = Scope.Any, bool virtualCall = true) : ParameterBindingAttribute(scope)
 {
+    /// <summary>
+    ///     Binds to a delegate for a method selected by name and the patch parameter's delegate signature.
+    /// </summary>
+    /// <param name="name">
+    ///     The optionally type-qualified method name, or <see langword="null" /> to use the attributed patch parameter's name.
+    /// </param>
+    /// <param name="scope">
+    ///     The instance used for instance methods and the default type for unqualified method names.
+    ///     The default, <see cref="Scope.Any" />, uses the inner instance for an inner patch and the outer instance otherwise.
+    /// </param>
+    /// <param name="virtualCall">Whether to dispatch virtual methods to the most-derived override.</param>
     public MethodAttribute(string? name, Scope scope = Scope.Any, bool virtualCall = true) : this(null, name, scope, virtualCall) { }
 
     /// <summary>
@@ -1017,6 +1063,10 @@ public sealed class MethodAttribute(Type? type, string? name = null, Scope scope
     /// </remarks>
     public bool VirtualCall { get; } = virtualCall;
 
+    /// <summary>
+    ///     Gets the method lookup type, or <see langword="null" /> to use the type associated with the selected scope.
+    ///     A type-qualified method name overrides this type.
+    /// </summary>
     public Type? Type { get; } = type;
 }
 
@@ -1042,9 +1092,12 @@ public sealed class MethodAttribute(Type? type, string? name = null, Scope scope
 public sealed class ExceptionAttribute() : ParameterBindingAttribute(Scope.Any);
 
 /// <summary>
-///    Binds a patch parameter to the <see cref="MemberInfo" /> of the target member.
+///     Binds a patch parameter to the <see cref="MemberInfo" /> of the target member.
 /// </summary>
-/// <param name="scope"></param>
+/// <param name="scope">
+///     The member whose metadata is bound. The default is <see cref="Scope.Outer" />, including for inner patches.
+///     <see cref="Scope.Any" /> selects the inner member for an inner patch and the outer member otherwise.
+/// </param>
 /// <remarks>
 ///     <para>
 ///         This enables a single patch applied to multiple targets with <see cref="TargetsAttribute" /> to
