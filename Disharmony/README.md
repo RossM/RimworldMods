@@ -139,10 +139,10 @@ explicit binding attributes and several familiar Harmony parameter names:
 
 | Value | Attribute | Parameter-name convention |
 | --- | --- | --- |
-| Argument | `[Argument("name")]` or `[Argument(index)]` | The target parameter's name |
+| Argument | `[Argument("name")]` or `[Argument(index)]` | *`name`* |
 | Argument values as an array | `[Arguments]` | `__args` |
 | Target instance | `[Instance]` | `__instance` |
-| Instance or static field, including a non-public field | `[Field("name")]` | `___fieldName` |
+| Instance or static field, including a non-public field | `[Field("name")]` | *`___name`* |
 | Return value | `[ReturnValue]` | `__result` |
 | Per-invocation shared state | `[State]` | `__state` |
 | Delegate to an instance or static method | `[Method]` | None |
