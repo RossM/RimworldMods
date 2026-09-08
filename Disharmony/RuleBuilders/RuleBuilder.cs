@@ -36,13 +36,11 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         {
             case BindingType.Argument or BindingType.Instance when parameter.fields is { Length: > 0 }:
             {
-                Type desiredType = parameter.fields[0].DeclaringType!;
-                if (wantRef && desiredType.IsValueType)
-                    desiredType = desiredType.MakeByRefType();
+                resultType = parameter.fields[0].DeclaringType!;
+                if (wantRef && resultType.IsValueType)
+                    resultType = resultType.MakeByRefType();
 
-                EmitParameterLookup(parameter.scope, parameter.index, desiredType);
-                resultType = desiredType;
-
+                EmitParameterLookup(parameter.scope, parameter.index, resultType);
                 EmitFieldLookups(parameter, wantRef, ref resultType);
 
                 break;
@@ -50,14 +48,13 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             case BindingType.Argument or BindingType.Instance:
             {
-                Type desiredType = GetParameterType(parameter);
-                if (wantRef && !desiredType.IsByRef)
-                    desiredType = desiredType.MakeByRefType();
-                else if (!wantRef && desiredType.IsByRef)
-                    desiredType = desiredType.GetElementType()!;
+                resultType = GetParameterType(parameter);
+                if (wantRef && !resultType.IsByRef)
+                    resultType = resultType.MakeByRefType();
+                else if (!wantRef && resultType.IsByRef)
+                    resultType = resultType.GetElementType()!;
 
-                EmitParameterLookup(parameter.scope, parameter.index, desiredType);
-                resultType = desiredType;
+                EmitParameterLookup(parameter.scope, parameter.index, resultType);
 
                 break;
             }
