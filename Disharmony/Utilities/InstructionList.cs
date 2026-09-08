@@ -2,6 +2,11 @@
 
 namespace Disharmony.Utilities;
 
+internal class Box<T>
+{
+    public T value;
+}
+
 internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruction>
 {
     public readonly List<CodeInstruction> instructions = [];
@@ -21,9 +26,15 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
         Type type = localIndex.Type;
 
         if (type.IsByRef)
-            throw new NotImplementedException($"IsByRef targetType {type}");
-
-        if (type.IsClass || type.IsInterface)
+        {
+            var boxType = typeof(Box<>).MakeGenericType(type.NoRefType);
+            var constructor = boxType.GetConstructor([]);
+            var field = boxType.GetField(nameof(Box<>.value));
+            Add(new(OpCodes.Newobj, constructor));
+            Add(new(OpCodes.Ldflda, field));
+            Add(localIndex.Store());
+        }
+        else if (type.IsClass || type.IsInterface)
         {
             Add(new(OpCodes.Ldnull));
             Add(localIndex.Store());

@@ -13,6 +13,7 @@ public static partial class ResultBindingPatches
 
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
+    [PatchOptions(PatchOptions.Debug)]
     public static void Postfix_Result_Primitive_ReadByValue(int __result) => valueObserved = __result;
 
     [Prefix]

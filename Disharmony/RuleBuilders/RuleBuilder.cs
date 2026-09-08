@@ -19,9 +19,6 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         bool wantRef = parameterType.IsByRef;
         EmitRawParameterValue(parameter, wantRef, out Type resultType);
 
-        if (parameter.fields is { Length: > 0 } && parameter.bindingType != BindingType.StaticField)
-            EmitFieldLookups(parameter, wantRef, ref resultType);
-
         if (resultType.IsValueType && parameterType != resultType)
             EmitConversion(parameterType, resultType);
     }
@@ -59,15 +56,31 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 EmitParameterLookup(parameter.scope, parameter.index, desiredType);
                 resultType = desiredType;
 
+                if (parameter.fields is { Length: > 0 })
+                    EmitFieldLookups(parameter, wantRef, ref resultType);
+
                 break;
             }
 
             case BindingType.Result:
             {
-                output.Add(resultLocal!.Load(wantRef));
-                resultType = resultLocal.Type;
-                if (wantRef)
-                    resultType = resultType.MakeByRefType();
+                if (wantRef && !resultLocal!.Type.IsByRef)
+                {
+                    output.Add(resultLocal!.Load(true));
+                    resultType = resultLocal.Type.MakeByRefType();
+                }
+                else if (!wantRef && resultLocal!.Type.IsByRef)
+                {
+                    output.Add(resultLocal!.Load());
+                    output.Add(new(OpCodes.Ldobj, resultLocal.Type.GetElementType()));
+                    resultType = resultLocal.Type.GetElementType();
+                }
+                else
+                {
+                    output.Add(resultLocal!.Load());
+                    resultType = resultLocal.Type;
+                }
+
                 break;
             }
 
