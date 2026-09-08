@@ -144,8 +144,8 @@ explicit binding attributes and several familiar Harmony parameter names:
 | Target instance | `[Instance]` | `__instance` |
 | Instance or static field, including a non-public field | `[Field("name")]` | *`___name`* |
 | Return value | `[ReturnValue]` | `__result` |
-| Per-invocation shared state | `[State]` | `__state` |
-| Delegate to an instance or static method | `[Method]` | None |
+| Per-invocation shared state | `[State("name")]` | `__state` |
+| Delegate to an instance or static method | `[Method("name")]` | None |
 | Delegate to the nearest base-class implementation | `[BaseMethod]` | `__base` |
 | Exception in an `AlwaysRun` postfix | `[Exception]` | `__exception` |
 | Target member metadata (outer by default) | `[MemberInfo]` | None |
