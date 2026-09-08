@@ -38,6 +38,7 @@ The analyzer targets .NET Standard 2.0 and does not load Disharmony, Harmony, or
 | DISHARMONY0035 | Postfix argument binding is out. |
 | DISHARMONY0036 | Arguments or MemberInfo binding is ref/out/in. |
 | DISHARMONY0037 | Inner constant cannot supply member metadata or a base method. |
+| DISHARMONY0038 | MemberInfo parameter cannot accept any supported member metadata type. |
 
 The analyzer assumes assembly discovery through Patcher.PatchAll or Patcher.PatchCategory.
 Methods are identified by the built-in Disharmony Prefix/Postfix attributes. User-defined attribute subclasses are ignored.
@@ -94,7 +95,7 @@ DISHARMONY0035 warns when a postfix binds an argument through out, including imp
 
 The binding API uses [Argument] for individual arguments, [Arguments] or __args for an argument array, and [MemberInfo] for target metadata.
 DISHARMONY0036 rejects ref/out/in on [Arguments] and [MemberInfo]. Argument arrays must accept object[]; AllowUnsafe does not bypass this check.
-MemberInfo type compatibility is deferred pending clarification of the binder's type validation.
+DISHARMONY0038 rejects [MemberInfo] parameter types that cannot accept any of FieldInfo, MethodInfo, or ConstructorInfo. Compatibility with the actual target remains a runtime check. AllowUnsafe bypasses reference-type compatibility; ref/out/in remain invalid.
 DISHARMONY0037 rejects [MemberInfo] and [BaseMethod] when they select an inner constant. An argument array for a constant is valid and empty.
 Explicit Scope.Inner still requires an inner patch.
 

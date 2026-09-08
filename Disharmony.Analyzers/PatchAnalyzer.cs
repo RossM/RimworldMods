@@ -16,7 +16,7 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         MultipleParameterBindings, InnerBindingWithoutInnerPatch, AlwaysRunResultBinding, InvalidExceptionBinding,
         InvalidDelegateBinding, IncompatibleBindingType, IncompatibleStateTypes, ConstantBindingUnavailable,
         VoidPrefixResultBinding, UnknownSpecialParameter, DuplicateBinding, StateWithoutWriter,
-        StateWithoutReader, WrittenValueParameter, BindingRequiresValue, ConstantMemberUnavailable, PrefixResultIsRef, PostfixArgumentIsOut,
+        StateWithoutReader, WrittenValueParameter, BindingRequiresValue, ConstantMemberUnavailable, IncompatibleMemberInfoType, PrefixResultIsRef, PostfixArgumentIsOut,
     ];
 
     public static readonly DiagnosticDescriptor GenericMethod = new(
@@ -186,6 +186,10 @@ public sealed class PatchAnalyzer : DiagnosticAnalyzer
         "Parameter '{0}' requests member metadata or a base method from [InnerConstant], which has neither",
         "Correctness", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor IncompatibleMemberInfoType = new(
+        "DISHARMONY0038", "Incompatible member metadata type",
+        "Parameter '{0}' cannot bind FieldInfo, MethodInfo, or ConstructorInfo",
+        "Correctness", DiagnosticSeverity.Error, isEnabledByDefault: true);
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

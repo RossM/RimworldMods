@@ -37,3 +37,4 @@ DISHARMONY0034 | Style       | Warning  | Prefix result is ref
 DISHARMONY0035 | Correctness | Warning  | Postfix argument binding is out
 DISHARMONY0036 | Correctness | Error | Arguments and MemberInfo bindings must be passed by value
 DISHARMONY0037 | Correctness | Error | Inner constant cannot supply member metadata or a base method
+DISHARMONY0038 | Correctness | Error | MemberInfo parameter cannot accept any supported member metadata type

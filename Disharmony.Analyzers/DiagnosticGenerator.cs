@@ -31,6 +31,7 @@ internal class DiagnosticGenerator
     private readonly int _Scope_Outer;
     private readonly int _PatchOptions_AllowUnsafe;
     private readonly INamedTypeSymbol? _Exception;
+    private readonly INamedTypeSymbol[] memberInfoTypes;
     private readonly INamedTypeSymbol? _PriorityAttribute;
     private readonly INamedTypeSymbol?[] methodAttributes;
     private readonly (ParameterKind Kind, INamedTypeSymbol? Type)[] bindingTypes;
@@ -72,6 +73,8 @@ internal class DiagnosticGenerator
         _HarmonyPatch = compilation.GetTypeByMetadataName("HarmonyLib.HarmonyPatch");
 
         _Exception = compilation.GetTypeByMetadataName("System.Exception");
+        memberInfoTypes = new[] { "System.Reflection.FieldInfo", "System.Reflection.MethodInfo", "System.Reflection.ConstructorInfo" }
+            .Select(compilation.GetTypeByMetadataName).OfType<INamedTypeSymbol>().ToArray();
 
         methodAttributes =
         [
@@ -184,6 +187,9 @@ internal class DiagnosticGenerator
                                  !Helpers.CanBindKnownType(compilation, parameter,
                                      compilation.CreateArrayTypeSymbol(compilation.GetSpecialType(SpecialType.System_Object)), false))
                             ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleBindingType, parameterLocation, parameter.Name, "object[]"));
+                        else if (kind == ParameterKind.MemberInfo && memberInfoTypes.Length == 3 &&
+                                 !memberInfoTypes.Any(t => Helpers.CanBindKnownType(compilation, parameter, t, allowUnsafe)))
+                            ctx.ReportDiagnostic(Diagnostic.Create(PatchAnalyzer.IncompatibleMemberInfoType, parameterLocation, parameter.Name));
                         break;
                     }
                     case ParameterKind.Result when isPrefix:
