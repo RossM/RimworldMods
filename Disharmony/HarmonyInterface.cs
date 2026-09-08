@@ -32,9 +32,7 @@ internal class HarmonyInterface
 
     private const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
-    private static readonly AssemblyBuilder dynamicMethodAssembly
-        = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("DynamicMethods"), AssemblyBuilderAccess.Run);
-    private static readonly ModuleBuilder module = dynamicMethodAssembly.DefineDynamicModule("DynamicModule");
+    private static readonly ModuleBuilder module;
 
     public static readonly HarmonyInterface Instance = new();
 
@@ -45,6 +43,11 @@ internal class HarmonyInterface
     private readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
 
     public bool optimizerEnabled = false;
+    static HarmonyInterface()
+    {
+        var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("DynamicMethods"), AssemblyBuilderAccess.Run);
+        module = assembly.DefineDynamicModule("DynamicModule");
+    }
 
 #if DEBUG
     internal event Action? ApplyPatchHookForTesting = null;
@@ -195,10 +198,24 @@ internal class HarmonyInterface
         Type[] parameterTypes = target.ParameterTypes;
 
         trampolineCount++;
-        var method = new DynamicMethod($"{target.FullName}_Trampoline{trampolineCount}", target.ReturnType,
+        var method = new DynamicMethod($"{target.FullName}_Trampoline{trampolineCount}", target.ReturnType.NoRefType,
             parameterTypes, module, true);
 
+        // DynamicMethod throws if you try to set the return type to an IsByRef type, but the restriction is only enforced
+        // in the constructor; so set the return type field directly. This must be done before getting the ILGenerator.
+        if (target.ReturnType.IsByRef)
+            InfoOf.DynamicMethod_ReturnType.SetValue(method, target.ReturnType);
+
         ILGenerator generator = method.GetILGenerator();
+
+        EmitTrampoline(target, generator);
+
+        return method;
+    }
+
+    private static void EmitTrampoline(MethodBaseInvocation target, ILGenerator generator)
+    {
+        Type[] parameterTypes = target.ParameterTypes;
 
         EmitLoadArguments(generator, parameterTypes);
 
@@ -222,8 +239,6 @@ internal class HarmonyInterface
         generator.Emit(OpCodes.Tailcall);
         generator.Emit(OpCodes.Call, target);
         generator.Emit(OpCodes.Ret);
-
-        return method;
     }
 
     private static void EmitLoadArguments(ILGenerator generator, Type[] parameterTypes)

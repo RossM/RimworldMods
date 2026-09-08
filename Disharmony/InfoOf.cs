@@ -22,4 +22,10 @@ internal static class InfoOf
     public static readonly MethodInfo ExceptionDispatchInfo_Capture = SymbolExtensions.GetMethodInfo(() => ExceptionDispatchInfo.Capture);
 
     public static readonly MethodInfo RuntimeHelpers_RethrowException = SymbolExtensions.GetMethodInfo(() => RuntimeHelpers.RethrowException);
+
+    public static readonly FieldInfo DynamicMethod_ReturnType =
+        typeof(DynamicMethod).GetField("returnType", BindingFlags.NonPublic | BindingFlags.Instance) ??
+        typeof(DynamicMethod).GetField("_returnType", BindingFlags.NonPublic | BindingFlags.Instance) ??
+        typeof(DynamicMethod).GetField("m_returnType", BindingFlags.NonPublic | BindingFlags.Instance)
+        ?? throw new InvalidOperationException("Cannot find returnType field on DynamicMethod");
 }
