@@ -440,8 +440,6 @@ public sealed class MethodLookupBindingTests
 
         var exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(MethodLookupBindingPatches.OutDelegateForRefMethod_ThrowsMethodNotFound), invocation));
-
-        Assert.That(exception!.InnerException, Is.TypeOf<ReflectionException>());
     }
 
     [Test]
@@ -452,8 +450,6 @@ public sealed class MethodLookupBindingTests
 
         var exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(MethodLookupBindingPatches.ExplicitNestedTypeWithInheritedMethod_ThrowsMethodNotFound), invocation));
-
-        Assert.That(exception!.InnerException, Is.TypeOf<ReflectionException>());
     }
 
     [Test]
@@ -464,8 +460,6 @@ public sealed class MethodLookupBindingTests
 
         var exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(MethodLookupBindingPatches.ExplicitShortTypeWithInheritedMethod_ThrowsMethodNotFound), invocation));
-
-        Assert.That(exception!.InnerException, Is.TypeOf<ReflectionException>());
     }
 
     [Test]
@@ -476,8 +470,6 @@ public sealed class MethodLookupBindingTests
 
         var exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(MethodLookupBindingPatches.ExplicitFullyQualifiedTypeWithInheritedMethod_ThrowsMethodNotFound), invocation));
-
-        Assert.That(exception!.InnerException, Is.TypeOf<ReflectionException>());
     }
 
     [Test]
@@ -488,8 +480,6 @@ public sealed class MethodLookupBindingTests
 
         var exception = Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(MethodLookupBindingPatches.ExplicitColonTypeWithInheritedMethod_ThrowsMethodNotFound), invocation));
-
-        Assert.That(exception!.InnerException, Is.TypeOf<ReflectionException>());
     }
 
     [Test]

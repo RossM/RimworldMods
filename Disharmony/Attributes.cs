@@ -894,6 +894,10 @@ public sealed class StateAttribute(string? key) : ParameterBindingAttribute(Scop
 ///         A parameter starting with <c>___</c> (three underscores) with no binding attribute is treated as if it has
 ///         this attribute, with the field name starting after the first three underscores.
 ///     </para>
+///     <para>
+///         If used on an auto-property, this will bind the property's backing field. To bind other properties
+///         use <see cref="MethodAttribute" /> with <see cref="MemberType.Getter" /> or <see cref="MemberType.Setter" />.
+///     </para>
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
@@ -998,7 +1002,12 @@ public sealed class BaseMethodAttribute(Scope scope = Scope.Any) : ParameterBind
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class MethodAttribute(Type? type, string? name = null, Scope scope = Scope.Any, bool virtualCall = true) : ParameterBindingAttribute(scope)
+public sealed class MethodAttribute(
+    Type? type,
+    string? name = null,
+    Scope scope = Scope.Any,
+    MemberType memberType = MemberType.Method,
+    bool virtualCall = true) : ParameterBindingAttribute(scope)
 {
     /// <summary>
     ///     Binds to a delegate for a method selected by name and the patch parameter's delegate signature.
@@ -1010,8 +1019,9 @@ public sealed class MethodAttribute(Type? type, string? name = null, Scope scope
     ///     The instance used for instance methods and the default type for unqualified method names.
     ///     The default, <see cref="Scope.Any" />, uses the inner instance for an inner patch and the outer instance otherwise.
     /// </param>
+    /// <param name="memberType">The kind of member or accessor to target.</param>
     /// <param name="virtualCall">Whether to dispatch virtual methods to the most-derived override.</param>
-    public MethodAttribute(string? name, Scope scope = Scope.Any, bool virtualCall = true) : this(null, name, scope, virtualCall) { }
+    public MethodAttribute(string? name, Scope scope = Scope.Any, MemberType memberType = MemberType.Method, bool virtualCall = true) : this(null, name, scope, memberType, virtualCall) { }
 
     /// <summary>
     ///     Binds to the method having the same name as the attributed patch parameter.
@@ -1020,8 +1030,9 @@ public sealed class MethodAttribute(Type? type, string? name = null, Scope scope
     ///     The instance used for instance methods and the default type for unqualified method names.
     ///     The default, <see cref="Scope.Any" />, uses the inner instance for an inner patch and the outer instance otherwise.
     /// </param>
+    /// <param name="memberType">The kind of member or accessor to target.</param>
     /// <param name="virtualCall">A value indicating whether to use a virtual call if the method is virtual.</param>
-    public MethodAttribute(Scope scope = Scope.Any, bool virtualCall = true) : this(null, scope, virtualCall) { }
+    public MethodAttribute(Scope scope = Scope.Any, MemberType memberType = MemberType.Method, bool virtualCall = true) : this(null, null, scope, memberType, virtualCall) { }
 
     /// <summary>
     ///     Gets the optionally type-qualified method name, or <see langword="null" /> when the patch parameter's name is used.
@@ -1042,6 +1053,8 @@ public sealed class MethodAttribute(Type? type, string? name = null, Scope scope
     ///     A type-qualified method name overrides this type.
     /// </summary>
     public Type? Type { get; } = type;
+
+    public MemberType MemberType { get; } = memberType;
 }
 
 /// <summary>

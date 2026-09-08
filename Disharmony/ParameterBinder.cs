@@ -86,8 +86,8 @@ internal class ParameterBinder(
 
             case BaseMethodAttribute: return BindBaseMethod(parameter, invocation, scope);
 
-            case MethodAttribute { Name: var name, VirtualCall: var virtualCall, Type: var type }:
-                return BindMethod(parameter, invocation, scope, name ?? parameterName, virtualCall, type);
+            case MethodAttribute { Name: var name, MemberType: var memberType, VirtualCall: var virtualCall, Type: var type }:
+                return BindMethod(parameter, invocation, scope, name ?? parameterName, memberType, virtualCall, type);
 
             case ExceptionAttribute: return BindException(parameter);
 
@@ -197,21 +197,20 @@ internal class ParameterBinder(
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, memberInfo = baseMethod };
     }
 
-    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, bool allowVirtual, Type? type)
+    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, MemberType memberType, bool allowVirtual, Type? type)
     {
         var instanceType = invocation.InstanceType;
+        
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
-        var delegateInvoke = parameter.ParameterType.GetMethod("Invoke") ??
+        
+        var invoke = parameter.ParameterType.GetMethod("Invoke") ??
                              throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
-        MethodInfo methodInfo;
-        try
-        {
-            methodInfo = ReflectionTools.GetMethod(type ?? instanceType, name, delegateInvoke.GetParameters(), true);
-        }
-        catch (ReflectionException e)
-        {
-            throw new ParameterBindingException(parameter.Name, "Method not found", e);
-        }
+        
+        var results = ReflectionTools.GetMembers(type ?? instanceType, name, memberType, ReflectionTools.WrapParameterTypes(invoke),
+            null, true);
+
+        if (results is not [MethodInfo methodInfo])
+            throw new ParameterBindingException(parameter.Name, "Method not found");
 
         if (!methodInfo.IsStatic)
         {

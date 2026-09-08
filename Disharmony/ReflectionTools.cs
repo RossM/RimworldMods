@@ -18,11 +18,6 @@ internal static class ReflectionTools
         AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoadHandler;
     }
 
-    public static MethodInfo GetMethod(Type defaultType, string name, ParameterInfo[] parameters, bool searchBaseTypes)
-    {
-        return (MethodInfo)GetMember(defaultType, name, MemberType.Method, [.. parameters.Select(WrappedType)], null, searchBaseTypes);
-    }
-
     private static Type WrappedType(ParameterInfo parameter)
     {
         Type parameterType = parameter.ParameterType;
@@ -31,6 +26,8 @@ internal static class ReflectionTools
         Type marker = parameter.IsOut ? typeof(Out<>) : parameter.IsIn ? typeof(In<>) : typeof(Ref<>);
         return marker.MakeGenericType(parameterType.GetElementType()!);
     }
+
+    public static Type[] WrapParameterTypes(MethodBase method) => [.. method.GetParameters().Select(WrappedType)];
 
     public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
     {
