@@ -2,6 +2,150 @@ namespace Disharmony.Tests.EndToEnd.Patching;
 
 public static class RefReturnPatchingPatches
 {
+    public static BindingReference? ReferenceObserved;
+    public static BindingReference? ReplacementReference;
+    public static BindingStruct StructObserved;
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
+    public static void Postfix_Result_Primitive_WriteByReference(ref int __result) =>
+        __result = 42;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallPrimitiveReference))]
+    public static void InnerPostfix_Result_Primitive_ReadByValue(int __result) =>
+        Observed = __result;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallPrimitiveReference))]
+    public static void InnerPostfix_Result_Primitive_ReadByReference(ref int __result) =>
+        Observed = __result;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallPrimitiveReference))]
+    public static void InnerPostfix_Result_Primitive_WriteByReference(ref int __result) =>
+        __result = 42;
+
+    [Prefix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
+    public static bool Prefix_Result_Primitive_SkipWithSuppliedReference(ref int __result)
+    {
+        __result = 42;
+        return false;
+    }
+
+    [Prefix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallPrimitiveReference))]
+    public static bool InnerPrefix_Result_Primitive_SkipWithSuppliedReference(ref int __result)
+    {
+        __result = 42;
+        return false;
+    }
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    public static void Postfix_Result_ReferenceType_ReadByValue(BindingReference __result) =>
+        ReferenceObserved = __result;
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    public static void Postfix_Result_ReferenceType_ReadByReference(ref BindingReference __result) =>
+        ReferenceObserved = __result;
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    public static void Postfix_Result_ReferenceType_WriteByReference(ref BindingReference __result) =>
+        __result = ReplacementReference!;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallObjectReference))]
+    public static void InnerPostfix_Result_ReferenceType_ReadByValue(BindingReference __result) =>
+        ReferenceObserved = __result;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallObjectReference))]
+    public static void InnerPostfix_Result_ReferenceType_ReadByReference(ref BindingReference __result) =>
+        ReferenceObserved = __result;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallObjectReference))]
+    public static void InnerPostfix_Result_ReferenceType_WriteByReference(ref BindingReference __result) =>
+        __result = ReplacementReference!;
+
+    [Prefix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    public static bool Prefix_Result_ReferenceType_SkipWithSuppliedReference(ref BindingReference __result)
+    {
+        __result = ReplacementReference!;
+        return false;
+    }
+
+    [Prefix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallObjectReference))]
+    public static bool InnerPrefix_Result_ReferenceType_SkipWithSuppliedReference(ref BindingReference __result)
+    {
+        __result = ReplacementReference!;
+        return false;
+    }
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    public static void Postfix_Result_Struct_ReadByValue(BindingStruct __result) =>
+        StructObserved = __result;
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    public static void Postfix_Result_Struct_ReadByReference(ref BindingStruct __result) =>
+        StructObserved = __result;
+
+    [Postfix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    public static void Postfix_Result_Struct_WriteByReference(ref BindingStruct __result) =>
+        __result = new BindingStruct { Value = 42 };
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallStructReference))]
+    public static void InnerPostfix_Result_Struct_ReadByValue(BindingStruct __result) =>
+        StructObserved = __result;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallStructReference))]
+    public static void InnerPostfix_Result_Struct_ReadByReference(ref BindingStruct __result) =>
+        StructObserved = __result;
+
+    [Postfix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallStructReference))]
+    public static void InnerPostfix_Result_Struct_WriteByReference(ref BindingStruct __result) =>
+        __result = new BindingStruct { Value = 42 };
+
+    [Prefix]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    public static bool Prefix_Result_Struct_SkipWithSuppliedReference(ref BindingStruct __result)
+    {
+        __result = new BindingStruct { Value = 42 };
+        return false;
+    }
+
+    [Prefix]
+    [Inner(typeof(RefReturnTargets), nameof(RefReturnTargets.StructReference))]
+    [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.CallStructReference))]
+    public static bool InnerPrefix_Result_Struct_SkipWithSuppliedReference(ref BindingStruct __result)
+    {
+        __result = new BindingStruct { Value = 42 };
+        return false;
+    }
+
     public static int ExecutionCount;
     public static int Observed;
 
@@ -59,6 +203,462 @@ public static class RefReturnPatchingPatches
 [TestFixture]
 public sealed class RefReturnPatchingTests : PatchTestBase
 {
+    [Test, Timeout(10000)]
+    public void Postfix_Result_Primitive_WriteByReference()
+    {
+        RefReturnPatchingPatches.Observed = default;
+        var original = 11;
+        var target = new RefReturnTargets { Primitive = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_Primitive_WriteByReference));
+
+        ref int result = ref target.PrimitiveReference();
+
+        var expected = 42;
+        Assert.That(result, Is.EqualTo(expected));
+        Assert.That(target.Primitive, Is.EqualTo(expected));
+
+        var later = 73;
+        result = later;
+        Assert.That(target.Primitive, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_Primitive_ReadByValue()
+    {
+        RefReturnPatchingPatches.Observed = default;
+        var original = 11;
+        var target = new RefReturnTargets { Primitive = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_Primitive_ReadByValue));
+
+        ref int result = ref RefReturnTargets.CallPrimitiveReference(target);
+
+        Assert.That(result, Is.EqualTo(original));
+        Assert.That(target.Primitive, Is.EqualTo(original));
+        Assert.That(RefReturnPatchingPatches.Observed, Is.EqualTo(original));
+
+        var later = 73;
+        result = later;
+        Assert.That(target.Primitive, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_Primitive_ReadByReference()
+    {
+        RefReturnPatchingPatches.Observed = default;
+        var original = 11;
+        var target = new RefReturnTargets { Primitive = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_Primitive_ReadByReference));
+
+        ref int result = ref RefReturnTargets.CallPrimitiveReference(target);
+
+        Assert.That(result, Is.EqualTo(original));
+        Assert.That(target.Primitive, Is.EqualTo(original));
+        Assert.That(RefReturnPatchingPatches.Observed, Is.EqualTo(original));
+
+        var later = 73;
+        result = later;
+        Assert.That(target.Primitive, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_Primitive_WriteByReference()
+    {
+        RefReturnPatchingPatches.Observed = default;
+        var original = 11;
+        var target = new RefReturnTargets { Primitive = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_Primitive_WriteByReference));
+
+        ref int result = ref RefReturnTargets.CallPrimitiveReference(target);
+
+        var expected = 42;
+        Assert.That(result, Is.EqualTo(expected));
+        Assert.That(target.Primitive, Is.EqualTo(expected));
+
+        var later = 73;
+        result = later;
+        Assert.That(target.Primitive, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Prefix_Result_Primitive_SkipWithSuppliedReference()
+    {
+        var original = 11;
+        var target = new RefReturnTargets { Primitive = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Prefix_Result_Primitive_SkipWithSuppliedReference));
+
+        ref int first = ref target.PrimitiveReference();
+        ref int second = ref target.PrimitiveReference();
+        var expected = 42;
+        Assert.That(first, Is.EqualTo(expected));
+        Assert.That(second, Is.EqualTo(expected));
+
+        var later = 73;
+        first = later;
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Assert.That(first, Is.EqualTo(later));
+        Assert.That(second, Is.EqualTo(expected));
+        Assert.That(target.Primitive, Is.EqualTo(original));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPrefix_Result_Primitive_SkipWithSuppliedReference()
+    {
+        var original = 11;
+        var target = new RefReturnTargets { Primitive = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPrefix_Result_Primitive_SkipWithSuppliedReference));
+
+        ref int first = ref RefReturnTargets.CallPrimitiveReference(target);
+        ref int second = ref RefReturnTargets.CallPrimitiveReference(target);
+        var expected = 42;
+        Assert.That(first, Is.EqualTo(expected));
+        Assert.That(second, Is.EqualTo(expected));
+
+        var later = 73;
+        first = later;
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Assert.That(first, Is.EqualTo(later));
+        Assert.That(second, Is.EqualTo(expected));
+        Assert.That(target.Primitive, Is.EqualTo(original));
+    }
+
+    [Test, Timeout(10000)]
+    public void Postfix_Result_ReferenceType_ReadByValue()
+    {
+        RefReturnPatchingPatches.ReferenceObserved = default;
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_ReferenceType_ReadByValue));
+
+        ref BindingReference result = ref target.ObjectReference();
+
+        Assert.That(result, Is.SameAs(original));
+        Assert.That(target.Reference, Is.SameAs(original));
+        Assert.That(RefReturnPatchingPatches.ReferenceObserved, Is.SameAs(original));
+
+        var later = new BindingReference { Value = 73 };
+        result = later;
+        Assert.That(target.Reference, Is.SameAs(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Postfix_Result_ReferenceType_ReadByReference()
+    {
+        RefReturnPatchingPatches.ReferenceObserved = default;
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_ReferenceType_ReadByReference));
+
+        ref BindingReference result = ref target.ObjectReference();
+
+        Assert.That(result, Is.SameAs(original));
+        Assert.That(target.Reference, Is.SameAs(original));
+        Assert.That(RefReturnPatchingPatches.ReferenceObserved, Is.SameAs(original));
+
+        var later = new BindingReference { Value = 73 };
+        result = later;
+        Assert.That(target.Reference, Is.SameAs(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Postfix_Result_ReferenceType_WriteByReference()
+    {
+        RefReturnPatchingPatches.ReferenceObserved = default;
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_ReferenceType_WriteByReference));
+
+        ref BindingReference result = ref target.ObjectReference();
+
+        var expected = RefReturnPatchingPatches.ReplacementReference!;
+        Assert.That(result, Is.SameAs(expected));
+        Assert.That(target.Reference, Is.SameAs(expected));
+
+        var later = new BindingReference { Value = 73 };
+        result = later;
+        Assert.That(target.Reference, Is.SameAs(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_ReferenceType_ReadByValue()
+    {
+        RefReturnPatchingPatches.ReferenceObserved = default;
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_ReferenceType_ReadByValue));
+
+        ref BindingReference result = ref RefReturnTargets.CallObjectReference(target);
+
+        Assert.That(result, Is.SameAs(original));
+        Assert.That(target.Reference, Is.SameAs(original));
+        Assert.That(RefReturnPatchingPatches.ReferenceObserved, Is.SameAs(original));
+
+        var later = new BindingReference { Value = 73 };
+        result = later;
+        Assert.That(target.Reference, Is.SameAs(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_ReferenceType_ReadByReference()
+    {
+        RefReturnPatchingPatches.ReferenceObserved = default;
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_ReferenceType_ReadByReference));
+
+        ref BindingReference result = ref RefReturnTargets.CallObjectReference(target);
+
+        Assert.That(result, Is.SameAs(original));
+        Assert.That(target.Reference, Is.SameAs(original));
+        Assert.That(RefReturnPatchingPatches.ReferenceObserved, Is.SameAs(original));
+
+        var later = new BindingReference { Value = 73 };
+        result = later;
+        Assert.That(target.Reference, Is.SameAs(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_ReferenceType_WriteByReference()
+    {
+        RefReturnPatchingPatches.ReferenceObserved = default;
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_ReferenceType_WriteByReference));
+
+        ref BindingReference result = ref RefReturnTargets.CallObjectReference(target);
+
+        var expected = RefReturnPatchingPatches.ReplacementReference!;
+        Assert.That(result, Is.SameAs(expected));
+        Assert.That(target.Reference, Is.SameAs(expected));
+
+        var later = new BindingReference { Value = 73 };
+        result = later;
+        Assert.That(target.Reference, Is.SameAs(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Prefix_Result_ReferenceType_SkipWithSuppliedReference()
+    {
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Prefix_Result_ReferenceType_SkipWithSuppliedReference));
+
+        ref BindingReference first = ref target.ObjectReference();
+        ref BindingReference second = ref target.ObjectReference();
+        var expected = RefReturnPatchingPatches.ReplacementReference!;
+        Assert.That(first, Is.SameAs(expected));
+        Assert.That(second, Is.SameAs(expected));
+
+        var later = new BindingReference { Value = 73 };
+        first = later;
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Assert.That(first, Is.SameAs(later));
+        Assert.That(second, Is.SameAs(expected));
+        Assert.That(target.Reference, Is.SameAs(original));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPrefix_Result_ReferenceType_SkipWithSuppliedReference()
+    {
+        RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
+        var original = new BindingReference { Value = 11 };
+        var target = new RefReturnTargets { Reference = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPrefix_Result_ReferenceType_SkipWithSuppliedReference));
+
+        ref BindingReference first = ref RefReturnTargets.CallObjectReference(target);
+        ref BindingReference second = ref RefReturnTargets.CallObjectReference(target);
+        var expected = RefReturnPatchingPatches.ReplacementReference!;
+        Assert.That(first, Is.SameAs(expected));
+        Assert.That(second, Is.SameAs(expected));
+
+        var later = new BindingReference { Value = 73 };
+        first = later;
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Assert.That(first, Is.SameAs(later));
+        Assert.That(second, Is.SameAs(expected));
+        Assert.That(target.Reference, Is.SameAs(original));
+    }
+
+    [Test, Timeout(10000)]
+    public void Postfix_Result_Struct_ReadByValue()
+    {
+        RefReturnPatchingPatches.StructObserved = default;
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_Struct_ReadByValue));
+
+        ref BindingStruct result = ref target.StructReference();
+
+        Assert.That(result, Is.EqualTo(original));
+        Assert.That(target.Structure, Is.EqualTo(original));
+        Assert.That(RefReturnPatchingPatches.StructObserved, Is.EqualTo(original));
+
+        var later = new BindingStruct { Value = 73 };
+        result = later;
+        Assert.That(target.Structure, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Postfix_Result_Struct_ReadByReference()
+    {
+        RefReturnPatchingPatches.StructObserved = default;
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_Struct_ReadByReference));
+
+        ref BindingStruct result = ref target.StructReference();
+
+        Assert.That(result, Is.EqualTo(original));
+        Assert.That(target.Structure, Is.EqualTo(original));
+        Assert.That(RefReturnPatchingPatches.StructObserved, Is.EqualTo(original));
+
+        var later = new BindingStruct { Value = 73 };
+        result = later;
+        Assert.That(target.Structure, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Postfix_Result_Struct_WriteByReference()
+    {
+        RefReturnPatchingPatches.StructObserved = default;
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Postfix_Result_Struct_WriteByReference));
+
+        ref BindingStruct result = ref target.StructReference();
+
+        var expected = new BindingStruct { Value = 42 };
+        Assert.That(result, Is.EqualTo(expected));
+        Assert.That(target.Structure, Is.EqualTo(expected));
+
+        var later = new BindingStruct { Value = 73 };
+        result = later;
+        Assert.That(target.Structure, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_Struct_ReadByValue()
+    {
+        RefReturnPatchingPatches.StructObserved = default;
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_Struct_ReadByValue));
+
+        ref BindingStruct result = ref RefReturnTargets.CallStructReference(target);
+
+        Assert.That(result, Is.EqualTo(original));
+        Assert.That(target.Structure, Is.EqualTo(original));
+        Assert.That(RefReturnPatchingPatches.StructObserved, Is.EqualTo(original));
+
+        var later = new BindingStruct { Value = 73 };
+        result = later;
+        Assert.That(target.Structure, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_Struct_ReadByReference()
+    {
+        RefReturnPatchingPatches.StructObserved = default;
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_Struct_ReadByReference));
+
+        ref BindingStruct result = ref RefReturnTargets.CallStructReference(target);
+
+        Assert.That(result, Is.EqualTo(original));
+        Assert.That(target.Structure, Is.EqualTo(original));
+        Assert.That(RefReturnPatchingPatches.StructObserved, Is.EqualTo(original));
+
+        var later = new BindingStruct { Value = 73 };
+        result = later;
+        Assert.That(target.Structure, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPostfix_Result_Struct_WriteByReference()
+    {
+        RefReturnPatchingPatches.StructObserved = default;
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPostfix_Result_Struct_WriteByReference));
+
+        ref BindingStruct result = ref RefReturnTargets.CallStructReference(target);
+
+        var expected = new BindingStruct { Value = 42 };
+        Assert.That(result, Is.EqualTo(expected));
+        Assert.That(target.Structure, Is.EqualTo(expected));
+
+        var later = new BindingStruct { Value = 73 };
+        result = later;
+        Assert.That(target.Structure, Is.EqualTo(later));
+    }
+
+    [Test, Timeout(10000)]
+    public void Prefix_Result_Struct_SkipWithSuppliedReference()
+    {
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.Prefix_Result_Struct_SkipWithSuppliedReference));
+
+        ref BindingStruct first = ref target.StructReference();
+        ref BindingStruct second = ref target.StructReference();
+        var expected = new BindingStruct { Value = 42 };
+        Assert.That(first, Is.EqualTo(expected));
+        Assert.That(second, Is.EqualTo(expected));
+
+        var later = new BindingStruct { Value = 73 };
+        first = later;
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Assert.That(first, Is.EqualTo(later));
+        Assert.That(second, Is.EqualTo(expected));
+        Assert.That(target.Structure, Is.EqualTo(original));
+    }
+
+    [Test, Timeout(10000)]
+    public void InnerPrefix_Result_Struct_SkipWithSuppliedReference()
+    {
+        var original = new BindingStruct { Value = 11 };
+        var target = new RefReturnTargets { Structure = original };
+        ApplyPatch(typeof(RefReturnPatchingPatches), nameof(RefReturnPatchingPatches.InnerPrefix_Result_Struct_SkipWithSuppliedReference));
+
+        ref BindingStruct first = ref RefReturnTargets.CallStructReference(target);
+        ref BindingStruct second = ref RefReturnTargets.CallStructReference(target);
+        var expected = new BindingStruct { Value = 42 };
+        Assert.That(first, Is.EqualTo(expected));
+        Assert.That(second, Is.EqualTo(expected));
+
+        var later = new BindingStruct { Value = 73 };
+        first = later;
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        Assert.That(first, Is.EqualTo(later));
+        Assert.That(second, Is.EqualTo(expected));
+        Assert.That(target.Structure, Is.EqualTo(original));
+    }
+
     [Test, Timeout(10000)]
     public void Prefix_StaticField_PreservesAliasOnFirstAndSubsequentCalls()
     {

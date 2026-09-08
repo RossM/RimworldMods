@@ -2,6 +2,15 @@ namespace Disharmony.Tests;
 
 public sealed class RefReturnTargets
 {
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static ref int CallPrimitiveReference(RefReturnTargets target) => ref target.PrimitiveReference();
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static ref BindingReference CallObjectReference(RefReturnTargets target) => ref target.ObjectReference();
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static ref BindingStruct CallStructReference(RefReturnTargets target) => ref target.StructReference();
+
     public int Primitive;
     public BindingReference Reference = new();
     public BindingStruct Structure;
