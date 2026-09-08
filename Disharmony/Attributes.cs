@@ -492,10 +492,6 @@ public static class PatchPriority
 /// <param name="parameterTypes">
 ///     The parameter types used to select an overload, or <see langword="null" /> to omit parameter filtering.
 /// </param>
-/// <param name="genericTypes">
-///     The generic type arguments used to identify a constructed generic method, or <see langword="null" /> when generic
-///     type arguments are not part of the selection.
-/// </param>
 /// <remarks>
 ///     <para>
 ///         When applied to a class, this target applies to every patch method declared by the class. Method-level targets
@@ -529,8 +525,7 @@ public class TargetAttribute(
     Type? type,
     string? methodName = null,
     MemberType memberType = MemberType.Any,
-    Type[]? parameterTypes = null,
-    Type[]? genericTypes = null)
+    Type[]? parameterTypes = null)
     : Attribute
 {
     /// <summary>
@@ -567,16 +562,11 @@ public class TargetAttribute(
     /// <param name="parameterTypes">
     ///     The parameter types used to select an overload, or <see langword="null" /> to match without a parameter signature.
     /// </param>
-    /// <param name="genericTypes">
-    ///     The generic type arguments used to identify a constructed generic method, or <see langword="null" /> when
-    ///     generic type arguments are not part of the selection.
-    /// </param>
     public TargetAttribute(
         string? methodName = null,
         MemberType memberType = MemberType.Any,
-        Type[]? parameterTypes = null,
-        Type[]? genericTypes = null)
-        : this(null, methodName, memberType, parameterTypes, genericTypes) { }
+        Type[]? parameterTypes = null)
+        : this(null, methodName, memberType, parameterTypes) { }
 
     /// <summary>
     ///     Applies the patch to a member whose declaring type is resolved from the member name or containing patch
@@ -616,12 +606,6 @@ public class TargetAttribute(
     ///     include a parameter signature.
     /// </summary>
     public Type[]? ParameterTypes { get; } = parameterTypes;
-
-    /// <summary>
-    ///     Gets the generic type arguments used to identify constructed generic methods, or <see langword="null" /> when
-    ///     the selection does not include generic type arguments.
-    /// </summary>
-    public Type[]? GenericTypes { get; } = genericTypes;
 }
 
 /// <summary>
@@ -638,10 +622,6 @@ public class TargetAttribute(
 /// <param name="memberType">The kind of members or accessors to target.</param>
 /// <param name="parameterTypes">
 ///     The parameter types used to filter overloads, or <see langword="null" /> to omit parameter filtering.
-/// </param>
-/// <param name="genericTypes">
-///     The generic type arguments used to identify constructed generic methods, or <see langword="null" /> when generic
-///     type arguments are not part of the selection.
 /// </param>
 /// <remarks>
 ///     <para>
@@ -663,9 +643,8 @@ public sealed class TargetsAttribute(
     Type? type,
     string? methodName = null,
     MemberType memberType = MemberType.Any,
-    Type[]? parameterTypes = null,
-    Type[]? genericTypes = null)
-    : TargetAttribute(type, methodName, memberType, parameterTypes, genericTypes)
+    Type[]? parameterTypes = null)
+    : TargetAttribute(type, methodName, memberType, parameterTypes)
 {
     /// <summary>
     ///     Applies the patch to every member with the specified name on the specified type.
@@ -701,16 +680,11 @@ public sealed class TargetsAttribute(
     /// <param name="parameterTypes">
     ///     The parameter types used to filter overloads, or <see langword="null" /> to match without a parameter signature.
     /// </param>
-    /// <param name="genericTypes">
-    ///     The generic type arguments used to identify constructed generic methods, or <see langword="null" /> when
-    ///     generic type arguments are not part of the selection.
-    /// </param>
     public TargetsAttribute(
         string? methodName = null,
         MemberType memberType = MemberType.Any,
-        Type[]? parameterTypes = null,
-        Type[]? genericTypes = null)
-        : this(null, methodName, memberType, parameterTypes, genericTypes) { }
+        Type[]? parameterTypes = null)
+        : this(null, methodName, memberType, parameterTypes) { }
 
     /// <summary>
     ///     Applies the patch to every matching member whose declaring type is resolved from the member name or containing

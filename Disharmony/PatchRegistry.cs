@@ -186,7 +186,7 @@ internal class PatchRegistry
                 var patchedType = targetAttribute.Type ?? defaultTargetType;
 
                 List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
-                    targetAttribute.MemberType, targetAttribute.ParameterTypes, targetAttribute.GenericTypes);
+                    targetAttribute.MemberType, targetAttribute.ParameterTypes, null);
 
                 var nameForErrors = targetAttribute.MemberType == MemberType.Constructor ? ".ctor" : targetAttribute.MethodName;
 

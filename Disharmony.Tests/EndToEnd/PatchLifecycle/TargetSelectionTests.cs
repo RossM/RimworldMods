@@ -14,8 +14,7 @@ public static class TargetSelectionPatches
     [Target(
         typeof(StaticMethodTargets),
         nameof(StaticMethodTargets.GenericIdentity),
-        parameterTypes: [typeof(int)],
-        genericTypes: [typeof(int)])]
+        parameterTypes: [typeof(int)])]
     public static void TargetAttributeCanSelectClosedGenericMethod(ref int __result) => __result = 42;
 }
 

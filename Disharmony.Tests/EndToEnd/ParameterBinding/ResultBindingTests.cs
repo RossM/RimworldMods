@@ -14,7 +14,6 @@ public static partial class ResultBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntResult))]
     public static void Postfix_Result_Primitive_ReadByValue(int __result) => valueObserved = __result;
-    public static void Postfix_Result_Primitive_ReadByValue(int __result) => valueObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringResult))]
