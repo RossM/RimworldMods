@@ -37,13 +37,13 @@ internal static class ParameterBinderPatchMethods
     public static void MemberInfo_Out([MemberInfo] out MemberInfo member) => member = null!;
     public static void MemberInfo_IncompatibleType([MemberInfo] int member) { }
     public static void Parameter_ImplicitName(int value) { }
-    public static void Parameter_AttributeNullName([Parameter(null)] int value) { }
-    public static void Parameter_AttributeExplicitName([Parameter("source", Scope.Outer)] int value) { }
-    public static void Parameter_AttributeStaticIndex([Parameter(1)] string value) { }
-    public static void Parameter_AttributeInstanceIndex([Parameter(0)] int value) { }
+    public static void Parameter_AttributeNullName([Argument(null)] int value) { }
+    public static void Parameter_AttributeExplicitName([Argument("source", Scope.Outer)] int value) { }
+    public static void Parameter_AttributeStaticIndex([Argument(1)] string value) { }
+    public static void Parameter_AttributeInstanceIndex([Argument(0)] int value) { }
     public static void Parameter_InnerNamePrecedence(int value) { }
     public static void Parameter_OuterNameFallback(int outerValue) { }
-    public static void Parameter_ExplicitOuterScope([Parameter("value", Scope.Outer)] int value) { }
+    public static void Parameter_ExplicitOuterScope([Argument("value", Scope.Outer)] int value) { }
     public static void Instance_Attribute([Instance] ClassMethodTargets instance) { }
     public static void Instance_InnerScope([Instance] InnerInstanceMethodTargets instance) { }
     public static void ReturnValue_Attribute([ReturnValue] int result) { }
@@ -79,11 +79,11 @@ internal static class ParameterBinderPatchMethods
     public static void ReservedName_BaseMethod(Func<int, string> __base) { }
     public static void ReservedName_Exception(Exception __exception) { }
     public static void ReservedName_Field(int ___foo) { }
-    public static void Error_MultipleBindingAttributes([Parameter] [Instance] int value) { }
+    public static void Error_MultipleBindingAttributes([Argument] [Instance] int value) { }
     public static void Error_InvalidScopeValue([Instance((Scope)99)] object value) { }
     public static void Error_InvalidInnerScope([Instance(Scope.Inner)] object value) { }
     public static void Error_CallerOutsideInnerPatch(object __caller) { }
-    public static void Error_ParameterIndexOutOfRange([Parameter(5)] int value) { }
+    public static void Error_ParameterIndexOutOfRange([Argument(5)] int value) { }
     public static void Error_ParameterNotFound(int missing) { }
     public static void Error_ParameterTypeMismatch(string value) { }
     public static void Error_ReturnValueForVoid([ReturnValue] int result) { }
@@ -107,20 +107,20 @@ internal static class ParameterBinderPatchMethods
     public static void Error_BaseMethodReturnTypeMismatch(Func<int, int> __base) { }
     public static void Error_BaseMethodNotFound(Func<int> __base) { }
     public static void Error_BaseMethodIsAbstract([BaseMethod] Func<int, string> method) { }
-    public static void StateMachine_ParameterByName([Parameter("outerValue", Scope.Outer)] int value) { }
-    public static void StateMachine_ParameterByIndex([Parameter(1, Scope.Outer)] int value) { }
+    public static void StateMachine_ParameterByName([Argument("outerValue", Scope.Outer)] int value) { }
+    public static void StateMachine_ParameterByIndex([Argument(1, Scope.Outer)] int value) { }
     public static void StateMachine_Instance([Instance(Scope.Outer)] AsyncMethodTargets instance) { }
     public static void StateMachine_Field([Field(nameof(AsyncMethodTargets.Field), Scope.Outer)] int value) { }
     public static void StateMachine_Error_InstanceByWritableReference(
         [Instance(Scope.Outer)] ref AsyncMethodTargets instance) { }
-    public static void StateMachine_Error_ParameterNotFound([Parameter("missing", Scope.Outer)] int value) { }
+    public static void StateMachine_Error_ParameterNotFound([Argument("missing", Scope.Outer)] int value) { }
     public static void StateMachine_Error_InstanceForStaticMethod([Instance(Scope.Outer)] object instance) { }
     public static void StateMachine_Error_MethodForOuterInstance(
         [Method(nameof(AsyncMethodTargets.CallAfterAwait), Scope.Outer)] Func<Task, int, Task<int>> method) { }
     public static void StateMachine_MethodForOuterStaticMethod(
         [Method(nameof(AsyncMethodTargets.CallBeforeAndAfterAwait), Scope.Outer)] Func<Task, int, Task<int>> method) { }
     public static void StateMachine_ClosureParameter(
-        [Parameter("enclosingValue", Scope.Outer)] int value) { }
+        [Argument("enclosingValue", Scope.Outer)] int value) { }
     public static void Error_FieldNotFound([Field("missing")] int value) { }
     public static void CapturedVariable_ByName(BindingReference captured) { }
 }
@@ -499,7 +499,7 @@ internal sealed class ParameterBinderBindTests
         Assert.Multiple(() =>
         {
             Assert.That(binding.parameter, Is.SameAs(GetParameter(nameof(ParameterBinderPatchMethods.Parameter_ImplicitName))));
-            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
             Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
             Assert.That(binding.index, Is.Zero);
         });
@@ -512,7 +512,7 @@ internal sealed class ParameterBinderBindTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
             Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
             Assert.That(binding.index, Is.Zero);
         });
@@ -525,7 +525,7 @@ internal sealed class ParameterBinderBindTests
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Parameter_AttributeExplicitName), outer);
 
-        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
         Assert.That(binding.index, Is.Zero);
     }
 
@@ -1177,7 +1177,7 @@ internal sealed class ParameterBinderBindTests
 
         BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.CapturedVariable_ByName), outer);
 
-        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
         Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
         Assert.That(binding.index, Is.EqualTo(closureIndex));
         Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
@@ -1199,7 +1199,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.CapturedVariable_ByName), StaticVoid, inner);
 
-        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
         Assert.That(binding.index, Is.EqualTo(closureIndex));
         Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
@@ -1397,7 +1397,7 @@ internal sealed class ParameterBinderBindTests
             patchType: PatchType.Postfix,
             options: PatchOptions.AllowUnsafe);
 
-        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
     }
 
     [Test]
@@ -1424,7 +1424,7 @@ internal sealed class ParameterBinderBindTests
             patchType: PatchType.Postfix,
             options: PatchOptions.AllowUnsafe);
 
-        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Parameter));
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
         Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
     }
 

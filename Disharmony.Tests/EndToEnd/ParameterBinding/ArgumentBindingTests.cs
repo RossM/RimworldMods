@@ -180,73 +180,73 @@ public static partial class ArgumentBindingPatches
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
-    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_WriteByReference([Parameter(0)] ref int replacement) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_WriteByReference([Argument(0)] ref int replacement) =>
         replacement = 42;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByValue([Parameter(0)] int argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByValue([Argument(0)] int argument) =>
         valueObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
-    public static void Prefix_ParameterAttribute_NullName_UsesParameterName([Parameter] int value) =>
+    public static void Prefix_ParameterAttribute_NullName_UsesParameterName([Argument] int value) =>
         valueObserved = value;
 
     [Prefix]
     [Target(typeof(LocalFunctionTargets), "InvokeAnonymousLambda.*")]
-    public static void Prefix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByValue([Parameter(0)] int argument) =>
+    public static void Prefix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByValue([Argument(0)] int argument) =>
         valueObserved = argument;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
     public static void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByValue(
-        [Parameter(0)] int argument) => valueObserved = argument;
+        [Argument(0)] int argument) => valueObserved = argument;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
     public static void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_ReadByReference(
-        [Parameter(0)] ref int argument) => valueObserved = argument;
+        [Argument(0)] ref int argument) => valueObserved = argument;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntIdentity))]
     public static void Prefix_ParameterAttribute_InstanceMethod_Index0_Primitive_WriteByReference(
-        [Parameter(0)] ref int argument) => argument = 42;
+        [Argument(0)] ref int argument) => argument = 42;
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.IntSum))]
     public static void Prefix_ParameterAttribute_InstanceMethod_Index1_Primitive_ReadByValue(
-        [Parameter(1)] int argument) => valueObserved = argument;
+        [Argument(1)] int argument) => valueObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringArgument))]
-    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByValue([Parameter(0)] string argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByValue([Argument(0)] string argument) =>
         referenceObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
-    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_WriteByReference([Parameter(0)] ref string argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_WriteByReference([Argument(0)] ref string argument) =>
         argument = "patched";
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructArgument))]
-    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByValue([Parameter(0)] BindingStruct argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByValue([Argument(0)] BindingStruct argument) =>
         structObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
-    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_WriteByReference([Parameter(0)] ref BindingStruct argument) =>
+    public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_WriteByReference([Argument(0)] ref BindingStruct argument) =>
         argument = new BindingStruct { Value = 42 };
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void InnerPrefix_ParameterAttribute_OuterScope_Primitive_ReadByValue(
-        [Parameter("value", Scope.Outer)] int outerValue) => innerObserved = outerValue;
+        [Argument("value", Scope.Outer)] int outerValue) => innerObserved = outerValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedArgument))]
     public static void InnerPrefix_ParameterAttribute_InnerScope_Primitive_ReadByValue(
-        [Parameter("value", Scope.Inner)] int innerValue) => innerObserved = innerValue;
+        [Argument("value", Scope.Inner)] int innerValue) => innerObserved = innerValue;
 }
 
 public static partial class ArgumentBindingPatches
@@ -273,22 +273,22 @@ public static partial class ArgumentBindingPatches
     [Postfix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Postfix_ParameterAttribute_ValueArgument_Primitive_WriteByReference_Rejected(
-        [Parameter(0)] ref int value) => value = 42;
+        [Argument(0)] ref int value) => value = 42;
 
     [Postfix]
     [Target(typeof(LocalFunctionTargets), "InvokeAnonymousLambda.*")]
     public static void Postfix_ParameterAttribute_AnonymousLambda_Index0_Primitive_ReadByReference_Rejected(
-        [Parameter(0)] ref int argument) => valueObserved = argument;
+        [Argument(0)] ref int argument) => valueObserved = argument;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPrefix_ParameterAttribute_OuterArgument_Primitive_ReadByReference_Rejected(
-        [Parameter(0, Scope.Outer)] ref int outerValue) => innerObserved = outerValue;
+        [Argument(0, Scope.Outer)] ref int outerValue) => innerObserved = outerValue;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Void))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.OuterArgument))]
     public static void InnerPostfix_ParameterAttribute_OuterArgument_Primitive_WriteByReference_Rejected(
-        [Parameter(0, Scope.Outer)] ref int outerValue) => outerValue = 42;
+        [Argument(0, Scope.Outer)] ref int outerValue) => outerValue = 42;
 
     [Postfix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.IntArgument))]
@@ -452,17 +452,17 @@ public static partial class ArgumentBindingPatches
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
     public static void Prefix_ParameterAttribute_StaticMethod_Index0_Primitive_ReadByReference(
-        [Parameter(0)] ref int argument) => valueObserved = argument;
+        [Argument(0)] ref int argument) => valueObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StringIdentity))]
     public static void Prefix_ParameterAttribute_StaticMethod_Index0_ReferenceType_ReadByReference(
-        [Parameter(0)] ref string argument) => referenceObserved = argument;
+        [Argument(0)] ref string argument) => referenceObserved = argument;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.StructIdentity))]
     public static void Prefix_ParameterAttribute_StaticMethod_Index0_Struct_ReadByReference(
-        [Parameter(0)] ref BindingStruct argument) => structObserved = argument;
+        [Argument(0)] ref BindingStruct argument) => structObserved = argument;
 }
 
 [TestFixture]

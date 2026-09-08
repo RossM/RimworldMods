@@ -44,7 +44,7 @@ public static class Patch_RaceProperties
     [Postfix]
     [InnerConstant("StatsReport_FinalValue")]
     [Target("NutritionEatenPerDayExplanation")]
-    public static void StatsReport_FinalValue_Postfix([Parameter("p")] Pawn pawn, [State] StringBuilder sb)
+    public static void StatsReport_FinalValue_Postfix([Argument("p")] Pawn pawn, [State] StringBuilder sb)
     {
         PatchHelpers.AddLactationExplanation(sb, pawn);
     }

@@ -67,10 +67,10 @@ internal class ParameterBinder(
 
         switch (parameterBindingAttribute)
         {
-            case ParameterAttribute { Index: int index }: return BindParameterByIndex(parameter, invocation, scope, index);
+            case ArgumentAttribute { Index: int index }: return BindArgumentByIndex(parameter, invocation, scope, index);
 
-            case ParameterAttribute { Name: var name, Scope: var attributeScope }:
-                return BindParameterByName(parameter, name ?? parameterName, attributeScope);
+            case ArgumentAttribute { Name: var name, Scope: var attributeScope }:
+                return BindArgumentByName(parameter, name ?? parameterName, attributeScope);
 
             case InstanceAttribute: return BindInstance(parameter, invocation, scope);
 
@@ -120,11 +120,11 @@ internal class ParameterBinder(
             case var _ when parameterName.StartsWith("__"):
                 throw new ParameterBindingException(parameterName, "Unrecognized special parameter name");
 
-            default: return BindParameterByName(parameter, parameterName, Scope.Any);
+            default: return BindArgumentByName(parameter, parameterName, Scope.Any);
         }
     }
 
-    private ParameterBinding BindParameterByIndex(ParameterInfo parameter, Invocation invocation, Scope scope, int index)
+    private ParameterBinding BindArgumentByIndex(ParameterInfo parameter, Invocation invocation, Scope scope, int index)
     {
         if (invocation.HasThis)
             index++;
@@ -132,10 +132,10 @@ internal class ParameterBinder(
         try
         {
             if (IsStateMachine && scope == Scope.Outer)
-                return BindParameterByName(parameter, target.ParameterNames[index], scope);
+                return BindArgumentByName(parameter, target.ParameterNames[index], scope);
 
             Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
-            return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = scope, index = index };
+            return new() { parameter = parameter, bindingType = BindingType.Argument, scope = scope, index = index };
         }
         catch (IndexOutOfRangeException e)
         {
@@ -274,16 +274,16 @@ internal class ParameterBinder(
         return new() { parameter = parameter, bindingType = BindingType.Instance, scope = scope };
     }
 
-    private ParameterBinding BindParameterByName(ParameterInfo parameter, string name, Scope scope)
+    private ParameterBinding BindArgumentByName(ParameterInfo parameter, string name, Scope scope)
     {
         // Look in target parameters
         if (scope is Scope.Inner or Scope.Any)
-            if (BindParameterByName(parameter, name, inner, Scope.Inner) is { } parameterBinding)
+            if (BindArgumentByName(parameter, name, inner, Scope.Inner) is { } parameterBinding)
                 return parameterBinding;
 
         // Look in caller parameters
         if (scope is Scope.Outer or Scope.Any)
-            if (BindParameterByName(parameter, name, outer, Scope.Outer) is { } parameterBinding)
+            if (BindArgumentByName(parameter, name, outer, Scope.Outer) is { } parameterBinding)
                 return parameterBinding;
 
         // Look in closure fields
@@ -299,7 +299,7 @@ internal class ParameterBinder(
         throw new ParameterBindingException(parameter.Name, "Parameter not found");
     }
 
-    private ParameterBinding? BindParameterByName(ParameterInfo parameter, string name, Invocation invocation, Scope scope)
+    private ParameterBinding? BindArgumentByName(ParameterInfo parameter, string name, Invocation invocation, Scope scope)
     {
         if (scope == Scope.Outer && IsStateMachine)
         {
@@ -332,7 +332,7 @@ internal class ParameterBinder(
         if (index >= 0)
         {
             Validate(parameter, invocation.ParameterTypes[index], scope, "parameter");
-            return new() { parameter = parameter, bindingType = BindingType.Parameter, scope = scope, index = index };
+            return new() { parameter = parameter, bindingType = BindingType.Argument, scope = scope, index = index };
         }
 
         return null;
@@ -357,7 +357,7 @@ internal class ParameterBinder(
                 return new()
                 {
                     parameter = parameter,
-                    bindingType = BindingType.Parameter,
+                    bindingType = BindingType.Argument,
                     scope = scope,
                     index = closureIndex,
                     fields = [field],

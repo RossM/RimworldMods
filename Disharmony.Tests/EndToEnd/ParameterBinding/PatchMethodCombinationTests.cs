@@ -8,14 +8,14 @@ public static class PatchMethodCombinationPatches
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_ExplicitParameterBinding_ReservedName_Result_BindsArgument(
-        [Parameter("value")] int __result) =>
+        [Argument("value")] int __result) =>
         firstObserved = __result;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
     public static void Prefix_DuplicateArgumentBinding_ReadByValueThenWriteByReference(
         int value,
-        [Parameter("value")] ref int replacement)
+        [Argument("value")] ref int replacement)
     {
         firstObserved = value;
         replacement = 42;
@@ -68,7 +68,7 @@ public static class PatchMethodCombinationPatches
     public static bool Prefix_CombinedBindings_InstanceFieldArgumentResult_SkipsTarget(
         [Instance] ClassMethodTargets instance,
         [Field("foo")] ref int field,
-        [Parameter("value")] ref int argument,
+        [Argument("value")] ref int argument,
         [ReturnValue] ref int result)
     {
         instanceObserved = instance;
@@ -82,8 +82,8 @@ public static class PatchMethodCombinationPatches
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.RefIntArgument))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.SameNamedRefArgument))]
     public static void InnerPrefix_CombinedScopes_SameNamedRefArgument_WritesInnerOnly(
-        [Parameter("value", Scope.Outer)] int outerValue,
-        [Parameter("value", Scope.Inner)] ref int innerValue)
+        [Argument("value", Scope.Outer)] int outerValue,
+        [Argument("value", Scope.Inner)] ref int innerValue)
     {
         firstObserved = outerValue;
         innerValue = 42;

@@ -9,7 +9,7 @@ public class RuntimePatchExceptionPatches
     public static void RuleBuilder_IncompatibleParameterConversion_IsRejectedBeforeUpdateMethod(string value) { }
 
     public static void RuleBuilder_OutOfRangeParameterIndex_IsRejectedBeforeUpdateMethod(
-        [Parameter(10)] int value) { }
+        [Argument(10)] int value) { }
 
     public static void Circumfix_ResultBindingForVoidTarget_IsRejectedBeforeUpdateMethod(int __result) { }
 

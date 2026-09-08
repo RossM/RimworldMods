@@ -44,7 +44,7 @@ public static class ConstructorPatchingPatches
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     public static void Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_ReadByValue(
-        [Parameter(0)] int argument) => parameterObserved = argument;
+        [Argument(0)] int argument) => parameterObserved = argument;
 
     [Prefix]
     [Target(
@@ -52,7 +52,7 @@ public static class ConstructorPatchingPatches
         memberType: MemberType.Constructor,
         parameterTypes: [typeof(int)])]
     public static void Prefix_Constructor_ReferenceType_ParameterAttribute_Index0_Primitive_WriteByReference(
-        [Parameter(0)] ref int argument) => argument = 42;
+        [Argument(0)] ref int argument) => argument = 42;
 
     [Postfix]
     [Target(

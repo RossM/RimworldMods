@@ -7,7 +7,7 @@ internal enum BindingType
     /// <summary>
     ///     Access to a method call's formal parameter.
     /// </summary>
-    Parameter,
+    Argument,
 
     /// <summary>
     ///     Access to a method call's instance parameter.

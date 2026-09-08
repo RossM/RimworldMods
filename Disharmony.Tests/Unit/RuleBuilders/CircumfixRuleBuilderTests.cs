@@ -465,7 +465,7 @@ public sealed class CircumfixRuleBuilderTests
         var binding = new BoundParameter
         {
             parameter = WriteArgument.MethodInfo.GetParameters()[0],
-            bindingType = BindingType.Parameter, scope = Scope.Outer, index = 0,
+            bindingType = BindingType.Argument, scope = Scope.Outer, index = 0,
         };
         var builder = new CircumfixRuleBuilder(context, Target,
             [CreatePatch(WriteArgument, PatchType.Prefix, parameters: [binding])]);
@@ -495,7 +495,7 @@ public sealed class CircumfixRuleBuilderTests
         var binding = new BoundParameter
         {
             parameter = ReadArgument.MethodInfo.GetParameters()[0],
-            bindingType = BindingType.Parameter, scope = Scope.Outer, index = 0,
+            bindingType = BindingType.Argument, scope = Scope.Outer, index = 0,
         };
         var builder = new CircumfixRuleBuilder(context, RefTarget,
             [CreatePatch(ReadArgument, PatchType.Prefix, parameters: [binding])]);

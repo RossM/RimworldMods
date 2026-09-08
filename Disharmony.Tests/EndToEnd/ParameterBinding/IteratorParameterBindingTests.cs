@@ -6,12 +6,12 @@ public static partial class IteratorParameterBindingPatches
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
     public static void InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Name_Primitive_ReadByValue(
-        [Parameter("outerValue", Scope.Outer)] int namedValue) => parameterObserved = namedValue;
+        [Argument("outerValue", Scope.Outer)] int namedValue) => parameterObserved = namedValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumerateIdentity))]
     public static void InnerPrefix_ParameterAttribute_StaticIteratorOriginalParameter_Name_Primitive_ReadByValue(
-        [Parameter("outerValue", Scope.Outer)] int namedValue) => parameterObserved = namedValue;
+        [Argument("outerValue", Scope.Outer)] int namedValue) => parameterObserved = namedValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
@@ -32,17 +32,17 @@ public static partial class IteratorParameterBindingPatches
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]
     public static void InnerPrefix_ParameterAttribute_InstanceIteratorOriginalParameter_Index0_Primitive_ReadByValue(
-        [Parameter(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
+        [Argument(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumerateIdentity))]
     public static void InnerPrefix_ParameterAttribute_StaticIteratorSingleParameter_Index0_Primitive_ReadByValue(
-        [Parameter(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
+        [Argument(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.EnumeratePair))]
     public static void InnerPrefix_ParameterAttribute_StaticIteratorTwoParameters_Index0_Primitive_ReadByValue(
-        [Parameter(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
+        [Argument(0, Scope.Outer)] int indexedValue) => parameterObserved = indexedValue;
 
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntIdentity))]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.EnumerateIdentity))]

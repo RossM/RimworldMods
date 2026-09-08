@@ -758,7 +758,7 @@ public abstract class ParameterBindingAttribute(Scope scope) : Attribute
 /// </remarks>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Parameter)]
-public sealed class ParameterAttribute : ParameterBindingAttribute
+public sealed class ArgumentAttribute : ParameterBindingAttribute
 {
     /// <summary>
     ///     Binds to the source parameter having the same name as the attributed patch parameter.
@@ -767,7 +767,7 @@ public sealed class ParameterAttribute : ParameterBindingAttribute
     ///     The member whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
     ///     member first and then the outer member.
     /// </param>
-    public ParameterAttribute(Scope scope = Scope.Any) : base(scope) { }
+    public ArgumentAttribute(Scope scope = Scope.Any) : base(scope) { }
 
     /// <summary>
     ///     Binds to a source parameter by name.
@@ -779,7 +779,7 @@ public sealed class ParameterAttribute : ParameterBindingAttribute
     ///     The member whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, searches the inner
     ///     member first and then the outer member.
     /// </param>
-    public ParameterAttribute(string? name, Scope scope = Scope.Any) : base(scope)
+    public ArgumentAttribute(string? name, Scope scope = Scope.Any) : base(scope)
     {
         Name = name;
     }
@@ -792,7 +792,7 @@ public sealed class ParameterAttribute : ParameterBindingAttribute
     ///     The member whose parameter is bound in an inner patch. The default, <see cref="Scope.Any" />, uses the inner
     ///     member for an inner patch and the outer member otherwise.
     /// </param>
-    public ParameterAttribute(int index, Scope scope = Scope.Any) : base(scope)
+    public ArgumentAttribute(int index, Scope scope = Scope.Any) : base(scope)
     {
         Index = index;
     }

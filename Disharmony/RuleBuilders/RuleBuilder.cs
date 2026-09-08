@@ -32,12 +32,12 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
         resultType = parameterType;
 
-        if (parameter is { fields.Length: > 0, bindingType: not (BindingType.Parameter or BindingType.Instance or BindingType.StaticField) })
+        if (parameter is { fields.Length: > 0, bindingType: not (BindingType.Argument or BindingType.Instance or BindingType.StaticField) })
             throw new NotSupportedException();
 
         switch (parameter.bindingType)
         {
-            case BindingType.Parameter:
+            case BindingType.Argument:
             case BindingType.Instance:
             {
                 Type desiredType;

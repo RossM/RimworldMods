@@ -262,14 +262,14 @@ public sealed class InfixRuleBuilderTests
         var number = new BoundParameter
         {
             parameter = patchParameters[0],
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Inner,
             index = 0,
         };
         var text = new BoundParameter
         {
             parameter = patchParameters[1],
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Inner,
             index = 1,
         };
@@ -311,7 +311,7 @@ public sealed class InfixRuleBuilderTests
         var value = new BoundParameter
         {
             parameter = ReadIntPrefix.MethodInfo.GetParameters()[0],
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Inner,
             index = 0,
         };
@@ -351,7 +351,7 @@ public sealed class InfixRuleBuilderTests
         var outerValue = new BoundParameter
         {
             parameter = ReadOuterPrefix.MethodInfo.GetParameters()[0],
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Outer,
             index = 0,
         };
@@ -600,7 +600,7 @@ public sealed class InfixRuleBuilderTests
         var value = new BoundParameter
         {
             parameter = ReadIntPrefix.MethodInfo.GetParameters()[0],
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Any,
             index = 0,
         };

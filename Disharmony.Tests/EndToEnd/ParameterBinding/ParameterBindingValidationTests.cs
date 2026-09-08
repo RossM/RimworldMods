@@ -13,27 +13,27 @@ public static class ParameterBindingValidationPatches
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_InvalidScope_RejectedByPatch(
-        [Parameter((Scope)int.MaxValue)] int value) { }
+        [Argument((Scope)int.MaxValue)] int value) { }
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_MultipleParameterBindingAttributes_RejectedByPatch(
-        [Parameter] [Field("primitiveField")] int value) { }
+        [Argument] [Field("primitiveField")] int value) { }
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_ParameterAttribute_IndexTooLarge_RejectedByPatch(
-        [Parameter(1)] int value) { }
+        [Argument(1)] int value) { }
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_ParameterAttribute_NegativeIndex_RejectedByPatch(
-        [Parameter(-1)] int value) { }
+        [Argument(-1)] int value) { }
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntArgument))]
     public static void Prefix_ParameterAttribute_MissingName_RejectedByPatch(
-        [Parameter("missing")] int value) { }
+        [Argument("missing")] int value) { }
 
     [Prefix]
     [Target(typeof(ClassMethodTargets), nameof(ClassMethodTargets.Void))]
@@ -62,7 +62,7 @@ public static class ParameterBindingValidationPatches
     [Prefix] [Inner(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.IntResult))]
     [Target(typeof(OuterStaticMethodTargets), nameof(OuterStaticMethodTargets.EnumerateIntResult))]
     public static void IteratorInnerPrefix_ParameterAttribute_MissingOuterParameter_RejectedByPatch(
-        [Parameter("missing", Scope.Outer)] int value) { }
+        [Argument("missing", Scope.Outer)] int value) { }
 }
 
 [TestFixture]

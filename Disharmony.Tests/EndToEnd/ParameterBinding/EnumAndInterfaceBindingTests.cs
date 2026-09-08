@@ -9,43 +9,43 @@ public static class EnumAndInterfaceBindingPatches
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.EnumIdentity))]
-    public static void Prefix_ParameterAttribute_Enum_ReadByValue([Parameter("value")] BindingEnum value) =>
+    public static void Prefix_ParameterAttribute_Enum_ReadByValue([Argument("value")] BindingEnum value) =>
         EnumObserved = value;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.EnumIdentity))]
-    public static void Prefix_ParameterAttribute_Enum_ReadByReference([Parameter("value")] ref BindingEnum value) =>
+    public static void Prefix_ParameterAttribute_Enum_ReadByReference([Argument("value")] ref BindingEnum value) =>
         EnumObserved = value;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.EnumIdentity))]
-    public static void Prefix_ParameterAttribute_Enum_WriteByReference([Parameter("value")] ref BindingEnum value) =>
+    public static void Prefix_ParameterAttribute_Enum_WriteByReference([Argument("value")] ref BindingEnum value) =>
         value = BindingEnum.Replacement;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.InterfaceIdentity))]
     public static void Prefix_ParameterAttribute_Interface_ReadByValue(
-        [Parameter("value")] IBindingInterface value) => InterfaceObserved = value;
+        [Argument("value")] IBindingInterface value) => InterfaceObserved = value;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.InterfaceIdentity))]
     public static void Prefix_ParameterAttribute_Interface_ReadByReference(
-        [Parameter("value")] ref IBindingInterface value) => InterfaceObserved = value;
+        [Argument("value")] ref IBindingInterface value) => InterfaceObserved = value;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.InterfaceIdentity))]
     public static void Prefix_ParameterAttribute_Interface_WriteByReference(
-        [Parameter("value")] ref IBindingInterface value) => value = InterfaceReplacement!;
+        [Argument("value")] ref IBindingInterface value) => value = InterfaceReplacement!;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.ConcreteInterfaceIdentity))]
     public static void Prefix_ParameterAttribute_ConcreteClass_AsInterface_ReadByValue(
-        [Parameter("value")] IBindingInterface value) => InterfaceObserved = value;
+        [Argument("value")] IBindingInterface value) => InterfaceObserved = value;
 
     [Prefix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.ConcreteInterfaceIdentity))]
     public static void Prefix_ParameterAttribute_ConcreteClass_AsInterface_ReadByReadonlyReference(
-        [Parameter("value")] in IBindingInterface value) => InterfaceObserved = value;
+        [Argument("value")] in IBindingInterface value) => InterfaceObserved = value;
 
     [Postfix]
     [Target(typeof(EnumAndInterfaceBindingTargets), nameof(EnumAndInterfaceBindingTargets.EnumResult))]

@@ -9,7 +9,7 @@ public static class Patch_GeneDef_GetDescriptionFull
     [Prefix]
     [Targets("GetDescriptionFull.*", typeof(ThoughtStage))]
     [PatchOptions(PatchOptions.Inline)]
-    public static bool GetDescriptionFull_Lambda_Prefix([Parameter(0)] ThoughtStage? stage, [ReturnValue] out bool __result)
+    public static bool GetDescriptionFull_Lambda_Prefix([Argument(0)] ThoughtStage? stage, [ReturnValue] out bool __result)
     {
         __result = false;
         return stage is not null;

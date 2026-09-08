@@ -41,7 +41,7 @@ public sealed class StateBuilderTests
         var parameter = new BoundParameter
         {
             parameter = PrimitiveParameter,
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Outer,
         };
 
@@ -151,7 +151,7 @@ public sealed class StateBuilderTests
         var parameter = new BoundParameter
         {
             parameter = PrimitiveParameter,
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Outer,
         };
         builder.AssignStateVariableIndexes([CreatePatch([parameter])]);
@@ -277,7 +277,7 @@ public sealed class StateBuilderTests
         var nonState = new BoundParameter
         {
             parameter = StructureParameter,
-            bindingType = BindingType.Parameter,
+            bindingType = BindingType.Argument,
             scope = Scope.Outer,
         };
 
