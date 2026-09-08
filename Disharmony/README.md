@@ -141,10 +141,10 @@ explicit binding attributes and several familiar Harmony parameter names:
 | --- | --- | --- |
 | Argument | `[Argument("name")]` or `[Argument(index)]` | *`name`* |
 | Argument values as an array | `[Arguments]` | `__args` |
-| Target instance | `[Instance]` | `__instance`, `__caller` |
-| Instance or static field, including a non-public field | `[Field("name")]` | *`___name`* |
 | Return value | `[ReturnValue]` | `__result` |
+| Target instance | `[Instance]` | `__instance`, `__caller` |
 | Per-invocation shared state | `[State("name")]` | `__state` |
+| Instance or static field | `[Field("name")]` | *`___name`* |
 | Delegate to an instance or static method | `[Method("name")]` | None |
 | Delegate to the nearest base-class implementation | `[BaseMethod]` | `__base` |
 | Exception in an `AlwaysRun` postfix | `[Exception]` | `__exception` |
