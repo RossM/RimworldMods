@@ -3,8 +3,8 @@
 // This patch must be applied after defs are loaded, otherwise the static constructor for
 // PregnancyUtility reads a null DefOf and throws an exception.
 
-[HarmonyPatch(typeof(PregnancyUtility))]
-[HarmonyPatchCategory("PostLoadDefs")]
+[Patch(typeof(PregnancyUtility))]
+[Category("PostLoadDefs")]
 public static class Patch_PregnancyUtility
 {
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]

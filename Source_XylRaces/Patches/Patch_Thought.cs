@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Thought))]
+[Patch(typeof(Thought))]
 public static class Patch_Thought
 {
     [Feature(nameof(Config.Feature.UI_Misc))]

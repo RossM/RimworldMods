@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Pawn_GeneTracker))]
+[Patch(typeof(Pawn_GeneTracker))]
 internal static class Patch_Pawn_GeneTracker
 {
     [Feature(typeof(DefModExtension_Chemical))]

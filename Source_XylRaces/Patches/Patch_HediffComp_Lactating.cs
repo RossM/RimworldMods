@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(HediffComp_Lactating))]
+[Patch(typeof(HediffComp_Lactating))]
 public static class Patch_HediffComp_Lactating
 {
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]

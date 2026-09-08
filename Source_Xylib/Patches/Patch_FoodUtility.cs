@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(FoodUtility))]
+[Patch(typeof(FoodUtility))]
 internal static class Patch_FoodUtility
 {
     [Feature(nameof(FoodHelpers.GetExtraNutritionFactor))]

@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(DrugPolicyUIUtility))]
+[Patch(typeof(DrugPolicyUIUtility))]
 internal static class Patch_DrugPolicyUIUtility
 {
     [Feature(nameof(DefModExtension_GeneWithComps.showInDrugPolicies))]

@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Def))]
+[Patch(typeof(Def))]
 internal static class Patch_Def
 {
     [Feature(nameof(PatchHelpers.RequiredMemberErrors))]

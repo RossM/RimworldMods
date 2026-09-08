@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(HediffDef))]
+[Patch(typeof(HediffDef))]
 internal static class Patch_HediffDef
 {
     private static readonly List<StatDrawEntry> statDrawEntries = [];

@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(StatWorker))]
+[Patch(typeof(StatWorker))]
 public static class Patch_StatWorker
 {
     [Feature(typeof(Hediff_SubstituteCapacity))]

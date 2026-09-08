@@ -2,7 +2,7 @@
 
 namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(FactionGenerator))]
+[Patch(typeof(FactionGenerator))]
 public static class Patch_FactionGenerator
 {
     [Feature(nameof(Settings.useDistinctiveFactionColors))]

@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(IdeoUtility))]
+[Patch(typeof(IdeoUtility))]
 public static class Patch_IdeoUtility
 {
     [Feature(typeof(IncidentWorker_WildTribe))]

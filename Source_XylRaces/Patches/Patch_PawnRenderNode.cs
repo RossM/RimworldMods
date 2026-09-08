@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(PawnRenderNode))]
+[Patch(typeof(PawnRenderNode))]
 public static class Patch_PawnRenderNode
 {
     // This allows tattoos to draw properly on top of scaleskin

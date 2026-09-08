@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Thing))]
+[Patch(typeof(Thing))]
 public static class Patch_Thing
 {
     [Feature(typeof(Hediff_DietDependency))]

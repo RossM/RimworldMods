@@ -2,7 +2,7 @@
 
 // GeneDef.GetDescriptionFull doesn't check whether thought stages are null, resulting in a NullReferenceException
 // when processing XylHyperlactation and XylSoreBreasts.
-[HarmonyPatch(typeof(GeneDef))]
+[Patch(typeof(GeneDef))]
 public static class Patch_GeneDef_GetDescriptionFull
 {
     [Feature(nameof(Config.Feature.Bugfix_Misc))]

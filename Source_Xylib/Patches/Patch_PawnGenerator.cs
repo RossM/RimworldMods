@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(PawnGenerator))]
+[Patch(typeof(PawnGenerator))]
 internal static class Patch_PawnGenerator
 {
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]

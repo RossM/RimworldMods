@@ -1,6 +1,6 @@
 namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Pawn_PsychicEntropyTracker))]
+[Patch(typeof(Pawn_PsychicEntropyTracker))]
 internal static class Patch_Pawn_PsychicEntropyTracker
 {
     [Feature(typeof(Psycast))]

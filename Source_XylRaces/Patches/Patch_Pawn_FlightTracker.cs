@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Pawn_FlightTracker))]
+[Patch(typeof(Pawn_FlightTracker))]
 public static class Patch_Pawn_FlightTracker
 {
     [Feature(typeof(GeneComp_Flight))]

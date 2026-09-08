@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(StatWorker_SuppressionFallRate))]
+[Patch(typeof(StatWorker_SuppressionFallRate))]
 public static class Patch_StatWorker_SuppressionFallRate
 {
     [Feature("TODO")]

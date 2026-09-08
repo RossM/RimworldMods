@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(PawnRenderer))]
+[Patch(typeof(PawnRenderer))]
 public static class Patch_PawnRenderer
 {
     [Feature(nameof(DefOf.XylTakeShower))]

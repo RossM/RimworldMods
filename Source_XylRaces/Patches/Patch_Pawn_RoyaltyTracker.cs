@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Pawn_RoyaltyTracker))]
+[Patch(typeof(Pawn_RoyaltyTracker))]
 public static class Patch_Pawn_RoyaltyTracker
 {
     [Feature(nameof(Config.Feature.Bugfix_Misc))]

@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(ConversionUtility))]
+[Patch(typeof(ConversionUtility))]
 public static class Patch_ConversionUtility
 {
     [Feature(nameof(DefModExtension_Xenotype.agreeingMemes))]

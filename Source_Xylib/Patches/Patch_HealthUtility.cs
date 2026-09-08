@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(HealthUtility))]
+[Patch(typeof(HealthUtility))]
 internal static class Patch_HealthUtility
 {
     [Feature(nameof(Config.resistanceStatByHediff))]

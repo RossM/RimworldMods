@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(DefGenerator))]
+[Patch(typeof(DefGenerator))]
 public static class Patch_DefGenerator
 {
     [Feature(typeof(GeneDefGenerator))]

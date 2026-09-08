@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(ThingDef))]
+[Patch(typeof(ThingDef))]
 public static class Patch_ThingDef
 {
     [Feature(typeof(GeneComp_Flight))]

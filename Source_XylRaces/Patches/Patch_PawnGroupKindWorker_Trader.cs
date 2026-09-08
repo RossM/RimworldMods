@@ -2,7 +2,7 @@
 
 namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(PawnGroupKindWorker_Trader))]
+[Patch(typeof(PawnGroupKindWorker_Trader))]
 public static class Patch_PawnGroupKindWorker_Trader
 {
     [Feature(nameof(DefOf.XylTribeGentleNixie))]

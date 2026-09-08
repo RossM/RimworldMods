@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Building_GeneExtractor))]
+[Patch(typeof(Building_GeneExtractor))]
 internal static class Patch_Building_GeneExtractor
 {
     [Feature(nameof(DefModExtension_GeneWithComps.geneType))]

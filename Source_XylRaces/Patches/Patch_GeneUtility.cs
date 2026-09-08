@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(GeneUtility))]
+[Patch(typeof(GeneUtility))]
 public static class Patch_GeneUtility
 {
     [Feature("TODO")]

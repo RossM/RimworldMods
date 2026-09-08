@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(PawnBioAndNameGenerator))]
+[Patch(typeof(PawnBioAndNameGenerator))]
 public static class Patch_PawnBioAndNameGenerator
 {
     [Feature(typeof(DefModExtension_Xenotype))]

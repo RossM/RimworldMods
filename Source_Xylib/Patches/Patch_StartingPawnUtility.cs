@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(StartingPawnUtility))]
+[Patch(typeof(StartingPawnUtility))]
 internal static class Patch_StartingPawnUtility
 {
     [Feature(typeof(CompProperties_Drug))]

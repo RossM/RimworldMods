@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Pawn))]
+[Patch(typeof(Pawn))]
 internal static class Patch_Pawn
 {
     // Note: This patch is performance-sensitive

@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Pawn_JobTracker))]
+[Patch(typeof(Pawn_JobTracker))]
 internal static class Patch_Pawn_JobTracker
 {
     [Feature(nameof(EventDefOf.PostJobStarted))]

@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Need_Food))]
+[Patch(typeof(Need_Food))]
 public static class Patch_Need_Food
 {
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]

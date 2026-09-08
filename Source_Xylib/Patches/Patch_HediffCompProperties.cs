@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(HediffCompProperties))]
+[Patch(typeof(HediffCompProperties))]
 internal static class Patch_HediffCompProperties
 {
     [Feature(nameof(PatchHelpers.RequiredMemberErrors))]

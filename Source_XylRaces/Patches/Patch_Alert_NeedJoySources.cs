@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Alert_NeedJoySources))]
+[Patch(typeof(Alert_NeedJoySources))]
 public static class Patch_Alert_NeedJoySources
 {
     [Feature(nameof(Config.Feature.Joyless))]

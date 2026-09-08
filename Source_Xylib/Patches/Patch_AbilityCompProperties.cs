@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(AbilityCompProperties))]
+[Patch(typeof(AbilityCompProperties))]
 internal static class Patch_AbilityCompProperties
 {
     [Feature(nameof(PatchHelpers.RequiredMemberErrors))]

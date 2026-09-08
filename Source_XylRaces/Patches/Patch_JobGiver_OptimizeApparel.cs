@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(JobGiver_OptimizeApparel))]
+[Patch(typeof(JobGiver_OptimizeApparel))]
 public static class Patch_JobGiver_OptimizeApparel
 {
     [Feature(typeof(GeneComp_Flight))]

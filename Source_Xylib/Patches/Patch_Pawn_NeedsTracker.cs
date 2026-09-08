@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Pawn_NeedsTracker))]
+[Patch(typeof(Pawn_NeedsTracker))]
 internal static class Patch_Pawn_NeedsTracker
 {
     [Feature(typeof(EventManager))]

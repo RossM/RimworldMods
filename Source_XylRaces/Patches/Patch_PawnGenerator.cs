@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(PawnGenerator))]
+[Patch(typeof(PawnGenerator))]
 public static class Patch_PawnGenerator
 {
     [Feature(typeof(XenotypeSetWithDefault))]

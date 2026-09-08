@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Hediff_Pregnant))]
+[Patch(typeof(Hediff_Pregnant))]
 public static class Patch_Hediff_Pregnant
 {
     [Feature(nameof(Config.Feature.Parthenogenesis))]

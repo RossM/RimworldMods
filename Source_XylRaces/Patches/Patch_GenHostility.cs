@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(GenHostility))]
+[Patch(typeof(GenHostility))]
 public static class Patch_GenHostility
 {
     // Note: This patch is performance-sensitive

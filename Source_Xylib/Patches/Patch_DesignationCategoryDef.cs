@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(DesignationCategoryDef))]
+[Patch(typeof(DesignationCategoryDef))]
 internal static class Patch_DesignationCategoryDef
 {
     [Feature(typeof(GeneCompProperties_UnlockBuildables))]

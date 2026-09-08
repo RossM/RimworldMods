@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(RecipeDef))]
+[Patch(typeof(RecipeDef))]
 internal static class Patch_RecipeDef
 {
     [Feature(typeof(GeneCompProperties_UnlockRecipes))]

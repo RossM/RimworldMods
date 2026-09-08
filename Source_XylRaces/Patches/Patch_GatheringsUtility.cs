@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(GatheringsUtility))]
+[Patch(typeof(GatheringsUtility))]
 public static class Patch_GatheringsUtility
 {
     [Feature(nameof(Config.Feature.Joyless))]

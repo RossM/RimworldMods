@@ -1,6 +1,6 @@
 ﻿namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(GenConstruct))]
+[Patch(typeof(GenConstruct))]
 internal static class Patch_GenConstruct
 {
     private static readonly AccessTools.FieldRef<List<string>> tmpIdeoMemberNames

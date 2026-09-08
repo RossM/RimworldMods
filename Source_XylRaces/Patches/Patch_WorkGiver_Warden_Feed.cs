@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(WorkGiver_Warden_Feed))]
+[Patch(typeof(WorkGiver_Warden_Feed))]
 public static class Patch_WorkGiver_Warden_Feed
 {
     [Feature(typeof(Hediff_DietDependency))]

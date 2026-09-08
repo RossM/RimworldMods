@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(PawnUtility))]
+[Patch(typeof(PawnUtility))]
 internal static class Patch_PawnUtility
 {
     [Feature(typeof(DefModExtension_Chemical))]

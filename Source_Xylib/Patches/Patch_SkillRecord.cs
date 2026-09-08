@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(SkillRecord))]
+[Patch(typeof(SkillRecord))]
 internal static class Patch_SkillRecord
 {
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionNone))]

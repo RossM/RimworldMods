@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(XenotypeSet))]
+[Patch(typeof(XenotypeSet))]
 public static class Patch_XenotypeSet
 {
     [Feature(typeof(XenotypeSetWithDefault))]

@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Dialog_CreateXenotype))]
+[Patch(typeof(Dialog_CreateXenotype))]
 internal static class Patch_Dialog_CreateXenotype
 {
     [Feature(nameof(DefModExtension_GeneWithComps.showInXenotypeCreation))]

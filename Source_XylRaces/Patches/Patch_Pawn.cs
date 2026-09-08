@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(Pawn))]
+[Patch(typeof(Pawn))]
 public static class Patch_Pawn
 {
     [Feature(typeof(GeneCompProperties_Psycast))]

@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(SocialProperness))]
+[Patch(typeof(SocialProperness))]
 public static class Patch_SocialProperness
 {
     [Feature(typeof(GeneComp_Hyperlactation))]

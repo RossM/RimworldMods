@@ -2,7 +2,7 @@
 
 namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(FoodUtility))]
+[Patch(typeof(FoodUtility))]
 public static class Patch_FoodUtility
 {
     [Feature(typeof(Hediff_DietDependency))]

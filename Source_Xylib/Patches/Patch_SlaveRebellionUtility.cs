@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(SlaveRebellionUtility))]
+[Patch(typeof(SlaveRebellionUtility))]
 internal static class Patch_SlaveRebellionUtility
 {
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]

@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Pawn_ApparelTracker))]
+[Patch(typeof(Pawn_ApparelTracker))]
 internal static class Patch_Pawn_ApparelTracker
 {
     [Feature(nameof(EventDefOf.PostApparelChanged))]

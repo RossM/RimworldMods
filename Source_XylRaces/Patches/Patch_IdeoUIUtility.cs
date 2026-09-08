@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(IdeoUIUtility))]
+[Patch(typeof(IdeoUIUtility))]
 public static class Patch_IdeoUIUtility
 {
     [Feature(typeof(DefModExtension_Xenotype))]

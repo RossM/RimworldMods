@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(SkillUI))]
+[Patch(typeof(SkillUI))]
 internal static class Patch_SkillUI
 {
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionNone))]

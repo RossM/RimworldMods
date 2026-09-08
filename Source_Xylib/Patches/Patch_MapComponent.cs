@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(MapComponent))]
+[Patch(typeof(MapComponent))]
 internal static class Patch_MapComponent
 {
     [Feature(typeof(EventManager))]

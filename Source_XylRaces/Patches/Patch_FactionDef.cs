@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(FactionDef))]
+[Patch(typeof(FactionDef))]
 public static class Patch_FactionDef
 {
     [Feature(typeof(XenotypeSetWithDefault))]

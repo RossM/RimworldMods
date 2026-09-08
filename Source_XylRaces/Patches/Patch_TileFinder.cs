@@ -2,7 +2,7 @@
 
 namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(TileFinder))]
+[Patch(typeof(TileFinder))]
 public static class Patch_TileFinder
 {
     [Feature(typeof(DefModExtension_Faction))]

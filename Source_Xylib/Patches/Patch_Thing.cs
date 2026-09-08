@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(Thing))]
+[Patch(typeof(Thing))]
 internal static class Patch_Thing
 {
     [Feature(typeof(EventManager))]

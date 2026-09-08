@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(ShotReport))]
+[Patch(typeof(ShotReport))]
 public static class Patch_ShotReport
 {
     [Feature(nameof(DefOf.XylEcholocation))]

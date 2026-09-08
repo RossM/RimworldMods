@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(JoyUtility))]
+[Patch(typeof(JoyUtility))]
 public static class Patch_JoyUtility
 {
     [Feature(typeof(Need_Wetness))]

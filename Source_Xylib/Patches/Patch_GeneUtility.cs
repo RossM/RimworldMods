@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(GeneUtility))]
+[Patch(typeof(GeneUtility))]
 internal static class Patch_GeneUtility
 {
     [Feature(nameof(EventDefOf.PostSatisfyChemicalGenes))]

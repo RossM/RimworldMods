@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(HediffSet))]
+[Patch(typeof(HediffSet))]
 internal static class Patch_HediffSet
 {
     [Feature(nameof(EventDefOf.PostHediffsChanged))]

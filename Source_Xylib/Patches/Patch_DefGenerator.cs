@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(DefGenerator))]
+[Patch(typeof(DefGenerator))]
 internal static class Patch_DefGenerator
 {
     [Feature(typeof(GeneDefGenerator))]

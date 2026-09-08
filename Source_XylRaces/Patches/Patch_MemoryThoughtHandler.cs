@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(MemoryThoughtHandler))]
+[Patch(typeof(MemoryThoughtHandler))]
 public static class Patch_MemoryThoughtHandler
 {
     [Feature(typeof(DefModExtension_Thought))]

@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(FloatMenuOptionProvider_Ingest))]
+[Patch(typeof(FloatMenuOptionProvider_Ingest))]
 internal static class Patch_FloatMenuOptionProvider_Ingest
 {
     [Feature(typeof(DefModExtension_Chemical))]

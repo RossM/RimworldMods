@@ -1,6 +1,6 @@
 namespace Xylib.Patches;
 
-[HarmonyPatch(typeof(GeneDef))]
+[Patch(typeof(GeneDef))]
 internal static class Patch_GeneDef
 {
     // GeneDef.ConfigErrors doesn't call Def.ConfigErrors, resulting in DefModExtension.ConfigErrors not getting called

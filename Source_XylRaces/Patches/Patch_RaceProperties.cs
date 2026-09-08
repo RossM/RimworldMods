@@ -1,6 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch(typeof(RaceProperties))]
+[Patch(typeof(RaceProperties))]
 public static class Patch_RaceProperties
 {
     [Feature(nameof(Config.Feature.Bugfix_Lactation))]
