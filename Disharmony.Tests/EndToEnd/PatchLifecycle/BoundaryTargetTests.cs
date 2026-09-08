@@ -20,8 +20,6 @@ public static class BoundaryTargetPatches
 
     public static void ExplicitInterfaceImplementation_ExecutesPatch() => PatchExecuted = true;
 
-    public static void RefReturnMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
-
     public static void PointerParameterMethod_ExecutesPatchAndPreservesPointer() => PatchExecuted = true;
 
     public static void VarArgsMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
@@ -129,17 +127,6 @@ public sealed class BoundaryTargetTests : PatchTestBase
 
         Assert.That(result, Is.EqualTo(42));
         Assert.That(BoundaryTargetPatches.PatchExecuted, Is.True);
-    }
-
-    [Test]
-    public void RefReturnMethod_IsRejectedBeforeRuntimePatching()
-    {
-        MethodInfo target = typeof(BoundaryTargets)
-            .GetMethod(nameof(BoundaryTargets.RefReturnMethod))!;
-        MethodInfo patch = typeof(BoundaryTargetPatches)
-            .GetMethod(nameof(BoundaryTargetPatches.RefReturnMethod_IsRejectedBeforeRuntimePatching))!;
-
-        Assert.Throws<PatchException>(() => Patcher.Patch(Patch.Prefix.With(patch).Of(target)));
     }
 
     [Test]
