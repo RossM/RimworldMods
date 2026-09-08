@@ -159,7 +159,6 @@ public static class RefReturnPatchingPatches
 
     [Prefix]
     [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.ObjectReference))]
-    [PatchOptions(PatchOptions.Debug)]
     public static void Prefix_InstanceReferenceType_PreservesAlias() => ExecutionCount++;
 
     [Postfix]
@@ -190,12 +189,10 @@ public static class RefReturnPatchingPatches
 
     [Postfix]
     [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
-    [PatchOptions(PatchOptions.Debug)]
     public static void Postfix_Result_Primitive_ReadByValue(int __result) => Observed = __result;
 
     [Postfix]
     [Target(typeof(RefReturnTargets), nameof(RefReturnTargets.PrimitiveReference))]
-    [PatchOptions(PatchOptions.Debug)]
     public static void Postfix_Result_Primitive_ReadByReference(ref int __result) => Observed = __result;
 
 }
