@@ -4,21 +4,75 @@ public static class MemberInfoBindingPatches
 {
     [Prefix]
     [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.StaticIdentity))]
-    public static void Prefix_Method_ClosedGenericType_Static([MemberInfo] MethodInfo member) => Observed = member;
+    public static void Prefix_Method_ClosedGenericType_Static_Int32([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.StaticIdentity))]
+    public static void Prefix_Method_ClosedGenericType_Static_String([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.StaticIdentity))]
+    public static void Postfix_Method_ClosedGenericType_Static_Int32([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.StaticIdentity))]
+    public static void Postfix_Method_ClosedGenericType_Static_String([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    public static void Prefix_Method_ClosedGenericType_Instance_Int32([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    public static void Prefix_Method_ClosedGenericType_Instance_String([MemberInfo] MethodInfo member) => Observed = member;
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    public static void Postfix_Method_ClosedGenericType_Instance_Int32([MemberInfo] MethodInfo member) => Observed = member;
 
     [Postfix]
     [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
-    public static void Postfix_Method_ClosedGenericType_Instance([MemberInfo] MethodInfo member) => Observed = member;
+    public static void Postfix_Method_ClosedGenericType_Instance_String([MemberInfo] MethodInfo member) => Observed = member;
 
     [Prefix]
     [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
     [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
-    public static void InnerPrefix_Method_ClosedGenericType_InnerScope([MemberInfo(Scope.Inner)] MethodInfo member) => Observed = member;
+    public static void InnerPrefix_Method_ClosedGenericType_InnerScope_Int32([MemberInfo(Scope.Inner)] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_InnerScope_String([MemberInfo(Scope.Inner)] MethodInfo member) => Observed = member;
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_InnerScope_Int32([MemberInfo(Scope.Inner)] MethodInfo member) => Observed = member;
 
     [Postfix]
     [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
     [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
-    public static void InnerPostfix_Method_ClosedGenericType_OuterScope([MemberInfo(Scope.Outer)] MethodInfo member) => Observed = member;
+    public static void InnerPostfix_Method_ClosedGenericType_InnerScope_String([MemberInfo(Scope.Inner)] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_OuterScope_Int32([MemberInfo(Scope.Outer)] MethodInfo member) => Observed = member;
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_OuterScope_String([MemberInfo(Scope.Outer)] MethodInfo member) => Observed = member;
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_OuterScope_Int32([MemberInfo(Scope.Outer)] MethodInfo member) => Observed = member;
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_OuterScope_String([MemberInfo(Scope.Outer)] MethodInfo member) => Observed = member;
 
     [Prefix]
     [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.IntIdentity))]
@@ -183,11 +237,11 @@ public static class MemberInfoBindingPatches
 public sealed class MemberInfoBindingTests : PatchTestBase
 {
     [Test]
-    public void Prefix_Method_ClosedGenericType_Static()
+    public void Prefix_Method_ClosedGenericType_Static_Int32()
     {
         MemberInfoBindingPatches.Observed = null;
         MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.StaticIdentity))!;
-        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Method_ClosedGenericType_Static));
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Method_ClosedGenericType_Static_Int32));
 
         Assert.That(MemberInfoGenericTargets<int>.StaticIdentity(42), Is.EqualTo(42));
 
@@ -203,12 +257,93 @@ public sealed class MemberInfoBindingTests : PatchTestBase
     }
 
     [Test]
-    public void Postfix_Method_ClosedGenericType_Instance()
+    public void Prefix_Method_ClosedGenericType_Static_String()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.StaticIdentity))!;
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Method_ClosedGenericType_Static_String));
+
+        Assert.That(MemberInfoGenericTargets<string>.StaticIdentity("argument"), Is.EqualTo("argument"));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<string>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(string)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Static_Int32()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.StaticIdentity))!;
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Postfix_Method_ClosedGenericType_Static_Int32));
+
+        Assert.That(MemberInfoGenericTargets<int>.StaticIdentity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<int>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(int)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Static_String()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.StaticIdentity))!;
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Postfix_Method_ClosedGenericType_Static_String));
+
+        Assert.That(MemberInfoGenericTargets<string>.StaticIdentity("argument"), Is.EqualTo("argument"));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<string>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(string)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void Prefix_Method_ClosedGenericType_Instance_Int32()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.Identity))!;
+        var target = new MemberInfoGenericTargets<int>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Method_ClosedGenericType_Instance_Int32));
+
+        Assert.That(target.Identity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<int>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(int)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void Prefix_Method_ClosedGenericType_Instance_String()
     {
         MemberInfoBindingPatches.Observed = null;
         MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.Identity))!;
         var target = new MemberInfoGenericTargets<string>();
-        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Postfix_Method_ClosedGenericType_Instance));
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Prefix_Method_ClosedGenericType_Instance_String));
 
         Assert.That(target.Identity("argument"), Is.EqualTo("argument"));
 
@@ -224,12 +359,54 @@ public sealed class MemberInfoBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPrefix_Method_ClosedGenericType_InnerScope()
+    public void Postfix_Method_ClosedGenericType_Instance_Int32()
     {
         MemberInfoBindingPatches.Observed = null;
         MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.Identity))!;
         var target = new MemberInfoGenericTargets<int>();
-        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPrefix_Method_ClosedGenericType_InnerScope));
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Postfix_Method_ClosedGenericType_Instance_Int32));
+
+        Assert.That(target.Identity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<int>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(int)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Instance_String()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.Identity))!;
+        var target = new MemberInfoGenericTargets<string>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.Postfix_Method_ClosedGenericType_Instance_String));
+
+        Assert.That(target.Identity("argument"), Is.EqualTo("argument"));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<string>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(string)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_InnerScope_Int32()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.Identity))!;
+        var target = new MemberInfoGenericTargets<int>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPrefix_Method_ClosedGenericType_InnerScope_Int32));
 
         Assert.That(target.CallIdentity(42), Is.EqualTo(42));
 
@@ -245,12 +422,138 @@ public sealed class MemberInfoBindingTests : PatchTestBase
     }
 
     [Test]
-    public void InnerPostfix_Method_ClosedGenericType_OuterScope()
+    public void InnerPrefix_Method_ClosedGenericType_InnerScope_String()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.Identity))!;
+        var target = new MemberInfoGenericTargets<string>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPrefix_Method_ClosedGenericType_InnerScope_String));
+
+        Assert.That(target.CallIdentity("argument"), Is.EqualTo("argument"));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<string>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(string)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_InnerScope_Int32()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.Identity))!;
+        var target = new MemberInfoGenericTargets<int>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPostfix_Method_ClosedGenericType_InnerScope_Int32));
+
+        Assert.That(target.CallIdentity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<int>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(int)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_InnerScope_String()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.Identity))!;
+        var target = new MemberInfoGenericTargets<string>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPostfix_Method_ClosedGenericType_InnerScope_String));
+
+        Assert.That(target.CallIdentity("argument"), Is.EqualTo("argument"));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<string>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(string)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_OuterScope_Int32()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.CallIdentity))!;
+        var target = new MemberInfoGenericTargets<int>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPrefix_Method_ClosedGenericType_OuterScope_Int32));
+
+        Assert.That(target.CallIdentity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<int>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(int)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_OuterScope_String()
     {
         MemberInfoBindingPatches.Observed = null;
         MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.CallIdentity))!;
         var target = new MemberInfoGenericTargets<string>();
-        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPostfix_Method_ClosedGenericType_OuterScope));
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPrefix_Method_ClosedGenericType_OuterScope_String));
+
+        Assert.That(target.CallIdentity("argument"), Is.EqualTo("argument"));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<string>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(string)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(string)));
+        });
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_OuterScope_Int32()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<int>).GetMethod(nameof(MemberInfoGenericTargets<int>.CallIdentity))!;
+        var target = new MemberInfoGenericTargets<int>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPostfix_Method_ClosedGenericType_OuterScope_Int32));
+
+        Assert.That(target.CallIdentity(42), Is.EqualTo(42));
+
+        Assert.That(MemberInfoBindingPatches.Observed, Is.EqualTo(expected));
+        var observed = (MethodInfo)MemberInfoBindingPatches.Observed!;
+        Assert.Multiple(() =>
+        {
+            Assert.That(observed.DeclaringType, Is.EqualTo(typeof(MemberInfoGenericTargets<int>)));
+            Assert.That(observed.ContainsGenericParameters, Is.False);
+            Assert.That(observed.ReturnType, Is.EqualTo(typeof(int)));
+            Assert.That(observed.GetParameters().Single().ParameterType, Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_OuterScope_String()
+    {
+        MemberInfoBindingPatches.Observed = null;
+        MethodInfo expected = typeof(MemberInfoGenericTargets<string>).GetMethod(nameof(MemberInfoGenericTargets<string>.CallIdentity))!;
+        var target = new MemberInfoGenericTargets<string>();
+        ApplyPatch(typeof(MemberInfoBindingPatches), nameof(MemberInfoBindingPatches.InnerPostfix_Method_ClosedGenericType_OuterScope_String));
 
         Assert.That(target.CallIdentity("argument"), Is.EqualTo("argument"));
 
