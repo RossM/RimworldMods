@@ -2,6 +2,78 @@ namespace Disharmony.Tests.EndToEnd.PatchLifecycle;
 
 public static class BoundaryTargetPatches
 {
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.StaticIdentity))]
+    public static void Prefix_Method_ClosedGenericType_Static_Int32_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.StaticIdentity))]
+    public static void Prefix_Method_ClosedGenericType_Static_String_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.StaticIdentity))]
+    public static void Postfix_Method_ClosedGenericType_Static_Int32_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.StaticIdentity))]
+    public static void Postfix_Method_ClosedGenericType_Static_String_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    public static void Prefix_Method_ClosedGenericType_Instance_Int32_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Prefix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    public static void Prefix_Method_ClosedGenericType_Instance_String_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    public static void Postfix_Method_ClosedGenericType_Instance_Int32_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Postfix]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    public static void Postfix_Method_ClosedGenericType_Instance_String_IsRejectedBeforeRuntimePatching([MemberInfo] MethodInfo member) { }
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_InnerScope_Int32_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Inner)] MethodInfo member) { }
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_InnerScope_String_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Inner)] MethodInfo member) { }
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_InnerScope_Int32_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Inner)] MethodInfo member) { }
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_InnerScope_String_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Inner)] MethodInfo member) { }
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_OuterScope_Int32_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Outer)] MethodInfo member) { }
+
+    [Prefix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPrefix_Method_ClosedGenericType_OuterScope_String_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Outer)] MethodInfo member) { }
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<int>), nameof(MemberInfoGenericTargets<int>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_OuterScope_Int32_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Outer)] MethodInfo member) { }
+
+    [Postfix]
+    [Inner(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.Identity))]
+    [Target(typeof(MemberInfoGenericTargets<string>), nameof(MemberInfoGenericTargets<string>.CallIdentity))]
+    public static void InnerPostfix_Method_ClosedGenericType_OuterScope_String_IsRejectedBeforeRuntimePatching([MemberInfo(Scope.Outer)] MethodInfo member) { }
+
     public static bool PatchExecuted;
 
     public static void AbstractMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
@@ -16,7 +88,7 @@ public static class BoundaryTargetPatches
 
     public static void ConstructedGenericMethod_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
 
-    public static void ClosedGenericDeclaringType_ExecutesPatch() => PatchExecuted = true;
+    public static void ClosedGenericDeclaringType_IsRejectedBeforeRuntimePatching() => PatchExecuted = true;
 
     public static void ExplicitInterfaceImplementation_ExecutesPatch() => PatchExecuted = true;
 
@@ -28,6 +100,150 @@ public static class BoundaryTargetPatches
 [TestFixture]
 public sealed class BoundaryTargetTests : PatchTestBase
 {
+    [Test]
+    public void Prefix_Method_ClosedGenericType_Static_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Prefix_Method_ClosedGenericType_Static_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Prefix_Method_ClosedGenericType_Static_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Prefix_Method_ClosedGenericType_Static_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Static_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Postfix_Method_ClosedGenericType_Static_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Static_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Postfix_Method_ClosedGenericType_Static_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Prefix_Method_ClosedGenericType_Instance_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Prefix_Method_ClosedGenericType_Instance_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Prefix_Method_ClosedGenericType_Instance_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Prefix_Method_ClosedGenericType_Instance_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Instance_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Postfix_Method_ClosedGenericType_Instance_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void Postfix_Method_ClosedGenericType_Instance_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.Postfix_Method_ClosedGenericType_Instance_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_InnerScope_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPrefix_Method_ClosedGenericType_InnerScope_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_InnerScope_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPrefix_Method_ClosedGenericType_InnerScope_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_InnerScope_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPostfix_Method_ClosedGenericType_InnerScope_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_InnerScope_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPostfix_Method_ClosedGenericType_InnerScope_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_OuterScope_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPrefix_Method_ClosedGenericType_OuterScope_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPrefix_Method_ClosedGenericType_OuterScope_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPrefix_Method_ClosedGenericType_OuterScope_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_OuterScope_Int32_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPostfix_Method_ClosedGenericType_OuterScope_Int32_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
+    [Test]
+    public void InnerPostfix_Method_ClosedGenericType_OuterScope_String_IsRejectedBeforeRuntimePatching()
+    {
+        var exception = Assert.Throws<PatchException>(() =>
+            ApplyPatch(typeof(BoundaryTargetPatches), nameof(BoundaryTargetPatches.InnerPostfix_Method_ClosedGenericType_OuterScope_String_IsRejectedBeforeRuntimePatching)));
+
+        Assert.That(exception!.InnerException, Is.TypeOf<PatchDefinitionException>());
+    }
+
     [Test]
     public void AbstractMethod_IsRejectedBeforeRuntimePatching()
     {
@@ -96,19 +312,15 @@ public sealed class BoundaryTargetTests : PatchTestBase
     }
 
     [Test]
-    public void ClosedGenericDeclaringType_ExecutesPatch()
+    public void ClosedGenericDeclaringType_IsRejectedBeforeRuntimePatching()
     {
         BoundaryTargetPatches.PatchExecuted = false;
         MethodInfo target = typeof(BoundaryGenericTargets<int>)
             .GetMethod(nameof(BoundaryGenericTargets<int>.NonGenericMethod))!;
         MethodInfo patch = typeof(BoundaryTargetPatches)
-            .GetMethod(nameof(BoundaryTargetPatches.ClosedGenericDeclaringType_ExecutesPatch))!;
+            .GetMethod(nameof(BoundaryTargetPatches.ClosedGenericDeclaringType_IsRejectedBeforeRuntimePatching))!;
 
-        Patcher.Patch(Patch.Prefix.With(patch).Of(target));
-        int result = BoundaryGenericTargets<int>.NonGenericMethod(42);
-
-        Assert.That(result, Is.EqualTo(42));
-        Assert.That(BoundaryTargetPatches.PatchExecuted, Is.True);
+        Assert.Throws<PatchException>(() => Patcher.Patch(Patch.Prefix.With(patch).Of(target)));
     }
 
     [Test]
