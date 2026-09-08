@@ -3,7 +3,7 @@
 namespace Disharmony.Utilities;
 
 /// <summary>
-///     A simple box class to hold a value of type T. This is used to create a managed reference to a value, allowing it to be passed by reference in IL code.
+///     A simple box class to hold a value of type T. This is used to create a location for a value on the managed heap, allowing it to be passed by reference in IL code.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 internal class Box<T>
