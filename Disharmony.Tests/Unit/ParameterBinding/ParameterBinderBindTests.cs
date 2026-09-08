@@ -8,6 +8,15 @@ internal sealed class UnsupportedParameterBindingAttribute() : ParameterBindingA
 
 internal static class ParameterBinderPatchMethods
 {
+    public static void Arguments_Default([Arguments] object[] values) { }
+    public static void Arguments_ReservedName(object[] __args) { }
+    public static void Arguments_Outer([Arguments(Scope.Outer)] object[] values) { }
+    public static void Arguments_Inner([Arguments(Scope.Inner)] object[] values) { }
+    public static void Arguments_Ref([Arguments] ref object[] values) { }
+    public static void Arguments_In([Arguments] in object[] values) { }
+    public static void Arguments_Out([Arguments] out object[] values) => values = null!;
+    public static void Arguments_StringArray([Arguments] string[] values) { }
+    public static void Arguments_ValueArray([Arguments] int[] values) { }
     public static void Field_ExplicitType_NullName_InnerScope(
         [Field(typeof(FieldLookupBaseTargets), null, Scope.Inner)] int Value) { }
     public static void Method_ExplicitType_NullName_InnerScope(
@@ -489,6 +498,101 @@ internal sealed class ParameterBinderBindTests
 
         Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(ParameterBinderPatchMethods.Field_ExplicitType_IncompatibleInstance), invocation));
+    }
+
+    [Test]
+    public void Arguments_Default_OuterPatch_SelectsOuterArguments()
+    {
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Arguments_Default),
+            StaticIntParameter);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.ArgumentArray));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+    }
+
+    [Test]
+    public void Arguments_ReservedName_OuterPatch_SelectsOuterArguments()
+    {
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Arguments_ReservedName),
+            StaticIntParameter);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.ArgumentArray));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+    }
+
+    [Test]
+    public void Arguments_Default_InnerPatch_SelectsInnerArguments()
+    {
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Arguments_Default),
+            StaticIntParameter, InnerIntParameter);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.ArgumentArray));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+    }
+
+    [Test]
+    public void Arguments_ReservedName_InnerPatch_SelectsInnerArguments()
+    {
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Arguments_ReservedName),
+            StaticIntParameter, InnerIntParameter);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.ArgumentArray));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+    }
+
+    [Test]
+    public void Arguments_Outer_InnerPatch_SelectsOuterArguments()
+    {
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Arguments_Outer),
+            StaticIntParameter, InnerIntParameter);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.ArgumentArray));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+    }
+
+    [Test]
+    public void Arguments_Inner_InnerPatch_SelectsInnerArguments()
+    {
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Arguments_Inner),
+            StaticIntParameter, InnerIntParameter);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.ArgumentArray));
+        Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+    }
+
+    [Test]
+    public void Arguments_RefParameter_IsRejected()
+    {
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Arguments_Ref), StaticIntParameter));
+    }
+
+    [Test]
+    public void Arguments_InParameter_IsRejected()
+    {
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Arguments_In), StaticIntParameter));
+    }
+
+    [Test]
+    public void Arguments_OutParameter_IsRejected()
+    {
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Arguments_Out), StaticIntParameter));
+    }
+
+    [Test]
+    public void Arguments_StringArrayParameter_IsRejected()
+    {
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Arguments_StringArray), StaticIntParameter));
+    }
+
+    [Test]
+    public void Arguments_ValueArrayParameter_IsRejected()
+    {
+        Assert.Throws<InvalidCastException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Arguments_ValueArray), StaticIntParameter));
     }
 
     [Test]
