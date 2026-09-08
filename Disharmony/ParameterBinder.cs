@@ -446,14 +446,15 @@ internal class ParameterBinder(
         if (parameter.ParameterType.IsByRef)
             throw new ParameterBindingException(parameter.Name, "[MemberInfo] cannot be bound to a 'ref' parameter");
 
-        MemberInfo memberInfo = invocation switch
+        (MemberInfo memberInfo, Type validationType) = invocation switch
         {
-            FieldInvocation fieldInvocation => fieldInvocation.FieldInfo,
-            MethodBaseInvocation methodBaseInvocation => methodBaseInvocation.MethodBase,
+            FieldInvocation fieldInvocation => ((MemberInfo)fieldInvocation.FieldInfo, typeof(FieldInfo)),
+            MethodInvocation methodInvocation => ((MemberInfo)methodInvocation.MethodInfo, typeof(MethodInfo)),
+            ConstructorInvocation constructorInvocation => ((MemberInfo)constructorInvocation.ConstructorInfo, typeof(ConstructorInfo)),
             _ => throw new ParameterBindingException(parameter.Name, "[MemberInfo] unsupported for this target type"),
         };
 
-        ValidateCast(parameter, typeof(MemberInfo));
+        ValidateCast(parameter, validationType);
         return new() { parameter = parameter, bindingType = BindingType.MemberInfo, scope = scope, memberInfo = memberInfo };
     }
 
