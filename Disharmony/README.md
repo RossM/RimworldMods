@@ -138,7 +138,7 @@ explicit binding attributes and several familiar Harmony parameter names:
 | Argument | `[Argument("name")]` or `[Argument(index)]` | *`name`* |
 | Argument values as an array | `[Arguments]` | `__args` |
 | Return value | `[ReturnValue]` | `__result` |
-| Target instance | `[Instance]` | `__instance` (selected scope), `__caller` (outer) |
+| Target instance | `[Instance]` | `__instance`, `__caller` |
 | Per-invocation shared state | `[State("name")]` | `__state` |
 | Instance or static field | `[Field("name")]` | *`___name`* |
 | Delegate to an instance or static method | `[Method("name")]` | None |
@@ -153,12 +153,12 @@ The [attribute reference](Attributes.cs) describes each binding's behavior and c
 ## Configure patches in code
 
 When targets are selected at runtime, the fluent API lets you configure patches using reflection objects. With
-`targetMethod` and `patchMethod` holding the `MethodInfo` objects for `GetPrice` and `ApplyMemberDiscount`, the
+`getPrice` and `applyMemberDiscount` holding the `MethodInfo` objects for `GetPrice` and `ApplyMemberDiscount`, the
 same discount patch can be registered as:
 
 ```csharp
 PatchHandle pricePatches = Patcher.Patch(
-    Patch.Postfix.With(patchMethod).Of(targetMethod));
+    Patch.Postfix.With(applyMemberDiscount).Of(getPrice));
 ```
 
 The builder creates a `PatchConfig`, which `Patcher.Patch` applies. Add `.Inner(innerMethod)` to target calls inside
@@ -169,7 +169,7 @@ as `[ReturnValue]` still apply, while the configuration supplies the patch type 
 
 For larger patch sets, `Patcher.PatchAll(assembly)` discovers patch classes marked with `[Patch]` or `[HarmonyPatch]`.
 Group classes with `[Category("name")]` and use `Patcher.PatchCategory(assembly, category)` to apply selected groups.
-A patch can also use `[Targets]` to select multiple targets, such as every overload of a method.
+If you need to make the same change in multiple places, single patch can target multiple methods.
 
 Each registration call returns a `PatchHandle`. To remove the patches associated with a handle, call:
 
