@@ -2,6 +2,30 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 
 public static class MethodBindingPatches
 {
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_ExplicitType_Named_NonVirtualCall(
+        [Method(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.Describe), virtualCall: false)] Func<string, string> method) =>
+        DescriptionObserved = method("patch");
+
+    [Prefix]
+    [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_ExplicitType_NullName_NonVirtualCall(
+        [Method((string?)null, virtualCall: false)] Func<string, string> Describe) =>
+        DescriptionObserved = Describe("patch");
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_MethodAttribute_ExplicitType_Named_UnrelatedStaticMethod(
+        [Method(typeof(MethodBindingStaticTargets), nameof(MethodBindingStaticTargets.BoundStaticMethod))] Func<int, int> method) =>
+        ResultObserved = method(5);
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_MethodAttribute_ExplicitType_NullName_UnrelatedStaticMethod(
+        [Method(typeof(MethodBindingStaticTargets), null)] Func<int, int> BoundStaticMethod) =>
+        ResultObserved = BoundStaticMethod(5);
+
     public static int ResultObserved;
     public static int ArgumentObserved;
     public static string? DescriptionObserved;
@@ -246,6 +270,62 @@ public static class MethodBindingPatches
 [TestFixture]
 public sealed class MethodBindingTests : PatchTestBase
 {
+    [Test]
+    public void Prefix_MethodAttribute_ExplicitType_Named_NonVirtualCall()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_ExplicitType_Named_NonVirtualCall));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:outer:patch"));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_ExplicitType_NullName_NonVirtualCall()
+    {
+        MethodBindingPatches.DescriptionObserved = null;
+        ApplyPatch(typeof(MethodBindingPatches),
+            nameof(MethodBindingPatches.Prefix_MethodAttribute_ExplicitType_NullName_NonVirtualCall));
+        MethodBindingVirtualBaseTargets target = new MethodBindingVirtualDerivedTargets { InstanceName = "outer" };
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(MethodBindingPatches.DescriptionObserved, Is.EqualTo("base:outer:patch"));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_ExplicitType_Named_UnrelatedStaticMethod()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.Prefix_MethodAttribute_ExplicitType_Named_UnrelatedStaticMethod));
+
+        StaticMethodTargets.Void();
+
+        Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(305));
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_ExplicitType_NullName_UnrelatedStaticMethod()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.Prefix_MethodAttribute_ExplicitType_NullName_UnrelatedStaticMethod));
+
+        StaticMethodTargets.Void();
+
+        Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(305));
+    }
+
     [Test]
     public void Prefix_MethodAttribute_InstanceMethodOnOuterInstance_Invokes()
     {

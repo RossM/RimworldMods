@@ -4,6 +4,54 @@ public static class FieldBindingPatches
 {
     [Prefix]
     [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_ExplicitTypeBaseField_Named_Primitive_ReadByValue(
+        [Field(typeof(FieldLookupBaseTargets), nameof(FieldLookupBaseTargets.Value))] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_ExplicitTypeBaseField_NullName_Primitive_ReadByValue(
+        [Field(typeof(FieldLookupBaseTargets), null)] int Value) =>
+        observed = Value;
+
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_ExplicitTypeBaseField_NullName_Primitive_ReadByReference(
+        [Field(typeof(FieldLookupBaseTargets), null)] ref int Value) =>
+        observed = Value;
+
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
+    public static void Prefix_ExplicitTypeBaseField_NullName_Primitive_WriteByReference(
+        [Field(typeof(FieldLookupBaseTargets), null)] ref int Value) =>
+        Value = 42;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_ExplicitTypeStaticField_Named_Primitive_ReadByValue(
+        [Field(typeof(InnerStaticMethodTargets), nameof(InnerStaticMethodTargets.Field))] int field) =>
+        observed = field;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_ExplicitTypeStaticField_NullName_Primitive_ReadByValue(
+        [Field(typeof(InnerStaticMethodTargets), null)] int Field) =>
+        observed = Field;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_ExplicitTypeStaticField_NullName_Primitive_ReadByReference(
+        [Field(typeof(InnerStaticMethodTargets), null)] ref int Field) =>
+        observed = Field;
+
+    [Prefix]
+    [Target(typeof(StaticMethodTargets), nameof(StaticMethodTargets.Void))]
+    public static void Prefix_ExplicitTypeStaticField_NullName_Primitive_WriteByReference(
+        [Field(typeof(InnerStaticMethodTargets), null)] ref int Field) =>
+        Field = 42;
+
+    [Prefix]
+    [Target(typeof(FieldLookupDerivedTargets), nameof(FieldLookupDerivedTargets.Target))]
     public static void Prefix_QualifiedBaseField_Primitive_ReadByValue(
         [Field("FieldLookupBaseTargets.Value")] int field) =>
         observed = field;
@@ -321,6 +369,140 @@ public static class FieldBindingPatches
 [TestFixture]
 public sealed class FieldBindingTests : PatchTestBase
 {
+    [Test]
+    public void Prefix_ExplicitTypeBaseField_Named_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeBaseField_Named_Primitive_ReadByValue));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeBaseField_NullName_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeBaseField_NullName_Primitive_ReadByValue));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeBaseField_NullName_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeBaseField_NullName_Primitive_ReadByReference));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(11));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeBaseField_NullName_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        var target = new FieldLookupDerivedTargets { Value = 21 };
+        ((FieldLookupBaseTargets)target).Value = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeBaseField_NullName_Primitive_WriteByReference));
+
+        target.Target();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(((FieldLookupBaseTargets)target).Value, Is.EqualTo(42));
+            Assert.That(target.Value, Is.EqualTo(21));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeStaticField_Named_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeStaticField_Named_Primitive_ReadByValue));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeStaticField_NullName_Primitive_ReadByValue()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeStaticField_NullName_Primitive_ReadByValue));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeStaticField_NullName_Primitive_ReadByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeStaticField_NullName_Primitive_ReadByReference));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(FieldBindingPatches.observed, Is.EqualTo(11));
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_ExplicitTypeStaticField_NullName_Primitive_WriteByReference()
+    {
+        FieldBindingPatches.observed = 0;
+        InnerStaticMethodTargets.Field = 11;
+        ApplyPatch(typeof(FieldBindingPatches), nameof(FieldBindingPatches.Prefix_ExplicitTypeStaticField_NullName_Primitive_WriteByReference));
+
+        StaticMethodTargets.Void();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(InnerStaticMethodTargets.Field, Is.EqualTo(42));
+        });
+    }
+
     [Test]
     public void Prefix_QualifiedBaseField_Primitive_ReadByValue()
     {

@@ -8,6 +8,20 @@ internal sealed class UnsupportedParameterBindingAttribute() : ParameterBindingA
 
 internal static class ParameterBinderPatchMethods
 {
+    public static void Field_ExplicitType_NullName_InnerScope(
+        [Field(typeof(FieldLookupBaseTargets), null, Scope.Inner)] int Value) { }
+    public static void Method_ExplicitType_NullName_InnerScope(
+        [Method(typeof(MethodBindingVirtualBaseTargets), null, Scope.Inner)] Func<string, string> Describe) { }
+    public static void Field_ExplicitType_NullName_OuterScope(
+        [Field(typeof(FieldLookupBaseTargets), null, Scope.Outer)] int Value) { }
+    public static void Method_ExplicitType_NullName_OuterScope(
+        [Method(typeof(MethodBindingVirtualBaseTargets), null, Scope.Outer)] Func<string, string> Describe) { }
+    public static void Method_ExplicitType_Overload(
+        [Method(typeof(MethodLookupTarget), nameof(MethodLookupTarget.Convert))] Func<string, string> method) { }
+    public static void Method_ExplicitType_IncompatibleInstance(
+        [Method(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.BoundInstanceMethod))] Func<int, int> method) { }
+    public static void Field_ExplicitType_IncompatibleInstance(
+        [Field(typeof(ClassMethodTargets), nameof(ClassMethodTargets.primitiveField))] int field) { }
     public static void Field_QualifiedBase([Field("FieldLookupBaseTargets.Value")] int field) { }
     public static void Field_FullyQualifiedBase([Field("Disharmony.Tests.FieldLookupBaseTargets.Value")] int field) { }
     public static void Field_QualifiedDerived([Field("FieldLookupDerivedTargets.Value")] int field) { }
@@ -373,6 +387,108 @@ internal sealed class ParameterBinderBindTests
     {
         Assert.Throws<ParameterBindingException>(() =>
             Bind(nameof(ParameterBinderPatchMethods.MemberInfo_Inner), StaticIntParameter));
+    }
+
+    [Test]
+    public void Field_ExplicitType_NullName_InnerScope_SelectsSpecifiedType()
+    {
+        var invocation = new MethodInvocation(typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+        var expected = typeof(FieldLookupBaseTargets).GetField(nameof(FieldLookupBaseTargets.Value))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.Field_ExplicitType_NullName_InnerScope), invocation, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Instance));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+        });
+    }
+
+    [Test]
+    public void Method_ExplicitType_NullName_InnerScope_SelectsSpecifiedType()
+    {
+        var invocation = new MethodInvocation(typeof(MethodBindingVirtualDerivedTargets).GetMethod(nameof(MethodBindingVirtualDerivedTargets.TargetDerivedInstanceMethod))!);
+        var expected = typeof(MethodBindingVirtualBaseTargets).GetMethod(nameof(MethodBindingVirtualBaseTargets.Describe))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.Method_ExplicitType_NullName_InnerScope), invocation, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+            Assert.That(binding.useVirtualDispatch, Is.True);
+        });
+    }
+
+    [Test]
+    public void Field_ExplicitType_NullName_OuterScope_SelectsSpecifiedType()
+    {
+        var invocation = new MethodInvocation(typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+        var expected = typeof(FieldLookupBaseTargets).GetField(nameof(FieldLookupBaseTargets.Value))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.Field_ExplicitType_NullName_OuterScope), invocation, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Instance));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.fields, Is.EqualTo(new[] { expected }));
+        });
+    }
+
+    [Test]
+    public void Method_ExplicitType_NullName_OuterScope_SelectsSpecifiedType()
+    {
+        var invocation = new MethodInvocation(typeof(MethodBindingVirtualDerivedTargets).GetMethod(nameof(MethodBindingVirtualDerivedTargets.TargetDerivedInstanceMethod))!);
+        var expected = typeof(MethodBindingVirtualBaseTargets).GetMethod(nameof(MethodBindingVirtualBaseTargets.Describe))!;
+
+        BoundParameter binding = Bind(
+            nameof(ParameterBinderPatchMethods.Method_ExplicitType_NullName_OuterScope), invocation, invocation);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+            Assert.That(binding.useVirtualDispatch, Is.True);
+        });
+    }
+
+    [Test]
+    public void Method_ExplicitType_SelectsOverloadUsingDelegateSignature()
+    {
+        var invocation = new MethodInvocation(typeof(MethodLookupTarget).GetMethod(nameof(MethodLookupTarget.Target))!);
+        var expected = typeof(MethodLookupTarget).GetMethod(nameof(MethodLookupTarget.Convert), [typeof(string)])!;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_ExplicitType_Overload), invocation);
+
+        Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+        Assert.That(binding.memberInfo, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void Method_ExplicitType_IncompatibleInstance_IsRejected()
+    {
+        var invocation = new MethodInvocation(
+            typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Method_ExplicitType_IncompatibleInstance), invocation));
+    }
+
+    [Test]
+    public void Field_ExplicitType_IncompatibleInstance_IsRejected()
+    {
+        var invocation = new MethodInvocation(
+            typeof(FieldLookupDerivedTargets).GetMethod(nameof(FieldLookupDerivedTargets.Target))!);
+
+        Assert.Throws<ParameterBindingException>(() =>
+            Bind(nameof(ParameterBinderPatchMethods.Field_ExplicitType_IncompatibleInstance), invocation));
     }
 
     [Test]
