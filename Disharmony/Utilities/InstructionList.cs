@@ -2,9 +2,15 @@
 
 namespace Disharmony.Utilities;
 
+/// <summary>
+///     A simple box class to hold a value of type T. This is used to create a managed reference to a value type, allowing it to be passed by reference in IL code.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 internal class Box<T>
 {
-    public T value;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
+    public T value = default!;
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 }
 
 internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruction>
