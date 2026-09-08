@@ -34,30 +34,30 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
         switch (parameter.bindingType)
         {
-            case BindingType.Argument:
-            case BindingType.Instance:
+            case BindingType.Argument or BindingType.Instance when parameter.fields is { Length: > 0 }:
             {
-                Type desiredType;
-                if (parameter.fields is { Length: > 0 })
-                {
-                    desiredType = parameter.fields[0].DeclaringType!;
-                    if (wantRef && desiredType.IsValueType)
-                        desiredType = desiredType.MakeByRefType();
-                }
-                else
-                {
-                    desiredType = GetParameterType(parameter);
-                    if (wantRef && !desiredType.IsByRef)
-                        desiredType = desiredType.MakeByRefType();
-                    else if (!wantRef && desiredType.IsByRef)
-                        desiredType = desiredType.GetElementType();
-                }
+                Type desiredType = parameter.fields[0].DeclaringType!;
+                if (wantRef && desiredType.IsValueType)
+                    desiredType = desiredType.MakeByRefType();
 
                 EmitParameterLookup(parameter.scope, parameter.index, desiredType);
                 resultType = desiredType;
 
-                if (parameter.fields is { Length: > 0 })
-                    EmitFieldLookups(parameter, wantRef, ref resultType);
+                EmitFieldLookups(parameter, wantRef, ref resultType);
+
+                break;
+            }
+
+            case BindingType.Argument or BindingType.Instance:
+            {
+                Type desiredType = GetParameterType(parameter);
+                if (wantRef && !desiredType.IsByRef)
+                    desiredType = desiredType.MakeByRefType();
+                else if (!wantRef && desiredType.IsByRef)
+                    desiredType = desiredType.GetElementType()!;
+
+                EmitParameterLookup(parameter.scope, parameter.index, desiredType);
+                resultType = desiredType;
 
                 break;
             }
@@ -153,7 +153,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         {
             output.Add(local.Load());
             output.Add(new(OpCodes.Ldobj, local.Type.GetElementType()));
-            resultType = local.Type.GetElementType();
+            resultType = local.Type.GetElementType()!;
         }
         else
         {
