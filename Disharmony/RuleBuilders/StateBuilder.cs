@@ -9,7 +9,7 @@ internal class StateBuilder(RuleBuilderContext context) : RuleBuilder(context, E
 {
     private readonly Dictionary<string, LocalTrackerBuilder> stateMap = [];
     
-    // Use a separate list rather than stateMap.Values so that initialization order is deterrministic
+    // Use a separate list rather than stateMap.Values so that initialization order is deterministic
     private readonly List<LocalTrackerBuilder> stateLocals = [];
 
     private LocalTrackerBuilder GetOrAddStateLocal(string stateKey, Type localType)
