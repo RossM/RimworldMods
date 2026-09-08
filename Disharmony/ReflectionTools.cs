@@ -167,7 +167,8 @@ internal static class ReflectionTools
             foreach (var type in allTypes)
                 _typesByName[type.Name] = type;
             foreach (var type in allTypes)
-                _typesByName[type.FullName] = type;
+                // RuntimeType.FullName is expensive on Mono because it calls RuntimeType.ContainsGenericParameters
+                _typesByName[$"{type.Namespace}.{type.Name}"] = type;
         }
 
         {
