@@ -809,6 +809,14 @@ public sealed class ArgumentAttribute : ParameterBindingAttribute
 }
 
 /// <summary>
+///     Binds a patch parameter to an array of all parameters of the outer or inner member.
+/// </summary>
+/// <param name="scope"></param>
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Parameter)]
+public sealed class ArgumentsAttribute(Scope scope = Scope.Any) : ParameterBindingAttribute(scope);
+
+/// <summary>
 ///     Binds a patch parameter to the instance on which either the outer or inner member is invoked.
 /// </summary>
 /// <param name="scope">

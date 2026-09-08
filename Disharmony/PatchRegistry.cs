@@ -5,9 +5,14 @@ namespace Disharmony;
 internal enum BindingType
 {
     /// <summary>
-    ///     Access to a method call's formal parameter.
+    ///     Access to a method call's argument.
     /// </summary>
     Argument,
+
+    /// <summary>
+    ///    Access to a method call's argument list as an array.
+    /// </summary>
+    ArgumentArray,
 
     /// <summary>
     ///     Access to a method call's instance parameter.

@@ -120,6 +120,11 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                 break;
             }
 
+            case BindingType.ArgumentArray:
+            {
+                throw new NotImplementedException();
+            }
+
             default:
             {
                 throw new ArgumentOutOfRangeException();

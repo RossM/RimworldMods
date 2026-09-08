@@ -72,6 +72,8 @@ internal class ParameterBinder(
             case ArgumentAttribute { Name: var name, Scope: var attributeScope }:
                 return BindArgumentByName(parameter, name ?? parameterName, attributeScope);
 
+            case ArgumentsAttribute: return BindArgumentArray(parameter, invocation, scope);
+
             case InstanceAttribute: return BindInstance(parameter, invocation, scope);
 
             case ReturnValueAttribute: return BindReturnValue(parameter, invocation, scope);
@@ -115,6 +117,8 @@ internal class ParameterBinder(
 
             case "__exception": return BindException(parameter);
 
+            case "__args": return BindArgumentArray(parameter, invocation, scope);
+
             case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any, null);
 
             case var _ when parameterName.StartsWith("__"):
@@ -141,6 +145,14 @@ internal class ParameterBinder(
         {
             throw new ParameterBindingException(parameter.Name, "Index is out of range", e);
         }
+    }
+
+    private ParameterBinding BindArgumentArray(ParameterInfo parameter, Invocation invocation, Scope scope)
+    {
+        if (parameter.ParameterType.IsByRef)
+            throw new ParameterBindingException(parameter.Name, "[Arguments] cannot be bound to a 'ref' parameter");
+        ValidateCast(typeof(object[]), parameter.ParameterType, parameter.Name);
+        return new() { parameter = parameter, bindingType = BindingType.ArgumentArray, scope = scope };
     }
 
     private ParameterBinding BindState(ParameterInfo parameter, string key)
