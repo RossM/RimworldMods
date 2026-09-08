@@ -350,15 +350,23 @@ internal class PatchRegistry
             throw new PatchDefinitionException(method, "Generic patch functions are not supported");
         if (!method.IsStatic)
             throw new PatchDefinitionException(method, "Patch methods must be static");
+        
         if (target.IsAbstract)
             throw new PatchDefinitionException(method, "Target method is abstract");
         if (target.ContainsGenericParameters)
             throw new PatchDefinitionException(method, "Can't patch uninstantiated generic method");
+
         // This is a limitation of MonoMod
         if (target.IsGenericMethod)
             throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
+        // MonoMod can sometimes patch methods in instantiated generic types, but only if all type arguments
+        // are value types. We don't want to rely on this, so reject all generic types.
+        if (TypeOrAnyContainingTypeIsGeneric(target.DeclaringType))
+            throw new PatchDefinitionException(method, "Can't patch method with generic type");
+        
         if ((target.Attributes & MethodAttributes.PinvokeImpl) != 0)
             throw new PatchDefinitionException(method, "Can't patch native method");
+        
         // This is a limitation of Harmony
         if ((target.CallingConvention & CallingConventions.VarArgs) != 0)
             throw new PatchDefinitionException(method, "Can't patch varargs method");
@@ -381,6 +389,15 @@ internal class PatchRegistry
             }
             default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
         }
+    }
+
+    private static bool TypeOrAnyContainingTypeIsGeneric(Type type)
+    {
+        if (type.IsGenericType)
+            return true;
+        if (type.DeclaringType is { } declaringType)
+            return TypeOrAnyContainingTypeIsGeneric(declaringType);
+        return false;
     }
 
     private void UnpatchAllInternal()
