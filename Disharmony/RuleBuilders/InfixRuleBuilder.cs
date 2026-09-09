@@ -1,8 +1,8 @@
 ﻿namespace Disharmony.RuleBuilders;
 
 /// <summary>
-///     This class generates rules implementing inner <see cref="PatchType.Prefix" /> and
-///     <see cref="PatchType.Postfix" /> patches for a method.
+///     This class generates rules implementing inner <see cref="PatchKind.Prefix" /> and
+///     <see cref="PatchKind.Postfix" /> patches for a method.
 /// </summary>
 internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
 {
@@ -21,12 +21,12 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
         [
             // Prefixes are sorted by priority and then reversed, so prefix-postfix pairs will nest naturally
             // even if priority isn't set
-            .. patches.Where(patch => patch is { patchType: PatchType.Prefix, inner: not EmptyInvocation })
+            .. patches.Where(patch => patch is { patchKind: PatchKind.Prefix, inner: not EmptyInvocation })
                 .OrderBy(patch => patch.priority).Reverse(),
         ];
         postfixes =
         [
-            .. patches.Where(patch => patch is { patchType: PatchType.Postfix, inner: not EmptyInvocation })
+            .. patches.Where(patch => patch is { patchKind: PatchKind.Postfix, inner: not EmptyInvocation })
                 .OrderBy(patch => patch.priority),
         ];
 

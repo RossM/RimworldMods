@@ -126,7 +126,7 @@ internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Inv
         foreach (var parameter in prefix.parameters)
             EmitParameterValue(parameter);
 
-        output.Add(CodeInstruction.Annotation($"{prefix.patchType} {prefix.patch.FullName}"));
+        output.Add(CodeInstruction.Annotation($"{prefix.patchKind} {prefix.patch.FullName}"));
         output.AddRange(prefix.patch.GetCodeInstructions());
     }
 }

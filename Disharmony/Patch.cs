@@ -27,7 +27,7 @@ public record PatchConfig
     /// <summary>
     ///     Gets or initializes when the patch runs relative to the selected operation, or <see langword="null" /> if unset.
     /// </summary>
-    public PatchType? Type { get; init; } = null;
+    public PatchKind? Kind { get; init; } = null;
     internal Invocation Target { get; init; } = EmptyInvocation.Instance;
     internal Invocation InnerTarget { get; init; } = EmptyInvocation.Instance;
 
@@ -196,12 +196,12 @@ public static class Patch
         /// <summary>
         ///     Gets a copy configured to run before its selected operation.
         /// </summary>
-        public PatchConfig Prefix => patchConfig with { Type = PatchType.Prefix };
+        public PatchConfig Prefix => patchConfig with { Kind = PatchKind.Prefix };
 
         /// <summary>
         ///     Gets a copy configured to run after its selected operation.
         /// </summary>
-        public PatchConfig Postfix => patchConfig with { Type = PatchType.Postfix };
+        public PatchConfig Postfix => patchConfig with { Kind = PatchKind.Postfix };
 
         /// <summary>
         ///     Returns a copy targeting the specified outer method or constructor.

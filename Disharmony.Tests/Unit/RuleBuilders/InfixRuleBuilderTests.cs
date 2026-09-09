@@ -65,7 +65,7 @@ public sealed class InfixRuleBuilderTests
 
     private static PatchInfo CreatePatch(
         Invocation patch,
-        PatchType patchType,
+        PatchKind patchKind,
         Invocation inner,
         BoundParameter[]? parameters = null,
         PatchOptions options = PatchOptions.Default,
@@ -74,7 +74,7 @@ public sealed class InfixRuleBuilderTests
         unpatchKey = 0,
         inner = inner,
         patch = patch,
-        patchType = patchType,
+        patchKind = patchKind,
         parameters = parameters ?? [],
         options = options,
         priority = priority,
@@ -116,12 +116,12 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
         [
-            CreatePatch(PrefixLow, PatchType.Prefix, InnerVoid, priority: -10),
-            CreatePatch(PostfixLow, PatchType.Postfix, InnerVoid, priority: -10),
-            CreatePatch(PrefixHigh, PatchType.Prefix, InnerVoid, priority: 10),
-            CreatePatch(PostfixHigh, PatchType.Postfix, InnerVoid, priority: 10),
-            CreatePatch(PrefixLow, PatchType.Prefix, EmptyInvocation.Instance),
-            CreatePatch(PostfixHigh, PatchType.Postfix, EmptyInvocation.Instance),
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, priority: -10),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, priority: -10),
+            CreatePatch(PrefixHigh, PatchKind.Prefix, InnerVoid, priority: 10),
+            CreatePatch(PostfixHigh, PatchKind.Postfix, InnerVoid, priority: 10),
+            CreatePatch(PrefixLow, PatchKind.Prefix, EmptyInvocation.Instance),
+            CreatePatch(PostfixHigh, PatchKind.Postfix, EmptyInvocation.Instance),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
@@ -154,10 +154,10 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
         [
-            CreatePatch(PrefixLow, PatchType.Prefix, InnerVoid),
-            CreatePatch(PostfixLow, PatchType.Postfix, InnerVoid),
-            CreatePatch(PrefixHigh, PatchType.Prefix, InnerVoid),
-            CreatePatch(PostfixHigh, PatchType.Postfix, InnerVoid),
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid),
+            CreatePatch(PrefixHigh, PatchKind.Prefix, InnerVoid),
+            CreatePatch(PostfixHigh, PatchKind.Postfix, InnerVoid),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
@@ -188,7 +188,7 @@ public sealed class InfixRuleBuilderTests
     public void BuildRules_VoidPrefix_DoesNotCreateResultLocalOrSkipBranch()
     {
         var context = new RuleBuilderContext();
-        PatchInfo prefix = CreatePatch(PrefixLow, PatchType.Prefix, InnerInt);
+        PatchInfo prefix = CreatePatch(PrefixLow, PatchKind.Prefix, InnerInt);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [prefix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -220,7 +220,7 @@ public sealed class InfixRuleBuilderTests
     public void BuildRules_BooleanPrefix_BranchesAroundInnerInvocationAndReturnsInitializedResult()
     {
         var context = new RuleBuilderContext();
-        PatchInfo prefix = CreatePatch(BooleanPrefix, PatchType.Prefix, InnerInt);
+        PatchInfo prefix = CreatePatch(BooleanPrefix, PatchKind.Prefix, InnerInt);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [prefix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -274,7 +274,7 @@ public sealed class InfixRuleBuilderTests
             index = 1,
         };
         PatchInfo prefix = CreatePatch(
-            InnerArgumentsPrefix, PatchType.Prefix, Combine, parameters: [number, text]);
+            InnerArgumentsPrefix, PatchKind.Prefix, Combine, parameters: [number, text]);
         var builder = new InfixRuleBuilder(context, Outer, Combine, [prefix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -315,7 +315,7 @@ public sealed class InfixRuleBuilderTests
             scope = Scope.Inner,
             index = 0,
         };
-        PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchType.Prefix, Increment, parameters: [value]);
+        PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchKind.Prefix, Increment, parameters: [value]);
         var builder = new InfixRuleBuilder(context, Outer, Increment, [prefix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -355,7 +355,7 @@ public sealed class InfixRuleBuilderTests
             scope = Scope.Outer,
             index = 0,
         };
-        PatchInfo prefix = CreatePatch(ReadOuterPrefix, PatchType.Prefix, InnerVoid, parameters: [outerValue]);
+        PatchInfo prefix = CreatePatch(ReadOuterPrefix, PatchKind.Prefix, InnerVoid, parameters: [outerValue]);
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [prefix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -389,7 +389,7 @@ public sealed class InfixRuleBuilderTests
             index = 0,
         };
         PatchInfo prefix = CreatePatch(
-            ReadInstancePrefix, PatchType.Prefix, InstanceInner, parameters: [instance]);
+            ReadInstancePrefix, PatchKind.Prefix, InstanceInner, parameters: [instance]);
         var builder = new InfixRuleBuilder(context, Outer, InstanceInner, [prefix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -430,7 +430,7 @@ public sealed class InfixRuleBuilderTests
             bindingType = BindingType.Result,
             scope = Scope.Inner,
         };
-        PatchInfo postfix = CreatePatch(ResultPostfix, PatchType.Postfix, InnerInt, parameters: [result]);
+        PatchInfo postfix = CreatePatch(ResultPostfix, PatchKind.Postfix, InnerInt, parameters: [result]);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [postfix]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -473,7 +473,7 @@ public sealed class InfixRuleBuilderTests
             scope = Scope.Outer,
             stateKey = "shared",
         };
-        PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchType.Prefix, InnerVoid, parameters: [state]);
+        PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchKind.Prefix, InnerVoid, parameters: [state]);
         var stateBuilder = new StateBuilder(context);
         stateBuilder.AssignStateVariableIndexes([prefix]);
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [prefix]);
@@ -513,16 +513,16 @@ public sealed class InfixRuleBuilderTests
         };
         PatchInfo[] patches =
         [
-            CreatePatch(PrefixLow, PatchType.Prefix, InnerInt),
-            CreatePatch(PostfixLow, PatchType.Postfix, InnerInt),
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerInt),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerInt),
             CreatePatch(
                 AlwaysPrefix,
-                PatchType.Prefix,
+                PatchKind.Prefix,
                 InnerInt,
                 options: PatchOptions.AlwaysRun),
             CreatePatch(
                 AlwaysPostfix,
-                PatchType.Postfix,
+                PatchKind.Postfix,
                 InnerInt,
                 parameters: [exception],
                 options: PatchOptions.AlwaysRun),
@@ -604,7 +604,7 @@ public sealed class InfixRuleBuilderTests
             scope = Scope.Any,
             index = 0,
         };
-        PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchType.Prefix, InnerInt, parameters: [value]);
+        PatchInfo prefix = CreatePatch(ReadIntPrefix, PatchKind.Prefix, InnerInt, parameters: [value]);
         var builder = new InfixRuleBuilder(context, Outer, InnerInt, [prefix]);
 
         ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() =>

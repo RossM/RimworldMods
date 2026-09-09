@@ -27,7 +27,7 @@ public sealed class StateBuilderTests
         unpatchKey = 0,
         inner = EmptyInvocation.Instance,
         patch = patch ?? FirstPatch,
-        patchType = PatchType.Prefix,
+        patchKind = PatchKind.Prefix,
         parameters = parameters,
         options = PatchOptions.Default,
         priority = 0,

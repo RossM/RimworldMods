@@ -498,7 +498,7 @@ public sealed class MethodLookupBindingTests
         ParameterInfo parameter = typeof(MethodLookupBindingPatches)
             .GetMethod(patchMethodName)!.GetParameters().Single();
         var binder = new ParameterBinder(invocation, invocation, EmptyInvocation.Instance,
-            PatchType.Prefix, PatchOptions.Default, "test");
+            PatchKind.Prefix, PatchOptions.Default, "test");
 
         return binder.Bind(parameter);
     }

@@ -96,7 +96,7 @@ internal struct PatchInfo
     public required int unpatchKey;
     public required Invocation inner;
     public required Invocation patch;
-    public required PatchType patchType;
+    public required PatchKind patchKind;
     public required ParameterBinding[] parameters;
     public required PatchOptions options;
     public required int priority;
@@ -177,7 +177,7 @@ internal class PatchRegistry
             if (patchTypeAttribute == null)
                 return;
 
-            PatchType patchType = patchTypeAttribute.PatchType;
+            PatchKind patchKind = patchTypeAttribute.PatchKind;
 
             Invocation inner = GetInnerInvocation(innerAttribute);
 
@@ -204,7 +204,7 @@ internal class PatchRegistry
                     var patch = new PatchConfig()
                     {
                         PatchMethod = method,
-                        Type = patchType,
+                        Kind = patchKind,
                         Target = GetOuterInvocation(target),
                         InnerTarget = inner,
                         Options = options,
@@ -241,7 +241,7 @@ internal class PatchRegistry
     {
         if (patch.PatchMethod is null)
             throw new ArgumentException("Patch method not set; call Patch.With()", nameof(patch));
-        if (patch.Type is not { } patchType)
+        if (patch.Kind is not { } patchKind)
             throw new ArgumentException("Patch type not set; call Patch.Prefix or Patch.Postfix", nameof(patch));
         if (patch.Target is not MethodBaseInvocation target)
             throw new ArgumentException("Patch target not set; call Patch.Of()", nameof(patch));
@@ -249,7 +249,7 @@ internal class PatchRegistry
         try
         {
             MethodInvocation patchMethod = new MethodInvocation(patch.PatchMethod);
-            Validate(patchType, patch.Options, patchMethod.MethodInfo, target.MethodBase);
+            Validate(patchKind, patch.Options, patchMethod.MethodInfo, target.MethodBase);
 
             MethodBaseInvocation outer = target;
             Invocation inner = patch.InnerTarget;
@@ -261,7 +261,7 @@ internal class PatchRegistry
                     outer = new MethodInvocation(moveNext);
             }
 
-            var parameterBinder = new ParameterBinder(target, outer, inner, patchType, patch.Options, $"{extraStateKey}#{unpatchKey}");
+            var parameterBinder = new ParameterBinder(target, outer, inner, patchKind, patch.Options, $"{extraStateKey}#{unpatchKey}");
 
             var parameters = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
 
@@ -270,7 +270,7 @@ internal class PatchRegistry
                 unpatchKey = unpatchKey,
                 inner = inner,
                 patch = patchMethod,
-                patchType = patchType,
+                patchKind = patchKind,
                 parameters = parameters,
                 options = patch.Options,
                 priority = patch.Priority,
@@ -343,7 +343,7 @@ internal class PatchRegistry
         };
     }
 
-    private static void Validate(PatchType patchType, PatchOptions options, MethodInfo method, MethodBase target)
+    private static void Validate(PatchKind patchKind, PatchOptions options, MethodInfo method, MethodBase target)
     {
         if (method.ContainsGenericParameters)
             throw new PatchDefinitionException(method, "Generic patch functions are not supported");
@@ -370,9 +370,9 @@ internal class PatchRegistry
         if ((target.CallingConvention & CallingConventions.VarArgs) != 0)
             throw new PatchDefinitionException(method, "Can't patch varargs method");
 
-        switch (patchType)
+        switch (patchKind)
         {
-            case PatchType.Prefix:
+            case PatchKind.Prefix:
             {
                 if ((options & PatchOptions.AlwaysRun) != 0 && method.ReturnType != typeof(void))
                     throw new PatchDefinitionException(method, "Prefix with AlwaysRun option must return 'void'");
@@ -380,13 +380,13 @@ internal class PatchRegistry
                     throw new PatchDefinitionException(method, "Prefix must return 'bool' or 'void'");
                 break;
             }
-            case PatchType.Postfix:
+            case PatchKind.Postfix:
             {
                 if (method.ReturnType != typeof(void))
                     throw new PatchDefinitionException(method, "Postfix must return 'void'");
                 break;
             }
-            default: throw new ArgumentOutOfRangeException(nameof(patchType), patchType, null);
+            default: throw new ArgumentOutOfRangeException(nameof(patchKind), patchKind, null);
         }
     }
 

@@ -46,7 +46,7 @@ public sealed class CircumfixRuleBuilderTests
 
     private static PatchInfo CreatePatch(
         Invocation patch,
-        PatchType patchType,
+        PatchKind patchKind,
         BoundParameter[]? parameters = null,
         PatchOptions options = PatchOptions.Default,
         int priority = 0,
@@ -55,7 +55,7 @@ public sealed class CircumfixRuleBuilderTests
         unpatchKey = 0,
         inner = inner ?? EmptyInvocation.Instance,
         patch = patch,
-        patchType = patchType,
+        patchKind = patchKind,
         parameters = parameters ?? [],
         options = options,
         priority = priority,
@@ -80,8 +80,8 @@ public sealed class CircumfixRuleBuilderTests
         var context = new RuleBuilderContext();
         var builder = new CircumfixRuleBuilder(context, Target,
         [
-            CreatePatch(BooleanPrefix, PatchType.Prefix, inner: VoidTarget),
-            CreatePatch(PostfixLow, PatchType.Postfix, inner: VoidTarget),
+            CreatePatch(BooleanPrefix, PatchKind.Prefix, inner: VoidTarget),
+            CreatePatch(PostfixLow, PatchKind.Postfix, inner: VoidTarget),
         ]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -95,7 +95,7 @@ public sealed class CircumfixRuleBuilderTests
     public void BuildRules_VoidPrefix_EmitsOnlyMethodPrefix()
     {
         var context = new RuleBuilderContext();
-        var builder = new CircumfixRuleBuilder(context, Target, [CreatePatch(PrefixLow, PatchType.Prefix)]);
+        var builder = new CircumfixRuleBuilder(context, Target, [CreatePatch(PrefixLow, PatchKind.Prefix)]);
 
         Rule[] rules = [.. builder.BuildRules()];
 
@@ -119,7 +119,7 @@ public sealed class CircumfixRuleBuilderTests
     public void BuildRules_BooleanPrefix_ValueTarget_SkipsToInitializedResultWithoutRewritingReturns()
     {
         var context = new RuleBuilderContext();
-        var builder = new CircumfixRuleBuilder(context, Target, [CreatePatch(BooleanPrefix, PatchType.Prefix)]);
+        var builder = new CircumfixRuleBuilder(context, Target, [CreatePatch(BooleanPrefix, PatchKind.Prefix)]);
 
         Rule[] rules = [.. builder.BuildRules()];
         Label skip = builder.CrossRuleLabels.Single();
@@ -157,7 +157,7 @@ public sealed class CircumfixRuleBuilderTests
     public void BuildRules_BooleanPrefix_VoidTarget_SkipsWithoutResultLocal()
     {
         var context = new RuleBuilderContext();
-        var builder = new CircumfixRuleBuilder(context, VoidTarget, [CreatePatch(BooleanPrefix, PatchType.Prefix)]);
+        var builder = new CircumfixRuleBuilder(context, VoidTarget, [CreatePatch(BooleanPrefix, PatchKind.Prefix)]);
 
         Rule[] rules = [.. builder.BuildRules()];
         Label skip = builder.CrossRuleLabels.Single();
@@ -187,7 +187,7 @@ public sealed class CircumfixRuleBuilderTests
     public void BuildRules_PostfixWithoutResultBinding_KeepsReturnValueOnStack()
     {
         var context = new RuleBuilderContext();
-        var builder = new CircumfixRuleBuilder(context, Target, [CreatePatch(PostfixLow, PatchType.Postfix)]);
+        var builder = new CircumfixRuleBuilder(context, Target, [CreatePatch(PostfixLow, PatchKind.Postfix)]);
 
         Rule[] rules = [.. builder.BuildRules()];
         Label end = builder.CrossRuleLabels.Single();
@@ -225,7 +225,7 @@ public sealed class CircumfixRuleBuilderTests
             bindingType = BindingType.Result, scope = Scope.Outer,
         };
         var builder = new CircumfixRuleBuilder(context, Target,
-            [CreatePatch(WriteResult, PatchType.Postfix, parameters: [binding])]);
+            [CreatePatch(WriteResult, PatchKind.Postfix, parameters: [binding])]);
 
         Rule[] rules = [.. builder.BuildRules()];
         Label end = builder.CrossRuleLabels.Single();
@@ -273,9 +273,9 @@ public sealed class CircumfixRuleBuilderTests
         };
         var builder = new CircumfixRuleBuilder(context, Target,
         [
-            CreatePatch(BooleanPrefix, PatchType.Prefix),
-            CreatePatch(SecondBooleanPrefix, PatchType.Prefix),
-            CreatePatch(ReadResult, PatchType.Postfix, parameters: [binding]),
+            CreatePatch(BooleanPrefix, PatchKind.Prefix),
+            CreatePatch(SecondBooleanPrefix, PatchKind.Prefix),
+            CreatePatch(ReadResult, PatchKind.Postfix, parameters: [binding]),
         ]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -336,7 +336,7 @@ public sealed class CircumfixRuleBuilderTests
             bindingType = BindingType.Result, scope = Scope.Outer,
         };
         var builder = new CircumfixRuleBuilder(context, Target,
-            [CreatePatch(WriteResult, PatchType.Prefix, parameters: [binding])]);
+            [CreatePatch(WriteResult, PatchKind.Prefix, parameters: [binding])]);
 
         Rule[] rules = [.. builder.BuildRules()];
         LocalBuilder result = context.locals.Single().Builder;
@@ -365,10 +365,10 @@ public sealed class CircumfixRuleBuilderTests
         var context = new RuleBuilderContext();
         var builder = new CircumfixRuleBuilder(context, VoidTarget,
         [
-            CreatePatch(PrefixHigh, PatchType.Prefix, priority: 10),
-            CreatePatch(PostfixHigh, PatchType.Postfix, priority: 10),
-            CreatePatch(PrefixLow, PatchType.Prefix, priority: -10),
-            CreatePatch(PostfixLow, PatchType.Postfix, priority: -10),
+            CreatePatch(PrefixHigh, PatchKind.Prefix, priority: 10),
+            CreatePatch(PostfixHigh, PatchKind.Postfix, priority: 10),
+            CreatePatch(PrefixLow, PatchKind.Prefix, priority: -10),
+            CreatePatch(PostfixLow, PatchKind.Postfix, priority: -10),
         ]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -415,10 +415,10 @@ public sealed class CircumfixRuleBuilderTests
         var context = new RuleBuilderContext();
         var builder = new CircumfixRuleBuilder(context, VoidTarget,
         [
-            CreatePatch(PrefixLow, PatchType.Prefix),
-            CreatePatch(PostfixLow, PatchType.Postfix),
-            CreatePatch(PrefixHigh, PatchType.Prefix),
-            CreatePatch(PostfixHigh, PatchType.Postfix),
+            CreatePatch(PrefixLow, PatchKind.Prefix),
+            CreatePatch(PostfixLow, PatchKind.Postfix),
+            CreatePatch(PrefixHigh, PatchKind.Prefix),
+            CreatePatch(PostfixHigh, PatchKind.Postfix),
         ]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -468,7 +468,7 @@ public sealed class CircumfixRuleBuilderTests
             bindingType = BindingType.Argument, scope = Scope.Outer, index = 0,
         };
         var builder = new CircumfixRuleBuilder(context, Target,
-            [CreatePatch(WriteArgument, PatchType.Prefix, parameters: [binding])]);
+            [CreatePatch(WriteArgument, PatchKind.Prefix, parameters: [binding])]);
 
         Rule[] rules = [.. builder.BuildRules()];
 
@@ -498,7 +498,7 @@ public sealed class CircumfixRuleBuilderTests
             bindingType = BindingType.Argument, scope = Scope.Outer, index = 0,
         };
         var builder = new CircumfixRuleBuilder(context, RefTarget,
-            [CreatePatch(ReadArgument, PatchType.Prefix, parameters: [binding])]);
+            [CreatePatch(ReadArgument, PatchKind.Prefix, parameters: [binding])]);
 
         Rule[] rules = [.. builder.BuildRules()];
 
@@ -535,8 +535,8 @@ public sealed class CircumfixRuleBuilderTests
         };
         PatchInfo[] patches =
         [
-            CreatePatch(WriteState, PatchType.Prefix, parameters: [write]),
-            CreatePatch(ReadState, PatchType.Postfix, parameters: [read]),
+            CreatePatch(WriteState, PatchKind.Prefix, parameters: [write]),
+            CreatePatch(ReadState, PatchKind.Postfix, parameters: [read]),
         ];
         new StateBuilder(context).AssignStateVariableIndexes(patches);
         LocalBuilder state = write.local!.Builder;
@@ -585,8 +585,8 @@ public sealed class CircumfixRuleBuilderTests
         var context = new RuleBuilderContext();
         var builder = new CircumfixRuleBuilder(context, Target,
         [
-            CreatePatch(AlwaysPrefix, PatchType.Prefix, options: PatchOptions.AlwaysRun, priority: -100),
-            CreatePatch(PrefixLow, PatchType.Prefix, priority: 100),
+            CreatePatch(AlwaysPrefix, PatchKind.Prefix, options: PatchOptions.AlwaysRun, priority: -100),
+            CreatePatch(PrefixLow, PatchKind.Prefix, priority: 100),
         ]);
 
         Rule[] rules = [.. builder.BuildRules()];
@@ -620,10 +620,10 @@ public sealed class CircumfixRuleBuilderTests
         };
         var builder = new CircumfixRuleBuilder(context, Target,
         [
-            CreatePatch(AlwaysPrefix, PatchType.Prefix, options: PatchOptions.AlwaysRun, priority: -100),
-            CreatePatch(BooleanPrefix, PatchType.Prefix, priority: 100),
-            CreatePatch(AlwaysPostfix, PatchType.Postfix, parameters: [binding], options: PatchOptions.AlwaysRun, priority: -100),
-            CreatePatch(PostfixLow, PatchType.Postfix, priority: 100),
+            CreatePatch(AlwaysPrefix, PatchKind.Prefix, options: PatchOptions.AlwaysRun, priority: -100),
+            CreatePatch(BooleanPrefix, PatchKind.Prefix, priority: 100),
+            CreatePatch(AlwaysPostfix, PatchKind.Postfix, parameters: [binding], options: PatchOptions.AlwaysRun, priority: -100),
+            CreatePatch(PostfixLow, PatchKind.Postfix, priority: 100),
         ]);
 
         Rule[] rules = [.. builder.BuildRules()];

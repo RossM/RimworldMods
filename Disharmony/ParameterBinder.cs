@@ -14,13 +14,13 @@ namespace Disharmony;
 /// <param name="target">The declared target of the patch.</param>
 /// <param name="outer">The outer method being patched.</param>
 /// <param name="inner">The inner invocation being patched, or <see cref="EmptyInvocation" /> for an outer patch.</param>
-/// <param name="patchType">The patch type.</param>
+/// <param name="patchKind">The patch type.</param>
 /// <param name="stateGroupKey">A string for grouping together <see cref="StateAttribute">state</see> parameters.</param>
 internal class ParameterBinder(
     Invocation target,
     Invocation outer,
     Invocation inner,
-    PatchType patchType,
+    PatchKind patchKind,
     PatchOptions options,
     string stateGroupKey)
 {
@@ -261,7 +261,7 @@ internal class ParameterBinder(
     {
         if (invocation.ReturnType == typeof(void))
             throw new ParameterBindingException(parameter.Name, "Method returns void");
-        if (patchType == PatchType.Prefix && AlwaysRun)
+        if (patchKind == PatchKind.Prefix && AlwaysRun)
             throw new ParameterBindingException(parameter.Name, "Binding return value not allowed for Prefix with AlwaysRun option");
         ValidateCast(parameter, invocation.ReturnType);
         return new() { parameter = parameter, bindingType = BindingType.Result, scope = scope };
@@ -440,7 +440,7 @@ internal class ParameterBinder(
 
     private ParameterBinding BindException(ParameterInfo parameter)
     {
-        if (patchType != PatchType.Postfix || !AlwaysRun)
+        if (patchKind != PatchKind.Postfix || !AlwaysRun)
             throw new ParameterBindingException(parameter.Name, "Accessing exception is only supported for Postfix with AlwaysRun option");
         ValidateCast(parameter, typeof(Exception));
         return new() { parameter = parameter, bindingType = BindingType.Exception, scope = Scope.Any };
@@ -521,12 +521,12 @@ internal class ParameterBinder(
         // be wildly unreliable, as the compiler is free to copy those to locals any time it wants.
         if (IsWriteableRef(parameter) && !type.IsByRef && !AllowUnsafe)
         {
-            if (scope == Scope.Outer && !(patchType == PatchType.Prefix && !IsInfix))
+            if (scope == Scope.Outer && !(patchKind == PatchKind.Prefix && !IsInfix))
                 throw new ParameterBindingException(parameter.Name,
-                    $"{patchType} can't access outer method {bindingType} by writeable reference");
-            if (scope == Scope.Inner && !(patchType == PatchType.Prefix && IsInfix))
+                    $"{patchKind} can't access outer method {bindingType} by writeable reference");
+            if (scope == Scope.Inner && !(patchKind == PatchKind.Prefix && IsInfix))
                 throw new ParameterBindingException(parameter.Name,
-                    $"{patchType} can't access inner method {bindingType} by writeable reference");
+                    $"{patchKind} can't access inner method {bindingType} by writeable reference");
         }
     }
 

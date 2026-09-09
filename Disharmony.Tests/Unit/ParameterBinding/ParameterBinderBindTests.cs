@@ -181,7 +181,7 @@ internal sealed class ParameterBinderBindTests
         Invocation outer,
         Invocation? inner = null,
         Invocation? target = null,
-        PatchType patchType = PatchType.Prefix,
+        PatchKind patchKind = PatchKind.Prefix,
         PatchOptions options = PatchOptions.Default)
     {
         var parameter = GetParameter(patchMethodName);
@@ -189,7 +189,7 @@ internal sealed class ParameterBinderBindTests
             target ?? outer,
             outer,
             inner ?? EmptyInvocation.Instance,
-            patchType,
+            patchKind,
             options,
             "test-group");
         return binder.Bind(parameter);
@@ -1468,7 +1468,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Exception_Attribute),
             StaticVoid,
-            patchType: PatchType.Postfix,
+            patchKind: PatchKind.Postfix,
             options: PatchOptions.AlwaysRun);
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Exception));
@@ -1531,7 +1531,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.ReservedName_Exception),
             StaticVoid,
-            patchType: PatchType.Postfix,
+            patchKind: PatchKind.Postfix,
             options: PatchOptions.AlwaysRun);
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Exception));
@@ -1810,7 +1810,7 @@ internal sealed class ParameterBinderBindTests
             Bind(
                 nameof(ParameterBinderPatchMethods.Error_ExceptionWithoutAlwaysRun),
                 StaticVoid,
-                patchType: PatchType.Postfix))!;
+                patchKind: PatchKind.Postfix))!;
 
         Assert.That(exception.Message,
             Is.EqualTo("__exception: Accessing exception is only supported for Postfix with AlwaysRun option"));
@@ -1830,7 +1830,7 @@ internal sealed class ParameterBinderBindTests
             Bind(
                 nameof(ParameterBinderPatchMethods.Error_PostfixOuterParameterByWritableReference),
                 StaticIntParameter,
-                patchType: PatchType.Postfix))!;
+                patchKind: PatchKind.Postfix))!;
 
         Assert.That(exception.Message,
             Is.EqualTo("value: Postfix can't access outer method parameter by writeable reference"));
@@ -1842,7 +1842,7 @@ internal sealed class ParameterBinderBindTests
         BoundParameter binding = Bind(
             nameof(ParameterBinderPatchMethods.Error_PostfixOuterParameterByWritableReference),
             StaticIntParameter,
-            patchType: PatchType.Postfix,
+            patchKind: PatchKind.Postfix,
             options: PatchOptions.AllowUnsafe);
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));
@@ -1856,7 +1856,7 @@ internal sealed class ParameterBinderBindTests
                 nameof(ParameterBinderPatchMethods.Error_InnerPostfixInnerParameterByWritableReference),
                 StaticVoid,
                 InnerIntParameter,
-                patchType: PatchType.Postfix))!;
+                patchKind: PatchKind.Postfix))!;
 
         Assert.That(exception.Message,
             Is.EqualTo("value: Postfix can't access inner method parameter by writeable reference"));
@@ -1869,7 +1869,7 @@ internal sealed class ParameterBinderBindTests
             nameof(ParameterBinderPatchMethods.Error_InnerPostfixInnerParameterByWritableReference),
             StaticVoid,
             InnerIntParameter,
-            patchType: PatchType.Postfix,
+            patchKind: PatchKind.Postfix,
             options: PatchOptions.AllowUnsafe);
 
         Assert.That(binding.bindingType, Is.EqualTo(BindingType.Argument));

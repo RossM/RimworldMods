@@ -5,7 +5,7 @@ namespace Disharmony;
 /// <summary>
 ///     Specifies whether a patch runs before or after its target operation.
 /// </summary>
-public enum PatchType
+public enum PatchKind
 {
     /// <summary>
     ///     Runs before the target operation.

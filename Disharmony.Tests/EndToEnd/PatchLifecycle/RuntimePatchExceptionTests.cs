@@ -140,7 +140,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
 
         Assert.Throws<PatchException>(() =>
         {
-            Patcher.Patch(Patch.With(patch).Of(target) with { Type = (PatchType)int.MaxValue });
+            Patcher.Patch(Patch.With(patch).Of(target) with { Kind = (PatchKind)int.MaxValue });
             Patcher.ForceApply();
         });
     }

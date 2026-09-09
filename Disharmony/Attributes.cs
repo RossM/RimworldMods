@@ -211,13 +211,13 @@ public sealed class CategoryAttribute(string category) : Attribute
 /// <summary>
 ///     Provides the base class for attributes that identify whether a patch method is a prefix or postfix.
 /// </summary>
-/// <param name="patchType">The point relative to the target operation at which the patch runs.</param>
-public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
+/// <param name="patchKind">The point relative to the target operation at which the patch runs.</param>
+public abstract class PatchTypeAttribute(PatchKind patchKind) : Attribute
 {
     /// <summary>
     ///     Gets the point relative to the target operation at which the patch runs.
     /// </summary>
-    public PatchType PatchType { get; } = patchType;
+    public PatchKind PatchKind { get; } = patchKind;
 }
 
 /// <summary>
@@ -232,7 +232,7 @@ public abstract class PatchTypeAttribute(PatchType patchType) : Attribute
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
+public sealed class PrefixAttribute() : PatchTypeAttribute(PatchKind.Prefix);
 
 /// <summary>
 ///     Marks a patch method to run after each selected target operation.
@@ -247,7 +247,7 @@ public sealed class PrefixAttribute() : PatchTypeAttribute(PatchType.Prefix);
 [PublicAPI]
 [MeansImplicitUse]
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class PostfixAttribute() : PatchTypeAttribute(PatchType.Postfix);
+public sealed class PostfixAttribute() : PatchTypeAttribute(PatchKind.Postfix);
 
 /// <summary>
 ///     Provides the base class for attributes that select an operation inside an outer patch target.

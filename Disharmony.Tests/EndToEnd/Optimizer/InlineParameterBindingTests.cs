@@ -15,7 +15,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     public void DisableOptimizer() =>
         HarmonyInterface.Instance.optimizerEnabled = false;
 
-    private static void ApplyInlinePatch(string patchMethodName, PatchType patchType,
+    private static void ApplyInlinePatch(string patchMethodName, PatchKind patchKind,
         string targetMethodName, string? innerMethodName = null)
     {
         MethodInfo patch = typeof(InlineParameterBindingPatches).GetMethod(patchMethodName)!;
@@ -23,11 +23,11 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         MethodInfo? innerTarget = innerMethodName == null
             ? null
             : typeof(InlineParameterBindingTargets).GetMethod(innerMethodName)!;
-        PatchConfig patchConfig = patchType switch
+        PatchConfig patchConfig = patchKind switch
         {
-            PatchType.Prefix => Patch.Prefix,
-            PatchType.Postfix => Patch.Postfix,
-            _ => throw new ArgumentOutOfRangeException(nameof(patchType)),
+            PatchKind.Prefix => Patch.Prefix,
+            PatchKind.Postfix => Patch.Postfix,
+            _ => throw new ArgumentOutOfRangeException(nameof(patchKind)),
         };
         if (innerTarget is not null)
             patchConfig = patchConfig.Inner(innerTarget);
@@ -35,15 +35,15 @@ public sealed class InlineParameterBindingTests : PatchTestBase
             .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
     }
 
-    private static void ApplyInlinePatch(string patchMethodName, PatchType patchType,
+    private static void ApplyInlinePatch(string patchMethodName, PatchKind patchKind,
         MethodBase target)
     {
         MethodInfo patch = typeof(InlineParameterBindingPatches).GetMethod(patchMethodName)!;
-        PatchConfig patchConfig = patchType switch
+        PatchConfig patchConfig = patchKind switch
         {
-            PatchType.Prefix => Patch.Prefix,
-            PatchType.Postfix => Patch.Postfix,
-            _ => throw new ArgumentOutOfRangeException(nameof(patchType)),
+            PatchKind.Prefix => Patch.Prefix,
+            PatchKind.Postfix => Patch.Postfix,
+            _ => throw new ArgumentOutOfRangeException(nameof(patchKind)),
         };
         Patcher.Patch(patchConfig.With(patch)
             .Options(PatchOptions.Optimize | PatchOptions.Inline).Of(target));
@@ -54,7 +54,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.OuterPrefix_Argument_WriteByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             nameof(InlineParameterBindingTargets.OuterPrefix_Argument_WriteByReference));
 
         int result = InlineParameterBindingTargets.OuterPrefix_Argument_WriteByReference(10);
@@ -71,7 +71,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.InnerPrefix_Argument_WriteByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             nameof(InlineParameterBindingTargets.InnerPrefix_Argument_WriteByReference),
             nameof(InlineParameterBindingTargets.InnerPrefix_Argument_WriteByReference_Inner));
 
@@ -89,7 +89,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.OuterPostfix_Result_WriteByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             nameof(InlineParameterBindingTargets.OuterPostfix_Result_WriteByReference));
 
         int result = InlineParameterBindingTargets.OuterPostfix_Result_WriteByReference();
@@ -106,7 +106,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.InnerPostfix_Result_WriteByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             nameof(InlineParameterBindingTargets.InnerPostfix_Result_WriteByReference),
             nameof(InlineParameterBindingTargets.InnerPostfix_Result_WriteByReference_Inner));
 
@@ -125,7 +125,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         InlineParameterBindingPatches.PrimitiveObserved = 0;
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_Argument_Primitive_ReadByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.PrimitiveIdentity))!);
 
         int result = InlineParameterBindingTargets.PrimitiveIdentity(7);
@@ -139,7 +139,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_Argument_Primitive_WriteByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.PrimitiveIdentity))!);
 
         int result = InlineParameterBindingTargets.PrimitiveIdentity(7);
@@ -154,7 +154,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         var original = new OptimizerDataObject { Number = 7, Text = "original" };
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_Argument_ReferenceType_ReadByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.ReferenceIdentity))!);
 
         OptimizerDataObject result = InlineParameterBindingTargets.ReferenceIdentity(original);
@@ -169,7 +169,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         var original = new OptimizerDataObject { Number = 7, Text = "original" };
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_Argument_ReferenceType_WriteByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.ReferenceIdentity))!);
 
         OptimizerDataObject result = InlineParameterBindingTargets.ReferenceIdentity(original);
@@ -188,7 +188,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         var original = new OptimizerDataStruct { Number = 7, Text = "original" };
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_Argument_Struct_ReadByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.StructIdentity))!);
 
         OptimizerDataStruct result = InlineParameterBindingTargets.StructIdentity(original);
@@ -205,7 +205,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         var original = new OptimizerDataStruct { Number = 7, Text = "original" };
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_Argument_Struct_WriteByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.StructIdentity))!);
 
         OptimizerDataStruct result = InlineParameterBindingTargets.StructIdentity(original);
@@ -222,7 +222,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         InlineParameterBindingPatches.PrimitiveObserved = 0;
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Postfix_Result_Primitive_ReadByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.PrimitiveResult))!);
 
         int result = InlineParameterBindingTargets.PrimitiveResult();
@@ -236,7 +236,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Postfix_Result_Primitive_WriteByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.PrimitiveResult))!);
 
         int result = InlineParameterBindingTargets.PrimitiveResult();
@@ -250,7 +250,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         InlineParameterBindingPatches.ReferenceObserved = null;
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Postfix_Result_ReferenceType_ReadByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.ReferenceResult))!);
 
         OptimizerDataObject result = InlineParameterBindingTargets.ReferenceResult();
@@ -265,7 +265,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Postfix_Result_ReferenceType_WriteByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.ReferenceResult))!);
 
         OptimizerDataObject result = InlineParameterBindingTargets.ReferenceResult();
@@ -280,7 +280,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         InlineParameterBindingPatches.StructObserved = default;
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Postfix_Result_Struct_ReadByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.StructResult))!);
 
         OptimizerDataStruct result = InlineParameterBindingTargets.StructResult();
@@ -296,7 +296,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
     {
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Postfix_Result_Struct_WriteByReference),
-            PatchType.Postfix,
+            PatchKind.Postfix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.StructResult))!);
 
         OptimizerDataStruct result = InlineParameterBindingTargets.StructResult();
@@ -312,7 +312,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         int value = 7;
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_TargetRefArgument_Primitive_ReadByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.RefPrimitiveIdentity))!);
 
         int result = InlineParameterBindingTargets.RefPrimitiveIdentity(ref value);
@@ -328,7 +328,7 @@ public sealed class InlineParameterBindingTests : PatchTestBase
         int value = 7;
         ApplyInlinePatch(
             nameof(InlineParameterBindingPatches.Prefix_TargetRefArgument_Primitive_WriteByReference),
-            PatchType.Prefix,
+            PatchKind.Prefix,
             typeof(InlineParameterBindingTargets).GetMethod(nameof(InlineParameterBindingTargets.RefPrimitiveIdentity))!);
 
         int result = InlineParameterBindingTargets.RefPrimitiveIdentity(ref value);
