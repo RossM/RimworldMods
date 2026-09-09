@@ -8,6 +8,12 @@ internal sealed class UnsupportedParameterBindingAttribute() : ParameterBindingA
 
 internal static class ParameterBinderPatchMethods
 {
+    public static void Method_PropertyGetter_Named([Method(nameof(MethodBindingInstanceTargets.InstanceValue), memberType: MemberType.Getter)] Func<int> accessor) { }
+    public static void Method_PropertySetter_Named([Method(nameof(MethodBindingInstanceTargets.InstanceValue), memberType: MemberType.Setter)] Action<int> accessor) { }
+    public static void Method_PropertyGetter_ExplicitTypeNullName([Method(typeof(MethodBindingInstanceTargets), null, memberType: MemberType.Getter)] Func<int> InstanceValue) { }
+    public static void Method_PropertySetter_ExplicitTypeNullName([Method(typeof(MethodBindingInstanceTargets), null, memberType: MemberType.Setter)] Action<int> InstanceValue) { }
+    public static void Method_PropertyGetter_ImplicitName([Method(Scope.Inner, memberType: MemberType.Getter)] Func<int> InstanceValue) { }
+    public static void Method_PropertySetter_ImplicitName([Method(Scope.Inner, memberType: MemberType.Setter)] Action<int> InstanceValue) { }
     public static void MemberInfo_TypedMethodInfo([MemberInfo] MethodInfo member) { }
     public static void MemberInfo_InnerTypedMethodInfo([MemberInfo(Scope.Inner)] MethodInfo member) { }
     public static void MemberInfo_TypedConstructorInfo([MemberInfo] ConstructorInfo member) { }
@@ -825,6 +831,112 @@ internal sealed class ParameterBinderBindTests
     {
         Assert.Throws<InvalidCastException>(() =>
             Bind(nameof(ParameterBinderPatchMethods.Arguments_ValueArray), StaticIntParameter));
+    }
+
+    [Test]
+    public void Method_PropertyGetter_Named_SelectsAccessor()
+    {
+        var outer = new MethodInvocation(typeof(MethodBindingInstanceTargets)
+            .GetMethod(nameof(MethodBindingInstanceTargets.TargetInstanceMethod))!);
+        var expected = typeof(MethodBindingInstanceTargets).GetProperty(nameof(MethodBindingInstanceTargets.InstanceValue))!.GetMethod;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_PropertyGetter_Named), outer);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void Method_PropertySetter_Named_SelectsAccessor()
+    {
+        var outer = new MethodInvocation(typeof(MethodBindingInstanceTargets)
+            .GetMethod(nameof(MethodBindingInstanceTargets.TargetInstanceMethod))!);
+        var expected = typeof(MethodBindingInstanceTargets).GetProperty(nameof(MethodBindingInstanceTargets.InstanceValue))!.SetMethod;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_PropertySetter_Named), outer);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void Method_PropertyGetter_ExplicitTypeNullName_SelectsAccessor()
+    {
+        var outer = new MethodInvocation(typeof(MethodBindingInstanceTargets)
+            .GetMethod(nameof(MethodBindingInstanceTargets.TargetInstanceMethod))!);
+        var expected = typeof(MethodBindingInstanceTargets).GetProperty(nameof(MethodBindingInstanceTargets.InstanceValue))!.GetMethod;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_PropertyGetter_ExplicitTypeNullName), outer);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void Method_PropertySetter_ExplicitTypeNullName_SelectsAccessor()
+    {
+        var outer = new MethodInvocation(typeof(MethodBindingInstanceTargets)
+            .GetMethod(nameof(MethodBindingInstanceTargets.TargetInstanceMethod))!);
+        var expected = typeof(MethodBindingInstanceTargets).GetProperty(nameof(MethodBindingInstanceTargets.InstanceValue))!.SetMethod;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_PropertySetter_ExplicitTypeNullName), outer);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Outer));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void Method_PropertyGetter_ImplicitName_SelectsAccessor()
+    {
+        var outer = new MethodInvocation(typeof(MethodBindingInstanceTargets)
+            .GetMethod(nameof(MethodBindingInstanceTargets.TargetInstanceMethod))!);
+        var inner = new MethodInvocation(typeof(MethodBindingInnerTargets)
+            .GetMethod(nameof(MethodBindingInnerTargets.TargetInstanceMethod))!);
+        var expected = typeof(MethodBindingInnerTargets).GetProperty(nameof(MethodBindingInnerTargets.InstanceValue))!.GetMethod;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_PropertyGetter_ImplicitName), outer, inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
+    }
+
+    [Test]
+    public void Method_PropertySetter_ImplicitName_SelectsAccessor()
+    {
+        var outer = new MethodInvocation(typeof(MethodBindingInstanceTargets)
+            .GetMethod(nameof(MethodBindingInstanceTargets.TargetInstanceMethod))!);
+        var inner = new MethodInvocation(typeof(MethodBindingInnerTargets)
+            .GetMethod(nameof(MethodBindingInnerTargets.TargetInstanceMethod))!);
+        var expected = typeof(MethodBindingInnerTargets).GetProperty(nameof(MethodBindingInnerTargets.InstanceValue))!.SetMethod;
+
+        BoundParameter binding = Bind(nameof(ParameterBinderPatchMethods.Method_PropertySetter_ImplicitName), outer, inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(binding.bindingType, Is.EqualTo(BindingType.Delegate));
+            Assert.That(binding.scope, Is.EqualTo(Scope.Inner));
+            Assert.That(binding.memberInfo, Is.EqualTo(expected));
+        });
     }
 
     [Test]

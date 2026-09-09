@@ -3,6 +3,38 @@ namespace Disharmony.Tests.EndToEnd.ParameterBinding;
 public static class MethodBindingPatches
 {
     [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_PropertyGetter_Named([Method(nameof(MethodBindingInstanceTargets.InstanceValue), memberType: MemberType.Getter)] Func<int> accessor) =>
+        ResultObserved = accessor();
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_PropertySetter_Named([Method(nameof(MethodBindingInstanceTargets.InstanceValue), memberType: MemberType.Setter)] Action<int> accessor) =>
+        accessor(42);
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_PropertyGetter_ExplicitTypeNullName([Method(typeof(MethodBindingInstanceTargets), null, memberType: MemberType.Getter)] Func<int> InstanceValue) =>
+        ResultObserved = InstanceValue();
+
+    [Prefix]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.TargetInstanceMethod))]
+    public static void Prefix_MethodAttribute_PropertySetter_ExplicitTypeNullName([Method(typeof(MethodBindingInstanceTargets), null, memberType: MemberType.Setter)] Action<int> InstanceValue) =>
+        InstanceValue(42);
+
+    [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
+    public static void InnerPrefix_MethodAttribute_PropertyGetter_ImplicitName([Method(Scope.Inner, memberType: MemberType.Getter)] Func<int> InstanceValue) =>
+        ResultObserved = InstanceValue();
+
+    [Prefix]
+    [Inner(typeof(MethodBindingInnerTargets), nameof(MethodBindingInnerTargets.TargetInstanceMethod))]
+    [Target(typeof(MethodBindingInstanceTargets), nameof(MethodBindingInstanceTargets.CallInnerInstanceMethod))]
+    public static void InnerPrefix_MethodAttribute_PropertySetter_ImplicitName([Method(Scope.Inner, memberType: MemberType.Setter)] Action<int> InstanceValue) =>
+        InstanceValue(42);
+
+    [Prefix]
     [Target(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.TargetInstanceMethod))]
     public static void Prefix_MethodAttribute_ExplicitType_Named_NonVirtualCall(
         [Method(typeof(MethodBindingVirtualBaseTargets), nameof(MethodBindingVirtualBaseTargets.Describe), virtualCall: false)] Func<string, string> method) =>
@@ -270,6 +302,109 @@ public static class MethodBindingPatches
 [TestFixture]
 public sealed class MethodBindingTests : PatchTestBase
 {
+    [Test]
+    public void Prefix_MethodAttribute_PropertyGetter_Named()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        var target = new MethodBindingInstanceTargets { InstanceValue = 11 };
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.Prefix_MethodAttribute_PropertyGetter_Named));
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(target.InstanceValue, Is.EqualTo(11));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_PropertySetter_Named()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        var target = new MethodBindingInstanceTargets { InstanceValue = 11 };
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.Prefix_MethodAttribute_PropertySetter_Named));
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(target.InstanceValue, Is.EqualTo(42));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_PropertyGetter_ExplicitTypeNullName()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        var target = new MethodBindingInstanceTargets { InstanceValue = 11 };
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.Prefix_MethodAttribute_PropertyGetter_ExplicitTypeNullName));
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(target.InstanceValue, Is.EqualTo(11));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(11));
+        });
+    }
+
+    [Test]
+    public void Prefix_MethodAttribute_PropertySetter_ExplicitTypeNullName()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        var target = new MethodBindingInstanceTargets { InstanceValue = 11 };
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.Prefix_MethodAttribute_PropertySetter_ExplicitTypeNullName));
+
+        int result = target.TargetInstanceMethod();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(10));
+            Assert.That(target.InstanceValue, Is.EqualTo(42));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_PropertyGetter_ImplicitName()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        var target = new MethodBindingInstanceTargets { InstanceValue = 11 };
+        var inner = new MethodBindingInnerTargets { InstanceValue = 23 };
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_PropertyGetter_ImplicitName));
+
+        int result = target.CallInnerInstanceMethod(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(target.InstanceValue, Is.EqualTo(11));
+            Assert.That(inner.InstanceValue, Is.EqualTo(23));
+            Assert.That(MethodBindingPatches.ResultObserved, Is.EqualTo(23));
+        });
+    }
+
+    [Test]
+    public void InnerPrefix_MethodAttribute_PropertySetter_ImplicitName()
+    {
+        MethodBindingPatches.ResultObserved = 0;
+        var target = new MethodBindingInstanceTargets { InstanceValue = 11 };
+        var inner = new MethodBindingInnerTargets { InstanceValue = 23 };
+        ApplyPatch(typeof(MethodBindingPatches), nameof(MethodBindingPatches.InnerPrefix_MethodAttribute_PropertySetter_ImplicitName));
+
+        int result = target.CallInnerInstanceMethod(inner);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.EqualTo(20));
+            Assert.That(target.InstanceValue, Is.EqualTo(11));
+            Assert.That(inner.InstanceValue, Is.EqualTo(42));
+        });
+    }
+
     [Test]
     public void Prefix_MethodAttribute_ExplicitType_Named_NonVirtualCall()
     {
