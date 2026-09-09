@@ -85,7 +85,7 @@ public enum PatchOptions
     ///     Ordinarily the rules engine will report an error if a patch's inner target operation is not found.
     ///     This flag causes the patch to instead be silently skipped.
     /// </remarks>
-    SuppressRuntimeErrors = 0x10,
+    AllowMissingInnerTarget = 0x10,
 
     /// <summary>
     ///     Logs the modified IL and, when available, the generated Mono JIT assembly.

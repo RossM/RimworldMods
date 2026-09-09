@@ -68,7 +68,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outer = typeof(StaticMethodTargets).GetMethod(
             nameof(StaticMethodTargets.IntResult))!;
 
-        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.AllowMissingInnerTarget));
         Patcher.ForceApply();
 
         Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
@@ -85,7 +85,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outer = typeof(OuterStaticMethodTargets).GetMethod(
             nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.AllowMissingInnerTarget));
         Patcher.ForceApply();
 
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));
@@ -102,7 +102,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outer = typeof(StaticMethodTargets).GetMethod(
             nameof(StaticMethodTargets.IntResult))!;
 
-        Patcher.Patch(Patch.Postfix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.Patch(Patch.Postfix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.AllowMissingInnerTarget));
         Patcher.ForceApply();
 
         Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
@@ -119,7 +119,7 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
         MethodInfo outer = typeof(OuterStaticMethodTargets).GetMethod(
             nameof(OuterStaticMethodTargets.IntResult))!;
 
-        Patcher.Patch(Patch.Postfix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.Patch(Patch.Postfix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.AllowMissingInnerTarget));
         Patcher.ForceApply();
 
         Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));

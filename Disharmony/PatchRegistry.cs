@@ -57,7 +57,7 @@ internal struct PatchInfo
     public readonly bool Debug => (options & PatchOptions.Debug) != 0;
     public readonly bool Optimize => (options & PatchOptions.Optimize) != 0;
     public readonly bool AlwaysRun => (options & PatchOptions.AlwaysRun) != 0;
-    public readonly bool SuppressRuntimeErrors => (options & PatchOptions.SuppressRuntimeErrors) != 0;
+    public readonly bool AllowMissingInnerTarget => (options & PatchOptions.AllowMissingInnerTarget) != 0;
     public readonly bool HasBindingType(BindingType bindingType) => parameters.Any(p => p.bindingType == bindingType);
 }
 

@@ -86,7 +86,7 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
         [
-            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.AllowMissingInnerTarget),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
@@ -114,7 +114,7 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
         [
-            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.AllowMissingInnerTarget),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
@@ -142,8 +142,8 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
         [
-            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
-            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.AllowMissingInnerTarget),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.AllowMissingInnerTarget),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 
@@ -204,7 +204,7 @@ public sealed class InfixRuleBuilderTests
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
         [
-            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.AllowMissingInnerTarget),
             CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.Default),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
@@ -236,7 +236,7 @@ public sealed class InfixRuleBuilderTests
         PatchInfo[] patches =
         [
             CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.Default),
-            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.AllowMissingInnerTarget),
         ];
         var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
 

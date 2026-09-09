@@ -102,12 +102,12 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
     {
         EmitReplacement();
 
-        // Only allow silently skipping the rule if all patches agree to SuppressRuntimeErrors.
-        bool suppressRuntimeErrors = prefixes.All(p => p.SuppressRuntimeErrors) && postfixes.All(p => p.SuppressRuntimeErrors);
+        // Only allow silently skipping the rule if all patches agree to AllowMissingInnerTarget.
+        bool allowMissingInnerTarget = prefixes.All(p => p.AllowMissingInnerTarget) && postfixes.All(p => p.AllowMissingInnerTarget);
 
         yield return new Rule
         {
-            Min = suppressRuntimeErrors ? 0 : 1,
+            Min = allowMissingInnerTarget ? 0 : 1,
             Max = 0,
             Mode = OutputMode.Replace,
             Pattern = [.. inner.GetCodeInstructions()],
