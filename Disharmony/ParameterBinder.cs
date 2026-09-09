@@ -3,6 +3,54 @@ using System.Text.RegularExpressions;
 
 namespace Disharmony;
 
+internal enum BindingType
+{
+    /// <summary>
+    ///     Access to a method call's argument.
+    /// </summary>
+    Argument,
+
+    /// <summary>
+    ///    Access to a method call's argument list as an array.
+    /// </summary>
+    ArgumentArray,
+
+    /// <summary>
+    ///     Access to a method call's instance parameter.
+    /// </summary>
+    Instance,
+
+    /// <summary>
+    ///     Access to the result of calling the method.
+    /// </summary>
+    Result,
+
+    /// <summary>
+    ///     Access to a local state variable.
+    /// </summary>
+    State,
+
+    /// <summary>
+    ///     Gets a delegate based on a given MethodInfo.
+    /// </summary>
+    Delegate,
+
+    /// <summary>
+    ///     Gets the exception thrown by the method.
+    /// </summary>
+    Exception,
+
+    /// <summary>
+    ///     Gets a static field.
+    /// </summary>
+    StaticField,
+
+    /// <summary>
+    ///     Gets a MemberInfo object.
+    /// </summary>
+    MemberInfo,
+}
+
 /// <summary>
 ///     A helper class that analyzes patch method parameters and determines how their values should be emitted in code
 ///     generation.
@@ -197,14 +245,21 @@ internal class ParameterBinder(
         return new() { parameter = parameter, bindingType = BindingType.Delegate, scope = scope, memberInfo = baseMethod };
     }
 
-    private ParameterBinding BindMethod(ParameterInfo parameter, Invocation invocation, Scope scope, string name, MemberType memberType, bool allowVirtual, Type? type)
+    private ParameterBinding BindMethod(
+        ParameterInfo parameter,
+        Invocation invocation,
+        Scope scope,
+        string name,
+        MemberType memberType,
+        bool allowVirtual,
+        Type? type)
     {
         var instanceType = invocation.InstanceType;
-        
+
         ValidateCast(typeof(Delegate), parameter.ParameterType, parameter.Name);
-        
+
         var invoke = parameter.ParameterType.GetMethod("Invoke") ??
-                             throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
+                     throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
 
         Type[]? parameterTypes = memberType switch
         {

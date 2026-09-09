@@ -2,54 +2,6 @@
 
 namespace Disharmony;
 
-internal enum BindingType
-{
-    /// <summary>
-    ///     Access to a method call's argument.
-    /// </summary>
-    Argument,
-
-    /// <summary>
-    ///    Access to a method call's argument list as an array.
-    /// </summary>
-    ArgumentArray,
-
-    /// <summary>
-    ///     Access to a method call's instance parameter.
-    /// </summary>
-    Instance,
-
-    /// <summary>
-    ///     Access to the result of calling the method.
-    /// </summary>
-    Result,
-
-    /// <summary>
-    ///     Access to a local state variable.
-    /// </summary>
-    State,
-
-    /// <summary>
-    ///     Gets a delegate based on a given MethodInfo.
-    /// </summary>
-    Delegate,
-
-    /// <summary>
-    ///     Gets the exception thrown by the method.
-    /// </summary>
-    Exception,
-
-    /// <summary>
-    ///     Gets a static field.
-    /// </summary>
-    StaticField,
-
-    /// <summary>
-    ///     Gets a MemberInfo object.
-    /// </summary>
-    MemberInfo,
-}
-
 internal class ParameterBinding
 {
     /// <summary>
