@@ -4,10 +4,10 @@ namespace Disharmony.Tests.EndToEnd.PatchLifecycle;
 
 public class RuntimePatchExceptionPatches
 {
-    public static void Infix_Prefix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior() => patchCalls++;
-    public static void Infix_Prefix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch() => patchCalls++;
-    public static void Infix_Postfix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior() => patchCalls++;
-    public static void Infix_Postfix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch() => patchCalls++;
+    public static void Infix_Prefix_AllowMissingInnerTarget_AbsentOperation_PreservesOriginalBehavior() => patchCalls++;
+    public static void Infix_Prefix_AllowMissingInnerTarget_PresentOperation_ExecutesPatch() => patchCalls++;
+    public static void Infix_Postfix_AllowMissingInnerTarget_AbsentOperation_PreservesOriginalBehavior() => patchCalls++;
+    public static void Infix_Postfix_AllowMissingInnerTarget_PresentOperation_ExecutesPatch() => patchCalls++;
     public static int patchCalls;
 
     public static void RuleBuilder_IncompatibleParameterConversion_IsRejectedBeforeUpdateMethod(string value) { }
@@ -59,11 +59,11 @@ public static class RuntimePatchExceptionGenericPatches<T>
 public sealed class RuntimePatchExceptionTests : PatchTestBase
 {
     [Test]
-    public void Infix_Prefix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior()
+    public void Infix_Prefix_AllowMissingInnerTarget_AbsentOperation_PreservesOriginalBehavior()
     {
         RuntimePatchExceptionPatches.patchCalls = 0;
         MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
-            nameof(RuntimePatchExceptionPatches.Infix_Prefix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior))!;
+            nameof(RuntimePatchExceptionPatches.Infix_Prefix_AllowMissingInnerTarget_AbsentOperation_PreservesOriginalBehavior))!;
         MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outer = typeof(StaticMethodTargets).GetMethod(
             nameof(StaticMethodTargets.IntResult))!;
@@ -76,11 +76,11 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     }
 
     [Test]
-    public void Infix_Prefix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch()
+    public void Infix_Prefix_AllowMissingInnerTarget_PresentOperation_ExecutesPatch()
     {
         RuntimePatchExceptionPatches.patchCalls = 0;
         MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
-            nameof(RuntimePatchExceptionPatches.Infix_Prefix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch))!;
+            nameof(RuntimePatchExceptionPatches.Infix_Prefix_AllowMissingInnerTarget_PresentOperation_ExecutesPatch))!;
         MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outer = typeof(OuterStaticMethodTargets).GetMethod(
             nameof(OuterStaticMethodTargets.IntResult))!;
@@ -93,11 +93,11 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     }
 
     [Test]
-    public void Infix_Postfix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior()
+    public void Infix_Postfix_AllowMissingInnerTarget_AbsentOperation_PreservesOriginalBehavior()
     {
         RuntimePatchExceptionPatches.patchCalls = 0;
         MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
-            nameof(RuntimePatchExceptionPatches.Infix_Postfix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior))!;
+            nameof(RuntimePatchExceptionPatches.Infix_Postfix_AllowMissingInnerTarget_AbsentOperation_PreservesOriginalBehavior))!;
         MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outer = typeof(StaticMethodTargets).GetMethod(
             nameof(StaticMethodTargets.IntResult))!;
@@ -110,11 +110,11 @@ public sealed class RuntimePatchExceptionTests : PatchTestBase
     }
 
     [Test]
-    public void Infix_Postfix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch()
+    public void Infix_Postfix_AllowMissingInnerTarget_PresentOperation_ExecutesPatch()
     {
         RuntimePatchExceptionPatches.patchCalls = 0;
         MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
-            nameof(RuntimePatchExceptionPatches.Infix_Postfix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch))!;
+            nameof(RuntimePatchExceptionPatches.Infix_Postfix_AllowMissingInnerTarget_PresentOperation_ExecutesPatch))!;
         MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
         MethodInfo outer = typeof(OuterStaticMethodTargets).GetMethod(
             nameof(OuterStaticMethodTargets.IntResult))!;

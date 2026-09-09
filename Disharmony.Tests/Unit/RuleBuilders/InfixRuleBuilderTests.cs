@@ -81,7 +81,7 @@ public sealed class InfixRuleBuilderTests
     };
 
     [Test]
-    public void BuildRules_SuppressRuntimeErrors_PrefixOnly_Minimum0()
+    public void BuildRules_AllowMissingInnerTarget_PrefixOnly_Minimum0()
     {
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
@@ -109,7 +109,7 @@ public sealed class InfixRuleBuilderTests
     }
 
     [Test]
-    public void BuildRules_SuppressRuntimeErrors_PostfixOnly_Minimum0()
+    public void BuildRules_AllowMissingInnerTarget_PostfixOnly_Minimum0()
     {
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
@@ -137,7 +137,7 @@ public sealed class InfixRuleBuilderTests
     }
 
     [Test]
-    public void BuildRules_SuppressRuntimeErrors_BothSuppress_Minimum0()
+    public void BuildRules_AllowMissingInnerTarget_BothAllow_Minimum0()
     {
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
@@ -168,7 +168,7 @@ public sealed class InfixRuleBuilderTests
     }
 
     [Test]
-    public void BuildRules_SuppressRuntimeErrors_NeitherSuppress_Minimum1()
+    public void BuildRules_AllowMissingInnerTarget_NeitherAllows_Minimum1()
     {
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
@@ -199,7 +199,7 @@ public sealed class InfixRuleBuilderTests
     }
 
     [Test]
-    public void BuildRules_SuppressRuntimeErrors_OnlyPrefixSuppresses_Minimum1()
+    public void BuildRules_AllowMissingInnerTarget_OnlyPrefixAllows_Minimum1()
     {
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
@@ -230,7 +230,7 @@ public sealed class InfixRuleBuilderTests
     }
 
     [Test]
-    public void BuildRules_SuppressRuntimeErrors_OnlyPostfixSuppresses_Minimum1()
+    public void BuildRules_AllowMissingInnerTarget_OnlyPostfixAllows_Minimum1()
     {
         var context = new RuleBuilderContext();
         PatchInfo[] patches =
