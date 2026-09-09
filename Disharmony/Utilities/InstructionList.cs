@@ -27,9 +27,9 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
     // ReSharper disable once ParameterHidesMember
     public void AddRange(IEnumerable<CodeInstruction> instructions) => this.instructions.AddRange(instructions);
 
-    public void EmitLocalInitializer(LocalTrackerBuilder localIndex)
+    public void EmitLocalInitializer(LocalTrackerBuilder local)
     {
-        Type type = localIndex.Type;
+        Type type = local.Type;
 
         if (type.IsByRef)
         {
@@ -46,12 +46,12 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
             var field = boxType.GetField(nameof(Box<>.value));
             Add(new(OpCodes.Newobj, constructor));
             Add(new(OpCodes.Ldflda, field));
-            Add(localIndex.Store());
+            Add(local.Store());
         }
         else if (type.IsClass || type.IsInterface)
         {
             Add(new(OpCodes.Ldnull));
-            Add(localIndex.Store());
+            Add(local.Store());
         }
         else if (type.IsPrimitive || type.IsEnum)
         {
@@ -66,11 +66,11 @@ internal class InstructionList(ILGenerator generator) : IEnumerable<CodeInstruct
             else
                 Add(new(OpCodes.Ldc_I4_0));
 
-            Add(localIndex.Store());
+            Add(local.Store());
         }
         else if (type.IsValueType)
         {
-            Add(localIndex.Load(true));
+            Add(local.Load(true));
             Add(new(OpCodes.Initobj, type));
         }
         else
