@@ -3,22 +3,6 @@
 namespace Disharmony;
 
 /// <summary>
-///     Specifies whether a patch runs before or after its target operation.
-/// </summary>
-public enum PatchKind
-{
-    /// <summary>
-    ///     Runs before the target operation.
-    /// </summary>
-    Prefix,
-
-    /// <summary>
-    ///     Runs after the target operation.
-    /// </summary>
-    Postfix,
-}
-
-/// <summary>
 ///     Applies and removes Disharmony patches.
 /// </summary>
 /// <remarks>

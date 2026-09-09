@@ -4,6 +4,22 @@ using JetBrains.Annotations;
 namespace Disharmony;
 
 /// <summary>
+///     Specifies whether a patch runs before or after its target operation.
+/// </summary>
+public enum PatchKind
+{
+    /// <summary>
+    ///     Runs before the target operation.
+    /// </summary>
+    Prefix,
+
+    /// <summary>
+    ///     Runs after the target operation.
+    /// </summary>
+    Postfix,
+}
+
+/// <summary>
 ///     Specifies optional patch behaviors that can be combined as flags.
 /// </summary>
 /// <remarks>
@@ -29,8 +45,7 @@ public enum PatchOptions
     /// <remarks>
     ///     The optimization pass must be enabled separately.
     /// </remarks>
-    [Experimental("DISHARMONY0033")]
-    Optimize = 0x2,
+    [Experimental("DISHARMONY0033")] Optimize = 0x2,
 
     /// <summary>
     ///     Requires that a patch always runs.
