@@ -1345,7 +1345,7 @@ public sealed class RulesEngineTests
     }
 
     [Test]
-    public void OptionalUnmatchedRuleWithoutAnyTransformationThrowsNoMatches()
+    public void OptionalUnmatchedRuleWithoutAnyTransformationPreservesInstructions()
     {
         var rule = new Rule
         {
@@ -1356,10 +1356,9 @@ public sealed class RulesEngineTests
             Output = [new CodeInstruction(OpCodes.Ldc_I4_2)],
         };
 
-        var exception = Assert.Throws<InvalidOperationException>(() =>
-            Run([rule], [new CodeInstruction(OpCodes.Ret)]));
+        List<CodeInstruction> result = Run([rule], [new CodeInstruction(OpCodes.Ret)]);
 
-        Assert.That(exception!.Message, Is.EqualTo("No matches"));
+        Assert.That(MeaningfulOpCodes(result), Is.EqualTo(new[] { OpCodes.Ret }));
     }
 
     [Test]
