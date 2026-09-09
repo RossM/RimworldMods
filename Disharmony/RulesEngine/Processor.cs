@@ -126,7 +126,10 @@ internal class Processor(
             }
 
             if (matches.Count == 0)
-                throw new InvalidOperationException("No matches");
+            {
+                outInstructions = instructions;
+                continue;
+            }
 
             // Make the substitutions
             for (var instructionIndex = 0;; instructionIndex++)
