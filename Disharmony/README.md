@@ -158,7 +158,7 @@ same discount patch can be registered as:
 
 ```csharp
 PatchHandle pricePatches = Patcher.Patch(
-    Patch.Postfix.With(applyMemberDiscount).Of(getPrice));
+    Patch.Postfix.Of(getPrice).With(applyMemberDiscount));
 ```
 
 The builder creates a `PatchConfig`, which `Patcher.Patch` applies. Add `.Inner(innerMethod)` to target calls inside
