@@ -94,7 +94,7 @@ public sealed class InfixRuleBuilderTests
             [
                 new Rule
                 {
-                    Mode = OutputMode.Replace, Name = Combine.FullName, Min = 1, Max = 0,
+                    Mode = OutputMode.Replace, Name = Combine.FullName, Min = 0, Max = 0,
                     Pattern = [new(OpCodes.Call, Combine.MethodInfo)],
                     Output =
                     [
