@@ -205,8 +205,14 @@ internal class ParameterBinder(
         
         var invoke = parameter.ParameterType.GetMethod("Invoke") ??
                              throw new ParameterBindingException(parameter.Name, "Delegate.Invoke not found");
-        
-        var results = ReflectionTools.GetMembers(type ?? instanceType, name, memberType, ReflectionTools.WrapParameterTypes(invoke),
+
+        Type[]? parameterTypes = memberType switch
+        {
+            MemberType.Any or MemberType.Constructor or MemberType.Method => ReflectionTools.WrapParameterTypes(invoke),
+            _ => null,
+        };
+
+        var results = ReflectionTools.GetMembers(type ?? instanceType, name, memberType, parameterTypes,
             null, true);
 
         if (results is not [MethodInfo methodInfo])
