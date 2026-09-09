@@ -43,7 +43,6 @@ internal class CircumfixRuleBuilder : PrefixPostfixRuleBuilder
     public override IEnumerable<Rule> BuildRules()
     {
         InitializeLocals();
-
         EmitPrefixes();
 
         if (output.instructions.Count > 0)
