@@ -115,7 +115,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
                         output.Add(new(OpCodes.Call, InfoOf.FieldInfo_GetFieldFromHandle1));
                         break;
                 }
-                    resultType = parameter.memberInfo!.GetType();
+                resultType = parameter.memberInfo!.GetType();
                 break;
             }
 
