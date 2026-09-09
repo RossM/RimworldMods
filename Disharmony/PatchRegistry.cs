@@ -201,13 +201,23 @@ internal class PatchRegistry
                 {
                     MethodBase target = result as MethodBase ??
                                         throw new ReflectionException($"{nameForErrors}: Couldn't locate method");
-                    AddPatch(new MethodInvocation(method), patchType, GetOuterInvocation(target), inner, options, priority,
-                        extraStateKey, unpatchKey);
+                    var patch = new PatchConfig()
+                    {
+                        PatchMethod = method,
+                        Type = patchType,
+                        Target = GetOuterInvocation(target),
+                        InnerTarget = inner,
+                        Options = options,
+                        Priority = priority
+                    };
+                    ProcessPatch(patch, unpatchKey, extraStateKey);
                 }
             }
         }
         catch (Exception e)
         {
+            if (e.GetType() == typeof(PatchException))
+                throw;
             throw new PatchException($"Error processing {method.FullName}", e);
         }
     }
@@ -239,11 +249,12 @@ internal class PatchRegistry
         try
         {
             AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options,
-                patch.Priority,
-                extraStateKey, unpatchKey);
+                patch.Priority, extraStateKey, unpatchKey);
         }
         catch (Exception e)
         {
+            if (e.GetType() == typeof(PatchException))
+                throw;
             throw new PatchException($"Error processing {patch.PatchMethod.FullName}", e);
         }
     }
