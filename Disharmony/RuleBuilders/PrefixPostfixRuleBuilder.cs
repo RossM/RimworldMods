@@ -2,6 +2,12 @@
 
 namespace Disharmony.RuleBuilders;
 
+/// <summary>
+///     Base class for <see cref="CircumfixRuleBuilder" /> and <see cref="InfixRuleBuilder" /> which contains
+///     common logic for handling prefixes and postfixes.
+/// </summary>
+/// <param name="context"></param>
+/// <param name="outer"></param>
 internal abstract class PrefixPostfixRuleBuilder(RuleBuilderContext context, Invocation outer) : RuleBuilder(context, outer)
 {
     private bool ExceptionBlockNeeded => postfixes.Any(p => p.AlwaysRun);

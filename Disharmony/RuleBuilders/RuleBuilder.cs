@@ -1,5 +1,15 @@
 ﻿namespace Disharmony.RuleBuilders;
 
+/// <summary>
+///     Base class for workers that build pattern matching rules implementing particular patches.
+/// </summary>
+/// <remarks>
+///     <para>
+///         This class includes most of the code for emitting IL instructions to load parameters onto the IL stack.
+///     </para>
+/// </remarks>
+/// <param name="context"></param>
+/// <param name="outer"></param>
 internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer)
 {
     public virtual IEnumerable<Label> CrossRuleLabels => [];
