@@ -100,11 +100,6 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
 
     public override IEnumerable<Rule> BuildRules()
     {
-        List<CodeInstruction> pattern =
-        [
-            .. inner.GetCodeInstructions(),
-        ];
-
         EmitReplacement();
 
         // Only allow silently skipping the rule if all patches agree to SuppressRuntimeErrors.
@@ -115,7 +110,7 @@ internal class InfixRuleBuilder : PrefixPostfixRuleBuilder
             Min = suppressRuntimeErrors ? 0 : 1,
             Max = 0,
             Mode = OutputMode.Replace,
-            Pattern = [.. pattern],
+            Pattern = [.. inner.GetCodeInstructions()],
             Output = [.. output.instructions],
             Name = inner.FullName,
         };
