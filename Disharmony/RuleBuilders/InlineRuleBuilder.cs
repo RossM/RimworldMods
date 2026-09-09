@@ -126,11 +126,6 @@ internal class InlineRuleBuilder : RuleBuilder
         if (locals == null)
             yield break;
 
-        List<CodeInstruction> pattern =
-        [
-            new(OpCodes.Call, method),
-        ];
-
         if (!EmitReplacement())
             yield break;
 
@@ -140,7 +135,7 @@ internal class InlineRuleBuilder : RuleBuilder
             Max = 0,
             Phase = 2,
             Mode = OutputMode.Replace,
-            Pattern = [.. pattern],
+            Pattern = [new(OpCodes.Call, method)],
             Output = [.. output.instructions],
             Name = method.FullName,
         };
