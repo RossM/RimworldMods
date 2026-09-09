@@ -243,13 +243,45 @@ internal class PatchRegistry
             throw new ArgumentException("Patch method not set; call Patch.With()", nameof(patch));
         if (patch.Type is not { } patchType)
             throw new ArgumentException("Patch type not set; call Patch.Prefix or Patch.Postfix", nameof(patch));
-        if (patch.Target is not MethodBaseInvocation targetInvocation)
+        if (patch.Target is not MethodBaseInvocation target)
             throw new ArgumentException("Patch target not set; call Patch.Of()", nameof(patch));
 
         try
         {
-            AddPatch(new MethodInvocation(patch.PatchMethod), patchType, targetInvocation, patch.InnerTarget, patch.Options,
-                patch.Priority, extraStateKey, unpatchKey);
+            MethodInvocation patchMethod = new MethodInvocation(patch.PatchMethod);
+            Validate(patchType, patch.Options, patchMethod.MethodInfo, target.MethodBase);
+
+            MethodBaseInvocation outer = target;
+            Invocation inner = patch.InnerTarget;
+
+            if (inner is not EmptyInvocation && outer is MethodInvocation outerMethod)
+            {
+                var moveNext = outerMethod.MethodInfo.GetStateMachineImplementation();
+                if (moveNext != null)
+                    outer = new MethodInvocation(moveNext);
+            }
+
+            var parameterBinder = new ParameterBinder(target, outer, inner, patchType, patch.Options, $"{extraStateKey}#{unpatchKey}");
+
+            var parameters = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
+
+            PatchInfo patchInfo = new()
+            {
+                unpatchKey = unpatchKey,
+                inner = inner,
+                patch = patchMethod,
+                patchType = patchType,
+                parameters = parameters,
+                options = patch.Options,
+                priority = patch.Priority,
+            };
+
+            methodsToUpdate.Enqueue(outer);
+            patchesByMethod.Add(outer, patchInfo);
+
+            if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methodSet))
+                methodSet = methodsByUnpatchKey[unpatchKey] = [];
+            methodSet.Add(outer);
         }
         catch (Exception e)
         {
@@ -309,50 +341,6 @@ internal class PatchRegistry
             ConstructorInfo outerConstructor => new OuterConstructorInvocation(outerConstructor),
             _ => throw new ArgumentOutOfRangeException(),
         };
-    }
-
-    private void AddPatch(
-        MethodInvocation patchMethod,
-        PatchType patchType,
-        MethodBaseInvocation target,
-        Invocation inner,
-        PatchOptions options,
-        int priority,
-        string extraStateKey,
-        int unpatchKey)
-    {
-        Validate(patchType, options, patchMethod.MethodInfo, target.MethodBase);
-
-        MethodBaseInvocation outer = target;
-
-        if (inner is not EmptyInvocation && outer is MethodInvocation outerMethod)
-        {
-            var moveNext = outerMethod.MethodInfo.GetStateMachineImplementation();
-            if (moveNext != null)
-                outer = new MethodInvocation(moveNext);
-        }
-
-        var parameterBinder = new ParameterBinder(target, outer, inner, patchType, options, $"{extraStateKey}#{unpatchKey}");
-
-        var arguments = patchMethod.MethodInfo.GetParameters().Select(parameterBinder.Bind).ToArray();
-
-        PatchInfo patch = new()
-        {
-            unpatchKey = unpatchKey,
-            inner = inner,
-            patch = patchMethod,
-            patchType = patchType,
-            parameters = arguments,
-            options = options,
-            priority = priority,
-        };
-
-        methodsToUpdate.Enqueue(outer);
-        patchesByMethod.Add(outer, patch);
-
-        if (!methodsByUnpatchKey.TryGetValue(unpatchKey, out var methodSet))
-            methodSet = methodsByUnpatchKey[unpatchKey] = [];
-        methodSet.Add(outer);
     }
 
     private static void Validate(PatchType patchType, PatchOptions options, MethodInfo method, MethodBase target)
