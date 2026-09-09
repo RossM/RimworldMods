@@ -16,16 +16,16 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     protected void EmitParameterValue(ParameterBinding parameter)
     {
         Type parameterType = parameter.parameter.ParameterType;
-        bool wantRef = parameterType.IsByRef;
-        EmitRawParameterValue(parameter, wantRef, out Type resultType);
+        EmitRawParameterValue(parameter, out Type resultType);
 
         if (resultType.IsValueType && parameterType != resultType)
             EmitConversion(parameterType, resultType);
     }
 
-    private void EmitRawParameterValue(ParameterBinding parameter, bool wantRef, out Type resultType)
+    private void EmitRawParameterValue(ParameterBinding parameter, out Type resultType)
     {
         Type parameterType = parameter.parameter.ParameterType;
+        bool wantRef = parameterType.IsByRef;
 
         resultType = parameterType;
 
@@ -154,19 +154,19 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     {
         if (wantRef && !local.Type.IsByRef)
         {
-            output.Add(local.Load(true));
             resultType = local.Type.MakeByRefType();
+            output.Add(local.Load(true));
         }
         else if (!wantRef && local.Type.IsByRef)
         {
-            output.Add(local.Load());
-            output.Add(new(OpCodes.Ldobj, local.Type.GetElementType()));
             resultType = local.Type.GetElementType()!;
+            output.Add(local.Load());
+            output.Add(new(OpCodes.Ldobj, resultType));
         }
         else
         {
-            output.Add(local.Load());
             resultType = local.Type;
+            output.Add(local.Load());
         }
     }
 
