@@ -19,8 +19,6 @@ internal class Processor(
     private readonly Dictionary<int, LocalTracker> localMap_Method = [];
     private readonly Dictionary<Label, Label> labelMap_Method = [];
     private readonly List<MatchData> matches = [];
-    private readonly List<ExceptionBlock> extraBlocks = [];
-    private readonly List<Label> extraLabels = [];
 
     public List<CodeInstruction> outInstructions = [];
     private List<CodeInstruction> instructions = inInstructions;
@@ -39,8 +37,6 @@ internal class Processor(
         foreach (var phase in ruleset.Rules.GroupBy(r => r.Phase).OrderBy(p => p.Key))
         {
             matches.Clear();
-            extraBlocks.Clear();
-            extraLabels.Clear();
             outInstructions = [];
 
             // Check and make sure that all the substitutions apply. Also work out the indexes of all locals.
@@ -421,12 +417,6 @@ internal class Processor(
 
     private void EmitReplacement(CodeInstruction replaceInst, MatchData match)
     {
-        if (replaceInst.blocks.Count > 0)
-            extraBlocks.AddRange(replaceInst.blocks);
-
-        if (replaceInst.labels.Count > 0)
-            extraLabels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(label, match)));
-
         CodeInstruction inst = OpCodeData.GetCanonicalOpcode(replaceInst) switch
         {
             OpCodeValues.Stloc => GetReplacementLocal(replaceInst, match).Store(),
@@ -437,6 +427,12 @@ internal class Processor(
                 labels.Select(label2 => GetReplacementLabel(label2, match)).ToArray()),
             _ => new(replaceInst.opcode, replaceInst.operand),
         };
+
+        if (replaceInst.blocks.Count > 0)
+            inst.blocks.AddRange(replaceInst.blocks);
+
+        if (replaceInst.labels.Count > 0)
+            inst.labels.AddRange(replaceInst.labels.Select(label => GetReplacementLabel(label, match)));
 
         Emit(inst);
     }
@@ -457,18 +453,6 @@ internal class Processor(
             newInstruction.labels.AddRange(labels);
         if (blocks != null)
             newInstruction.blocks.AddRange(blocks);
-
-        if (extraBlocks.Count > 0)
-        {
-            newInstruction.blocks.AddRange(extraBlocks);
-            extraBlocks.Clear();
-        }
-
-        if (extraLabels.Count > 0)
-        {
-            newInstruction.labels.AddRange(extraLabels);
-            extraLabels.Clear();
-        }
 
         outInstructions.Add(newInstruction);
     }
