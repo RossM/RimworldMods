@@ -136,7 +136,7 @@ internal class InlineRuleBuilder : RuleBuilder
 
         yield return new Rule
         {
-            Min = 1,
+            Min = 0,
             Max = 0,
             Phase = 2,
             Mode = OutputMode.Replace,

@@ -33,7 +33,7 @@ public sealed class InlineRuleBuilderTests
         [
             new Rule
             {
-                Mode = OutputMode.Replace, Name = method.FullName, Min = 1, Max = 0, Phase = 2,
+                Mode = OutputMode.Replace, Name = method.FullName, Min = 0, Max = 0, Phase = 2,
                 Pattern = [new(OpCodes.Call, method.MethodInfo)],
                 Output =
                 [
