@@ -4,6 +4,10 @@ namespace Disharmony.Tests.EndToEnd.PatchLifecycle;
 
 public class RuntimePatchExceptionPatches
 {
+    public static void Infix_Prefix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior() => patchCalls++;
+    public static void Infix_Prefix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch() => patchCalls++;
+    public static void Infix_Postfix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior() => patchCalls++;
+    public static void Infix_Postfix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch() => patchCalls++;
     public static int patchCalls;
 
     public static void RuleBuilder_IncompatibleParameterConversion_IsRejectedBeforeUpdateMethod(string value) { }
@@ -54,6 +58,74 @@ public static class RuntimePatchExceptionGenericPatches<T>
 [TestFixture]
 public sealed class RuntimePatchExceptionTests : PatchTestBase
 {
+    [Test]
+    public void Infix_Prefix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior()
+    {
+        RuntimePatchExceptionPatches.patchCalls = 0;
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
+            nameof(RuntimePatchExceptionPatches.Infix_Prefix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior))!;
+        MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outer = typeof(StaticMethodTargets).GetMethod(
+            nameof(StaticMethodTargets.IntResult))!;
+
+        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.ForceApply();
+
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        Assert.That(RuntimePatchExceptionPatches.patchCalls, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void Infix_Prefix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch()
+    {
+        RuntimePatchExceptionPatches.patchCalls = 0;
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
+            nameof(RuntimePatchExceptionPatches.Infix_Prefix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch))!;
+        MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outer = typeof(OuterStaticMethodTargets).GetMethod(
+            nameof(OuterStaticMethodTargets.IntResult))!;
+
+        Patcher.Patch(Patch.Prefix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.ForceApply();
+
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));
+        Assert.That(RuntimePatchExceptionPatches.patchCalls, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void Infix_Postfix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior()
+    {
+        RuntimePatchExceptionPatches.patchCalls = 0;
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
+            nameof(RuntimePatchExceptionPatches.Infix_Postfix_SuppressRuntimeErrors_AbsentOperation_PreservesOriginalBehavior))!;
+        MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outer = typeof(StaticMethodTargets).GetMethod(
+            nameof(StaticMethodTargets.IntResult))!;
+
+        Patcher.Patch(Patch.Postfix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.ForceApply();
+
+        Assert.That(StaticMethodTargets.IntResult(), Is.EqualTo(1));
+        Assert.That(RuntimePatchExceptionPatches.patchCalls, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void Infix_Postfix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch()
+    {
+        RuntimePatchExceptionPatches.patchCalls = 0;
+        MethodInfo patch = typeof(RuntimePatchExceptionPatches).GetMethod(
+            nameof(RuntimePatchExceptionPatches.Infix_Postfix_SuppressRuntimeErrors_PresentOperation_ExecutesPatch))!;
+        MethodInfo inner = typeof(InnerStaticMethodTargets).GetMethod(nameof(InnerStaticMethodTargets.IntResult))!;
+        MethodInfo outer = typeof(OuterStaticMethodTargets).GetMethod(
+            nameof(OuterStaticMethodTargets.IntResult))!;
+
+        Patcher.Patch(Patch.Postfix.Inner(inner).With(patch).Of(outer).Options(PatchOptions.SuppressRuntimeErrors));
+        Patcher.ForceApply();
+
+        Assert.That(OuterStaticMethodTargets.IntResult(), Is.EqualTo(1));
+        Assert.That(RuntimePatchExceptionPatches.patchCalls, Is.EqualTo(1));
+    }
+
     [Test]
     public void RuleBuilder_IncompatibleParameterConversion_IsRejectedBeforeUpdateMethod()
     {

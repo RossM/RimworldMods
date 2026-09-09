@@ -81,6 +81,186 @@ public sealed class InfixRuleBuilderTests
     };
 
     [Test]
+    public void BuildRules_SuppressRuntimeErrors_PrefixOnly_Minimum0()
+    {
+        var context = new RuleBuilderContext();
+        PatchInfo[] patches =
+        [
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+        ];
+        var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
+
+        Rule[] rules = [.. builder.BuildRules()];
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 0, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
+    public void BuildRules_SuppressRuntimeErrors_PostfixOnly_Minimum0()
+    {
+        var context = new RuleBuilderContext();
+        PatchInfo[] patches =
+        [
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+        ];
+        var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
+
+        Rule[] rules = [.. builder.BuildRules()];
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 0, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
+    public void BuildRules_SuppressRuntimeErrors_BothSuppress_Minimum0()
+    {
+        var context = new RuleBuilderContext();
+        PatchInfo[] patches =
+        [
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+        ];
+        var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
+
+        Rule[] rules = [.. builder.BuildRules()];
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 0, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
+    public void BuildRules_SuppressRuntimeErrors_NeitherSuppress_Minimum1()
+    {
+        var context = new RuleBuilderContext();
+        PatchInfo[] patches =
+        [
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.Default),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.Default),
+        ];
+        var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
+
+        Rule[] rules = [.. builder.BuildRules()];
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
+    public void BuildRules_SuppressRuntimeErrors_OnlyPrefixSuppresses_Minimum1()
+    {
+        var context = new RuleBuilderContext();
+        PatchInfo[] patches =
+        [
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.Default),
+        ];
+        var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
+
+        Rule[] rules = [.. builder.BuildRules()];
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
+    public void BuildRules_SuppressRuntimeErrors_OnlyPostfixSuppresses_Minimum1()
+    {
+        var context = new RuleBuilderContext();
+        PatchInfo[] patches =
+        [
+            CreatePatch(PrefixLow, PatchKind.Prefix, InnerVoid, options: PatchOptions.Default),
+            CreatePatch(PostfixLow, PatchKind.Postfix, InnerVoid, options: PatchOptions.SuppressRuntimeErrors),
+        ];
+        var builder = new InfixRuleBuilder(context, Outer, InnerVoid, [.. patches]);
+
+        Rule[] rules = [.. builder.BuildRules()];
+
+        AssertRules(rules,
+        [
+            new Rule
+            {
+                Mode = OutputMode.Replace, Name = InnerVoid.FullName, Min = 1, Max = 0,
+                Pattern = [new(OpCodes.Call, InnerVoid.MethodInfo)],
+                Output =
+                [
+                    CodeInstruction.Annotation($"Prefix {PrefixLow.FullName}"),
+                    new(OpCodes.Call, PrefixLow.MethodInfo),
+                    new(OpCodes.Call, InnerVoid.MethodInfo),
+                    CodeInstruction.Annotation($"Postfix {PostfixLow.FullName}"),
+                    new(OpCodes.Call, PostfixLow.MethodInfo),
+                ],
+            },
+        ]);
+    }
+
+    [Test]
     public void BuildRules_NoPatches_PreservesInnerInvocationStackContract()
     {
         var context = new RuleBuilderContext();
