@@ -191,11 +191,23 @@
             <count>3</count>
             <genes>
               <li>FoamSpray</li>
-              <li>FireResistant</li>
+              <li>WoundHealing_Fast</li>
               <li>Skin_SheerWhite</li>                      
             </genes>
           </maker>
         </li>
+        <!--
+        <li>
+          <maker Class="Xylib.GeneSetMaker_List">
+            <count>3</count>
+            <genes>
+              <li>XylEMPBurst</li>  Not implemented
+              <li>Unstoppable</li>
+              <li>Skin_Blue</li>                      
+            </genes>
+          </maker>
+        </li>
+        -->
       </options>
     </root>
   </Xylib.GeneSetMakerDef>
