@@ -295,9 +295,9 @@ Strong internal bonds coexist with aggression, volatile moods, and a capacity fo
 
 Definition: [`XylSuccuboid`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritable.**
 
-Succuboids combine a delicate, winged body with beauty, social aptitude, and a strong influence over attraction. Pink skin, small horns, a smooth tail, and an enduringly youthful appearance give them a distinctive form, though their youthful looks offer no protection from illness or old age. They prefer nudity, have a high libido, need substantial sleep, and work slowly. Intimacy with them produces a euphoric chemical effect that can leave partners addicted, adding a biological dimension to their romantic influence.
+Succuboids were engineered as fashionable companions for glitterworld elites. Their beauty, social aptitude, and psychic influence over attraction accompany a distinctive appearance: pink skin, wings, small horns, a smooth tail, and looks that remain youthful despite ordinary aging. Their delicate bodies, substantial need for sleep, and slow work suit a life of leisure, while high libido and euphoric secretions make intimacy with them compelling and potentially addictive.
 
-Their germline is exclusively female and strongly self-perpetuating: children conceived with a parent of a different xenotype normally inherit the succuboid parent's complete endogene set unless the other parent also carries strong genes. No origin, habitat, history, or society is specified; this profile describes the biology and behavior established by their genes.
+At some point, succuboids took control of their own reproduction and engineered the ability to bear succuboid daughters with partners of other xenotypes. Their exclusively female lineage can now preserve itself across generations, although reproduction still depends on males from outside that lineage. This combination of reproductive autonomy and intimate dependence on outsiders shapes their ambiguous place in society: some people prize them as prestigious companions, others treat them as valuable commodities, and still others fear them as social parasites. Their origins as designed companions continue to influence how they are treated even after they gained control over their biological future.
 
 ### New functional genes
 
@@ -335,9 +335,9 @@ Their germline is exclusively female and strongly self-perpetuating: children co
 
 Definition: [`XylScaleborn`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritable.**
 
-Scaleborn are heavily armed carnivores whose horns, retractable claws, and strong melee attacks are backed by tough scales. They move slowly, sleep often, and become increasingly sluggish in the cold until they enter torpor. Aggression and unpredictable moods make their temperament as formidable as their bodies, while psychic dullness limits their sensitivity to psychic influence.
+Scaleborn began with a fashion for genetic modifications that recreated the dragons of ancient Earth mythology. The resulting horns, retractable claws, powerful melee attacks, and armored scales have since acquired a practical role on Tyrantis V, a dinosaur world where scaleborn survive as top predators. They hunt its great megafauna for both food and materials, supported by a digestive system that extracts abundant nutrition from raw meat.
 
-Three lineages give this common body plan different defenses: red scaleborn breathe fire and resist burning; dark green scaleborn spray acid and resist toxins; white scaleborn spray foam and heal quickly. These variants are defined by their gene packages, but no account of their origin, ecology, or social organization is provided.
+Their draconic inheritance takes three forms: red scaleborn breathe fire and resist burning; dark green scaleborn spray acid and resist toxins; white scaleborn spray foam and heal quickly. Despite their formidable natural weapons, they move slowly, sleep often, and enter torpor when cold. Aggression and volatile moods accompany these physical adaptations, while psychic dullness reduces their sensitivity to psychic influence. What began as an imitation of mythical creatures has become a way of life among the giant animals of Tyrantis V.
 
 ### New functional genes
 
