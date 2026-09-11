@@ -16,6 +16,7 @@ Lore summaries combine xenotype and faction descriptions, with relevant gene, sc
 - [Succuboid](#succuboid)
 - [Scaleborn](#scaleborn)
 - [Zeegee](#zeegee)
+- [Currently unused genes](#currently-unused-genes)
 
 ## Bossaps
 
@@ -418,6 +419,37 @@ Planetary life is physically difficult for them. Their delicate bodies and weak 
 - Poor animals aptitude (`AptitudePoor_Animals`).
 - Strong intellectual aptitude (`AptitudeStrong_Intellectual`).
 
+## Currently unused genes
+
+These **17 new genes** are defined in the mod but are not assigned to any of its ten xenotypes, either directly or through an explicitly listed bonus-gene package. "Unused" here means unused by those presets, not disabled: custom xenotypes and random gene generation may still use them. Abstract definitions and commented-out code are excluded.
+
+### Functional genes
+
+| Gene | Effect |
+| --- | --- |
+| drug resistant ([`XylDrugResistant`](Defs/GeneDefs/GeneDefs_Drugs.xml)) | Drug effects wear off faster, tolerance develops more slowly, and addiction is less likely. Subtracts 0.5 from the drug-effect multiplier and multiplies global addiction chance by 0.7. |
+| even temper ([`XylEvenTemper`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Suppresses innate mood and nerves extremes, neurotic traits, Bloodlust, Too Smart, Greedy, Jealous, and Tortured Artist, reducing variation in temperament. |
+| always male ([`XylGender_AlwaysMale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Makes germline carriers male; has no effect as a xenogene. |
+| usually male ([`XylGender_UsuallyMale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Sets a 75% male chance when present as a germline gene; has no effect as a xenogene. |
+| parthenogenic ([`XylParthenogenic`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Female carriers can become spontaneously pregnant without a father. Active from age 16, with a configured mean interval of 120 days. |
+| precognition ([`XylPrecognition`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Improves melee and ranged dodging, with the effect scaling with psychic sensitivity. Although mentioned in chyrr lore, it is not in their gene list. |
+| specialist ([`XylSpecialist`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | Replaces itself with a strong aptitude gene, granting +4 aptitude in one random non-combat skill. Titans instead use super-specialist. |
+| voracious ([`XylVoracious`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Grants both Cannibal and Gourmand. Its description is still TODO; these effects come from its configured forced traits. |
+| weak genes ([`XylWeakGenes`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Children with a parent of another xenotype copy that other parent's endogenes, unless the other parent also has weak genes. |
+| ultra-fast wound healing ([`XylWoundHealing_UltraFast`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | An archite gene that rapidly heals wounds, configured at 20 health per hour. Does not repair permanent scars or restore lost blood. |
+
+### Appearance genes
+
+- Bald females ([`XylHair_BaldOnly_Female`](Defs/GeneDefs/GeneDefs_Hair.xml)).
+- Short-haired females ([`XylHair_ShortOnly_Female`](Defs/GeneDefs/GeneDefs_Hair.xml)).
+- Long-haired females ([`XylHair_LongOnly_Female`](Defs/GeneDefs/GeneDefs_Hair.xml)).
+- Short-haired males ([`XylHair_ShortOnly_Male`](Defs/GeneDefs/GeneDefs_Hair.xml)).
+- Long-haired males ([`XylHair_LongOnly_Male`](Defs/GeneDefs/GeneDefs_Hair.xml)).
+- Visible ribs ([`XylRibs`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
+- Dark purple skin ([`XylSkin_DarkPurple`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+
+The [psycast-gene template](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) also generates genes from available game psycasts. Only Beckon, Focus, and Word of Love are explicitly assigned to the mod's xenotypes; other generated psycast genes are unused by these presets. They are not included in the 17 individually defined genes above because their roster depends on the available ability definitions.
+
 ## Source guide
 
 - [Xenotype and gene definitions](Defs/GeneDefs/): gene pools, effects, innate weapons, abilities, health conditions, and random gene generators.
@@ -428,4 +460,4 @@ Planetary life is physically difficult for them. Their delicate bodies and weak 
 - [Titan drugs](Defs/Drugs/Drugs_Titan.xml): lithoid biochemistry and petrification management.
 - [Psycast gene template](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml): creates genes from game psycasts; these grant their abilities without a psylink. Nixie Beckon and Focus entries explicitly require Royalty; the succuboid Word of Love reference lacks that explicit guard.
 
-Other new genes exist in the mod, but are not part of these ten xenotypes' fixed gene lists. They are outside this xenotype-by-xenotype reference unless relevant to a documented random variant or flavor-text discrepancy.
+New genes not assigned to these xenotypes or their listed bonus packages are covered in [Currently unused genes](#currently-unused-genes).
