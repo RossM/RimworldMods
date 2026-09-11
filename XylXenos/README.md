@@ -396,8 +396,8 @@ Planetary life is physically difficult for them. Their delicate bodies and weak 
 
 | Gene | Effect |
 | --- | --- |
-| planet sickness ([`XylPlanetSickness`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Periodic nausea and vomiting while on a planet's surface, with a configured mean interval of 30 days. An episode lasts about a day and multiplies Consciousness by 0.6, Moving by 0.8, Manipulation by 0.9, and Eating by 0.5. |
-| emergency reserves ([`XylEmergencyReserves`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Early vacuum exposure, hypothermia, heatstroke, or toxic buildup triggers stored oxygen and proteins, temporarily protecting against all four hazards. The active phase lasts about one day, followed by roughly four days of recovery with increased hunger before the reserves are available again. |
+| planet sickness ([`XylPlanetSickness`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Periodic nausea and vomiting while on a planet's surface. |
+| emergency reserves ([`XylEmergencyReserves`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Vacuum exposure, hypothermia, heatstroke, or toxic buildup triggers stored oxygen and proteins, temporarily protecting against all four hazards. The active phase lasts about one day, followed by roughly four days of recovery with increased hunger before the reserves are available again. |
 | telescopic vision ([`XylTelescopicVision`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Multiplies the shooting-accuracy factor at long range by 2 and at medium range by 1.5. |
 | tech affinity ([`XylTechAffinity`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Adds 3 mech bandwidth and, with Odyssey, 0.3 piloting ability. |
 
