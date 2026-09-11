@@ -648,13 +648,17 @@
       </li>
       <li Class="HediffCompProperties_MessageAboveSeverity">
         <severity>0</severity>
-        <message>{0}'s emergency reserves gene has activated.</message>
+        <message>{0}'s emergency reserves have activated.</message>
+        <messageType>NeutralEvent</messageType>
+      </li>
+      <li Class="HediffCompProperties_MessageOnRemoval">
+        <message>{0}'s emergency reserves have finished recharging.</message>
         <messageType>NeutralEvent</messageType>
       </li>
     </comps>
     <stages>
       <li>
-        <label>recovering</label>
+        <label>recharging</label>
         <overrideTooltip>This character's emergency reserves are recovering from being used. They will be unavailable for use until fully recovered.</overrideTooltip>
         <hungerRateFactorOffset>0.25</hungerRateFactorOffset>
       </li>
