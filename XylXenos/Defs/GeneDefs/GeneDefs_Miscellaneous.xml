@@ -487,6 +487,7 @@
       <ShootingAccuracyFactor_Long>2.0</ShootingAccuracyFactor_Long>
       <ShootingAccuracyFactor_Medium>1.5</ShootingAccuracyFactor_Medium>
     </statFactors>
+    <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <exclusionTags>
       <li>ShootingAccuracy</li>
