@@ -11,7 +11,7 @@
     <combatPowerFactor>0.75</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
-      <li>XylPsycast_WordOfLove</li>
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_WordOfLove</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
       <li>XylBatWings</li>
