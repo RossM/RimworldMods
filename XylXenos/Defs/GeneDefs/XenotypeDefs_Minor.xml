@@ -6,6 +6,7 @@
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <description>Originally engineered as fashionable companions for glitterworld elites, at some point the succuboids took control of their own reproduction, engineering themselves with the ability to have succuboid daughters regardless of the xenotype of their partner. Now they are viewed variously as prestigious status symbols, valuable commodities, or dangerous social parasites.</description>
+    <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
     <displayPriority>-202</displayPriority>
     <combatPowerFactor>0.75</combatPowerFactor>
@@ -42,6 +43,7 @@
     <defName>XylScaleborn</defName>
     <label>scaleborn</label>
     <description>Scaleborn began as a fashion trend, a craze for genetic modification to recreate the appearance and traits of the mythical dragons of ancient Earth. Now they survive as the top predators of the dino world Tyrantis V, hunting the great megafauna for food and materials.</description>
+    <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
     <displayPriority>-201</displayPriority>
     <inheritable>true</inheritable>
@@ -64,6 +66,37 @@
       <li>FacialRidges</li>
       <li>AptitudePoor_Cooking</li>
       <li>XylScalebornLineage</li>
+    </genes>
+  </XenotypeDef>
+
+  <XenotypeDef>
+    <defName>XylZeegee</defName>
+    <label>zeeegee</label>
+    <description>Zeegees are descendants of the inhabitants of deep space habitats and ancient generation ships. They're smart and take naturally to advanced technology, but have a hard time adapting to the gravity of planetary surfaces.</description>
+    <!-- TODO icon -->
+    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon1</iconPath>
+    <displayPriority>-203</displayPriority>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>Immunity_Weak</li>
+      <li>XylPlanetSickness</li>
+      <li>XylEmergencyReserves</li>
+      <li>MeleeDamage_Weak</li>
+      <li>Delicate</li>
+      <li>Hair_ShortOnly</li>
+      <li>XylForeheadMark</li>
+      <li>XylSkin_DarkSilver</li>
+      <li>XylSkin_LightSilver</li>
+      <li MayRequire="Ludeon.RimWorld.Odyssey">MoveSpeed_Space</li>
+      <li>Learning_Fast</li>
+      <li>XylTelescopicVision</li>
+      <li>DarkVision</li>
+      <li>CaveDweller</li>
+      <li>XylTechAffinity</li>
+      <li>AptitudeStrong_Shooting</li>
+      <li>AptitudePoor_Plants</li>
+      <li>AptitudePoor_Animals</li>
+      <li>AptitudeStrong_Intellectual</li>
     </genes>
   </XenotypeDef>
 
