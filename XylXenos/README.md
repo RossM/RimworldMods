@@ -336,7 +336,7 @@ Definition: [`XylScaleborn`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritabl
 
 Scaleborn began with a fashion for genetic modifications that recreated the dragons of ancient Earth mythology. The resulting horns, retractable claws, powerful melee attacks, and armored scales have since acquired a practical role on Tyrantis V, a dinosaur world where scaleborn survive as top predators. They hunt its great megafauna for both food and materials, supported by a digestive system that extracts abundant nutrition from raw meat.
 
-Their draconic inheritance takes three forms: red scaleborn breathe fire and resist burning; dark green scaleborn spray acid and resist toxins; white scaleborn spray foam and heal quickly. Despite their formidable natural weapons, they move slowly, sleep often, and enter torpor when cold. Aggression and volatile moods accompany these physical adaptations, while psychic dullness reduces their sensitivity to psychic influence. What began as an imitation of mythical creatures has become a way of life among the giant animals of Tyrantis V.
+Their draconic inheritance takes five forms: red scaleborn breathe fire and resist burning; dark green scaleborn spray acid and resist toxins; white scaleborn spray foam and heal quickly; blue scaleborn release electromagnetic blasts and resist being staggered; black scaleborn have robust bodies and spray blinding oil that leaves flammable puddles. Despite their formidable natural weapons, they move slowly, sleep often, and enter torpor when cold. Aggression and volatile moods accompany these physical adaptations, while psychic dullness reduces their sensitivity to psychic influence. What began as an imitation of mythical creatures has become a way of life among the giant animals of Tyrantis V.
 
 ### New functional genes
 
@@ -348,7 +348,7 @@ Their draconic inheritance takes three forms: red scaleborn breathe fire and res
 | retractable claws ([`XylRetractableClaws`](Defs/GeneDefs/GeneDefs_InnateWeapons.xml)) | Carriers of this gene have retractable claws that function as weapons. |
 | carnivore stomach ([`XylCarnivoreStomach`](Defs/GeneDefs/GeneDefs_Diet.xml)) | Raw meat nutrition x1.8; raw vegetables x0.5 and cooked vegetables x0.8. Removes the raw-food thought and food-poisoning chance for raw meat; does not itself grant the Cannibal trait. |
 | scaleskin ([`XylScaleskin`](Defs/GeneDefs/GeneDefs_Body.xml)) | Protective scales add 40 percentage points of sharp armor and 15 of blunt armor. |
-| scaleborn lineage ([`XylScalebornLineage`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | Replaces itself with one of three complete lineage packages: fire, acid/toxin, or foam/healing. See the variant list below. |
+| scaleborn lineage ([`XylScalebornLineage`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | Replaces itself with one of five complete lineage packages: fire, acid/toxin, foam/healing, EMP, or oil. See the variant list below. |
 
 ### Existing game genes
 
@@ -371,8 +371,17 @@ The lineage generator selects one complete package and removes the `XylScaleborn
 - **Fire:** fire spew (`FireSpew`), fire resistance (`FireResistant`), deep red skin (`Skin_DeepRed`).
 - **Acid/toxin:** acid spray (`AcidSpray`), partial toxic resistance (`ToxResist_Partial`), new cosmetic dark green skin (`XylSkin_DarkGreen`).
 - **Foam/healing:** foam spray (`FoamSpray`), fast wound healing (`WoundHealing_Fast`), sheer white skin (`Skin_SheerWhite`).
+- **Blue / EMP:** EMP blast (`XylEMPBlast`), unstoppable (`Unstoppable`), new cosmetic dark blue skin (`XylSkin_DarkBlue`).
+- **Black / oil:** oil spray (`XylOilSpray`), robust (`Robust`), slate gray skin (`Skin_SlateGray`).
 
-A fourth EMP-based package is commented out and is not an active variant.
+The black lineage uses the existing slate gray skin gene (`Skin_SlateGray`).
+
+These new functional genes occur only in their respective lineage packages:
+
+| Gene | Effect |
+| --- | --- |
+| EMP blast ([`XylEMPBlast`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Releases an electromagnetic pulse around the carrier, disabling nearby electronic devices. The blast has a radius of 3.5 cells and a five-day cooldown. |
+| oil spray ([`XylOilSpray`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Sprays sticky oil from neck glands through the mouth, temporarily blinding targets and leaving flammable puddles. Has a range of 8.9 cells and a five-day cooldown. |
 
 ## Source guide
 
