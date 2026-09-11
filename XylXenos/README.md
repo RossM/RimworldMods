@@ -135,9 +135,9 @@ Their carbon-silicate bodies require specialized drugs and heal slowly. They can
 
 ## Trog
 
-Trogs descend from neanderthals, wasters, dirtmoles, and other xenohumans thrown together on barely habitable rimworlds. Their ancestry still surfaces in unexpected extra genes. Slow, foul-smelling, and remarkably tenacious, they thrive in polluted warrens and underground decay.
+Trogs descend from neanderthals, wasters, dirtmoles, and other xenohumans interbreeding on some of the harshest rimworlds. Their mixed ancestry still produces unexpected genes, while strength, disease resistance, and tolerance of pain sustain them in polluted underground warrens. Their bodies reject artificial implants, limiting their options for augmentation.
 
-Giant insects tolerate their pheromones, giving trogs both useful animals and dangerous neighbors to turn against intruders. Their warlike tribes refuse dealings with outsiders. Primitive technology, brute strength, and an aversion to artificial body parts make them formidable inhabitants of places few others want.
+Their tribes are insular and warlike, defending their territory with brute force and tamed giant insects. Pheromones let them move among wild hives without being attacked, making the surrounding insect colonies another obstacle for intruders. Outsiders can expect little welcome and few opportunities to negotiate.
 
 ### Genes
 
