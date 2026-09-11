@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <ThinkTreeDef>
+    <defName>XylWildMan</defName>
+    <insertTag>Humanlike_PostMain</insertTag>
+    <insertPriority>0</insertPriority>
+    <thinkRoot Class="ThinkNode_ConditionalPawnKind">
+      <pawnKind>WildMan</pawnKind>
+      <subNodes>
+        <!-- Leave if timed out -->
+        <li Class="ThinkNode_ConditionalExitTimedOut">
+          <subNodes>
+            <li Class="ThinkNode_Tagger">
+              <tagToGive>Misc</tagToGive>
+              <subNodes>
+                <li Class="JobGiver_ExitMapRandom">
+                  <defaultLocomotion>Walk</defaultLocomotion>
+                </li>
+              </subNodes>
+            </li>
+          </subNodes>
+        </li>
+      </subNodes>
+    </thinkRoot>
+  </ThinkTreeDef>
+
+  </Defs>
