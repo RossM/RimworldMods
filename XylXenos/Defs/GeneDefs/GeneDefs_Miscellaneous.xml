@@ -546,7 +546,7 @@
     <displayOrderInCategory>220</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>1</biostatCpx>
-    <biostatArc>3</biostatArc>
+    <biostatMet>3</biostatMet>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <hediffGivers>
