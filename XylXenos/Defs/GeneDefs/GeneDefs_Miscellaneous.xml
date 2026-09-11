@@ -472,21 +472,6 @@
       </li>
     </modExtensions>
   </GeneDef>
-
-  <GeneDef>
-    <defName>XylGravitySickness</defName>
-    <label>gravity sickness</label>
-    <description>Carriers of this gene are prone to debilitating bouts of gravity sickness while on a planet's surface. They periodically suffer pain, nausea, and reduced consciousness for a day or so, or until they return to orbit.</description>
-    <displayCategory>Healing</displayCategory>
-    <displayOrderInCategory>200</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>5</biostatMet>
-    <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps">
-      </li>
-    </modExtensions>
-  </GeneDef>
   -->
 
   <GeneDef>
