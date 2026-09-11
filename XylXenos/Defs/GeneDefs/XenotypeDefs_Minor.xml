@@ -41,7 +41,7 @@
   <XenotypeDef>
     <defName>XylScaleborn</defName>
     <label>scaleborn</label>
-    <description>Scaleborn began as a fashion trend, a craze for genetic modification to recreate the appearance of traits of the mythical dragons of ancient planets. Now they survive as the top predators of the dino world Tyrantis V, hunting the great megafauna for food and materials.</description>
+    <description>Scaleborn began as a fashion trend, a craze for genetic modification to recreate the appearance and traits of the mythical dragons of ancient Earth. Now they survive as the top predators of the dino world Tyrantis V, hunting the great megafauna for food and materials.</description>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
     <displayPriority>-201</displayPriority>
     <inheritable>true</inheritable>
