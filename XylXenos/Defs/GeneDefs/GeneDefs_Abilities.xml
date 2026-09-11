@@ -19,9 +19,6 @@
     <abilities>
       <li>XylFeralRage</li>
     </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylFeralRage</AbilityDef>
-    </descriptionHyperlinks>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
@@ -160,9 +157,6 @@
     <abilities>
       <li>XylRockToss</li>
     </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylRockToss</AbilityDef>
-    </descriptionHyperlinks>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
@@ -267,9 +261,6 @@
     <abilities>
       <li>XylSonicWave</li>
     </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylSonicWave</AbilityDef>
-    </descriptionHyperlinks>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
@@ -325,9 +316,6 @@
     <abilities>
       <li>XylToxicBurst</li>
     </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylToxicBurst</AbilityDef>
-    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
@@ -399,9 +387,6 @@
     <abilities>
       <li>XylEMPBlast</li>
     </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylEMPBlast</AbilityDef>
-    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
@@ -448,5 +433,114 @@
       </li>
     </comps>
   </AbilityDef>
+
+  <GeneDef>
+    <defName>XylOilSpray</defName>
+    <label>oil spray</label>
+    <description>Carriers have glands in their neck that can use used to spray a sticky oil that blinds opponents and leaves flammable puddles.</description>
+    <descriptionHyperlinks>
+      <AbilityDef>XylOilSpray</AbilityDef>
+    </descriptionHyperlinks>
+    <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>202</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <abilities>
+      <li>XylOilSpray</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>XylOilSpray</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps" />
+    </modExtensions>
+  </GeneDef>
+
+  <AbilityDef>
+    <defName>XylOilSpray</defName>
+    <label>oil spray</label>
+    <description>Spray a sticky oil substance from glands in the neck up through the mouth and all over the target area. The oil will blind targets, and puddles of it can catch on fire.</description>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <cooldownTicksRange>30000</cooldownTicksRange>
+    <aiCanUse>true</aiCanUse>
+    <displayOrder>300</displayOrder>
+    <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
+    <warmupStartSound>AcidSpray_Warmup</warmupStartSound>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <range>8.9</range>
+      <warmupTime>0.5</warmupTime>
+      <soundCast>AcidSpray_Resolve</soundCast>
+      <targetParams>
+        <canTargetLocations>true</canTargetLocations>
+      </targetParams>
+    </verbProperties>
+    <comps>
+      <li Class="CompProperties_AbilitySprayLiquid">
+        <projectileDef>Proj_Oil</projectileDef>
+        <numCellsToHit>9</numCellsToHit>
+        <!-- TODO add effecter -->
+        <sprayEffecter>AcidSpray_Directional</sprayEffecter>
+      </li>
+    </comps>
+  </AbilityDef>
+  <ThingDef>
+    <defName>Proj_Oil</defName>
+    <label>oil</label>
+    <thingClass>Projectile_Liquid</thingClass>
+    <category>Projectile</category>
+    <tickerType>Normal</tickerType>
+    <altitudeLayer>Projectile</altitudeLayer>
+    <useHitPoints>False</useHitPoints>
+    <neverMultiSelect>True</neverMultiSelect>
+    <graphicData>
+      <!-- TODO add texture -->
+      <texPath>Things/Projectile/Acid</texPath>
+      <graphicClass>Graphic_Random</graphicClass>
+      <shaderType>MoteGlow</shaderType>
+      <drawSize>0.85</drawSize>
+    </graphicData>
+    <projectile>
+      <damageDef>XylOil</damageDef>
+      <speed>25</speed>
+      <damageAmountBase>30</damageAmountBase>
+      <arcHeightFactor>0.4</arcHeightFactor>
+      <armorPenetrationBase>0.8</armorPenetrationBase>
+      <stoppingPower>1</stoppingPower>
+      <shadowSize>0</shadowSize>
+      <filth>Filth_OilSmear</filth>
+      <filthCount>1</filthCount>
+    </projectile>
+  </ThingDef>
+  <DamageDef>
+    <defName>XylOil</defName>
+    <label>oil</label>
+    <workerClass>XylXenos.DamageWorker_Blind</workerClass>
+    <hediff>OilInEyes</hediff>
+    <scaleDamageToBuildingsBasedOnFlammability>false</scaleDamageToBuildingsBasedOnFlammability>
+  </DamageDef>
+  <HediffDef>
+    <!-- This really should have some sort of visual effect... -->
+    <defName>OilInEyes</defName>
+    <label>oil</label>
+    <labelNoun>oil</labelNoun>
+    <description>Oil in the eyes. It impairs vision.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <battleStateLabel>blind</battleStateLabel>
+    <maxSeverity>1</maxSeverity>
+    <stages>
+      <li>
+        <partEfficiencyOffset>-1.0</partEfficiencyOffset>
+      </li>
+    </stages>
+    <comps>
+      <li Class="HediffCompProperties_SelfHeal">
+        <!-- Lasts 2500 ticks -->
+        <healAmount>0.02</healAmount>
+      </li>
+    </comps>
+  </HediffDef>
+
 
 </Defs>
