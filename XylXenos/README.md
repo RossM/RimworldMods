@@ -308,10 +308,11 @@ At some point, succuboids took control of their own reproduction and engineered 
 | always female ([`XylGender_AlwaysFemale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Makes germline carriers female; has no effect as a xenogene. |
 | strong genes ([`XylStrongGenes`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | With a parent of a different xenotype, offspring copy the carrier's endogenes exactly unless the other parent also has strong genes. |
 | love euphoria ([`XylLoveEuphoria`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Lovin' gives the partner a euphoric mood boost (+14) and a chance of inspiration, but can create an addiction. Withdrawal worsens mood, work speed, and tiredness. Active from age 16. |
+| youthful ([`XylYouthful`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Caps the age used in lovin' frequency, lovin' age-factor, and relationship-compatibility calculations at 18. Does not stop biological aging, prevent age-related illness, or extend lifespan. See the [implementation](../Source_XylRaces/Patches/PatchLovin.cs). |
 | shameless ([`XylShameless`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Carriers of this gene are never ashamed by nudity, and are much happier when not wearing clothes. |
 | lazy ([`XylLazy`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Carriers of this gene are slow workers. |
 
-**New appearance genes:** youthful ([`XylYouthful`](Defs/GeneDefs/GeneDefs_Reproduction.xml)): appearance stops aging at 18, without preventing age-related illness or extending life; pink skin ([`XylSkin_Pink`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+**New appearance genes:** pink skin ([`XylSkin_Pink`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
 
 ### Existing game genes
 
