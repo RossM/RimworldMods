@@ -386,4 +386,67 @@
     </comps>
   </AbilityDef>
 
+  <GeneDef>
+    <defName>XylEMPBlast</defName>
+    <label>EMP blast</label>
+    <description>Carriers have specialized muscles that can release an electric shock in an area around them, disabling nearby electronic devices.</description>
+    <descriptionHyperlinks>
+      <AbilityDef>XylEMPBlast</AbilityDef>
+    </descriptionHyperlinks>
+    <displayCategory>Ability</displayCategory>
+    <displayOrderInCategory>202</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <abilities>
+      <li>XylEMPBlast</li>
+    </abilities>
+    <descriptionHyperlinks>
+      <AbilityDef>XylEMPBlast</AbilityDef>
+    </descriptionHyperlinks>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps" />
+    </modExtensions>
+  </GeneDef>
+
+  <AbilityDef>
+    <defName>XylEMPBlast</defName>
+    <label>EMP blast</label>
+    <description>Releases an electromagnetic pulse in an area around the user, disabling nearby electronic devices.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylEMPBlast</GeneDef>
+    </descriptionHyperlinks>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <cooldownTicksRange>300000</cooldownTicksRange>
+    <!-- 5 days -->
+    <aiCanUse>true</aiCanUse>
+    <showPsycastEffects>false</showPsycastEffects>
+    <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
+    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
+    <hostile>false</hostile>
+    <targetRequired>false</targetRequired>
+    <statBases>
+      <Ability_Duration>0</Ability_Duration>
+    </statBases>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <label>EMP blast</label>
+      <drawAimPie>false</drawAimPie>
+      <range>3.5</range>
+      <warmupTime>0.5</warmupTime>
+      <violent>false</violent>
+      <targetable>true</targetable>
+      <targetParams>
+        <canTargetSelf>true</canTargetSelf>
+      </targetParams>
+      <soundCast>Explosion_EMP</soundCast>
+    </verbProperties>
+    <comps>
+      <li Class="CompProperties_AbilityExplosion">
+        <explosionRadius>3.5</explosionRadius>
+        <damageDef>EMP</damageDef>
+      </li>
+    </comps>
+  </AbilityDef>
+
 </Defs>
