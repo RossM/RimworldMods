@@ -5,6 +5,7 @@
   <XenotypeDef>
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
+    <description>Originally engineered as fashionable companions for glitterworld elites, at some point the succuboids took control of their own reproduction, engineering themselves with the ability to have succuboid daughters regardless of the xenotype of their partner. Now they are viewed variously as prestigious status symbols, valuable commodities, or dangerous social parasites.</description>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
     <displayPriority>-202</displayPriority>
     <combatPowerFactor>0.75</combatPowerFactor>
@@ -40,6 +41,7 @@
   <XenotypeDef>
     <defName>XylScaleborn</defName>
     <label>scaleborn</label>
+    <description>Scaleborn began as a fashion trend, a craze for genetic modification to recreate the appearance of traits of the mythical dragons of ancient planets. Now they survive as the top predators of the dino world Tyrantis V, hunting the great megafauna for food and materials.</description>
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
     <displayPriority>-201</displayPriority>
     <inheritable>true</inheritable>
