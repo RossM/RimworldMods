@@ -96,7 +96,7 @@ Definition: [`XylDvergr`](Defs/GeneDefs/XenotypeDefs_Dvergr.xml). **Inheritable.
 
 Dvergr civilization grew beneath the mineral-rich surface of Svartalfheim, where magma upwellings power vast underground cities. Short, heat-tolerant, and at home in darkness, dvergr are well suited to the mining, construction, and craftwork around which their lives revolve. Fungus provides both food and brewing material: their digestion makes it nourishing without making it appetizing, while alcohol is a biological necessity. These adaptations let expeditions establish new settlements around little more than promising rock, fungus, and beer.
 
-Their devotion to work does not make them easy company. Stoic and industrious, they prefer practical labor to conversation, yet melancholy and aggression can interrupt long stretches of effort with tantrums or mental breaks. Those crises sometimes give way to extraordinary creative inspiration, making the ambition to build something worth remembering more than an empty ideal. Their settlements form loose unions whose unruly, demanding members can become powerful allies once won over. An affinity for tunneling and a dislike of nature primacy suit a culture devoted to shaping the underground world.
+Their devotion to work does not make them easy company. Stoic and industrious, they prefer practical labor to conversation, yet melancholy and aggression can interrupt long stretches of effort with tantrums or mental breaks. Those crises sometimes give way to extraordinary creative inspiration, making the ambition to build something worth remembering more than an empty ideal. Their settlements form loose unions whose unruly, demanding members can become powerful allies once won over.
 
 ### New functional genes
 
@@ -137,7 +137,7 @@ Definition: [`XylNixie`](Defs/GeneDefs/XenotypeDefs_Nixie.xml). **Inheritable.**
 
 Nixies were engineered for Atlantis, an ocean world, and have since spread across many planets. On the rim they have lived for thousands of years in river clans and coastal camps, where water sustains both their way of life and their bodies. Their blue, scaled skin must stay moist and dries rapidly in heat; webbed extremities and swift movement through water make rivers and shorelines natural homes. They also travel inland in small bands, and use enlarged, land-capable engineered seals called selkies as pack animals.
 
-Beauty, graceful movement, eloquence, and an instinctive psychic pull give nixies a presence that can seem half-divine. Peaceful tribes trade openly with the 'dryskins', while their affinity for nudism and high life accompanies a physiology unusually sensitive to drugs. Tunneling and shipborn life hold little appeal. Their psychic allure can also take a religious form: one known cult preached cosmic voices and dissolution into a greater unity before authorities destroyed it with overwhelming force and psychic countermeasures. A survivor seeking new followers on the rim carries that particular tradition forward; it is not a belief attributed to nixies as a whole.
+Beauty, graceful movement, eloquence, and an instinctive psychic pull give nixies a presence that can seem half-divine. Peaceful tribes trade openly with the 'dryskins', while their affinity for nudism and high life accompanies a physiology unusually sensitive to drugs.
 
 ### New functional genes
 
@@ -176,8 +176,6 @@ Definition: [`XylTitan`](Defs/GeneDefs/XenotypeDefs_Titan.xml). **Non-inheritabl
 Titans are sterile, vat-grown giants created to build structures that will outlast their own lives. Their massive bodies, stony armor, strength, and resistance to toxins suit arduous labor, while an inability to feel joy removes the ordinary desire for recreation. They are taciturn and narrowly focused: each has an exceptional aptitude in one field, but little interest in learning subjects outside their passions. Their reputation is one of relentless construction in deserts, tundra, and poisonous wastelands, and they have an ideological affinity for shipborn life.
 
 Their unusual durability comes with unusual medical needs. Carbon-silicates are incorporated into their biochemistry, leaving most ordinary drugs ineffective, and their tissues can progressively turn to stone through incurable petrification. Specialized drugs can prevent the disease before it begins or gradually strengthen resistance to hostile environments, but depend on continued dosing. Their slow healing and movement remain practical limitations even behind the image of an inexhaustible worker.
-
-**Definition note:** the base gene list contains neither sleeplessness nor explicit heat/cold-tolerance genes; the lore's environmental endurance should not be read as unconditional immunity.
 
 ### New functional genes
 
@@ -303,7 +301,7 @@ At some point, succuboids took control of their own reproduction and engineered 
 
 | Gene | Effect |
 | --- | --- |
-| Word of Love ([`XylPsycast_WordOfLove`](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml)) | Grants the Word of Love psycast (influences romantic attraction) without requiring a psylink, via the mod's psycast-gene template. Its ability comes from Royalty; unlike the nixie entries, the succuboid gene reference has no explicit MayRequire guard. |
+| Word of Love ([`XylPsycast_WordOfLove`](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml)) | Grants the Word of Love psycast (influences romantic attraction) without requiring a psylink, via the mod's psycast-gene template. |
 | bat wings ([`XylBatWings`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Enables short flights, blocked by some heavy torso apparel; also reduces Manipulation by 0.1. |
 | always female ([`XylGender_AlwaysFemale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Makes germline carriers female; has no effect as a xenogene. |
 | strong genes ([`XylStrongGenes`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | With a parent of a different xenotype, offspring copy the carrier's endogenes exactly unless the other parent also has strong genes. |
