@@ -458,22 +458,6 @@
     </stages>
   </HediffDef>
 
-  <!--<GeneDef>
-    <defName>XylEmergencyReserves</defName>
-    <label>emergency reserves</label>
-    <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
-    <displayCategory>ResistanceAndWeakness</displayCategory>
-    <displayOrderInCategory>90</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>-2</biostatMet>
-    <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps">
-      </li>
-    </modExtensions>
-  </GeneDef>
-  -->
-
   <GeneDef>
     <defName>XylTechAffinity</defName>
     <label>tech affinity</label>
@@ -613,6 +597,76 @@
             <postFactor>0.5</postFactor>
           </li>
         </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <GeneDef>
+    <defName>XylEmergencyReserves</defName>
+    <label>emergency reserves</label>
+    <description>Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage.</description>
+    <descriptionHyperlinks>
+      <HediffDef>XylEmergencyReserves</HediffDef>
+    </descriptionHyperlinks>
+    <displayCategory>ResistanceAndWeakness</displayCategory>
+    <displayOrderInCategory>90</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-2</biostatMet>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_EmergencyReserves">
+            <hediff>XylEmergencyReserves</hediff>
+            <triggers>
+              <VacuumExposure>0.01</VacuumExposure>
+              <Hypothermia>0.01</Hypothermia>
+              <Heatstroke>0.01</Heatstroke>
+              <ToxicBuildup>0.01</ToxicBuildup>
+            </triggers>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+  <HediffDef>
+    <defName>XylEmergencyReserves</defName>
+    <label>emergency reserves</label>
+    <description>Reserves of oxygen and special proteins are flooding this character's body, providing temporary protection against environmental stressors.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylEmergencyReserves</GeneDef>
+    </descriptionHyperlinks>
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>1</initialSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-0.2</severityPerDay>
+      </li>
+      <li Class="Xylib.HediffCompProperties_Genetic">
+        <gene>XylEmergencyReserves</gene>
+        <showStats>false</showStats>
+      </li>
+      <li Class="HediffCompProperties_MessageAboveSeverity">
+        <severity>0</severity>
+        <message>{0}'s emergency reserves gene has activated.</message>
+        <messageType>NeutralEvent</messageType>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <label>recovering</label>
+        <overrideTooltip>This character's emergency reserves are recovering from being used. They will be unavailable for use until fully recovered.</overrideTooltip>
+        <hungerRateFactorOffset>0.25</hungerRateFactorOffset>
+      </li>
+      <li>
+        <label>active</label>
+        <minSeverity>0.8</minSeverity>
+        <statOffsets>
+          <ToxicResistance>1</ToxicResistance>
+          <VacuumResistance>1</VacuumResistance>
+          <XylHeatstrokeResistance>1</XylHeatstrokeResistance>
+          <XylHypothermiaResistance>1</XylHypothermiaResistance>
+        </statOffsets>
       </li>
     </stages>
   </HediffDef>

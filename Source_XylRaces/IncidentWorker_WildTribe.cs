@@ -14,7 +14,7 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
         [UsedFromReflection]
         public void LoadDataFromXmlCustom(XmlNode xmlRoot)
         {
-            DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, "trait", xmlRoot.Name);
+            DirectXmlCrossRefLoader.RegisterObjectWantsCrossRef(this, nameof(trait), xmlRoot.Name);
             if (xmlRoot.FirstChild?.Value is null)
                 throw new InvalidOperationException();
             chance = ParseHelper.FromString<float>(xmlRoot.FirstChild.Value);
