@@ -13,6 +13,7 @@
       <XylNixie>0.025</XylNixie>
       <XylTitan>0.025</XylTitan>
       <XylScaleborn>0.005</XylScaleborn>
+      <XylZeegee>0.005</XylZeegee>
     </value>
   </Operation>
 
@@ -63,6 +64,7 @@
     </xpath>
     <value>
       <XylTitan>0.05</XylTitan>
+      <XylZeegee>0.05</XylZeegee>
     </value>
   </Operation>
 
@@ -82,6 +84,7 @@
       <XylTitan>0.025</XylTitan>
       <XylSuccuboid>0.01</XylSuccuboid>
       <XylScaleborn>0.01</XylScaleborn>
+      <XylZeegee>0.01</XylZeegee>
     </value>
   </Operation>
 
