@@ -368,11 +368,11 @@ Their draconic inheritance takes five forms: red scaleborn breathe fire and resi
 
 The lineage generator selects one complete package and removes the `XylScalebornLineage` placeholder:
 
-- **Fire:** fire spew (`FireSpew`), fire resistance (`FireResistant`), deep red skin (`Skin_DeepRed`).
-- **Acid/toxin:** acid spray (`AcidSpray`), partial toxic resistance (`ToxResist_Partial`), new cosmetic dark green skin (`XylSkin_DarkGreen`).
-- **Foam/healing:** foam spray (`FoamSpray`), fast wound healing (`WoundHealing_Fast`), sheer white skin (`Skin_SheerWhite`).
-- **Blue / EMP:** EMP blast (`XylEMPBlast`), unstoppable (`Unstoppable`), new cosmetic dark blue skin (`XylSkin_DarkBlue`).
-- **Black / oil:** oil spray (`XylOilSpray`), robust (`Robust`), slate gray skin (`Skin_SlateGray`).
+- **Red:** fire spew (`FireSpew`), fire resistance (`FireResistant`), deep red skin (`Skin_DeepRed`).
+- **Green:** acid spray (`AcidSpray`), partial toxic resistance (`ToxResist_Partial`), new cosmetic dark green skin (`XylSkin_DarkGreen`).
+- **White:** foam spray (`FoamSpray`), fast wound healing (`WoundHealing_Fast`), sheer white skin (`Skin_SheerWhite`).
+- **Blue:** EMP blast (`XylEMPBlast`), unstoppable (`Unstoppable`), new cosmetic dark blue skin (`XylSkin_DarkBlue`).
+- **Black:** oil spray (`XylOilSpray`), robust (`Robust`), slate gray skin (`Skin_SlateGray`).
 
 The black lineage uses the existing slate gray skin gene (`Skin_SlateGray`).
 
