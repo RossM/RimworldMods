@@ -487,11 +487,12 @@
       </li>
     </modExtensions>
   </GeneDef>
+  -->
 
   <GeneDef>
-    <defName>XylMechAffinity</defName>
-    <label>mech affinity</label>
-    <description>Carriers of this gene are naturally adept at being mechanitors.</description>
+    <defName>XylTechAffinity</defName>
+    <label>tech affinity</label>
+    <description>Carriers of this gene are naturally adept with advanced technology.</description>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>1100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
@@ -499,12 +500,29 @@
     <biostatMet>-1</biostatMet>
     <statOffsets>
       <MechBandwidth>3</MechBandwidth>
+      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.3</PilotingAbility>
     </statOffsets>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps">
-      </li>
+      <li Class="Xylib.DefModExtension_GeneWithComps"/>
     </modExtensions>
-  </GeneDef>-->
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylTelescopicVision</defName>
+    <label>telescopic vision</label>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <description>Carriers of this gene can see exceptionally well at a distance. Their shooting accuracy at long ranges is increased.</description>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>51</displayOrderInCategory>
+    <statFactors>
+      <ShootingAccuracyFactor_Long>2.0</ShootingAccuracyFactor_Long>
+      <ShootingAccuracyFactor_Medium>1.5</ShootingAccuracyFactor_Medium>
+    </statFactors>
+    <biostatMet>-2</biostatMet>
+    <exclusionTags>
+      <li>ShootingAccuracy</li>
+    </exclusionTags>
+  </GeneDef>
 
   <GeneDef>
     <defName>XylLearning_Focused</defName>
@@ -547,5 +565,71 @@
       </li>
     </modExtensions>
   </GeneDef>
+
+  <GeneDef>
+    <defName>XylPlanetSickness</defName>
+    <label>planet sickness</label>
+    <description>Carriers of this gene are prone to bouts of nausea and vomiting when on a planet's surface.</description>
+    <descriptionHyperlinks>
+      <HediffDef>XylPlanetSickness</HediffDef>
+    </descriptionHyperlinks>
+    <displayCategory>Healing</displayCategory>
+    <displayOrderInCategory>220</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <biostatCpx>1</biostatCpx>
+    <biostatArc>3</biostatArc>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <hediffGivers>
+          <li Class="XylXenos.HediffGiver_RandomNotInSpace">
+            <hediff>XylPlanetSickness</hediff>
+            <mtbDays>30</mtbDays>
+          </li>
+        </hediffGivers>
+      </li>      
+    </modExtensions>
+  </GeneDef>
+  <HediffDef ParentName="DiseaseBase">
+    <defName>XylPlanetSickness</defName>
+    <label>planet sickness</label>
+    <description>Nausea and vomiting caused by a genetic predisposition to motion sickness on planetary surfaces.</description>
+    <descriptionHyperlinks>
+      <GeneDef>XylPlanetSickness</GeneDef>
+    </descriptionHyperlinks>
+    <initialSeverity>1</initialSeverity>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay">
+        <severityPerDay>-1</severityPerDay>
+        <showHoursToRecover>true</showHoursToRecover>
+      </li>
+      <li Class="Xylib.HediffCompProperties_Genetic">
+        <gene>XylPlanetSickness</gene>
+        <showStats>false</showStats>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <vomitMtbDays>0.2</vomitMtbDays>
+        <capMods>
+          <li>
+            <capacity>Consciousness</capacity>
+            <postFactor>0.6</postFactor>
+          </li>
+          <li>
+            <capacity>Moving</capacity>
+            <postFactor>0.8</postFactor>
+          </li>
+          <li>
+            <capacity>Manipulation</capacity>
+            <postFactor>0.9</postFactor>
+          </li>
+          <li>
+            <capacity>Eating</capacity>
+            <postFactor>0.5</postFactor>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
 
 </Defs>

@@ -477,7 +477,7 @@
     </verbProperties>
     <comps>
       <li Class="CompProperties_AbilitySprayLiquid">
-        <projectileDef>Proj_Oil</projectileDef>
+        <projectileDef>XylProj_Oil</projectileDef>
         <numCellsToHit>9</numCellsToHit>
         <!-- TODO add effecter -->
         <sprayEffecter>AcidSpray_Directional</sprayEffecter>
@@ -485,7 +485,7 @@
     </comps>
   </AbilityDef>
   <ThingDef>
-    <defName>Proj_Oil</defName>
+    <defName>XylProj_Oil</defName>
     <label>oil</label>
     <thingClass>Projectile_Liquid</thingClass>
     <category>Projectile</category>
@@ -516,12 +516,12 @@
     <defName>XylOil</defName>
     <label>oil</label>
     <workerClass>XylXenos.DamageWorker_Blind</workerClass>
-    <hediff>OilInEyes</hediff>
+    <hediff>XylOilInEyes</hediff>
     <scaleDamageToBuildingsBasedOnFlammability>false</scaleDamageToBuildingsBasedOnFlammability>
   </DamageDef>
   <HediffDef>
     <!-- This really should have some sort of visual effect... -->
-    <defName>OilInEyes</defName>
+    <defName>XylOilInEyes</defName>
     <label>oil</label>
     <labelNoun>oil</labelNoun>
     <description>Oil in the eyes. It impairs vision.</description>
