@@ -2,6 +2,10 @@
 
 <Defs>
 
+  <!-- 
+  This faction never appears directly in game. It is used to generate the characters for the "bossaps wander in" (XylWildBossapsHerd) event,
+  but those characters are set to factionless after generation.
+  -->
   <FactionDef ParentName="TribeBase">
     <defName>BossapsHerd</defName>
     <label>wild bossaps herd</label>
