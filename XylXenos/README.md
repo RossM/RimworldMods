@@ -1,6 +1,6 @@
 # Xyl's Xenotypes
 
-This directory defines **nine new xenotypes**: bossaps, chyrr, dvergr, nixie, titan, trog, warcat, succuboid, and scaleborn. All are marked inheritable except titans.
+This directory defines **ten new xenotypes**: bossaps, chyrr, dvergr, nixie, titan, trog, warcat, succuboid, scaleborn, and zeegee. All are marked inheritable except titans.
 
 This reference summarizes the XML data in this mod. Each entry lists every gene referenced by its xenotype definition, including cosmetic entries and conditional genes. The lists describe the definition's gene pool; multiple body shapes, colors, or other mutually exclusive appearance entries need not all be active on one individual. Random additions are described separately. Existing game genes are named but not given a full effects reference; tables explain the new non-cosmetic genes supplied by this mod. Definition IDs are included for exact lookup. Human-readable names for existing genes are descriptive rather than a claim about the game's current localization.
 
@@ -15,6 +15,7 @@ Lore summaries combine xenotype and faction descriptions, with relevant gene, sc
 - [Warcat](#warcat)
 - [Succuboid](#succuboid)
 - [Scaleborn](#scaleborn)
+- [Zeegee](#zeegee)
 
 ## Bossaps
 
@@ -383,6 +384,40 @@ These new functional genes occur only in their respective lineage packages:
 | EMP blast ([`XylEMPBlast`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Releases an electromagnetic pulse around the carrier, disabling nearby electronic devices. The blast has a radius of 3.5 cells and a five-day cooldown. |
 | oil spray ([`XylOilSpray`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Sprays sticky oil from neck glands through the mouth, temporarily blinding targets and leaving flammable puddles. Has a range of 8.9 cells and a five-day cooldown. |
 
+## Zeegee
+
+Definition: [`XylZeegee`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritable.**
+
+Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. Their aptitude for advanced technology and rapid learning suit the machinery-dependent environments of their ancestry, while dark vision and a preference for enclosed surroundings fit life inside a habitat. Silver skin and a distinctive forehead mark set them apart, and their keen distance vision supports an aptitude for shooting. They are less suited to close combat or handling animals.
+
+Planetary life is physically difficult for them. Their delicate bodies and weak immunity leave them vulnerable, and adapting to surface gravity brings bouts of nausea and vomiting that impair everyday activity. Yet they retain a specialized means of surviving environmental emergencies: oxygen and proteins stored in their bone marrow can temporarily protect them against vacuum, toxins, and extreme temperatures. These reserves offer a chance to survive a crisis, followed by a period of recovery, rather than permanent freedom from the hazards outside a habitat. No distinct zeegee society or named homeworld is described.
+
+### New functional genes
+
+| Gene | Effect |
+| --- | --- |
+| planet sickness ([`XylPlanetSickness`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Periodic nausea and vomiting while on a planet's surface, with a configured mean interval of 30 days. An episode lasts about a day and multiplies Consciousness by 0.6, Moving by 0.8, Manipulation by 0.9, and Eating by 0.5. |
+| emergency reserves ([`XylEmergencyReserves`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Early vacuum exposure, hypothermia, heatstroke, or toxic buildup triggers stored oxygen and proteins, temporarily protecting against all four hazards. The active phase lasts about one day, followed by roughly four days of recovery with increased hunger before the reserves are available again. |
+| telescopic vision ([`XylTelescopicVision`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Multiplies the shooting-accuracy factor at long range by 2 and at medium range by 1.5. |
+| tech affinity ([`XylTechAffinity`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Adds 3 mech bandwidth and, with Odyssey, 0.3 piloting ability. |
+
+**New appearance genes:** forehead mark ([`XylForeheadMark`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)); dark silver skin ([`XylSkin_DarkSilver`](Defs/GeneDefs/GeneDefs_SkinColors.xml)); light silver skin ([`XylSkin_LightSilver`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+
+### Existing game genes
+
+- Weak immunity (`Immunity_Weak`).
+- Weak melee damage (`MeleeDamage_Weak`).
+- Delicate (`Delicate`).
+- Short hair (`Hair_ShortOnly`).
+- Space movement speed (`MoveSpeed_Space`; requires Odyssey).
+- Fast learning (`Learning_Fast`).
+- Dark vision (`DarkVision`).
+- Cave dweller (`CaveDweller`).
+- Strong shooting aptitude (`AptitudeStrong_Shooting`).
+- Poor melee aptitude (`AptitudePoor_Melee`).
+- Poor animals aptitude (`AptitudePoor_Animals`).
+- Strong intellectual aptitude (`AptitudeStrong_Intellectual`).
+
 ## Source guide
 
 - [Xenotype and gene definitions](Defs/GeneDefs/): gene pools, effects, innate weapons, abilities, health conditions, and random gene generators.
@@ -393,4 +428,4 @@ These new functional genes occur only in their respective lineage packages:
 - [Titan drugs](Defs/Drugs/Drugs_Titan.xml): lithoid biochemistry and petrification management.
 - [Psycast gene template](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml): creates genes from game psycasts; these grant their abilities without a psylink. Nixie Beckon and Focus entries explicitly require Royalty; the succuboid Word of Love reference lacks that explicit guard.
 
-Other new genes exist in the mod, but are not part of these nine xenotypes' fixed gene lists. They are outside this xenotype-by-xenotype reference unless relevant to a documented random variant or flavor-text discrepancy.
+Other new genes exist in the mod, but are not part of these ten xenotypes' fixed gene lists. They are outside this xenotype-by-xenotype reference unless relevant to a documented random variant or flavor-text discrepancy.
