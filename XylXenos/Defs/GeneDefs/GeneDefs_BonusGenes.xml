@@ -202,7 +202,17 @@
             <genes>
               <li>XylEMPBlast</li>
               <li>Unstoppable</li>
-              <li>Skin_Blue</li>                      
+              <li>XylSkin_DarkBlue</li>                      
+            </genes>
+          </maker>
+        </li>
+        <li>
+          <maker Class="Xylib.GeneSetMaker_List">
+            <count>3</count>
+            <genes>
+              <li>XylOilSpray</li>
+              <li>Robust</li>
+              <li>Skin_SlateGray</li>
             </genes>
           </maker>
         </li>

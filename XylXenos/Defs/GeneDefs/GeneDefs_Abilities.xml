@@ -377,7 +377,7 @@
   <GeneDef>
     <defName>XylEMPBlast</defName>
     <label>EMP blast</label>
-    <description>Carriers have specialized muscles that can release an electric shock in an area around them, disabling nearby electronic devices.</description>
+    <description>Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices.</description>
     <descriptionHyperlinks>
       <AbilityDef>XylEMPBlast</AbilityDef>
     </descriptionHyperlinks>
@@ -403,7 +403,6 @@
     </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange>
-    <!-- 5 days -->
     <aiCanUse>true</aiCanUse>
     <showPsycastEffects>false</showPsycastEffects>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
@@ -462,7 +461,7 @@
     <label>oil spray</label>
     <description>Spray a sticky oil substance from glands in the neck up through the mouth and all over the target area. The oil will blind targets, and puddles of it can catch on fire.</description>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <cooldownTicksRange>30000</cooldownTicksRange>
+    <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <displayOrder>300</displayOrder>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
