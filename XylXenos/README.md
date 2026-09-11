@@ -1,10 +1,10 @@
 # Xyl's Xenotypes
 
-This directory defines **ten new xenotypes**: bossaps, chyrr, dvergr, nixie, titan, trog, warcat, succuboid, scaleborn, and zeegee. All are marked inheritable except titans.
+Ten xenotypes for RimWorld, from fungus-fed underground builders to vat-grown stone giants, aquatic traders, and descendants of generation-ship crews. Each brings its own needs, strengths, and complications to colony life.
 
-This reference summarizes the XML data in this mod. Each entry lists every gene referenced by its xenotype definition, including cosmetic entries and conditional genes. The lists describe the definition's gene pool; multiple body shapes, colors, or other mutually exclusive appearance entries need not all be active on one individual. Random additions are described separately. Existing game genes are named but not given a full effects reference; tables explain the new non-cosmetic genes supplied by this mod. Definition IDs are included for exact lookup. Human-readable names for existing genes are descriptive rather than a claim about the game's current localization.
+**Requires RimWorld 1.6, Biotech, and Harmony.** Royalty adds innate psycasts; Ideology and Odyssey provide additional features where noted.
 
-Lore summaries combine xenotype and faction descriptions, with relevant gene, scenario, tip, and animal text. Scenario-specific stories and gaps in the data are identified explicitly. Ideology affinities are configuration preferences, not beliefs shared by every individual. This is a data reference, not an in-game validation report.
+All xenotypes except titans are inheritable. The tables describe the mod's new functional genes; the lists below them include existing genes and appearance options.
 
 - [Bossaps](#bossaps)
 - [Chyrr](#chyrr)
@@ -20,444 +20,281 @@ Lore summaries combine xenotype and faction descriptions, with relevant gene, sc
 
 ## Bossaps
 
-Definition: [`XylBossaps`](Defs/GeneDefs/XenotypeDefs_Bossaps.xml). **Inheritable.**
+Bossaps were engineered as sentient livestock by glitterworld gene-artisans. Fertile, mostly female, and able to live on raw plants, they produce abundant milk and find comfort in a herd. Their docility makes them easy to exploit, but injury can send them charging into a horn-first frenzy—even against an ally who hurt them. Wild herds roam the rim, far from the people who designed them.
 
-Bossaps are bovine xenohumans engineered as sentient livestock on a glitterworld whose identity is best forgotten. Their fertile, predominantly female population produces abundant milk, and their digestion favors raw plant food. Life in a herd suits both their temperament and their biology: they are mild-mannered, comfortable sharing sleeping quarters, and distressed by isolation. Wild herds also exist on the rim.
-
-Their apparent gentleness can be deceptive. Although unusually accepting of captivity and able to experience pain as pleasure, an injured bossaps may charge into an uncontrollable melee frenzy, using its horns against enemies or even an ally responsible for the injury. Their ideological preferences combine animal personhood, nudism, and pain as virtue with an aversion to ranching, an uneasy legacy for people originally bred to be livestock.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| herd instinct ([`XylHerdInstinct`](Defs/GeneDefs/GeneDefs_Mood.xml)) | Needs a sufficiently large colony to avoid a mood penalty; does not mind sleeping in barracks. |
-| docile ([`XylDocile`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Never initiates social fights; is easier to enslave and less likely to rebel or start prison breaks. Receives a +20 mood thought while imprisoned or enslaved. |
-| large horns ([`XylLargeHorns`](Defs/GeneDefs/GeneDefs_InnateWeapons.xml)) | Carriers of this gene have large horns that function as a weapon. |
-| seeing red ([`XylSeeingRed`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Combat damage can trigger an uncontrollable melee frenzy, increasing movement and melee damage while greatly reducing pain. The tips warn that an enraged carrier can attack allies who hurt them. |
-| pain reversal ([`XylPainReversal`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Grants the Masochist trait: pain gives pleasure and a mood benefit, rather than ordinary pain-related unhappiness. |
-| hyperlactation ([`XylHyperlactation`](Defs/GeneDefs/GeneDefs_Hyperlactation.xml)) | Female carriers lactate without pregnancy or breastfeeding and can be milked, including while imprisoned. Active from age 13; inactive in males. |
-| usually female ([`XylGender_UsuallyFemale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Sets a 75% female chance when present as a germline gene; has no effect as a xenogene. |
-| herbivore stomach ([`XylHerbivoreStomach`](Defs/GeneDefs/GeneDefs_Diet.xml)) | Raw vegetable nutrition x1.8; raw meat x0.5 and cooked meat x0.8. Removes the raw-food thought and food-poisoning chance for raw vegetables. |
+| [Herd instinct](Defs/GeneDefs/GeneDefs_Mood.xml) | Small colonies cause unhappiness; shared barracks do not. |
+| [Docile](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Never starts social fights. Easier to enslave, less likely to escape or rebel, and happier in captivity. |
+| [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds horns that serve as melee weapons. |
+| [Seeing red](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Injury can trigger an uncontrollable melee frenzy with greater speed, strength, and pain resistance. Allies who cause injury can become targets. |
+| [Pain reversal](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Masochist: pain improves mood. |
+| [Hyperlactation](Defs/GeneDefs/GeneDefs_Hyperlactation.xml) | Females produce milk without pregnancy and can be milked. |
+| [Usually female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers have a 75% chance of being female. |
+| [Herbivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Gets more nutrition from raw plants and less from meat. Can eat raw plants without the usual raw-food mood penalty or food poisoning. |
 
-**New appearance genes:** cow ears ([`XylEars_Cow`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Cold tolerant (`MinTemp_SmallDecrease`).
-- Heat tolerant (`MaxTemp_SmallIncrease`).
-- Robust (`Robust`).
-- Fertile (`Fertile`).
-- Long hair (`Hair_LongOnly`).
-- Standard body (`Body_Standard`).
-- Fat body (`Body_Fat`).
-- Hulk body (`Body_Hulk`).
-- Nearsighted (`Nearsighted`).
-- Poor cooking aptitude (`AptitudePoor_Cooking`).
-- Strong plants aptitude (`AptitudeStrong_Plants`).
+- **Traits:** cold tolerant, heat tolerant, robust, fertile, nearsighted.
+- **Skills:** poor cooking aptitude, strong plants aptitude.
+- **Appearance:** [cow ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); long hair, standard body, fat body, hulk body.
 
 ## Chyrr
 
-Definition: [`XylChyrr`](Defs/GeneDefs/XenotypeDefs_Chyrr.xml). **Inheritable.**
+Chyrr are nocturnal flying mystics from hot jungles and deserts. They navigate by sound, with hearing sharp enough to compensate for blindness, and defend their fragile bodies with a stunning cry. Their affinity for blindsight suits a life in which eyes are optional. Sunlight troubles them; cold sends them into hibernation. They make gifted medics, provided they can stay warm and work at night.
 
-Chyrr are nocturnal, winged mystics adapted to the heat of jungles and deserts. Sunlight troubles them, while cold slows their metabolism into torpor and eventually hibernation. Their delicate bodies and weak immunity make them vulnerable, but short flights and a stunning ultrasonic cry give them ways to escape or disable threats without relying on physical strength.
-
-Sound is central to their experience of the world. Acute hearing and echolocation let even those born blind perceive their surroundings, fitting their affinity for blindsight. Their mystical character also encompasses low-level psychic sensing and a hazy awareness of events just before they happen. They have a natural aptitude for medicine, though little is recorded about their origins or social institutions.
-
-**Definition note:** precognition appears in the lore, but the separate `XylPrecognition` gene is not included in the chyrr gene list.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| sonic wave ([`XylSonicWave`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Releases an ultrasonic and psychic wave that stuns nearby organic creatures around the target. The ability description excludes mechanoids and drones. |
-| bat wings ([`XylBatWings`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Enables short flights, blocked by some heavy torso apparel; also reduces Manipulation by 0.1. |
-| torpor ([`XylTorpor`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Cold causes progressively impaired consciousness and eventual hibernation, reducing food use and slowing hypothermia and starvation. Warming reverses the condition. |
-| nocturnal ([`XylNocturnal`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Grants the Night Owl trait, favoring nighttime activity over being awake during the day. |
-| keen ears ([`XylKeenEars`](Defs/GeneDefs/GeneDefs_Senses.xml)) | Multiplies Hearing by 1.2. |
-| echolocation ([`XylEcholocation`](Defs/GeneDefs/GeneDefs_Senses.xml)) | Uses Hearing in place of Sight when higher, except for reading speed. Gives a 15% chance of congenital blindness; the tips note that blind or blindfolded carriers can shoot without smoke penalties. |
+| [Sonic wave](Defs/GeneDefs/GeneDefs_Abilities.xml) | Stuns organic creatures around a target with an ultrasonic and psychic cry. |
+| [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Allows short flights at the cost of some manipulation. Heavy torso apparel can prevent flight. |
+| [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Cold causes hibernation, reducing food needs and slowing starvation and hypothermia. Warmth reverses it. |
+| [Nocturnal](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Night Owl: prefers being awake at night. |
+| [Keen ears](Defs/GeneDefs/GeneDefs_Senses.xml) | Improves hearing by 20%. |
+| [Echolocation](Defs/GeneDefs/GeneDefs_Senses.xml) | Uses hearing instead of sight when better, except for reading. Some carriers are born blind. |
 
-**New appearance genes:** small pointed ears ([`XylEars_SmallPointed`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Weak immunity (`Immunity_Weak`).
-- Cold sensitive (`MinTemp_SmallIncrease`).
-- Heat tolerant (`MaxTemp_SmallIncrease`).
-- Mild UV sensitivity (`UVSensitivity_Mild`).
-- Delicate (`Delicate`).
-- Standard body (`Body_Standard`).
-- Thin body (`Body_Thin`).
-- No beard (`Beard_NoBeardOnly`).
-- Dark Vision (`DarkVision`).
-- Poor mining aptitude (`AptitudePoor_Mining`).
-- Strong medicine aptitude (`AptitudeStrong_Medicine`).
+- **Traits:** weak immunity, cold sensitive, heat tolerant, mild UV sensitivity, delicate, dark vision.
+- **Skills:** poor mining aptitude, strong medicine aptitude.
+- **Appearance:** [small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); standard body, thin body, no beard.
 
 ## Dvergr
 
-Definition: [`XylDvergr`](Defs/GeneDefs/XenotypeDefs_Dvergr.xml). **Inheritable.**
+Dvergr come from Svartalfheim, a mineral-rich world of underground cities powered by magma. Short, heat-tolerant, and industrious, they build their lives around mining and craftwork. Fungus feeds them and supplies their breweries, though even their specialized digestion cannot improve its taste. Alcohol is a necessity.
 
-Dvergr civilization grew beneath the mineral-rich surface of Svartalfheim, where magma upwellings power vast underground cities. Short, heat-tolerant, and at home in darkness, dvergr are well suited to the mining, construction, and craftwork around which their lives revolve. Fungus provides both food and brewing material: their digestion makes it nourishing without making it appetizing, while alcohol is a biological necessity. These adaptations let expeditions establish new settlements around little more than promising rock, fungus, and beer.
+Their settlements form loose unions: difficult to please, but powerful allies once won over. Dvergr prefer work to conversation, and their stoicism conceals a persistent melancholy. Long stretches of labor sometimes end in a breakdown—and, occasionally, a work of extraordinary craftsmanship.
 
-Their devotion to work does not make them easy company. Stoic and industrious, they prefer practical labor to conversation, yet melancholy and aggression can interrupt long stretches of effort with tantrums or mental breaks. Those crises sometimes give way to extraordinary creative inspiration, making the ambition to build something worth remembering more than an empty ideal. Their settlements form loose unions whose unruly, demanding members can become powerful allies once won over.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| stoic ([`XylStoic`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Grants the positive Nerves trait degree, reducing the mental-break threshold and improving resilience to stress. |
-| melancholy ([`XylMelancholy`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break. |
-| dwarf ([`XylDwarf`](Defs/GeneDefs/GeneDefs_Body.xml)) | Smaller body (body-size factor 0.9), proportionately larger head, and -0.1 movement speed. |
-| fungus eater ([`XylFungusEater`](Defs/GeneDefs/GeneDefs_Diet.xml)) | Raw fungus nutrition x1.8, without removing dislike of its taste. Unlocks fungus wort brewing and, with Ideology, fungal gravel. |
-| industrious ([`XylIndustrious`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Carriers of this gene are exceptionally fast workers. |
+| [Stoic](Defs/GeneDefs/GeneDefs_Traits.xml) | Lowers the mental-break threshold. |
+| [Melancholy](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Tortured Artist: persistent unhappiness, with a chance of creative inspiration after a breakdown. |
+| [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | A smaller body with slightly slower movement. |
+| [Fungus eater](Defs/GeneDefs/GeneDefs_Diet.xml) | Gets extra nutrition from raw fungus. Enables fungus brewing and, with Ideology, fungal gravel. |
+| [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Works faster. |
 
-**New appearance genes:** bald males ([`XylHair_BaldOnly_Male`](Defs/GeneDefs/GeneDefs_Hair.xml)); small pointed ears ([`XylEars_SmallPointed`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Psychically dull (`PsychicAbility_Dull`).
-- Very heat tolerant (`MaxTemp_LargeIncrease`).
-- Aggressive (`Aggression_Aggressive`).
-- Short hair (`Hair_ShortOnly`).
-- Bushy beard (`Beard_BushyOnly`).
-- Light gray skin (`Skin_LightGray`).
-- Slate gray skin (`Skin_SlateGray`).
-- Ink-black skin (`Skin_InkBlack`).
-- Strong Stomach (`StrongStomach`).
-- Dark Vision (`DarkVision`).
-- Cave Dweller (`CaveDweller`).
-- Unstoppable (`Unstoppable`).
-- Strong construction aptitude (`AptitudeStrong_Construction`).
-- Strong mining aptitude (`AptitudeStrong_Mining`).
-- Strong crafting aptitude (`AptitudeStrong_Crafting`).
-- Poor medicine aptitude (`AptitudePoor_Medicine`).
-- Poor social aptitude (`AptitudePoor_Social`).
-- Alcohol dependency (`ChemicalDependency_Alcohol`).
+- **Traits:** psychically dull, very heat tolerant, aggressive, strong stomach, dark vision, cave dweller, unstoppable, alcohol dependency.
+- **Skills:** strong construction aptitude, strong mining aptitude, strong crafting aptitude, poor medicine aptitude, poor social aptitude.
+- **Appearance:** [bald males](Defs/GeneDefs/GeneDefs_Hair.xml); [small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); short hair, bushy beard, light gray skin, slate gray skin, ink-black skin.
 
 ## Nixie
 
-Definition: [`XylNixie`](Defs/GeneDefs/XenotypeDefs_Nixie.xml). **Inheritable.**
+Engineered for the ocean world Atlantis, nixies have spread across many planets. On the rim they live in river clans and coastal camps, trading with the 'dryskins' and sometimes venturing inland with engineered seal pack animals called selkies. Their scaled skin needs regular moisture, making water both a home and a necessity.
 
-Nixies were engineered for Atlantis, an ocean world, and have since spread across many planets. On the rim they have lived for thousands of years in river clans and coastal camps, where water sustains both their way of life and their bodies. Their blue, scaled skin must stay moist and dries rapidly in heat; webbed extremities and swift movement through water make rivers and shorelines natural homes. They also travel inland in small bands, and use enlarged, land-capable engineered seals called selkies as pack animals.
+Beauty, eloquence, and an instinctive psychic attraction give them an almost divine presence. They favor nudity and pleasure, but their sensitivity to drugs makes indulgence risky. In a colony, they excel at social work and move easily through water; dry heat is a constant discomfort.
 
-Beauty, graceful movement, eloquence, and an instinctive psychic pull give nixies a presence that can seem half-divine. Peaceful tribes trade openly with the 'dryskins', while their affinity for nudism and high life accompanies a physiology unusually sensitive to drugs.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| Beckon ([`XylPsycast_Beckon`](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml)) | Grants the Beckon psycast (draws a target toward the caster) without requiring a psylink. Royalty-dependent; the tips specify at least 25 psyfocus for innate nixie psycasts. |
-| Focus ([`XylPsycast_Focus`](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml)) | Grants the Focus psycast (improves the target's focus and performance) without requiring a psylink. Royalty-dependent; the tips specify at least 25 psyfocus for innate nixie psycasts. |
-| scaleskin ([`XylScaleskin`](Defs/GeneDefs/GeneDefs_Body.xml)) | Protective scales add 40 percentage points of sharp armor and 15 of blunt armor. |
-| drug sensitive ([`XylDrugSensitive`](Defs/GeneDefs/GeneDefs_Drugs.xml)) | Drug effects last longer and tolerance rises faster; adds 0.4 to the drug-effect multiplier and doubles the global addiction-chance factor. |
-| aquatic ([`XylAquatic`](Defs/GeneDefs/GeneDefs_Needs.xml)) | Adds a wetness need: standing in water, rain, or showers restores moisture. Dryness causes mood penalties up to -20; soaking wet gives +3. Unlocks showers and lowers minimum comfortable temperature by 5 degrees C. Tips warn of faster drying above 30 degrees C. |
+| [Beckon](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | Draws a target toward the caster. Requires Royalty and psyfocus, but no psylink. |
+| [Focus](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | Improves a target's performance. Requires Royalty and psyfocus, but no psylink. |
+| [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Scales provide natural protection against sharp and blunt attacks. |
+| [Drug sensitive](Defs/GeneDefs/GeneDefs_Drugs.xml) | Drug effects last longer, tolerance builds faster, and addiction is more likely. |
+| [Aquatic](Defs/GeneDefs/GeneDefs_Needs.xml) | Needs water, rain, or showers to keep skin moist. Dryness causes unhappiness; hot weather dries skin faster. Unlocks showers. |
 
-**New appearance genes:** fin ears ([`XylEars_Fin`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Enhanced psychic sensitivity (`PsychicAbility_Enhanced`).
-- Naked Speed (`NakedSpeed`).
-- Webbed Phalanges (`WebbedPhalanges`).
-- Pessimist (`Mood_Pessimist`).
-- Very cold tolerant (`MinTemp_LargeDecrease`).
-- Heat sensitive (`MaxTemp_SmallDecrease`).
-- Weak melee damage (`MeleeDamage_Weak`).
-- Pretty (`Beauty_Pretty`).
-- Bald (`Hair_BaldOnly`).
-- Snow-white hair (`Hair_SnowWhite`).
-- Grayless hair (`Hair_Grayless`).
-- Blue skin (`Skin_Blue`).
-- Poor mining aptitude (`AptitudePoor_Mining`).
-- Poor construction aptitude (`AptitudePoor_Construction`).
-- Strong social aptitude (`AptitudeStrong_Social`).
+- **Traits:** enhanced psychic sensitivity, naked speed, webbed phalanges, pessimist, very cold tolerant, heat sensitive, weak melee damage, pretty.
+- **Skills:** poor mining aptitude, poor construction aptitude, strong social aptitude.
+- **Appearance:** [fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, snow-white hair, grayless hair, blue skin.
 
 ## Titan
 
-Definition: [`XylTitan`](Defs/GeneDefs/XenotypeDefs_Titan.xml). **Non-inheritable.**
+Titans are sterile, vat-grown giants built to leave enduring structures behind them. Massive, armored, and indifferent to recreation, they labor in places most people would struggle to survive. Each has an exceptional talent in one field and little interest in subjects outside their passions.
 
-Titans are sterile, vat-grown giants created to build structures that will outlast their own lives. Their massive bodies, stony armor, strength, and resistance to toxins suit arduous labor, while an inability to feel joy removes the ordinary desire for recreation. They are taciturn and narrowly focused: each has an exceptional aptitude in one field, but little interest in learning subjects outside their passions. Their reputation is one of relentless construction in deserts, tundra, and poisonous wastelands, and they have an ideological affinity for shipborn life.
+Their carbon-silicate bodies require specialized drugs and heal slowly. They can also develop petrification, an incurable disease that gradually turns tissue to stone. Their endurance depends on care tailored to their unusual biology.
 
-Their unusual durability comes with unusual medical needs. Carbon-silicates are incorporated into their biochemistry, leaving most ordinary drugs ineffective, and their tissues can progressively turn to stone through incurable petrification. Specialized drugs can prevent the disease before it begins or gradually strengthen resistance to hostile environments, but depend on continued dosing. Their slow healing and movement remain practical limitations even behind the image of an inexhaustible worker.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| rock toss ([`XylRockToss`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands. |
-| lithoid ([`XylLithoid`](Defs/GeneDefs/GeneDefs_Drugs.xml)) | Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on baseliners, and instead must use specialized drugs designed for lithoids. |
-| rockskin ([`XylMineralizedSkin`](Defs/GeneDefs/GeneDefs_Body.xml)) | Rock-like plates add 70 percentage points of sharp armor, 40 blunt, and 50 heat, at -0.4 movement speed. Also reduces romance chance with people lacking this gene (factor 0.2). |
-| petrification ([`XylPetrification`](Defs/GeneDefs/GeneDefs_Petrification.xml)) | Can develop incurable petrification, gradually replacing tissue with stone. Medical care slows progression and surgery removes affected tissue. Softener prevents onset when taken every five days, but does not treat an existing disease, even if dormant. |
-| focused ([`XylLearning_Focused`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in. |
-| giant ([`XylGiant`](Defs/GeneDefs/GeneDefs_Body.xml)) | Body size x1.5 and health scale x1.3. The larger body carries more and resists drugs and toxins better, but is easier to hit with ranged weapons. |
-| joyless ([`XylJoyless`](Defs/GeneDefs/GeneDefs_Needs.xml)) | Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. |
-| super-specialist ([`XylSuperSpecialist`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | Replaces itself with one random remarkable aptitude gene: +8 aptitude and one passion level in Construction, Mining, Cooking, Plants, Animals, Crafting, Artistic, Medicine, Social, or Intellectual. Shooting and Melee are excluded from this generator. |
+| [Rock toss](Defs/GeneDefs/GeneDefs_Abilities.xml) | Throws a rock chunk, damaging everything near its landing point. |
+| [Lithoid](Defs/GeneDefs/GeneDefs_Drugs.xml) | Most ordinary drugs have no effect; uses specialized lithoid drugs instead. |
+| [Rockskin](Defs/GeneDefs/GeneDefs_Body.xml) | Heavy natural armor against sharp, blunt, and heat damage, at the cost of movement speed. |
+| [Petrification](Defs/GeneDefs/GeneDefs_Petrification.xml) | Risks a disease that turns tissue to stone. Treatment slows it and surgery removes affected tissue; softener prevents onset but cannot cure it. |
+| [Focused](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Learns faster in burning passions and much slower in skills without passion. |
+| [Giant](Defs/GeneDefs/GeneDefs_Body.xml) | Larger and tougher, with greater carrying capacity and resistance to drugs and toxins. Easier to hit at range. |
+| [Joyless](Defs/GeneDefs/GeneDefs_Needs.xml) | Has no recreation need or recreation-related mood effects. |
+| [Super-specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Gains +8 aptitude and one passion level in a random non-combat skill. |
 
-**New appearance genes:** bald males ([`XylHair_BaldOnly_Male`](Defs/GeneDefs/GeneDefs_Hair.xml)).
+**Other genes and appearance**
 
-### Existing game genes
+- **Traits:** strong melee damage, super immunity, slow wound healing, superclotting, psychically deaf, slow runner, total toxic resistance, sterile, ugly.
+- **Skills:** poor social aptitude, poor intellectual aptitude.
+- **Appearance:** [bald males](Defs/GeneDefs/GeneDefs_Hair.xml); no beard, hulk body.
 
-- Strong melee damage (`MeleeDamage_Strong`).
-- Super immunity (`Immunity_SuperStrong`).
-- Slow wound healing (`WoundHealing_Slow`).
-- Superclotting (`Superclotting`).
-- Psychically deaf (`PsychicAbility_Deaf`).
-- Slow runner (`MoveSpeed_Slow`).
-- Total toxic resistance (`ToxResist_Total`).
-- Sterile (`Sterile`).
-- Ugly (`Beauty_Ugly`).
-- No beard (`Beard_NoBeardOnly`).
-- Hulk body (`Body_Hulk`).
-- Poor social aptitude (`AptitudePoor_Social`).
-- Poor intellectual aptitude (`AptitudePoor_Intellectual`).
-
-**Lithoid drug context:** [Softener, atlasite, and crystal](Defs/Drugs/Drugs_Titan.xml) are tailored to lithoids. Softener prevents new petrification; atlasite requires a dose every three days to build and maintain protective saturation, which rapidly declines after a missed dose; crystal produces euphoria, improves performance, and dulls pain, but is highly addictive.
+**Lithoid drugs:** [Softener](Defs/Drugs/Drugs_Titan.xml) prevents petrification. Atlasite builds protective resistance with regular doses; crystal improves performance and dulls pain, but is highly addictive.
 
 ## Trog
 
-Definition: [`XylTrog`](Defs/GeneDefs/XenotypeDefs_Trog.xml). **Inheritable.**
+Trogs descend from neanderthals, wasters, dirtmoles, and other xenohumans thrown together on barely habitable rimworlds. Their ancestry still surfaces in unexpected extra genes. Slow, foul-smelling, and remarkably tenacious, they thrive in polluted warrens and underground decay.
 
-Trogs are the descendants of repeated interbreeding among neanderthals, wasters, dirtmoles, and numerous other xenohuman lineages on some of humanity's least habitable rimworlds. That ancestry remains unsettled: their unstable genomes frequently express unexpected additional genes. Malformed, foul-smelling, and slow, they nevertheless endure toxic sludge and underground decay with formidable strength, disease resistance, and tolerance of pain. Darkness offers refuge from their sensitivity to sunlight, while pollution can invigorate them.
+Giant insects tolerate their pheromones, giving trogs both useful animals and dangerous neighbors to turn against intruders. Their warlike tribes refuse dealings with outsiders. Primitive technology, brute strength, and an aversion to artificial body parts make them formidable inhabitants of places few others want.
 
-Their relationship with giant insects makes these hostile environments more livable and their settlements more dangerous. Pheromones protect them from wild insects, which they can tame or turn into a defensive advantage against intruders. Warlike trog tribes are insular and refuse dealings with outsiders, relying on tenacity and insect allies despite primitive technology. Their preference for darkness and flesh purity also fits bodies that painfully reject artificial implants, making technological replacement of flesh especially unappealing.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| toxic burst ([`XylToxicBurst`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally. |
-| bio-rejection ([`XylBioRejection`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Artificial implants or body parts cause ongoing pain until removed. The tips specify that a mechlink triggers rejection but a psylink does not. |
-| insect pheromones ([`XylInsectPheromones`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Prevents hostility from wild insects. The tips also state that colony animals benefit from this protection. |
-| genetic atavism ([`XylGeneticAtavism`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | 50% chance to generate extra random xenogenes. The generator excludes archite genes and constrains the resulting metabolic total to -2 through +2; individual trogs can therefore differ. |
+| [Toxic burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Releases tox gas around the carrier, who is also exposed to it. |
+| [Bio-rejection](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Artificial body parts and implants cause persistent pain. Mechlinks trigger it; psylinks do not. |
+| [Insect pheromones](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Wild insects leave carriers alone. Colony animals also benefit from the protection. |
+| [Genetic atavism](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | A 50% chance of extra random non-archite xenogenes. |
 
-**New appearance genes:** warped head ([`XylHead_Trog`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)); dark green skin ([`XylSkin_DarkGreen`](Defs/GeneDefs/GeneDefs_SkinColors.xml)); olive skin ([`XylSkin_Olive`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Strong immunity (`Immunity_Strong`).
-- Slow runner (`MoveSpeed_Slow`).
-- Partial toxic-environment resistance (`ToxicEnvironmentResistance_Partial`).
-- Mild UV sensitivity (`UVSensitivity_Mild`).
-- Aggressive (`Aggression_Aggressive`).
-- Strong melee damage (`MeleeDamage_Strong`).
-- Reduced pain (`Pain_Reduced`).
-- Very ugly (`Beauty_VeryUgly`).
-- Bald (`Hair_BaldOnly`).
-- Human headbone (`Headbone_Human`).
-- Mini-horns (`Headbone_MiniHorns`).
-- Green skin (`Skin_Green`).
-- Slow study (`Learning_Slow`).
-- Dark Vision (`DarkVision`).
-- Pollution Rush (`PollutionRush`).
-- Mild cell instability (`Instability_Mild`).
-- Strong mining aptitude (`AptitudeStrong_Mining`).
-- Strong animals aptitude (`AptitudeStrong_Animals`).
-- Terrible intellectual aptitude (`AptitudeTerrible_Intellectual`).
-- Psychite addiction resistance (`AddictionResistant_Psychite`).
+- **Traits:** strong immunity, slow runner, partial toxic-environment resistance, mild UV sensitivity, aggressive, strong melee damage, reduced pain, very ugly, slow study, dark vision, pollution rush, mild cell instability, psychite addiction resistance.
+- **Skills:** strong mining aptitude, strong animals aptitude, terrible intellectual aptitude.
+- **Appearance:** [warped head](Defs/GeneDefs/GeneDefs_Cosmetic.xml); [dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); [olive skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); bald, human headbone, mini-horns, green skin.
 
 ## Warcat
 
-Definition: [`XylWarcat`](Defs/GeneDefs/XenotypeDefs_Warcat.xml). **Inheritable.**
+Warcats are military hybrids of humans and great cats, built for speed and close combat. A flaw in their engineering left them dependent on raw meat. Their hunting bands roam in tight-knit prides, taking any prey they can overpower—including other xenohumans. After thousands of years on the rim, they are part of the ecosystem.
 
-Warcats began as military hybrids of humans and great cats, built around fast reflexes, powerful melee attacks, and retractable claws. A flaw in their engineering left them unable to make essential nutrients that must now come from raw meat. This dependence shapes their place on the rim: they roam in close-knit prides and hunting bands, taking whatever prey they can overpower, including other xenohumans. Their arrival on the local world is forgotten, but thousands of years of hunting have made them an established part of its ecosystem.
+Proud, volatile, and fiercely aggressive, warcats form loose confederations that can still be negotiated with. Exiles must find new hunting grounds and a place to settle. Their claws and reflexes make them dangerous opponents, but even the strongest hunter must keep feeding.
 
-Strong internal bonds coexist with aggression, volatile moods, and a capacity for feral rage. Hunting bands form loose confederations that are difficult to deal with but can still be reasoned with. Cannibalism and raiding fit their predatory way of life, whereas animal personhood conflicts with it. Pride membership is not assured: exiles may be forced to seek new territory and establish a home with scant supplies, and the recorded example of such a group includes slaves. Their prowess makes them dangerous settlers; their accumulating need for raw meat makes hunger a constant constraint.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| feral rage ([`XylFeralRage`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%). |
-| moody ([`XylMoody`](Defs/GeneDefs/GeneDefs_Mood.xml)) | Carriers of this gene have a volatile emotional state. They randomly get good and bad moods. |
-| fast reflexes ([`XylFastReflexes`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Grants the Nimble trait, improving melee dodging and trap avoidance. |
-| retractable claws ([`XylRetractableClaws`](Defs/GeneDefs/GeneDefs_InnateWeapons.xml)) | Carriers of this gene have retractable claws that function as weapons. |
-| carnivore stomach ([`XylCarnivoreStomach`](Defs/GeneDefs/GeneDefs_Diet.xml)) | Raw meat nutrition x1.8; raw vegetables x0.5 and cooked vegetables x0.8. Removes the raw-food thought and food-poisoning chance for raw meat; does not itself grant the Cannibal trait. |
-| meat dependence ([`XylMeatDependence`](Defs/GeneDefs/GeneDefs_Diet.xml)) | From age 13, requires raw meat for essential nutrients. Deficiency causes declining mood and health, pain, weakness, mental instability, coma, and eventually death. The deficit accumulates: recovery requires making up missed raw meat. |
+| [Feral rage](Defs/GeneDefs/GeneDefs_Abilities.xml) | Temporarily increases movement and melee attack speed, followed by pain and slower movement. |
+| [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Random bouts of good and bad mood. |
+| [Fast reflexes](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Nimble: better melee dodging and trap avoidance. |
+| [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds retractable claws as melee weapons. |
+| [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Gets more nutrition from raw meat and less from plants. Can eat raw meat without the usual raw-food mood penalty or food poisoning. |
+| [Meat dependence](Defs/GeneDefs/GeneDefs_Diet.xml) | Requires raw meat to survive. Deficiency accumulates and can become fatal; recovery requires making up the missed meat. |
 
-**New appearance genes:** yellow eyes ([`XylEyes_Yellow`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)); facial stripes ([`XylFacialStripes`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Hyper-aggressive (`Aggression_HyperAggressive`).
-- Strong melee damage (`MeleeDamage_Strong`).
-- Sleepy (`Sleepy`).
-- High libido (`Libido_High`).
-- Long hair (`Hair_LongOnly`).
-- No beard (`Beard_NoBeardOnly`).
-- Cat ears (`Ears_Cat`).
-- Standard body (`Body_Standard`).
-- Thin body (`Body_Thin`).
-- Dark Vision (`DarkVision`).
-- Remarkable melee aptitude (`AptitudeRemarkable_Melee`).
-- Poor plants aptitude (`AptitudePoor_Plants`).
-- Poor crafting aptitude (`AptitudePoor_Crafting`).
+- **Traits:** hyper-aggressive, strong melee damage, sleepy, high libido, dark vision.
+- **Skills:** remarkable melee aptitude, poor plants aptitude, poor crafting aptitude.
+- **Appearance:** [yellow eyes](Defs/GeneDefs/GeneDefs_Cosmetic.xml); [facial stripes](Defs/GeneDefs/GeneDefs_Cosmetic.xml); long hair, no beard, cat ears, standard body, thin body.
 
 ## Succuboid
 
-Definition: [`XylSuccuboid`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritable.**
+Succuboids were designed as fashionable companions for glitterworld elites: beautiful, winged, socially gifted, and able to make intimacy chemically addictive. They prefer leisure and nudity, and their youthful appearance lasts into old age.
 
-Succuboids were engineered as fashionable companions for glitterworld elites. Their beauty, social aptitude, and psychic influence over attraction accompany a distinctive appearance: pink skin, wings, small horns, a smooth tail, and looks that remain youthful despite ordinary aging. Their delicate bodies, substantial need for sleep, and slow work suit a life of leisure, while high libido and euphoric secretions make intimacy with them compelling and potentially addictive.
+They later took control of their reproduction, ensuring that their daughters would inherit the succuboid lineage regardless of their partner's xenotype. They still need males from other populations to reproduce. Their independence has not ended the fascination surrounding them: outsiders variously regard them as prestigious companions, valuable commodities, or dangerous social parasites.
 
-At some point, succuboids took control of their own reproduction and engineered the ability to bear succuboid daughters with partners of other xenotypes. Their exclusively female lineage can now preserve itself across generations, although reproduction still depends on males from outside that lineage. This combination of reproductive autonomy and intimate dependence on outsiders shapes their ambiguous place in society: some people prize them as prestigious companions, others treat them as valuable commodities, and still others fear them as social parasites. Their origins as designed companions continue to influence how they are treated even after they gained control over their biological future.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| Word of Love ([`XylPsycast_WordOfLove`](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml)) | Grants the Word of Love psycast (influences romantic attraction) without requiring a psylink, via the mod's psycast-gene template. |
-| bat wings ([`XylBatWings`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Enables short flights, blocked by some heavy torso apparel; also reduces Manipulation by 0.1. |
-| always female ([`XylGender_AlwaysFemale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Makes germline carriers female; has no effect as a xenogene. |
-| strong genes ([`XylStrongGenes`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | With a parent of a different xenotype, offspring copy the carrier's endogenes exactly unless the other parent also has strong genes. |
-| love euphoria ([`XylLoveEuphoria`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Lovin' gives the partner a euphoric mood boost (+14) and a chance of inspiration, but can create an addiction. Withdrawal worsens mood, work speed, and tiredness. Active from age 16. |
-| youthful ([`XylYouthful`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Caps the age used in lovin' frequency and relationship-compatibility calculations at 18. Does not stop biological aging, prevent age-related illness, or extend lifespan. |
-| shameless ([`XylShameless`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Carriers of this gene are never ashamed by nudity, and are much happier when not wearing clothes. |
-| lazy ([`XylLazy`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Carriers of this gene are slow workers. |
+| [Word of Love](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | Influences romantic attraction. Requires Royalty, but no psylink. |
+| [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Allows short flights at the cost of some manipulation. Heavy torso apparel can prevent flight. |
+| [Always female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers are always female. |
+| [Strong genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the carrier's endogenes when the other parent has a different xenotype, unless both parents have strong genes. |
+| [Love euphoria](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Intimacy gives partners euphoria and possible inspiration, but can cause addiction and withdrawal. |
+| [Youthful](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Uses an age no higher than 18 for lovin' frequency and relationship compatibility. Biological aging continues normally. |
+| [Shameless](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Nudist: happier without clothes. |
+| [Lazy](Defs/GeneDefs/GeneDefs_Traits.xml) | Works slower. |
 
-**New appearance genes:** pink skin ([`XylSkin_Pink`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Enhanced psychic sensitivity (`PsychicAbility_Enhanced`).
-- Naked Speed (`NakedSpeed`).
-- Weak melee damage (`MeleeDamage_Weak`).
-- Very Sleepy (`VerySleepy`).
-- Delicate (`Delicate`).
-- High libido (`Libido_High`).
-- Beautiful (`Beauty_Beautiful`).
-- Long hair (`Hair_LongOnly`).
-- Mini-horns (`Headbone_MiniHorns`).
-- Standard body (`Body_Standard`).
-- Pink hair (`Hair_Pink`).
-- Light purple hair (`Hair_LightPurple`).
-- Smooth tail (`Tail_Smooth`).
-- Grayless hair (`Hair_Grayless`).
-- Strong social aptitude (`AptitudeStrong_Social`).
+- **Traits:** enhanced psychic sensitivity, naked speed, weak melee damage, very sleepy, delicate, high libido, beautiful.
+- **Skills:** strong social aptitude.
+- **Appearance:** [pink skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); long hair, mini-horns, standard body, pink hair, light purple hair, smooth tail, grayless hair.
 
 ## Scaleborn
 
-Definition: [`XylScaleborn`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritable.**
+Scaleborn began as a fashion for recreating the dragons of ancient Earth. On the dinosaur world Tyrantis V, those modifications became tools of survival: horns, claws, armored scales, and specialized breath weapons help them hunt megafauna for food and materials.
 
-Scaleborn began with a fashion for genetic modifications that recreated the dragons of ancient Earth mythology. The resulting horns, retractable claws, powerful melee attacks, and armored scales have since acquired a practical role on Tyrantis V, a dinosaur world where scaleborn survive as top predators. They hunt its great megafauna for both food and materials, supported by a digestive system that extracts abundant nutrition from raw meat.
+Five colored lineages carry different weapons and defenses. All are carnivorous, aggressive, and prone to unpredictable moods. Their strength comes with a slow pace and a need for sleep; cold can send them into torpor.
 
-Their draconic inheritance takes five forms: red scaleborn breathe fire and resist burning; dark green scaleborn spray acid and resist toxins; white scaleborn spray foam and heal quickly; blue scaleborn release electromagnetic blasts and resist being staggered; black scaleborn have robust bodies and spray blinding oil that leaves flammable puddles. Despite their formidable natural weapons, they move slowly, sleep often, and enter torpor when cold. Aggression and volatile moods accompany these physical adaptations, while psychic dullness reduces their sensitivity to psychic influence. What began as an imitation of mythical creatures has become a way of life among the giant animals of Tyrantis V.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| moody ([`XylMoody`](Defs/GeneDefs/GeneDefs_Mood.xml)) | Carriers of this gene have a volatile emotional state. They randomly get good and bad moods. |
-| torpor ([`XylTorpor`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Cold causes progressively impaired consciousness and eventual hibernation, reducing food use and slowing hypothermia and starvation. Warming reverses the condition. |
-| large horns ([`XylLargeHorns`](Defs/GeneDefs/GeneDefs_InnateWeapons.xml)) | Carriers of this gene have large horns that function as a weapon. |
-| retractable claws ([`XylRetractableClaws`](Defs/GeneDefs/GeneDefs_InnateWeapons.xml)) | Carriers of this gene have retractable claws that function as weapons. |
-| carnivore stomach ([`XylCarnivoreStomach`](Defs/GeneDefs/GeneDefs_Diet.xml)) | Raw meat nutrition x1.8; raw vegetables x0.5 and cooked vegetables x0.8. Removes the raw-food thought and food-poisoning chance for raw meat; does not itself grant the Cannibal trait. |
-| scaleskin ([`XylScaleskin`](Defs/GeneDefs/GeneDefs_Body.xml)) | Protective scales add 40 percentage points of sharp armor and 15 of blunt armor. |
-| scaleborn lineage ([`XylScalebornLineage`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | Replaces itself with one of five complete lineage packages: fire, acid/toxin, foam/healing, EMP, or oil. See the variant list below. |
+| [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Random bouts of good and bad mood. |
+| [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Cold causes hibernation, reducing food needs and slowing starvation and hypothermia. Warmth reverses it. |
+| [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds horns that serve as melee weapons. |
+| [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds retractable claws as melee weapons. |
+| [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Gets more nutrition from raw meat and less from plants. Can eat raw meat without the usual raw-food mood penalty or food poisoning. |
+| [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Scales provide natural protection against sharp and blunt attacks. |
+| [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
 
-### Existing game genes
+**Other genes and appearance**
 
-- Psychically dull (`PsychicAbility_Dull`).
-- Slow runner (`MoveSpeed_Slow`).
-- Cold tolerant (`MinTemp_SmallDecrease`).
-- Heat tolerant (`MaxTemp_SmallIncrease`).
-- Aggressive (`Aggression_Aggressive`).
-- Strong melee damage (`MeleeDamage_Strong`).
-- Sleepy (`Sleepy`).
-- Bald (`Hair_BaldOnly`).
-- No beard (`Beard_NoBeardOnly`).
-- Facial Ridges (`FacialRidges`).
-- Poor cooking aptitude (`AptitudePoor_Cooking`).
+- **Traits:** psychically dull, slow runner, cold tolerant, heat tolerant, aggressive, strong melee damage, sleepy.
+- **Skills:** poor cooking aptitude.
+- **Appearance:** bald, no beard, facial ridges.
 
-### Additional lineage genes
+### Lineages
 
-The lineage generator selects one complete package and removes the `XylScalebornLineage` placeholder:
+Each scaleborn receives one additional gene package:
 
-- **Red:** fire spew (`FireSpew`), fire resistance (`FireResistant`), deep red skin (`Skin_DeepRed`).
-- **Green:** acid spray (`AcidSpray`), partial toxic resistance (`ToxResist_Partial`), new cosmetic dark green skin (`XylSkin_DarkGreen`).
-- **White:** foam spray (`FoamSpray`), fast wound healing (`WoundHealing_Fast`), sheer white skin (`Skin_SheerWhite`).
-- **Blue:** EMP blast (`XylEMPBlast`), unstoppable (`Unstoppable`), new cosmetic dark blue skin (`XylSkin_DarkBlue`).
-- **Black:** oil spray (`XylOilSpray`), robust (`Robust`), slate gray skin (`Skin_SlateGray`).
-
-The black lineage uses the existing slate gray skin gene (`Skin_SlateGray`).
-
-These new functional genes occur only in their respective lineage packages:
+| Lineage | Genes |
+| --- | --- |
+| Red | Fire spew, fire resistance, deep red skin |
+| Green | Acid spray, partial toxic resistance, dark green skin |
+| White | Foam spray, fast wound healing, sheer white skin |
+| Blue | EMP blast, unstoppable, dark blue skin |
+| Black | Oil spray, robust, slate gray skin |
 
 | Gene | Effect |
 | --- | --- |
-| EMP blast ([`XylEMPBlast`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Releases an electromagnetic pulse around the carrier, disabling nearby electronic devices. The blast has a radius of 3.5 cells and a five-day cooldown. |
-| oil spray ([`XylOilSpray`](Defs/GeneDefs/GeneDefs_Abilities.xml)) | Sprays sticky oil from neck glands through the mouth, temporarily blinding targets and leaving flammable puddles. Has a range of 8.9 cells and a five-day cooldown. |
+| [EMP blast](Defs/GeneDefs/GeneDefs_Abilities.xml) | Disables nearby electronics with an electromagnetic pulse. |
+| [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Sprays oil that temporarily blinds targets and leaves flammable puddles. |
 
 ## Zeegee
 
-Definition: [`XylZeegee`](Defs/GeneDefs/XenotypeDefs_Minor.xml). **Inheritable.**
+Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. Silver-skinned and marked on the forehead, they are quick learners with a talent for advanced technology. Keen distance vision makes them good shots, while dark vision and comfort indoors suit life aboard a ship.
 
-Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. Their aptitude for advanced technology and rapid learning suit the machinery-dependent environments of their ancestry, while dark vision and a preference for enclosed surroundings fit life inside a habitat. Silver skin and a distinctive forehead mark set them apart, and their keen distance vision supports an aptitude for shooting. They are less suited to close combat or handling animals.
+Planetary gravity is harder on them. Their delicate bodies suffer bouts of nausea on the surface, and weak immunity adds to the difficulty of settling a new world. Stored oxygen and protective proteins give them a temporary defense against vacuum and other environmental emergencies, buying time to reach safety.
 
-Planetary life is physically difficult for them. Their delicate bodies and weak immunity leave them vulnerable, and adapting to surface gravity brings bouts of nausea and vomiting that impair everyday activity. Yet they retain a specialized means of surviving environmental emergencies: oxygen and proteins stored in their bone marrow can temporarily protect them against vacuum, toxins, and extreme temperatures. These reserves offer a chance to survive a crisis, followed by a period of recovery, rather than permanent freedom from the hazards outside a habitat. No distinct zeegee society or named homeworld is described.
-
-### New functional genes
+### Genes
 
 | Gene | Effect |
 | --- | --- |
-| planet sickness ([`XylPlanetSickness`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Periodic nausea and vomiting while on a planet's surface. |
-| emergency reserves ([`XylEmergencyReserves`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Vacuum exposure, hypothermia, heatstroke, or toxic buildup triggers stored oxygen and proteins, temporarily protecting against all four hazards. The active phase lasts about one day, followed by roughly four days of recovery with increased hunger before the reserves are available again. |
-| telescopic vision ([`XylTelescopicVision`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Multiplies the shooting-accuracy factor at long range by 2 and at medium range by 1.5. |
-| tech affinity ([`XylTechAffinity`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Adds 3 mech bandwidth and, with Odyssey, 0.3 piloting ability. |
+| [Planet sickness](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Periodic nausea and vomiting on planetary surfaces. |
+| [Emergency reserves](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Temporary protection against vacuum, toxins, heatstroke, and hypothermia, followed by a recovery period with increased hunger. |
+| [Telescopic vision](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Improves shooting accuracy at medium and long range. |
+| [Tech affinity](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Adds 3 mech bandwidth and improves piloting with Odyssey. |
 
-**New appearance genes:** forehead mark ([`XylForeheadMark`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)); dark silver skin ([`XylSkin_DarkSilver`](Defs/GeneDefs/GeneDefs_SkinColors.xml)); light silver skin ([`XylSkin_LightSilver`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+**Other genes and appearance**
 
-### Existing game genes
-
-- Weak immunity (`Immunity_Weak`).
-- Weak melee damage (`MeleeDamage_Weak`).
-- Delicate (`Delicate`).
-- Short hair (`Hair_ShortOnly`).
-- Space movement speed (`MoveSpeed_Space`; requires Odyssey).
-- Fast learning (`Learning_Fast`).
-- Dark vision (`DarkVision`).
-- Cave dweller (`CaveDweller`).
-- Strong shooting aptitude (`AptitudeStrong_Shooting`).
-- Poor melee aptitude (`AptitudePoor_Melee`).
-- Poor animals aptitude (`AptitudePoor_Animals`).
-- Strong intellectual aptitude (`AptitudeStrong_Intellectual`).
+- **Traits:** weak immunity, weak melee damage, delicate, space movement speed (Odyssey), fast learning, dark vision, cave dweller.
+- **Skills:** strong shooting aptitude, poor melee aptitude, poor animals aptitude, strong intellectual aptitude.
+- **Appearance:** [forehead mark](Defs/GeneDefs/GeneDefs_Cosmetic.xml); [dark silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); [light silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); short hair.
 
 ## Currently unused genes
 
-These **17 new genes** are defined in the mod but are not assigned to any of its ten xenotypes, either directly or through an explicitly listed bonus-gene package. "Unused" here means unused by those presets, not disabled: custom xenotypes and random gene generation may still use them. Abstract definitions and commented-out code are excluded.
+These genes are available for custom xenotypes but are not part of the mod's xenotypes or their lineage packages.
 
 ### Functional genes
 
 | Gene | Effect |
 | --- | --- |
-| drug resistant ([`XylDrugResistant`](Defs/GeneDefs/GeneDefs_Drugs.xml)) | Drug effects wear off faster, tolerance develops more slowly, and addiction is less likely. Subtracts 0.5 from the drug-effect multiplier and multiplies global addiction chance by 0.7. |
-| even temper ([`XylEvenTemper`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Suppresses innate mood and nerves extremes, neurotic traits, Bloodlust, Too Smart, Greedy, Jealous, and Tortured Artist, reducing variation in temperament. |
-| always male ([`XylGender_AlwaysMale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Makes germline carriers male; has no effect as a xenogene. |
-| usually male ([`XylGender_UsuallyMale`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Sets a 75% male chance when present as a germline gene; has no effect as a xenogene. |
-| parthenogenic ([`XylParthenogenic`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Female carriers can become spontaneously pregnant without a father. Active from age 16, with a configured mean interval of 120 days. |
-| precognition ([`XylPrecognition`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | Improves melee and ranged dodging, with the effect scaling with psychic sensitivity. Although mentioned in chyrr lore, it is not in their gene list. |
-| specialist ([`XylSpecialist`](Defs/GeneDefs/GeneDefs_BonusGenes.xml)) | Replaces itself with a strong aptitude gene, granting +4 aptitude in one random non-combat skill. Titans instead use super-specialist. |
-| voracious ([`XylVoracious`](Defs/GeneDefs/GeneDefs_Traits.xml)) | Grants both Cannibal and Gourmand. Its description is still TODO; these effects come from its configured forced traits. |
-| weak genes ([`XylWeakGenes`](Defs/GeneDefs/GeneDefs_Reproduction.xml)) | Children with a parent of another xenotype copy that other parent's endogenes, unless the other parent also has weak genes. |
-| ultra-fast wound healing ([`XylWoundHealing_UltraFast`](Defs/GeneDefs/GeneDefs_Miscellaneous.xml)) | An archite gene that rapidly heals wounds, configured at 20 health per hour. Does not repair permanent scars or restore lost blood. |
+| [Drug resistant](Defs/GeneDefs/GeneDefs_Drugs.xml) | Drug effects wear off faster, tolerance builds slower, and addiction is less likely. |
+| [Even temper](Defs/GeneDefs/GeneDefs_Traits.xml) | Suppresses mood and nerves extremes, neuroticism, and several other volatile personality traits. |
+| [Always male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers are always male. |
+| [Usually male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers have a 75% chance of being male. |
+| [Parthenogenic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Females can become pregnant without a father. |
+| [Precognition](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Improves melee and ranged dodging in proportion to psychic sensitivity. |
+| [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Grants +4 aptitude in a random non-combat skill. |
+| [Voracious](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Cannibal and Gourmand. |
+| [Weak genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the other parent's endogenes when that parent has a different xenotype, unless both parents have weak genes. |
+| [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | An archite gene that rapidly heals wounds, but not permanent scars or blood loss. |
 
 ### Appearance genes
 
-- Bald females ([`XylHair_BaldOnly_Female`](Defs/GeneDefs/GeneDefs_Hair.xml)).
-- Short-haired females ([`XylHair_ShortOnly_Female`](Defs/GeneDefs/GeneDefs_Hair.xml)).
-- Long-haired females ([`XylHair_LongOnly_Female`](Defs/GeneDefs/GeneDefs_Hair.xml)).
-- Short-haired males ([`XylHair_ShortOnly_Male`](Defs/GeneDefs/GeneDefs_Hair.xml)).
-- Long-haired males ([`XylHair_LongOnly_Male`](Defs/GeneDefs/GeneDefs_Hair.xml)).
-- Visible ribs ([`XylRibs`](Defs/GeneDefs/GeneDefs_Cosmetic.xml)).
-- Dark purple skin ([`XylSkin_DarkPurple`](Defs/GeneDefs/GeneDefs_SkinColors.xml)).
+- [Bald females](Defs/GeneDefs/GeneDefs_Hair.xml).
+- [Short-haired females](Defs/GeneDefs/GeneDefs_Hair.xml).
+- [Long-haired females](Defs/GeneDefs/GeneDefs_Hair.xml).
+- [Short-haired males](Defs/GeneDefs/GeneDefs_Hair.xml).
+- [Long-haired males](Defs/GeneDefs/GeneDefs_Hair.xml).
+- [Visible ribs](Defs/GeneDefs/GeneDefs_Cosmetic.xml).
+- [Dark purple skin](Defs/GeneDefs/GeneDefs_SkinColors.xml).
 
-The [psycast-gene template](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) also generates genes from available game psycasts. Only Beckon, Focus, and Word of Love are explicitly assigned to the mod's xenotypes; other generated psycast genes are unused by these presets. They are not included in the 17 individually defined genes above because their roster depends on the available ability definitions.
+Additional psycast genes are generated from the available abilities. The xenotypes above use Beckon, Focus, and Word of Love.
 
-## Source guide
+## Mod data
 
-- [Xenotype and gene definitions](Defs/GeneDefs/): gene pools, effects, innate weapons, abilities, health conditions, and random gene generators.
-- [Faction descriptions](Defs/Factions/): bossaps herd, dvergr union, nixie tribe, trog tribe, and warcat tribe.
-- [Gameplay tips](Defs/TipSetDefs/): supplementary details about biology and gene use.
-- [Scenarios](Defs/Scenarios/Scenarios.xml) and [Royalty scenarios](Compat/Royalty/Defs/Scenarios_Royalty.xml): dvergr migration, warcat exile, and the nixie cult survivor.
-- [Odyssey animals](Compat/Odyssey/Defs/Races_Animal_Odyssey.xml): nixie selkies.
-- [Titan drugs](Defs/Drugs/Drugs_Titan.xml): lithoid biochemistry and petrification management.
-- [Psycast gene template](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml): creates genes from game psycasts; these grant their abilities without a psylink. Nixie Beckon and Focus entries explicitly require Royalty; the succuboid Word of Love reference lacks that explicit guard.
-
-New genes not assigned to these xenotypes or their listed bonus packages are covered in [Currently unused genes](#currently-unused-genes).
+Browse the [xenotype and gene definitions](Defs/GeneDefs/), [factions](Defs/Factions/), and [scenarios](Defs/Scenarios/) for the full data.
