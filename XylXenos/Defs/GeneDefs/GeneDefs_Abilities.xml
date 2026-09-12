@@ -83,7 +83,7 @@
     <isBad>false</isBad>
     <comps>
       <li Class="XylXenos.HediffCompProperties_SeverityPerDay_Stage">
-        <severityPerDay>-2.0</severityPerDay>
+        <severityPerDay>-1.6</severityPerDay>
         <showHoursToRecover>true</showHoursToRecover>
       </li>
     </comps>
@@ -101,7 +101,7 @@
       </li>
       <li>
         <label>active</label>
-        <minSeverity>0.75</minSeverity>
+        <minSeverity>0.8</minSeverity>
         <capMods>
           <li>
             <capacity>Moving</capacity>
