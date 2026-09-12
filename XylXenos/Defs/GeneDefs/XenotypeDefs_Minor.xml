@@ -81,6 +81,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>true</allowSolidBackstories>
+        <lineageInheritance>true</lineageInheritance>
         <agreeingMemes>
           <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
         </agreeingMemes>
