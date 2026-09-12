@@ -94,7 +94,7 @@
 
   <XenotypeDef>
     <defName>XylZeegee</defName>
-    <label>zeeegee</label>
+    <label>zeegee</label>
     <description>Zeegees are descendants of the inhabitants of deep space habitats and ancient generation ships. They're smart and take naturally to advanced technology, but have a hard time adapting to the gravity of planetary surfaces.</description>
     <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon1</iconPath>
