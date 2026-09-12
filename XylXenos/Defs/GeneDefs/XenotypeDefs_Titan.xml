@@ -38,8 +38,11 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">
         <agreeingMemes>
-          <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Collectivist</li>
         </agreeingMemes>
+        <disagreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>
+        </disagreeingMemes>
       </li>
     </modExtensions>
   </XenotypeDef>
