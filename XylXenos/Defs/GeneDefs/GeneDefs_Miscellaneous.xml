@@ -570,7 +570,7 @@
     <comps>
       <li Class="HediffCompProperties_SeverityPerDay">
         <severityPerDay>-1</severityPerDay>
-        <showHoursToRecover>true</showHoursToRecover>
+        <severityPerDayRange>-0.1~0.1</severityPerDayRange>
       </li>
       <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylPlanetSickness</gene>
@@ -640,10 +640,10 @@
     <hediffClass>HediffWithComps</hediffClass>
     <initialSeverity>1</initialSeverity>
     <comps>
-      <li Class="HediffCompProperties_SeverityPerDay">
-        <compClass>XylXenos.HediffComp_SeverityPerDay_Stage</compClass>
+      <li Class="XylXenos.HediffCompProperties_SeverityPerDay_Stage">
         <severityPerDay>-0.2</severityPerDay>
-        <showDaysToRecover>true</showDaysToRecover>
+        <showHoursToRecoverStages>1</showHoursToRecoverStages>
+        <showDaysToRecoverStages>0</showDaysToRecoverStages>
       </li>
       <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylEmergencyReserves</gene>

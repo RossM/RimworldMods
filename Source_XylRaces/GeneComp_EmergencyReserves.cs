@@ -8,7 +8,7 @@ public class GeneCompProperties_EmergencyReserves : GeneCompProperties
     [UsedFromXml]
     public class HediffSeverity
     {
-        public HediffDef hediff;
+        public required HediffDef hediff;
         public float minSeverity;
 
         [UsedFromReflection]
@@ -21,13 +21,10 @@ public class GeneCompProperties_EmergencyReserves : GeneCompProperties
         }
     }
 
-    public HediffDef hediff;
+    public required HediffDef hediff;
     public FloatRange severityRange = FloatRange.One;
 
-    [MustTranslate] public string message;
-    public LetterDef messageType;
-
-    public List<HediffSeverity> triggers;
+    public required List<HediffSeverity> triggers;
 
     public GeneCompProperties_EmergencyReserves()
     {
