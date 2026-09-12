@@ -1,5 +1,8 @@
 ﻿namespace XylXenos;
 
+/// <summary>
+///     This is the same as <see cref="HediffComp_SeverityPerDay"/> except that the displayed time remaining is for only the current stage.
+/// </summary>
 [UsedFromXml]
 public class HediffComp_SeverityPerDay_Stage : HediffComp_SeverityPerDay
 {
