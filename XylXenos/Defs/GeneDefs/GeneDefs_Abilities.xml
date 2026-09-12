@@ -347,8 +347,6 @@
     <aiCanUse>true</aiCanUse>
     <showPsycastEffects>false</showPsycastEffects>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
-    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
-    <hostile>false</hostile>
     <targetRequired>false</targetRequired>
     <statBases>
       <Ability_Duration>0</Ability_Duration>
@@ -406,8 +404,6 @@
     <aiCanUse>true</aiCanUse>
     <showPsycastEffects>false</showPsycastEffects>
     <sendMessageOnCooldownComplete>true</sendMessageOnCooldownComplete>
-    <casterMustBeCapableOfViolence>false</casterMustBeCapableOfViolence>
-    <hostile>false</hostile>
     <targetRequired>false</targetRequired>
     <statBases>
       <Ability_Duration>0</Ability_Duration>
