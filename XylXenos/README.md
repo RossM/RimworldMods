@@ -20,7 +20,7 @@ All xenotypes except titans are inheritable. The tables describe the mod's new f
 
 ## Bossaps
 
-Bossaps were engineered as sentient livestock by glitterworld gene-artisans. Fertile, mostly female, and able to live on raw plants, they produce abundant milk and find comfort in a herd. Their docility makes them easy to exploit, but injury can send them charging into a horn-first frenzy—even against an ally who hurt them. Wild herds roam the rim, far from the people who designed them.
+Bossaps were engineered as sentient livestock by glitterworld gene-artisans. Fertile and predominantly female, they produce abundant milk, digest raw plants efficiently, and find comfort in a herd. Wild herds now roam the rim, though their docility still makes them easy to exploit. That gentleness can vanish when they are injured: a wounded bossaps may charge into a frenzy, turning its horns on whoever hurt it—even an ally.
 
 ### Genes
 
@@ -43,7 +43,7 @@ Bossaps were engineered as sentient livestock by glitterworld gene-artisans. Fer
 
 ## Chyrr
 
-Chyrr are nocturnal flying mystics from hot jungles and deserts. They navigate by sound, with hearing sharp enough to compensate for blindness, and defend their fragile bodies with a stunning cry. Their affinity for blindsight suits a life in which eyes are optional. Sunlight troubles them; cold sends them into hibernation. They make gifted medics, provided they can stay warm and work at night.
+Chyrr are nocturnal flying mystics from hot jungles and deserts. Sensitive to sunlight and prone to hibernation in the cold, they fare best on warm nights. They navigate by sound, with hearing sharp enough to compensate for blindness, and their affinity for blindsight reflects how little they depend on their eyes. Though physically fragile, they can defend themselves with a stunning cry and have a natural aptitude for medicine.
 
 ### Genes
 
@@ -64,9 +64,9 @@ Chyrr are nocturnal flying mystics from hot jungles and deserts. They navigate b
 
 ## Dvergr
 
-Dvergr come from Svartalfheim, a mineral-rich world of underground cities powered by magma. Short, heat-tolerant, and industrious, they build their lives around mining and craftwork. Fungus feeds them and supplies their breweries, though even their specialized digestion cannot improve its taste. Alcohol is a necessity.
+Dvergr come from Svartalfheim, a mineral-rich world of underground cities powered by magma. Short, heat-tolerant, and industrious, they build their lives around mining and craftwork. Fungus sustains their settlements as both food and brewing material: their digestion makes it nourishing without improving its taste, while alcohol is a biological necessity.
 
-Their settlements form loose unions: difficult to please, but powerful allies once won over. Dvergr prefer work to conversation, and their stoicism conceals a persistent melancholy. Long stretches of labor sometimes end in a breakdown—and, occasionally, a work of extraordinary craftsmanship.
+Dvergr prefer work to conversation, and their stoicism accompanies a persistent melancholy. A breakdown sometimes gives way to the inspiration for an extraordinary piece of craftsmanship. Their settlements form loose unions whose inhabitants are difficult to please, but can become powerful allies once won over.
 
 ### Genes
 
@@ -86,9 +86,9 @@ Their settlements form loose unions: difficult to please, but powerful allies on
 
 ## Nixie
 
-Engineered for the ocean world Atlantis, nixies have spread across many planets. On the rim they live in river clans and coastal camps, trading with the 'dryskins' and sometimes venturing inland with engineered seal pack animals called selkies. Their scaled skin needs regular moisture, making water both a home and a necessity.
+Engineered for the ocean world Atlantis, nixies have spread across many planets. Their scaled skin needs regular moisture, and they move easily through water. On the rim they make their homes in river clans and coastal camps, though small bands also venture inland with selkies, engineered seals bred as pack animals.
 
-Beauty, eloquence, and an instinctive psychic attraction give them an almost divine presence. They favor nudity and pleasure, but their sensitivity to drugs makes indulgence risky. In a colony, they excel at social work and move easily through water; dry heat is a constant discomfort.
+Beauty, eloquence, and an instinctive psychic attraction give nixies an almost divine presence. Peaceful tribes welcome trade with the 'dryskins', and their social gifts serve them well in mixed colonies. They favor nudity and pleasure, although their sensitivity to drugs makes indulgence risky.
 
 ### Genes
 
@@ -108,9 +108,9 @@ Beauty, eloquence, and an instinctive psychic attraction give them an almost div
 
 ## Titan
 
-Titans are sterile, vat-grown giants built to leave enduring structures behind them. Massive, armored, and indifferent to recreation, they labor in places most people would struggle to survive. Each has an exceptional talent in one field and little interest in subjects outside their passions.
+Titans are sterile, vat-grown giants built to leave enduring structures behind them. Massive and armored, they can labor in places most people would struggle to survive. They have no need for recreation and devote themselves to narrow interests, with each titan possessing an exceptional talent in one field.
 
-Their carbon-silicate bodies require specialized drugs and heal slowly. They can also develop petrification, an incurable disease that gradually turns tissue to stone. Their endurance depends on care tailored to their unusual biology.
+Caring for them requires an understanding of their carbon-silicate biology. Most ordinary drugs have no effect, wounds heal slowly, and their tissues can gradually turn to stone through incurable petrification. Specialized drugs help sustain them, preventing the disease before it begins or building their resistance to hostile environments.
 
 ### Genes
 
@@ -135,9 +135,9 @@ Their carbon-silicate bodies require specialized drugs and heal slowly. They can
 
 ## Trog
 
-Trogs descend from neanderthals, wasters, dirtmoles, and other xenohumans interbreeding on some of the harshest rimworlds. Their mixed ancestry still produces unexpected genes, while strength, disease resistance, and tolerance of pain sustain them in polluted underground warrens. Their bodies reject artificial implants, limiting their options for augmentation.
+Trogs descend from generations of interbreeding among neanderthals, wasters, dirtmoles, and other xenohumans on some of the harshest rimworlds. Their mixed ancestry still produces unexpected genes. Strength, disease resistance, and tolerance of pain sustain them in polluted underground warrens, while their bodies' rejection of artificial implants limits their use of augmentation.
 
-Their tribes are insular and warlike, defending their territory with brute force and tamed giant insects. Pheromones let them move among wild hives without being attacked, making the surrounding insect colonies another obstacle for intruders. Outsiders can expect little welcome and few opportunities to negotiate.
+Pheromones allow trogs to live among giant insects without being attacked. Their insular, warlike tribes tame these creatures and use the surrounding wild hives as another obstacle for intruders. Outsiders face both brute force and insect defenders, with few opportunities to negotiate.
 
 ### Genes
 
@@ -156,9 +156,9 @@ Their tribes are insular and warlike, defending their territory with brute force
 
 ## Warcat
 
-Warcats are military hybrids of humans and great cats, built for speed and close combat. A flaw in their engineering left them dependent on raw meat. Their hunting bands roam in tight-knit prides, taking any prey they can overpower—including other xenohumans. After thousands of years on the rim, they are part of the ecosystem.
+Warcats are military hybrids of humans and great cats, built for speed and close combat. A flaw in their engineering left them dependent on raw meat, driving their hunting bands to take any prey they can overpower—including other xenohumans. After thousands of years on the rim, these predators are an established part of the ecosystem.
 
-Proud, volatile, and fiercely aggressive, warcats form loose confederations that can still be negotiated with. Exiles must find new hunting grounds and a place to settle. Their claws and reflexes make them dangerous opponents, but even the strongest hunter must keep feeding.
+Their prides are tightly knit, but membership is not assured: exiles must find new hunting grounds and a place to settle. Prides also form loose confederations whose proud, volatile members can be negotiated with despite their aggression. Whether settled or roaming, they must keep a steady supply of raw meat to survive.
 
 ### Genes
 
@@ -179,9 +179,9 @@ Proud, volatile, and fiercely aggressive, warcats form loose confederations that
 
 ## Succuboid
 
-Succuboids were designed as fashionable companions for glitterworld elites: beautiful, winged, socially gifted, and able to make intimacy chemically addictive. They prefer leisure and nudity, and their youthful appearance lasts into old age.
+Succuboids were designed as fashionable companions for glitterworld elites: beautiful, winged, socially gifted, and able to make intimacy chemically addictive. Their preference for leisure and nudity suits that origin, as does an appearance that remains youthful into old age.
 
-They later took control of their reproduction, ensuring that their daughters would inherit the succuboid lineage regardless of their partner's xenotype. They still need males from other populations to reproduce. Their independence has not ended the fascination surrounding them: outsiders variously regard them as prestigious companions, valuable commodities, or dangerous social parasites.
+They later took control of their reproduction, engineering the ability to bear succuboid daughters with partners of other xenotypes. This lets them preserve their lineage while still relying on males from other populations to reproduce. Control over their biological future has not freed them from their old social position: outsiders continue to regard them as prestigious companions, valuable commodities, or dangerous social parasites.
 
 ### Genes
 
@@ -204,9 +204,9 @@ They later took control of their reproduction, ensuring that their daughters wou
 
 ## Scaleborn
 
-Scaleborn began as a fashion for recreating the dragons of ancient Earth. On the dinosaur world Tyrantis V, those modifications became tools of survival: horns, claws, armored scales, and specialized breath weapons help them hunt megafauna for food and materials.
+Scaleborn began as a fashion for recreating the dragons of ancient Earth. Their horns, claws, armored scales, and specialized breath weapons have since become tools of survival on Tyrantis V, a dinosaur world where they hunt megafauna for food and materials.
 
-Five colored lineages carry different weapons and defenses. All are carnivorous, aggressive, and prone to unpredictable moods. Their strength comes with a slow pace and a need for sleep; cold can send them into torpor.
+Five colored lineages bring different weapons and defenses to the hunt, but all share a carnivorous appetite, an aggressive temperament, and unpredictable moods. They are powerful rather than swift, need plenty of sleep, and can lapse into torpor when cold.
 
 ### Genes
 
@@ -245,9 +245,9 @@ Each scaleborn receives one additional gene package:
 
 ## Zeegee
 
-Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. Silver-skinned and marked on the forehead, they are quick learners with a talent for advanced technology. Keen distance vision makes them good shots, while dark vision and comfort indoors suit life aboard a ship.
+Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. Quick learners with a talent for advanced technology, they remain well suited to life aboard a ship. Dark vision helps them navigate dim interiors, while keen distance vision makes them good shots. Silver skin and a distinctive forehead mark set them apart.
 
-Planetary gravity is harder on them. Their delicate bodies suffer bouts of nausea on the surface, and weak immunity adds to the difficulty of settling a new world. Stored oxygen and protective proteins give them a temporary defense against vacuum and other environmental emergencies, buying time to reach safety.
+Their bodies are less comfortable on planetary surfaces, where gravity brings bouts of nausea and weak immunity complicates settlement. They do have a defense against more immediate hazards: reserves of oxygen and protective proteins temporarily shield them from vacuum, toxins, and extreme temperatures, buying time to reach safety.
 
 ### Genes
 
