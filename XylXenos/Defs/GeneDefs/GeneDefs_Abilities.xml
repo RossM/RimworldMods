@@ -9,7 +9,6 @@
     <descriptionHyperlinks>
       <AbilityDef>XylFeralRage</AbilityDef>
       <HediffDef>XylFeralRage</HediffDef>
-      <HediffDef>XylFeralRageBacklash</HediffDef>
     </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
@@ -32,7 +31,6 @@
     <descriptionHyperlinks>
       <GeneDef>XylFeralRage</GeneDef>
       <HediffDef>XylFeralRage</HediffDef>
-      <HediffDef>XylFeralRageBacklash</HediffDef>
     </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/Gene_FeralRage</iconPath>
     <!-- 1 day -->
@@ -54,7 +52,6 @@
       <drawAimPie>false</drawAimPie>
       <requireLineOfSight>false</requireLineOfSight>
       <nonInterruptingSelfCast>true</nonInterruptingSelfCast>
-      <!--<soundCast>Pawn_Ghoul_Frenzy</soundCast>-->
       <targetable>false</targetable>
       <targetParams>
         <canTargetSelf>true</canTargetSelf>
@@ -85,17 +82,26 @@
     <maxSeverity>1.0</maxSeverity>
     <isBad>false</isBad>
     <comps>
-      <li Class="XylXenos.HediffCompProperties_GiveHediffOnRemoval">
-        <hediff>XylFeralRageBacklash</hediff>
-      </li>
-      <li Class="HediffCompProperties_Disappears">
-        <!-- This value doesn't matter, the actual duration is set by the AbilityDef -->
-        <disappearsAfterTicks>15000</disappearsAfterTicks>
-        <showRemainingTime>true</showRemainingTime>
+      <li Class="XylXenos.HediffCompProperties_SeverityPerDay_Stage">
+        <severityPerDay>-2.0</severityPerDay>
+        <showHoursToRecover>true</showHoursToRecover>
       </li>
     </comps>
     <stages>
       <li>
+        <label>backlash</label>
+        <overrideTooltip>Recovering from a frenzy state. Causes pain and decreases movement speed.</overrideTooltip>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <offset>-0.2</offset>
+          </li>
+        </capMods>
+        <painOffset>0.1</painOffset>
+      </li>
+      <li>
+        <label>active</label>
+        <minSeverity>0.75</minSeverity>
         <capMods>
           <li>
             <capacity>Moving</capacity>
@@ -105,39 +111,6 @@
         <statFactors>
           <MeleeCooldownFactor>0.67</MeleeCooldownFactor>
         </statFactors>
-      </li>
-    </stages>
-  </HediffDef>
-
-  <HediffDef>
-    <defName>XylFeralRageBacklash</defName>
-    <hediffClass>HediffWithComps</hediffClass>
-    <label>feral rage</label>
-    <description>Recovering from a frenzy state. Causes pain and decreases movement speed.</description>
-    <descriptionHyperlinks>
-      <GeneDef>XylFeralRage</GeneDef>
-      <AbilityDef>XylFeralRage</AbilityDef>
-    </descriptionHyperlinks>
-    <initialSeverity>1.0</initialSeverity>
-    <maxSeverity>1.0</maxSeverity>
-    <isBad>true</isBad>
-    <comps>
-      <li Class="HediffCompProperties_Disappears">
-        <!--12 hours-->
-        <disappearsAfterTicks>30000</disappearsAfterTicks>
-        <showRemainingTime>true</showRemainingTime>
-      </li>
-    </comps>
-    <stages>
-      <li>
-        <label>backlash</label>
-        <capMods>
-          <li>
-            <capacity>Moving</capacity>
-            <offset>-0.2</offset>
-          </li>
-        </capMods>
-        <painOffset>0.1</painOffset>
       </li>
     </stages>
   </HediffDef>
