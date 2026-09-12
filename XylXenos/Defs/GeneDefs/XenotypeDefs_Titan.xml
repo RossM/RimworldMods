@@ -32,7 +32,6 @@
       <li>XylJoyless</li>
       <li>AptitudePoor_Social</li>
       <li>AptitudePoor_Intellectual</li>
-      <!-- Bonus genes must come last -->
       <li>XylSuperSpecialist</li>
     </genes>
     <modExtensions>
