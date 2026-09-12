@@ -52,7 +52,7 @@
       <li>
         <subEffecterClass>SubEffecter_SprayerTriggered</subEffecterClass>
         <positionRadius>0.15</positionRadius>
-        <fleckDef>XylOil</fleckDef>
+        <fleckDef>XylOilSpray</fleckDef>
         <burstCount>10~15</burstCount>
         <speed>0.6~3.0</speed>
         <scale>0.5~1.2</scale>
@@ -63,7 +63,7 @@
     </children>
   </EffecterDef>
   <FleckDef ParentName="FleckBase_Thrown">
-    <defName>XylOil</defName>
+    <defName>XylOilSpray</defName>
     <graphicData>
       <texPath>Xyl/Things/Mote/Oil</texPath>
       <renderInstanced>true</renderInstanced>
@@ -74,6 +74,35 @@
     <solidTime>0.2</solidTime>
     <fadeOutTime>1</fadeOutTime>
     <growthRate>0.9</growthRate>
+  </FleckDef>
+
+  <EffecterDef>
+    <defName>XylOilBlind</defName>
+    <children>
+      <li>
+        <subEffecterClass>SubEffecter_SprayerContinuous</subEffecterClass>
+        <ticksBetweenMotes>10</ticksBetweenMotes>
+        <scale>0.8~1.2</scale>
+        <positionOffset>(0,0,0.3)</positionOffset>
+        <positionRadius>0.2</positionRadius>
+        <fleckDef>XylOilBlind</fleckDef>
+        <speed>0</speed>
+        <rotation>-15~15</rotation>
+      </li>
+    </children>
+  </EffecterDef>
+  <FleckDef ParentName="FleckBase_Thrown">
+    <defName>XylOilBlind</defName>
+    <graphicData>
+      <texPath>Xyl/Things/Mote/OilBlind</texPath>
+      <renderInstanced>true</renderInstanced>
+      <color>(1,1,1,0.6)</color>
+    </graphicData>
+    <altitudeLayer>MoteOverhead</altitudeLayer>
+    <fadeInTime>0.04</fadeInTime>
+    <solidTime>0.2</solidTime>
+    <fadeOutTime>0.6</fadeOutTime>
+    <growthRate>0.1</growthRate>
   </FleckDef>
 
 </Defs>

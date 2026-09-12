@@ -536,6 +536,9 @@
         <!-- Lasts 2500 ticks -->
         <healAmount>0.02</healAmount>
       </li>
+      <li Class="HediffCompProperties_Effecter">
+        <stateEffecter>XylOilBlind</stateEffecter>
+      </li>
     </comps>
   </HediffDef>
 
