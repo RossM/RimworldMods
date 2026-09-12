@@ -514,7 +514,6 @@
     <scaleDamageToBuildingsBasedOnFlammability>false</scaleDamageToBuildingsBasedOnFlammability>
   </DamageDef>
   <HediffDef>
-    <!-- This really should have some sort of visual effect... -->
     <defName>XylOilInEyes</defName>
     <label>oil</label>
     <labelNoun>oil</labelNoun>
