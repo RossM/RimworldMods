@@ -197,6 +197,7 @@
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <parentTagDef>Head</parentTagDef>
+        <drawSize>0.25</drawSize>
         <useRottenColor>true</useRottenColor>
         <rotDrawMode>Fresh</rotDrawMode>
         <texPaths>
@@ -211,7 +212,8 @@
           <!--<li>West</li>-->
         </visibleFacing>
         <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
-        <baseLayer>53</baseLayer>
+        <!-- Layer 53 would draw over the tattoo but under the hair. However, it looks better over the hair. -->
+        <baseLayer>63</baseLayer>
       </li>
     </renderNodeProperties>
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
