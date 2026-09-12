@@ -37,6 +37,17 @@
       <li>Hair_Grayless</li>
       <li>AptitudeStrong_Social</li>
     </genes>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Xenotype">
+        <allowSolidBackstories>true</allowSolidBackstories>
+        <agreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Individualist</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">MaleSupremacy</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
 
   <XenotypeDef>
@@ -67,6 +78,17 @@
       <li>AptitudePoor_Cooking</li>
       <li>XylScalebornLineage</li>
     </genes>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Xenotype">
+        <allowSolidBackstories>true</allowSolidBackstories>
+        <agreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
 
   <XenotypeDef>
@@ -98,6 +120,18 @@
       <li>AptitudePoor_Animals</li>
       <li>AptitudeStrong_Intellectual</li>
     </genes>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Xenotype">
+        <allowSolidBackstories>true</allowSolidBackstories>
+        <agreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
+          <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
   </XenotypeDef>
 
 </Defs>
