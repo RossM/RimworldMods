@@ -479,8 +479,7 @@
       <li Class="CompProperties_AbilitySprayLiquid">
         <projectileDef>XylProj_Oil</projectileDef>
         <numCellsToHit>9</numCellsToHit>
-        <!-- TODO add effecter -->
-        <sprayEffecter>AcidSpray_Directional</sprayEffecter>
+        <sprayEffecter>XylOilSpray_Directional</sprayEffecter>
       </li>
     </comps>
   </AbilityDef>
@@ -494,11 +493,10 @@
     <useHitPoints>False</useHitPoints>
     <neverMultiSelect>True</neverMultiSelect>
     <graphicData>
-      <!-- TODO add texture -->
-      <texPath>Things/Projectile/Acid</texPath>
-      <graphicClass>Graphic_Random</graphicClass>
-      <shaderType>MoteGlow</shaderType>
-      <drawSize>0.85</drawSize>
+      <texPath>Xyl/Things/Projectile/Oil</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(1,1,1,0.8)</color>
+      <drawSize>1.35</drawSize>
     </graphicData>
     <projectile>
       <damageDef>XylOil</damageDef>

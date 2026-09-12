@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <EffecterDef>
+    <defName>XylShowerSplash</defName>
+    <children>
+      <li MayRequire="Ludeon.Rimworld.Royalty">
+        <subEffecterClass>SubEffecter_SprayerChance</subEffecterClass>
+        <positionRadius>0.15</positionRadius>
+        <fleckDef>WaterskipSplashParticles</fleckDef>
+        <chancePerTick>0.9</chancePerTick>
+        <positionOffset>(0,0,0.55)</positionOffset>
+        <speed>2.5</speed>
+        <scale>0.1</scale>
+        <angle>165~195</angle>
+        <absoluteAngle>true</absoluteAngle>
+        <positionLerpFactor>1</positionLerpFactor>
+        <fleckUsesAngleForVelocity>true</fleckUsesAngleForVelocity>
+      </li>
+    </children>
+  </EffecterDef>
+
+  <EffecterDef>
+    <defName>XylFeralRage</defName>
+    <children>
+      <li>
+        <subEffecterClass>SubEffecter_SprayerTriggered</subEffecterClass>
+        <moteDef>Mote_RedFlash</moteDef>
+        <burstCount>1</burstCount>
+        <spawnLocType>OnSource</spawnLocType>
+        <scale>3</scale>
+      </li>
+      <li>
+        <subEffecterClass>SubEffecter_SprayerTriggered</subEffecterClass>
+        <moteDef>Mote_AnimalWarcallFlash</moteDef>
+        <burstCount>1</burstCount>
+        <spawnLocType>OnSource</spawnLocType>
+        <scale>0.02</scale>
+      </li>
+      <li>
+        <subEffecterClass>SubEffecter_SoundTriggered</subEffecterClass>
+        <spawnLocType>OnSource</spawnLocType>
+        <soundDef>Pawn_Cougar_Angry</soundDef>
+      </li>
+    </children>
+  </EffecterDef>
+
+  <EffecterDef>
+    <defName>XylOilSpray_Directional</defName>
+    <children>
+      <li>
+        <subEffecterClass>SubEffecter_SprayerTriggered</subEffecterClass>
+        <positionRadius>0.15</positionRadius>
+        <fleckDef>XylOil</fleckDef>
+        <burstCount>10~15</burstCount>
+        <speed>0.6~3.0</speed>
+        <scale>0.5~1.2</scale>
+        <angle>-15~15</angle>
+        <positionLerpFactor>0.8</positionLerpFactor>
+        <fleckUsesAngleForVelocity>true</fleckUsesAngleForVelocity>
+      </li>
+    </children>
+  </EffecterDef>
+  <FleckDef ParentName="FleckBase_Thrown">
+    <defName>XylOil</defName>
+    <graphicData>
+      <texPath>Xyl/Things/Mote/Oil</texPath>
+      <renderInstanced>true</renderInstanced>
+      <color>(1,1,1,0.6)</color>
+    </graphicData>
+    <altitudeLayer>MoteOverhead</altitudeLayer>
+    <fadeInTime>0.04</fadeInTime>
+    <solidTime>0.2</solidTime>
+    <fadeOutTime>1</fadeOutTime>
+    <growthRate>0.9</growthRate>
+  </FleckDef>
+
+</Defs>
