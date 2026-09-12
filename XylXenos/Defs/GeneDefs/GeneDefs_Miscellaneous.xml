@@ -641,7 +641,9 @@
     <initialSeverity>1</initialSeverity>
     <comps>
       <li Class="HediffCompProperties_SeverityPerDay">
+        <compClass>XylXenos.HediffComp_SeverityPerDay_Stage</compClass>
         <severityPerDay>-0.2</severityPerDay>
+        <showDaysToRecover>true</showDaysToRecover>
       </li>
       <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylEmergencyReserves</gene>
