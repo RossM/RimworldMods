@@ -5,6 +5,7 @@
   <!-- 
   This defines the Nixie xenotype when Royalty is not installed.
   For the full version including psycast genes, see Compat/Royalty/Defs/GeneDefs/XenotypeDefs_Nixie.xml.
+  Keep this version identical to the full version aside from the commented out genes.
   -->
   <XenotypeDef>
     <defName>XylNixie</defName>
