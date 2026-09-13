@@ -143,6 +143,8 @@ public class GeneSetMaker_Option : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_Subtree : GeneSetMaker
 {
+    public override int BiostatMetForDisplay => def.root.BiostatMetForDisplay;
+
     public required GeneSetMakerDef def;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
