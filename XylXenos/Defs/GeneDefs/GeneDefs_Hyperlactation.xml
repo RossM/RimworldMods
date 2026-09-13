@@ -22,7 +22,7 @@
         <comps>
           <li Class="XylXenos.GeneCompProperties_Hyperlactation">
             <item>Milk</item>
-            <chargePerItem>0.1</chargePerItem>
+            <chargePerItem>0.05</chargePerItem>
             <hediff>XylHyperlactating</hediff>
             <milkedThoughts>
               <li>XylMilked</li>
