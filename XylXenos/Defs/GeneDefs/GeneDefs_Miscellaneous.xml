@@ -620,10 +620,14 @@
           <li Class="XylXenos.GeneCompProperties_EmergencyReserves">
             <hediff>XylEmergencyReserves</hediff>
             <triggers>
-              <VacuumExposure>0.01</VacuumExposure>
-              <Hypothermia>0.01</Hypothermia>
-              <Heatstroke>0.01</Heatstroke>
-              <ToxicBuildup>0.01</ToxicBuildup>
+              <!-- Visible onset 0.15 -->
+              <VacuumExposure>0.075</VacuumExposure>
+              <!-- Visible onset 0.04 -->
+              <Hypothermia>0.02</Hypothermia>
+              <!-- Visible onset 0.04 -->
+              <Heatstroke>0.02</Heatstroke>
+              <!-- Visible onset 0.04 -->
+              <ToxicBuildup>0.02</ToxicBuildup>
             </triggers>
           </li>
         </comps>
