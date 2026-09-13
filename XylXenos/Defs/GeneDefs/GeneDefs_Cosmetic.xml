@@ -160,9 +160,8 @@
         <nodeClass>XylXenos.PawnRenderNode_HeadPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <parentTagDef>Head</parentTagDef>
-        <colorType>Skin</colorType>
+        <color>(0.35,0.20,0.10,0.8)</color>
         <useRottenColor>true</useRottenColor>
-        <useSkinShader>true</useSkinShader>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <texPaths>
           <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/FacialStripes/FacialStripesA</li>
