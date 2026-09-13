@@ -6,5 +6,6 @@
     <li IfModActive="Ludeon.RimWorld.Ideology">Compat/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Odyssey">Compat/Odyssey</li>
     <li IfModActive="Ludeon.RimWorld.Royalty">Compat/Royalty</li>
+    <li IfModNotActive="Ludeon.RimWorld.Royalty">Compat/NoRoyalty</li>
   </v1.6>
 </loadFolders>

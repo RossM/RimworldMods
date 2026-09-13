@@ -3,9 +3,9 @@
 <Defs>
 
   <!-- 
-  This defines the Nixie xenotype when Royalty is not installed.
-  For the full version including psycast genes, see Compat/Royalty/Defs/GeneDefs/XenotypeDefs_Nixie.xml.
-  Keep this version identical to the full version aside from the commented out genes.
+  This is the full version of the Nixie xenotype, including psycast genes.
+  For the non-Royalty version omitting psycast genes, see Compat/NoRoyalty/Defs/GeneDefs/XenotypeDefs_Nixie.xml.
+  If you edit this version also edit the non-Royalty version.
   -->
   <XenotypeDef>
     <defName>XylNixie</defName>
@@ -19,12 +19,12 @@
     <nameMaker>NamerXylPersonNixie</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>
-      <!--<li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Beckon</li>-->
-      <!--<li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Focus</li>-->
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Beckon</li>
+      <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_Focus</li>
       <li>PsychicAbility_Enhanced</li>
       <li>NakedSpeed</li>
       <li>WebbedPhalanges</li>
-      <!--<li>Mood_Pessimist</li>-->
+      <li>Mood_Pessimist</li>
       <li>MinTemp_LargeDecrease</li>
       <li>MaxTemp_SmallDecrease</li>
       <li>XylScaleskin</li>
