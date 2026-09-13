@@ -13,8 +13,8 @@ All xenotypes except titans are inheritable. The tables describe the mod's new f
 - [Titan](#titan)
 - [Trog](#trog)
 - [Warcat](#warcat)
-- [Succuboid](#succuboid)
 - [Scaleborn](#scaleborn)
+- [Succuboid](#succuboid)
 - [Zeegee](#zeegee)
 - [Currently unused genes](#currently-unused-genes)
 
