@@ -315,8 +315,8 @@
       </li>
       <li Class="Xylib.HediffCompProperties_SetNeed">
         <need>Rest</need>
-        <levelPercentage>0~0.1</levelPercentage>
-        <severityRange>0.5~999</severityRange>
+        <range>0~0.1</range>
+        <stages>3~</stages>
       </li>
       <li Class="Xylib.HediffCompProperties_Genetic">
         <gene>XylTorpor</gene>
