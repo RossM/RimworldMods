@@ -355,4 +355,9 @@ public static class PatchHelpers
             stringBuilder.AppendLine();
         }
     }
+
+    public static float GetHitChanceBonus(Verb verb)
+    {
+        return verb.HediffCompSource?.parent.def.GetModExtension<DefModExtension_Hediff_InnateWeapon>()?.hitChanceBonus ?? 0f;
+    }
 }

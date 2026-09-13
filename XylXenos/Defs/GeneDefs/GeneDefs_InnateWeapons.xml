@@ -86,6 +86,11 @@
         <gene>XylLargeHorns</gene>
       </li>
     </comps>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_InnateWeapon">
+        <hitChanceBonus>0.2</hitChanceBonus>
+      </li>
+    </modExtensions>
   </HediffDef>
 
   <GeneDef>
@@ -154,6 +159,11 @@
         <gene>XylRetractableClaws</gene>
       </li>
     </comps>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_InnateWeapon">
+        <hitChanceBonus>0.2</hitChanceBonus>
+      </li>
+    </modExtensions>
   </HediffDef>
 
 </Defs>
