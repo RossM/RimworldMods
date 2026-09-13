@@ -44,10 +44,13 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
+          <!-- Dvergr are at home underground -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Kill the trees! -->
           <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
+          <li MayRequire="Ludeon.RimWorld.Ideology">TreeConnection</li>
         </disagreeingMemes>
       </li>
     </modExtensions>

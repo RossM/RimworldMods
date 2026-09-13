@@ -38,9 +38,11 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">
         <agreeingMemes>
+          <!-- Titans are engineered to work together as a group of specialists -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Collectivist</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- As lithoids, Titans have no safe social drugs -->
           <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>
         </disagreeingMemes>
       </li>

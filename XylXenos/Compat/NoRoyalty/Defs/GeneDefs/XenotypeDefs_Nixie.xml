@@ -44,10 +44,13 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
+          <!-- High life fits with drug sensitivity -->
           <li MayRequire="Ludeon.RimWorld.Ideology">HighLife</li>
+          <!-- Nixies don't normally wear clothes -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Underground or shipborn life conflicts with Nixies' aquatic nature -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
           <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
         </disagreeingMemes>

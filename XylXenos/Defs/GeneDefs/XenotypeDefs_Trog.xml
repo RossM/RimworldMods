@@ -47,10 +47,13 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
+          <!-- Trogs are at home in dark, polluted environments -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Darkness</li>
+          <!-- Flesh purity fits with bio-rejection -->
           <li MayRequire="Ludeon.RimWorld.Ideology">FleshPurity</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Transhumanism requires implants, which conflicts with bio-rejection -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
         </disagreeingMemes>
       </li>

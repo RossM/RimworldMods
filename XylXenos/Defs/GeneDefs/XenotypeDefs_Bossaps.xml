@@ -39,11 +39,15 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">
         <agreeingMemes>
+          <!-- Animal personhood fits their origin as engineered livestock -->
           <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
+          <!-- Bossaps herds are nudist -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
+          <!-- Goes well with the forced Masochist trait -->
           <li MayRequire="Ludeon.RimWorld.Ideology">PainIsVirtue</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Rancher disallows eating plants, which conflicts with herbivore stomach -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Rancher</li>
         </disagreeingMemes>
       </li>

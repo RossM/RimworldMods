@@ -38,6 +38,7 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
+          <!-- Echolocation is a natural fit for blindsight -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Blindsight</li>
         </agreeingMemes>
       </li>

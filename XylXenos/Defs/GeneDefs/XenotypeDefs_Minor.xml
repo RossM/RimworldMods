@@ -42,9 +42,11 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>true</allowSolidBackstories>
         <agreeingMemes>
+          <!-- Individualist is associated with Lovin: Free -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Individualist</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Male supremacy is a poor fit for an all-female xenotype -->
           <li MayRequire="Ludeon.RimWorld.Ideology">MaleSupremacy</li>
         </disagreeingMemes>
       </li>
@@ -85,9 +87,11 @@
         <allowSolidBackstories>true</allowSolidBackstories>
         <lineageInheritance>true</lineageInheritance>
         <agreeingMemes>
+          <!-- Dragons are associated with arrogance -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Animal personhood disallows eating meat, which conflicts with carnivore stomach -->
           <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
         </disagreeingMemes>
       </li>
@@ -128,10 +132,13 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>true</allowSolidBackstories>
         <agreeingMemes>
+          <!-- Transhumanist fits with tech affinity -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
+          <!-- Zeegees are naturally shipborn -->
           <li MayRequire="Ludeon.RimWorld.Odyssey">Shipborn</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Planetside life isn't for zeegees -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Tunneler</li>
         </disagreeingMemes>
       </li>

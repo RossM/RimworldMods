@@ -40,10 +40,12 @@
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>false</allowSolidBackstories>
         <agreeingMemes>
+          <!-- Warcat lore describes them as hunting and eating other xenohumans -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Cannibal</li>
           <li MayRequire="Ludeon.RimWorld.Ideology">Raider</li>
         </agreeingMemes>
         <disagreeingMemes>
+          <!-- Animal personhood disallows eating meat, which conflicts with carnivore stomach -->
           <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
         </disagreeingMemes>
       </li>
