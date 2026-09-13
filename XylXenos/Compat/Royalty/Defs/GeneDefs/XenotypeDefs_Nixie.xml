@@ -2,6 +2,10 @@
 
 <Defs>
 
+  <!--
+  This is the "official" version of the Nixie xenotype, including psycast genes.
+  If you edit this version, also make corresponding edits to Defs/GeneDefs/XenotypeDefs_Nixie.xml, which is used when Royalty is not installed.
+  -->
   <XenotypeDef>
     <defName>XylNixie</defName>
     <label>nixie</label>
