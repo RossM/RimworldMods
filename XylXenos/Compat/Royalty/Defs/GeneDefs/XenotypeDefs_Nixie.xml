@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylNixie</defName>
     <label>nixie</label>
-    <description>Nixies were made for ocean worlds, but they're more than just fish people. They're beautiful in form, fluid in movement, and graceful in speech, with an innate psychic pull that draws others in whether they mean to or not. On the rim, they live in scattered river clans and coastal camps, half-wild and half-divine.</description>
+    <description>Made for ocean worlds, nixies are graceful aquatic xenohumans who swim easily through cold water. They are beautiful and persuasive, with psychic gifts that let them beckon others closer or sharpen a companion's focus. Without regular soaking, their natural melancholy deepens. Though their scales offer some protection, they are weak in close combat and poor at heavy construction. Their sensitive bodies tolerate heat poorly and react strongly to drugs.\n\nNixies were engineered for the ocean world Atlantis and have since spread to many planets. On the rim, they live in scattered river clans and coastal camps. Their beauty, fluid movements, and graceful speech have earned them a place in local folklore as beings half-wild and half-divine. Stories credit them with an innate psychic pull that draws strangers to the water whether the nixies intend it or not. A clan visiting to trade may find itself greeted with offerings, suspicion, or both.</description>
+    <descriptionShort>Nixies are graceful aquatic xenohumans with social and psychic gifts. They thrive in cold water and need regular soaking to keep their melancholy from deepening. They are weak in close combat, poor at heavy construction, and sensitive to heat and drugs.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Nixie_small</iconPath>
     <displayPriority>-104</displayPriority>
     <combatPowerFactor>1.0</combatPowerFactor>

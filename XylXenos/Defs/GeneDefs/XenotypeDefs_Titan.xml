@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylTitan</defName>
     <label>titan</label>
-    <description>These stony giants are grown in vats for one purpose: to build things that will outlast them. Towering and near-impervious, they work without pause in places that would kill most people: burning deserts, frozen tundras, poisonous wastelands. They don't talk much, don't reflect much, and don't seem to care. Walls go up, fire burns, storms howl—and the Titans keep working.</description>
+    <description>Titans are stony giants engineered for specialized labor. Each has an exceptional talent for a particular kind of work, and none feels the need for recreation. Their immense strength and armored skin make them formidable in a fight, but they are slow to move and slow to recover from injury. Their unusual biochemistry renders most ordinary drugs useless. It also leaves them vulnerable to petrification, an incurable disease that gradually replaces living tissue with stone.\n\nTitans are grown in vats to build things that will outlast them. They have raised structures in poisonous wastelands, burning deserts, and frozen tundras, often for employers who care little about what becomes of them. They say little about their work and seem to care even less about its purpose. In abandoned industrial settlements, some still tend the machines and walls they helped build, long after the people who commissioned them have gone.</description>
+    <descriptionShort>Titans are stony giants with immense strength and a talent for specialized work. They need no recreation, but move and heal slowly. Most ordinary drugs have no effect on them, and they may develop an incurable disease that turns their tissues to stone.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Titan_small</iconPath>
     <displayPriority>-105</displayPriority>
     <inheritable>false</inheritable>

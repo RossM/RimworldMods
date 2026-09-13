@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
-    <description>Originally engineered as fashionable companions for glitterworld elites, at some point the succuboids took control of their own reproduction, engineering themselves with the ability to have succuboid daughters regardless of the xenotype of their partner. Now they are viewed variously as prestigious status symbols, valuable commodities, or dangerous social parasites.</description>
+    <description>Designed as beautiful companions, succuboids are winged xenohumans whose charm makes them adept at winning others over. Their intimate partners experience a lasting euphoria that can become addictive. Succuboids are exclusively female and usually bear daughters of their own kind, even with partners of another xenotype. They sleep long hours and work slowly, and their delicate bodies are poorly suited to combat or hard labor.\n\nSuccuboids were originally engineered as fashionable companions for glitterworld elites. At some point they took control of their own reproduction, modifying themselves so they could bear succuboid daughters regardless of their partner's xenotype. Today, some societies regard them as prestigious status symbols or valuable commodities; others see them as dangerous social parasites. The same family might be welcomed at one world's courts and forbidden to settle on the next.</description>
+    <descriptionShort>Succuboids are beautiful, socially gifted companions whose lovers experience an addictive euphoria. They are exclusively female and usually bear succuboid daughters regardless of their partner's xenotype. They are also physically delicate, work slowly, and need considerable sleep.</descriptionShort>
     <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
     <displayPriority>-202</displayPriority>
@@ -53,7 +54,8 @@
   <XenotypeDef>
     <defName>XylScaleborn</defName>
     <label>scaleborn</label>
-    <description>Scaleborn began as a fashion trend, a craze for genetic modification to recreate the appearance and traits of the mythical dragons of ancient Earth. Now they survive as the top predators of the dino world Tyrantis V, hunting the great megafauna for food and materials.</description>
+    <description>Scaleborn are heavily scaled carnivores built to overpower large prey. Their natural armor and vicious close-range attacks make them dangerous even without equipment, while different lineages possess weapons such as fiery breath or blinding oil. They gain more nourishment from raw meat than other humans do, but digest plants poorly. For all their strength, scaleborn are sluggish and temperamental. They are ill-suited to prolonged pursuit, and cold can send them into torpor.\n\nScaleborn began with a fashion craze for recreating the mythical dragons of ancient Earth through genetic modification. Their descendants now live as apex predators on the dinosaur world Tyrantis V, hunting its megafauna for food and materials. Hunting clans trace their ancestry through scale color and inherited weapons. The remains of a great kill can feed a clan, furnish its dwellings, and provide trophies that keep the story of the hunt alive for generations.</description>
+    <descriptionShort>Scaleborn are armored carnivores with powerful close-range attacks and natural weapons that vary by lineage. They thrive on raw meat but digest plants poorly. They are slow and temperamental, and cold can send them into torpor.</descriptionShort>
     <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
     <displayPriority>-201</displayPriority>
@@ -95,7 +97,8 @@
   <XenotypeDef>
     <defName>XylZeegee</defName>
     <label>zeegee</label>
-    <description>Zeegees are descendants of the inhabitants of deep space habitats and ancient generation ships. They're smart and take naturally to advanced technology, but have a hard time adapting to the gravity of planetary surfaces.</description>
+    <description>Zeegees are adapted to life in spacecraft and enclosed habitats. They learn quickly and have a natural understanding of advanced technology, while their keen distance vision makes them effective marksmen. Their bodies store reserves that briefly protect them from hazards such as vacuum and extreme temperatures. These reserves do little for the ordinary hardships of planetary life: zeegees are prone to nausea on the surface, vulnerable to disease, and easily injured.\n\nZeegees descend from the inhabitants of deep-space habitats and ancient generation ships. After generations of life in space, they find planetary gravity an uncomfortable burden. In their oldest communities, a person's home is identified by vessel and deck rather than world and nation. Some families have crossed interstellar distances without a single member ever standing beneath an open sky. They see little reason to start.</description>
+    <descriptionShort>Zeegees are natural researchers and technicians with keen distance vision. Adapted to space, they can briefly survive environmental hazards that would harm other humans. They are fragile and prone to disease, and planetary life brings bouts of nausea.</descriptionShort>
     <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon1</iconPath>
     <displayPriority>-203</displayPriority>

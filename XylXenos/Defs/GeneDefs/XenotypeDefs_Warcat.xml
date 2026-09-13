@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylWarcat</defName>
     <label>warcat</label>
-    <description>These graceful predators were forged in military gene-vats: part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on raw meat to survive. Now they roam the rimworlds in tight-knit clans, hunting anything they can bring down - even other xenohumans.</description>
+    <description>Warcats are feline xenohumans bred for close combat. Their reflexes and killing instincts make them deadly with a blade or their own claws. They can push themselves into a feral rage, but are left aching and sluggish afterward. Their predatory metabolism requires regular meals of raw meat; without it, they sicken and eventually die. The same aggression that makes them fearsome fighters also makes them volatile companions, quick to turn a disagreement into violence.\n\nWarcats were forged in military gene-vats by splicing humans with great cats, producing graceful predators packed with fast-twitch muscle. Something in the splice failed, leaving them dependent on raw meat. Their descendants now roam the rimworlds in tight-knit hunting clans, sharing the spoils of anything they can bring down, including other xenohumans. To many warcat hunters, a stranger carrying a weapon is simply more dangerous game.</description>
+    <descriptionShort>Warcats are feline xenohumans with exceptional close-combat instincts. They can enter a powerful rage, but suffer a painful backlash afterward. They require raw meat to survive, and their aggressive temperaments make them prone to violence even among friends.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</iconPath>
     <displayPriority>-107</displayPriority>
     <inheritable>true</inheritable>

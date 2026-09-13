@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylTrog</defName>
     <label>trog</label>
-    <description>Trogs are the lurching result of generations of interbreeding between neanderthals, wasters, and dirtmoles on the worst rimworlds humanity ever forgot. They're slow, ugly, and stink like a landfill, but thrive in toxic sludge and underground rot. Giant insects won't touch them, and half of them come out with genes from who-knows-where. No one's quite sure how they survive, but they do - much to everyone else's dismay.</description>
+    <description>Trogs are misshapen xenohumans adapted to dark, polluted places. They are capable miners and animal handlers, and their scent allows them to live among wild insects without being attacked. Pollution invigorates them, but their resistance has limits: even the toxic clouds they release in self-defense can poison them. They have the strength for hard physical work, though they move slowly and struggle to learn. Their bodies painfully reject artificial parts, making it difficult to replace an injured limb.\n\nTrogs descend from generations of interbreeding among neanderthals, wasters, and dirtmoles on some of the worst rimworlds humanity ever forgot. They make their homes amid toxic sludge and underground rot, and smell much like their surroundings. About half develop unexpected extra genes, adding to the bewildering variety of trog bodies and faces. Outsiders rarely understand how these communities survive, and are often dismayed to discover how stubbornly they endure.</description>
+    <descriptionShort>Trogs are strong miners and animal handlers who can live safely among wild insects. They are invigorated by pollution and can release toxic gas, but are not immune to poisoning. They move and learn slowly, and their bodies painfully reject artificial parts.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Trog_small</iconPath>
     <displayPriority>-106</displayPriority>
     <inheritable>true</inheritable>

@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylChyrr</defName>
     <label>chyrr</label>
-    <description>Chyrr are nocturnal, flying mystics native to steaming jungles and sun-blasted deserts. They perceive the world through sound and low-level psychic sensing, aided by a hazy thread of precognition that lets them act just before things happen. Though physically fragile, they defend themselves with a keening cry that leaves foes reeling.</description>
+    <description>Chyrr are winged, nocturnal xenohumans adapted to warm climates. They find their way through darkness by sound and can take flight for short periods, making them difficult to corner. Though too fragile to withstand much punishment, they can stun living enemies with a piercing cry. Their keen senses also serve them well in medicine. They fare poorly outside the warmth and darkness they are accustomed to: sunlight slows them, and cold can send them into torpor.\n\nChyrr mystics are native to steaming jungles and sun-blasted deserts, where their communities shelter in high roosts during the day. Their traditions describe perception as a mingling of sound and low-level psychic sensing, with a hazy thread of precognition that lets the listener act just before something happens. Outsiders disagree over how much of this is psychic insight and how much is simply careful listening. To the chyrr, listening is a sacred discipline either way.</description>
+    <descriptionShort>Chyrr are nocturnal xenohumans who navigate by sound, fly short distances, and stun living enemies with piercing cries. They are gifted healers but physically fragile. They thrive in warm darkness, while sunlight slows them and cold can leave them helpless.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Chyrr_small</iconPath>
     <displayPriority>-102</displayPriority>
     <combatPowerFactor>0.9</combatPowerFactor>

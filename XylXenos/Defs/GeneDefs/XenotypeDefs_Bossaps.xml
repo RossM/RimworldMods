@@ -5,7 +5,8 @@
   <XenotypeDef>
     <defName>XylBossaps</defName>
     <label>bossaps</label>
-    <description>Bossaps were engineered as sentient livestock by the gene-artisans of a glitterworld best left forgotten. When things are peaceful they are calm and mild-mannered. But when they're hurt, instinct takes over, and they charge their enemies like a raging bull.</description>
+    <description>Bossaps are bovine xenohumans with a strong need for the company of a herd. They are natural farmers who thrive on raw plant foods. Most bossaps are female and produce abundant milk. Their docile temperaments make communal life easy, but isolation leaves them unhappy. In combat, that calm can vanish without warning. Pain excites them, and a wounded bossaps may charge the nearest enemy in a blind fury, ignoring orders until the fighting is over.\n\nBossaps were engineered as sentient livestock by the gene-artisans of a glitterworld best left forgotten. Free herds still share meals, childcare, and sleeping space, but now decide for themselves how to live. Outsiders sometimes mistake their mild manners for obedience. Many former owners made the same mistake.</description>
+    <descriptionShort>Bossaps are hardy bovine xenohumans who thrive on plant foods and are natural farmers. Most are milk-producing females. They are docile and need plenty of company, but wounds can send them into an uncontrollable melee frenzy.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Bossaps_small</iconPath>
     <displayPriority>-101</displayPriority>
     <inheritable>true</inheritable>
