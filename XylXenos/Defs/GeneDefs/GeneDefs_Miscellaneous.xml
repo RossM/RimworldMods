@@ -601,6 +601,20 @@
       </li>
     </stages>
   </HediffDef>
+  <ThoughtDef>
+    <defName>XylPlanetSickness</defName>
+    <workerClass>ThoughtWorker_Hediff</workerClass>
+    <hediff>XylPlanetSickness</hediff>
+    <validWhileDespawned>true</validWhileDespawned>
+    <developmentalStageFilter>Baby, Child, Adult</developmentalStageFilter>
+    <stages>
+      <li>
+        <label>planet sickness</label>
+        <description>I feel like I'm going to throw up...</description>
+        <baseMoodEffect>-10</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
 
   <GeneDef>
     <defName>XylEmergencyReserves</defName>
