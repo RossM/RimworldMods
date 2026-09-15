@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
+      Defs/FactionDef[defName="Salvagers"]/xenotypeSet/xenotypeChances
+    </xpath>
+    <value>
+      <XylZeegee>0.1</XylZeegee>
+    </value>
+  </Operation>
+
+
+</Patch>

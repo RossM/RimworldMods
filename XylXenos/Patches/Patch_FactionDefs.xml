@@ -64,7 +64,7 @@
     </xpath>
     <value>
       <XylTitan>0.05</XylTitan>
-      <XylZeegee>0.05</XylZeegee>
+      <XylZeegee>0.1</XylZeegee>
     </value>
   </Operation>
 
