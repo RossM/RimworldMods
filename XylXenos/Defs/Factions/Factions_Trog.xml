@@ -24,6 +24,7 @@
         <XylDvergr>0.025</XylDvergr>
         <XylNixie>0.025</XylNixie>
         <XylWarcat>0.025</XylWarcat>
+        <XylScaleborn>0.01</XylScaleborn>
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum Inherit="false">
