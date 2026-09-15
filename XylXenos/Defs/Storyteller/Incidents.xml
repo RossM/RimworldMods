@@ -17,7 +17,7 @@
     <letterDef>NeutralEvent</letterDef>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Incident_WildTribe">
-        <faction>BossapsHerd</faction>
+        <faction>XylBossapsHerd</faction>
         <pawnsCount>2 ~ 4</pawnsCount>
         <exitMapTicks>180000 ~ 300000</exitMapTicks> <!-- 3 to 5 days -->
         <forcedTraits>
