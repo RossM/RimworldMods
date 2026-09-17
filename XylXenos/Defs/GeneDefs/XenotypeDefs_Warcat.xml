@@ -5,7 +5,7 @@
   <XenotypeDef>
     <defName>XylWarcat</defName>
     <label>warcat</label>
-    <description>Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on regular raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.\n\nWarcat tribes can be a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.</description>
+    <description>Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on a diet of raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.\n\nWarcat tribes are a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.</description>
     <descriptionShort>Warcats are experimental supersoldiers - part human, part great cat. They hunt with retractable claws, powerful melee attacks, and catlike reflexes, but depend on regular raw meat to survive.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</iconPath>
     <displayPriority>-107</displayPriority>
