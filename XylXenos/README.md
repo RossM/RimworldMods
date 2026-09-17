@@ -20,7 +20,7 @@ All xenotypes except titans are inheritable. The tables describe the mod's new f
 
 ## Bossaps
 
-Bossaps were created as sentient livestock by the gene-engineers of a glitterworld best forgotten. They gain extra nourishment from raw plants, and their mostly female herds produce abundant milk. Naturally gregarious, they become unhappy in small colonies but tolerate shared barracks. While usually docile, injury can send a bossaps charging with its large horns in an uncontrollable rage - even at the friend whose shot went astray.
+Bossaps were created as sentient livestock by the gene-engineers of a glitterworld best forgotten. They gain extra nourishment from raw plants, and their mostly female herds produce abundant milk. Naturally gregarious, they become unhappy in small colonies but tolerate shared barracks. While usually docile, injury can send a bossaps charging horns-first in an uncontrollable rage - even at the friend whose shot went astray.
 
 The glitterworld that created bossaps had a strict vegan philosophy that it was unethical to keep animals that couldn’t consent to their own treatment. Their solution was to engineer livestock that not only consented to being owned, but did so enthusiastically. Long after the fall of their birthplace, wild bossaps herds can be found on many rimworlds.
 
