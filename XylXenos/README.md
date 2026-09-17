@@ -260,7 +260,7 @@ While their origin is very similar to that of highmates, succuboids have one imp
 
 "Succuboid" is a homage to succubi, mythological female demons that tempted men in their sleep.
 
-The succuboid reproductive system resembles [gynogenesis](https://en.wikipedia.org/wiki/Gynogenesis), a real world trait found in some fish and amphibians where eggs develop into a clone of the mother but only after being activated by sperm from a male of a closely related species.
+The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.org/wiki/Gynogenesis), a real world trait found in some fish and amphibians where eggs develop into a clone of the mother but only after being activated by sperm from a male of a closely related species.
 
 ### Genes
 
