@@ -26,7 +26,7 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 
 ### Trivia
 
-"Bossaps" is a contraction of "Bos sapiens", a scientific name meaning "Intelligent cow".
+"Bossaps" is a contraction of "Bos sapiens", a made-up scientific name that would mean "Wise cow".
 
 The idea that bulls are enraged by the color red is a myth. Cows, like most non-primate mammals, are partially color blind and can't distinguish red from green.
 
@@ -84,7 +84,7 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 ### Trivia
 
-"Dvergr" is an Old Norse word for dwarf, and their homeland in Old Norse mythology was either called "Svartálfheim" or "Niðavellir".
+"Dvergr" is an Old Norse word for dwarf, and their homeland in Old Norse mythology was either called "Svartálfheim" or "Niðavellir" depending on the source.
 
 ### Genes
 
@@ -110,7 +110,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 ### Trivia
 
-"Nixie" comes from the name of mythical water spirits from European folklore that used their beauty and songs to lure unsuspecting people into the water.
+"Nixie" comes from the name of mythical water spirits from Germanic folklore that used their beauty and music to lure unsuspecting people into the water.
 
 ### Genes
 
@@ -136,7 +136,7 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 ### Trivia
 
-"Titan" comes from the name of godlike beings from Greek mythology. The most well-known titan was Atlas, who held up the world on his shoulders.
+"Titan" comes from the name of godlike beings from Greek mythology. One well-known titan was Atlas, who held up the sky on his shoulders.
 
 ### Genes
 
@@ -192,7 +192,7 @@ Warcat tribes are a constant threat on the rim. Their need for meat drives them 
 
 ## Trivia
 
-Real cats are unable to produce certain essential nutrients such as taurine, and must get them from meat as part of their diet.
+Real cats are unable to produce adequate amounts certain essential nutrients such as taurine, and must get them from meat as part of their diet.
 
 ### Genes
 
@@ -262,7 +262,7 @@ While their origin is very similar to that of highmates, succuboids have one imp
 
 "Succuboid" is a homage to succubi, mythological female demons that tempted men in their sleep.
 
-The succuboid reproductive system resembles [gynogenesis](https://en.wikipedia.org/wiki/Gynogenesis), a real world trait found in some fish and amphibians where eggs develop into a clone of the mother but only after being fertilized by a male of a closely related species.
+The succuboid reproductive system resembles [gynogenesis](https://en.wikipedia.org/wiki/Gynogenesis), a real world trait found in some fish and amphibians where eggs develop into a clone of the mother but only after being activated by sperm from a male of a closely related species.
 
 ### Genes
 
@@ -291,7 +291,7 @@ Even the most colossal spaceborn habitat can eventually break down due to years 
 
 ### Trivia
 
-"Zeegee" is a contraction of the initial letters of "zero gravity".
+"Zeegee" is a phonetic spelling of the initial letters of "zero gravity".
 
 ### Genes
 
