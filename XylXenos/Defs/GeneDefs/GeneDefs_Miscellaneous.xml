@@ -658,6 +658,7 @@
     <hediffClass>HediffWithComps</hediffClass>
     <initialSeverity>1</initialSeverity>
     <comps>
+      <!-- Active for 1 day, then recharging for 4 days -->
       <li Class="XylXenos.HediffCompProperties_SeverityPerDay_Stage">
         <severityPerDay>-0.2</severityPerDay>
         <showHoursToRecoverStages>1</showHoursToRecoverStages>
