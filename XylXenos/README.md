@@ -165,7 +165,7 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 
 ### Trivia
 
-"Trog" is a contraction of "troglodyte", meaning a person who lives in a cave.
+"Trog" is an abbreviation of "troglodyte", meaning a person who lives in a cave.
 
 ### Genes
 
