@@ -21,6 +21,16 @@
     <factionNameMaker>NamerXylFactionTribalNixie</factionNameMaker>
     <settlementNameMaker>NamerXylSettlementTribalNixie</settlementNameMaker>
     <replacesFaction>TribeCivil</replacesFaction>
+    <apparelStuffFilter Inherit="false">
+      <thingDefs>
+        <li>XylCoral</li>
+      </thingDefs>
+      <stuffCategoriesToAllow>
+        <li>Fabric</li>
+        <li>Leathery</li>
+        <li>Woody</li>
+      </stuffCategoriesToAllow>
+    </apparelStuffFilter>
     <requiredMemes>
       <li MayRequire="Ludeon.RimWorld.Ideology">Nudism</li>
     </requiredMemes>
@@ -32,6 +42,12 @@
       <li MayRequire="Ludeon.RimWorld.Anomaly">Inhuman</li>
       <li MayRequire="Ludeon.RimWorld.Anomaly">Ritualist</li>
     </disallowedMemes>
+    <caravanTraderKinds Inherit="false">
+      <li>XylCaravan_Nixie_BulkGoods</li>
+      <li>XylCaravan_Nixie_WarMerchant</li>
+      <li>XylCaravan_Nixie_Slaver</li>
+      <li>XylCaravan_Nixie_ShamanMerchant</li>
+    </caravanTraderKinds>
     <maxConfigurableAtWorldCreation>9999</maxConfigurableAtWorldCreation>
     <configurationListOrderPriority>30</configurationListOrderPriority>
     <modExtensions>

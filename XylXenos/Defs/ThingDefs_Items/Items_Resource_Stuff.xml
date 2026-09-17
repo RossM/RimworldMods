@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <ThingDef ParentName="ResourceBase">
+    <defName>XylCoral</defName>
+    <label>coral</label>
+    <description>The skeletal remains of a sea organism. It is renowned for its beauty and rarity.</description>
+    <graphicData>
+      <texPath>Xyl/Things/Item/Resource/Coral</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.75,0.45,0.85)</color>
+    </graphicData>
+    <useHitPoints>false</useHitPoints>
+    <healthAffectsPrice>false</healthAffectsPrice>
+    <soundInteract>ChunkRock_Drop</soundInteract>
+    <soundDrop>ChunkRock_Drop</soundDrop>
+    <statBases>
+      <MarketValue>5</MarketValue>
+      <Mass>0.5</Mass>
+      <SharpDamageMultiplier>1.2</SharpDamageMultiplier>
+      <BluntDamageMultiplier>1.0</BluntDamageMultiplier>
+    </statBases>
+    <thingCategories>
+      <li>ResourcesRaw</li>
+    </thingCategories>
+    <burnableByRecipe>false</burnableByRecipe>
+    <smeltable>false</smeltable>
+    <stuffProps>
+      <categories>
+        <li>Stony</li>
+      </categories>
+      <commonality>0.01</commonality>
+      <color>(160,93,171)</color>
+      <soundImpactBullet>BulletImpact_Ground</soundImpactBullet>
+      <soundMeleeHitSharp>MeleeHit_Stone</soundMeleeHitSharp>
+      <soundMeleeHitBlunt>MeleeHit_Stone</soundMeleeHitBlunt>
+      <soundImpactMelee>Pawn_Melee_Punch_HitBuilding_Stone</soundImpactMelee>
+      <statOffsets>
+        <Beauty>5</Beauty>
+      </statOffsets>
+      <statFactors>
+        <MaxHitPoints>1</MaxHitPoints>
+        <WorkToMake>1.4</WorkToMake>
+        <WorkToBuild>5.0</WorkToBuild>
+        <Beauty>2</Beauty>
+        <Flammability>0</Flammability>
+        <BedRestEffectiveness>0.9</BedRestEffectiveness>
+      </statFactors>
+    </stuffProps>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <allowedArchonexusCount>80</allowedArchonexusCount>
+  </ThingDef>
+
+</Defs>
