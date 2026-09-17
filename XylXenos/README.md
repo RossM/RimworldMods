@@ -51,7 +51,7 @@ Chyrr are batlike xenohumans who trace their origin to the blind healer Marah. T
 
 According to chyrr legend, a blind woman named Marah came across an injured stranger. She brought the stranger back to her tribe and spent many moons nursing him back to health. As a parting gift, the stranger transformed Marah and her tribe into chyrr.
 
-"Chyrr" is a corruption of "chiropteran", the scientific name for bats.
+"Chyrr" is a corruption of "chiropteran", the scientific name for bats, which comes from the roots *chiro* "hand" and *ptera* "wing".
 
 ### Genes
 
