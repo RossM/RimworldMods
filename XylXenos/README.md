@@ -24,6 +24,8 @@ Bossaps were created as sentient livestock by the gene-engineers of a glitterwor
 
 The glitterworld that created bossaps had a strict vegan philosophy that it was unethical to keep animals that couldn’t consent to their own treatment. Their solution was to engineer livestock that not only consented to being owned, but did so enthusiastically. Long after the fall of their birthplace, wild Bossaps herds can be found on many rimworlds.
 
+"Bossaps" is a contraction of "Bos sapiens", a scientific name meaning "Intelligent cow".
+
 ### Genes
 
 | Gene | Effect |
@@ -49,6 +51,8 @@ Chyrr are batlike xenohumans who trace their origin to the blind healer Marah. T
 
 According to chyrr legend, a blind woman named Marah came across an injured stranger. She brought the stranger back to her tribe and spent many moons nursing him back to health. As a parting gift, the stranger transformed Marah and her tribe into chyrr.
 
+"Chyrr" is a corruption of "chiropteran", the scientific name for bats.
+
 ### Genes
 
 | Gene | Effect |
@@ -72,6 +76,8 @@ Dvergr hail from the vast underground cities beneath the inhospitable surface of
 
 Dvergr society is organized around the clan and the corporation; the two are one and the same. They are renowned for their skill with explosives, deep understanding of geology, excellent legal departments, and remarkably short safety manuals.
 
+"Dvergr" is the Old Norse word for dwarf.
+
 ### Genes
 
 | Gene | Effect |
@@ -94,6 +100,8 @@ Originally engineered for the water world of Atlantis, nixies have spread across
 
 The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without access to dry land, nixies were unable to develop advanced technology and industry. Instead, they put their efforts into developing art and culture, creating beautiful coral gardens and ethereal songs that echoed for miles underwater. The source of their psychic abilities is a mystery.
 
+"Nixie" comes from the name of mythical water spirits from European folklore.
+
 ### Genes
 
 | Gene | Effect |
@@ -115,6 +123,8 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 Titans are mass-produced workers originally designed for reclaiming deathworlds. Specialized carbon-silicate lithoid biochemistry makes them immune to toxins and highly resistant to injury and disease, letting them work in conditions that would be lethal for other xenotypes. Each is engineered with exceptional aptitude and passion for one random skill, but they have great difficulty learning skills that they aren’t passionate about. Their unusual biochemistry also leaves them susceptible to petrification, an incurable genetic disease that gradually turns their tissues to solid stone.
 
 Today, titans can be found on more than just the deathworlds they were engineered for. They are employed in space construction, mining, and agriculture, among other fields. Their employers are mostly well-resourced governments or corporations that are able to afford the expense of providing them with a regular supply of lithoid drugs such as softener and atlasite.
+
+"Titan" comes from the name of godlike beings from Greek mythology. The most well-known titan was Atlas, who held up the world on his shoulders.
 
 ### Genes
 
@@ -142,6 +152,8 @@ Today, titans can be found on more than just the deathworlds they were engineere
 Trogs emerged from generations of interbreeding among wasters, dirtmoles, and neanderthals on the worst rimworlds known to mankind. They are ugly, slow, and poor learners, but skilled miners and animal handlers. They emit special pheromones that let them move freely among giant insects, and even tame them and employ them as war animals. Like wasters, pollution invigorates them, but they are only partially resistant to its effects. Roughly half inherit additional random genes from who-knows-where.
 
 Trogs can be found anywhere other xenotypes don’t want to live, from polluted wastelands to underground caverns to volcanic lava fields. They form aggressive, territorial clans that often squabble as much among themselves as they do with outsiders. Despite their unwholesome reputation, however, they can be quite welcoming to outcast and shunned people of any xenotype.
+
+"Trog" is a contraction of "troglodyte", meaning a person who lives in a cave.
 
 ### Genes
 
@@ -228,6 +240,8 @@ Succuboids were created as fashionable companions for glitterworld elite, with d
 
 While their origin is very similar to that of highmates, Succuboids have one important difference: at some point, they took control of their own reproduction, engineering themselves with the ability to reproduce with other xenotypes. The result of such a coupling is invariably a female succuboid. On some worlds they are considered prestigious companions, on others they are valuable merchandise, and on yet others they are treated as dangerous social parasites.
 
+"Succuboid" is a homage to succubi, mythological female demons that tempted men in their sleep.
+
 ### Genes
 
 | Gene | Effect |
@@ -252,6 +266,8 @@ While their origin is very similar to that of highmates, Succuboids have one imp
 Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. They are comfortable indoors and in low gravity, but on planets they are prone to bouts of debilitating nausea. They learn quickly, excel at intellectual work, and have a natural connection to machines that makes them adept at controlling mechanoids and piloting gravships. In emergency situations oxygen and protective proteins stored in their bone marrow can briefly protect them against vacuum, toxins, and temperature extremes. Enhanced vision, adapted for the darkness and distances of deep space, makes them excellent marksmen.
 
 Even the most colossal spaceborn habitat can eventually break down due to years of accidents, neglect, or conflict. The former inhabitants of those lost paradises are now scattered across the galaxy. Many find their homes in spacer guilds and salvager gangs, but even more have settled on planets where they put their unique biological traits to use despite the gravity.
+
+"Zeegee" is a contraction of the initial letters of "zero gravity".
 
 ### Genes
 
