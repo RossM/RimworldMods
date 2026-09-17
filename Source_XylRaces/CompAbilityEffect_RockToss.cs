@@ -53,7 +53,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
         if (projectile.GetComp<CompThingContainer>()?.innerContainer?.TryAddOrTransfer(thing) is not true)
         {
-            Log.Warning("Failed to add thing to projectile: projectile={projectile} thing={thing}");
+            Log.Warning($"Failed to add thing to projectile: projectile={projectile} thing={thing}");
             return;
         }
 
