@@ -98,9 +98,9 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 Originally engineered for the water world of Atlantis, nixies have spread across inhabited space. Their scaled skin and webbed hands provide protection and let them move quickly in water, but long periods outside it will leave them miserable with cracked, bleeding skin. Beyond their physical adaptations, they possess otherworldly beauty and innate psychic powers that draw others towards them. They are skilled negotiators but poor miners and builders, trading with “dryskins” for manufactured goods.
 
-The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without access to dry land, nixies were unable to develop advanced technology and industry. Instead, they put their efforts into developing art and culture, creating beautiful coral gardens and ethereal songs that echoed for miles underwater. The source of their psychic abilities is a mystery.
+The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without access to dry land, nixies were unable to develop advanced technology and industry. Instead, they put their efforts into developing art and culture, creating beautiful coral gardens and ethereal songs that echo for miles underwater. The source of their psychic abilities is a mystery.
 
-"Nixie" comes from the name of mythical water spirits from European folklore.
+"Nixie" comes from the name of mythical water spirits from European folklore that used their beauty and songs to lure unsuspecting people into the water.
 
 ### Genes
 
