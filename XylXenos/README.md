@@ -238,7 +238,7 @@ Each scaleborn receives one additional gene package:
 
 Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.
 
-While their origin is very similar to that of highmates, Succuboids have one important difference: at some point, they took control of their own reproduction, engineering themselves with the ability to reproduce with other xenotypes and invariably produce succuboid daughters. On some worlds they are considered prestigious companions, on others they are valuable merchandise, and on yet others they are treated as dangerous social parasites.
+While their origin is very similar to that of highmates, succuboids have one important difference: at some point, they took control of their own reproduction, engineering themselves with the ability to reproduce with other xenotypes and invariably produce succuboid daughters. On some worlds they are considered prestigious companions, on others they are valuable merchandise, and on yet others they are treated as dangerous social parasites.
 
 "Succuboid" is a homage to succubi, mythological female demons that tempted men in their sleep.
 
