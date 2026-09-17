@@ -210,7 +210,13 @@
     </pawnGroupMakers>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Faction">
-        <nearbyPollution>0.01 ~ 9999</nearbyPollution>
+        <!-- Trog bases are allowed if any of these match -->
+        <nearbyPollution>0.01~9999</nearbyPollution>
+        <allowedBiomes>
+          <li MayRequire="Ludeon.RimWorld.Odyssey">Scarlands</li>
+          <li MayRequire="Ludeon.RimWorld.Odyssey">LavaField</li>
+          <li MayRequire="Ludeon.RimWorld.Odyssey">Glowforest</li>
+        </allowedBiomes>
       </li>
     </modExtensions>
   </FactionDef>

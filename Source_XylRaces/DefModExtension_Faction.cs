@@ -15,19 +15,21 @@ public class DefModExtension_Faction : DefModExtension
         if (planetTile.Tile is not SurfaceTile surfaceTile)
             return false;
 
-        if (waterRequired && !surfaceTile.IsCoastalOrRiverTile)
-            return false;
+        if (allowedBiomes is not { Count: > 0 } && allowedHilliness is not { Count: > 0 } && !waterRequired && !nearbyPollution.HasValue)
+            return true;
 
-        if (allowedBiomes != null && !surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef)))
-            return false;
+        if (waterRequired && surfaceTile.IsCoastalOrRiverTile)
+            return true;
 
-        if (allowedHilliness != null && !allowedHilliness.Contains(surfaceTile.hilliness))
-            return false;
+        if (allowedBiomes is { Count: > 0 } && surfaceTile.Biomes.Any(biomeDef => allowedBiomes.Contains(biomeDef)))
+            return true;
 
-        if (nearbyPollution != null &&
-            !nearbyPollution.Value.Includes(WorldPollutionUtility.CalculateNearbyPollutionScore(planetTile)))
-            return false;
+        if (allowedHilliness is { Count: > 0 } && allowedHilliness.Contains(surfaceTile.hilliness))
+            return true;
 
-        return true;
+        if (nearbyPollution?.Includes(WorldPollutionUtility.CalculateNearbyPollutionScore(planetTile)) ?? false)
+            return true;
+
+        return false;
     }
 }
