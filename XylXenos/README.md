@@ -112,7 +112,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 ## Titan
 
-Titans are mass-produced workers originally designed for reclaiming deathworlds. Natural armor and specialized carbon-silicate lithoid biochemistry makes them immune to toxins and highly resistant to disease, letting them work in conditions that would be lethal for other xenotypes. Each is engineered with exceptional aptitude and passion for one random skill, but they have great difficulty learning skills that they aren’t passionate about. Their unusual biochemistry also leaves them susceptible to petrification, an incurable genetic disease that gradually turns their tissues to solid stone.
+Titans are mass-produced workers originally designed for reclaiming deathworlds. Specialized carbon-silicate lithoid biochemistry makes them immune to toxins and highly resistant to wounds and disease, letting them work in conditions that would be lethal for other xenotypes. Each is engineered with exceptional aptitude and passion for one random skill, but they have great difficulty learning skills that they aren’t passionate about. Their unusual biochemistry also leaves them susceptible to petrification, an incurable genetic disease that gradually turns their tissues to solid stone.
 
 Today, titans can be found on more than just the deathworlds they were engineered for. They are employed in space construction, mining, and agriculture, among other fields. Their employers are mostly well-resourced governments or corporations that are able to afford the expense of providing them with a regular supply of lithoid drugs such as softener and atlasite.
 
