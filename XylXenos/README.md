@@ -82,7 +82,7 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 ### Trivia
 
-"Dvergr" is the Old Norse word for dwarf.
+"Dvergr" is an Old Norse word for dwarf, and their homeland in Old Norse mythology was either called "Svartálfheim" or "Niðavellir".
 
 ### Genes
 
