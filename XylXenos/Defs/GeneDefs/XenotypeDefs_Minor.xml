@@ -3,6 +3,51 @@
 <Defs>
 
   <XenotypeDef>
+    <defName>XylScaleborn</defName>
+    <label>scaleborn</label>
+    <description>Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.\n\nOn the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the megafauna in ritual hunts. Successful hunters will share the meat with not only their own tribe but their neighbors, hosting great feasts and displaying the skulls of their prey as trophies.</description>
+    <descriptionShort>Scaleborn are dragonlike fighters protected by tough scales and armed with claws and horns. Each lineage has unique abilities such as fiery breath or blinding oil. They are slow runners and become even slower in the cold.</descriptionShort>
+    <!-- TODO icon -->
+    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
+    <displayPriority>-201</displayPriority>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>PsychicAbility_Dull</li>
+      <li>MoveSpeed_Slow</li>
+      <li>XylMoody</li>
+      <li>MinTemp_SmallDecrease</li>
+      <li>MaxTemp_SmallIncrease</li>
+      <li>XylTorpor</li>
+      <li>Aggression_Aggressive</li>
+      <li>MeleeDamage_Strong</li>
+      <li>XylLargeHorns</li>
+      <li>XylRetractableClaws</li>
+      <li>Sleepy</li>
+      <li>Hair_BaldOnly</li>
+      <li>Beard_NoBeardOnly</li>
+      <li>XylCarnivoreStomach</li>
+      <li>XylScaleskin</li>
+      <li>FacialRidges</li>
+      <li>AptitudePoor_Cooking</li>
+      <li>XylScalebornLineage</li>
+    </genes>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Xenotype">
+        <allowSolidBackstories>true</allowSolidBackstories>
+        <lineageInheritance>true</lineageInheritance>
+        <agreeingMemes>
+          <!-- Dragons are associated with arrogance -->
+          <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <!-- Animal personhood disallows eating meat, which conflicts with carnivore stomach -->
+          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
+  </XenotypeDef>
+
+  <XenotypeDef>
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <description>Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.\n\nWhile their origin is very similar to that of highmates, succuboids have one important difference: at some point, they took control of their own reproduction, engineering themselves with the ability to reproduce with other xenotypes and invariably produce succuboid daughters. On some worlds they are considered prestigious companions, on others they are valuable merchandise, and on yet others they are treated as dangerous social parasites.</description>
@@ -48,51 +93,6 @@
         <disagreeingMemes>
           <!-- Male supremacy is a poor fit for an all-female xenotype -->
           <li MayRequire="Ludeon.RimWorld.Ideology">MaleSupremacy</li>
-        </disagreeingMemes>
-      </li>
-    </modExtensions>
-  </XenotypeDef>
-
-  <XenotypeDef>
-    <defName>XylScaleborn</defName>
-    <label>scaleborn</label>
-    <description>Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.\n\nOn the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the megafauna in ritual hunts. Successful hunters will share the meat with not only their own tribe but their neighbors, hosting great feasts and displaying the skulls of their prey as trophies.</description>
-    <descriptionShort>Scaleborn are dragonlike fighters protected by tough scales and armed with claws and horns. Each lineage has unique abilities such as fiery breath or blinding oil. They are slow runners and become even slower in the cold.</descriptionShort>
-    <!-- TODO icon -->
-    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
-    <displayPriority>-201</displayPriority>
-    <inheritable>true</inheritable>
-    <genes>
-      <li>PsychicAbility_Dull</li>
-      <li>MoveSpeed_Slow</li>
-      <li>XylMoody</li>
-      <li>MinTemp_SmallDecrease</li>
-      <li>MaxTemp_SmallIncrease</li>
-      <li>XylTorpor</li>
-      <li>Aggression_Aggressive</li>
-      <li>MeleeDamage_Strong</li>
-      <li>XylLargeHorns</li>
-      <li>XylRetractableClaws</li>
-      <li>Sleepy</li>
-      <li>Hair_BaldOnly</li>
-      <li>Beard_NoBeardOnly</li>
-      <li>XylCarnivoreStomach</li>
-      <li>XylScaleskin</li>
-      <li>FacialRidges</li>
-      <li>AptitudePoor_Cooking</li>
-      <li>XylScalebornLineage</li>
-    </genes>
-    <modExtensions>
-      <li Class="XylXenos.DefModExtension_Xenotype">
-        <allowSolidBackstories>true</allowSolidBackstories>
-        <lineageInheritance>true</lineageInheritance>
-        <agreeingMemes>
-          <!-- Dragons are associated with arrogance -->
-          <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>
-        </agreeingMemes>
-        <disagreeingMemes>
-          <!-- Animal personhood disallows eating meat, which conflicts with carnivore stomach -->
-          <li MayRequire="Ludeon.RimWorld.Ideology">AnimalPersonhood</li>
         </disagreeingMemes>
       </li>
     </modExtensions>
