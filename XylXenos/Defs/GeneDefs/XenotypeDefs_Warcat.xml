@@ -5,8 +5,8 @@
   <XenotypeDef>
     <defName>XylWarcat</defName>
     <label>warcat</label>
-    <description>Warcats were forged in military gene-vats: part human, part great cat, all fast-twitch muscle. They fight savagely at close quarters, but something in the splice tied their survival to a hunger cooked meals cannot satisfy. Without regular raw meat from hunts or livestock, they can lose control of themselves, then sicken and die. Even well fed, their killing instincts lie close to the surface, and a disagreement can quickly turn violent.\n\nWarcats now roam the rimworlds in tight-knit hunting clans, pursuing anything they can bring down, including other xenohumans. On some worlds they have been part of the ecosystem for thousands of years. A clan lives by its hunters' success, and sharing a kill is as much an obligation as a reward. Hunting companions often remain close for life, but such loyalty carries no promise of mercy toward outsiders.</description>
-    <descriptionShort>Warcats are graceful feline predators bred for savage close combat. Without regular raw meat from hunting or livestock, they become dangerously unstable, sicken, and die. Even well fed, they are highly aggressive.</descriptionShort>
+    <description>Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on regular raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.\n\nWarcat tribes can be a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.</description>
+    <descriptionShort>Warcats are experimental supersoldiers - part human, part great cat. They hunt with retractable claws, powerful melee attacks, and catlike reflexes, but depend on regular raw meat to survive.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</iconPath>
     <displayPriority>-107</displayPriority>
     <inheritable>true</inheritable>
