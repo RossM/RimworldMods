@@ -161,7 +161,7 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 Trogs emerged from generations of interbreeding among wasters, dirtmoles, and neanderthals on the worst rimworlds known to mankind. They are ugly, slow, and poor learners, but skilled miners and animal handlers. They emit special pheromones that let them move freely among giant insects, and even tame them and employ them as war animals. Like wasters, pollution invigorates them, but they are only partially resistant to its effects. Roughly half inherit additional random genes from who-knows-where.
 
-Trogs can be found anywhere other xenotypes don’t want to live, from polluted wastelands to underground caverns to volcanic lava fields. They form aggressive, territorial clans that often squabble as much among themselves as they do with outsiders. Despite their unwholesome reputation, however, they can be quite welcoming to outcast and shunned people of any xenotype.
+Trogs can be found anywhere other xenotypes don’t want to live, from polluted wastelands to underground caverns to volcanic lava fields. They form aggressive, territorial clans that often squabble as much among themselves as they do with outsiders. Despite their unwholesome reputation, they can be quite welcoming to outcast and shunned people of any xenotype.
 
 ### Trivia
 
@@ -184,9 +184,9 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 
 ## Warcat
 
-Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on regular raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.
+Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on a diet of raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.
 
-Warcat tribes can be a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.
+Warcat tribes are a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.
 
 ## Trivia
 
