@@ -188,6 +188,10 @@ Warcats were created in military gene-vats as experimental supersoldiers - part 
 
 Warcat tribes can be a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.
 
+## Trivia
+
+Real cats are unable to produce certain essential nutrients such as taurine, and must get them from meat as part of their diet.
+
 ### Genes
 
 | Gene | Effect |
