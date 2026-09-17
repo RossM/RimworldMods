@@ -82,6 +82,7 @@
     <maxSeverity>1.0</maxSeverity>
     <isBad>false</isBad>
     <comps>
+      <!-- Active for 3 hours, then backlash for 12 hours -->
       <li Class="XylXenos.HediffCompProperties_SeverityPerDay_Stage">
         <severityPerDay>-1.6</severityPerDay>
         <showHoursToRecover>true</showHoursToRecover>
