@@ -28,8 +28,6 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 
 "Bossaps" is a contraction of "Bos sapiens", a made-up scientific name that would mean "Wise cow".
 
-The idea that bulls are enraged by the color red is a myth. Cows, like most non-primate mammals, are partially color blind and can't distinguish red from green.
-
 ### Genes
 
 | Gene | Effect |
