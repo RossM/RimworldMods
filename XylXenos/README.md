@@ -192,7 +192,7 @@ Warcat tribes are a constant threat on the rim. Their need for meat drives them 
 
 ## Trivia
 
-Real cats are unable to produce adequate amounts certain essential nutrients such as taurine, and must get them from meat as part of their diet.
+Real cats are unable to produce adequate amounts of certain essential nutrients such as taurine, and must get them from meat as part of their diet.
 
 ### Genes
 
