@@ -232,3 +232,50 @@ public class GeneSetMaker_List : GeneSetMaker
         }
     }
 }
+
+public class GeneSetMaker_BiostatTotal : GeneSetMaker
+{
+    public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max);
+
+    public IntRange biostatArc = IntRange.Zero;
+    public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
+    public IntRange biostatMet = new(int.MinValue, int.MaxValue);
+    public required List<GeneSetMaker> subMakers;
+    public bool shuffle = true;
+
+    private List<GeneSetMaker>? subMakersTemp;
+
+    protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
+    {
+        subMakersTemp ??= [.. subMakers];
+
+        List<GeneDef> genesList = geneSet.GenesListForReading;
+        
+        int initialGeneCount = genesList.Count;
+
+        for (int iteration = 0; iteration < 100; iteration++)
+        {
+            genesList.RemoveRange(initialGeneCount, genesList.Count);
+            if (shuffle)
+                subMakersTemp.Shuffle();
+
+            for (int i = 0; i < countValue && i < subMakers.Count; i++)
+                subMakers[i].AddGenes(geneSet, geneType, pawn);
+
+            int totalBiostatArc = 0;
+            int totalBiostatCpx = 0;
+            int totalBiostatMet = 0;
+            for (int i = initialGeneCount; i < genesList.Count; i++)
+            {
+                totalBiostatArc += genesList[i].biostatArc;
+                totalBiostatCpx += genesList[i].biostatCpx;
+                totalBiostatMet += genesList[i].biostatMet;
+            }
+
+            if (biostatArc.Includes(totalBiostatArc) && biostatCpx.Includes(totalBiostatCpx) && biostatMet.Includes(totalBiostatMet))
+                return;
+        }
+
+        Log.WarningOnce("GeneSetMaker_BiostatTotal failed to generate a gene set within range, using last result", 0x2AE4C1BA);
+    }
+}
