@@ -59,7 +59,7 @@
   <XylSettingtooltip_fixGeneticPassions>The game has a bug that causes passion increases from genes to not stack with randomly generated skill passions on newly generated pawns. This setting controls fixing that bug.</XylSettingtooltip_fixGeneticPassions>
 
   <!-- Misc -->
-  <XylMeleeDamageFactor>{0} damage: {1}</XylMeleeDamageFactor>
+  <XylMeleeDamageFactor>{0} damage x{1}</XylMeleeDamageFactor>
   <XylWildPeople>wild people</XylWildPeople>
   <XylScenPartPsycastLabel>{0} (level {1})</XylScenPartPsycastLabel>
   <XylPsycast>psycast</XylPsycast>
