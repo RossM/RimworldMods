@@ -26,9 +26,8 @@ public static class PatchLovin
 
         foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
         {
-            HediffComp_GiveLovinMTBFactor? comp = hediff.TryGetComp<HediffComp_GiveLovinMTBFactor>();
-            if (comp is { Props: not null })
-                __result *= comp.Props.lovinMTBFactor;
+            if (hediff.TryGetComp<HediffComp_GiveLovinMTBFactor>() is { Props.lovinMTBFactor: var factor })
+                __result *= factor;
         }
     }
 }
