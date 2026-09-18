@@ -32,7 +32,7 @@ public abstract class GeneTracker : IEventListener, IPawnData
             dest.AddRange(source);
     }
 
-    protected static void AccumulateMultiply<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keyExtractor, Func<TItem, float> valueExtractor)
+    protected static void Multiply<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keyExtractor, Func<TItem, float> valueExtractor)
     {
         if (source is null)
             return;

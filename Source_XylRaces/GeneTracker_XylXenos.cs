@@ -34,11 +34,11 @@ public class GeneTracker_XylXenos : GeneTracker
         {
             var def = gene.DefExt;
 
-            AccumulateMultiply(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors,
+            Multiply(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors,
                 item => item.joyGiver, item => item.factor);
             Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
             Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
-            AccumulateMultiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors, 
+            Multiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors, 
                 item => item.damageDef, item => item.factor);
 
             hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
