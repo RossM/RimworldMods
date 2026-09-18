@@ -67,8 +67,14 @@ public class GeneComp
     ///     once every 15 ticks.
     /// </summary>
     /// <remarks>
-    ///     It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer interval,
-    ///     to avoid performance issues.
+    ///     <para>
+    ///         It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer interval,
+    ///         to avoid performance issues.
+    ///     </para>
+    ///     <para>
+    ///         <see cref="GeneWithComps"/> is optimized so that a subclass that doesn't override this method will incur no overhead
+    ///         when <see cref="GeneWithComps.TickInterval" /> is called.
+    ///     </para>
     /// </remarks>
     /// <param name="delta"></param>
     public virtual void CompTickInterval(int delta) { }
@@ -77,7 +83,13 @@ public class GeneComp
     ///     Called every gameplay tick.
     /// </summary>
     /// <remarks>
-    ///     This can have a significant impact on performance. Prefer to use <see cref="CompTickInterval" /> if possible.
+    ///     <para>
+    ///         This can have a significant impact on performance. Prefer to use <see cref="CompTickInterval" /> if possible.
+    ///     </para>
+    ///     <para>
+    ///         <see cref="GeneWithComps"/> is optimized so that a subclass that doesn't override this method will incur no overhead
+    ///         when <see cref="GeneWithComps.Tick" /> is called.
+    ///     </para>
     /// </remarks>
     public virtual void CompTick() { }
 
