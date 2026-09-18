@@ -269,6 +269,7 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
     {
         subMakersTemp ??= [.. subMakers];
 
+        // "For reading" is just a suggestion
         List<GeneDef> genes = geneSet.GenesListForReading;
         
         int initialGeneCount = genes.Count;
