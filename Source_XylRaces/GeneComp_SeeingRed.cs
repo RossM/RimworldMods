@@ -21,7 +21,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
 {
     public GeneCompProperties_SeeingRed Props => (GeneCompProperties_SeeingRed)props;
 
-    private const int checkInterval = 60;
+    private const int CheckInterval = 60;
     public HashSet<Thing>? extraEnemies;
 
     public override void CompExposeData()
@@ -31,7 +31,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
 
     public override void CompTickInterval(int delta)
     {
-        if (!Pawn.IsHashIntervalTick(checkInterval, delta))
+        if (!Pawn.IsHashIntervalTick(CheckInterval, delta))
             return;
         if (extraEnemies != null)
         {

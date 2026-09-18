@@ -23,14 +23,14 @@ public class JobDriver_TakeShower : JobDriver
         this.FailOnDespawnedOrNull(TargetIndex.A);
         yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.InteractionCell);
 
-        var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
+        var need = pawn.needs.TryGetNeed<Need_Wetness>();
 
         Toil toil = ToilMaker.MakeToil();
         toil.defaultCompleteMode = ToilCompleteMode.Delay;
         toil.defaultDuration = job.def.joyDuration;
         toil.AddPreTickIntervalAction(_ =>
         {
-            if (need_wetness is { CurLevel: > 0.9999f })
+            if (need is { CurLevel: > 0.9999f })
                 EndJobWith(JobCondition.Succeeded);
         });
         toil.initAction = () =>

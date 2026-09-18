@@ -14,13 +14,13 @@ public class GeneCompProperties_Regeneration : GeneCompProperties
 public class GeneComp_Regeneration : GeneComp
 {
     public GeneCompProperties_Regeneration Props => (GeneCompProperties_Regeneration)props;
-    private const int updateInterval = GenTicks.TicksPerRealSecond;
+    private const int CheckInterval = GenTicks.TicksPerRealSecond;
 
     [Unsaved] private List<Hediff_Injury> tmpHediffInjuries = [];
 
     public override void CompTickInterval(int delta)
     {
-        if (!Pawn.IsHashIntervalTick(updateInterval, delta))
+        if (!Pawn.IsHashIntervalTick(CheckInterval, delta))
             return;
 
         if (!Pawn.health.hediffSet.HasNaturallyHealingInjury())
@@ -28,7 +28,7 @@ public class GeneComp_Regeneration : GeneComp
 
         Pawn.health.hediffSet.GetHediffs(ref tmpHediffInjuries, hediff => hediff.CanHealNaturally());
 
-        float healingAmount = Props.healthPerHour * Pawn.HealthScale * updateInterval / GenDate.TicksPerHour /
+        float healingAmount = Props.healthPerHour * Pawn.HealthScale * CheckInterval / GenDate.TicksPerHour /
                               tmpHediffInjuries.Count;
         foreach (var hediff in tmpHediffInjuries)
             hediff.Heal(healingAmount);

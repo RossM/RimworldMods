@@ -7,10 +7,10 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
     {
         Job job;
 
-        if (pawn.MentalState is not MentalState_HuntingVermin mentalState_huntingVermin)
+        if (pawn.MentalState is not MentalState_HuntingVermin mentalState)
             return null;
 
-        if (mentalState_huntingVermin.target?.Corpse is Corpse corpse)
+        if (mentalState.target?.Corpse is Corpse corpse)
         {
             if (!pawn.CanReserveAndReach(corpse, PathEndMode.ClosestTouch, Danger.Some))
                 pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
@@ -19,15 +19,15 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
             return job;
         }
 
-        if (!mentalState_huntingVermin.IsTargetStillValidAndReachable())
+        if (!mentalState.IsTargetStillValidAndReachable())
             return null;
 
-        DebugAssert.NotNull(mentalState_huntingVermin.target);
+        DebugAssert.NotNull(mentalState.target);
 
-        Thing? targetThing = mentalState_huntingVermin.target.SpawnedParentOrMe;
+        Thing? targetThing = mentalState.target.SpawnedParentOrMe;
         job = JobMaker.MakeJob(JobDefOf.AttackMelee, targetThing);
         job.killIncappedTarget = true;
-        if (targetThing != mentalState_huntingVermin.target)
+        if (targetThing != mentalState.target)
             job.maxNumMeleeAttacks = 2;
         return job;
     }

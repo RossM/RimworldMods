@@ -3,7 +3,7 @@
 [UsedFromXml]
 public class MentalState_HuntingVermin : MentalState
 {
-    private const int checkInterval = 120;
+    private const int CheckInterval = 120;
 
     private static readonly List<Pawn> tmpTargets = [];
     public Pawn? target;
@@ -43,7 +43,7 @@ public class MentalState_HuntingVermin : MentalState
             return;
         }
 
-        if (!pawn.IsHashIntervalTick(checkInterval, delta))
+        if (!pawn.IsHashIntervalTick(CheckInterval, delta))
             return;
         if (IsTargetStillValidAndReachable())
             return;

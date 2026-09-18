@@ -37,7 +37,7 @@ public class GeneComp_Hyperlactation : GeneComp
         Find.TickManager.TicksGame > lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay &&
         MilkCount >= 1;
 
-    private const int checkInterval = 60;
+    private const int CheckInterval = 60;
     public bool allowMilking = true;
     public int milkingCooldownDays = 1;
 
@@ -103,7 +103,7 @@ public class GeneComp_Hyperlactation : GeneComp
 
     public override void CompTickInterval(int delta)
     {
-        if (!Pawn.IsHashIntervalTick(checkInterval, delta))
+        if (!Pawn.IsHashIntervalTick(CheckInterval, delta))
             return;
 
         AddHediff();

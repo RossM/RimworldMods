@@ -3,11 +3,11 @@
 [UsedFromReflection]
 public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListener
 {
-    public const int violationDisableTicks = 2500;
-    public const int updateFrequency = 60;
+    public const int ViolationDisableTicks = 2500;
+    public const int CheckFrequency = 60;
 
-    [Unsaved] private static Map? lastMap;
-    [Unsaved] private static HostilityOverrideManager? lastManager;
+    [Unsaved] private static Map? _lastMap;
+    [Unsaved] private static HostilityOverrideManager? _lastManager;
 
     public bool anyOverrides = false;
     public HashSet<(Faction, Faction)> activeOverrides = [];
@@ -28,12 +28,12 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
     {
         if (map == null)
             return null;
-        if (map == lastMap)
-            return lastManager;
+        if (map == _lastMap)
+            return _lastManager;
 
-        lastMap = map;
-        lastManager = map.GetComponent<HostilityOverrideManager>();
-        return lastManager;
+        _lastMap = map;
+        _lastManager = map.GetComponent<HostilityOverrideManager>();
+        return _lastManager;
     }
 
     public bool HostilityDisabled(Thing source, Thing target)
@@ -62,12 +62,12 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         if (!lastHostileActionTick.TryGetValue(from, out int hostileActionTick))
             return true;
 
-        return hostileActionTick + violationDisableTicks < Find.TickManager.TicksGame;
+        return hostileActionTick + ViolationDisableTicks < Find.TickManager.TicksGame;
     }
 
     public override void MapComponentTick()
     {
-        if (Find.TickManager.TicksGame % updateFrequency != 0)
+        if (Find.TickManager.TicksGame % CheckFrequency != 0)
             return;
 
         anyOverrides = false;

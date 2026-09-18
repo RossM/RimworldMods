@@ -18,19 +18,19 @@ public class HediffComp_RandomInspiration : HediffComp
 
     public override string CompTipStringExtra => $"  - {"XylCausesRandomInspirations".Translate()}";
 
-    public const int checkFrequency = 150;
+    public const int CheckFrequency = 150;
 
     public override void CompPostTickInterval(ref float severityAdjustment, int delta)
     {
         DebugAssert.NotNull(Pawn);
 
-        if (!Pawn.IsHashIntervalTick(checkFrequency, delta))
+        if (!Pawn.IsHashIntervalTick(CheckFrequency, delta))
             return;
 
         if (Pawn.Inspired)
             return;
 
-        if (Rand.MTBEventOccurs(Props.mtbDays, GenDate.TicksPerDay, checkFrequency))
+        if (Rand.MTBEventOccurs(Props.mtbDays, GenDate.TicksPerDay, CheckFrequency))
             GiveInspiration();
     }
 

@@ -64,15 +64,15 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
             string? text = base.TipStringExtra;
 
-            HediffComp_SeverityPerDay? comp_severityPerDay = GetComp<HediffComp_SeverityPerDay>();
-            if (comp_severityPerDay is null)
+            HediffComp_SeverityPerDay? comp = GetComp<HediffComp_SeverityPerDay>();
+            if (comp is null)
                 return text;
 
             if (!text.NullOrEmpty())
                 text += "\n\n";
 
             var severityPerDay =
-                ((HediffCompProperties_SeverityPerDay)comp_severityPerDay.props)
+                ((HediffCompProperties_SeverityPerDay)comp.props)
                 .severityPerDay;
             var deficiencyDays = def.stages[(int)Stages.MildDeficiency]!.minSeverity / severityPerDay;
             var comaDays = def.stages[(int)Stages.Coma]!.minSeverity / severityPerDay;

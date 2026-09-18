@@ -5,7 +5,7 @@ namespace XylXenos;
 [UsedFromXml]
 public class JobGiver_GetWetness : ThinkNode_JobGiver
 {
-    public const Danger maxDanger = Danger.None;
+    public const Danger MaxDanger = Danger.None;
     public required JobDef soakJobDef;
 
     public static List<ThingDef> WetnessGivingThings
@@ -52,7 +52,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
             return null;
 
         TraverseParms traverseParams = TraverseParms.For(pawn);
-        traverseParams.maxDanger = maxDanger;
+        traverseParams.maxDanger = MaxDanger;
 
         return GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, candidates,
             PathEndMode.InteractionCell, traverseParams, validator: t => CanInteractWith(pawn, t));
@@ -87,7 +87,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
         DebugAssert.NotNull(pawn.Map);
 
-        bool Validator(IntVec3 x) => IsValidWaterTileFor(pawn, x) && pawn.CanReach(new LocalTargetInfo(x), PathEndMode.OnCell, maxDanger);
+        bool Validator(IntVec3 x) => IsValidWaterTileFor(pawn, x) && pawn.CanReach(new LocalTargetInfo(x), PathEndMode.OnCell, MaxDanger);
 
         return RCellFinder.TryFindRandomCellNearWith(pawn.Position, Validator, pawn.Map, out result,
             maxSearchRadius: maxSearchRadius);
@@ -128,15 +128,15 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     public override float GetPriority(Pawn pawn)
     {
-        var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
-        if (need_wetness == null)
+        var need = pawn.needs.TryGetNeed<Need_Wetness>();
+        if (need == null)
             return 0.0f;
 
-        var projectedWetness = need_wetness.CurLevel - 8f * need_wetness.FallPerHour;
+        var projectedWetness = need.CurLevel - 8f * need.FallPerHour;
 
-        return need_wetness.CurLevel switch
+        return need.CurLevel switch
         {
-            < Need_Wetness.thresholdWet when projectedWetness < Need_Wetness.thresholdNeutral => ThinkNodePriority.MiscNeed,
+            < Need_Wetness.ThresholdWet when projectedWetness < Need_Wetness.ThresholdNeutral => ThinkNodePriority.MiscNeed,
             < 0.95f => ThinkNodePriority.AvoidIdle,
             _ => 0.0f,
         };

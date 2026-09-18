@@ -318,12 +318,12 @@ public static class PatchHelpers
     {
         colorDefs.SortBy(x =>
         {
-            Color.RGBToHSV(getColor(x), out var H, out var S, out _);
-            return S >= 0.05f ? Mathf.RoundToInt(H * 100f) : 200f;
+            Color.RGBToHSV(getColor(x), out var h, out var s, out _);
+            return s >= 0.05f ? Mathf.RoundToInt(h * 100f) : 200f;
         }, x =>
         {
-            Color.RGBToHSV(getColor(x), out _, out _, out var V);
-            return Mathf.RoundToInt(V * 100f);
+            Color.RGBToHSV(getColor(x), out _, out _, out var v);
+            return Mathf.RoundToInt(v * 100f);
         });
     }
 

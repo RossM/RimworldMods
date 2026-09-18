@@ -12,13 +12,13 @@ public class JobDriver_Soak : JobDriver
     {
         DebugAssert.NotNull(pawn);
 
-        var need_wetness = pawn.needs.TryGetNeed<Need_Wetness>();
+        var need = pawn.needs.TryGetNeed<Need_Wetness>();
 
         Toil goToil = Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
         goToil.tickIntervalAction = _ =>
         {
             if (Find.TickManager.TicksGame > startTick + job.def.joyDuration ||
-                need_wetness is { CurLevel: > 0.999f })
+                need is { CurLevel: > 0.999f })
                 EndJobWith(JobCondition.Succeeded);
             else
                 CheckForSwimmingPose();

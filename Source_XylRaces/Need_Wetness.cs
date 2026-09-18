@@ -18,10 +18,10 @@ public class Need_Wetness : Need_Seeker
     public float RisePerHour => def.seekerRisePerHour;
     public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
 
-    public const float thresholdWet = 0.90f;
-    public const float thresholdNeutral = 0.50f;
-    public const float thresholdDry = 0.25f;
-    public const float thresholdVeryDry = 0.05f;
+    public const float ThresholdWet = 0.90f;
+    public const float ThresholdNeutral = 0.50f;
+    public const float ThresholdDry = 0.25f;
+    public const float ThresholdVeryDry = 0.05f;
 
     private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
     [
@@ -44,7 +44,7 @@ public class Need_Wetness : Need_Seeker
 
     public Need_Wetness(Pawn pawn) : base(pawn)
     {
-        threshPercents = [thresholdVeryDry, thresholdDry, thresholdNeutral, thresholdWet];
+        threshPercents = [ThresholdVeryDry, ThresholdDry, ThresholdNeutral, ThresholdWet];
     }
 
     public override float CurInstantLevel
@@ -67,10 +67,10 @@ public class Need_Wetness : Need_Seeker
         {
             return CurLevel switch
             {
-                >= thresholdWet => WetnessCategory.Wet,
-                >= thresholdNeutral => WetnessCategory.Neutral,
-                >= thresholdDry => WetnessCategory.Dry,
-                >= thresholdVeryDry => WetnessCategory.VeryDry,
+                >= ThresholdWet => WetnessCategory.Wet,
+                >= ThresholdNeutral => WetnessCategory.Neutral,
+                >= ThresholdDry => WetnessCategory.Dry,
+                >= ThresholdVeryDry => WetnessCategory.VeryDry,
                 _ => WetnessCategory.Parched,
             };
         }
