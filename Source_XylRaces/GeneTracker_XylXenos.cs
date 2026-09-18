@@ -6,7 +6,7 @@ public class GeneTracker_XylXenos : GeneTracker
     ///     Aggregates <see cref="GeneCompProperties_JoyGiverChances.factors" /> from all genes.<br /><br />
     ///     <inheritdoc cref="GeneCompProperties_JoyGiverChances.factors" />
     /// </summary>
-    public List<JoyGiverFactor>? joyGiverChanceFactors;
+    public Dictionary<JoyGiverDef, float>? joyGiverChanceFactors;
 
     public List<FactionDef>? disableHostilityFromFactions;
 
@@ -34,10 +34,10 @@ public class GeneTracker_XylXenos : GeneTracker
         {
             var def = gene.DefExt;
 
-            Append(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
+            AccumulateMultiply(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors,
+                item => item.joyGiver, item => item.factor);
             Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
             Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
-
             AccumulateMultiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors, 
                 item => item.damageDef, item => item.factor);
 

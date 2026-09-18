@@ -280,22 +280,6 @@ public static class PatchHelpers
         return false;
     }
 
-    public static float GetJoyFactor(Pawn pawn, JoyGiver joyGiver)
-    {
-        List<JoyGiverFactor>? joyGiverChanceFactors = pawn.GeneTracker_XylXenos?.joyGiverChanceFactors;
-        if (joyGiverChanceFactors == null)
-            return 1f;
-
-        float factor = 1f;
-        foreach (var joyGiverFactor in joyGiverChanceFactors)
-        {
-            if (joyGiverFactor.joyGiver == joyGiver.def)
-                factor *= joyGiverFactor.factor;
-        }
-
-        return factor;
-    }
-
     public static bool ShouldGetGeneticPassion(Pawn pawn, SkillRecord record, int minorPassions)
     {
         if (minorPassions <= 0)

@@ -12,8 +12,7 @@ public static class Patch_VerbProperties
         if (__instance is not { IsMeleeAttack: true, meleeDamageDef: { } damageDef })
             return;
 
-        if (attacker?.GeneTracker_XylXenos?.meleeDamageFactors is { } factors &&
-            factors.TryGetValue(damageDef, out float factor))
+        if (attacker?.GeneTracker_XylXenos?.meleeDamageFactors?.TryGetValue(damageDef, out float factor) is true)
             __result *= factor;
     }
 }

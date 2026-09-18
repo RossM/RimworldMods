@@ -8,7 +8,7 @@ public static class Patch_JoyGiver
     [Target(nameof(JoyGiver.GetChance))]
     public static void GetChance_Postfix(JoyGiver __instance, Pawn pawn, ref float __result)
     {
-        var factor = PatchHelpers.GetJoyFactor(pawn, __instance);
-        __result *= factor;
+        if (pawn.GeneTracker_XylXenos?.joyGiverChanceFactors?.TryGetValue(__instance.def, out var factor) is true)
+            __result *= factor;
     }
 }
