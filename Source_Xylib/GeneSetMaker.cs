@@ -1,5 +1,8 @@
 ﻿namespace Xylib;
 
+/// <summary>
+///     This class configures a gene set maker that can generate different, randomized gene sets during gameplay.
+/// </summary>
 [UsedFromXml]
 [PublicAPI]
 public abstract class GeneSetMaker
@@ -95,6 +98,9 @@ public class GeneSetMakerWeight
     public float weight = 1f;
 }
 
+/// <summary>
+///     Generates genes by randomly selecting from several options that are each themselves a <see cref="GeneSetMaker" />.
+/// </summary>
 [UsedFromXml]
 [PublicAPI]
 public class GeneSetMaker_Option : GeneSetMaker
@@ -139,6 +145,9 @@ public class GeneSetMaker_Option : GeneSetMaker
     }
 }
 
+/// <summary>
+///     Generates genes by referencing a <see cref="GeneSetMakerDef" />.
+/// </summary>
 [UsedFromXml]
 [PublicAPI]
 public class GeneSetMaker_Subtree : GeneSetMaker
@@ -153,6 +162,9 @@ public class GeneSetMaker_Subtree : GeneSetMaker
     }
 }
 
+/// <summary>
+///     Generates genes randomly selected from the entire gene list, filtered by biostats.
+/// </summary>
 [UsedFromXml]
 [PublicAPI]
 public class GeneSetMaker_Biostats : GeneSetMaker
@@ -184,6 +196,9 @@ public class GeneSetMaker_Biostats : GeneSetMaker
     }
 }
 
+/// <summary>
+///     Generates genes by selecting random genes from a list of specific <see cref="GeneDef" />s.
+/// </summary>
 [UsedFromXml]
 [PublicAPI]
 public class GeneSetMaker_List : GeneSetMaker
@@ -233,8 +248,13 @@ public class GeneSetMaker_List : GeneSetMaker
     }
 }
 
+/// <summary>
+///     Generates genes by calling a list of <see cref="GeneSetMaker" />s then accepting or rejecting the result based on total biostats.
+/// </summary>
 public class GeneSetMaker_BiostatTotal : GeneSetMaker
 {
+    private const int TryCount = 100;
+
     public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max);
 
     public IntRange biostatArc = IntRange.Zero;
@@ -253,7 +273,7 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
         
         int initialGeneCount = genesList.Count;
 
-        for (int iteration = 0; iteration < 100; iteration++)
+        for (int iteration = 0; iteration < TryCount; iteration++)
         {
             genesList.RemoveRange(initialGeneCount, genesList.Count);
             if (shuffle)
@@ -276,6 +296,6 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
                 return;
         }
 
-        Log.WarningOnce("GeneSetMaker_BiostatTotal failed to generate a gene set within range, using last result", 0x2AE4C1BA);
+        Log.WarningOnce($"GeneSetMaker_BiostatTotal failed to generate a valid gene set within {TryCount} attempts, using last result", 0x2AE4C1BA);
     }
 }
