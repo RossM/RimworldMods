@@ -100,8 +100,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
 
     private static void ExposeData(Pawn pawn)
     {
-        if (!data.TryGetValue(pawn.thingIDNumber, out T? value))
-            value = default;
+        T? value = data.GetValueOrDefault(pawn.thingIDNumber);
 
         Scribe_Deep.Look(ref value, ScribeLabel);
 

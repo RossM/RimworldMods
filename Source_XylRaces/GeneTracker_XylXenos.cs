@@ -8,7 +8,6 @@ public class GeneTracker_XylXenos : GeneTracker
     /// </summary>
     public List<JoyGiverFactor>? joyGiverChanceFactors;
 
-
     public List<FactionDef>? disableHostilityFromFactions;
 
     public List<GeneIngestionThoughtOverride>? ingestionThoughtOverrides;
@@ -28,27 +27,29 @@ public class GeneTracker_XylXenos : GeneTracker
         hasPsycast = false;
         youthfulMaxAge = float.MaxValue;
 
-        if (Pawn.genes != null)
-            foreach (var gene in Pawn.ActiveGenesOfType<GeneWithComps>())
-            {
-                var def = gene.DefExt;
+        if (Pawn.genes == null)
+            return;
 
-                Append(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
-                Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
-                Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
+        foreach (var gene in Pawn.ActiveGenesOfType<GeneWithComps>())
+        {
+            var def = gene.DefExt;
 
-                if (def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors is { } damageFactors)
-                    foreach (var damageFactor in damageFactors)
-                    {
-                        meleeDamageFactors ??= [];
-                        float factor = meleeDamageFactors.TryGetValue(damageFactor.damageDef, out float existing) ? existing : 1f;
-                        meleeDamageFactors[damageFactor.damageDef] = factor * damageFactor.factor;
-                    }
+            Append(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
+            Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
+            Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
 
-                hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
+            if (def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors is { } damageFactors)
+                foreach (var damageFactor in damageFactors)
+                {
+                    meleeDamageFactors ??= [];
+                    float factor = meleeDamageFactors.GetValueOrDefault(damageFactor.damageDef, 1f);
+                    meleeDamageFactors[damageFactor.damageDef] = factor * damageFactor.factor;
+                }
 
-                if (def.CompProps<GeneCompProperties_Youthful>() is { } youthful)
-                    youthfulMaxAge = Mathf.Min(youthfulMaxAge, youthful.maxAge);
-            }
+            hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
+
+            if (def.CompProps<GeneCompProperties_Youthful>() is { } youthful)
+                youthfulMaxAge = Mathf.Min(youthfulMaxAge, youthful.maxAge);
+        }
     }
 }
