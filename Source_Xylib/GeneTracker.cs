@@ -12,7 +12,6 @@ public abstract class GeneTracker : IEventListener, IPawnData
         set;
     }
 
-    // ReSharper disable once ParameterHidesMember
     void IPawnData.Init()
     {
         EventManager.Instance.AddListener(this);
