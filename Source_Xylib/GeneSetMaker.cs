@@ -269,13 +269,13 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
     {
         subMakersTemp ??= [.. subMakers];
 
-        List<GeneDef> genesList = geneSet.GenesListForReading;
+        List<GeneDef> genes = geneSet.GenesListForReading;
         
-        int initialGeneCount = genesList.Count;
+        int initialGeneCount = genes.Count;
 
         for (int iteration = 0; iteration < TryCount; iteration++)
         {
-            genesList.RemoveRange(initialGeneCount, genesList.Count);
+            genes.RemoveRange(initialGeneCount, genes.Count);
             if (shuffle)
                 subMakersTemp.Shuffle();
 
@@ -285,11 +285,11 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
             int totalBiostatArc = 0;
             int totalBiostatCpx = 0;
             int totalBiostatMet = 0;
-            for (int i = initialGeneCount; i < genesList.Count; i++)
+            for (int i = initialGeneCount; i < genes.Count; i++)
             {
-                totalBiostatArc += genesList[i].biostatArc;
-                totalBiostatCpx += genesList[i].biostatCpx;
-                totalBiostatMet += genesList[i].biostatMet;
+                totalBiostatArc += genes[i].biostatArc;
+                totalBiostatCpx += genes[i].biostatCpx;
+                totalBiostatMet += genes[i].biostatMet;
             }
 
             if (biostatArc.Includes(totalBiostatArc) && biostatCpx.Includes(totalBiostatCpx) && biostatMet.Includes(totalBiostatMet))
