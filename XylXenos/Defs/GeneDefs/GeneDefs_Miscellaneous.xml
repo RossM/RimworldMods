@@ -697,4 +697,29 @@
     </stages>
   </HediffDef>
 
+  <GeneDef>
+    <defName>XylBeaverTeeth</defName>
+    <label>beaver teeth</label>
+    <description>Carriers of this gene have strong, chisel-shaped teeth. Their bites deal twice as much damage, and they cut trees twice as fast.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>112</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <statFactors>
+      <XylTreeCuttingSpeed>2</XylTreeCuttingSpeed>
+    </statFactors>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_MeleeDamageFactors">
+            <factors>
+              <Bite>2</Bite>
+            </factors>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

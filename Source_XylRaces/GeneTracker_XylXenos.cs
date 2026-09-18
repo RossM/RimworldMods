@@ -13,6 +13,8 @@ public class GeneTracker_XylXenos : GeneTracker
 
     public List<GeneIngestionThoughtOverride>? ingestionThoughtOverrides;
 
+    public Dictionary<DamageDef, float>? meleeDamageFactors;
+
     public bool hasPsycast;
 
     public float youthfulMaxAge;
@@ -22,6 +24,7 @@ public class GeneTracker_XylXenos : GeneTracker
         joyGiverChanceFactors?.Clear();
         disableHostilityFromFactions?.Clear();
         ingestionThoughtOverrides?.Clear();
+        meleeDamageFactors?.Clear();
         hasPsycast = false;
         youthfulMaxAge = float.MaxValue;
 
@@ -33,6 +36,14 @@ public class GeneTracker_XylXenos : GeneTracker
                 Append(ref joyGiverChanceFactors, def.CompProps<GeneCompProperties_JoyGiverChances>()?.factors);
                 Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
                 Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
+
+                if (def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors is { } damageFactors)
+                    foreach (var damageFactor in damageFactors)
+                    {
+                        meleeDamageFactors ??= [];
+                        float factor = meleeDamageFactors.TryGetValue(damageFactor.damageDef, out float existing) ? existing : 1f;
+                        meleeDamageFactors[damageFactor.damageDef] = factor * damageFactor.factor;
+                    }
 
                 hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
 

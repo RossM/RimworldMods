@@ -18,6 +18,8 @@ public static class DefOf
 
     public static PawnKindDef XylSelkie;
 
+    public static StatDef XylTreeCuttingSpeed;
+
     static DefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));

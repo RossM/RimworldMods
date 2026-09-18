@@ -338,4 +338,16 @@
     <showOnDrones>false</showOnDrones>
   </StatDef>
 
+  <StatDef>
+    <defName>XylTreeCuttingSpeed</defName>
+    <label>tree cutting speed</label>
+    <description>A multiplier on how quickly this person cuts or harvests trees, in addition to their plant work speed.</description>
+    <category>PawnWork</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>4549</displayPriorityInCategory>
+  </StatDef>
+
 </Defs>
