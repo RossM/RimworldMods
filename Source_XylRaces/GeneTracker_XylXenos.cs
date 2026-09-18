@@ -38,13 +38,8 @@ public class GeneTracker_XylXenos : GeneTracker
             Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
             Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
 
-            if (def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors is { } damageFactors)
-                foreach (var damageFactor in damageFactors)
-                {
-                    meleeDamageFactors ??= [];
-                    float factor = meleeDamageFactors.GetValueOrDefault(damageFactor.damageDef, 1f);
-                    meleeDamageFactors[damageFactor.damageDef] = factor * damageFactor.factor;
-                }
+            AccumulateMultiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors, 
+                item => item.damageDef, item => item.factor);
 
             hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
 

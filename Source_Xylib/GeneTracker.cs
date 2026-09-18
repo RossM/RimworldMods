@@ -22,7 +22,7 @@ public abstract class GeneTracker : IEventListener, IPawnData
 
     public abstract void Update();
 
-    protected void Append<T>(ref List<T>? dest, List<T>? source)
+    protected static void Append<T>(ref List<T>? dest, List<T>? source)
     {
         if (source == null || source.Count == 0)
             return;
@@ -30,6 +30,20 @@ public abstract class GeneTracker : IEventListener, IPawnData
             dest = [.. source];
         else
             dest.AddRange(source);
+    }
+
+    protected static void AccumulateMultiply<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keyExtractor, Func<TItem, float> valueExtractor)
+    {
+        if (source is null)
+            return;
+
+        foreach (var item in source)
+        {
+            dest ??= [];
+            var key = keyExtractor(item);
+            var value = valueExtractor(item);
+            dest[key] = dest.GetValueOrDefault(key, 1f) * value;
+        }
     }
 
     void IEventListener.RegisterWith(EventManager manager)
