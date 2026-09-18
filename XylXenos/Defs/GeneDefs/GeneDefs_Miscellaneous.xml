@@ -703,8 +703,8 @@
     <description>Carriers of this gene have strong, chisel-shaped teeth. Their bites deal twice as much damage, and they cut trees twice as fast.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <displayCategory>Violence</displayCategory>
-    <displayOrderInCategory>112</displayOrderInCategory>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>80</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <statFactors>
       <XylTreeCuttingSpeed>2</XylTreeCuttingSpeed>
