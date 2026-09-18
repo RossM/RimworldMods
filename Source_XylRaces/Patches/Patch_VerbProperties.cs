@@ -9,7 +9,7 @@ public static class Patch_VerbProperties
     [Target(nameof(VerbProperties.GetDamageFactorFor), typeof(Tool), typeof(Pawn), typeof(HediffComp_VerbGiver))]
     public static void GetDamageFactorFor_Postfix(VerbProperties __instance, Pawn? attacker, ref float __result)
     {
-        if (!__instance.IsMeleeAttack || __instance.meleeDamageDef is not { } damageDef)
+        if (__instance is not { IsMeleeAttack: true, meleeDamageDef: { } damageDef })
             return;
 
         if (attacker?.GeneTracker_XylXenos?.meleeDamageFactors is { } factors &&
