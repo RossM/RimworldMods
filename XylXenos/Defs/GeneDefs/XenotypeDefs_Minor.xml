@@ -14,7 +14,7 @@
     <description>Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move effortlessly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.\n\nOn their home planet, omegabeavers build enormous reservoirs to store clean water and channels to divert polluted water, maintaining oases of green among the cracked and rotting landscape.</description>
     <descriptionShort>TODO.</descriptionShort>
     <!-- TODO icon -->
-    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon1</iconPath>
+    <iconPath>UI/Icons/Xenotypes/Other</iconPath>
     <displayPriority>-200</displayPriority>
     <inheritable>true</inheritable>
     <genes>
@@ -60,8 +60,7 @@
     <label>scaleborn</label>
     <description>Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.\n\nOn the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the megafauna in ritual hunts. Successful hunters will share the meat with not only their own tribe but their neighbors, hosting great feasts and displaying the skulls of their prey as trophies.</description>
     <descriptionShort>Scaleborn are dragonlike fighters protected by tough scales and armed with claws and horns. Each lineage has unique abilities such as fiery breath or blinding oil. They are slow runners and become even slower in the cold.</descriptionShort>
-    <!-- TODO icon -->
-    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon7</iconPath>
+    <iconPath>Xyl/UI/Icons/Xenotypes/Scaleborn_small</iconPath>
     <displayPriority>-201</displayPriority>
     <inheritable>true</inheritable>
     <genes>
@@ -105,8 +104,7 @@
     <label>succuboid</label>
     <description>Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.\n\nWhile their origin is very similar to that of highmates, succuboids have one important difference: at some point, they took control of their own reproduction, engineering themselves with the ability to reproduce with other xenotypes and invariably produce succuboid daughters. On some worlds they are considered prestigious status symbols, on others they are valuable merchandise, and on yet others they are treated as dangerous social parasites.</description>
     <descriptionShort>Succuboids are beautiful, charming companions with pink skin, horns, wings, and tails. Intimacy gives their partners a lasting, addictive euphoria. Their inherent laziness and increased need for sleep make them poor workers.</descriptionShort>
-    <!-- TODO icon -->
-    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon3</iconPath>
+    <iconPath>Xyl/UI/Icons/Xenotypes/Succuboid_small</iconPath>
     <displayPriority>-202</displayPriority>
     <combatPowerFactor>0.75</combatPowerFactor>
     <inheritable>true</inheritable>
