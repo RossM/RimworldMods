@@ -1,6 +1,6 @@
 # Xyl's Xenotypes
 
-Ten xenotypes for RimWorld, from fungus-fed underground builders to vat-grown stone giants, aquatic traders, and descendants of generation-ship crews. Each brings its own needs, strengths, and complications to colony life.
+Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown stone giants, aquatic traders, and descendants of generation-ship crews. Each brings its own needs, strengths, and complications to colony life.
 
 **Requires RimWorld 1.6, Biotech, and Harmony.** Royalty adds innate psycasts; Ideology and Odyssey provide additional features where noted.
 
@@ -10,6 +10,7 @@ All xenotypes except titans are inheritable. The tables describe the mod's new f
 - [Chyrr](#chyrr)
 - [Dvergr](#dvergr)
 - [Nixie](#nixie)
+- [Omegabeaver](#omegabeaver)
 - [Titan](#titan)
 - [Trog](#trog)
 - [Warcat](#warcat)
@@ -125,6 +126,24 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 - **Traits:** enhanced psychic sensitivity, naked speed, webbed phalanges, pessimist, very cold tolerant, heat sensitive, weak melee damage, pretty.
 - **Skills:** poor mining aptitude, poor construction aptitude, strong social aptitude.
 - **Appearance:** [fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, snow-white hair, grayless hair, blue skin.
+
+## Omegabeaver
+
+Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move quickly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
+
+### Genes
+
+| Gene | Effect |
+| --- | --- |
+| [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Doubles tree-cutting speed and bite damage. |
+| [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | A smaller body with slightly slower movement. |
+| [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Works faster. |
+
+**Other genes and appearance**
+
+- **Traits:** psychically deaf, naked speed, webbed phalanges, optimist, weak melee damage, kind instinct, fertile, strong stomach, furskin, slow study, nearsighted.
+- **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
+- **Appearance:** [beaver tail](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, no beard.
 
 ## Titan
 
