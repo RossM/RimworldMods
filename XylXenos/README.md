@@ -212,7 +212,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 
 ## Omegabeaver
 
-Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move quickly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
+Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move effortlessly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
 
 ### Genes
 
