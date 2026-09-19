@@ -2,6 +2,12 @@
 
 <Defs>
 
+  <!--
+  This file is for "minor" xenotypes that remix genes from the other xenotypes, sometimes with one or two new unique genes.
+  Generally minor xenotypes won't have unique name generators, and will only appear at a rate of 1% or 0.5% in factions.
+  They appear after the major modded xenotypes in the xenotype list, but before sanguophage.
+  -->
+    
   <XenotypeDef>
     <defName>XylOmegabeaver</defName>
     <label>omegabeaver</label>
