@@ -263,6 +263,7 @@
         <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail</texPath>
         <overrideMeshSize>(1, 1)</overrideMeshSize>
         <parentTagDef>Body</parentTagDef>
+        <color>(0.25,0.25,0.25)</color>
         <useRottenColor>true</useRottenColor>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <visibleFacing>
@@ -276,7 +277,7 @@
             <layer>-2</layer>
           </defaultData>
           <dataNorth>
-            <offset>(0, 0, -0.4)</offset>
+            <offset>(0, 0, -0.5)</offset>
             <layer>90</layer>
           </dataNorth>
           <dataEast>
