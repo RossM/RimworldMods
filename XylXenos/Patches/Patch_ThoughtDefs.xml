@@ -49,6 +49,8 @@
     <value>
       <nullifyingGenes>
         <li>XylAquatic</li>
+        <!-- Vanilla change but I don't care -->
+        <li>WebbedPhalanges</li>
       </nullifyingGenes>
     </value>
   </Operation>
