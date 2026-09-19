@@ -3,6 +3,53 @@
 <Defs>
 
   <XenotypeDef>
+    <defName>XylOmegabeaver</defName>
+    <label>omegabeaver</label>
+    <description>This xenotype are evolved from a population of alphabeavers that were left behind after humans abandoned their home planets due to rampant pollution. They excel at logging and construction, but are poor fighters. Their webbed fingers allow them to move quickly in water.</description>
+    <descriptionShort>TODO.</descriptionShort>
+    <!-- TODO icon -->
+    <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon1</iconPath>
+    <displayPriority>-200</displayPriority>
+    <inheritable>true</inheritable>
+    <genes>
+      <li>PsychicAbility_Deaf</li>
+      <li>NakedSpeed</li>
+      <li>WebbedPhalanges</li>
+      <li>Mood_Optimist</li>
+      <li>MeleeDamage_Weak</li>
+      <li>KindInstinct</li>
+      <li>Fertile</li>
+      <li>Hair_BaldOnly</li>
+      <li>Beard_NoBeardOnly</li>
+      <!--<li>VoicePig</li>-->
+      <li>XylTail_Beaver</li>
+      <li>StrongStomach</li>
+      <li>XylDwarf</li>
+      <li>Furskin</li>
+      <li>XylIndustrious</li>
+      <li>Learning_Slow</li>
+      <li>Nearsighted</li>
+      <li>XylBeaverTeeth</li>
+      <li>AptitudeRemarkable_Construction</li>
+      <li>AptitudeStrong_Cooking</li>
+      <li>AptitudeStrong_Plants</li>
+      <li>AptitudePoor_Animals</li>
+      <li>AptitudePoor_Intellectual</li>
+    </genes>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Xenotype">
+        <allowSolidBackstories>true</allowSolidBackstories>
+        <agreeingMemes>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <!-- Beavers like cutting down trees -->
+          <li MayRequire="Ludeon.RimWorld.Ideology">TreeConnection</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
+  </XenotypeDef>
+
+  <XenotypeDef>
     <defName>XylScaleborn</defName>
     <label>scaleborn</label>
     <description>Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.\n\nOn the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the megafauna in ritual hunts. Successful hunters will share the meat with not only their own tribe but their neighbors, hosting great feasts and displaying the skulls of their prey as trophies.</description>
