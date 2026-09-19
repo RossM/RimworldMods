@@ -48,6 +48,7 @@
         </agreeingMemes>
         <disagreeingMemes>
           <!-- Beavers like cutting down trees -->
+          <li MayRequire="Ludeon.RimWorld.Ideology">NaturePrimacy</li>
           <li MayRequire="Ludeon.RimWorld.Ideology">TreeConnection</li>
         </disagreeingMemes>
       </li>
