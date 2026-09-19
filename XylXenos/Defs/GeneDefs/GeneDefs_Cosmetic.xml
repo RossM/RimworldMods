@@ -247,4 +247,47 @@
     <randomBrightnessFactor>0</randomBrightnessFactor>
   </GeneDef>
 
+  <GeneDef ParentName="GeneTailBase">
+    <defName>XylTail_Beaver</defName>
+    <label>beaver tail</label>
+    <description>Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TailBeaver</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayCategory>Cosmetic</displayCategory>
+    <displayOrderInCategory>1001</displayOrderInCategory>
+    <biostatCpx>0</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <renderNodeProperties>
+      <li>
+        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail</texPath>
+        <overrideMeshSize>(1, 1)</overrideMeshSize>
+        <parentTagDef>Body</parentTagDef>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <visibleFacing>
+          <li>East</li>
+          <li>North</li>
+          <li>West</li>
+        </visibleFacing>
+        <drawData>
+          <scaleOffsetByBodySize>true</scaleOffsetByBodySize>
+          <defaultData>
+            <layer>-2</layer>
+          </defaultData>
+          <dataNorth>
+            <offset>(0, 0, -0.4)</offset>
+            <layer>90</layer>
+          </dataNorth>
+          <dataEast>
+            <offset>(-0.5, 0, -0.3)</offset>
+          </dataEast>
+          <dataWest>
+            <offset>(0.5, 0, -0.3)</offset>
+          </dataWest>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
 </Defs>
