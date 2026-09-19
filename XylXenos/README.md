@@ -281,7 +281,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 
 ### Lineages
 
-Each scaleborn receives one additional gene package:
+Each scaleborn receives one additional gene package from the list below. Scaleborn children always inherit the complete gene package of one of their parents.
 
 | Lineage | Genes |
 | --- | --- |
