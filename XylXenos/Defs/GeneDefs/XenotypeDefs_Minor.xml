@@ -5,7 +5,7 @@
   <XenotypeDef>
     <defName>XylOmegabeaver</defName>
     <label>omegabeaver</label>
-    <description>This xenotype are evolved from a population of alphabeavers that were left behind after humans abandoned their home planets due to rampant pollution. They excel at logging and construction, but are poor fighters. Their webbed fingers allow them to move quickly in water.</description>
+    <description>This xenotype are evolved from a population of alphabeavers that were left behind after humans abandoned their home planet due to rampant pollution. They excel at logging and construction, but are poor fighters. Their webbed fingers allow them to move quickly in water.</description>
     <descriptionShort>TODO.</descriptionShort>
     <!-- TODO icon -->
     <iconPath>UI/Icons/Xenotypes/Custom/CustomXenotypeIcon1</iconPath>
