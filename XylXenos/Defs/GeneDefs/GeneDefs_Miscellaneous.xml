@@ -697,8 +697,8 @@
     </stages>
   </HediffDef>
 
-  <GeneDef>
-    <defName>XylBeaverTeeth</defName>
+  <GeneDef ParentName="GeneNoseBase">
+    <defName>XylNose_Beaver</defName>
     <label>beaver teeth</label>
     <description>Carriers of this gene have strong, chisel-shaped teeth. They cut trees twice as fast, and their bites deal twice as much damage.</description>
     <biostatCpx>1</biostatCpx>

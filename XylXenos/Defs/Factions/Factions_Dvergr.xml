@@ -23,6 +23,7 @@
         <Yttakin>0.025</Yttakin>
         <XylTitan>0.05</XylTitan>
         <XylTrog>0.025</XylTrog>
+        <XylOmegabeaver>0.005</XylOmegabeaver>
       </xenotypeChances>
     </xenotypeSet>
     <colorSpectrum Inherit="false">

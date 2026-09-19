@@ -12,6 +12,7 @@
       <XylDvergr>0.05</XylDvergr>
       <XylNixie>0.025</XylNixie>
       <XylTitan>0.025</XylTitan>
+      <XylOmegabeaver>0.005</XylOmegabeaver>
       <XylScaleborn>0.005</XylScaleborn>
       <XylZeegee>0.005</XylZeegee>
     </value>
@@ -82,6 +83,7 @@
       <XylDvergr>0.05</XylDvergr>
       <XylNixie>0.05</XylNixie>
       <XylTitan>0.025</XylTitan>
+      <XylOmegabeaver>0.01</XylOmegabeaver>
       <XylSuccuboid>0.01</XylSuccuboid>
       <XylScaleborn>0.01</XylScaleborn>
       <XylZeegee>0.01</XylZeegee>
