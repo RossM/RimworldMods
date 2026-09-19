@@ -704,8 +704,31 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>80</displayOrderInCategory>
+    <displayOrderInCategory>411</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <renderNodeProperties>
+      <li>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverNose</texPath>
+        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
+        <useSkinShader>true</useSkinShader>
+        <useRottenColor>true</useRottenColor>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <visibleFacing>
+          <li>East</li>
+          <li>South</li>
+          <li>West</li>
+        </visibleFacing>
+        <drawData>
+          <defaultData>
+            <layer>66</layer>
+          </defaultData>
+        </drawData>
+      </li>
+    </renderNodeProperties>
     <statFactors>
       <XylTreeCuttingSpeed>2</XylTreeCuttingSpeed>
     </statFactors>
