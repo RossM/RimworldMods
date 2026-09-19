@@ -10,10 +10,10 @@ All xenotypes except titans are inheritable. The tables describe the mod's new f
 - [Chyrr](#chyrr)
 - [Dvergr](#dvergr)
 - [Nixie](#nixie)
-- [Omegabeaver](#omegabeaver)
 - [Titan](#titan)
 - [Trog](#trog)
 - [Warcat](#warcat)
+- [Omegabeaver](#omegabeaver)
 - [Scaleborn](#scaleborn)
 - [Succuboid](#succuboid)
 - [Zeegee](#zeegee)
@@ -127,24 +127,6 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 - **Skills:** poor mining aptitude, poor construction aptitude, strong social aptitude.
 - **Appearance:** [fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, snow-white hair, grayless hair, blue skin.
 
-## Omegabeaver
-
-Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move quickly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
-
-### Genes
-
-| Gene | Effect |
-| --- | --- |
-| [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Doubles tree-cutting speed and bite damage. |
-| [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | A smaller body with slightly slower movement. |
-| [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Works faster. |
-
-**Other genes and appearance**
-
-- **Traits:** psychically deaf, naked speed, webbed phalanges, optimist, weak melee damage, kind instinct, fertile, strong stomach, furskin, slow study, nearsighted.
-- **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
-- **Appearance:** [beaver tail](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, no beard.
-
 ## Titan
 
 Titans are mass-produced workers originally designed for reclaiming deathworlds. Specialized carbon-silicate lithoid biochemistry makes them immune to toxins and highly resistant to injury and disease, letting them work in conditions that would be lethal for other xenotypes. Each is engineered with exceptional aptitude and passion for one random skill, but they have great difficulty learning skills that they aren’t passionate about. Their unusual biochemistry also leaves them susceptible to petrification, an incurable genetic disease that gradually turns their tissues to solid stone.
@@ -227,6 +209,24 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 - **Traits:** hyper-aggressive, strong melee damage, sleepy, high libido, dark vision.
 - **Skills:** remarkable melee aptitude, poor plants aptitude, poor crafting aptitude.
 - **Appearance:** [yellow eyes](Defs/GeneDefs/GeneDefs_Cosmetic.xml); [facial stripes](Defs/GeneDefs/GeneDefs_Cosmetic.xml); long hair, no beard, cat ears, standard body, thin body.
+
+## Omegabeaver
+
+Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move quickly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
+
+### Genes
+
+| Gene | Effect |
+| --- | --- |
+| [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Doubles tree-cutting speed and bite damage. |
+| [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | A smaller body with slightly slower movement. |
+| [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Works faster. |
+
+**Other genes and appearance**
+
+- **Traits:** psychically deaf, naked speed, webbed phalanges, optimist, weak melee damage, kind instinct, fertile, strong stomach, furskin, slow study, nearsighted.
+- **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
+- **Appearance:** [beaver tail](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, no beard.
 
 ## Scaleborn
 
