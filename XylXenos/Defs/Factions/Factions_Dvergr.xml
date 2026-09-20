@@ -171,14 +171,66 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="XylDvergrMeleeBase">
+    <defName>XylDvergr_Miner</defName>
+    <label>dvergr miner</label>
+    <combatPower>90</combatPower>
+    <canBeSapper>true</canBeSapper>
+    <isGoodBreacher>true</isGoodBreacher>
+    <apparelMoney>350~550</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_PlateArmor</li>
+    </apparelRequired>
+    <weaponMoney>160~260</weaponMoney>
+    <weaponTags>
+      <!-- Breach axe -->
+      <li>NeolithicMeleeDestructive</li>
+    </weaponTags>
+    <skills Inherit="False">
+      <li>
+        <skill>Melee</skill>
+        <range>4~9</range>
+      </li>
+      <li>
+        <skill>Mining</skill>
+        <range>4~9</range>
+      </li>
+    </skills>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrMeleeBase">
+    <defName>XylDvergr_EliteWarrior</defName>
+    <label>dvergr elite warrior</label>
+    <combatPower>150</combatPower>
+    <itemQuality>Good</itemQuality>
+    <gearHealthRange>1~1</gearHealthRange>
+    <apparelMoney>1000~1600</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_PlateArmor</li>
+      <li>Apparel_ShieldBelt</li>
+    </apparelRequired>
+    <weaponMoney>500~650</weaponMoney>
+    <weaponTags>
+      <li>MedievalMeleeDecent</li>
+      <li>MedievalMeleeAdvanced</li>
+    </weaponTags>
+    <skills Inherit="False">
+      <li>
+        <skill>Melee</skill>
+        <range>10~16</range>
+      </li>
+    </skills>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_Champion</defName>
     <label>dvergr champion</label>
     <combatPower>150</combatPower>
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>1400~2200</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_PlateArmor</li>
+    <apparelRequired Inherit="False">
+      <li>Apparel_PowerArmor</li>
+      <li>Apparel_PowerArmorHelmet</li>
       <li>Apparel_ShieldBelt</li>
     </apparelRequired>
     <weaponMoney>500~650</weaponMoney>
@@ -295,7 +347,7 @@
     <gearHealthRange>0.6~0.9</gearHealthRange>
     <weaponMoney>250~300</weaponMoney>
     <weaponTags>
-      <li>SimpleGun</li>
+      <li>ShortShots</li>
     </weaponTags>
   </PawnKindDef>
 
@@ -306,7 +358,7 @@
     <apparelMoney>400~650</apparelMoney>
     <weaponMoney>300~350</weaponMoney>
     <weaponTags>
-      <li>Gun</li>
+      <li>ShortShots</li>
     </weaponTags>
     <skills Inherit="False">
       <li>
@@ -361,12 +413,12 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_HeavyGunner</defName>
     <label>dvergr heavy gunner</label>
-    <combatPower>170</combatPower>
+    <combatPower>160</combatPower>
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>2500~3500</apparelMoney>
     <apparelRequired>
-      <li>Apparel_PowerArmor</li>
+      <li>Apparel_FlakVest</li>
     </apparelRequired>
     <weaponMoney>1200~1200</weaponMoney>
     <weaponTags>
@@ -381,18 +433,42 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_EliteGunner</defName>
-    <label>dvergr elite gunner</label>
+    <defName>XylDvergr_Enforcer</defName>
+    <label>dvergr enforcer</label>
     <combatPower>180</combatPower>
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3000~4000</apparelMoney>
-    <apparelRequired>
+    <apparelRequired Inherit="False">
       <li>Apparel_PowerArmor</li>
+      <li>Apparel_PowerArmorHelmet</li>
     </apparelRequired>
     <weaponMoney>650~800</weaponMoney>
     <weaponTags>
       <li>IndustrialGunAdvanced</li>
+    </weaponTags>
+    <skills Inherit="False">
+      <li>
+        <skill>Shooting</skill>
+        <range>12~18</range>
+      </li>
+    </skills>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_TunnelSweeper</defName>
+    <label>dvergr tunnel sweeper</label>
+    <combatPower>180</combatPower>
+    <itemQuality>Excellent</itemQuality>
+    <gearHealthRange>1~1</gearHealthRange>
+    <apparelMoney>3000~4000</apparelMoney>
+    <apparelRequired Inherit="False">
+      <li>Apparel_PowerArmor</li>
+      <li>Apparel_PowerArmorHelmet</li>
+    </apparelRequired>
+    <weaponMoney>650~800</weaponMoney>
+    <weaponTags>
+      <li>ShortShots</li>
     </weaponTags>
     <skills Inherit="False">
       <li>
