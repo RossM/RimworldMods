@@ -225,6 +225,34 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="XylDvergrMeleeBase">
+    <defName>XylDvergr_Berserker</defName>
+    <label>dvergr berserker</label>
+    <combatPower>90</combatPower>
+    <itemQuality>Good</itemQuality>
+    <gearHealthRange>1~1</gearHealthRange>
+    <apparelMoney>150~400</apparelMoney>
+    <weaponMoney>400~1000</weaponMoney>
+    <weaponTags>
+      <li>MedievalMeleeDecent</li>
+      <li>MedievalMeleeAdvanced</li>
+    </weaponTags>
+    <skills Inherit="False">
+      <li>
+        <skill>Melee</skill>
+        <range>10~16</range>
+      </li>
+    </skills>
+    <inventoryOptions>
+      <subOptionsChooseOne>
+        <li>
+          <thingDef>GoJuice</thingDef>
+          <countRange>1</countRange>
+        </li>
+      </subOptionsChooseOne>
+    </inventoryOptions>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_EliteWarrior</defName>
     <label>dvergr elite warrior</label>
     <combatPower>130</combatPower>
