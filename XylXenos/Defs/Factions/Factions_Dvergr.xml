@@ -119,7 +119,7 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_Drunkard</defName>
     <label>dvergr drunkard</label>
-    <combatPower>35</combatPower>
+    <combatPower>65</combatPower>
     <itemQuality>Poor</itemQuality>
     <gearHealthRange>0.2~0.6</gearHealthRange>
     <apparelMoney>50~150</apparelMoney>
@@ -133,7 +133,7 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_Brawler</defName>
     <label>dvergr brawler</label>
-    <combatPower>55</combatPower>
+    <combatPower>80</combatPower>
     <apparelMoney>400~700</apparelMoney>
     <apparelRequired>
       <li>Apparel_SimpleHelmet</li>      
@@ -153,7 +153,7 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_Miner</defName>
     <label>dvergr miner</label>
-    <combatPower>55</combatPower>
+    <combatPower>85</combatPower>
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
     <apparelMoney>400~700</apparelMoney>
@@ -180,7 +180,7 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_Warrior</defName>
     <label>dvergr warrior</label>
-    <combatPower>90</combatPower>
+    <combatPower>120</combatPower>
     <apparelMoney>700~1000</apparelMoney>
     <apparelRequired>
       <li>Apparel_SimpleHelmet</li>      
@@ -230,7 +230,7 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_EliteWarrior</defName>
     <label>dvergr elite warrior</label>
-    <combatPower>90</combatPower>
+    <combatPower>130</combatPower>
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>1000~1400</apparelMoney>
@@ -253,7 +253,7 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_Champion</defName>
     <label>dvergr champion</label>
-    <combatPower>150</combatPower>
+    <combatPower>180</combatPower>
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3400~4400</apparelMoney>
@@ -310,7 +310,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_Demolitionist</defName>
     <label>dvergr demolitionist</label>
-    <combatPower>110</combatPower>
+    <combatPower>80</combatPower>
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
     <itemQuality>Good</itemQuality>
@@ -331,7 +331,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_Rocketeer</defName>
     <label>dvergr rocketeer</label>
-    <combatPower>180</combatPower>
+    <combatPower>100</combatPower>
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>1000~1400</apparelMoney>
@@ -352,7 +352,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_Prospector</defName>
     <label>dvergr prospector</label>
-    <combatPower>45</combatPower>
+    <combatPower>75</combatPower>
     <itemQuality>Poor</itemQuality>
     <gearHealthRange>0.6~0.9</gearHealthRange>
     <apparelMoney>150~400</apparelMoney>
@@ -365,7 +365,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_Guard</defName>
     <label>dvergr guard</label>
-    <combatPower>60</combatPower>
+    <combatPower>75</combatPower>
     <apparelMoney>400~700</apparelMoney>
     <apparelRequired>
       <li>Apparel_SimpleHelmet</li>      
@@ -406,7 +406,7 @@
     <defName>XylDvergr_Marksman</defName>
     <label>dvergr marksman</label>
     <labelPlural>dvergr marksmen</labelPlural>
-    <combatPower>110</combatPower>
+    <combatPower>70</combatPower>
     <itemQuality>Good</itemQuality>
     <apparelMoney>700~1000</apparelMoney>
     <apparelRequired>
@@ -427,7 +427,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_HeavyGunner</defName>
     <label>dvergr heavy gunner</label>
-    <combatPower>120</combatPower>
+    <combatPower>140</combatPower>
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>1000~1400</apparelMoney>
@@ -446,7 +446,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_Enforcer</defName>
     <label>dvergr enforcer</label>
-    <combatPower>180</combatPower>
+    <combatPower>150</combatPower>
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3000~4000</apparelMoney>
@@ -469,7 +469,7 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_TunnelSweeper</defName>
     <label>dvergr tunnel sweeper</label>
-    <combatPower>180</combatPower>
+    <combatPower>120</combatPower>
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3000~4000</apparelMoney>
