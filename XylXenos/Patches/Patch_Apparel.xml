@@ -26,4 +26,17 @@
     </value>
   </Operation>
 
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>
+      Defs/ThingDef[@Name="HatBase" or @Name="HatMakeableBase" or @Name="NobleHatMakeableBase"]
+    </xpath>
+    <value>
+      <apparel>
+        <tags>
+          <li>XylHat</li>
+        </tags>
+      </apparel>
+    </value>
+  </Operation>
+
 </Patch>

@@ -74,11 +74,19 @@
     <maxGenerationAge>65</maxGenerationAge>
     <itemQuality>Normal</itemQuality>
     <gearHealthRange>0.8~1</gearHealthRange>
-    <apparelMoney>250~450</apparelMoney>
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
-    <apparelRequired>
-      <li>Apparel_SimpleHelmet</li>
-    </apparelRequired>
+    <apparelTags Inherit="False">
+      <li>MedievalMilitary</li>
+      <li>IndustrialBasic</li>
+      <li>IndustrialAdvanced</li>
+      <li>IndustrialMilitaryBasic</li>
+      <li>IndustrialMilitaryAdvanced</li>
+      <li>SpacerMilitary</li>
+      <li>BeltDefensePop</li>
+    </apparelTags>
+    <apparelDisallowTags>
+      <li>XylHat</li>
+    </apparelDisallowTags>
     <initialWillRange>1~3</initialWillRange>
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
@@ -94,26 +102,43 @@
     </skills>
   </PawnKindDef>
 
+  <PawnKindDef Name="XylDvergrRangedBase" ParentName="XylDvergrFighterBase" Abstract="True">
+    <disallowedTraits>
+      <li>Brawler</li>
+    </disallowedTraits>
+    <skills>
+      <li>
+        <skill>Shooting</skill>
+        <range>2~6</range>
+      </li>
+    </skills>
+  </PawnKindDef>
+        
   <!-- Melee -->
 
   <PawnKindDef ParentName="XylDvergrMeleeBase">
-    <defName>XylDvergr_Brawler</defName>
-    <label>dvergr brawler</label>
+    <defName>XylDvergr_Drunkard</defName>
+    <label>dvergr drunkard</label>
     <combatPower>35</combatPower>
     <itemQuality>Poor</itemQuality>
-    <gearHealthRange>0.6~0.9</gearHealthRange>
-    <weaponMoney>80~100</weaponMoney>
+    <gearHealthRange>0.2~0.6</gearHealthRange>
+    <apparelMoney>50~150</apparelMoney>
+    <apparelAllowHeadgearChance>0.5</apparelAllowHeadgearChance>
+    <weaponMoney>50~100</weaponMoney>
     <weaponTags>
       <li>MedievalMeleeBasic</li>
     </weaponTags>
   </PawnKindDef>
 
   <PawnKindDef ParentName="XylDvergrMeleeBase">
-    <defName>XylDvergr_Bruiser</defName>
-    <label>dvergr bruiser</label>
+    <defName>XylDvergr_Brawler</defName>
+    <label>dvergr brawler</label>
     <combatPower>55</combatPower>
-    <apparelMoney>350~550</apparelMoney>
-    <weaponMoney>150~250</weaponMoney>
+    <apparelMoney>400~700</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
+    <weaponMoney>100~200</weaponMoney>
     <weaponTags>
       <li>MedievalMeleeDecent</li>
     </weaponTags>
@@ -131,8 +156,11 @@
     <combatPower>55</combatPower>
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
-    <apparelMoney>350~550</apparelMoney>
-    <weaponMoney>120~150</weaponMoney>
+    <apparelMoney>400~700</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
+    <weaponMoney>150~150</weaponMoney>
     <weaponTags>
       <!-- Breach axe -->
       <li>NeolithicMeleeDestructive</li>
@@ -153,11 +181,12 @@
     <defName>XylDvergr_Warrior</defName>
     <label>dvergr warrior</label>
     <combatPower>90</combatPower>
-    <apparelMoney>750~1100</apparelMoney>
+    <apparelMoney>700~1000</apparelMoney>
     <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
       <li>Apparel_PlateArmor</li>
     </apparelRequired>
-    <weaponMoney>350~450</weaponMoney>
+    <weaponMoney>200~500</weaponMoney>
     <weaponTags>
       <li>MedievalMeleeDecent</li>
       <li>MedievalMeleeAdvanced</li>
@@ -177,11 +206,11 @@
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
     <itemQuality>Good</itemQuality>
-    <apparelMoney>750~1100</apparelMoney>
+    <apparelMoney>1000~1400</apparelMoney>
     <apparelRequired>
-      <li>Apparel_PlateArmor</li>
+      <li>Apparel_ShieldBelt</li>
     </apparelRequired>
-    <weaponMoney>120~150</weaponMoney>
+    <weaponMoney>150~150</weaponMoney>
     <weaponTags>
       <!-- Breach axe -->
       <li>NeolithicMeleeDestructive</li>
@@ -201,15 +230,14 @@
   <PawnKindDef ParentName="XylDvergrMeleeBase">
     <defName>XylDvergr_EliteWarrior</defName>
     <label>dvergr elite warrior</label>
-    <combatPower>150</combatPower>
+    <combatPower>90</combatPower>
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
-    <apparelMoney>1200~1600</apparelMoney>
+    <apparelMoney>1000~1400</apparelMoney>
     <apparelRequired>
-      <li>Apparel_PlateArmor</li>
       <li>Apparel_ShieldBelt</li>
     </apparelRequired>
-    <weaponMoney>350~450</weaponMoney>
+    <weaponMoney>400~1000</weaponMoney>
     <weaponTags>
       <li>MedievalMeleeDecent</li>
       <li>MedievalMeleeAdvanced</li>
@@ -229,32 +257,18 @@
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3400~4400</apparelMoney>
-    <apparelRequired Inherit="False">
-      <li>Apparel_PowerArmor</li>
-      <li>Apparel_PowerArmorHelmet</li>
+    <apparelRequired>
       <li>Apparel_ShieldBelt</li>
     </apparelRequired>
-    <weaponMoney>350~450</weaponMoney>
+    <weaponMoney>1400~2400</weaponMoney>
     <weaponTags>
-      <li>MedievalMeleeDecent</li>
       <li>MedievalMeleeAdvanced</li>
+      <li>UltratechMelee</li>
     </weaponTags>
     <skills Inherit="False">
       <li>
         <skill>Melee</skill>
         <range>12~18</range>
-      </li>
-    </skills>
-  </PawnKindDef>
-
-  <PawnKindDef Name="XylDvergrRangedBase" ParentName="XylDvergrFighterBase" Abstract="True">
-    <disallowedTraits>
-      <li>Brawler</li>
-    </disallowedTraits>
-    <skills>
-      <li>
-        <skill>Shooting</skill>
-        <range>2~6</range>
       </li>
     </skills>
   </PawnKindDef>
@@ -268,7 +282,9 @@
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
     <itemQuality>Poor</itemQuality>
-    <gearHealthRange>0.6~0.9</gearHealthRange>
+    <gearHealthRange>0.2~0.6</gearHealthRange>
+    <apparelMoney>50~150</apparelMoney>
+    <apparelAllowHeadgearChance>0.5</apparelAllowHeadgearChance>
     <weaponMoney>500~500</weaponMoney>
     <weaponTags>
       <li>GrenadeDestructive</li>
@@ -281,7 +297,10 @@
     <combatPower>75</combatPower>
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
-    <apparelMoney>400~650</apparelMoney>
+    <apparelMoney>400~700</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
     <weaponMoney>500~500</weaponMoney>
     <weaponTags>
       <li>GrenadeDestructive</li>
@@ -297,11 +316,6 @@
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>1000~1400</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_FlakVest</li>
-      <li>Apparel_FlakPants</li>
-      <li>Apparel_FlakJacket</li>
-    </apparelRequired>
     <weaponMoney>500~500</weaponMoney>
     <weaponTags>
       <li>GrenadeDestructive</li>
@@ -321,11 +335,6 @@
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>1000~1400</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_FlakVest</li>
-      <li>Apparel_FlakPants</li>
-      <li>Apparel_FlakJacket</li>
-    </apparelRequired>
     <weaponMoney>1200~1200</weaponMoney>
     <weaponTags>
       <li>GunSingleUse</li>
@@ -346,6 +355,7 @@
     <combatPower>45</combatPower>
     <itemQuality>Poor</itemQuality>
     <gearHealthRange>0.6~0.9</gearHealthRange>
+    <apparelMoney>150~400</apparelMoney>
     <weaponMoney>260~300</weaponMoney>
     <weaponTags>
       <li>ShortShots</li>
@@ -356,7 +366,10 @@
     <defName>XylDvergr_Guard</defName>
     <label>dvergr guard</label>
     <combatPower>60</combatPower>
-    <apparelMoney>400~650</apparelMoney>
+    <apparelMoney>400~700</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
     <weaponMoney>360~450</weaponMoney>
     <weaponTags>
       <li>ShortShots</li>
@@ -373,9 +386,9 @@
     <defName>XylDvergr_Gunner</defName>
     <label>dvergr gunner</label>
     <combatPower>85</combatPower>
-    <apparelMoney>650~1000</apparelMoney>
+    <apparelMoney>700~1000</apparelMoney>
     <apparelRequired>
-      <li>Apparel_FlakVest</li>
+      <li>Apparel_SimpleHelmet</li>      
     </apparelRequired>
     <weaponMoney>360~550</weaponMoney>
     <weaponTags>
@@ -395,9 +408,9 @@
     <labelPlural>dvergr marksmen</labelPlural>
     <combatPower>110</combatPower>
     <itemQuality>Good</itemQuality>
-    <apparelMoney>800~1200</apparelMoney>
+    <apparelMoney>700~1000</apparelMoney>
     <apparelRequired>
-      <li>Apparel_FlakVest</li>
+      <li>Apparel_SimpleHelmet</li>      
     </apparelRequired>
     <weaponMoney>600~600</weaponMoney>
     <weaponTags>
@@ -414,13 +427,10 @@
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_HeavyGunner</defName>
     <label>dvergr heavy gunner</label>
-    <combatPower>160</combatPower>
+    <combatPower>120</combatPower>
     <itemQuality>Good</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
-    <apparelMoney>900~1400</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_FlakVest</li>
-    </apparelRequired>
+    <apparelMoney>1000~1400</apparelMoney>
     <weaponMoney>1200~1200</weaponMoney>
     <weaponTags>
       <li>GunHeavy</li>
@@ -440,13 +450,13 @@
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3000~4000</apparelMoney>
-    <apparelRequired Inherit="False">
-      <li>Apparel_PowerArmor</li>
-      <li>Apparel_PowerArmorHelmet</li>
-    </apparelRequired>
-    <weaponMoney>500~650</weaponMoney>
+    <apparelTags>
+      <li>SpacerMilitary</li>
+    </apparelTags>
+    <weaponMoney>500~1400</weaponMoney>
     <weaponTags>
       <li>IndustrialGunAdvanced</li>
+      <li>GunHeavy</li>
     </weaponTags>
     <skills Inherit="False">
       <li>
@@ -463,11 +473,7 @@
     <itemQuality>Excellent</itemQuality>
     <gearHealthRange>1~1</gearHealthRange>
     <apparelMoney>3000~4000</apparelMoney>
-    <apparelRequired Inherit="False">
-      <li>Apparel_PowerArmor</li>
-      <li>Apparel_PowerArmorHelmet</li>
-    </apparelRequired>
-    <weaponMoney>450~550</weaponMoney>
+    <weaponMoney>500~1400</weaponMoney>
     <weaponTags>
       <li>ShortShots</li>
     </weaponTags>
