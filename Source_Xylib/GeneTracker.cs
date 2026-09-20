@@ -46,6 +46,20 @@ public abstract class GeneTracker : IEventListener, IPawnData
         }
     }
 
+    protected static void Add<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keySelector, Func<TItem, float> valueSelector)
+    {
+        if (source is null)
+            return;
+
+        foreach (var item in source)
+        {
+            dest ??= [];
+            var key = keySelector(item);
+            var value = valueSelector(item);
+            dest[key] = dest.GetValueOrDefault(key, 0f) + value;
+        }
+    }
+
     void IEventListener.RegisterWith(EventManager manager)
     {
         manager.Register(EventDefOf.PostLoadedGame, Pawn, Update);

@@ -344,4 +344,20 @@ public static class PatchHelpers
     {
         return verb.HediffCompSource?.parent.def.GetModExtension<DefModExtension_Hediff_InnateWeapon>()?.hitChanceBonus ?? 0f;
     }
+
+    public static float GetDamageFactor(VerbProperties verbProps, Pawn? attacker)
+    {
+        if (verbProps is not { IsMeleeAttack: true, meleeDamageDef: { } damageDef } ||
+            attacker?.GeneTracker_XylXenos?.meleeDamageFactors?.TryGetValue(damageDef, out float factor) is not true)
+            return 1f;
+        return factor;
+    }
+
+    public static float GetChanceBonus(VerbProperties verbProps, Pawn? attacker)
+    {
+        if (verbProps is not { IsMeleeAttack: true, meleeDamageDef: { } damageDef } ||
+            attacker?.GeneTracker_XylXenos?.meleeChanceBonuses?.TryGetValue(damageDef, out float factor) is not true)
+            return 0f;
+        return factor;
+    }
 }

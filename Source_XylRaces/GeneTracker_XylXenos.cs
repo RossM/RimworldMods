@@ -13,6 +13,7 @@ public class GeneTracker_XylXenos : GeneTracker
     public List<GeneIngestionThoughtOverride>? ingestionThoughtOverrides;
 
     public Dictionary<DamageDef, float>? meleeDamageFactors;
+    public Dictionary<DamageDef, float>? meleeChanceBonuses;
 
     public bool hasPsycast;
 
@@ -40,6 +41,9 @@ public class GeneTracker_XylXenos : GeneTracker
             Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
             Multiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors, 
                 item => item.damageDef, item => item.factor);
+            Add(ref meleeChanceBonuses, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors,
+                item => item.damageDef, item => item.chanceBonus);
+
 
             hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
 

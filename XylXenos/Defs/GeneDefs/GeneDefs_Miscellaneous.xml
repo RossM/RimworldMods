@@ -738,7 +738,12 @@
         <comps>
           <li Class="XylXenos.GeneCompProperties_MeleeDamageFactors">
             <factors>
-              <Bite>2</Bite>
+              <li>
+                <damageDef>Bite</damageDef>
+                <factor>2</factor>
+                <!-- Human bite chanceFactor is 0.07 -->
+                <chanceBonus>0.93</chanceBonus>
+              </li>
             </factors>
           </li>
         </comps>

@@ -9,10 +9,16 @@ public static class Patch_VerbProperties
     [Target(nameof(VerbProperties.GetDamageFactorFor), typeof(Tool), typeof(Pawn), typeof(HediffComp_VerbGiver))]
     public static void GetDamageFactorFor_Postfix(VerbProperties __instance, Pawn? attacker, ref float __result)
     {
-        if (__instance is not { IsMeleeAttack: true, meleeDamageDef: { } damageDef })
-            return;
+        __result *= PatchHelpers.GetDamageFactor(__instance, attacker);
+    }
 
-        if (attacker?.GeneTracker_XylXenos?.meleeDamageFactors?.TryGetValue(damageDef, out float factor) is true)
-            __result *= factor;
+    [Feature(typeof(GeneCompProperties_MeleeDamageFactors))]
+    [Postfix]
+    [Inner(typeof(Tool), nameof(Tool.chanceFactor))]
+    [Target(nameof(VerbProperties.AdjustedMeleeSelectionWeight), typeof(Tool), typeof(Pawn), typeof(Thing), typeof(HediffComp_VerbGiver),
+        typeof(bool))]
+    public static void Tool_chanceFactor_Postfix(VerbProperties __caller, Pawn? attacker, ref float __result)
+    {
+        __result += PatchHelpers.GetChanceBonus(__caller, attacker);
     }
 }

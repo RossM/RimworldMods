@@ -3,6 +3,14 @@
 namespace XylXenos;
 
 [UsedFromXml]
+public class DamageFactor
+{
+    public required DamageDef damageDef;
+    public float factor = 1f;
+    public float chanceBonus = 0f;
+}
+
+[UsedFromXml]
 public class GeneCompProperties_MeleeDamageFactors : GeneCompProperties
 {
     public required List<DamageFactor> factors;
