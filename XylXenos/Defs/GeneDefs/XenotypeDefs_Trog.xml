@@ -40,7 +40,6 @@
       <li>AptitudeStrong_Animals</li>
       <li>AptitudeTerrible_Intellectual</li>
       <li>AddictionResistant_Psychite</li>
-      <!-- Bonus genes must come last -->
       <li>XylGeneticAtavism</li>
     </genes>
     <modExtensions>
