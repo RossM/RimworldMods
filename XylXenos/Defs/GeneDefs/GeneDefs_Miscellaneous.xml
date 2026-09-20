@@ -709,7 +709,7 @@
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
-        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <workerClass>XylXenos.PawnRenderNodeWorker_HeadAttachment</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverNose</texPath>
         <shaderTypeDef>CutoutComplex</shaderTypeDef>
         <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
