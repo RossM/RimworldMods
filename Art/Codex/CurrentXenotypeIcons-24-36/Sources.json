@@ -1,0 +1,79 @@
+[
+  {
+    "name": "Bossaps",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Bossaps_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "A23D0078BE1DD45291D53F71A352C4243689F63894D6F6D762ABE8BCE3E61AE9"
+  },
+  {
+    "name": "Chyrr",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Chyrr_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "046B38CBF16A1D389421E741F0A43A4C697CE54A5AB65D3DC1FEDF6EDE53216F"
+  },
+  {
+    "name": "Dvergr",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Dvergr_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "D6D42F85BB8FCDE9076845022B762F381F9E48E29B0ADBEC118FA965BC728BFC"
+  },
+  {
+    "name": "Nixie",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Nixie_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "C36268198F854AE3574BD40CFCB9322BFB0DB219538A9981AFAB1D409BE54987"
+  },
+  {
+    "name": "Titan",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Titan_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "C379819F54D0CF3E327012460B94A741E16893C67EE801837E7B3C736C17E47E"
+  },
+  {
+    "name": "Trog",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Trog_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "71038B9B12AF8A2817950FD7346F1146A926946D25ECDD3DEA226F7BB9D36C17"
+  },
+  {
+    "name": "Warcat",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Warcat_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "1D3485B3AA8891061E0E6AB7779A2D454E468FB95A17507E59456FE04D031E92"
+  },
+  {
+    "name": "Zeegee",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Zeegee_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "1407F170B393FBC6DE2F1DCC411D6F144031929E7583EF5614FD0B7026CC2F70"
+  },
+  {
+    "name": "Omegabeaver",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Omegabeaver_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "33A1CAA9C88F5329FBBA57FE43A39304B5F10AEEF0D4DEB84F7CB7DC1CB0994B"
+  },
+  {
+    "name": "Scaleborn",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Scaleborn_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "7E402791A03B3E61875CEDC4793B6A55911C73271541C6732DE286CE0C843A22"
+  },
+  {
+    "name": "Succuboid",
+    "source": "XylXenos/Textures/Xyl/UI/Icons/Xenotypes/Succuboid_small.png",
+    "width": 128,
+    "height": 128,
+    "sha256": "F1B9E531804C5061B4462B9E291BD542FEBF0A9159FB9959B8721D8E60843E34"
+  }
+]
