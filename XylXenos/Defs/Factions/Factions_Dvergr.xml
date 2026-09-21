@@ -70,10 +70,8 @@
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
     <useFactionXenotypes>true</useFactionXenotypes>
     <isFighter>true</isFighter>
-    <minGenerationAge>18</minGenerationAge>
-    <maxGenerationAge>65</maxGenerationAge>
     <itemQuality>Normal</itemQuality>
-    <gearHealthRange>0.8~1</gearHealthRange>
+    <gearHealthRange>0.8~2.0</gearHealthRange>
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
     <apparelTags Inherit="False">
       <li>MedievalMilitary</li>
