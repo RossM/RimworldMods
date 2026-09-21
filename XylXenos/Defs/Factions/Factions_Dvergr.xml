@@ -89,9 +89,9 @@
       <li>Brawler</li>
     </disallowedTraits>
   </PawnKindDef>
-        
-  <!-- Melee -->
 
+  <!-- Poverty tier -->
+  
   <PawnKindDef ParentName="XylDvergrFighterBase">
     <defName>XylDvergr_Drunkard</defName>
     <label>dvergr drunkard</label>
@@ -109,6 +109,41 @@
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
 
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Maniac</defName>
+    <label>dvergr maniac</label>
+    <combatPower>70</combatPower>
+    <canBeSapper>true</canBeSapper>
+    <isGoodBreacher>true</isGoodBreacher>
+    <itemQuality>Poor</itemQuality>
+    <gearHealthRange>0.2~0.6</gearHealthRange>
+    <apparelMoney>50~150</apparelMoney>
+    <apparelAllowHeadgearChance>0.1</apparelAllowHeadgearChance>
+    <weaponMoney>500~500</weaponMoney>
+    <weaponTags>
+      <li>GrenadeDestructive</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Prospector</defName>
+    <label>dvergr prospector</label>
+    <combatPower>70</combatPower>
+    <itemQuality>Poor</itemQuality>
+    <gearHealthRange>0.6~0.9</gearHealthRange>
+    <apparelMoney>150~400</apparelMoney>
+    <weaponMoney>260~300</weaponMoney>
+    <weaponTags>
+      <li>ShortShots</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <!-- Low tier -->
+  
   <PawnKindDef ParentName="XylDvergrFighterBase">
     <defName>XylDvergr_Brawler</defName>
     <label>dvergr brawler</label>
@@ -121,12 +156,6 @@
     <weaponTags>
       <li>MedievalMeleeDecent</li>
     </weaponTags>
-    <skills Inherit="False">
-      <li>
-        <skill>Melee</skill>
-        <range>4~9</range>
-      </li>
-    </skills>
     <initialWillRange>1~3</initialWillRange>
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
@@ -156,6 +185,58 @@
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
 
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Grenadier</defName>
+    <label>dvergr grenadier</label>
+    <combatPower>65</combatPower>
+    <canBeSapper>true</canBeSapper>
+    <isGoodBreacher>true</isGoodBreacher>
+    <apparelMoney>400~700</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
+    <weaponMoney>500~500</weaponMoney>
+    <weaponTags>
+      <li>GrenadeDestructive</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Guard</defName>
+    <label>dvergr guard</label>
+    <combatPower>80</combatPower>
+    <apparelMoney>400~700</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
+    <weaponMoney>360~450</weaponMoney>
+    <weaponTags>
+      <li>ShortShots</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Gunner</defName>
+    <label>dvergr gunner</label>
+    <combatPower>90</combatPower>
+    <apparelMoney>700~1000</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
+    <weaponMoney>360~550</weaponMoney>
+    <weaponTags>
+      <li>IndustrialGunAdvanced</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <!-- Mid tier -->
+  
   <PawnKindDef ParentName="XylDvergrFighterBase">
     <defName>XylDvergr_Warrior</defName>
     <label>dvergr warrior</label>
@@ -225,6 +306,64 @@
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
 
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Demolitionist</defName>
+    <label>dvergr demolitionist</label>
+    <combatPower>90</combatPower>
+    <canBeSapper>true</canBeSapper>
+    <isGoodBreacher>true</isGoodBreacher>
+    <itemQuality>Good</itemQuality>
+    <gearHealthRange>1~1</gearHealthRange>
+    <apparelMoney>1000~1400</apparelMoney>
+    <weaponMoney>500~500</weaponMoney>
+    <weaponTags>
+      <li>GrenadeDestructive</li>
+    </weaponTags>
+    <skills Inherit="False">
+      <li>
+        <skill>Shooting</skill>
+        <range>8~14</range>
+      </li>
+    </skills>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_Marksman</defName>
+    <label>dvergr marksman</label>
+    <labelPlural>dvergr marksmen</labelPlural>
+    <combatPower>80</combatPower>
+    <itemQuality>Good</itemQuality>
+    <apparelMoney>700~1000</apparelMoney>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>      
+    </apparelRequired>
+    <weaponMoney>600~600</weaponMoney>
+    <weaponTags>
+      <li>SniperRifle</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="XylDvergrRangedBase">
+    <defName>XylDvergr_HeavyGunner</defName>
+    <label>dvergr heavy gunner</label>
+    <combatPower>130</combatPower>
+    <itemQuality>Good</itemQuality>
+    <gearHealthRange>1~1</gearHealthRange>
+    <apparelMoney>1000~1400</apparelMoney>
+    <weaponMoney>1200~1200</weaponMoney>
+    <weaponTags>
+      <li>GunHeavy</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>10~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <!-- High tier -->
+  
   <PawnKindDef ParentName="XylDvergrFighterBase">
     <defName>XylDvergr_EliteWarrior</defName>
     <label>dvergr elite warrior</label>
@@ -265,67 +404,6 @@
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
 
-  <!-- Explosives -->
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Maniac</defName>
-    <label>dvergr maniac</label>
-    <combatPower>70</combatPower>
-    <canBeSapper>true</canBeSapper>
-    <isGoodBreacher>true</isGoodBreacher>
-    <itemQuality>Poor</itemQuality>
-    <gearHealthRange>0.2~0.6</gearHealthRange>
-    <apparelMoney>50~150</apparelMoney>
-    <apparelAllowHeadgearChance>0.1</apparelAllowHeadgearChance>
-    <weaponMoney>500~500</weaponMoney>
-    <weaponTags>
-      <li>GrenadeDestructive</li>
-    </weaponTags>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Grenadier</defName>
-    <label>dvergr grenadier</label>
-    <combatPower>65</combatPower>
-    <canBeSapper>true</canBeSapper>
-    <isGoodBreacher>true</isGoodBreacher>
-    <apparelMoney>400~700</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_SimpleHelmet</li>      
-    </apparelRequired>
-    <weaponMoney>500~500</weaponMoney>
-    <weaponTags>
-      <li>GrenadeDestructive</li>
-    </weaponTags>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Demolitionist</defName>
-    <label>dvergr demolitionist</label>
-    <combatPower>90</combatPower>
-    <canBeSapper>true</canBeSapper>
-    <isGoodBreacher>true</isGoodBreacher>
-    <itemQuality>Good</itemQuality>
-    <gearHealthRange>1~1</gearHealthRange>
-    <apparelMoney>1000~1400</apparelMoney>
-    <weaponMoney>500~500</weaponMoney>
-    <weaponTags>
-      <li>GrenadeDestructive</li>
-    </weaponTags>
-    <skills Inherit="False">
-      <li>
-        <skill>Shooting</skill>
-        <range>8~14</range>
-      </li>
-    </skills>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
   <PawnKindDef ParentName="XylDvergrRangedBase">
     <defName>XylDvergr_Rocketeer</defName>
     <label>dvergr rocketeer</label>
@@ -343,88 +421,6 @@
         <range>8~14</range>
       </li>
     </skills>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <!-- Guns -->
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Prospector</defName>
-    <label>dvergr prospector</label>
-    <combatPower>70</combatPower>
-    <itemQuality>Poor</itemQuality>
-    <gearHealthRange>0.6~0.9</gearHealthRange>
-    <apparelMoney>150~400</apparelMoney>
-    <weaponMoney>260~300</weaponMoney>
-    <weaponTags>
-      <li>ShortShots</li>
-    </weaponTags>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Guard</defName>
-    <label>dvergr guard</label>
-    <combatPower>80</combatPower>
-    <apparelMoney>400~700</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_SimpleHelmet</li>      
-    </apparelRequired>
-    <weaponMoney>360~450</weaponMoney>
-    <weaponTags>
-      <li>ShortShots</li>
-    </weaponTags>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Gunner</defName>
-    <label>dvergr gunner</label>
-    <combatPower>90</combatPower>
-    <apparelMoney>700~1000</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_SimpleHelmet</li>      
-    </apparelRequired>
-    <weaponMoney>360~550</weaponMoney>
-    <weaponTags>
-      <li>IndustrialGunAdvanced</li>
-    </weaponTags>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_Marksman</defName>
-    <label>dvergr marksman</label>
-    <labelPlural>dvergr marksmen</labelPlural>
-    <combatPower>80</combatPower>
-    <itemQuality>Good</itemQuality>
-    <apparelMoney>700~1000</apparelMoney>
-    <apparelRequired>
-      <li>Apparel_SimpleHelmet</li>      
-    </apparelRequired>
-    <weaponMoney>600~600</weaponMoney>
-    <weaponTags>
-      <li>SniperRifle</li>
-    </weaponTags>
-    <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>10~20</initialResistanceRange>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="XylDvergrRangedBase">
-    <defName>XylDvergr_HeavyGunner</defName>
-    <label>dvergr heavy gunner</label>
-    <combatPower>130</combatPower>
-    <itemQuality>Good</itemQuality>
-    <gearHealthRange>1~1</gearHealthRange>
-    <apparelMoney>1000~1400</apparelMoney>
-    <weaponMoney>1200~1200</weaponMoney>
-    <weaponTags>
-      <li>GunHeavy</li>
-    </weaponTags>
     <initialWillRange>1~3</initialWillRange>
     <initialResistanceRange>10~20</initialResistanceRange>
   </PawnKindDef>
