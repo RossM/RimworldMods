@@ -283,6 +283,28 @@ public static class DebugOutputs
         }
     }
 
+    [DebugOutput("Pawns")]
+    public static void HumanlikePawnKinds()
+    {
+        List<TableDataGetter<PawnKindDef>> columns =
+        [
+            new("defName", def => def.defName),
+            new("label", def => def.LabelCap),
+            new("combatPower", def => def.combatPower),
+            new("itemQuality", def => def.itemQuality),
+            new("gearHealthRange", def => def.gearHealthRange),
+            new("apparelMoney", def => def.apparelMoney),
+            new("weaponMoney", def => def.weaponMoney),
+            new("techHediffsMoney", def => def.techHediffsMoney),
+            new("initialWillRange", def => def.initialWillRange),
+            new("initialResistanceRange", def => def.initialResistanceRange),
+            new("skills", def => string.Join(", ", def.skills?.Select(s => $"{s.Skill.LabelCap} {s.Range}") ?? [])),
+        ];
+
+        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(k => k.race == ThingDefOf.Human).OrderBy(k => k.combatPower), 
+            [.. columns]);
+    }
+
     private static string Abbreviate(string str, int maxLength = 8)
     {
         var words = str.Split(' ').ToList();
