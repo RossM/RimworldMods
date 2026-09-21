@@ -299,6 +299,9 @@ public static class DebugOutputs
             new("initialWillRange", def => def.initialWillRange),
             new("initialResistanceRange", def => def.initialResistanceRange),
             new("skills", def => string.Join(", ", def.skills?.Select(s => $"{s.Skill.LabelCap} {s.Range}") ?? [])),
+            new("apparelTags", def => string.Join(", ", def.apparelTags?.Distinct() ?? [])),
+            new("weaponTags", def => string.Join(", ", def.weaponTags?.Distinct() ?? [])),
+            new("techHediffsTags", def => string.Join(", ", def.techHediffsTags?.Distinct() ?? [])),
         ];
 
         DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(k => k.race == ThingDefOf.Human).OrderBy(k => k.combatPower), 
