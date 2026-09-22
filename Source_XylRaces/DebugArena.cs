@@ -243,7 +243,7 @@ public static class DebugArena
         {
             xenotypeChances = [new(xenotype, 1.0f)],
         };
-        newPawnKindDef.defName = $"{pawnKindDef.defName}_{xenotype.defName}";
+        newPawnKindDef.defName = $"{pawnKindDef.defName}:{xenotype.defName}";
         newPawnKindDef.label = $"{xenotype.label} {pawnKindDef.label}";
         newPawnKindDef.ignoreFactionApparelStuffRequirements = true;
         newPawnKindDef.combatPower = pawnKindDef.combatPower * xenotype.combatPowerFactor;
