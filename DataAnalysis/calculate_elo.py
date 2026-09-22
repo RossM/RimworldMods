@@ -9,8 +9,9 @@ import torch
 import torch.nn.functional as F
 
 
-DEFAULT_INPUT = Path(__file__).resolve().parent / "Data" / "CombatArena.csv"
-DEFAULT_OUTPUT = Path(__file__).resolve().parent / "elo_ratings.csv"
+RIMWORLD_DATA_DIR = Path.home() / "AppData" / "LocalLow" / "Ludeon Studios" / "RimWorld by Ludeon Studios"
+DEFAULT_INPUT = RIMWORLD_DATA_DIR / "CombatArena.csv"
+DEFAULT_OUTPUT = RIMWORLD_DATA_DIR / "elo_ratings.csv"
 ELO_LOGIT_SCALE = math.log(10.0) / 400.0
 
 
