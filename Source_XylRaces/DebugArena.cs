@@ -33,12 +33,60 @@ public static class DebugArena
 
         List<string> humanoidPawnKinds =
         [
+            // Tribal
+
+            // 40 combat power
+            "Tribal_Penitent",
+            // 45 combat power
             "Tribal_Archer",
+            // 50 combat power
+            "Tribal_Warrior",
+            // 60 combat power
+            "Tribal_Hunter",
+            // 65 combat power
             "Tribal_Berserker",
-            "Mercenary_Slasher",
+            // 75 combat power
+            "Tribal_HeavyArcher",
+            // 85 combat power
+            "Tribal_ChiefMelee",
+            // 85 combat power
+            "Tribal_ChiefRanged",
+
+            // Pirate & mercenary
+
+            // 35 combat power
+            "Drifter",
+            // 50 combat power
+            "Scavenger",
+            // 50 combat power
+            "Thrasher",
+            // 65 combat power
+            "Pirate",
+            // 70 combat power
+            "Grenadier_Destructive",
+            // 85 combat power
             "Mercenary_Gunner",
-            "Empire_Fighter_StellicGuardMelee",
-            "Empire_Fighter_StellicGuardRanged",
+            // 110 combat power
+            "Mercenary_Sniper",
+            // 130 combat power
+            "Mercenary_Elite",
+            // 140 combat power
+            "Mercenary_Slasher",
+            // 140 combat power
+            "Mercenary_Heavy",
+
+            // Empire
+
+            // 65 combat power
+            "Empire_Fighter_Trooper",
+            // 65 combat power
+            "Empire_Fighter_Grenadier",
+            // 100 combat power
+            "Empire_Fighter_Janissary",
+            // 100 combat power
+            "Empire_Fighter_Champion",
+            // 150 combat power
+            "Empire_Fighter_Cataphract",
         ];
 
         List<string> otherPawnKinds =
