@@ -124,7 +124,7 @@ public static class DebugArena
             "Mech_Lancer",
             "Mech_Scyther",
             "Mech_Pikeman",
-            "Mech_Termite",
+            "Mech_Termite_Breach",
         ];
 
         static bool ValidXenotype(XenotypeDef xenotype) => !xenotype.AllGenes.Any(def => def.disabledWorkTags.HasFlag(WorkTags.Violent));
