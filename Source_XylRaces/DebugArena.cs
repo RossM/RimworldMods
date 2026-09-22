@@ -365,7 +365,10 @@ public static class DebugArena
 
             ReadEstimatedCombatPower(ratingsPath);
 
-            float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def]);
+            // Numerical stability
+            int minTotal = total.Values.Min();
+
+            float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def] - minTotal);
             static float CombatPower(PawnKindDef def) => combatPowerTmp.TryGetValue(def.defName, out float value) ? value : def.combatPower;
 
             List<PawnKindDef> filteredKinds = kinds;
@@ -374,7 +377,8 @@ public static class DebugArena
 
             PawnKindDef lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
             // ReSharper disable once AccessToModifiedClosure
-            PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElementByWeight(PawnKindWeight);
+            // Use RandomElement rather than RandomElementByWeight to avoid bias
+            PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElement();
 
             if (forcedPawnKind != null && Rand.Chance(0.5f))
                 (lhsDef, rhsDef) = (rhsDef, lhsDef);
