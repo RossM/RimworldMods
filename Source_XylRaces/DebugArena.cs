@@ -373,7 +373,7 @@ public static class DebugArena
 
             List<PawnKindDef> filteredKinds = kinds;
             if (scoreRankLimit > 0)
-                filteredKinds = [.. kinds.OrderByDescending(CombatPower).Take(scoreRankLimit)];
+                filteredKinds = [.. kinds.Where(def => total[def] > 0).OrderByDescending(CombatPower).Take(scoreRankLimit)];
 
             PawnKindDef lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
             // ReSharper disable once AccessToModifiedClosure
