@@ -27,16 +27,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
-            <renderNodeModifiers>
-              <li>
-                <tag>Root</tag>
-                <scale>0.85</scale>
-              </li>
-              <li>
-                <tag>Head</tag>
-                <scale>1.177</scale>
-              </li>
-            </renderNodeModifiers>
+            <bodyScale>0.85</bodyScale>
           </li>
           <li Class="Xylib.GeneCompProperties_RaceModifiers">
             <bodySizeFactor>0.9</bodySizeFactor>
@@ -62,17 +53,9 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
-            <renderNodeModifiers>
-              <li>
-                <tag>Root</tag>
-                <scale>1.2</scale>
-              </li>
-              <li>
-                <tag>Head</tag>
-                <scale>0.9</scale>
-                <offset>0,0,-0.05</offset>
-              </li>
-            </renderNodeModifiers>
+            <bodyScale>1.2</bodyScale>
+            <headScale>1.05</headScale>
+            <headOffset>(0,0,-0.05)</headOffset>
           </li>
           <li Class="Xylib.GeneCompProperties_RaceModifiers">
             <bodySizeFactor>1.5</bodySizeFactor>
@@ -111,38 +94,19 @@
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
       <ArmorRating_Blunt>0.15</ArmorRating_Blunt>
     </statOffsets>
-    <renderNodeProperties>
-      <li>
-        <debugLabel>Scaleskin</debugLabel>
-        <nodeClass>PawnRenderNode</nodeClass>
-        <workerClass>PawnRenderNodeWorker_Body</workerClass>
-        <baseLayer>1</baseLayer>
-        <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <colorType>Skin</colorType>
-        <useSkinShader>true</useSkinShader>
-        <parentTagDef>Body</parentTagDef>
-        <bodyTypeGraphicPaths>
-          <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
-          <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
-          <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
-          <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
-          <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
-          <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
-          <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
-        </bodyTypeGraphicPaths>
-      </li>
-    </renderNodeProperties>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
-            <renderNodeModifiers>
-              <li>
-                <tag>Body</tag>
-                <hidden>true</hidden>
-                <includeChildren>false</includeChildren>
-              </li>
-            </renderNodeModifiers>
+            <bodyTypeGraphicPaths>
+              <Male>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Male</Male>
+              <Female>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Female</Female>
+              <Hulk>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Hulk</Hulk>
+              <Fat>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Fat</Fat>
+              <Thin>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Thin</Thin>
+              <Child>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Child>
+              <Baby>Xyl/Things/Pawn/Humanlike/Bodies/Scaleskin_Child</Baby>
+            </bodyTypeGraphicPaths>
           </li>
         </comps>
       </li>

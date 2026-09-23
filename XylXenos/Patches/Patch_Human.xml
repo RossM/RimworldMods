@@ -10,4 +10,21 @@
     </value>
   </Operation>
 
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/PawnRenderTreeDef[defName="Humanlike"]//li[tagDef="Body"]</xpath>
+    <value>
+      <subworkerClasses>
+        <li>Xylib.PawnRenderSubWorker_Body</li>
+      </subworkerClasses>
+    </value>
+  </Operation>
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/PawnRenderTreeDef[defName="Humanlike"]//li[tagDef="Head" or nodeClass="PawnRenderNode_Stump"]</xpath>
+    <value>
+      <subworkerClasses>
+        <li>Xylib.PawnRenderSubWorker_Head</li>
+      </subworkerClasses>
+    </value>
+  </Operation>
+
 </Patch>

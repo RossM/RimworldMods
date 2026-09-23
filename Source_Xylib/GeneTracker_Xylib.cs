@@ -16,15 +16,6 @@ public class GeneTracker_Xylib : GeneTracker
     public float healthScaleFactor = 1f;
 
     /// <summary>
-    ///     Aggregates <see cref="GeneCompProperties_RenderNodeModifiers.renderNodeModifiers" /> from all genes.<br /><br />
-    ///     <inheritdoc cref="GeneCompProperties_RenderNodeModifiers.renderNodeModifiers" />
-    /// </summary>
-    public List<RenderNodeModifier>? renderNodeModifiers;
-
-    internal readonly List<RenderNodeModifier>?[] renderNodeModifiersByType
-        = new List<RenderNodeModifier>[Enum.GetValues<RenderNodeModifierType>().Length];
-
-    /// <summary>
     ///     Aggregates <see cref="GeneCompProperties_UnlockBuildables.buildables" /> from all genes.<br /><br />
     ///     <inheritdoc cref="GeneCompProperties_UnlockBuildables.buildables" />
     /// </summary>
@@ -32,15 +23,23 @@ public class GeneTracker_Xylib : GeneTracker
 
     public List<RecipeDef>? unlockedRecipes;
 
+    public Vector3 bodyOffset = Vector3.zero;
+    public float bodyScale = 1f;
+    public Vector3 headOffset = Vector3.zero;
+    public float headScale = 1f;
+    public Graphic? bodyGraphicOverride = null;
+
     public override void Update()
     {
         bodySizeFactor = 1f;
         healthScaleFactor = 1f;
-        renderNodeModifiers?.Clear();
-        foreach (List<RenderNodeModifier>? list in renderNodeModifiersByType)
-            list?.Clear();
         unlockedBuildables?.Clear();
         unlockedRecipes?.Clear();
+        bodyGraphicOverride = null;
+        bodyOffset = Vector3.zero;
+        bodyScale = 1f;
+        headOffset = Vector3.zero;
+        headScale = 1f;
 
         if (Pawn.genes == null)
             return;
@@ -55,11 +54,14 @@ public class GeneTracker_Xylib : GeneTracker
                 healthScaleFactor *= raceModifiers.healthScaleFactor;
             }
 
-            Append(ref renderNodeModifiers, def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.renderNodeModifiers);
-            for (int i = 0; i < renderNodeModifiersByType.Length; i++)
+            if (def.CompProps<GeneCompProperties_RenderNodeModifiers>() is { } renderNodeModifiers)
             {
-                Append(ref renderNodeModifiersByType[i],
-                    def.CompProps<GeneCompProperties_RenderNodeModifiers>()?.RenderNodeModifiersOfType((RenderNodeModifierType)i));
+                if (renderNodeModifiers.bodyTypeGraphics?.TryGetValue(Pawn.story.bodyType, out var graphic) is true)
+                    bodyGraphicOverride = graphic;
+                bodyOffset += renderNodeModifiers.bodyOffset;
+                bodyScale *= renderNodeModifiers.bodyScale;
+                headOffset += renderNodeModifiers.headOffset;
+                headScale *= renderNodeModifiers.headScale;
             }
 
             Append(ref unlockedBuildables, def.CompProps<GeneCompProperties_UnlockBuildables>()?.buildables);

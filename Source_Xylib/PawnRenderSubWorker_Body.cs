@@ -1,0 +1,33 @@
+﻿namespace Xylib;
+
+[UsedFromXml]
+public class PawnRenderSubWorker_Body : PawnRenderSubWorker
+{
+    public override void TransformOffset(PawnRenderNode node, PawnDrawParms parms, ref Vector3 offset, ref Vector3 pivot)
+    {
+        if (node.tree.pawn.GeneTracker_Xylib is { } geneTracker)
+            offset += geneTracker.bodyOffset;
+    }
+
+    public override void TransformScale(PawnRenderNode node, PawnDrawParms parms, ref Vector3 scale)
+    {
+        if (node.tree.pawn.GeneTracker_Xylib is { } geneTracker)
+            scale *= geneTracker.bodyScale;
+    }
+
+    //public override void EditMaterial(PawnRenderNode node, PawnDrawParms parms, ref Material material)
+    //{
+    //    Pawn pawn = node.tree.pawn;
+    //    if (pawn.GeneTracker_Xylib is { } geneTracker && geneTracker.bodyGraphicOverride is { } graphic)
+    //    {
+    //        material = graphic.NodeGetMat(parms);
+    //    }
+    //}
+
+    public override void EditMaterialPropertyBlock(PawnRenderNode node, Material material, PawnDrawParms parms, ref MaterialPropertyBlock block)
+    {
+        Pawn pawn = node.tree.pawn;
+        if (pawn.GeneTracker_Xylib is { bodyGraphicOverride: { } graphic })
+            block.SetTexture("_MainTex", graphic.NodeGetMat(parms).mainTexture);
+    }
+}
