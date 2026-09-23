@@ -17,15 +17,6 @@ public class PawnRenderSubWorker_Body : PawnRenderSubWorker
             scale *= geneTracker.bodyScale;
     }
 
-    //public override void EditMaterial(PawnRenderNode node, PawnDrawParms parms, ref Material material)
-    //{
-    //    Pawn pawn = node.tree.pawn;
-    //    if (pawn.GeneTracker_Xylib is { } geneTracker && geneTracker.bodyGraphicOverride is { } graphic)
-    //    {
-    //        material = graphic.NodeGetMat(parms);
-    //    }
-    //}
-
     public override void EditMaterialPropertyBlock(PawnRenderNode node, Material material, PawnDrawParms parms, ref MaterialPropertyBlock block)
     {
         Pawn pawn = node.tree.pawn;
