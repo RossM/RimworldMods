@@ -368,7 +368,7 @@ public static class DebugArena
             // Numerical stability
             int minTotal = total.Values.Min();
 
-            float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.98f, total[def] - minTotal);
+            float PawnKindWeight(PawnKindDef def) => Mathf.Pow(0.95f, total[def] - minTotal);
             static float CombatPower(PawnKindDef def) => combatPowerTmp.TryGetValue(def.defName, out float value) ? value : def.combatPower;
 
             List<PawnKindDef> filteredKinds = kinds;
