@@ -22,8 +22,7 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
 
             bodyTypeGraphics = [];
             foreach (var data in bodyTypeGraphicPaths)
-                bodyTypeGraphics[data.bodyType]
-                    = GraphicDatabase.Get<Graphic_Multi>(data.texturePath, ShaderDatabase.CutoutSkin, Vector2.one, Color.white);
+                bodyTypeGraphics[data.bodyType] = GraphicDatabase.Get<Graphic_Multi>(data.texturePath);
         });
     }
 }
