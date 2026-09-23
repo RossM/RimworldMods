@@ -19,8 +19,7 @@ public class PawnRenderSubWorker_Body : PawnRenderSubWorker
 
     public override void EditMaterialPropertyBlock(PawnRenderNode node, Material material, PawnDrawParms parms, ref MaterialPropertyBlock block)
     {
-        Pawn pawn = node.tree.pawn;
-        if (pawn.GeneTracker_Xylib is { bodyGraphicOverride: { } graphic })
+        if (node.tree.pawn.GeneTracker_Xylib is { bodyGraphicOverride: { } graphic })
             block.SetTexture(mainTex, graphic.NodeGetMat(parms).mainTexture);
     }
 }
