@@ -9,7 +9,7 @@
     <descriptionShort>Dvergr are fast workers and skilled miners, builders, and craftspeople. They see in darkness, tolerate great heat, and never need to go outdoors. They gain extra nourishment from raw fungus despite hating the taste. Without regular alcohol, they sicken and eventually die.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Dvergr_small</iconPath>
     <displayPriority>-103</displayPriority>
-    <combatPowerFactor>1.1</combatPowerFactor>
+    <combatPowerFactor>1.2</combatPowerFactor>
     <inheritable>true</inheritable>
     <nameMaker>NamerXylPersonDvergr</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>

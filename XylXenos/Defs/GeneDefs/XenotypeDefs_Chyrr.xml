@@ -9,7 +9,7 @@
     <descriptionShort>Chyrr are fragile, batlike xenohumans with a strong aptitude for medicine. They navigate by sound, stun living enemies with a sonic cry, and fly short distances. Cold sends them into hibernation, protecting them from hypothermia but leaving them helpless.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Chyrr_small</iconPath>
     <displayPriority>-102</displayPriority>
-    <combatPowerFactor>0.9</combatPowerFactor>
+    <combatPowerFactor>1.1</combatPowerFactor>
     <nameMaker>NamerXylPersonChyrrMale</nameMaker>
     <nameMakerFemale>NamerXylPersonChyrrFemale</nameMakerFemale>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>

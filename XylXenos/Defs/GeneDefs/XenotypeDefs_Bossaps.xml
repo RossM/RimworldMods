@@ -10,7 +10,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Bossaps_small</iconPath>
     <displayPriority>-101</displayPriority>
     <inheritable>true</inheritable>
-    <combatPowerFactor>1.6</combatPowerFactor>
+    <combatPowerFactor>1.3</combatPowerFactor>
     <nameMaker>NamerXylPersonBossapsMale</nameMaker>
     <nameMakerFemale>NamerXylPersonBossapsFemale</nameMakerFemale>
     <chanceToUseNameMaker>0.75</chanceToUseNameMaker>

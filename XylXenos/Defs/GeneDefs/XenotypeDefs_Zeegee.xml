@@ -10,7 +10,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Zeegee_small</iconPath>
     <displayPriority>-108</displayPriority>
     <inheritable>true</inheritable>
-    <combatPowerFactor>0.75</combatPowerFactor>
+    <combatPowerFactor>0.8</combatPowerFactor>
     <genes>
       <li>Immunity_Weak</li>
       <li>XylPlanetSickness</li>
