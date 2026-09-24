@@ -32,7 +32,7 @@
     <label>drug resistant</label>
     <description>Carriers of this gene are less affected by drugs. Effects from a single dose wear off faster, they gain tolerance slower, and they are less likely to become addicted.</description>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>-1</biostatMet>
+    <biostatMet>-2</biostatMet>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>210</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_DrugResistant</iconPath>
