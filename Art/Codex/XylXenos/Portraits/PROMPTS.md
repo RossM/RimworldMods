@@ -74,7 +74,7 @@ Final asset: [trog.png](trog.png)
 
 An adult female Warcat xenohuman hunter: predominantly human facial structure, unmistakable cat ears, clear yellow feline eyes and naturally integrated dark facial stripes. Long thick untidy hair, no beard. Strong cheekbones, broad mobile nose, a small healed notch in an eyebrow and a controlled closed mouth. Her direct gaze is unnervingly attentive; a predator deciding whether to move, with a trace of temper held in check. Make her athletic, weathered and individual, not a cute catgirl or glamour model. Restrained hide hunting collar with a small bone fastening, only upper shoulders visible. Human skin with facial stripes, not a fully furred lion muzzle. Warm tawny and charcoal palette. No hands or claws displayed, no blood, no weapon, no oversized skull blocking the portrait. Express dangerous speed through sharp shapes and tension, not action effects.
 
-Final asset: [warcat-v2.png](warcat-v2.png). See the duplicate-ear correction prompt below.
+Final asset: [warcat-v3.png](warcat-v3.png). See the duplicate-ear and vertical-pupil correction prompts below.
 
 ### Zeegee
 
@@ -206,4 +206,15 @@ This character must have exactly ONE pair of ears: the existing large triangular
 REMOVE all human ear anatomy from the SIDES of her head. In particular, the exposed rounded human ear beside the cheek on the viewer's RIGHT must disappear completely, including its outline, outer rim, inner folds and lobe. Replace that small region with natural continuous dark brown hair matching the surrounding locks, so the cheek transitions into hair without any extra ear. On the viewer's LEFT likewise ensure there is no human ear shape or ear remnant among the hair. The anatomy is a human-shaped face with only the single pair of top-mounted cat ears. No lateral human ears, extra ears or ear-shaped skin patches.
 
 Preserve exactly the face, facial proportions, yellow eyes, expression, direct gaze, facial stripes, scars, long dark hair everywhere except the small corrected side-ear regions, both top cat ears, clothing, bone fastening, shoulders, background, frontal square composition, colors, lighting and polished ink-and-gouache drawing style. This is a tiny local anatomical correction, not a redesign or repaint of the portrait. No additional changes, no text or watermark.
+
+
+
+### Warcat - vertical slit pupils
+
+Author direction: give the Warcat vertical slit pupils. Generated with built-in imagegen using warcat-v2.png as the edit target; saved as [warcat-v3.png](warcat-v3.png). Retains the corrected single pair of cat ears. Earlier versions retained.
+
+Use case: precise-object-edit.
+The supplied corrected Warcat portrait is the edit target. Make exactly one tiny local change: replace the ROUND BLACK PUPIL in EACH eye with a clearly visible narrow VERTICAL SLIT pupil, like a cat in bright light. Both pupils must be vertical black elongated slits, tapered at top and bottom, centered within the existing golden-yellow irises. Keep their gaze looking directly at the viewer. Preserve the existing iris color, iris size, eye shape, eyelids, catchlights and expression.
+
+Everything outside the two pupils must remain unchanged: face identity and proportions, yellow irises, facial stripes, scars, expression, hair, the single pair of top-mounted cat ears, absence of human ears, clothing, bone fastening, shoulders, background, square frontal composition, lighting, colors and polished ink-and-gouache style. No enlarged eyes, no glow, no other anatomical change, no human ears, no text or watermark.
 
