@@ -74,7 +74,7 @@ Final asset: [trog.png](trog.png)
 
 An adult female Warcat xenohuman hunter: predominantly human facial structure, unmistakable cat ears, clear yellow feline eyes and naturally integrated dark facial stripes. Long thick untidy hair, no beard. Strong cheekbones, broad mobile nose, a small healed notch in an eyebrow and a controlled closed mouth. Her direct gaze is unnervingly attentive; a predator deciding whether to move, with a trace of temper held in check. Make her athletic, weathered and individual, not a cute catgirl or glamour model. Restrained hide hunting collar with a small bone fastening, only upper shoulders visible. Human skin with facial stripes, not a fully furred lion muzzle. Warm tawny and charcoal palette. No hands or claws displayed, no blood, no weapon, no oversized skull blocking the portrait. Express dangerous speed through sharp shapes and tension, not action effects.
 
-Final asset: [warcat.png](warcat.png)
+Final asset: [warcat-v2.png](warcat-v2.png). See the duplicate-ear correction prompt below.
 
 ### Zeegee
 
@@ -191,4 +191,19 @@ The current glowing diamond and dot look like a magical jewel. Completely REPLAC
 Pastel mint-cyan traces with a few pale lavender nodes; softly luminous, a little diffused into the skin, restrained local glow. It is a genetic expression of an inherent connection with machines, integrated flat within living silver skin. No implanted chip, metallic hardware, sockets, plate, raised ornament or wound. No central diamond, jewel, flame, teardrop, third eye, occult rune, mandala, decorative filigree or magical aura. Do not extend the pattern onto cheeks, temples or hair. No blinding neon, floating HUD or beams.
 
 Preserve exactly the person's facial identity, expression, eyes, direct gaze, ordinary rounded ears, short white hair, skin and its painted texture outside the mark, ochre spacer collar, shoulders, frontal square composition, dark blue background and lighting. The new marking must belong to the same polished ink-and-gouache illustration: painted softly luminous lines, not a glossy 3D object. No changes elsewhere, no text or watermark.
+
+
+
+### Warcat - duplicate ears corrected
+
+Removed the lateral human ears, retaining only the pair of cat ears on top of the head. Generated with built-in imagegen using warcat.png as the edit target; saved as [warcat-v2.png](warcat-v2.png). Original retained for comparison.
+
+Use case: precise-object-edit.
+The supplied Warcat portrait is the edit target. Correct ONLY the duplicate ears.
+
+This character must have exactly ONE pair of ears: the existing large triangular feline ears on TOP of her head. Preserve both of those cat ears exactly as drawn.
+
+REMOVE all human ear anatomy from the SIDES of her head. In particular, the exposed rounded human ear beside the cheek on the viewer's RIGHT must disappear completely, including its outline, outer rim, inner folds and lobe. Replace that small region with natural continuous dark brown hair matching the surrounding locks, so the cheek transitions into hair without any extra ear. On the viewer's LEFT likewise ensure there is no human ear shape or ear remnant among the hair. The anatomy is a human-shaped face with only the single pair of top-mounted cat ears. No lateral human ears, extra ears or ear-shaped skin patches.
+
+Preserve exactly the face, facial proportions, yellow eyes, expression, direct gaze, facial stripes, scars, long dark hair everywhere except the small corrected side-ear regions, both top cat ears, clothing, bone fastening, shoulders, background, frontal square composition, colors, lighting and polished ink-and-gouache drawing style. This is a tiny local anatomical correction, not a redesign or repaint of the portrait. No additional changes, no text or watermark.
 
