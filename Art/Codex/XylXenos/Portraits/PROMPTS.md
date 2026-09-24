@@ -24,7 +24,7 @@ Final asset: [bossaps.png](bossaps.png)
 
 An adult Chyrr healer: a delicate fine-boned xenohuman with SMALL pointed ears, no beard, a lean human face and quietly attentive dark eyes looking directly at us. Batlike ancestry is suggested subtly by the ear shape and small folded membranous wing tips barely visible behind the upper shoulders; do not turn the face into an animal muzzle or give enormous bat ears. Short softly disordered dark hair, a slightly long nose, subtle tiredness around the eyes. A composed, compassionate expression with a hint of concern, someone listening exceptionally carefully. Simple clean layered healer's fabric at the neck, no modern medical emblem. Understated nocturnal violet-gray and warm skin colors. They have a specific thoughtful face, neither a vampire nor an ethereal generic elf.
 
-Final asset: [chyrr.png](chyrr.png)
+Final asset: [chyrr-v2.png](chyrr-v2.png). See the full-size flight-wing correction prompt below.
 
 ### Dvergr
 
@@ -44,7 +44,7 @@ Final asset: [dvergr.png](dvergr.png)
 
 An adult Nixie aquatic xenohuman negotiator with blue scaled skin, delicate lateral fin ears and snow-white hair swept cleanly back from the face. An unusually beautiful but individual human-shaped face: long cheek planes, a distinctive slightly arched nose and large direct, appraising eyes. Sparse graphic scale pattern on temples and cheeks, integrated naturally into skin rather than pasted-on decoration. Their mouth holds the smallest knowing almost-smile; compelling, cultured and persuasive, with a trace of melancholy skepticism. Elegant restraint, like someone who already knows the value of what you are offering. A tiny coral-inspired collar ornament may suggest an ocean-grown artistic culture, without becoming a costume display. Cool blue and chalk white with one restrained warm accent. No water splash, magical aura, mermaid body, crown, fish muzzle or glossy beauty-ad rendering.
 
-Final asset: [nixie-v3.png](nixie-v3.png). Original generation prompt above retained for provenance; the fresh-composition prompt below supersedes earlier Nixie prompts.
+Final asset: [nixie-v6.png](nixie-v6.png). Original generation prompt above retained for provenance; the latest fresh portrait emphasizes ethereal beauty and an enigmatic expression, with purple eyes and no psychic ripples. See revision prompts below.
 
 ### Titan
 
@@ -217,4 +217,75 @@ Use case: precise-object-edit.
 The supplied corrected Warcat portrait is the edit target. Make exactly one tiny local change: replace the ROUND BLACK PUPIL in EACH eye with a clearly visible narrow VERTICAL SLIT pupil, like a cat in bright light. Both pupils must be vertical black elongated slits, tapered at top and bottom, centered within the existing golden-yellow irises. Keep their gaze looking directly at the viewer. Preserve the existing iris color, iris size, eye shape, eyelids, catchlights and expression.
 
 Everything outside the two pupils must remain unchanged: face identity and proportions, yellow irises, facial stripes, scars, expression, hair, the single pair of top-mounted cat ears, absence of human ears, clothing, bone fastening, shoulders, background, square frontal composition, lighting, colors and polished ink-and-gouache style. No enlarged eyes, no glow, no other anatomical change, no human ears, no text or watermark.
+
+
+
+### Chyrr - full-size flight wings
+
+Author direction: the Chyrr's wings must be large enough for actual flight. Replaced miniature shoulder wings with cropped portions of large folded flight wings extending beyond the headshot. Generated with built-in imagegen using chyrr.png as the edit target; saved as [chyrr-v2.png](chyrr-v2.png). The original is retained. This correction supersedes the original prompt's small-wing-tip direction.
+
+Use case: precise-object-edit.
+The supplied Chyrr portrait is the edit target. Correct the WING SCALE and folded wing anatomy only, preserving the person and the portrait.
+
+The Chyrr has a single pair of LARGE functional membranous wings capable of carrying this adult person in actual flight. The existing little complete bat-wing silhouettes behind the shoulders are incorrectly tiny. Remove and replace them completely with the visible upper portions of MUCH LARGER folded flight wings.
+
+Design believable folded batlike anatomy at adult-human scale: strong elongated leading-edge bones rise from behind the back and shoulders, with the upper bent wrist joints reaching approximately temple or upper-ear height on either side of the head. Long fingerlike supports and broad pleated membrane fold back DOWN and OUT, continuing beyond the left, right and bottom edges of this close headshot. Only a cropped fraction of each immense folded wing is visible. Suggest a wingspan several times the person's shoulder width when unfolded. Broad membrane panels should clearly continue out of frame, never form a whole miniature scalloped wing contained above a shoulder. Wings are resting, substantially folded, not fully spread for flight. Keep them behind the person, not growing from the neck or ears. Let the portrait crop communicate their scale.
+
+Maintain a clear silhouette around the face and the small pointed ears. The substantial folded wing structures frame the head farther out toward the sides, with some quiet background between the head and wings. Muted plum-gray membranes, structural fingers rendered in the existing selective ink-and-gouache style, visibly anatomical and functional rather than decorative costume pieces. Keep the face as the focus. No feathers, extra wings, wing-shaped collar, miniature shoulder wings or additional limbs.
+
+Preserve exactly the face identity, fine-boned facial proportions, thoughtful compassionate expression, direct gaze, short dark hair, small pointed ears, clothing, shoulder position, square face-on headshot composition and scale, colors and lighting of the person, and polished matte drawn style. Do not zoom out or shrink the person to fit the wings. The wings extend OUTSIDE the crop. Preserve existing background wherever not occupied by the enlarged wings. No text or watermark.
+
+
+
+### Nixie - supernatural charm
+
+Author direction: express the supernatural charm represented by Beckon and Focus. Revised the gaze and expression toward inviting, uncanny attentiveness, with pearlescent irises and subtle psychic refraction. Generated with built-in imagegen using nixie-v3.png as the edit target; saved as [nixie-v4.png](nixie-v4.png). Earlier versions retained. This direction supersedes the original prohibition on psychic effects.
+
+Use case: identity-preserve.
+Input: the supplied bald blue Nixie portrait is the edit target. Create a revised interpretation of this SAME person that conveys her supernatural psychic charm, the capacity to draw someone toward her (Beckon) and bring their mind into extraordinary clarity (Focus).
+
+Creative priority: this must be expressed primarily through her presence and eye contact. The existing portrait is a conventionally poised trader; give her an uncannily arresting, deeply attentive gaze and an intimate, reassuring almost-smile, as though she has quietly singled out the viewer and understands them completely. Ease the slightly skeptical tension in the brows and mouth. Warmth, serene confidence and a faint unsettling sense of knowing more than she says. She should feel inviting and difficult to look away from. Neither sinister possession nor a fashion-model pose.
+
+Make the eyes the most finely articulated and compelling part of the painting. Preserve natural eye size, visible dark pupils and human anatomy. The sea-green irises have extraordinary luminous clarity: delicate pearlescent pale-aqua and silver inner rings, subtle reflected light along the lower lids, a faintly impossible depth. The light lives INSIDE the iris, not beams or white glowing eyeballs. Keep natural catchlights. The face remains recognizably the same individual.
+
+Secondary psychic cue: softly painted, barely-there concentric refractive ripples in the quiet background immediately around the head, as if her attention were gently bending the air like still water. Incomplete broad arcs, low contrast, no hard circles or graphic symbols. Their visual rhythm should lead the viewer's attention inward to her eyes. A whisper of opalescent aqua and lavender reflected on the temples and fin membranes, subtle enough to feel like an inherent presence rather than an active spell attack. Make this distinctly aquatic and psychic, not technological. Do not put a symbol on her forehead.
+
+Maintain the successful bald-head composition and normal proportions: completely bald blue scaled scalp, no hair or stubble; same fin ears, face identity, scale pattern, lightweight pale draped clothing, exposed neck and collarbones, tiny coral pendant, frontal level pose, direct gaze and square headshot framing. Keep the skin matte and the portrait visibly DRAWN: confident selective ink, opaque gouache planes, restrained dry-brush texture and controlled painted edges. Preserve the quiet warm-gray background tone except for the subtle psychic refraction. The eyes are sharper and the outer background softer through brushwork, not photographic depth of field.
+
+Avoid generic fantasy pinup glamour, airbrushed skin, photorealism, 3D, neon bloom, dramatic rim light, large halos, crowns, sparkles, swirls of particles, floating runes, circuitry, beams, solid glowing eyes, exaggerated makeup, hands, text or watermark. Do not simply add a big magical effect to the unchanged expression. The change in her attention and expression must carry the supernatural allure.
+
+
+
+### Nixie - subtle purple eyes, no ripples
+
+Author direction: remove the blatant psychic ripples and use purple eyes with a very subtle glow. Generated with built-in imagegen using nixie-v4.png as the edit target; saved as [nixie-v5.png](nixie-v5.png). This supersedes the previous psychic-ripple direction; earlier versions retained.
+
+Use case: precise-object-edit.
+The supplied Nixie portrait is the edit target. Make only these two changes:
+1. Completely REMOVE all psychic ripples, colored arcs, rings, halos and magical effects from the background. Restore an uninterrupted quiet warm-gray painted background with the same subtle gouache/paper texture. No residual arcs or circular patterns.
+2. Change both irises to a beautiful soft PURPLE, with a VERY SUBTLE inherent glow. Muted amethyst-violet iris color, delicate lavender highlights within the iris, fully visible dark pupils and natural catchlights. The luminous quality is barely perceptible: the eyes seem quietly alive with light on a second look, not shining lamps. Keep the glow inside the irises; no bloom around the eyes, no light spill on cheeks or eyelids, no beams, no solid glowing eyes, no neon or electric saturation. Preserve eye size, shape, pupil position, direct gaze and eyelids.
+
+Preserve exactly the current individual's face, inviting almost-smile, expression, bald blue scaled head, fin ears, skin colors, facial proportions, scale pattern, light draped clothing, coral pendant, frontal level pose, square headshot framing, lighting and polished DRAWN ink-and-gouache style. No changes outside the eyes and background cleanup. The only supernatural hint is the restrained purple iris luminosity. No other effects, text or watermark.
+
+
+
+### Nixie - ethereal presence, fresh portrait
+
+Author direction: mesmerizing, ethereal, slightly otherworldly beauty rather than friendliness. An expression edit remained too close to the previous face, so the selected portrait was generated from scratch with no reference image using built-in imagegen. New facial design, still mouth, intent purple eyes, delicate pale-blue color relationships and a darker plain background carry the effect. Saved as [nixie-v6.png](nixie-v6.png). Earlier saved versions retained.
+
+Create a NEW original portrait from scratch. Do not copy any previous character face or image composition in the conversation.
+
+A mesmerizing adult female aquatic xenohuman called a Nixie, portrayed as a strange and exquisitely beautiful water spirit. Her psychic gift draws people's attention almost involuntarily. The portrait must convey an ethereal, slightly otherworldly, can't-look-away beauty through exceptional facial design and presence alone.
+
+DRAWING DIRECTION: sophisticated illustrative portrait, fine selective ink with matte opaque gouache and delicate watercolor-like color transitions. Elegant intentional drawing, refined shapes, some visible brushwork, only a little paper texture. More lyrical and delicate than gritty concept art, yet clean and polished. Clearly drawn, not photorealistic, not 3D, not an airbrushed beauty ad. Individual unforgettable face, not a generic glamour-model face.
+
+SUBJECT: completely bald blue-skinned adult woman with graceful translucent fin ears and small subtle scale groupings around the outer face and crown. Naturally bald, beautiful normal rounded head, no hair, no headdress. Delicate luminous pale-blue complexion with subtle silver and lilac undertones in the painted planes. An unusual elegant face: wide fine cheekbones, softly hollow cheeks, a narrow long clean nose with a distinctive profile visible in its frontal planes, gently tapered lower face, wide-set long almond eyes beneath fine almost-straight brows. Lightly defined lips, a small beautifully articulated mouth at rest, with neither smile nor frown. A sense of ageless stillness, while clearly an adult. Her expression is serenely unreadable, quietly aware of the viewer. Neither reassuring friendliness nor haughty sternness, neither vacant doll nor seductive pout.
+
+EYES: arresting direct eye contact. Amethyst-purple irises, clear dark pupils, extraordinary depth with the faintest inner lavender luminosity. A tiny lucid catchlight, no large glow. Lids poised and relaxed, eyes alert, looking straight at the camera. The stillness of the face concentrates attention in the eyes. The beauty should feel uncanny and elusive rather than approachable and cheerful.
+
+COMPOSITION: upright, LEVEL, directly face-on headshot and upper shoulders only. No head tilt, no three-quarter turn. Entire bald skull and elegant lateral fin ears inside the square with deliberate breathing room. Normal human skull and neck proportions; do not elongate the forehead or dome. Close intimate portrait, delicately balanced silhouette. Very light pale fabric visible at the bottom over the upper shoulders, open neckline, bare neck. A small simple coral pendant on a fine cord. No coats or tall collars.
+
+LIGHT AND BACKGROUND: softly luminous face against a plain deeper desaturated blue-gray painted background. Controlled soft light gives fine pearlescent transitions to the blue skin; no glossy highlights. Background is quieter and darker than the face. The face should seem to emerge from stillness through value and color, not magic effects. The eyes and mouth have the most precise linework; outer contours and cloth are more economical. Preserve a strong readable face at thumbnail size.
+
+ABSOLUTE CONSTRAINTS: no scalp hair, no psychic ripples, no halos, no aura, no runes, no forehead mark, no glitter, no spells, no colored smoke, no glowing outline, no beams, no solid glowing eyes, no magical scenery, no heavy makeup, no exaggerated eyelashes, no plastic-smooth skin, no shiny doll face. No text, frame or watermark. One finished square portrait.
 

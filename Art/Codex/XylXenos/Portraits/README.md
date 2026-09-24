@@ -6,7 +6,7 @@ Eleven face-on character portraits based on [the mod README](../../../../XylXeno
 
 | | | |
 | --- | --- | --- |
-| **Bossaps**<br>[![Bossaps](bossaps.png)](bossaps.png) | **Chyrr**<br>[![Chyrr](chyrr.png)](chyrr.png) | **Dvergr**<br>[![Dvergr](dvergr.png)](dvergr.png) |
-| **Nixie**<br>[![Nixie](nixie-v3.png)](nixie-v3.png) | **Titan**<br>[![Titan](titan.png)](titan.png) | **Trog**<br>[![Trog](trog.png)](trog.png) |
+| **Bossaps**<br>[![Bossaps](bossaps.png)](bossaps.png) | **Chyrr**<br>[![Chyrr](chyrr-v2.png)](chyrr-v2.png) | **Dvergr**<br>[![Dvergr](dvergr.png)](dvergr.png) |
+| **Nixie**<br>[![Nixie](nixie-v6.png)](nixie-v6.png) | **Titan**<br>[![Titan](titan.png)](titan.png) | **Trog**<br>[![Trog](trog.png)](trog.png) |
 | **Warcat**<br>[![Warcat](warcat-v3.png)](warcat-v3.png) | **Zeegee**<br>[![Zeegee](zeegee-v3.png)](zeegee-v3.png) | **Omegabeaver**<br>[![Omegabeaver](omegabeaver.png)](omegabeaver.png) |
 | **Scaleborn — red lineage**<br>[![Scaleborn — red lineage](scaleborn.png)](scaleborn.png) | **Succuboid**<br>[![Succuboid](succuboid.png)](succuboid.png) |  |
