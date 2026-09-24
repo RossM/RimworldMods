@@ -7,6 +7,23 @@
       <rulesStrings>
         <li>r_name->[firstName] [lastName]</li>
 
+        <li>lastName(p=2)->[Color][BodyPart]</li>
+        <li>lastName->[weapon][BodyPart]</li>
+        <li>lastName->[Color][weapon]</li>
+      </rulesStrings>
+      <rulesFiles>
+        <li>weapon->Xyl/Words/Trog/Weapons</li>
+        <li>firstName->Xyl/Names/Trog/First_Unisex</li>
+      </rulesFiles>
+    </rulePack>
+  </RulePackDef>
+
+  <RulePackDef>
+    <defName>NamerXylPersonTrog_Old</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>r_name->[firstName] [lastName]</li>
+
         <li>firstName->[consonant1][vowel][consonant2]</li>
 
         <li>lastName(p=2)->[Color][BodyPart]</li>
