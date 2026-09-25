@@ -256,8 +256,7 @@ public static class PatchHelpers
         if (thought == null || ingestible == null)
             return false;
 
-        List<GeneIngestionThoughtOverride>? thoughtOverrides = eater.GeneTracker_XylXenos?.ingestionThoughtOverrides;
-        if (thoughtOverrides == null)
+        if (eater.GeneTracker_XylXenos?.ingestionThoughtOverrides is not List<GeneIngestionThoughtOverride> thoughtOverrides)
             return false;
 
         foreach (var thoughtOverride in thoughtOverrides)
