@@ -11,11 +11,11 @@ internal static class Patch_SlaveRebellionUtility
         if (__result < 0)
             return;
 
+        __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
+        
         var geneTracker = pawn.GeneTracker_Xylib;
         if (geneTracker == null)
             return;
-
-        __result *= pawn.GetStatValue(XStatDefOf.XylSlaveRebellionMtbFactor);
     }
 
     [Feature(nameof(XStatDefOf.XylSlaveRebellionMtbFactor))]

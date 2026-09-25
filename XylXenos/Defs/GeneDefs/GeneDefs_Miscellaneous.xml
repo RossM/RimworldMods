@@ -13,7 +13,6 @@
     <socialFightChanceFactor>0</socialFightChanceFactor>
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor>
     <statFactors>
-      <SlaveSuppressionFallRate MayRequire="Ludeon.RimWorld.Ideology">0.25</SlaveSuppressionFallRate>
       <XylWillFallRate>4</XylWillFallRate>
       <XylSlaveRebellionMtbFactor>4</XylSlaveRebellionMtbFactor>
     </statFactors>

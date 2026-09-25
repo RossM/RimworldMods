@@ -2,10 +2,16 @@
 
 <Patch>
 
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/StatDef[defName="SlaveSuppressionFallRate"]/workerClass</xpath>
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/StatDef[defName="SlaveSuppressionFallRate"]</xpath>
+    <order>Prepend</order>
     <value>
-      <workerClass>XylXenos.StatWorker_SuppressionFallRate_Fixed</workerClass>
+      <parts>
+        <li Class="Xylib.StatPart_Genetic">
+          <gene>XylDocile</gene>
+          <factor>0.25</factor>
+        </li>
+      </parts>
     </value>
   </Operation>
 
