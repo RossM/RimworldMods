@@ -359,4 +359,9 @@ public static class PatchHelpers
             return 0f;
         return factor;
     }
+
+    public static bool DocileAndHappy(Pawn pawn) =>
+        pawn.genes?.HasActiveGene(XylXenos.DefOf.XylDocile) is true &&
+        pawn.mindState.mentalBreaker is { } breaker &&
+        breaker.CurMood >= breaker.BreakThresholdMinor;
 }

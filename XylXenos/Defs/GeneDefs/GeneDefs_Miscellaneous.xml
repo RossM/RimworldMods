@@ -14,8 +14,12 @@
     <prisonBreakMTBFactor>4</prisonBreakMTBFactor>
     <statFactors>
       <XylWillFallRate>4</XylWillFallRate>
-      <XylSlaveRebellionMtbFactor>4</XylSlaveRebellionMtbFactor>
+      <!--<XylSlaveRebellionMtbFactor>4</XylSlaveRebellionMtbFactor>-->
     </statFactors>
+    <customEffectDescriptions>
+      <li>Slave suppression fall rate: x0.25</li>
+      <li>Will never start or join a slave rebellion while happy.</li>
+    </customEffectDescriptions>
     <suppressedTraits>
       <Bloodlust />
     </suppressedTraits>
