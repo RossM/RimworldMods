@@ -361,7 +361,7 @@ public static class PatchHelpers
     }
 
     public static bool DocileAndHappy(Pawn pawn) =>
-        pawn.genes?.HasActiveGene(XylXenos.DefOf.XylDocile) is true &&
+        pawn.genes?.HasActiveGene(DefOf.XylDocile) is true &&
         pawn.mindState.mentalBreaker is { } breaker &&
         breaker.CurMood >= breaker.BreakThresholdMinor;
 }
