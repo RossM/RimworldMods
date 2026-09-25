@@ -5,13 +5,13 @@
   <GeneDef ParentName="GeneAggressionBase">
     <defName>XylDocile</defName>
     <label>docile</label>
-    <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They are also less likely to start prison breaks, and never start social fights.</description>
+    <description>Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They also never start social fights.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayOrderInCategory>5</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Docile</iconPath>
     <socialFightChanceFactor>0</socialFightChanceFactor>
-    <prisonBreakMTBFactor>4</prisonBreakMTBFactor>
+    <prisonBreakMTBFactor>-1</prisonBreakMTBFactor>
     <statFactors>
       <XylWillFallRate>4</XylWillFallRate>
       <!--<XylSlaveRebellionMtbFactor>4</XylSlaveRebellionMtbFactor>-->
