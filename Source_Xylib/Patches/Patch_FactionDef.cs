@@ -1,7 +1,7 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [Patch(typeof(FactionDef))]
-public static class Patch_FactionDef
+internal static class Patch_FactionDef
 {
     [Feature(typeof(XenotypeSetWithDefault))]
     [Postfix]

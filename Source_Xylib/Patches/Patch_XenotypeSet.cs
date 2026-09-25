@@ -1,7 +1,7 @@
-﻿namespace XylXenos.Patches;
+﻿namespace Xylib.Patches;
 
 [Patch(typeof(XenotypeSet))]
-public static class Patch_XenotypeSet
+internal static class Patch_XenotypeSet
 {
     [Feature(typeof(XenotypeSetWithDefault))]
     [Postfix]
