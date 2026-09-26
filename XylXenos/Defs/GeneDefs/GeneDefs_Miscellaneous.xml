@@ -631,6 +631,10 @@
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
+    <customEffectDescriptions>
+      <li>Duration: 1 day</li>
+      <li>Recharge time: 4 days</li>
+    </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
