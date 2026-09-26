@@ -25,6 +25,7 @@ public class GeneTracker_XylXenos : GeneTracker
         disableHostilityFromFactions?.Clear();
         ingestionThoughtOverrides?.Clear();
         meleeDamageFactors?.Clear();
+        meleeChanceBonuses?.Clear();
         hasPsycast = false;
         youthfulMaxAge = float.MaxValue;
 

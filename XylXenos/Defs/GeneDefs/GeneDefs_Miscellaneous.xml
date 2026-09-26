@@ -343,10 +343,10 @@
             <setMax>0.8</setMax>
           </li>
         </capMods>
-        <statFactors>
+        <statOffsets>
           <XylHypothermiaResistance>0.5</XylHypothermiaResistance>
           <XylMalnutritionResistance>0.5</XylMalnutritionResistance>
-        </statFactors>
+        </statOffsets>
       </li>
       <li>
         <label>half-asleep</label>
@@ -359,10 +359,10 @@
             <setMax>0.5</setMax>
           </li>
         </capMods>
-        <statFactors>
+        <statOffsets>
           <XylHypothermiaResistance>0.75</XylHypothermiaResistance>
           <XylMalnutritionResistance>0.75</XylMalnutritionResistance>
-        </statFactors>
+        </statOffsets>
       </li>
       <li>
         <label>hibernating</label>
@@ -375,10 +375,10 @@
             <setMax>0.1</setMax>
           </li>
         </capMods>
-        <statFactors>
+        <statOffsets>
           <XylHypothermiaResistance>0.9</XylHypothermiaResistance>
           <XylMalnutritionResistance>0.9</XylMalnutritionResistance>
-        </statFactors>
+        </statOffsets>
       </li>
     </stages>
   </HediffDef>

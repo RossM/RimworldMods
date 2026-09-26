@@ -28,6 +28,7 @@
     <requiredGenes>
       <li>XylHerdInstinct</li>
     </requiredGenes>
+    <validWhileDespawned>true</validWhileDespawned>
     <stages>
       <li>
         <label>herd instinct alone</label>

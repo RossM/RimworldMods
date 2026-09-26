@@ -22,15 +22,17 @@ public class Thought_Situational_HerdInstinct : Thought_Situational
     {
         DebugAssert.NotNull(pawn);
 
-        int colonistCount;
-
-        if (pawn.Map is { } map)
-            colonistCount = map.mapPawns.ColonistsSpawnedCount;
-        else if (pawn.GetCaravan() is { } caravan)
-            colonistCount = caravan.PlayerPawnsForStoryteller.Count();
-        else
-            colonistCount = 1;
+        int colonistCount = ColonistCount(pawn);
 
         return MoodOffsetCurveFromPopulation.Evaluate(colonistCount);
+    }
+
+    public static int ColonistCount(Pawn pawn)
+    {
+        if (pawn.Map is { } map)
+            return map.mapPawns.ColonistsSpawnedCount;
+        if (pawn.GetCaravan() is { } caravan)
+            return caravan.PlayerPawnsForStoryteller.Count(p => p.IsColonist);
+        return 1;
     }
 }

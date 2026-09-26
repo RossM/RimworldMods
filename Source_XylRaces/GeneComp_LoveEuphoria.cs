@@ -19,6 +19,9 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
 
     public void Notify_PostLovin(Pawn partner)
     {
+        if (!Active)
+            return;
+
         if (Props.hediffs is { Count: > 0 })
             foreach (var hediffDef in Props.hediffs)
             {

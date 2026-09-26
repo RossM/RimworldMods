@@ -54,7 +54,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
 
     public void Notify_DamageTaken(DamageInfo damageInfo)
     {
-        if (Active)
+        if (!Active)
             return;
 
         Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);

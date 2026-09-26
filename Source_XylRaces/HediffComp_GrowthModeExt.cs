@@ -7,6 +7,7 @@ public class GrowthMode
 {
     public float weight = 1f;
     public bool causesNoPain = false;
+    public bool enableHediffGivers = true;
     public bool allowTend = true;
     public float changeMtbDays = -1;
     public float severityPerDay = 0f;
@@ -89,6 +90,8 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
     {
         if (GrowthMode.causesNoPain)
             stage.painOffset = 0f;
+        if (!GrowthMode.enableHediffGivers)
+            stage.hediffGivers = null;
     }
 
     public override void CompExposeData()
