@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/XenotypeDef[defName="Sanguophage"]</xpath>
+    <value>
+      <doubleXenotypeChances>
+        <XylBossaps>0.02</XylBossaps>
+        <XylChyrr>0.02</XylChyrr>
+        <XylDvergr>0.02</XylDvergr>
+        <XylNixie>0.02</XylNixie>
+        <XylOmegabeaver>0.02</XylOmegabeaver>
+        <XylScaleborn>0.02</XylScaleborn>
+        <XylSuccuboid>0.02</XylSuccuboid>
+        <XylTrog>0.02</XylTrog>
+        <XylWarcat>0.02</XylWarcat>
+        <XylZeegee>0.02</XylZeegee>
+      </doubleXenotypeChances>
+    </value>
+  </Operation>
+  
+</Patch>
