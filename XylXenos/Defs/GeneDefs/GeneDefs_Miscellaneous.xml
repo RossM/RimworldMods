@@ -386,7 +386,7 @@
   <GeneDef>
     <defName>XylInsectPheromones</defName>
     <label>insect pheromones</label>
-    <description>Carriers of this gene produce special pheromones which make wild insects not attack them.</description>
+    <description>Carriers of this gene produce special pheromones which prevent wild insects from attacking them. This protection is briefly disabled if their faction provokes the insects.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
