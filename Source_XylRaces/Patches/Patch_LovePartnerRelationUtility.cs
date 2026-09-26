@@ -1,12 +1,12 @@
 ﻿namespace XylXenos.Patches;
 
-[HarmonyPatch]
-public static class PatchLovin
+[Patch(typeof(LovePartnerRelationUtility))]
+public static class Patch_LovePartnerRelationUtility
 {
 
     [Feature(nameof(Config.Feature.Bugfix_Misc))]
     [Postfix]
-    [Target(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
+    [Target("LovinMtbSinglePawnFactor")]
     public static void LovinMtbSinglePawnFactor_Postfix(Pawn pawn, ref float __result)
     {
         if (ModsConfig.BiotechActive && pawn.genes != null)
@@ -22,7 +22,7 @@ public static class PatchLovin
 
     [Feature(typeof(GeneComp_LoveEuphoria))]
     [Postfix]
-    [Target(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.GetLovinMtbHours))]
+    [Target(nameof(LovePartnerRelationUtility.GetLovinMtbHours))]
     public static void GetLovinMtbHours_Postfix(Pawn pawn, Pawn partner, ref float __result)
     {
         if (__result <= 0)
