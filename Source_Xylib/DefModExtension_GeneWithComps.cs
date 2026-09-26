@@ -6,6 +6,8 @@ public abstract class GeneCompProperties
 {
     public Type? compClass;
 
+    public virtual bool AllowDuplicates => false;
+
     public virtual IEnumerable<string> ConfigErrors(GeneDef? gene)
     {
         return PatchHelpers.RequiredMemberErrors(this) ?? [];
@@ -151,6 +153,8 @@ public class DefModExtension_GeneWithComps : DefModExtension
         if (comps is null)
             yield break;
 
+        HashSet<Type> seenCompPropertyTypes = [];
+
         foreach (var comp in comps)
         {
             if (comp is null)
@@ -158,6 +162,9 @@ public class DefModExtension_GeneWithComps : DefModExtension
                 yield return "comp is null";
                 continue;
             }
+
+            if (!comp.AllowDuplicates && !seenCompPropertyTypes.Add(comp.GetType()))
+                yield return $"Duplicate comps of type {comp.GetType()}";
 
             foreach (var configError in comp.ConfigErrors(parent as GeneDef))
                 yield return $"{comp}: {configError}";
