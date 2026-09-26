@@ -117,7 +117,7 @@
     <defName>XylMineralizedSkin</defName>
     <label>rockskin</label>
     <labelShortAdj>rock</labelShortAdj>
-    <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks. The tough skin reduces movement speed.</description>
+    <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks. The inflexible skin reduces movement speed.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-4</biostatMet>
     <displayCategory>XylBody</displayCategory>
