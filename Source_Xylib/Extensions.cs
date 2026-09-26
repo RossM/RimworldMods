@@ -931,4 +931,14 @@ public static class Extensions
         public static string[] GetNames<T>() where T : Enum => Enum.GetNames(typeof(T));
         public static T[] GetValues<T>() where T : Enum => (T[])Enum.GetValues(typeof(T));
     }
+
+    extension(XenotypeDef xenotype)
+    {
+        public GeneType GeneType => xenotype.inheritable ? GeneType.Endogene : GeneType.Xenogene;
+    }
+
+    extension (CustomXenotype xenotype)
+    {
+        public GeneType GeneType => xenotype.inheritable ? GeneType.Endogene : GeneType.Xenogene;
+    }
 }

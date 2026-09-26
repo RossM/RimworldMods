@@ -35,16 +35,20 @@ public static class StaticEventHandlers
         if (request.FixedGender != null)
             return;
 
-        static bool HasGenderRatio(GeneDef geneDef) => geneDef.CompProps<GeneCompProperties_GenderRatio>() != null;
-
-        GeneDef? gene = request.ForcedEndogenes?.FirstOrDefault(HasGenderRatio) ??
-                        request.ForcedXenogenes?.FirstOrDefault(HasGenderRatio) ??
-                        request.ForcedCustomXenotype?.genes.FirstOrDefault(HasGenderRatio) ??
-                        xenotype?.AllGenes.FirstOrDefault(HasGenderRatio);
+        GeneDef? gene = request.ForcedXenogenes?.FirstOrDefault(def => HasGenderRatio(def, GeneType.Xenogene)) ??
+                        request.ForcedEndogenes?.FirstOrDefault(def => HasGenderRatio(def, GeneType.Endogene)) ??
+                        request.ForcedCustomXenotype?.genes.FirstOrDefault(def => HasGenderRatio(def, request.ForcedCustomXenotype.GeneType)) ??
+                        xenotype?.AllGenes.FirstOrDefault(def => HasGenderRatio(def, xenotype.GeneType));
         var comp = gene?.CompProps<GeneCompProperties_GenderRatio>();
         if (comp == null)
             return;
 
         pawn.gender = Rand.Chance(comp.femaleChance) ? Gender.Female : Gender.Male;
+        return;
+
+        static bool HasGenderRatio(GeneDef geneDef, GeneType geneType) =>
+            geneDef.Extension_GeneWithComps is not null &&
+            geneDef.CompProps<GeneCompProperties_GenderRatio>() != null && 
+            (geneDef.Extension_GeneWithComps.geneType is null || geneDef.Extension_GeneWithComps.geneType == geneType);
     }
 }
