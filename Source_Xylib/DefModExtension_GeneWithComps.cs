@@ -6,20 +6,51 @@ public abstract class GeneCompProperties
 {
     public Type? compClass;
 
+    /// <summary>
+    ///     Whether it is valid for a <see cref="DefModExtension_GeneWithComps" /> to have multiple comps of this type.
+    /// </summary>
+    /// <remarks>
+    ///     <see cref="DefModExtension_GeneWithComps.ConfigErrors" /> will report an error if a
+    ///     gene has multiple comps with the same type with this flag set to <see langword="false" />.
+    /// </remarks>
     public virtual bool AllowDuplicates => false;
 
+    /// <summary>
+    ///     Reports errors in the configuration of this comp. Override in a derived class to report additional errors.
+    /// </summary>
+    /// <remarks>
+    ///     Overrides should be sure to call the <see langword="base" /> method and return errors from it as well.
+    /// </remarks>
+    /// <param name="gene"></param>
+    /// <returns></returns>
     public virtual IEnumerable<string> ConfigErrors(GeneDef? gene)
     {
         return PatchHelpers.RequiredMemberErrors(this) ?? [];
     }
 
+    /// <summary>
+    ///     Called during initialization after all defs have been parsed.
+    /// </summary>
+    /// <remarks>
+    ///     Override this method to perform additional initialization, such as setting null fields to default values.
+    /// </remarks>
+    /// <param name="parentDef"></param>
     public virtual void ResolveReferences(Def parentDef) { }
 
+    /// <summary>
+    ///     Stat entries which will be displayed on the containing gene's info page.
+    /// </summary>
+    /// <param name="req"></param>
+    /// <returns></returns>
     public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
     {
         return [];
     }
 
+    /// <summary>
+    ///     Description lines which will be displayed on the containing gene's tooltip.
+    /// </summary>
+    /// <returns></returns>
     public virtual IEnumerable<string> CustomEffectDescriptions()
     {
         foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
