@@ -161,8 +161,8 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>XylParthenogenic</defName>
-    <label>parthenogenic</label>
+    <defName>XylParthenogenetic</defName>
+    <label>parthenogenetic</label>
     <description>Female carriers of this gene can become spontaneously pregnant without a father.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
@@ -174,6 +174,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <gender>Female</gender>
         <hediffGivers>
+          <!-- This bypasses infertility, so parthenogenic + sterile will result in only spontaneous pregnancies -->
           <li Class="HediffGiver_Random">
             <mtbDays>120</mtbDays>
             <hediff>PregnantHuman</hediff>
