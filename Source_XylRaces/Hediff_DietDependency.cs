@@ -1,6 +1,8 @@
 ﻿namespace XylXenos;
-// TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed
-// and CaravanInventoryUtility.TryGetBestFood.
+
+// TODO: Need to handle satisfying the dependency for pawns in caravans. See Caravan_NeedsTracker.TrySatisfyChemicalNeed.
+// This is partially implemented in that pawns will automatically select food that meets their need, see
+// Patch_CaravanPawnsNeedsUtility.
 
 [UsedFromXml]
 public class DefModExtension_Hediff_DietDependency : DefModExtension
