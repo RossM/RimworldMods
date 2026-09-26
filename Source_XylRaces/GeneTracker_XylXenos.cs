@@ -17,8 +17,6 @@ public class GeneTracker_XylXenos : GeneTracker
 
     public bool hasPsycast;
 
-    public float youthfulMaxAge;
-
     public override void Update()
     {
         joyGiverChanceFactors?.Clear();
@@ -27,7 +25,6 @@ public class GeneTracker_XylXenos : GeneTracker
         meleeDamageFactors?.Clear();
         meleeChanceBonuses?.Clear();
         hasPsycast = false;
-        youthfulMaxAge = float.MaxValue;
 
         if (Pawn.genes == null)
             return;
@@ -47,9 +44,6 @@ public class GeneTracker_XylXenos : GeneTracker
 
 
             hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
-
-            if (def.CompProps<GeneCompProperties_Youthful>() is { } youthful)
-                youthfulMaxAge = Mathf.Min(youthfulMaxAge, youthful.maxAge);
         }
     }
 }

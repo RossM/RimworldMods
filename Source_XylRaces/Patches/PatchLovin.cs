@@ -3,17 +3,6 @@
 [HarmonyPatch]
 public static class PatchLovin
 {
-    [Feature(typeof(GeneCompProperties_Youthful))]
-    [Postfix]
-    [Inner(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYearsFloat))]
-    [Target(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
-    [Target(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.LovinAgeFactor))]
-    [Target(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]
-    public static void AgeBiologicalYearsFloat_Postfix(Pawn ___pawn, ref float __result)
-    {
-        if (___pawn.GeneTracker_XylXenos is { } tracker)
-            __result = Mathf.Min(__result, tracker.youthfulMaxAge);
-    }
 
     [Feature(nameof(Config.Feature.Bugfix_Misc))]
     [Postfix]
@@ -29,5 +18,19 @@ public static class PatchLovin
             if (hediff.TryGetComp<HediffComp_GiveLovinMTBFactor>() is { Props.lovinMTBFactor: var factor })
                 __result *= factor;
         }
+    }
+
+    [Feature(typeof(GeneComp_LoveEuphoria))]
+    [Postfix]
+    [Target(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.GetLovinMtbHours))]
+    public static void GetLovinMtbHours_Postfix(Pawn pawn, Pawn partner, ref float __result)
+    {
+        if (__result <= 0)
+            return;
+
+        if (pawn.FirstActiveGeneCompOfType<GeneComp_LoveEuphoria>()?.Props.maxLovinMtbHours is { } max1 and >= 0)
+            __result = Mathf.Min(__result, max1);
+        if (partner.FirstActiveGeneCompOfType<GeneComp_LoveEuphoria>()?.Props.maxLovinMtbHours is { } max2 and >= 0)
+            __result = Mathf.Min(__result, max2);
     }
 }

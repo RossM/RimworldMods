@@ -5,6 +5,7 @@ public class GeneCompProperties_LoveEuphoria : GeneCompProperties
     public required NeedDef need;
     public float needOffset = 1f;
     public List<HediffDef>? hediffs;
+    public float maxLovinMtbHours = -1f;
 
     public GeneCompProperties_LoveEuphoria()
     {
