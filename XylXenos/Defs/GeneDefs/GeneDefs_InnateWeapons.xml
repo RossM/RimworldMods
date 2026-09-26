@@ -32,9 +32,6 @@
         </drawData>
       </li>
     </renderNodeProperties>
-    <exclusionTags>
-      <li>Headbone</li>
-    </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>

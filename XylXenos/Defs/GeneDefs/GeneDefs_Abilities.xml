@@ -406,7 +406,7 @@
   <GeneDef>
     <defName>XylOilSpray</defName>
     <label>oil spray</label>
-    <description>Carriers have glands in their neck that can use used to spray a sticky oil that blinds opponents and leaves flammable puddles.</description>
+    <description>Carriers have glands in their neck that can be used to spray a sticky oil that blinds opponents and leaves flammable puddles.</description>
     <descriptionHyperlinks>
       <AbilityDef>XylOilSpray</AbilityDef>
     </descriptionHyperlinks>
@@ -416,9 +416,6 @@
     <abilities>
       <li>XylOilSpray</li>
     </abilities>
-    <descriptionHyperlinks>
-      <AbilityDef>XylOilSpray</AbilityDef>
-    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
