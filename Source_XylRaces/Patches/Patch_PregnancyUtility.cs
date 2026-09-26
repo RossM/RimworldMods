@@ -38,10 +38,13 @@ public static class Patch_PregnancyUtility
     {
         __result = PatchHelpers.GetDominantParent(mother, father) switch
         {
-            PatchHelpers.DominantParent.Mother => [.. mother.genes.Endogenes.Select(gene => gene.def)],
-            PatchHelpers.DominantParent.Father => [.. father.genes.Endogenes.Select(gene => gene.def)],
+            PatchHelpers.DominantParent.Mother => GenesFrom(mother),
+            PatchHelpers.DominantParent.Father => GenesFrom(father),
             _ => __result,
         };
+        return;
+
+        static List<GeneDef> GenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
