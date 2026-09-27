@@ -147,7 +147,6 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>25</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
-    <iconColor>(0.35, 0.55, 0.35)</iconColor>
     <exclusionTags>
       <li>WorkSpeed</li>
     </exclusionTags>
@@ -164,7 +163,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>26</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Lazy</iconPath>
     <exclusionTags>
       <li>WorkSpeed</li>
     </exclusionTags>
