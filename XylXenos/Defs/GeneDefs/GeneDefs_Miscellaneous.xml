@@ -840,9 +840,9 @@
     <displayOrderInCategory>1002</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <statFactors>
-      <SocialImpact>1.4</SocialImpact>
-    </statFactors>
+    <statOffsets>
+      <SocialImpact>0.4</SocialImpact>
+    </statOffsets>
     <renderNodeProperties>
       <li>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
