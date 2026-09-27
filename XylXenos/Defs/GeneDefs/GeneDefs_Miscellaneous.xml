@@ -282,7 +282,7 @@
     <biostatMet>2</biostatMet>
     <displayCategory>Temperature</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Torpor</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <hediffGivers>
