@@ -194,6 +194,7 @@
     <displayOrderInCategory>500</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <minAgeActive>16</minAgeActive>
+    <marketValueFactor>1.5</marketValueFactor>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>

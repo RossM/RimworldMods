@@ -49,8 +49,7 @@
     <value>
       <nullifyingGenes>
         <li>XylAquatic</li>
-        <!-- Vanilla change but I don't care -->
-        <li>WebbedPhalanges</li>
+        <li>XylTail_Beaver</li>
       </nullifyingGenes>
     </value>
   </Operation>
