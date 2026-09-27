@@ -145,8 +145,10 @@
       <GeneDef>XylRockToss</GeneDef>
     </descriptionHyperlinks>
     <iconPath>Xyl/UI/Icons/Genes/Gene_RockToss</iconPath>
-    <!-- 8 hours -->
-    <cooldownTicksRange>20000</cooldownTicksRange>
+    <!-- 1 day -->
+    <cooldownTicksRange>60000</cooldownTicksRange>
+    <charges>2</charges>
+    <cooldownPerCharge>true</cooldownPerCharge>
     <jobDef>XylCastAbilityWithHeldThing</jobDef>
     <verbProperties>
       <verbClass>Verb_CastAbilityTouch</verbClass>
