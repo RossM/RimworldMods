@@ -1,0 +1,15 @@
+# Generation prompts
+
+Tool: built-in `image_gen.imagegen`. The source PNGs retain the generated alpha. Library exports are normalized to pure white and centered using the same framing as the extracted components.
+
+## Die
+
+Source: `_sources/die-original.png`. New generation without an input image.
+
+Use case: ui-mockup. Asset type: a single isolated raster icon component for a RimWorld gene-icon compositing library. Create one simple six-sided gaming die symbol meaning randomness. Small-game-UI icon style, very clean flat silhouette, chunky and legible at 32 pixels. Show the die in a restrained three-quarter/isometric view with three visible faces. Top face has exactly ONE pip, left face exactly THREE pips, right face exactly FIVE pips, correctly aligned on their perspective planes. Use ONLY solid pure white for the die faces. The circular/elliptical pips and the narrow straight gaps separating the three faces must be genuine transparent cutouts. Transparent RGBA background everywhere outside the die and inside the pips/seams. No black or gray pixels, no outlines or border stroke, no colored shading, no lighting, no gradients, no drop shadow, no ground, no text, no frame. Slightly softened outer corners, simple planar geometry. Single centered complete die, square 1024x1024 canvas; visible bounding box centered horizontally and vertically, longest visible extent about 896px with at least 64px empty margin. Output only the isolated white die component with real alpha transparency.
+
+## Shirt
+
+Source: `_sources/shirt-original.png`. Edit input: `Art/Rimworld art/Gene_NakedSpeed.png`. Faithful reconstruction of the shirt behind the weight; not a pixel-exact extraction of the hidden area.
+
+Use case: background-extraction. Edit target: the attached RimWorld Gene_NakedSpeed icon. Extract ONLY the short-sleeved T-SHIRT behind the weight into one reusable standalone component. Delete the weight completely. Preserve the source shirt's actual visible silhouette: wide short angled sleeves, diagonal shoulder lines, a shallow rounded scoop neckline, an ordinary simple front-facing shirt torso. Faithfully complete the central lower torso and flat hem hidden behind the weight so the shirt is a complete coherent T-shirt; use the sleeve proportions and source icon style, do not leave a weight-shaped hole. Remove the entire black outline. The source shirt is a single solid olive color, so change its entire fill to pure WHITE as required for this icon component library. No interior shading, no seams, no black or gray pixels, no collar stroke, no symbol on the shirt. Only the source's shirt as one flat pure white silhouette. Actual transparent RGBA background; the neckline and outside are transparent. Clean antialiased edges, tiny-icon readability, no added ornament. Center the complete shirt by its visible bounds on a square 1024x1024 transparent canvas; longest visible dimension about 896 pixels with at least 64px margin. Do not generate a die or a weight. Output a single shirt component.

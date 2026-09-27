@@ -1082,6 +1082,21 @@
       "note": "128 px vanilla source; enlarged for consistent framing. "
     },
     {
+      "file": "04_Symbols/die.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Codex/Iconography/_sources/die-original.png",
+          "method": "Built-in imagegen; new randomness symbol"
+        }
+      ],
+      "source_content_size": [
+        892,
+        967
+      ],
+      "note": "Generated white die with transparent pips and face separations; prompt recorded in generation-prompts.md."
+    },
+    {
       "file": "05_Objects/flask.png",
       "color": "original",
       "source": [
@@ -1324,6 +1339,38 @@
         447
       ],
       "note": ""
+    },
+    {
+      "file": "05_Objects/weight.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_NakedSpeed.png"
+        }
+      ],
+      "source_content_size": [
+        54,
+        49
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. Isolated the gray weight and handle; converted to white, with the handle opening transparent."
+    },
+    {
+      "file": "05_Objects/shirt.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_NakedSpeed.png"
+        },
+        {
+          "path": "Art/Codex/Iconography/_sources/shirt-original.png",
+          "method": "Built-in imagegen; faithful extraction and reconstruction"
+        }
+      ],
+      "source_content_size": [
+        1046,
+        714
+      ],
+      "note": "White shirt component; torso hidden by the weight faithfully reconstructed from the source outline and visible hem. Prompt recorded in generation-prompts.md."
     },
     {
       "file": "05_Objects/thermometer-hot.png",

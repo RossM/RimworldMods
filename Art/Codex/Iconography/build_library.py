@@ -185,6 +185,7 @@ vanilla('04_Symbols','sleep-zz','Sleepy')
 vanilla('04_Symbols','sleep-zzz','VerySleepy')
 vanilla('04_Symbols','radiation','PartialToxicityResistance','white',lambda im:select_color(im,(136,136,91),tolerance=2))
 vanilla('04_Symbols','sun-uv','IntenseUVSensitivity')
+save('04_Symbols','die',Image.open(OUT/'_sources/die-original.png').convert('RGBA'),[{'path':'Art/Codex/Iconography/_sources/die-original.png','method':'Built-in imagegen; new randomness symbol'}],note='Generated white die with transparent pips and face separations; prompt recorded in generation-prompts.md.')
 
 # Objects with their internal colors retained.
 native('05_Objects','flask','DrugResistant',[2,3,4,5],'original',note='Highlight, fluid and bubbles clipped to the base flask silhouette.',transform=lambda im:clip_to_alpha(im,layer('DrugResistant',2)))
@@ -198,6 +199,8 @@ native('05_Objects','rock','RockToss',[2,3],'original',transform=lambda im:clip_
 native('05_Objects','mountains','EvenTemper',[3,4,5],'original')
 native('05_Objects','anvil','Stoic',[1])
 native('05_Objects','running-cat','FastReflexes',[1],'original')
+vanilla('05_Objects','weight','NakedSpeed','white',lambda im:select_color(im,(61,61,61),tolerance=2),note='Isolated the gray weight and handle; converted to white, with the handle opening transparent.')
+save('05_Objects','shirt',Image.open(OUT/'_sources/shirt-original.png').convert('RGBA'),[{'path':'Art/Rimworld art/Gene_NakedSpeed.png'},{'path':'Art/Codex/Iconography/_sources/shirt-original.png','method':'Built-in imagegen; faithful extraction and reconstruction'}],note='White shirt component; torso hidden by the weight faithfully reconstructed from the source outline and visible hem. Prompt recorded in generation-prompts.md.')
 
 # Recover the obscured thermometer from its unobscured left half.
 for source,name in [('MaxTemperatureSmallDecrease','thermometer-hot'),('MinTemperatureSmallDecrease','thermometer-cold')]:
