@@ -776,15 +776,16 @@
   <GeneDef ParentName="GeneTailBase">
     <defName>XylTail_Beaver</defName>
     <label>beaver tail</label>
-    <description>Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver. The cute tail improves other characters' opinions of the carrier.</description>
+    <description>Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver that helps with temperature regulation.</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_TailBeaver</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>1001</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <customEffectDescriptions>
-      <li>Opinion +5</li>
-    </customEffectDescriptions>
+    <statOffsets>
+      <ComfyTemperatureMax>5</ComfyTemperatureMax>
+      <ComfyTemperatureMin>-5</ComfyTemperatureMin>
+    </statOffsets>
     <renderNodeProperties>
       <li>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
@@ -818,7 +819,7 @@
       </li>
     </renderNodeProperties>
   </GeneDef>
-  <ThoughtDef>
+  <!--<ThoughtDef>
     <defName>XylBeaverTail</defName>
     <thoughtClass>Thought_SituationalSocial</thoughtClass>
     <workerClass>XylXenos.ThoughtWorker_BeaverTail</workerClass>
@@ -829,12 +830,12 @@
         <baseOpinionOffset>5</baseOpinionOffset>
       </li>
     </stages>
-  </ThoughtDef>
+  </ThoughtDef>-->
 
   <GeneDef ParentName="GeneTailBase">
     <defName>XylTail_Demon</defName>
     <label>pointed tail</label>
-    <description>Carriers of this gene grow a narrow, pointed tail. The striking tail increases the character's effect in social interactions.</description>
+    <description>Carriers of this gene grow a narrow, pointed tail that increases the character's effect in social interactions.</description>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>1002</displayOrderInCategory>
