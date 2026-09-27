@@ -841,7 +841,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <statFactors>
-      <SocialImpact>1.5</SocialImpact>
+      <SocialImpact>1.4</SocialImpact>
     </statFactors>
     <renderNodeProperties>
       <li>
