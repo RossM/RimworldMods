@@ -1,6 +1,6 @@
 # Gene icon components
 
-75 transparent PNG components for composing RimWorld gene icons in a paint program.
+76 transparent PNG components for composing RimWorld gene icons in a paint program.
 
 - Every component is on a 1024 x 1024 RGBA canvas, with its visible bounds centered and its longest dimension fitted to 896 px (64 px minimum margin).
 - Single-color components are pure white. Tint them after importing. Components with internal shading or multiple colors retain those colors, including grayscale shading.

@@ -912,6 +912,30 @@
       "note": ""
     },
     {
+      "file": "04_Symbols/double-gear.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Industrious.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 15, 2025, 05_12_02 AM.png copy"
+            },
+            {
+              "index": 2,
+              "name": "ChatGPT Image Jun 15, 2025, 05_12_02 AM.png copy #1"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        627,
+        636
+      ],
+      "note": "Both source gears retained at their original relative positions and sizes; black outlines omitted."
+    },
+    {
       "file": "04_Symbols/broken-gear.png",
       "color": "white",
       "source": [
