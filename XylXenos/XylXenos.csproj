@@ -18,6 +18,7 @@
     <Folder Include="Languages\English\Strings\Xyl\WordParts\Trog\" />
     <Folder Include="Languages\English\Strings\Xyl\WordParts\Nixie\" />
     <Folder Include="Languages\English\Strings\Xyl\Words\Trog\" />
+    <Folder Include="Textures\Xyl\Things\Pawn\Humanlike\BodyAttachments\DemonTail\" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">

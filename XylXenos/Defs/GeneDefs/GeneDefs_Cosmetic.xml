@@ -291,4 +291,48 @@
     </renderNodeProperties>
   </GeneDef>
 
+  <GeneDef ParentName="GeneTailBase">
+    <defName>XylTail_Demon</defName>
+    <label>pointed tail</label>
+    <description>Carriers of this gene grow a narrow, pointed tail.</description>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayCategory>Cosmetic</displayCategory>
+    <displayOrderInCategory>1002</displayOrderInCategory>
+    <biostatCpx>0</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <renderNodeProperties>
+      <li>
+        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/DemonTail/DemonTail</texPath>
+        <overrideMeshSize>(1, 1)</overrideMeshSize>
+        <parentTagDef>Body</parentTagDef>
+        <colorType>Skin</colorType>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <visibleFacing>
+          <li>East</li>
+          <li>North</li>
+          <li>West</li>
+        </visibleFacing>
+        <drawData>
+          <scaleOffsetByBodySize>true</scaleOffsetByBodySize>
+          <defaultData>
+            <layer>-2</layer>
+          </defaultData>
+          <dataNorth>
+            <offset>(0, 0, 0)</offset>
+            <layer>90</layer>
+          </dataNorth>
+          <dataEast>
+            <offset>(-0.5, 0, 0)</offset>
+          </dataEast>
+          <dataWest>
+            <offset>(0.5, 0, 0)</offset>
+          </dataWest>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
+
 </Defs>
