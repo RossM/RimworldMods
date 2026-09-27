@@ -52,7 +52,7 @@ def card(name, style):
             typeface = font("SourceSerifPro-Semibold.ttf", 52)
             left, top, right, bottom = draw.textbbox((0, 0), name, font=typeface)
             assert 173 + right < SIZE - 24, f"Label exceeds card: {name}"
-            draw.text((173, SIZE - 80 - (bottom - top) / 2 - top), name, font=typeface, fill="#f4ede0")
+            draw.text((173, SIZE - 80 - (bottom - top) / 2 - top), name, font=typeface, fill="#f4ede0", stroke_width=3, stroke_fill="#000000")
         else:
             draw.text((155, SIZE - 73), name, font=font("SourceSerifPro-Semibold.ttf", 48), fill="#f4ede0", anchor="lm")
         draw.rectangle((0, 0, SIZE - 1, SIZE - 1), outline="#55534e", width=1 if refined else 2)
