@@ -835,8 +835,8 @@
   <GeneDef ParentName="GeneTailBase">
     <defName>XylTail_Demon</defName>
     <label>pointed tail</label>
-    <description>Carriers of this gene grow a narrow, pointed tail that increases the character's effect in social interactions.</description>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <description>Carriers of this gene grow a narrow, pointed tail that increases the character's impact in social interactions.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TailDemon</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>1002</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
