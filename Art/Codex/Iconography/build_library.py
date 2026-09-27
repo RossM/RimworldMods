@@ -132,7 +132,7 @@ native('01_Modifiers','sound-waves-single','Echolocation',[3],transform=lambda i
 native('01_Modifiers','motion-lines','Giant',[4])
 native('01_Modifiers','anger-mark','Rage',[5])
 vanilla('01_Modifiers','aggression-burst','Aggressive','white')
-vanilla('01_Modifiers','medical-cross','WoundHealingRateFast','white',lambda im:select_color(im,(151,203,221),(85,140,165)),note='Isolated light-blue medical cross, whitened.')
+native('01_Modifiers','medical-cross','EmergencyReserves_firsttry',[8],note='Clean standalone medical cross layer, whitened; replaces the low-resolution color selection.')
 
 # Body shapes and anatomical building blocks, without feature overlays.
 native('02_Anatomy','head-round','Head_Trog',[2])
@@ -182,11 +182,12 @@ native('04_Symbols','moon','Nocturnal',[2])
 native('04_Symbols','cloud','Nocturnal',[4])
 vanilla('04_Symbols','sleep-z','Sleepy','white',lambda im:select_color(im,(136,136,91),tolerance=2))
 vanilla('04_Symbols','sleep-zz','Sleepy')
+vanilla('04_Symbols','sleep-zzz','VerySleepy')
 vanilla('04_Symbols','radiation','PartialToxicityResistance','white',lambda im:select_color(im,(136,136,91),tolerance=2))
 vanilla('04_Symbols','sun-uv','IntenseUVSensitivity')
 
 # Objects with their internal colors retained.
-native('05_Objects','flask','DrugResistant',[2,3,4,5],'original')
+native('05_Objects','flask','DrugResistant',[2,3,4,5],'original',note='Highlight, fluid and bubbles clipped to the base flask silhouette.',transform=lambda im:clip_to_alpha(im,layer('DrugResistant',2)))
 native('05_Objects','flask-silhouette','DrugResistant',[2])
 native('05_Objects','bubbles','DrugResistant',[5])
 native('05_Objects','paintbrush','Melancholy',[5])

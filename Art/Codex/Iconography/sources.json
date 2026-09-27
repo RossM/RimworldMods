@@ -184,14 +184,20 @@
       "color": "white",
       "source": [
         {
-          "path": "Art/Rimworld art/Gene_WoundHealingRateFast.png"
+          "path": "Art/Gene_EmergencyReserves_firsttry.xcf",
+          "layers": [
+            {
+              "index": 8,
+              "name": "Cross"
+            }
+          ]
         }
       ],
       "source_content_size": [
-        54,
-        55
+        257,
+        256
       ],
-      "note": "128 px vanilla source; enlarged for consistent framing. Isolated light-blue medical cross, whitened."
+      "note": "Clean standalone medical cross layer, whitened; replaces the low-resolution color selection."
     },
     {
       "file": "02_Anatomy/head-round.png",
@@ -1034,6 +1040,20 @@
       "note": "128 px vanilla source; enlarged for consistent framing. "
     },
     {
+      "file": "04_Symbols/sleep-zzz.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_VerySleepy.png"
+        }
+      ],
+      "source_content_size": [
+        103,
+        102
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
       "file": "04_Symbols/radiation.png",
       "color": "white",
       "source": [
@@ -1089,9 +1109,9 @@
       ],
       "source_content_size": [
         453,
-        650
+        640
       ],
-      "note": ""
+      "note": "Highlight, fluid and bubbles clipped to the base flask silhouette."
     },
     {
       "file": "05_Objects/flask-silhouette.png",
