@@ -482,7 +482,7 @@
   <GeneDef>
     <defName>XylTelescopicVision</defName>
     <label>telescopic vision</label>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TelescopicVision</iconPath>
     <description>Carriers of this gene can see exceptionally well at a distance. Their shooting accuracy at long ranges is increased.</description>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>51</displayOrderInCategory>
