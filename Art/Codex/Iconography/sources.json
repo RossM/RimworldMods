@@ -1,0 +1,1397 @@
+{
+  "canvas": [
+    1024,
+    1024
+  ],
+  "maximum_content_extent": 896,
+  "components": [
+    {
+      "file": "01_Modifiers/arrow-up.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_KeenEars.xcf",
+          "layers": [
+            {
+              "index": 6,
+              "name": "Arrow"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        390,
+        335
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/arrow-down.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_DrugResistant.xcf",
+          "layers": [
+            {
+              "index": 7,
+              "name": "arrow"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        432,
+        318
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/cross-no.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Blind.xcf",
+          "layers": [
+            {
+              "index": 6,
+              "name": "X"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        466,
+        464
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/arrow-curved.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_RockToss.xcf",
+          "layers": [
+            {
+              "index": 5,
+              "name": "Arrow"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        658,
+        545
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/sound-waves-pair.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Echolocation.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Waves"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        784,
+        497
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/sound-waves-single.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Echolocation.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Waves"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        295,
+        497
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/motion-lines.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Giant.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Lines"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        656,
+        284
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/anger-mark.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Rage.xcf",
+          "layers": [
+            {
+              "index": 5,
+              "name": "Angry"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        217,
+        215
+      ],
+      "note": ""
+    },
+    {
+      "file": "01_Modifiers/aggression-burst.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Aggressive.png"
+        }
+      ],
+      "source_content_size": [
+        90,
+        86
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "01_Modifiers/medical-cross.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_WoundHealingRateFast.png"
+        }
+      ],
+      "source_content_size": [
+        54,
+        55
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. Isolated light-blue medical cross, whitened."
+    },
+    {
+      "file": "02_Anatomy/head-round.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Head_Trog.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Normal face"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        466,
+        543
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/head-broad.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Head_Trog.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "face"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        514,
+        556
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/head-pawn.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Docile.xcf",
+          "layers": [
+            {
+              "index": 8,
+              "name": "Head"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        286,
+        328
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/body-pawn.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Docile.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Body"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        355,
+        421
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/pawn.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Echolocation.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "Pawn"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        246,
+        487
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/pawn-giant.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Giant.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Body"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        420,
+        812
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/pawn-group-member.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_HerdInstinct.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Pawn"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        148,
+        394
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/head-horned.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_LargeHorns.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "face"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        645,
+        640
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/head-bull.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Rage.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Silhouette"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        626,
+        639
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/eye-almond.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Precognition.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "Middle eye"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        419,
+        233
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/iris.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Blind.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Iris"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        357,
+        307
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/eye-gray.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_GrayEyes.png"
+        }
+      ],
+      "source_content_size": [
+        79,
+        46
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "02_Anatomy/ear-human.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_KeenEars.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Ear base"
+            },
+            {
+              "index": 4,
+              "name": "Ear shadow"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        307,
+        489
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/ear-cow.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_CowEars.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Ear"
+            },
+            {
+              "index": 3,
+              "name": "Ear fold"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        554,
+        336
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/ear-fin.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_FinEars.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Base"
+            },
+            {
+              "index": 3,
+              "name": "Dark"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        594,
+        404
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/ear-pointed.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_EarSmallPointed.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 15, 2025, 04_14_35 PM.png"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        192,
+        420
+      ],
+      "note": "Removed residual black matte pixels at the source layer edge."
+    },
+    {
+      "file": "02_Anatomy/stomach.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_HerbivoreStomach.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 18, 2025, 02_43_25 AM.png"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        497,
+        447
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/stomach-shaded.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_ArchiteMetabolism.png"
+        }
+      ],
+      "source_content_size": [
+        86,
+        81
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "02_Anatomy/heart.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_InsectPheromones.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Heart"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        464,
+        421
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/heart-solid.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_PainReversal.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Heart"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        551,
+        473
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/broken-bone.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_PainReversal.xcf",
+          "layers": [
+            {
+              "index": 5,
+              "name": "Bone"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        610,
+        617
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/clawed-hand.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_RetractableClaws.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "hand"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        475,
+        616
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/bat-wings.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_BatWings.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Bat"
+            },
+            {
+              "index": 3,
+              "name": "Internal line"
+            },
+            {
+              "index": 4,
+              "name": "Eyes"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        852,
+        358
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/tail-beaver.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_BeaverTail.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "tail"
+            },
+            {
+              "index": 2,
+              "name": "new shading"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        240,
+        382
+      ],
+      "note": ""
+    },
+    {
+      "file": "02_Anatomy/tail-demon.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_DemonTail.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "tail"
+            },
+            {
+              "index": 2,
+              "name": "tail highlight"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        148,
+        111
+      ],
+      "note": ""
+    },
+    {
+      "file": "03_Expressions/eyes-heavy-brow.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Head_Trog.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "eyes"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        318,
+        71
+      ],
+      "note": ""
+    },
+    {
+      "file": "03_Expressions/eyes-angry.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Rage.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Eye"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        265,
+        57
+      ],
+      "note": ""
+    },
+    {
+      "file": "03_Expressions/sad-features.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Melancholy.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Face features"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        308,
+        241
+      ],
+      "note": ""
+    },
+    {
+      "file": "03_Expressions/mood-happy.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Sanguine.png"
+        }
+      ],
+      "source_content_size": [
+        64,
+        63
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "03_Expressions/mood-sad.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Depressive.png"
+        }
+      ],
+      "source_content_size": [
+        64,
+        63
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "03_Expressions/happy-features.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Sanguine.png"
+        }
+      ],
+      "source_content_size": [
+        36,
+        38
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "04_Symbols/female.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_AlwaysFemale.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "female symbol copy"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        327,
+        500
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/male.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_AlwaysMale.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "male symbol copy"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        459,
+        467
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/dna-two-colors.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_GeneticAtavism.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "DNA"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        456,
+        770
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/dna-inbred.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Inbred.png"
+        }
+      ],
+      "source_content_size": [
+        70,
+        72
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "04_Symbols/gear.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Industrious.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 15, 2025, 05_12_02 AM.png copy"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        438,
+        447
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/broken-gear.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_BioRejection.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "Gear"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        592,
+        677
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/chess-knight.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Joyless.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Piece"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        397,
+        745
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/insect.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_InsectPheromones.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Insect"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        435,
+        513
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/moon.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Nocturnal.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "Moon"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        387,
+        387
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/cloud.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Nocturnal.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Cloud"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        544,
+        309
+      ],
+      "note": ""
+    },
+    {
+      "file": "04_Symbols/sleep-z.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Sleepy.png"
+        }
+      ],
+      "source_content_size": [
+        54,
+        62
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "04_Symbols/sleep-zz.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_Sleepy.png"
+        }
+      ],
+      "source_content_size": [
+        88,
+        80
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "04_Symbols/radiation.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_PartialToxicityResistance.png"
+        }
+      ],
+      "source_content_size": [
+        57,
+        53
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "04_Symbols/sun-uv.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_IntenseUVSensitivity.png"
+        }
+      ],
+      "source_content_size": [
+        95,
+        100
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. "
+    },
+    {
+      "file": "05_Objects/flask.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_DrugResistant.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "flask"
+            },
+            {
+              "index": 3,
+              "name": "flask copy"
+            },
+            {
+              "index": 4,
+              "name": "Fluid"
+            },
+            {
+              "index": 5,
+              "name": "bubbles"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        453,
+        650
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/flask-silhouette.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_DrugResistant.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "flask"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        453,
+        640
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/bubbles.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_DrugResistant.xcf",
+          "layers": [
+            {
+              "index": 5,
+              "name": "bubbles"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        185,
+        220
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/paintbrush.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Melancholy.xcf",
+          "layers": [
+            {
+              "index": 5,
+              "name": "Pen"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        379,
+        403
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/mushroom.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_MushroomEater.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Mushroom"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        333,
+        349
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/corn.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_HerbivoreStomach.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "ChatGPT Image Jun 18, 2025, 02_43_25 AM.png copy"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        354,
+        298
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/meat.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_MeatDependence.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 17, 2025, 01_08_08 PM.png"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        581,
+        507
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/rock.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_RockToss.xcf",
+          "layers": [
+            {
+              "index": 2,
+              "name": "rock"
+            },
+            {
+              "index": 3,
+              "name": "rock highlight"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        338,
+        407
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/mountains.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_EvenTemper.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Base"
+            },
+            {
+              "index": 4,
+              "name": "Highlight"
+            },
+            {
+              "index": 5,
+              "name": "Shadow"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        698,
+        509
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/anvil.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Stoic.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 15, 2025, 06_00_31 AM.png"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        791,
+        448
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/running-cat.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Gene_FastReflexes.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 17, 2025, 01_08_10 PM.png"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        641,
+        447
+      ],
+      "note": ""
+    },
+    {
+      "file": "05_Objects/thermometer-hot.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_MaxTemperatureSmallDecrease.png"
+        }
+      ],
+      "source_content_size": [
+        44,
+        110
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. Occluded right half restored by reflecting the visible left half around x=52.5; arrow omitted. Hot shaft occlusion filled with the original fluid color."
+    },
+    {
+      "file": "05_Objects/thermometer-cold.png",
+      "color": "original",
+      "source": [
+        {
+          "path": "Art/Rimworld art/Gene_MinTemperatureSmallDecrease.png"
+        }
+      ],
+      "source_content_size": [
+        42,
+        110
+      ],
+      "note": "128 px vanilla source; enlarged for consistent framing. Occluded right half restored by reflecting the visible left half around x=52.5; arrow omitted. Hot shaft occlusion filled with the original fluid color."
+    },
+    {
+      "file": "06_Patterns/mineral-patches.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_MineralizedSkin.xcf",
+          "layers": [
+            {
+              "index": 4,
+              "name": "Pattern"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        422,
+        503
+      ],
+      "note": ""
+    },
+    {
+      "file": "06_Patterns/scale-mesh.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_Scaleskin.xcf",
+          "layers": [
+            {
+              "index": 3,
+              "name": "Scales"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        1941,
+        1570
+      ],
+      "note": ""
+    },
+    {
+      "file": "06_Patterns/facial-stripes.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Gene_FacialStripes.xcf",
+          "layers": [
+            {
+              "index": 1,
+              "name": "ChatGPT Image Jun 17, 2025, 01_35_57 PM.png"
+            }
+          ]
+        }
+      ],
+      "source_content_size": [
+        414,
+        363
+      ],
+      "note": ""
+    }
+  ]
+}
