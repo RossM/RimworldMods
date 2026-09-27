@@ -66,7 +66,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayOrderInCategory>201</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Specialist</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <geneType>Xenogene</geneType>
@@ -107,7 +107,7 @@
     <biostatCpx>2</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayOrderInCategory>202</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_SuperSpecialist</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <geneType>Xenogene</geneType>
