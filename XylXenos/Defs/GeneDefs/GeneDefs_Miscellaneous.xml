@@ -467,7 +467,7 @@
     <description>Carriers of this gene are naturally adept with advanced technology.</description>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>1100</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TechAffinity</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <statOffsets>
