@@ -190,6 +190,7 @@
     <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a mood bonus but rewire the partner's brain causing an immediate and long-lasting addiction.</description>
     <descriptionHyperlinks>
       <HediffDef>XylLoveEuphoria</HediffDef>
+      <HediffDef>XylLovinAddiction</HediffDef>
     </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
