@@ -30,7 +30,7 @@
       "color": "white",
       "source": [
         {
-          "path": "Art/Gene_DrugResistant.xcf",
+          "path": "Art/old/Gene_DrugResistant.xcf",
           "layers": [
             {
               "index": 7,
@@ -130,7 +130,7 @@
       "color": "white",
       "source": [
         {
-          "path": "Art/Gene_Giant.xcf",
+          "path": "Art/old/Gene_Giant.xcf",
           "layers": [
             {
               "index": 4,
@@ -304,7 +304,7 @@
       "color": "white",
       "source": [
         {
-          "path": "Art/Gene_Giant.xcf",
+          "path": "Art/old/Gene_Giant.xcf",
           "layers": [
             {
               "index": 3,
@@ -956,6 +956,34 @@
       "note": ""
     },
     {
+      "file": "04_Symbols/shield.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/AddictionImmune.png"
+        }
+      ],
+      "source_content_size": [
+        75,
+        86
+      ],
+      "note": "128 px source. Olive shield isolated and whitened; bottle overlay replaced with solid shield interior. Original outer contour retained; half-shield cut restored between its visible endpoints."
+    },
+    {
+      "file": "04_Symbols/half-shield.png",
+      "color": "white",
+      "source": [
+        {
+          "path": "Art/Rimworld art/AddictionResistant.png"
+        }
+      ],
+      "source_content_size": [
+        37,
+        83
+      ],
+      "note": "128 px source. Olive shield isolated and whitened; bottle overlay replaced with solid shield interior. Original outer contour retained; half-shield cut restored between its visible endpoints."
+    },
+    {
       "file": "04_Symbols/chess-knight.png",
       "color": "white",
       "source": [
@@ -1125,7 +1153,7 @@
       "color": "original",
       "source": [
         {
-          "path": "Art/Gene_DrugResistant.xcf",
+          "path": "Art/old/Gene_DrugResistant.xcf",
           "layers": [
             {
               "index": 2,
@@ -1157,7 +1185,7 @@
       "color": "white",
       "source": [
         {
-          "path": "Art/Gene_DrugResistant.xcf",
+          "path": "Art/old/Gene_DrugResistant.xcf",
           "layers": [
             {
               "index": 2,
@@ -1177,7 +1205,7 @@
       "color": "white",
       "source": [
         {
-          "path": "Art/Gene_DrugResistant.xcf",
+          "path": "Art/old/Gene_DrugResistant.xcf",
           "layers": [
             {
               "index": 5,

@@ -13,14 +13,19 @@ EXTENT=896
 inventory={}
 manifest=[]
 
-def layer(name,index):
+def native_source(name):
     source=ROOT/f'Art/Gene_{name}.xcf'
+    if not source.exists(): source=ROOT/f'Art/old/Gene_{name}.xcf'
+    return source
+
+def layer(name,index):
+    source=native_source(name)
     if source.name not in inventory:
         result=subprocess.run(['magick','identify','-format','%s|%l|%wx%h|%X,%Y\n',str(source)],check=True,capture_output=True,text=True)
         inventory[source.name]=result.stdout.splitlines()
     path=WORK/f'{name}-{index}.png'
     if not path.exists():
-        subprocess.run(['magick',str(ROOT/f'Art/Gene_{name}.xcf')+f'[{index}]','+repage',str(path)],check=True,capture_output=True)
+        subprocess.run(['magick',str(source)+f'[{index}]','+repage',str(path)],check=True,capture_output=True)
     return Image.open(path).convert('RGBA')
 
 def composed(name,indices):
@@ -115,12 +120,38 @@ def save(category,name,im,sources,mode='white',note=''):
 def native(category,name,source,indices,mode='white',note='',transform=None):
     im=composed(source,indices)
     if transform: im=transform(im)
-    save(category,name,im,[{'path':f'Art/Gene_{source}.xcf','layers':[{'index':i,'name':inventory[f'Gene_{source}.xcf'][i].split('|')[1]} for i in indices]}],mode,note)
+    save(category,name,im,[{'path':native_source(source).relative_to(ROOT).as_posix(),'layers':[{'index':i,'name':inventory[f'Gene_{source}.xcf'][i].split('|')[1]} for i in indices]}],mode,note)
 
 def vanilla(category,name,source,mode='original',transform=None,note=''):
     im=Image.open(ROOT/f'Art/Rimworld art/Gene_{source}.png').convert('RGBA')
     im=transform(im) if transform else remove_black(im)
     save(category,name,im,[{'path':f'Art/Rimworld art/Gene_{source}.png'}],mode,'128 px vanilla source; enlarged for consistent framing. '+note)
+
+def shield_component(im,half=False):
+    # Select the olive shield, then restore its interior behind the bottle overlay.
+    a=np.array(select_color(im,(97,87,57),tolerance=2))
+    alpha=a[:,:,3]
+    cut=None
+    if half:
+        # The visible upper and lower parts establish the original vertical cut.
+        cut=int(np.where(alpha>0)[1].max())
+        rows=np.where(alpha[:,cut]>0)[0]
+        first,last=int(rows.min()),int(rows.max())
+        cut_alpha=int(alpha[rows,cut].max())
+        alpha[first:last+1,cut]=255
+    barrier=alpha>=128
+    exterior=np.zeros(alpha.shape,dtype=bool)
+    todo=[(0,0)];exterior[0,0]=True
+    while todo:
+        y,x=todo.pop()
+        for dy,dx in ((0,1),(0,-1),(1,0),(-1,0)):
+            ny,nx=y+dy,x+dx
+            if 0<=ny<im.height and 0<=nx<im.width and not barrier[ny,nx] and not exterior[ny,nx]:
+                exterior[ny,nx]=True;todo.append((ny,nx))
+    alpha[~exterior]=255
+    if cut is not None: alpha[first:last+1,cut]=cut_alpha
+    a[:,:,3]=alpha
+    return Image.fromarray(a)
 
 # Repeated modifiers first.
 native('01_Modifiers','arrow-up','KeenEars',[6])
@@ -177,6 +208,10 @@ vanilla('04_Symbols','dna-inbred','Inbred','white')
 native('04_Symbols','gear','Industrious',[1])
 native('04_Symbols','double-gear','Industrious',[1,2],note='Both source gears retained at their original relative positions and sizes; black outlines omitted.')
 native('04_Symbols','broken-gear','BioRejection',[1])
+for filename,name,half in [('AddictionImmune','shield',False),('AddictionResistant','half-shield',True)]:
+    source=ROOT/f'Art/Rimworld art/{filename}.png'
+    save('04_Symbols',name,shield_component(Image.open(source).convert('RGBA'),half),[{'path':source.relative_to(ROOT).as_posix()}],note='128 px source. Olive shield isolated and whitened; bottle overlay replaced with solid shield interior. Original outer contour retained; half-shield cut restored between its visible endpoints.')
+
 native('04_Symbols','chess-knight','Joyless',[2])
 native('04_Symbols','insect','InsectPheromones',[4])
 native('04_Symbols','moon','Nocturnal',[2])

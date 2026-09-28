@@ -1,6 +1,6 @@
 # Gene icon components
 
-76 transparent PNG components for composing RimWorld gene icons in a paint program.
+78 transparent PNG components for composing RimWorld gene icons in a paint program.
 
 - Every component is on a 1024 x 1024 RGBA canvas, with its visible bounds centered and its longest dimension fitted to 896 px (64 px minimum margin).
 - Single-color components are pure white. Tint them after importing. Components with internal shading or multiple colors retain those colors, including grayscale shading.
@@ -13,7 +13,7 @@
 1. `01_Modifiers`: arrows, prohibition cross, sound waves, motion and anger marks, aggression burst, medical cross.
 2. `02_Anatomy`: heads, bodies, eyes, ears, stomachs, hearts, bone, hand, wings and tails.
 3. `03_Expressions`: standalone facial features and multicolor mood disks.
-4. `04_Symbols`: sex symbols, DNA, gears, chess piece, insect, moon, cloud, sleep, radiation, UV sun and a randomness die.
+4. `04_Symbols`: sex symbols, DNA, gears, shields, chess piece, insect, moon, cloud, sleep, radiation, UV sun and a randomness die.
 5. `05_Objects`: flask, bubbles, brush, food, rock, mountains, anvil, cat, thermometers, shirt and weight.
 6. `06_Patterns`: mineral patches, scale mesh and facial stripes.
 
@@ -23,7 +23,7 @@ The library was selected by inspecting all 49 gene icons in `XylXenos/Textures/X
 
 `sources.json` identifies the source file and GIMP layer names/indices for each component, its cropped source resolution, color treatment and any reconstruction. Most shapes were exported directly from existing layers. The vanilla-only PNGs are 128 x 128; their exports are enlarged for consistent canvas size and do not gain new detail. At small icon sizes this is usually inconsequential, but prefer the native-layer components when enlarging a composition.
 
-Color selection and black-matte removal recover alpha for flattened vanilla art. Tiny disconnected selection remnants were removed. The thermometer's hidden right half is restored by mirroring the unobscured left half. The hot thermometer's small shaft occlusion is filled with its original fluid color. The shirt hidden behind the weight in `Gene_NakedSpeed.png` uses a faithful generated reconstruction; the weight is extracted directly. The die is newly generated. Both were made with the built-in imagegen tool; their original RGBA images and exact prompts are retained in `_sources` and `generation-prompts.md`.
+Color selection and black-matte removal recover alpha for flattened vanilla art. Tiny disconnected selection remnants were removed. The thermometer's hidden right half is restored by mirroring the unobscured left half. The hot thermometer's small shaft occlusion is filled with its original fluid color. The shirt hidden behind the weight in `Gene_NakedSpeed.png` uses a faithful generated reconstruction; the weight is extracted directly. The shield and half-shield come from `AddictionImmune.png` and `AddictionResistant.png`; their bottle overlays are removed by filling the enclosed shield interior, with the half-shield cut restored between visible endpoints. The die is newly generated. Both were made with the built-in imagegen tool; their original RGBA images and exact prompts are retained in `_sources` and `generation-prompts.md`.
 
 `broken-bone` intentionally keeps the fracture gap. `scale-mesh` is the full diamond-shaped source pattern, intended to be clipped to a head or body mask. `head-horned` and `head-bull` retain their integrated horns; the library does not invent separate hidden horn roots.
 
