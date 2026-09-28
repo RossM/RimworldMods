@@ -149,7 +149,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>XylRandom</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_ScalebornLineage</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
