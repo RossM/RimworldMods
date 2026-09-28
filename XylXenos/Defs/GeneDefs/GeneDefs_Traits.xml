@@ -132,7 +132,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Shameless</iconPath>
     <forcedTraits>
       <Nudist />
     </forcedTraits>
