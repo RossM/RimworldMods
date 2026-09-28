@@ -122,7 +122,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>400</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_StrongGenes</iconPath>
     <exclusionTags>
       <li>XenotypeStrength</li>
     </exclusionTags>
@@ -145,7 +145,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>401</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_WeakGenes</iconPath>
     <exclusionTags>
       <li>XenotypeStrength</li>
     </exclusionTags>
