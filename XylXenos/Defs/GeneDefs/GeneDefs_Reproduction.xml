@@ -174,8 +174,8 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <gender>Female</gender>
         <hediffGivers>
-          <!-- This bypasses infertility, so parthenogenic + sterile will result in only spontaneous pregnancies -->
-          <li Class="HediffGiver_Random">
+          <!-- This bypasses genetic infertility, so parthenogenic + sterile will result in only spontaneous pregnancies -->
+          <li Class="XylXenos.HediffGiver_Parthenogenesis">
             <mtbDays>120</mtbDays>
             <hediff>PregnantHuman</hediff>
           </li>
