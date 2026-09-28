@@ -357,7 +357,7 @@
     </descriptionHyperlinks>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>202</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EMPBlast</iconPath>
     <abilities>
       <li>XylEMPBlast</li>
     </abilities>
@@ -375,7 +375,7 @@
     <descriptionHyperlinks>
       <GeneDef>XylEMPBlast</GeneDef>
     </descriptionHyperlinks>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EMPBlast</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <showPsycastEffects>false</showPsycastEffects>
