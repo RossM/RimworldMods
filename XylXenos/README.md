@@ -266,7 +266,6 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 
 | Gene | Effect |
 | --- | --- |
-| [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Random bouts of good and bad mood. |
 | [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Cold causes hibernation, reducing food needs and slowing starvation and hypothermia. Warmth reverses it. |
 | [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds horns that serve as melee weapons. |
 | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds retractable claws as melee weapons. |
@@ -277,7 +276,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 **Other genes and appearance**
 
 - **Traits:** psychically dull, slow runner, cold tolerant, heat tolerant, aggressive, strong melee damage, sleepy.
-- **Skills:** poor cooking aptitude.
+- **Skills:** terrible cooking aptitude.
 - **Appearance:** bald, no beard, facial ridges.
 
 ### Lineages
