@@ -66,7 +66,7 @@
     <genes>
       <li>PsychicAbility_Dull</li>
       <li>MoveSpeed_Slow</li>
-      <li>XylMoody</li>
+      <li>MinTemp_SmallDecrease</li>
       <li>MaxTemp_SmallIncrease</li>
       <li>XylTorpor</li>
       <li>Aggression_Aggressive</li>
