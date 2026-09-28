@@ -189,7 +189,8 @@
     <description>Carriers of this gene have a distinctive mark on their forehead.</description>
     <displayCategory>Cosmetic</displayCategory>
     <displayOrderInCategory>502</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_ForeheadMark</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>
