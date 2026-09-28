@@ -628,7 +628,7 @@
     </descriptionHyperlinks>
     <displayCategory>ResistanceAndWeakness</displayCategory>
     <displayOrderInCategory>90</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EmergencyReserves</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <customEffectDescriptions>
