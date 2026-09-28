@@ -219,7 +219,7 @@
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
   </GeneDef>
 
-  <GeneDef>
+  <!--<GeneDef>
     <defName>XylRibs</defName>
     <label>ribs</label>
     <description>Carriers of this gene have visible ribs.</description>
@@ -246,6 +246,6 @@
       </li>
     </renderNodeProperties>
     <randomBrightnessFactor>0</randomBrightnessFactor>
-  </GeneDef>
+  </GeneDef>-->
 
 </Defs>
