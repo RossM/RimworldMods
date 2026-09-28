@@ -188,6 +188,9 @@
     <defName>XylLoveEuphoria</defName>
     <label>love euphoria</label>
     <description>Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a long-lasting mood bonus but rewire the partner's brain causing an immediate and long-lasting addiction.</description>
+    <descriptionHyperlinks>
+      <HediffDef>XylLoveEuphoria</HediffDef>
+    </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -195,15 +198,16 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_LoveEuphoria</iconPath>
     <minAgeActive>16</minAgeActive>
     <marketValueFactor>1.5</marketValueFactor>
+    <customEffectDescriptions>
+      <li>Partner mood +14</li>
+    </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="XylXenos.GeneCompProperties_LoveEuphoria">
             <need>XylLovin</need>
-            <hediffs>
-              <li>XylLovinAddiction</li>
-              <li>XylLoveEuphoria</li>
-            </hediffs>
+            <highHediff>XylLoveEuphoria</highHediff>
+            <addictionHediff>XylLovinAddiction</addictionHediff>
             <maxLovinMtbHours>4</maxLovinMtbHours>
           </li>
         </comps>
