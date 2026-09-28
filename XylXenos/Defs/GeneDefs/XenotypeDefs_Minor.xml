@@ -19,9 +19,9 @@
     <combatPowerFactor>0.9</combatPowerFactor>
     <genes>
       <li>PsychicAbility_Deaf</li>
-      <li>NakedSpeed</li>
       <li>WebbedPhalanges</li>
       <li>Mood_Optimist</li>
+      <li>WoundHealing_Slow</li>
       <li>MeleeDamage_Weak</li>
       <li>KindInstinct</li>
       <li>Fertile</li>
