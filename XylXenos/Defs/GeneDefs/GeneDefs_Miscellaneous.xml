@@ -712,7 +712,8 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>411</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_BeaverTeeth</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <renderNodeProperties>
       <li>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
