@@ -78,7 +78,7 @@
     </forcedTraits>
   </GeneDef>
 
-  <GeneDef>
+  <!--<GeneDef>
     <defName>XylVoracious</defName>
     <label>voracious</label>
     <description>TODO</description>
@@ -91,7 +91,7 @@
       <Cannibal />
       <Gourmand />
     </forcedTraits>
-  </GeneDef>
+  </GeneDef>-->
 
   <GeneDef>
     <defName>XylEvenTemper</defName>
