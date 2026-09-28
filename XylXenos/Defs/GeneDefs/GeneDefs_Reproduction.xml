@@ -163,13 +163,16 @@
   <GeneDef>
     <defName>XylParthenogenetic</defName>
     <label>parthenogenetic</label>
-    <description>Female carriers of this gene can become spontaneously pregnant without a father.</description>
+    <description>Female carriers of this gene can become spontaneously pregnant without a father. The chance of becoming pregnant this way isn't affected by genetic fertility factors.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>410</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <minAgeActive>16</minAgeActive>
+    <customEffectDescriptions>
+      <li>Average interval: 120 days</li>
+    </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <gender>Female</gender>
