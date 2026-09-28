@@ -21,9 +21,9 @@ public class GeneCompProperties_LoveEuphoria : GeneCompProperties
         foreach (var stat in base.SpecialDisplayStats(req))
             yield return stat;
 
-        if (highHediff?.CompProps<HediffCompProperties_SeverityPerDay>() is { } severityPerDay)
+        if (highHediff?.CompProps<HediffCompProperties_SeverityPerDay>() is { } highSeverityPerDay)
         {
-            var highDuration = highHediff.initialSeverity / -severityPerDay.severityPerDay;
+            var highDuration = highHediff.initialSeverity / -highSeverityPerDay.severityPerDay;
             yield return new StatDrawEntry(StatCategoryDefOf.Drug, "HighDuration".Translate(),
                 "PeriodDays".Translate(highDuration.ToString("F1")), "Stat_Thing_Drug_HighDurationPerDose_Desc".Translate(), 2460);
         }
@@ -36,9 +36,9 @@ public class GeneCompProperties_LoveEuphoria : GeneCompProperties
             yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedDoseInterval".Translate(), "PeriodDays".Translate((needOffset / need.fallPerDay).ToString("F1")), "Stat_Thing_Drug_AddictionNeedDoseInterval_Desc".Translate(), 2400);
         }
 
-        if (addictionHediff?.CompProps<HediffCompProperties_SeverityPerDay>() is { } severityPerDay2)
+        if (addictionHediff?.CompProps<HediffCompProperties_SeverityPerDay>() is { } addictionSeverityPerDay)
         {
-            var addictionDuration = addictionHediff.initialSeverity / -severityPerDay2.severityPerDay;
+            var addictionDuration = addictionHediff.initialSeverity / -addictionSeverityPerDay.severityPerDay;
             yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionRecoveryTime".Translate(),
                 "PeriodDays".Translate(addictionDuration.ToString("F1")), "Stat_Thing_Drug_AddictionRecoveryTime_Desc".Translate(), 2395);
         }
