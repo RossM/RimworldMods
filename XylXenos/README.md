@@ -340,7 +340,6 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 | [Parthenogenic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Females can become pregnant without a father. |
 | [Precognition](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Improves melee and ranged dodging in proportion to psychic sensitivity. |
 | [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Grants +4 aptitude in a random non-combat skill. |
-| [Voracious](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Cannibal and Gourmand. |
 | [Weak genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the other parent's endogenes when that parent has a different xenotype, unless both parents have weak genes. |
 | [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | An archite gene that rapidly heals wounds, but not permanent scars or blood loss. |
 
@@ -351,7 +350,6 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 - [Long-haired females](Defs/GeneDefs/GeneDefs_Hair.xml).
 - [Short-haired males](Defs/GeneDefs/GeneDefs_Hair.xml).
 - [Long-haired males](Defs/GeneDefs/GeneDefs_Hair.xml).
-- [Visible ribs](Defs/GeneDefs/GeneDefs_Cosmetic.xml).
 - [Dark purple skin](Defs/GeneDefs/GeneDefs_SkinColors.xml).
 
 Additional psycast genes are generated from the available abilities. The xenotypes above use Beckon, Focus, and Word of Love.
