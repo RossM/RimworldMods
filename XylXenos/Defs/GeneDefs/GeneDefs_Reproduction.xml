@@ -168,7 +168,7 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>410</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Parthenogenetic</iconPath>
     <minAgeActive>16</minAgeActive>
     <customEffectDescriptions>
       <li>Average interval: 120 days</li>
