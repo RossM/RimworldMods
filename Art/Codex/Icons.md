@@ -2,7 +2,7 @@
 
 Plain-text descriptions of the visible artwork, grouped by source folder and filename. These describe the icons themselves rather than the genes' gameplay effects. Most use simple flat shapes, thick black outlines, and transparent backgrounds.
 
-Includes all 75 gene icons in XylXenos/Textures/Xyl/UI/Icons/Genes/ and all 49 gene icons in Art/Rimworld art/. The NoArt placeholder and endogene background are listed separately as supporting assets. Unrelated xenotype icons, character textures, apparel, animals, items, and settlement artwork are excluded.
+Includes all 75 gene icons in XylXenos/Textures/Xyl/UI/Icons/Genes/ and all 76 gene icons in Art/Rimworld art/Genes/. The NoArt placeholder and endogene background are listed separately as supporting assets. Unrelated xenotype icons, character textures, apparel, animals, items, and settlement artwork are excluded.
 
 ## XylXenos/Textures/Xyl/UI/Icons/Genes/
 
@@ -86,21 +86,30 @@ Includes all 75 gene icons in XylXenos/Textures/Xyl/UI/Icons/Genes/ and all 49 g
 
 - NoArt.png: The words NO ART in irregular white uppercase lettering with a thick black outline, stacked on two lines.
 
-## Art/Rimworld art/
+## Art/Rimworld art/Genes/
 
 - AddictionImmune.png: Two joined brown bottle shapes with narrow necks in front of a complete olive shield.
 - AddictionResistant.png: Two joined brown bottle shapes with narrow necks in front of the left half of an olive shield.
 - AddictionSensitivity.png: Two joined brown bottle shapes with narrow necks, without a surrounding emblem.
 - ChemicalDependency.png: Two joined brown bottle shapes with narrow necks centered over an olive heart.
+- Gene_AcidSpray.png: An irregular green splash with a pointed spray extending to the upper left, two detached round droplets, and lighter green highlights.
 - Gene_Aggressive.png: An irregular muted-red starburst with long, sharp spikes.
 - Gene_AnimalWarcall.png: An olive animal head in side profile, facing right, with a pointed ear and three curved sound-wave bands spreading toward the lower left.
 - Gene_ArchiteMetabolism.png: A gray stomach silhouette with a pale inner highlight and short tubes at the top and lower left.
+- Gene_Beautiful.png: A green face framed by long hair with a thick braid curling below the chin, a flower at the upper right, and a white four-point sparkle at the upper left.
 - Gene_Bloodfeeder.png: An open red mouth with four small white upper teeth and two long white fangs at the sides, backed by a pointed red droplet-like shape.
 - Gene_BodyHulk.png: A white head-and-torso bust with a thick neck, broad shoulders, and a torso tapering strongly toward the waist.
 - Gene_BodyStandard.png: A white head-and-torso bust with a narrow neck, modest shoulders, and a gently tapered body.
 - Gene_Darkvision.png: A gray-blue almond-shaped eye containing a dark crescent moon.
+- Gene_Delicate.png: A gray teacup with a small loop handle on the right, resting on a narrow saucer.
 - Gene_Depressive.png: A round blue face with closed eyes, a downturned open mouth, and a tear on its right cheek.
+- Gene_EarCat.png: A single upright triangular cat ear with a white outer edge and a broad gray inner patch.
 - Gene_EarHuman.png: A single upright white human ear with curved gray inner folds.
+- Gene_EnhancedPsychicAbility.png: Three curved olive signal bands of increasing size, overlapped by a small green upward arrow.
+- Gene_ExtremePsychicAbility.png: Three curved olive signal bands of increasing size, overlapped by a large green upward arrow that covers most of their center.
+- Gene_FastLearning.png: An olive graduation cap with a diamond-shaped top and a green upward arrow rising behind it.
+- Gene_Fertile.png: A pink ring representing an egg, overlapped at the lower right by a white sperm with a rounded head and a wavy tail.
+- Gene_FireResistant.png: A brown shield containing a pale-orange flame with a smaller, darker flame-shaped center.
 - Gene_Furskin.png: A white face with gray eyes framed by shaggy fur, with pointed tufts projecting from the crown and sides.
 - Gene_GauntHead.png: A narrow white face with a broad gray border around the upper head and cheeks tapering to a small chin.
 - Gene_GrayEyes.png: A gray almond-shaped eye with a large medium-gray circular iris and pale outer corners.
@@ -114,6 +123,7 @@ Includes all 75 gene icons in XylXenos/Textures/Xyl/UI/Icons/Genes/ and all 49 g
 - Gene_Inbred.png: A vertical muted-red DNA double helix with several horizontal crossbars.
 - Gene_IntenseUVSensitivity.png: A pale-yellow circular sun surrounded by a jagged muted-red corona, with several especially long rays extending down and right.
 - Gene_Killthirst.png: A muted-red knife tilted diagonally down and right, with a short handle and a broad pointed blade.
+- Gene_LowLibido.png: A hollow pink heart outline above a muted-red downward arrow.
 - Gene_MaxTemperatureSmallDecrease.png: A white-outlined thermometer filled with muted-red liquid, overlapped on the right by a muted-red downward arrow.
 - Gene_MaxTemperatureSmallIncrease.png: A white-outlined thermometer filled with muted-red liquid, overlapped on the right by a green upward arrow.
 - Gene_MinTemperatureSmallDecrease.png: A white-outlined thermometer with blue liquid in its bulb, overlapped on the right by a green downward arrow.
@@ -124,19 +134,36 @@ Includes all 75 gene icons in XylXenos/Textures/Xyl/UI/Icons/Genes/ and all 49 g
 - Gene_NonSenescent.png: A stylized olive human figure with a round head, raised arms, a curved torso, and one bent leg.
 - Gene_PainReduced.png: A white broken bone laid diagonally across a muted-red circle, with the jagged break visible at the center.
 - Gene_PartialToxicityResistance.png: An olive radiation trefoil overlapping the left half of an olive shield.
+- Gene_Pretty.png: A light-green face with darker swept hair and two white four-point sparkles, one above the head and one beside its lower-left edge.
+- Gene_PsychicallyDeaf.png: Three curved olive signal bands covered by a large muted-red X.
+- Gene_PsychicallyDull.png: Three curved olive signal bands of increasing size, overlapped by a small muted-red downward arrow.
+- Gene_PsychicBonding.png: Two overlapping muted-red hearts arranged diagonally, with a darker patch where they intersect.
+- Gene_QuickMovespeed.png: An olive rabbit sitting in side profile facing right, with long raised ears and a large rounded hindquarter.
+- Gene_QuickSleeper.png: Two upright olive Zs aligned along their lower edge, with a larger Z on the left and a smaller one on the right.
 - Gene_RedEyes.png: An almond-shaped eye with a muted-red iris, a dark-red round pupil, and pale pink outer corners.
 - Gene_RobustDigestion.png: A brown stomach with several pointed, tooth-like projections along its right and lower edges.
 - Gene_Sanguine.png: A round green smiling face with closed, upward-curving eyes and a wide open mouth.
 - Gene_SkinColorOverride.png: A plain white head-and-torso silhouette with a narrow neck and no facial details.
 - Gene_Sleepy.png: Two olive Zs arranged diagonally, with a larger Z above and to the left of a smaller one.
-- Gene_StrongArtistic.png: A gray paintbrush angled up and right, accompanied by a green upward arrow at its lower right.
+- Gene_SlowLearning.png: An olive graduation cap with a diamond-shaped top and a muted-red downward arrow extending beneath it.
+- Gene_SlowMovespeed.png: A muted-red tortoise in side profile facing right, with a dark domed shell, a small raised head, short legs, and a tiny tail.
 - Gene_StrongImmunity.png: A yellow-green shield with several small gray circular particles overlapping its edges.
+- Gene_StrongMeleeDamage.png: Two green swords crossed diagonally with their pointed blades upward and round pommels below.
 - Gene_StrongStomach.png: A solid olive stomach silhouette with short tubes at the top and lower left.
+- Gene_Superclotting.png: A cluster of round muted-red blood-cell shapes pressed beside a larger, vertically elongated red shape with an inward-curving left edge.
 - Gene_SuperStrongImmunity.png: A yellow-green shield with a second inset shield outline and several small gray circular particles overlapping its edges.
+- Gene_VeryQuickMovespeed.png: A green leaping cat silhouette in side profile facing right, with its forelegs extended, hind legs stretched behind, and tail curling upward at the left.
 - Gene_VerySleepy.png: Three olive Zs descending diagonally from a large upper-left Z to a small lower-right Z.
+- Gene_WeakImmunity.png: A yellow-green shield split by a jagged black crack, with several small gray circular particles overlapping its edges.
 - Gene_WoundHealingRateFast.png: A blue upward arrow with one light-blue medical cross centered on its shaft.
 - Gene_WoundHealingRateSlow.png: A muted-red downward arrow with one light-blue medical cross centered on its shaft.
 - Gene_WoundHealingRateSuperfast.png: A blue upward arrow with two offset light-blue medical crosses, one near the upper right and one near the lower left.
+- PassionAdd.png: A gray paintbrush angled up and right, with an orange flame containing a pale-yellow center beside its bristles.
+- PassionDrop.png: A gray paintbrush angled up and right, with an orange-and-yellow flame beside its bristles covered by a muted-red X.
+- Poor.png: A gray paintbrush angled up and right, accompanied by a small muted-red downward arrow at its lower right.
+- Remarkable.png: A gray paintbrush angled up and right, accompanied by a large green upward arrow covering much of its lower-right side.
+- Strong.png: A gray paintbrush angled up and right, accompanied by a small green upward arrow at its lower right.
+- Terrible.png: A gray paintbrush angled up and right, accompanied by a large muted-red downward arrow covering much of its lower-right side.
 
 ### Supporting asset
 
