@@ -7,7 +7,7 @@ namespace XylXenos;
 
 public static class DebugArena
 {
-    private const int maxFights = 5;
+    private const int maxFights = 25;
 
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
