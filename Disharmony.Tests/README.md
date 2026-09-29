@@ -20,6 +20,19 @@ Build outputs are separated by configuration and framework under `bin`. The .NET
 library build deploys to the RimWorld mod assembly directories; `-p:DeployToMods=false` disables that copy.
 Visual Studio Test Explorer and `dotnet test` run the tests for each target through the NUnit test adapter.
 
+## Hang detection
+
+NUnit's [`Timeout`](https://docs.nunit.org/articles/nunit/writing-tests/attributes/timeout.html) attributes are enabled only for `net472`; NUnit rejects them on modern .NET because it cannot
+abort a running thread. `CancelAfter` requires cooperative cancellation, which cannot interrupt the synchronous
+optimizer and patching calls these tests exercise. To bound a hung .NET 10 test, run it through [VSTest's process-level
+hang detection](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-test-vstest) (the timeout resets after each completed test):
+
+```powershell
+dotnet test .\Disharmony.Tests\Disharmony.Tests.csproj --framework net10.0 -p:DeployToMods=false --blame-hang --blame-hang-timeout 30s --blame-hang-dump-type none
+```
+
+The .NET 10 NUnitLite runner has no hard per-test timeout. Use the command above when investigating possible hangs.
+
 ## NUnitLite runners
 
 The script builds only the target required by the selected runtime and runs it in a fresh process:

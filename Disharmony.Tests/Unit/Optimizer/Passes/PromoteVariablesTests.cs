@@ -3,7 +3,9 @@ using Disharmony.Optimizer.Passes;
 namespace Disharmony.Tests.Unit.Optimizer.Passes;
 
 [TestFixture]
+#if NETFRAMEWORK
 [Timeout(1000)]
+#endif
 public sealed class PromoteVariablesTests
 {
     private enum ShortEnum : short

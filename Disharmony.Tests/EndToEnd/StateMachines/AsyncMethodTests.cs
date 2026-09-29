@@ -52,7 +52,9 @@ public static class AsyncMethodPatches
 }
 
 [TestFixture]
+#if NETFRAMEWORK
 [Timeout(5000)]
+#endif
 public sealed class AsyncMethodTests : PatchTestBase
 {
     [Test]

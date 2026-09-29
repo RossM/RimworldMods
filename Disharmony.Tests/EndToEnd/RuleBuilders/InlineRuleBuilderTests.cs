@@ -1,7 +1,9 @@
 namespace Disharmony.Tests.EndToEnd.RuleBuilders;
 
 [TestFixture]
+#if NETFRAMEWORK
 [Timeout(5000)]
+#endif
 public sealed class InlineRuleBuilderTests : PatchTestBase
 {
     [Test]

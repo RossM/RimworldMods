@@ -1,7 +1,9 @@
 namespace Disharmony.Tests.EndToEnd.Optimizer;
 
 [TestFixture]
+#if NETFRAMEWORK
 [Timeout(5000)]
+#endif
 public sealed class InlineTypeAnalysisTests : PatchTestBase
 {
     [SetUp]

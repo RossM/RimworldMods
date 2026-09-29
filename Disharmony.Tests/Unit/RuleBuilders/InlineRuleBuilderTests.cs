@@ -5,7 +5,9 @@ using static Disharmony.Tests.Support.RuleAssertions;
 namespace Disharmony.Tests.Unit.RuleBuilders;
 
 [TestFixture]
+#if NETFRAMEWORK
 [Timeout(5000)]
+#endif
 public sealed class InlineRuleBuilderTests
 {
     // EmitReplacement tests supply explicit IL; TestTargets methods provide only signature/local metadata.
