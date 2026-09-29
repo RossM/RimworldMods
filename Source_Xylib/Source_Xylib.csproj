@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Xylib.dll&quot; &quot;..\XylXenos\Assemblies\Xylib.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\Xylib.dll&quot; &quot;..\XylXenos\Assemblies\Xylib.dll&quot;" />
   </Target>
 
 </Project>

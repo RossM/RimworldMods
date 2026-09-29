@@ -30,10 +30,8 @@
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent" Condition="'$(DeployToMods)' == 'true'">
-    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Disharmony.dll&quot;" />
-    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\Disharmony.dll&quot; &quot;..\XylXenos\Assemblies\Disharmony.dll&quot;" />
-    <Exec Condition="'$(EnableDisassembly)' == 'true' And Exists('bin\$(Configuration)\net4.7.2\Iced.dll')" Command="copy &quot;bin\$(Configuration)\net4.7.2\Iced.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Iced.dll&quot;" />
-    <Exec Condition="'$(EnableDisassembly)' == 'true' And Exists('bin\$(Configuration)\net4.7.2\Iced.dll')" Command="copy &quot;bin\$(Configuration)\net4.7.2\Iced.dll&quot; &quot;..\XylXenos\Assemblies\Iced.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\Disharmony.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Disharmony.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\Disharmony.dll&quot; &quot;..\XylXenos\Assemblies\Disharmony.dll&quot;" />
   </Target>
 
 </Project>

@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\$(Configuration)\net4.7.2\XylIdeos.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\XylIdeos.dll&quot;" />
+    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\XylIdeos.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\XylIdeos.dll&quot;" />
   </Target>
 
   <ItemGroup>
