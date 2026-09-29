@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <OutputType>Exe</OutputType>
+    <!-- Program.cs provides the NUnitLite entry point. -->
+    <GenerateProgramFile>false</GenerateProgramFile>
     <Prefer32Bit>false</Prefer32Bit>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
