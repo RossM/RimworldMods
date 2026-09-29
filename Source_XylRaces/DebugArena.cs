@@ -185,7 +185,7 @@ public static class DebugArena
         }
 
         List<DebugActionNode> actions = [];
-        for (int n = 25; n <= 500; n += 25)
+        for (int n = 25; n <= 1000; n += 25)
         {
             var localN = n;
             actions.Add(new($"Top {n}")
