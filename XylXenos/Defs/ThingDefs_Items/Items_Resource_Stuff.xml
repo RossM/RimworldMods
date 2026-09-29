@@ -52,4 +52,46 @@
     <allowedArchonexusCount>80</allowedArchonexusCount>
   </ThingDef>
 
+  <ThingDef ParentName="ResourceBase">
+    <defName>XylSeaSilk</defName>
+    <label>sea silk</label>
+    <description>Cloth produced by spinning the fine threads that certain bivalves use to attach themselves to rocks. It is remarkably strong, with a distinctive golden sheen.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/Cloth</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(215,170,90)</color>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>150</MaxHitPoints>
+      <MarketValue>7</MarketValue>
+      <Mass>0.025</Mass>
+      <Flammability>0.5</Flammability>
+      <DeteriorationRate>3</DeteriorationRate>
+      <StuffPower_Armor_Sharp>1.8</StuffPower_Armor_Sharp>
+      <StuffPower_Armor_Blunt>0.42</StuffPower_Armor_Blunt>
+      <StuffPower_Armor_Heat>0</StuffPower_Armor_Heat>
+      <StuffPower_Insulation_Cold>26</StuffPower_Insulation_Cold>
+      <StuffPower_Insulation_Heat>18</StuffPower_Insulation_Heat>
+    </statBases>
+    <burnableByRecipe>true</burnableByRecipe>
+    <healthAffectsPrice>false</healthAffectsPrice>
+    <minRewardCount>30</minRewardCount>
+    <stuffProps>
+      <categories>
+        <li>Fabric</li>
+      </categories>
+      <commonality>0.01</commonality>
+      <color>(215,170,90)</color>
+      <statFactors>
+        <Flammability>0.5</Flammability>
+        <MaxHitPoints>1.3</MaxHitPoints>
+        <Beauty>5.0</Beauty>
+      </statFactors>
+    </stuffProps>
+    <thingCategories>
+      <li>Textiles</li>
+    </thingCategories>
+    <allowedArchonexusCount>80</allowedArchonexusCount>
+  </ThingDef>
+
 </Defs>

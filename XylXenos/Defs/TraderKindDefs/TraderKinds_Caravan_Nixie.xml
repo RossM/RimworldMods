@@ -16,6 +16,10 @@
         <thingDef>XylCoral</thingDef>
         <countRange>30~50</countRange>
       </li>
+      <li Class="StockGenerator_SingleDef">
+        <thingDef>XylSeaSilk</thingDef>
+        <countRange>50~100</countRange>
+      </li>
 
     </stockGenerators>
   </TraderKindDef>

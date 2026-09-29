@@ -24,9 +24,10 @@
     <apparelStuffFilter Inherit="false">
       <thingDefs>
         <li>XylCoral</li>
+        <li>Cloth</li>
+        <li>XylSeaSilk</li>
       </thingDefs>
       <stuffCategoriesToAllow>
-        <li>Fabric</li>
         <li>Leathery</li>
         <li>Woody</li>
       </stuffCategoriesToAllow>
