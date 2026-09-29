@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net4.7.2</TargetFramework>
+    <TargetFrameworks>net472;net10.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -29,9 +29,9 @@
     </PackageReference>
   </ItemGroup>
 
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent" Condition="'$(DeployToMods)' == 'true'">
-    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\Disharmony.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\Disharmony.dll&quot;" />
-    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\Disharmony.dll&quot; &quot;..\XylXenos\Assemblies\Disharmony.dll&quot;" />
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent" Condition="'$(DeployToMods)' == 'true' and '$(TargetFramework)' == 'net472'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)\..\XylIdeoTweaks\Assemblies\$(TargetFileName)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)\..\XylXenos\Assemblies\$(TargetFileName)" />
   </Target>
 
 </Project>

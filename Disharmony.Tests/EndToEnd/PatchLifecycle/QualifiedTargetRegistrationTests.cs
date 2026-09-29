@@ -9,7 +9,7 @@ public sealed class QualifiedTargetRegistrationTests : PatchTestBase
     [TestCase("qualified-targets-dot", typeof(TargetsAttribute), "Disharmony.Tests.StaticMethodTargets.RegistrationResultA")]
     public void PatchCategoryResolvesQualifiedNameWithoutDefaultType(string category, Type attributeType, string qualifiedName)
     {
-        var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
+        var assembly = AssemblyBuilder.DefineDynamicAssembly(
             new AssemblyName("QualifiedCategoryPatches_" + Guid.NewGuid().ToString("N")), AssemblyBuilderAccess.Run);
         var type = assembly.DefineDynamicModule("Patches").DefineType("QualifiedPatches",
             TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.Sealed);
@@ -39,7 +39,7 @@ public sealed class QualifiedTargetRegistrationTests : PatchTestBase
     [Test]
     public void PatchAllResolvesQualifiedNamesWithoutDefaultTypes()
     {
-        var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
+        var assembly = AssemblyBuilder.DefineDynamicAssembly(
             new AssemblyName("QualifiedPatchAllPatches"), AssemblyBuilderAccess.Run);
         var module = assembly.DefineDynamicModule("Patches");
         // Separate targets ensure that each qualified-name form must resolve and apply independently.

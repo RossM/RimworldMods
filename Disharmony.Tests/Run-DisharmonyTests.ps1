@@ -1,6 +1,6 @@
 [CmdletBinding(PositionalBinding = $false)]
 param(
-    [ValidateSet('Clr', 'Mono')]
+    [ValidateSet('Clr', 'Mono', 'Dotnet')]
     [string] $Runtime = 'Mono',
 
     [ValidateSet('Debug', 'Release')]
@@ -75,7 +75,9 @@ if ($Profile -and $MonoProfile)
 $testProjectRoot = $PSScriptRoot
 $repositoryRoot = Split-Path -Parent $testProjectRoot
 $testProject = Join-Path $testProjectRoot 'Disharmony.Tests.csproj'
-$testExecutable = Join-Path $testProjectRoot "bin\$Configuration\net4.7.2\Disharmony.Tests.exe"
+$targetFramework = if ($Runtime -eq 'Dotnet') { 'net10.0' } else { 'net472' }
+$testFileName = if ($Runtime -eq 'Dotnet') { 'Disharmony.Tests.dll' } else { 'Disharmony.Tests.exe' }
+$testExecutable = Join-Path $testProjectRoot "bin\$Configuration\$targetFramework\$testFileName"
 $dotnet = Get-Command dotnet -CommandType Application -ErrorAction Stop
 $runnerExitCode = 1
 $expectedProfilePath = $null
@@ -96,8 +98,8 @@ if (-not ($NUnitArguments | Where-Object { $_ -match '^--result(?:=|$)' }))
 Push-Location $repositoryRoot
 try
 {
-    Write-Host "Building Disharmony tests ($Configuration)..."
-    & $dotnet.Source build $testProject --configuration $Configuration -p:DeployToMods=false
+    Write-Host "Building Disharmony tests ($Configuration, $targetFramework)..."
+    & $dotnet.Source build $testProject --configuration $Configuration --framework $targetFramework -p:DeployToMods=false
     if ($LASTEXITCODE -ne 0)
     {
         throw "Building Disharmony tests failed with exit code $LASTEXITCODE."
@@ -108,7 +110,13 @@ try
         throw "The test executable was not produced at the expected path: $testExecutable"
     }
 
-    if ($Runtime -eq 'Clr')
+    if ($Runtime -eq 'Dotnet')
+    {
+        Write-Host 'Running Disharmony tests on .NET 10...'
+        & $dotnet.Source $testExecutable @effectiveNUnitArguments
+        $runnerExitCode = $LASTEXITCODE
+    }
+    elseif ($Runtime -eq 'Clr')
     {
         Write-Host 'Running Disharmony tests on the Microsoft CLR...'
         & $testExecutable @effectiveNUnitArguments

@@ -70,7 +70,7 @@ public sealed class PatcherRegistrationTests : PatchTestBase
     private static Assembly CreateDiscoveryAssembly()
     {
         // Isolate assembly discovery, particularly null-category selection, from unrelated test patches.
-        var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
+        var assembly = AssemblyBuilder.DefineDynamicAssembly(
             new AssemblyName("RegistrationPatches"), AssemblyBuilderAccess.Run);
         var module = assembly.DefineDynamicModule("RegistrationPatches");
         (string Target, string[] Categories, string[] HarmonyCategories)[] containers =
