@@ -1,7 +1,7 @@
 namespace Disharmony.Tests.EndToEnd.Optimizer;
 
 [TestFixture]
-[Timeout(5000)]
+[CancelAfter(5000)]
 public sealed class InlineControlFlowTests : PatchTestBase
 {
     [SetUp]

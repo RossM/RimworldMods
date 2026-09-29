@@ -52,7 +52,7 @@ public static class AsyncMethodPatches
 }
 
 [TestFixture]
-[Timeout(5000)]
+[CancelAfter(5000)]
 public sealed class AsyncMethodTests : PatchTestBase
 {
     [Test]
@@ -67,7 +67,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.Executions, Is.EqualTo(1));
         Assert.That(resultTask.IsCompleted, Is.False);
         gate.SetResult(true);
-        Assert.That(await resultTask, Is.EqualTo(42));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(42));
     }
 
     [Test]
@@ -82,7 +82,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.Executions, Is.EqualTo(1));
         Assert.That(resultTask.IsCompleted, Is.False);
         gate.SetResult(true);
-        Assert.That(await resultTask, Is.EqualTo(42));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(42));
     }
 
     [Test]
@@ -99,7 +99,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.Executions, Is.EqualTo(1));
         Assert.That(resultTask.IsCompleted, Is.False);
         gate.SetResult(true);
-        Assert.That(await resultTask, Is.EqualTo(42));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(42));
     }
 
     [Test]
@@ -116,7 +116,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.Executions, Is.Zero);
         Assert.That(resultTask.IsCompleted, Is.False);
         gate.SetResult(true);
-        Assert.That(await resultTask, Is.EqualTo(42));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(42));
         Assert.That(AsyncMethodPatches.Executions, Is.EqualTo(1));
     }
 
@@ -131,7 +131,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Task<int> resultTask = AsyncMethodTargets.CallBeforeAndAfterAwait(gate.Task, 1);
         gate.SetResult(true);
 
-        Assert.That(await resultTask, Is.EqualTo(42));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(42));
     }
 
     [Test]
@@ -148,7 +148,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.ParameterObserved, Is.Zero);
         gate.SetResult(true);
 
-        Assert.That(await resultTask, Is.EqualTo(43));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(43));
         Assert.That(AsyncMethodPatches.ParameterObserved, Is.EqualTo(42));
     }
 
@@ -166,7 +166,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.InstanceObserved, Is.Null);
         gate.SetResult(true);
 
-        Assert.That(await resultTask, Is.EqualTo(42));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(42));
         Assert.That(AsyncMethodPatches.InstanceObserved, Is.SameAs(target));
     }
 
@@ -184,7 +184,7 @@ public sealed class AsyncMethodTests : PatchTestBase
         Assert.That(AsyncMethodPatches.FieldObserved, Is.Zero);
         gate.SetResult(true);
 
-        Assert.That(await resultTask, Is.EqualTo(43));
+        Assert.That(await resultTask.WaitAsync(TestContext.CurrentContext.CancellationToken), Is.EqualTo(43));
         Assert.That(AsyncMethodPatches.FieldObserved, Is.EqualTo(42));
     }
 }

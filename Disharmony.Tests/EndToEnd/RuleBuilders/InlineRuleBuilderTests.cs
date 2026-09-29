@@ -1,7 +1,7 @@
 namespace Disharmony.Tests.EndToEnd.RuleBuilders;
 
 [TestFixture]
-[Timeout(5000)]
+[CancelAfter(5000)]
 public sealed class InlineRuleBuilderTests : PatchTestBase
 {
     [Test]

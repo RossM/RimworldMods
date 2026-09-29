@@ -1152,7 +1152,7 @@ public sealed class RulesEngineTests
         Label branchTarget = (Label)result.Single(instruction => instruction.opcode == OpCodes.Br).operand;
         CodeInstruction emittedLocalLoad = result.Single(instruction => instruction.IsLdloc());
         Assert.That(emittedLocalLoad.labels, Does.Contain(branchTarget));
-        Assert.That(emittedLocalLoad.operand, Is.TypeOf<LocalBuilder>());
+        Assert.That(emittedLocalLoad.operand, Is.InstanceOf<LocalBuilder>());
     }
 
     [Test]
@@ -1976,7 +1976,7 @@ public sealed class RulesEngineTests
 
     private static void AssertLocalBuilderOperand(CodeInstruction instruction, int expectedIndex)
     {
-        Assert.That(instruction.operand, Is.TypeOf<LocalBuilder>());
+        Assert.That(instruction.operand, Is.InstanceOf<LocalBuilder>());
         var localBuilder = (LocalBuilder)instruction.operand;
         Assert.That(localBuilder.LocalIndex, Is.EqualTo(expectedIndex));
         Assert.That(localBuilder.LocalType, Is.EqualTo(typeof(string)));

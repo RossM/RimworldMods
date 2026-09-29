@@ -200,7 +200,7 @@ public static class RefReturnPatchingPatches
 [TestFixture]
 public sealed class RefReturnPatchingTests : PatchTestBase
 {
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_Primitive_WriteByReference()
     {
         RefReturnPatchingPatches.Observed = default;
@@ -219,7 +219,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Primitive, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_Primitive_ReadByValue()
     {
         RefReturnPatchingPatches.Observed = default;
@@ -238,7 +238,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Primitive, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_Primitive_ReadByReference()
     {
         RefReturnPatchingPatches.Observed = default;
@@ -257,7 +257,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Primitive, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_Primitive_WriteByReference()
     {
         RefReturnPatchingPatches.Observed = default;
@@ -276,7 +276,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Primitive, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Prefix_Result_Primitive_SkipWithSuppliedReference()
     {
         var original = 11;
@@ -300,7 +300,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Primitive, Is.EqualTo(original));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPrefix_Result_Primitive_SkipWithSuppliedReference()
     {
         var original = 11;
@@ -324,7 +324,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Primitive, Is.EqualTo(original));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_ReferenceType_ReadByValue()
     {
         RefReturnPatchingPatches.ReferenceObserved = default;
@@ -344,7 +344,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_ReferenceType_ReadByReference()
     {
         RefReturnPatchingPatches.ReferenceObserved = default;
@@ -364,7 +364,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_ReferenceType_WriteByReference()
     {
         RefReturnPatchingPatches.ReferenceObserved = default;
@@ -384,7 +384,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_ReferenceType_ReadByValue()
     {
         RefReturnPatchingPatches.ReferenceObserved = default;
@@ -404,7 +404,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_ReferenceType_ReadByReference()
     {
         RefReturnPatchingPatches.ReferenceObserved = default;
@@ -424,7 +424,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_ReferenceType_WriteByReference()
     {
         RefReturnPatchingPatches.ReferenceObserved = default;
@@ -444,7 +444,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Prefix_Result_ReferenceType_SkipWithSuppliedReference()
     {
         RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
@@ -469,7 +469,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(original));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPrefix_Result_ReferenceType_SkipWithSuppliedReference()
     {
         RefReturnPatchingPatches.ReplacementReference = new BindingReference { Value = 42 };
@@ -494,7 +494,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Reference, Is.SameAs(original));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_Struct_ReadByValue()
     {
         RefReturnPatchingPatches.StructObserved = default;
@@ -513,7 +513,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_Struct_ReadByReference()
     {
         RefReturnPatchingPatches.StructObserved = default;
@@ -532,7 +532,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_Struct_WriteByReference()
     {
         RefReturnPatchingPatches.StructObserved = default;
@@ -551,7 +551,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_Struct_ReadByValue()
     {
         RefReturnPatchingPatches.StructObserved = default;
@@ -570,7 +570,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_Struct_ReadByReference()
     {
         RefReturnPatchingPatches.StructObserved = default;
@@ -589,7 +589,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_Result_Struct_WriteByReference()
     {
         RefReturnPatchingPatches.StructObserved = default;
@@ -608,7 +608,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(later));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Prefix_Result_Struct_SkipWithSuppliedReference()
     {
         var original = new BindingStruct { Value = 11 };
@@ -632,7 +632,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(original));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPrefix_Result_Struct_SkipWithSuppliedReference()
     {
         var original = new BindingStruct { Value = 11 };
@@ -656,7 +656,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(target.Structure, Is.EqualTo(original));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Prefix_StaticField_PreservesAliasOnFirstAndSubsequentCalls()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -675,7 +675,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(2));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_InstancePrimitive_PreservesAlias()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -691,7 +691,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Prefix_InstanceReferenceType_PreservesAlias()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -707,7 +707,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_InstanceStruct_PreservesAlias()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -721,7 +721,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Prefix_RefArgument_PreservesCallerStorage()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -735,7 +735,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_ArrayElement_PreservesSelectedElement()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -749,7 +749,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_ReadonlyReference_PreservesLiveAlias()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -763,7 +763,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPrefix_ArrayElement_PreservesAlias()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -777,7 +777,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void InnerPostfix_ArrayElement_PreservesAlias()
     {
         RefReturnPatchingPatches.ExecutionCount = 0;
@@ -791,7 +791,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(RefReturnPatchingPatches.ExecutionCount, Is.EqualTo(1));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_Primitive_ReadByValue()
     {
         RefReturnPatchingPatches.Observed = 0;
@@ -804,7 +804,7 @@ public sealed class RefReturnPatchingTests : PatchTestBase
         Assert.That(result, Is.EqualTo(42));
     }
 
-    [Test, Timeout(10000)]
+    [Test, CancelAfter(10000)]
     public void Postfix_Result_Primitive_ReadByReference()
     {
         RefReturnPatchingPatches.Observed = 0;

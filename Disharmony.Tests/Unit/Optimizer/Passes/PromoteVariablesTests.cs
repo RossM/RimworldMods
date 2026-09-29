@@ -3,7 +3,7 @@ using Disharmony.Optimizer.Passes;
 namespace Disharmony.Tests.Unit.Optimizer.Passes;
 
 [TestFixture]
-[Timeout(1000)]
+[CancelAfter(1000)]
 public sealed class PromoteVariablesTests
 {
     private enum ShortEnum : short
