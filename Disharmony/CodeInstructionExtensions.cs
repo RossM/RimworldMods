@@ -53,7 +53,8 @@ internal static class CodeInstructionExtensions
                 StackBehaviour.Popref_popi_pop1 => 3,
                 StackBehaviour.Varpop when inst.operand is MethodInfo methodInfo => methodInfo.GetParameters().Length +
                                                                                     (methodInfo.HasThis ? 1 : 0),
-                StackBehaviour.Varpop when inst.operand is ConstructorInfo constructorInfo => constructorInfo.GetParameters().Length,
+                StackBehaviour.Varpop when inst.operand is ConstructorInfo constructorInfo => constructorInfo.GetParameters().Length + 
+                                                                                              (inst.opcode == OpCodes.Newobj ? 0 : 1),
                 StackBehaviour.Varpop when inst.operand?.GetType() == HarmonyInterface.InlineSignature =>
                     HarmonyInterface.InlineSignature_Parameters(inst.operand).Count +
                     (HarmonyInterface.InlineSignature_HasThis(inst.operand) ? 2 : 1),
