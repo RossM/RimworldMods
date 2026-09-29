@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <ShaderDef>
+    <defName>XylCutoutComplexSkin</defName>
+    <shaderProgram>
+      <fragmentShaderFileName>CutoutComplexSkin.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <depthWrite>true</depthWrite>
+      <renderQueue>2900</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+  <ShaderTypeDef>
+    <defName>XylCutoutComplexSkin</defName>
+    <shaderPath>Xyl/CutoutComplexSkin</shaderPath>
+  </ShaderTypeDef>
+
+</Defs>
