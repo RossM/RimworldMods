@@ -374,11 +374,7 @@ internal struct OpCodeData
         (OpCodeValues.Not,            new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         (OpCodeValues.Or,             new OpCodeData { flags = OpCodeFlags.Arithmetic }),
         (OpCodeValues.Pop,            new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(void) }),
-#if NETFRAMEWORK
-        (OpCodeValues.Refanytype,     new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(TypeToken) }),
-#else
-        (OpCodeValues.Refanytype,     new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(int) }),
-#endif
+        (OpCodeValues.Refanytype,     new OpCodeData { flags = OpCodeFlags.Default, resultType = typeof(RuntimeTypeHandle) }),
         (OpCodeValues.Refanyval,      new OpCodeData { flags = OpCodeFlags.TypeFromOperandRef | OpCodeFlags.CanThrow_InvalidCast }),
         (OpCodeValues.Rem,            new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Arithmetic }),
         (OpCodeValues.Rem_Un,         new OpCodeData { flags = OpCodeFlags.Arithmetic | OpCodeFlags.CanThrow_Arithmetic }),

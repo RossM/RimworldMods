@@ -187,11 +187,7 @@ internal sealed class GetOutputTypeTests
             Operand: typeof(int)),
         new("Mkrefany_Int_Null", OpCodes.Mkrefany, [TypeLattice.Null], typeof(TypedReference),
             Operand: typeof(int)),
-#if NETFRAMEWORK
-        new("Refanytype", OpCodes.Refanytype, [typeof(TypedReference)], typeof(TypeToken)),
-#else
-        new("Refanytype", OpCodes.Refanytype, [typeof(TypedReference)], typeof(int)),
-#endif
+        new("Refanytype", OpCodes.Refanytype, [typeof(TypedReference)], typeof(RuntimeTypeHandle)),
         new("Sizeof_Struct", OpCodes.Sizeof, [], typeof(IntPtr), Operand: StructType),
 
         // Variable loads. The declared variable type is the synthetic first input described above.

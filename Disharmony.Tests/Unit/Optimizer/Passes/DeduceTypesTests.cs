@@ -3,7 +3,9 @@ using Disharmony.Optimizer.Passes;
 namespace Disharmony.Tests.Unit.Optimizer.Passes;
 
 [TestFixture]
-[CancelAfter(1000)]
+#if NETFRAMEWORK
+[Timeout(1000)]
+#endif
 public sealed class DeduceTypesTests
 {
     private static readonly MethodInfo ReturnIntMethod =
