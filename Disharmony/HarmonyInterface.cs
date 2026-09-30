@@ -3,61 +3,44 @@ using HarmonyPatchInfo = HarmonyLib.PatchInfo;
 
 namespace Disharmony;
 
-internal class HarmonyInterface
+internal abstract class HarmonyInterface
 {
-    private class HarmonyInternalsContainer
-    {
-        public readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
+    // Shared with Harmony when resolving pending trampolines.
+    protected abstract object Locker { get; }
 
-        public readonly Func<MethodBase, HarmonyPatchInfo> GetPatchInfo
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
-
-        public readonly Action<MethodBase, MethodBase> DetourMethod
-            = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
-
-        public readonly Action<MethodBase, MethodInfo, HarmonyPatchInfo> UpdatePatchInfo
-            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyPatchInfo>>(
-                "HarmonyLib.HarmonySharedState:UpdatePatchInfo");
-
-        public readonly Func<MethodBase, HarmonyPatchInfo, MethodInfo> UpdateWrapper
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatchInfo, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
-
-        public readonly MethodInfo InlineSignature_ReturnType_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:ReturnType");
-        public readonly MethodInfo InlineSignature_Parameters_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:Parameters");
-        public readonly MethodInfo InlineSignature_HasThis_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:HasThis");
-        public readonly Type InlineSignature_Type = ReflectionTools.GetTypeByName("HarmonyLib.InlineSignature")!;
-    }
-
-    private HarmonyInternalsContainer HarmonyInternals { get; } = new();
+    protected abstract Type InlineSignatureType { get; }
+    protected abstract List<object> InlineSignatureParameters(object signature);
+    protected abstract object InlineSignatureReturnType(object signature);
+    protected abstract bool InlineSignatureHasThis(object signature);
 
     public static List<object> InlineSignature_Parameters(object inlineSignature) =>
-        (List<object>)Instance.HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(inlineSignature, []);
+        Instance.InlineSignatureParameters(inlineSignature);
     public static object InlineSignature_ReturnType(object inlineSignature) =>
-        (object)Instance.HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(inlineSignature, []);
+        Instance.InlineSignatureReturnType(inlineSignature);
     public static bool InlineSignature_HasThis(object inlineSignature) =>
-        (bool)Instance.HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(inlineSignature, []);
+        Instance.InlineSignatureHasThis(inlineSignature);
 
-    public static Type InlineSignature => Instance.HarmonyInternals.InlineSignature_Type;
+    public static Type InlineSignature => Instance.InlineSignatureType;
 
 
-    private struct MethodPatch
+    protected struct MethodPatch
     {
         public required Ruleset ruleset;
         public bool optimize;
         public bool debug;
     }
 
-    private const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
+    protected const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
     private static readonly ModuleBuilder module;
 
-    public static readonly HarmonyInterface Instance = new();
+    public static readonly HarmonyInterface Instance = Create();
 
-    // These variables must only be accessed while HarmonyInternals.locker is held
-    private readonly Dictionary<MethodBase, MethodInfo> trampolines = [];
+    // These variables must only be accessed while Locker is held
+    protected readonly Dictionary<MethodBase, MethodInfo> trampolines = [];
     private int trampolineCount;
 
-    private readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
+    protected readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
 
     public bool optimizerEnabled = false;
     static HarmonyInterface()
@@ -66,49 +49,38 @@ internal class HarmonyInterface
         module = assembly.DefineDynamicModule("DynamicModule");
     }
 
-#if DEBUG
-    internal event Action? ApplyPatchHookForTesting = null;
-#endif
-
-    /// <summary>
-    ///     This does the same thing as <see cref="Harmony.Patch" />> but must be called
-    ///     while we are already holding <see cref="HarmonyInternals.locker" />.
-    /// </summary>
-    /// <param name="original"></param>
-    private Exception? PatchDirectly(MethodBase original)
+    private static HarmonyInterface Create()
     {
-        HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatchInfo();
+        Type sharedState = GetHarmonyType("HarmonyLib.HarmonySharedState");
+        MethodInfo? FindUpdate(Type payloadType) => sharedState.GetMethod("UpdatePatchInfo",
+            BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding, null,
+            [typeof(MethodBase), typeof(MethodInfo), payloadType], null);
 
-        MethodInfo replacement;
-        try
-        {
-            replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
-#if ENABLE_DISASSEMBLY
-            if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
-                JitAssemblyLogger.TryLog(original, replacement);
-#endif
-        }
-        catch (Exception e)
-        {
-            patchInfo.transpilers =
-            [
-                .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
-            ];
+        if (FindUpdate(typeof(byte[]))?.ReturnType == typeof(void))
+            return new HarmonyInterfaceImplV3();
+        if (FindUpdate(typeof(HarmonyPatchInfo))?.ReturnType == typeof(void))
+            return new HarmonyInterfaceImplV2();
 
-            replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
-
-            HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
-            return e;
-        }
-
-        HarmonyInternals.UpdatePatchInfo(original, replacement, patchInfo);
-        return null;
+        throw Unsupported("HarmonyLib.HarmonySharedState.UpdatePatchInfo");
     }
+
+    // Detect the backend in the assembly Disharmony binds to, even if other Harmony copies are loaded.
+    protected static Type GetHarmonyType(string name) =>
+        typeof(Harmony).Assembly.GetType(name) ?? throw Unsupported(name);
+
+    protected static NotSupportedException Unsupported(string member) =>
+        new($"Unsupported Harmony internals: {member} in {typeof(Harmony).Assembly.FullName}.");
+
+#if DEBUG
+    internal abstract event Action? ApplyPatchHookForTesting;
+#endif
+
+    protected abstract Exception? PatchDirectly(MethodBase original);
 
     public void ResolveTrampolineImpl(MethodBase method)
     {
         Exception? e;
-        lock (HarmonyInternals.locker)
+        lock (Locker)
         {
             // If we can't remove the method, we lost a race and some other thread has
             // already replaced the trampoline
@@ -142,7 +114,7 @@ internal class HarmonyInterface
     {
         while (true)
         {
-            lock (HarmonyInternals.locker)
+            lock (Locker)
             {
                 if (trampolines.Count == 0)
                     return;
@@ -154,21 +126,6 @@ internal class HarmonyInterface
                     throw new RuntimePatchException($"Error patching {method.FullName}", e);
             }
         }
-    }
-
-    // Must hold HarmonyInternals.locker
-    private MethodInfo ApplyTrampoline(MethodBaseInvocation method)
-    {
-        if (trampolines.TryGetValue(method.MethodBase, out var existingTrampoline))
-            return existingTrampoline;
-
-        MethodInfo trampoline = MakeTrampoline(method);
-
-        HarmonyInternals.DetourMethod(method.MethodBase, trampoline);
-
-        trampolines[method.MethodBase] = trampoline;
-
-        return trampoline;
     }
 
     // This method is called from within Harmony from UpdateWrapper, which is only called while
@@ -210,7 +167,7 @@ internal class HarmonyInterface
         }
     }
 
-    private MethodInfo MakeTrampoline(MethodBaseInvocation target)
+    protected MethodInfo MakeTrampoline(MethodBaseInvocation target)
     {
         Type[] parameterTypes = target.ParameterTypes;
 
@@ -275,74 +232,7 @@ internal class HarmonyInterface
             generator.Emit(OpCodes.Ldarg, i);
     }
 
-    public void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines, bool debug, bool optimize)
-    {
-#if DEBUG
-        ApplyPatchHookForTesting?.Invoke();
-#endif
+    public abstract void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines, bool debug, bool optimize);
 
-        lock (HarmonyInternals.locker)
-        {
-            HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatchInfo();
-
-            if (!methodPatches.ContainsKey(original.MethodBase))
-            {
-                HarmonyMethod patcher = new(InfoOf.HarmonyInterface_Transpiler, priority: Priority.LowerThanNormal - 1) { debug = debug };
-
-                patchInfo.transpilers =
-                [
-                    .. patchInfo.transpilers,
-                    new HarmonyLib.Patch(patcher, patchInfo.transpilers.Length, HarmonyID),
-                ];
-            }
-
-            methodPatches[original.MethodBase] = new()
-            {
-                ruleset = ruleset,
-                optimize = optimize,
-                debug = debug,
-            };
-
-            MethodInfo replacement;
-            if (useTrampolines)
-                replacement = ApplyTrampoline(original);
-            else
-                try
-                {
-                    replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
-#if ENABLE_DISASSEMBLY
-                    if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
-                        JitAssemblyLogger.TryLog(original.MethodBase, replacement);
-#endif
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimePatchException($"Error patching {original.FullName}", e);
-                }
-
-            HarmonyInternals.UpdatePatchInfo(original.MethodBase, replacement, patchInfo);
-        }
-    }
-
-    public void Unpatch(MethodBase methodBase)
-    {
-        lock (HarmonyInternals.locker)
-        {
-            if (!methodPatches.Remove(methodBase))
-                return;
-
-            trampolines.Remove(methodBase);
-
-            HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(methodBase) ?? new HarmonyPatchInfo();
-
-            patchInfo.transpilers =
-            [
-                .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
-            ];
-
-            MethodInfo replacement = HarmonyInternals.UpdateWrapper(methodBase, patchInfo);
-
-            HarmonyInternals.UpdatePatchInfo(methodBase, replacement, patchInfo);
-        }
-    }
+    public abstract void Unpatch(MethodBase methodBase);
 }
