@@ -247,6 +247,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 | Gene | Effect |
 | --- | --- |
 | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Doubles tree-cutting speed and bite damage. |
+| [Beaver tail](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Extends the comfortable temperature range by 5°C in both directions. |
 | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | A smaller body with slightly slower movement. |
 | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Works faster. |
 
@@ -254,7 +255,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 
 - **Traits:** psychically deaf, naked speed, webbed phalanges, optimist, weak melee damage, kind instinct, fertile, strong stomach, furskin, slow study, nearsighted.
 - **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
-- **Appearance:** [beaver tail](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, no beard.
+- **Appearance:** bald, no beard.
 
 ## Scaleborn
 
@@ -313,6 +314,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 | Gene | Effect |
 | --- | --- |
 | [Word of Love](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | Influences romantic attraction. Requires Royalty, but no psylink. |
+| [Pointed tail](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Adds 40 percentage points to social impact. |
 | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Allows short flights at the cost of some manipulation. Heavy torso apparel can prevent flight. |
 | [Always female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers are always female. |
 | [Strong genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the carrier's endogenes when the other parent has a different xenotype, unless both parents have strong genes. |
@@ -324,7 +326,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 
 - **Traits:** enhanced psychic sensitivity, naked speed, weak melee damage, very sleepy, delicate, high libido, beautiful.
 - **Skills:** strong social aptitude.
-- **Appearance:** [pink skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); long hair, mini-horns, standard body, pink hair, light purple hair, smooth tail, grayless hair.
+- **Appearance:** [pink skin](Defs/GeneDefs/GeneDefs_SkinColors.xml); long hair, mini-horns, standard body, pink hair, light purple hair, grayless hair.
 
 ## Currently unused genes
 
