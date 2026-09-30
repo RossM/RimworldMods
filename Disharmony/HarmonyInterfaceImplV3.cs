@@ -17,14 +17,14 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
         public readonly Func<MethodBase, HarmonyPatchInfo, MethodInfo> UpdateWrapper =
             Bind<Func<MethodBase, HarmonyPatchInfo, MethodInfo>>("HarmonyLib.PatchFunctions", "UpdateWrapper");
         public readonly Action<HarmonyPatchInfo> ValidateSurvivingMetadata =
-            Bind<Action<HarmonyPatchInfo>>("HarmonyLib.PatchInfo", "ValidateSurvivingMetadata", isStatic: false);
+            Bind<Action<HarmonyPatchInfo>>("HarmonyLib.PatchInfo", "ValidateSurvivingMetadata");
         public readonly Func<HarmonyPatchInfo, byte[]> SerializeValidated =
             Bind<Func<HarmonyPatchInfo, byte[]>>("HarmonyLib.PatchInfoSerialization", "SerializeValidated");
 
         public readonly Type InlineSignature_Type = GetHarmonyType("HarmonyLib.InlineSignature");
-        public readonly MethodInfo InlineSignature_Parameters_Getter = GetInlineSignatureGetter("Parameters");
-        public readonly MethodInfo InlineSignature_ReturnType_Getter = GetInlineSignatureGetter("ReturnType");
-        public readonly MethodInfo InlineSignature_HasThis_Getter = GetInlineSignatureGetter("HasThis");
+        public readonly MethodInfo InlineSignature_Parameters_Getter = GetGetter("HarmonyLib.InlineSignature", "Parameters");
+        public readonly MethodInfo InlineSignature_ReturnType_Getter = GetGetter("HarmonyLib.InlineSignature", "ReturnType");
+        public readonly MethodInfo InlineSignature_HasThis_Getter = GetGetter("HarmonyLib.InlineSignature", "HasThis");
         // ReSharper restore InconsistentNaming
     }
 
@@ -176,27 +176,4 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
             HarmonyInternals.UpdateWrapper(methodBase, patchInfo);
         }
     }
-
-    private static TDelegate Bind<TDelegate>(string typeName, string methodName, bool isStatic = true)
-        where TDelegate : Delegate
-    {
-        MethodInfo invoke = typeof(TDelegate).GetMethod("Invoke")!;
-        Type[] parameters = [.. invoke.GetParameters().Skip(isStatic ? 0 : 1).Select(p => p.ParameterType)];
-        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding
-                             | (isStatic ? BindingFlags.Static : BindingFlags.Instance);
-        MethodInfo? method = GetHarmonyType(typeName).GetMethod(methodName, flags, null, parameters, null);
-        if (method is null || method.ReturnType != invoke.ReturnType)
-            throw Unsupported($"{typeName}.{methodName}");
-
-        return AccessTools.MethodDelegate<TDelegate>(method);
-    }
-
-    private static object GetLocker() => GetHarmonyType("HarmonyLib.PatchProcessor")
-        .GetField("locker", BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null)
-        ?? throw Unsupported("HarmonyLib.PatchProcessor.locker");
-
-    private static MethodInfo GetInlineSignatureGetter(string propertyName) =>
-        GetHarmonyType("HarmonyLib.InlineSignature").GetProperty(propertyName)?.GetGetMethod()
-        ?? throw Unsupported($"HarmonyLib.InlineSignature.{propertyName}");
-
 }

@@ -5,30 +5,14 @@ namespace Disharmony;
 
 internal abstract class HarmonyInterface
 {
-    // Shared with Harmony when resolving pending trampolines.
-    protected abstract object Locker { get; }
-
-    protected abstract Type InlineSignatureType { get; }
-    protected abstract List<object> InlineSignatureParameters(object signature);
-    protected abstract object InlineSignatureReturnType(object signature);
-    protected abstract bool InlineSignatureHasThis(object signature);
-
-    public static List<object> InlineSignature_Parameters(object inlineSignature) =>
-        Instance.InlineSignatureParameters(inlineSignature);
-    public static object InlineSignature_ReturnType(object inlineSignature) =>
-        Instance.InlineSignatureReturnType(inlineSignature);
-    public static bool InlineSignature_HasThis(object inlineSignature) =>
-        Instance.InlineSignatureHasThis(inlineSignature);
-
-    public static Type InlineSignature => Instance.InlineSignatureType;
-
-
     protected struct MethodPatch
     {
         public required Ruleset ruleset;
         public bool optimize;
         public bool debug;
     }
+
+    public static Type InlineSignature => Instance.InlineSignatureType;
 
     protected const string HarmonyID = "Xylthixlm.Disharmony.Autopatcher";
 
@@ -43,15 +27,34 @@ internal abstract class HarmonyInterface
     protected readonly Dictionary<MethodBase, MethodPatch> methodPatches = [];
 
     public bool optimizerEnabled = false;
+
     static HarmonyInterface()
     {
         var assembly = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("DynamicMethods"), AssemblyBuilderAccess.Run);
         module = assembly.DefineDynamicModule("DynamicModule");
     }
 
+    // Shared with Harmony when resolving pending trampolines.
+    protected abstract object Locker { get; }
+
+    protected abstract Type InlineSignatureType { get; }
+    protected abstract List<object> InlineSignatureParameters(object signature);
+    protected abstract object InlineSignatureReturnType(object signature);
+    protected abstract bool InlineSignatureHasThis(object signature);
+
+    public static List<object> InlineSignature_Parameters(object inlineSignature) =>
+        Instance.InlineSignatureParameters(inlineSignature);
+
+    public static object InlineSignature_ReturnType(object inlineSignature) =>
+        Instance.InlineSignatureReturnType(inlineSignature);
+
+    public static bool InlineSignature_HasThis(object inlineSignature) =>
+        Instance.InlineSignatureHasThis(inlineSignature);
+
     private static HarmonyInterface Create()
     {
         Type sharedState = GetHarmonyType("HarmonyLib.HarmonySharedState");
+
         MethodInfo? FindUpdate(Type payloadType) => sharedState.GetMethod("UpdatePatchInfo",
             BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding, null,
             [typeof(MethodBase), typeof(MethodInfo), payloadType], null);
@@ -235,4 +238,34 @@ internal abstract class HarmonyInterface
     public abstract void ApplyPatch(MethodBaseInvocation original, Ruleset ruleset, bool useTrampolines, bool debug, bool optimize);
 
     public abstract void Unpatch(MethodBase methodBase);
+
+    protected static TDelegate Bind<TDelegate>(string typeName, string methodName)
+        where TDelegate : Delegate
+    {
+        Type type = GetHarmonyType(typeName);
+        MethodInfo invoke = typeof(TDelegate).GetMethod("Invoke")!;
+        MethodInfo? method = 
+            type.GetMethod(methodName,
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding | BindingFlags.Static,
+                null,
+                [.. invoke.GetParameters().Select(p => p.ParameterType)],
+                null) ??
+            type.GetMethod(methodName,
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding | BindingFlags.Instance,
+                null,
+                [.. invoke.GetParameters().Skip(1).Select(p => p.ParameterType)],
+                null);
+        if (method is null || method.ReturnType != invoke.ReturnType)
+            throw Unsupported($"{typeName}.{methodName}");
+
+        return AccessTools.MethodDelegate<TDelegate>(method);
+    }
+
+    protected static object GetLocker() => GetHarmonyType("HarmonyLib.PatchProcessor")
+                                               .GetField("locker", BindingFlags.NonPublic | BindingFlags.Static)?.GetValue(null)
+                                           ?? throw Unsupported("HarmonyLib.PatchProcessor.locker");
+
+    protected static MethodInfo GetGetter(string typeName, string propertyName) =>
+        GetHarmonyType(typeName).GetProperty(propertyName)?.GetGetMethod()
+        ?? throw Unsupported($"{typeName}.{propertyName}");
 }
