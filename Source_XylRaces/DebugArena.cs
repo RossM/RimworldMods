@@ -380,7 +380,7 @@ public static class DebugArena
             // Use RandomElement rather than RandomElementByWeight to avoid bias
             PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElement();
 
-            if (forcedPawnKind != null && Rand.Chance(0.5f))
+            if (Rand.Chance(0.5f))
                 (lhsDef, rhsDef) = (rhsDef, lhsDef);
 
             float lhsPower = CombatPower(lhsDef);
