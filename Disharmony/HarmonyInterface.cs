@@ -5,37 +5,39 @@ namespace Disharmony;
 
 internal class HarmonyInterface
 {
-    private static class HarmonyInternals
+    private class HarmonyInternalsContainer
     {
-        public static readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
+        public readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
 
-        public static readonly Func<MethodBase, HarmonyPatchInfo> GetPatchInfo
+        public readonly Func<MethodBase, HarmonyPatchInfo> GetPatchInfo
             = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
 
-        public static readonly Action<MethodBase, MethodBase> DetourMethod
+        public readonly Action<MethodBase, MethodBase> DetourMethod
             = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
 
-        public static readonly Action<MethodBase, MethodInfo, HarmonyPatchInfo> UpdatePatchInfo
+        public readonly Action<MethodBase, MethodInfo, HarmonyPatchInfo> UpdatePatchInfo
             = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyPatchInfo>>(
                 "HarmonyLib.HarmonySharedState:UpdatePatchInfo");
 
-        public static readonly Func<MethodBase, HarmonyPatchInfo, MethodInfo> UpdateWrapper
+        public readonly Func<MethodBase, HarmonyPatchInfo, MethodInfo> UpdateWrapper
             = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatchInfo, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
 
-        public static readonly MethodInfo InlineSignature_ReturnType_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:ReturnType");
-        public static readonly MethodInfo InlineSignature_Parameters_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:Parameters");
-        public static readonly MethodInfo InlineSignature_HasThis_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:HasThis");
-        public static readonly Type InlineSignature_Type = ReflectionTools.GetTypeByName("HarmonyLib.InlineSignature")!;
+        public readonly MethodInfo InlineSignature_ReturnType_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:ReturnType");
+        public readonly MethodInfo InlineSignature_Parameters_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:Parameters");
+        public readonly MethodInfo InlineSignature_HasThis_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:HasThis");
+        public readonly Type InlineSignature_Type = ReflectionTools.GetTypeByName("HarmonyLib.InlineSignature")!;
     }
 
-    public static List<object> InlineSignature_Parameters(object inlineSignature) =>
-        (List<object>)HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(inlineSignature, []);
-    public static object InlineSignature_ReturnType(object inlineSignature) =>
-        (object)HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(inlineSignature, []);
-    public static bool InlineSignature_HasThis(object inlineSignature) =>
-        (bool)HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(inlineSignature, []);
+    private HarmonyInternalsContainer HarmonyInternals { get; } = new();
 
-    public static Type InlineSignature => HarmonyInternals.InlineSignature_Type;
+    public static List<object> InlineSignature_Parameters(object inlineSignature) =>
+        (List<object>)Instance.HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(inlineSignature, []);
+    public static object InlineSignature_ReturnType(object inlineSignature) =>
+        (object)Instance.HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(inlineSignature, []);
+    public static bool InlineSignature_HasThis(object inlineSignature) =>
+        (bool)Instance.HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(inlineSignature, []);
+
+    public static Type InlineSignature => Instance.HarmonyInternals.InlineSignature_Type;
 
 
     private struct MethodPatch
@@ -73,7 +75,7 @@ internal class HarmonyInterface
     ///     while we are already holding <see cref="HarmonyInternals.locker" />.
     /// </summary>
     /// <param name="original"></param>
-    private static Exception? PatchDirectly(MethodBase original)
+    private Exception? PatchDirectly(MethodBase original)
     {
         HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatchInfo();
 
