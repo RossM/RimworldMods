@@ -21,7 +21,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" />
-    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
     <PackageReference Include="PolySharp" Version="1.16.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
