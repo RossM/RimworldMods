@@ -557,6 +557,7 @@
           <li Class="XylXenos.HediffGiver_RandomNotInSpace">
             <hediff>XylPlanetSickness</hediff>
             <mtbDays>30</mtbDays>
+            <message>{PAWN_labelShort} has developed planet sickness</message>
           </li>
         </hediffGivers>
       </li>      
@@ -565,7 +566,7 @@
   <HediffDef ParentName="DiseaseBase">
     <defName>XylPlanetSickness</defName>
     <label>planet sickness</label>
-    <description>Nausea and vomiting caused by a genetic predisposition to motion sickness on planetary surfaces.</description>
+    <description>Nausea and vomiting caused by a genetic predisposition to motion sickness on planetary surfaces. An episode lasts about a day.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPlanetSickness</GeneDef>
     </descriptionHyperlinks>
