@@ -6,6 +6,7 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
 {
     private sealed class HarmonyInternalsContainer
     {
+        // ReSharper disable InconsistentNaming
         public readonly object Locker = GetLocker();
         public readonly Func<MethodBase, HarmonyPatchInfo?> GetPatchInfo =
             Bind<Func<MethodBase, HarmonyPatchInfo?>>("HarmonyLib.HarmonySharedState", "GetPatchInfo");
@@ -20,42 +21,43 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
         public readonly Func<HarmonyPatchInfo, byte[]> SerializeValidated =
             Bind<Func<HarmonyPatchInfo, byte[]>>("HarmonyLib.PatchInfoSerialization", "SerializeValidated");
 
-        public readonly Type InlineSignature = GetHarmonyType("HarmonyLib.InlineSignature");
-        public readonly MethodInfo InlineSignatureParameters = GetInlineSignatureGetter("Parameters");
-        public readonly MethodInfo InlineSignatureReturnType = GetInlineSignatureGetter("ReturnType");
-        public readonly MethodInfo InlineSignatureHasThis = GetInlineSignatureGetter("HasThis");
+        public readonly Type InlineSignature_Type = GetHarmonyType("HarmonyLib.InlineSignature");
+        public readonly MethodInfo InlineSignature_Parameters_Getter = GetInlineSignatureGetter("Parameters");
+        public readonly MethodInfo InlineSignature_ReturnType_Getter = GetInlineSignatureGetter("ReturnType");
+        public readonly MethodInfo InlineSignature_HasThis_Getter = GetInlineSignatureGetter("HasThis");
+        // ReSharper restore InconsistentNaming
     }
 
-    private readonly HarmonyInternalsContainer internals = new();
+    private HarmonyInternalsContainer HarmonyInternals { get; } = new();
 
-    protected override object Locker => internals.Locker;
+    protected override object Locker => HarmonyInternals.Locker;
 
     private void InstallAndPublishTrampoline(MethodBase original, MethodInfo trampoline, HarmonyPatchInfo patchInfo)
     {
         // Trampolines bypass UpdateWrapper. Follow its validation/serialization order so an invalid
         // patch cannot replace the live method before its metadata is ready to publish.
         byte[] bytes = PreparePatchInfo(patchInfo);
-        internals.DetourMethod(original, trampoline);
-        internals.UpdatePatchInfo(original, trampoline, bytes);
+        HarmonyInternals.DetourMethod(original, trampoline);
+        HarmonyInternals.UpdatePatchInfo(original, trampoline, bytes);
     }
 
     private void PublishTrampoline(MethodBase original, MethodInfo trampoline, HarmonyPatchInfo patchInfo) =>
-        internals.UpdatePatchInfo(original, trampoline, PreparePatchInfo(patchInfo));
+        HarmonyInternals.UpdatePatchInfo(original, trampoline, PreparePatchInfo(patchInfo));
 
     private byte[] PreparePatchInfo(HarmonyPatchInfo patchInfo)
     {
-        internals.ValidateSurvivingMetadata(patchInfo);
+        HarmonyInternals.ValidateSurvivingMetadata(patchInfo);
         patchInfo.VersionCount++;
-        return internals.SerializeValidated(patchInfo);
+        return HarmonyInternals.SerializeValidated(patchInfo);
     }
 
-    protected override Type InlineSignatureType => internals.InlineSignature;
+    protected override Type InlineSignatureType => HarmonyInternals.InlineSignature_Type;
     protected override List<object> InlineSignatureParameters(object signature) =>
-        (List<object>)internals.InlineSignatureParameters.Invoke(signature, null)!;
+        (List<object>)HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(signature, null)!;
     protected override object InlineSignatureReturnType(object signature) =>
-        internals.InlineSignatureReturnType.Invoke(signature, null)!;
+        HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(signature, null)!;
     protected override bool InlineSignatureHasThis(object signature) =>
-        (bool)internals.InlineSignatureHasThis.Invoke(signature, null)!;
+        (bool)HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(signature, null)!;
 
 #if DEBUG
     internal override event Action? ApplyPatchHookForTesting = null;
@@ -68,11 +70,11 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
     /// <param name="original"></param>
     protected override Exception? PatchDirectly(MethodBase original)
     {
-        HarmonyPatchInfo patchInfo = internals.GetPatchInfo(original) ?? new HarmonyPatchInfo();
+        HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatchInfo();
 
         try
         {
-            MethodInfo replacement = internals.UpdateWrapper(original, patchInfo);
+            MethodInfo replacement = HarmonyInternals.UpdateWrapper(original, patchInfo);
 #if ENABLE_DISASSEMBLY
             if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
                 JitAssemblyLogger.TryLog(original, replacement);
@@ -85,7 +87,7 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
                 .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
             ];
 
-            internals.UpdateWrapper(original, patchInfo);
+            HarmonyInternals.UpdateWrapper(original, patchInfo);
             return e;
         }
 
@@ -117,7 +119,7 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
 
         lock (Locker)
         {
-            HarmonyPatchInfo patchInfo = internals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatchInfo();
+            HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatchInfo();
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {
@@ -142,7 +144,7 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
             else
                 try
                 {
-                    MethodInfo replacement = internals.UpdateWrapper(original.MethodBase, patchInfo);
+                    MethodInfo replacement = HarmonyInternals.UpdateWrapper(original.MethodBase, patchInfo);
 #if ENABLE_DISASSEMBLY
                     if (patchInfo.transpilers.Any(p => p.debug && p.owner == HarmonyID))
                         JitAssemblyLogger.TryLog(original.MethodBase, replacement);
@@ -164,14 +166,14 @@ internal sealed class HarmonyInterfaceImplV3 : HarmonyInterface
 
             trampolines.Remove(methodBase);
 
-            HarmonyPatchInfo patchInfo = internals.GetPatchInfo(methodBase) ?? new HarmonyPatchInfo();
+            HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(methodBase) ?? new HarmonyPatchInfo();
 
             patchInfo.transpilers =
             [
                 .. patchInfo.transpilers.Where(t => t.owner != HarmonyID),
             ];
 
-            internals.UpdateWrapper(methodBase, patchInfo);
+            HarmonyInternals.UpdateWrapper(methodBase, patchInfo);
         }
     }
 

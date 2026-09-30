@@ -6,6 +6,7 @@ internal sealed class HarmonyInterfaceImplV2 : HarmonyInterface
 {
     private class HarmonyInternalsContainer
     {
+        // ReSharper disable InconsistentNaming
         public readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
 
         public readonly Func<MethodBase, HarmonyPatchInfo> GetPatchInfo
@@ -25,6 +26,7 @@ internal sealed class HarmonyInterfaceImplV2 : HarmonyInterface
         public readonly MethodInfo InlineSignature_Parameters_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:Parameters");
         public readonly MethodInfo InlineSignature_HasThis_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:HasThis");
         public readonly Type InlineSignature_Type = ReflectionTools.GetTypeByName("HarmonyLib.InlineSignature")!;
+        // ReSharper restore InconsistentNaming
     }
 
     private HarmonyInternalsContainer HarmonyInternals { get; } = new();
