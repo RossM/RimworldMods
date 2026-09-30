@@ -8,6 +8,11 @@ param(
 
     [string] $MonoExecutable,
 
+    [ValidateSet('2', '3')]
+    [string[]] $HarmonyVersion,
+
+    [string] $HarmonyV3Path = (Join-Path $PSScriptRoot '..\TestArtifacts\Harmony\3.0.0.0-preview.1\net10.0\0Harmony.dll'),
+
     [switch] $Profile,
 
     [string] $MonoProfile,
@@ -72,28 +77,45 @@ if ($Profile -and $MonoProfile)
     throw 'Use either -Profile or -MonoProfile, not both.'
 }
 
+if (-not $HarmonyVersion)
+{
+    # The supplied v3 beta targets .NET 10; CLR and Mono retain their v2 default.
+    $HarmonyVersion = if ($Runtime -eq 'Dotnet') { @('2', '3') } else { @('2') }
+}
+$HarmonyVersion = @($HarmonyVersion | Select-Object -Unique)
+
+if ('3' -in $HarmonyVersion)
+{
+    if (-not (Test-Path -LiteralPath $HarmonyV3Path -PathType Leaf))
+    {
+        throw "Harmony v3 was not found at $HarmonyV3Path. Supply -HarmonyV3Path or select -HarmonyVersion 2."
+    }
+    $HarmonyV3Path = (Resolve-Path -LiteralPath $HarmonyV3Path).Path
+    if ([Reflection.AssemblyName]::GetAssemblyName($HarmonyV3Path).Version.Major -ne 3)
+    {
+        throw "The requested Harmony v3 assembly is not version 3: $HarmonyV3Path"
+    }
+}
+
+if ($HarmonyVersion.Count -gt 1 -and ($NUnitArguments | Where-Object { $_ -match '^--result(?:=|$)' }))
+{
+    throw 'Use a single -HarmonyVersion with a custom --result path, or omit --result to save separate results for both versions.'
+}
+if ($HarmonyVersion.Count -gt 1 -and $MonoProfile -match '(^|,)output=')
+{
+    throw 'Use a single -HarmonyVersion with a custom Mono profile output path.'
+}
+
 $testProjectRoot = $PSScriptRoot
 $repositoryRoot = Split-Path -Parent $testProjectRoot
 $testProject = Join-Path $testProjectRoot 'Disharmony.Tests.csproj'
 $targetFramework = if ($Runtime -eq 'Dotnet') { 'net10.0' } else { 'net472' }
 $testFileName = if ($Runtime -eq 'Dotnet') { 'Disharmony.Tests.dll' } else { 'Disharmony.Tests.exe' }
-$testExecutable = Join-Path $testProjectRoot "bin\$Configuration\$targetFramework\$testFileName"
+$buildDirectory = Join-Path $testProjectRoot "bin\$Configuration\$targetFramework"
 $dotnet = Get-Command dotnet -CommandType Application -ErrorAction Stop
-$runnerExitCode = 1
-$expectedProfilePath = $null
+$runnerExitCode = 0
 $resultDirectory = Join-Path $repositoryRoot 'TestResults\Disharmony'
-$effectiveNUnitArguments = [Collections.Generic.List[string]]::new()
-foreach ($argument in $NUnitArguments)
-{
-    $effectiveNUnitArguments.Add($argument)
-}
-
-if (-not ($NUnitArguments | Where-Object { $_ -match '^--result(?:=|$)' }))
-{
-    New-Item -ItemType Directory -Path $resultDirectory -Force | Out-Null
-    $resultPath = Join-Path $resultDirectory "test-result-$($Runtime.ToLowerInvariant()).xml"
-    $effectiveNUnitArguments.Add("--result=$resultPath")
-}
+$previousExpectedMajor = $env:DISHARMONY_TEST_HARMONY_MAJOR
 
 Push-Location $repositoryRoot
 try
@@ -105,60 +127,90 @@ try
         throw "Building Disharmony tests failed with exit code $LASTEXITCODE."
     }
 
-    if (-not (Test-Path -LiteralPath $testExecutable -PathType Leaf))
+    if (-not (Test-Path -LiteralPath (Join-Path $buildDirectory $testFileName) -PathType Leaf))
     {
-        throw "The test executable was not produced at the expected path: $testExecutable"
+        throw "The test executable was not produced in $buildDirectory."
     }
 
-    if ($Runtime -eq 'Dotnet')
+    foreach ($version in $HarmonyVersion)
     {
-        Write-Host 'Running Disharmony tests on .NET 10...'
-        & $dotnet.Source $testExecutable @effectiveNUnitArguments
-        $runnerExitCode = $LASTEXITCODE
-    }
-    elseif ($Runtime -eq 'Clr')
-    {
-        Write-Host 'Running Disharmony tests on the Microsoft CLR...'
-        & $testExecutable @effectiveNUnitArguments
-        $runnerExitCode = $LASTEXITCODE
-    }
-    else
-    {
-        $mono = Resolve-MonoExecutable $MonoExecutable
-        $monoArguments = [Collections.Generic.List[string]]::new()
+        # Stage the same v2-compiled binaries for each run, replacing only the runtime Harmony DLL.
+        # Keeping these directories outside the build output also keeps logs and dependencies separate.
+        $runDirectory = Join-Path $testProjectRoot "bin\HarmonyCompatibility\$Configuration\$targetFramework\v$version"
+        New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
+        Get-ChildItem -LiteralPath $buildDirectory | Copy-Item -Destination $runDirectory -Recurse -Force
+        if ($version -eq '3')
+        {
+            Copy-Item -LiteralPath $HarmonyV3Path -Destination (Join-Path $runDirectory '0Harmony.dll') -Force
+        }
 
-        if ($Profile -or $MonoProfile)
+        $testExecutable = Join-Path $runDirectory $testFileName
+        $env:DISHARMONY_TEST_HARMONY_MAJOR = $version
+        $expectedProfilePath = $null
+        $effectiveNUnitArguments = [Collections.Generic.List[string]]::new()
+        foreach ($argument in $NUnitArguments)
+        {
+            $effectiveNUnitArguments.Add($argument)
+        }
+        if (-not ($NUnitArguments | Where-Object { $_ -match '^--result(?:=|$)' }))
         {
             New-Item -ItemType Directory -Path $resultDirectory -Force | Out-Null
-            $profilePath = Join-Path $resultDirectory ("mono-profile-{0:yyyyMMdd-HHmmss}.mlpd" -f [DateTime]::UtcNow)
-            $profilePath = $profilePath.Replace('\', '/')
-
-            $profileSpecification = if ($MonoProfile) { $MonoProfile } else { 'log:sample' }
-            if ($profileSpecification -notmatch '(^|,)output=')
-            {
-                $profileSpecification += ",output=$profilePath"
-                $expectedProfilePath = $profilePath
-                Write-Host "Requesting Mono profile output at $profilePath"
-            }
-            else
-            {
-                Write-Host "Using Mono profiler specification: $profileSpecification"
-            }
-
-            $monoArguments.Add("--profile=$profileSpecification")
+            $resultPath = Join-Path $resultDirectory "test-result-$($Runtime.ToLowerInvariant())-harmony$version.xml"
+            $effectiveNUnitArguments.Add("--result=$resultPath")
         }
 
-        $monoArguments.Add($testExecutable)
-        foreach ($argument in $effectiveNUnitArguments)
+        Write-Host "Running Disharmony tests ($Runtime, Harmony $version)..."
+        if ($Runtime -eq 'Dotnet')
         {
-            $monoArguments.Add($argument)
+            & $dotnet.Source $testExecutable @effectiveNUnitArguments
+            $versionExitCode = $LASTEXITCODE
+        }
+        elseif ($Runtime -eq 'Clr')
+        {
+            & $testExecutable @effectiveNUnitArguments
+            $versionExitCode = $LASTEXITCODE
+        }
+        else
+        {
+            $mono = Resolve-MonoExecutable $MonoExecutable
+            $monoArguments = [Collections.Generic.List[string]]::new()
+
+            if ($Profile -or $MonoProfile)
+            {
+                New-Item -ItemType Directory -Path $resultDirectory -Force | Out-Null
+                $profilePath = Join-Path $resultDirectory ("mono-profile-harmony$version-{0:yyyyMMdd-HHmmss}.mlpd" -f [DateTime]::UtcNow)
+                $profilePath = $profilePath.Replace('\', '/')
+
+                $profileSpecification = if ($MonoProfile) { $MonoProfile } else { 'log:sample' }
+                if ($profileSpecification -notmatch '(^|,)output=')
+                {
+                    $profileSpecification += ",output=$profilePath"
+                    $expectedProfilePath = $profilePath
+                    Write-Host "Requesting Mono profile output at $profilePath"
+                }
+                else
+                {
+                    Write-Host "Using Mono profiler specification: $profileSpecification"
+                }
+
+                $monoArguments.Add("--profile=$profileSpecification")
+            }
+
+            $monoArguments.Add($testExecutable)
+            foreach ($argument in $effectiveNUnitArguments)
+            {
+                $monoArguments.Add($argument)
+            }
+
+            & $mono @monoArguments
+            $versionExitCode = $LASTEXITCODE
         }
 
-        Write-Host "Running Disharmony tests on Mono: $mono"
-        & $mono @monoArguments
-        $runnerExitCode = $LASTEXITCODE
-
-        if ($runnerExitCode -eq 0 -and $expectedProfilePath -and -not (Test-Path -LiteralPath $expectedProfilePath -PathType Leaf))
+        if ($versionExitCode -ne 0)
+        {
+            $runnerExitCode = $versionExitCode
+        }
+        if ($versionExitCode -eq 0 -and $expectedProfilePath -and -not (Test-Path -LiteralPath $expectedProfilePath -PathType Leaf))
         {
             throw "Mono completed the tests but did not create $expectedProfilePath. The selected Mono distribution may not include the requested profiler module."
         }
@@ -166,6 +218,7 @@ try
 }
 finally
 {
+    $env:DISHARMONY_TEST_HARMONY_MAJOR = $previousExpectedMajor
     Pop-Location
 }
 

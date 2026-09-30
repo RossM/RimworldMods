@@ -19,6 +19,8 @@ Build outputs are separated by configuration and framework under `bin`. The .NET
 `net472` (previously `net4.7.2`). Project references select the matching target automatically. Only the `net472`
 library build deploys to the RimWorld mod assembly directories; `-p:DeployToMods=false` disables that copy.
 Visual Studio Test Explorer and `dotnet test` run the tests for each target through the NUnit test adapter.
+These commands use the referenced Harmony 2.4.2 package. Use the compatibility runner below to test the same
+Disharmony binaries against both Harmony versions.
 
 ## Hang detection
 
@@ -35,13 +37,28 @@ The .NET 10 NUnitLite runner has no hard per-test timeout. Use the command above
 
 ## NUnitLite runners
 
-The script builds only the target required by the selected runtime and runs it in a fresh process:
+The script builds only the target required by the selected runtime, then runs each selected Harmony version in a
+fresh process:
 
-* `Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Clr` runs `net472` on the Microsoft .NET Framework CLR.
-* `Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono` runs `net472` on Mono (the default).
-* `Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Dotnet` runs `net10.0` on .NET 10 via `dotnet`.
+* `Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Clr` runs `net472` with Harmony v2 on the Microsoft .NET Framework CLR.
+* `Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono` runs `net472` with Harmony v2 on Mono (the default).
+* `Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Dotnet` runs `net10.0` with both Harmony v2 and v3 on .NET 10.
 
-Default NUnitLite result files are saved separately for each runtime under `TestResults\Disharmony`.
+Harmony v2 comes from the project's pinned NuGet package. The merged .NET 10 Harmony v3 beta DLL is versioned at
+`TestArtifacts\Harmony\3.0.0.0-preview.1\net10.0\0Harmony.dll` and used by default. Use `-HarmonyV3Path` to test a
+different build. The bundled beta identifies itself as `3.0.0.0-preview.1`; its `UpdatePatchInfo` takes serialized bytes and
+`UpdateWrapper` publishes the patch information itself. A .NET 10 DLL cannot be used for the CLR/Mono runs; v3 is
+currently tested only on .NET 10.
+
+Pass `-HarmonyVersion 2` or `-HarmonyVersion 3` to select one version. Both runs use the same test and Disharmony
+assemblies, compiled against v2, with only `0Harmony.dll` replaced in the v3 run. Staged outputs are under
+`Disharmony.Tests\bin\HarmonyCompatibility\<configuration>\<framework>\v<version>`. The test setup verifies the
+loaded Harmony major version and prints its identity and location, so accidentally running v2 twice cannot pass
+as a compatibility check. A failing run makes the script fail even if the other version succeeds.
+
+Default NUnitLite result files are saved separately for each runtime and Harmony version under
+`TestResults\Disharmony`, for example `test-result-dotnet-harmony3.xml`. A custom `--result` path requires selecting
+one Harmony version to avoid overwriting another run's results.
 
 Run the script from the repository root. For Mono, it checks `-MonoExecutable`, then `MONO_EXE`, then `mono` on
 `PATH`, and finally the standard Windows installation directories. NUnitLite arguments can be supplied after the
@@ -50,6 +67,8 @@ script arguments, or explicitly through `-NUnitArguments`.
 ```powershell
 .\Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Clr
 .\Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Dotnet
+.\Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Dotnet -HarmonyVersion 2
+.\Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Dotnet -HarmonyVersion 3 -HarmonyV3Path C:\path\to\net10.0\0Harmony.dll
 .\Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono
 .\Disharmony.Tests\Run-DisharmonyTests.ps1 -Runtime Mono --where 'test =~ Optimizer'
 ```
