@@ -1,5 +1,5 @@
 using JetBrains.Annotations;
-using HarmonyPatch = HarmonyLib.PatchInfo;
+using HarmonyPatchInfo = HarmonyLib.PatchInfo;
 
 namespace Disharmony;
 
@@ -9,18 +9,18 @@ internal class HarmonyInterface
     {
         public static readonly object locker = AccessTools.FieldRefAccess<object>("HarmonyLib.PatchProcessor:locker")();
 
-        public static readonly Func<MethodBase, HarmonyPatch> GetPatchInfo
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
+        public static readonly Func<MethodBase, HarmonyPatchInfo> GetPatchInfo
+            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatchInfo>>("HarmonyLib.HarmonySharedState:GetPatchInfo");
 
         public static readonly Action<MethodBase, MethodBase> DetourMethod
             = AccessTools.MethodDelegate<Action<MethodBase, MethodBase>>("HarmonyLib.PatchTools:DetourMethod");
 
-        public static readonly Action<MethodBase, MethodInfo, HarmonyPatch> UpdatePatchInfo
-            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyPatch>>(
+        public static readonly Action<MethodBase, MethodInfo, HarmonyPatchInfo> UpdatePatchInfo
+            = AccessTools.MethodDelegate<Action<MethodBase, MethodInfo, HarmonyPatchInfo>>(
                 "HarmonyLib.HarmonySharedState:UpdatePatchInfo");
 
-        public static readonly Func<MethodBase, HarmonyPatch, MethodInfo> UpdateWrapper
-            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatch, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
+        public static readonly Func<MethodBase, HarmonyPatchInfo, MethodInfo> UpdateWrapper
+            = AccessTools.MethodDelegate<Func<MethodBase, HarmonyPatchInfo, MethodInfo>>("HarmonyLib.PatchFunctions:UpdateWrapper");
 
         public static readonly MethodInfo InlineSignature_ReturnType_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:ReturnType");
         public static readonly MethodInfo InlineSignature_Parameters_Getter = AccessTools.PropertyGetter("HarmonyLib.InlineSignature:Parameters");
@@ -75,7 +75,7 @@ internal class HarmonyInterface
     /// <param name="original"></param>
     private static Exception? PatchDirectly(MethodBase original)
     {
-        HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatch();
+        HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original) ?? new HarmonyPatchInfo();
 
         MethodInfo replacement;
         try
@@ -281,7 +281,7 @@ internal class HarmonyInterface
 
         lock (HarmonyInternals.locker)
         {
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatch();
+            HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(original.MethodBase) ?? new HarmonyPatchInfo();
 
             if (!methodPatches.ContainsKey(original.MethodBase))
             {
@@ -331,7 +331,7 @@ internal class HarmonyInterface
 
             trampolines.Remove(methodBase);
 
-            HarmonyPatch patchInfo = HarmonyInternals.GetPatchInfo(methodBase) ?? new HarmonyPatch();
+            HarmonyPatchInfo patchInfo = HarmonyInternals.GetPatchInfo(methodBase) ?? new HarmonyPatchInfo();
 
             patchInfo.transpilers =
             [
