@@ -32,12 +32,6 @@ public class GeneTemplateDef : Def
 
     public float selectionWeight = 1f;
 
-    public override void ResolveReferences()
-    {
-        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
-        displayCategory ??= GeneCategoryDefOf.Miscellaneous;
-    }
-
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {

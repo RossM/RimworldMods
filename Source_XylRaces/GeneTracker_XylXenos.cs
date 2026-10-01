@@ -42,7 +42,6 @@ public class GeneTracker_XylXenos : GeneTracker
             Add(ref meleeChanceBonuses, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors,
                 item => item.damageDef, item => item.chanceBonus);
 
-
             hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
         }
     }
