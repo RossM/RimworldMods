@@ -123,7 +123,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 **Other genes and appearance**
 
-- **Traits:** enhanced psychic sensitivity, naked speed, webbed phalanges, pessimist, very cold tolerant, heat sensitive, weak melee damage, pretty.
+- **Traits:** enhanced psychic sensitivity, naked speed, webbed phalanges, pessimist (Royalty), very cold tolerant, heat sensitive, weak melee damage, pretty.
 - **Skills:** poor mining aptitude, poor construction aptitude, strong social aptitude.
 - **Appearance:** [fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml); bald, snow-white hair, grayless hair, blue skin.
 
@@ -253,7 +253,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 
 **Other genes and appearance**
 
-- **Traits:** psychically deaf, naked speed, webbed phalanges, optimist, weak melee damage, kind instinct, fertile, strong stomach, furskin, slow study, nearsighted.
+- **Traits:** psychically deaf, webbed phalanges, optimist, slow wound healing, weak melee damage, kind instinct, fertile, furskin, slow study, nearsighted.
 - **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
 - **Appearance:** bald, no beard.
 
