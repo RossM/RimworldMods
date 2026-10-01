@@ -1,4 +1,6 @@
-﻿namespace Xylib;
+﻿using System.Reflection;
+
+namespace Xylib;
 
 [UsedFromXml]
 [PublicAPI]
@@ -69,12 +71,11 @@ public class DefModExtension_GeneWithComps : DefModExtension
     {
         get
         {
-            var parentGene = parent as GeneDef;
-            DebugAssert.NotNull(parentGene);
+            DebugAssert.NotNull(parent);
 
             return field ??= extraIconPath is { Length: > 0 }
-                ? ContentFinder<Texture2D>.Get(extraIconPath) ?? parentGene.Icon
-                : parentGene.Icon;
+                ? ContentFinder<Texture2D>.Get(extraIconPath) ?? parent.Icon
+                : parent.Icon;
         }
     }
 
@@ -129,9 +130,11 @@ public class DefModExtension_GeneWithComps : DefModExtension
     #region Properties which are filled automatically and shouldn't be set in XML
 
     /// <summary>
-    ///     The <see cref="GeneDef" /> or <see cref="GeneTemplateDef" /> this object is attached to.
+    ///     The <see cref="GeneDef" /> this object is attached to.
     /// </summary>
-    public Def? parent;
+    public GeneDef? parent;
+
+    private bool parentWasGeneTemplateDef = false;
 
     #endregion
 
@@ -168,15 +171,17 @@ public class DefModExtension_GeneWithComps : DefModExtension
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
-        DebugAssert.NotNull(parent);
+        if (parent is null)
+        {
+            if (!parentWasGeneTemplateDef)
+                yield return "parent is not GeneDef or GeneTemplateDef";
+            yield break;
+        }
 
         foreach (var configError in base.ConfigErrors())
             yield return configError;
 
-        var fieldDef = parent?.GetType().GetField("geneClass");
-        if (fieldDef is null || fieldDef.FieldType != typeof(Type))
-            yield return "parent is not GeneDef or GeneTemplateDef";
-        else if (fieldDef.GetValue(parent) is not Type type)
+        if (parent.geneClass is not Type type)
             yield return "geneClass is null or invalid type";
         else if (!typeof(GeneWithComps).IsAssignableFrom(type))
             yield return "geneClass is not GeneExt or subclass thereof";
@@ -197,7 +202,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
             if (!comp.AllowDuplicates && !seenCompPropertyTypes.Add(comp.GetType()))
                 yield return $"Duplicate comps of type {comp.GetType()}";
 
-            foreach (var configError in comp.ConfigErrors(parent as GeneDef))
+            foreach (var configError in comp.ConfigErrors(parent))
                 yield return $"{comp}: {configError}";
         }
     }
@@ -206,21 +211,28 @@ public class DefModExtension_GeneWithComps : DefModExtension
     {
         base.ResolveReferences(parentDef);
 
+        // parentDef could be a GeneTemplateDef. This is called after the templated genes are already created, so just return in this case.
+        if (parentDef is not GeneDef geneDef)
+        {
+            if (parentDef.GetType().GetField("geneClass") is FieldInfo fieldDef && fieldDef.FieldType == typeof(Type))
+                parentWasGeneTemplateDef = true;
+            return;
+        }
+
         // If this is a child of a GeneTemplateDef, we'll be called again with each GeneDef created from it.
         // We need to avoid clobbering an already-set parent.
-        parent ??= parentDef;
+        parent = geneDef;
 
         Extensions.defExtCache.Clear();
 
-        var fieldDef = parentDef.GetType().GetField("geneClass");
-        if (fieldDef != null && fieldDef.FieldType == typeof(Type) && (Type?)fieldDef.GetValue(parentDef) == typeof(Gene))
-            fieldDef.SetValue(parentDef, typeof(GeneWithComps));
+        if (geneDef.geneClass == typeof(Gene))
+            geneDef.geneClass = typeof(GeneWithComps);
 
         if (comps is null)
             return;
 
         foreach (var comp in comps)
-            comp.ResolveReferences(parentDef);
+            comp.ResolveReferences(geneDef);
     }
 
     public T? CompProps<T>() where T : GeneCompProperties

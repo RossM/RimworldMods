@@ -58,7 +58,7 @@ public static class GeneDefGenerator
         geneDef.abilities = [def];
 
         if (template.modExtensions is { Count: > 0 })
-            geneDef.modExtensions = [.. template.modExtensions];
+            geneDef.modExtensions = [.. template.modExtensions.Select(ext => ext.MemberwiseClone())];
 
         return geneDef;
     }
