@@ -35,11 +35,11 @@ internal sealed class HarmonyInterfaceImplV2 : HarmonyInterface
 
     protected override Type InlineSignatureType => HarmonyInternals.InlineSignature_Type;
     protected override List<object> InlineSignatureParameters(object signature) =>
-        (List<object>)HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(signature, []);
+        (List<object>)HarmonyInternals.InlineSignature_Parameters_Getter.Invoke(signature, [])!;
     protected override object InlineSignatureReturnType(object signature) =>
-        (object)HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(signature, []);
+        (object)HarmonyInternals.InlineSignature_ReturnType_Getter.Invoke(signature, [])!;
     protected override bool InlineSignatureHasThis(object signature) =>
-        (bool)HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(signature, []);
+        (bool)HarmonyInternals.InlineSignature_HasThis_Getter.Invoke(signature, [])!;
 
 #if DEBUG
     internal override event Action? ApplyPatchHookForTesting = null;

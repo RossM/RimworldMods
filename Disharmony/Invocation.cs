@@ -75,13 +75,13 @@ internal abstract record FieldInvocation(FieldInfo FieldInfo) : Invocation
 {
     public override string FullName => FieldInfo.FullName;
     public override bool IsStatic => FieldInfo.IsStatic;
-    public override Type InstanceType => FieldInfo.DeclaringType;
+    public override Type InstanceType => FieldInfo.DeclaringType ?? throw new NotSupportedException();
 }
 
 internal record GetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldInfo)
 {
     public override Type ReturnType => FieldInfo.FieldType;
-    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [] : [FieldInfo.DeclaringType];
+    public override Type[] ParameterTypes => field ??= FieldInfo.IsStatic ? [] : [FieldInfo.DeclaringType!];
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [] : [InstanceParameterName];
 
     protected override CodeInstruction GetCodeInstruction() => new(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo);
@@ -96,7 +96,7 @@ internal record SetFieldInvocation(FieldInfo FieldInfo) : FieldInvocation(FieldI
     public override Type ReturnType => typeof(void);
 
     public override Type[] ParameterTypes =>
-        field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType.CallableType, FieldInfo.FieldType];
+        field ??= FieldInfo.IsStatic ? [FieldInfo.FieldType] : [FieldInfo.DeclaringType!.CallableType, FieldInfo.FieldType];
 
     public override string[] ParameterNames => field ??= FieldInfo.IsStatic ? [ValueFieldName] : [InstanceParameterName, ValueFieldName];
     public const string ValueFieldName = "value";
@@ -119,13 +119,13 @@ internal record MethodInvocation(MethodInfo MethodInfo) : MethodBaseInvocation
     public override Type ReturnType => MethodInfo.ReturnType;
     public override bool IsStatic => MethodInfo.IsStatic;
     public override bool HasThis => MethodInfo.HasThis;
-    public override Type InstanceType => MethodInfo.DeclaringType;
+    public override Type InstanceType => MethodInfo.DeclaringType ?? throw new NotSupportedException();
 
     public override MethodBase MethodBase => MethodInfo;
 
     public override Type[] ParameterTypes => field ??=
         MethodInfo.HasThis
-            ? [MethodInfo.DeclaringType.CallableType, .. MethodInfo.GetParameters().Select(p => p.ParameterType)]
+            ? [MethodInfo.DeclaringType!.CallableType, .. MethodInfo.GetParameters().Select(p => p.ParameterType)]
             : [.. MethodInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override string[] ParameterNames => field ??=
@@ -158,7 +158,7 @@ internal record MethodInvocation(MethodInfo MethodInfo) : MethodBaseInvocation
 internal abstract record ConstructorInvocation(ConstructorInfo ConstructorInfo) : MethodBaseInvocation
 {
     public override string FullName => ConstructorInfo.FullName;
-    public override Type InstanceType => ConstructorInfo.DeclaringType;
+    public override Type InstanceType => ConstructorInfo.DeclaringType ?? throw new NotSupportedException();
     public override MethodBase MethodBase => ConstructorInfo;
 }
 
@@ -168,7 +168,7 @@ internal abstract record ConstructorInvocation(ConstructorInfo ConstructorInfo) 
 /// <param name="ConstructorInfo"></param>
 internal record InnerConstructorInvocation(ConstructorInfo ConstructorInfo) : ConstructorInvocation(ConstructorInfo)
 {
-    public override Type ReturnType => ConstructorInfo.DeclaringType;
+    public override Type ReturnType => ConstructorInfo.DeclaringType!;
     public override Type[] ParameterTypes => field ??= [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override bool IsStatic => true;
@@ -193,7 +193,7 @@ internal record OuterConstructorInvocation(ConstructorInfo ConstructorInfo) : Co
 
     public override Type[] ParameterTypes => field ??=
         ConstructorInfo.HasThis
-            ? [ConstructorInfo.DeclaringType.CallableType, .. ConstructorInfo.GetParameters().Select(p => p.ParameterType)]
+            ? [ConstructorInfo.DeclaringType!.CallableType, .. ConstructorInfo.GetParameters().Select(p => p.ParameterType)]
             : [.. ConstructorInfo.GetParameters().Select(p => p.ParameterType)];
 
     public override string[] ParameterNames => field ??=

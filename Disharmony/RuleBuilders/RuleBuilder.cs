@@ -156,7 +156,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
 
             default:
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(parameter), parameter, null);
             }
         }
     }
@@ -184,7 +184,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     private void EmitDelegate(ParameterBinding parameter)
     {
         // ParameterType must be a subclass of Delegate here
-        ConstructorInfo delegateConstructor = parameter.parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)]);
+        ConstructorInfo delegateConstructor = parameter.parameter.ParameterType.GetConstructor([typeof(object), typeof(IntPtr)])!;
 
         MethodBase methodBase = (MethodBase)parameter.memberInfo!;
 
@@ -195,7 +195,7 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
         }
         else
         {
-            EmitParameterLookup(parameter.scope, 0, methodBase.DeclaringType);
+            EmitParameterLookup(parameter.scope, 0, methodBase.DeclaringType!);
             if (methodBase.DeclaringType!.IsValueType)
                 output.Add(new(OpCodes.Box, methodBase.DeclaringType));
         }
@@ -242,13 +242,13 @@ internal abstract class RuleBuilder(RuleBuilderContext context, Invocation outer
     protected virtual Type GetParameterType(ParameterBinding parameter) => parameter.scope switch
     {
         Scope.Outer => outerParameterTypes[parameter.index],
-        _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
+        _ => throw new ArgumentOutOfRangeException(nameof(parameter)),
     };
 
     protected virtual Invocation GetInvocation(ParameterBinding parameter) => parameter.scope switch
     {
         Scope.Outer => outer,
-        _ => throw new ArgumentOutOfRangeException(nameof(parameter.scope)),
+        _ => throw new ArgumentOutOfRangeException(nameof(parameter)),
     };
 
     protected virtual void EmitParameterLookup(Scope scope, int index, Type resultType)

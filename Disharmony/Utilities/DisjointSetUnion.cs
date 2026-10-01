@@ -13,7 +13,7 @@ namespace Disharmony.Utilities;
 ///     </para>
 /// </remarks>
 /// <typeparam name="T"></typeparam>
-internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>>
+internal class DisjointSetUnion<T> : IEnumerable<IGrouping<T, T>> where T : notnull
 {
     private IEnumerable<IGrouping<T, T>> Groups => parents.Keys.ToArray().GroupBy(GetRoot);
 

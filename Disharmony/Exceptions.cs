@@ -30,7 +30,7 @@ public class ParameterBindingException : PatchException
     /// </summary>
     /// <param name="argumentName">The name of the patch-method parameter that could not be bound.</param>
     /// <param name="message">The message that describes the binding error.</param>
-    public ParameterBindingException(string argumentName, string message) : base($"{argumentName}: {message}") { }
+    public ParameterBindingException(string? argumentName, string message) : base($"{argumentName ?? "<unknown>"}: {message}") { }
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ParameterBindingException" /> class with an inner exception.
@@ -38,7 +38,7 @@ public class ParameterBindingException : PatchException
     /// <param name="argumentName">The name of the patch-method parameter that could not be bound.</param>
     /// <param name="message">The message that describes the binding error.</param>
     /// <param name="innerException">The exception that caused the binding error.</param>
-    public ParameterBindingException(string argumentName, string message, Exception innerException) : base($"{argumentName}: {message}", innerException) { }
+    public ParameterBindingException(string? argumentName, string message, Exception innerException) : base($"{argumentName ?? "<unknown>"}: {message}", innerException) { }
 }
 
 /// <summary>

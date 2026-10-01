@@ -4,7 +4,7 @@ internal class Optimizer
 {
     public IReadOnlyList<CodeInstruction> Instructions => inputInstructions;
     private static readonly bool forceDebug;
-    private static readonly string forceDebugForMethod;
+    private static readonly string? forceDebugForMethod;
     private readonly List<CodeInstruction> inputInstructions;
     internal readonly ILGenerator generator;
     private readonly bool debug;
@@ -28,7 +28,7 @@ internal class Optimizer
         this.debug = debug || forceDebug || (!string.IsNullOrEmpty(forceDebugForMethod) && method.Name == forceDebugForMethod);
 
         if (method.HasThis)
-            parameterTypes = [method.DeclaringType.CallableType, .. method.GetParameters().Types()];
+            parameterTypes = [method.DeclaringType!.CallableType, .. method.GetParameters().Types()];
         else
             parameterTypes = [.. method.GetParameters().Types()];
 

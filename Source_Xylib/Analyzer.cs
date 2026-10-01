@@ -35,8 +35,7 @@ public static class Analyzer
     /// <param name="assembly"></param>
     public static void CheckCodingStyle_Patches(Assembly assembly)
     {
-        if (assembly is null)
-            throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         foreach (Type type in assembly.GetTypes())
         {
@@ -92,8 +91,7 @@ public static class Analyzer
     /// <exception cref="ArgumentNullException"></exception>
     public static void CheckCodingStyle_Defs(Assembly assembly)
     {
-        if (assembly is null)
-            throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         List<Type> extraDefTypes = [.. GenTypes.AllTypesWithAttribute<UsedFromXmlAttribute>().Where(t => t.IsAbstract)];
 
@@ -123,8 +121,7 @@ public static class Analyzer
     /// <exception cref="ArgumentNullException"></exception>
     public static void CheckCodingStyle_ConfigErrors(Assembly assembly)
     {
-        if (assembly is null)
-            throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         foreach (Type type in assembly.GetTypes())
         {
@@ -156,8 +153,7 @@ public static class Analyzer
     /// <exception cref="ArgumentNullException"></exception>
     public static void CheckCodingStyle_ExposeData(Assembly assembly)
     {
-        if (assembly is null)
-            throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         foreach (Type type in assembly.GetTypes())
         {
@@ -195,7 +191,7 @@ public static class Analyzer
 
                 if (baseMethod is not null && !callsBaseMethod)
                 {
-                    Type baseType = baseMethod.DeclaringType;
+                    Type? baseType = baseMethod.DeclaringType;
                     DebugAssert.NotNull(baseType);
 
                     if (baseType.GetFields().Any(field => ShouldExposeField(field, baseType)))

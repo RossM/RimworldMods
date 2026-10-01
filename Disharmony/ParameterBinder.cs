@@ -101,13 +101,13 @@ internal class ParameterBinder(
             Scope.Any => IsInfix ? Scope.Inner : Scope.Outer,
             Scope.Inner => Scope.Inner,
             Scope.Outer => Scope.Outer,
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter), parameter, null),
         };
         Invocation invocation = scope switch
         {
             Scope.Inner => inner,
             Scope.Outer => target,
-            _ => throw new ArgumentOutOfRangeException(nameof(scope), scope, null),
+            _ => throw new ArgumentOutOfRangeException(nameof(parameter), parameter, null),
         };
 
         if (invocation is EmptyInvocation)
@@ -117,25 +117,31 @@ internal class ParameterBinder(
         {
             case ArgumentAttribute { Index: int index }: return BindArgumentByIndex(parameter, invocation, scope, index);
 
-            case ArgumentAttribute { Name: var name, Scope: var attributeScope }:
-                return BindArgumentByName(parameter, name ?? parameterName, attributeScope);
+            case ArgumentAttribute { Name: { } name, Scope: var attributeScope }:
+                return BindArgumentByName(parameter, name, attributeScope);
+            case ArgumentAttribute { Scope: var attributeScope } when parameterName is not null:
+                return BindArgumentByName(parameter, parameterName, attributeScope);
 
-            case ArgumentsAttribute: return BindArgumentArray(parameter, invocation, scope);
+            case ArgumentsAttribute: return BindArgumentArray(parameter, scope);
 
             case InstanceAttribute: return BindInstance(parameter, invocation, scope);
 
             case ReturnValueAttribute: return BindReturnValue(parameter, invocation, scope);
 
-            case StateAttribute { Key: var key }: return BindState(parameter, key ?? parameterName);
+            case StateAttribute { Key: { } key }: return BindState(parameter, key);
+            case StateAttribute when parameterName is not null: return BindState(parameter, parameterName);
 
-            case FieldAttribute { Name: var name, Scope: var attributeScope, Type: var type }:
-                return BindFieldByName(parameter, name ?? (parameterName.StartsWith("___") ? parameterName[3..] : parameterName),
-                    attributeScope, type);
+            case FieldAttribute { Name: { } name, Scope: var attributeScope, Type: var type }:
+                return BindFieldByName(parameter, name, attributeScope, type);
+            case FieldAttribute { Scope: var attributeScope, Type: var type } when parameterName is not null:
+                return BindFieldByName(parameter, parameterName.StartsWith("___") ? parameterName[3..] : parameterName, attributeScope, type);
 
             case BaseMethodAttribute: return BindBaseMethod(parameter, invocation, scope);
 
-            case MethodAttribute { Name: var name, MemberType: var memberType, VirtualCall: var virtualCall, Type: var type }:
-                return BindMethod(parameter, invocation, scope, name ?? parameterName, memberType, virtualCall, type);
+            case MethodAttribute { Name: { } name, MemberType: var memberType, VirtualCall: var virtualCall, Type: var type }:
+                return BindMethod(parameter, invocation, scope, name, memberType, virtualCall, type);
+            case MethodAttribute { MemberType: var memberType, VirtualCall: var virtualCall, Type: var type } when parameterName is not null:
+                return BindMethod(parameter, invocation, scope, parameterName, memberType, virtualCall, type);
 
             case ExceptionAttribute: return BindException(parameter);
 
@@ -165,14 +171,16 @@ internal class ParameterBinder(
 
             case "__exception": return BindException(parameter);
 
-            case "__args": return BindArgumentArray(parameter, invocation, scope);
+            case "__args": return BindArgumentArray(parameter, scope);
 
-            case var _ when parameterName.StartsWith("___"): return BindFieldByName(parameter, parameterName[3..], Scope.Any, null);
+            case var _ when parameterName?.StartsWith("___") is true: return BindFieldByName(parameter, parameterName[3..], Scope.Any, null);
 
-            case var _ when parameterName.StartsWith("__"):
+            case var _ when parameterName?.StartsWith("__") is true:
                 throw new ParameterBindingException(parameterName, "Unrecognized special parameter name");
 
-            default: return BindArgumentByName(parameter, parameterName, Scope.Any);
+            case not null: return BindArgumentByName(parameter, parameterName, Scope.Any);
+
+            default: throw new ParameterBindingException(null, "Missing parameter name");
         }
     }
 
@@ -195,7 +203,7 @@ internal class ParameterBinder(
         }
     }
 
-    private ParameterBinding BindArgumentArray(ParameterInfo parameter, Invocation invocation, Scope scope)
+    private static ParameterBinding BindArgumentArray(ParameterInfo parameter, Scope scope)
     {
         if (parameter.ParameterType.IsByRef)
             throw new ParameterBindingException(parameter.Name, "[Arguments] cannot be bound to a 'ref' parameter");
@@ -529,16 +537,16 @@ internal class ParameterBinder(
         return field != null;
     }
 
-    private static void ValidateCast(Type to, Type from, string parameterName)
+    private static void ValidateCast(Type to, Type from, string? parameterName)
     {
         if (!to.NoRefType.IsAssignableFrom(from.NoRefType))
-            throw new InvalidCastException($"{parameterName}: Can't convert {from.FullName} to {to.FullName}");
+            throw new InvalidCastException($"{parameterName ?? "<unknown>"}: Can't convert {from.FullName} to {to.FullName}");
     }
 
     private void ValidateCast(ParameterInfo parameter, Type from)
     {
         Type to = parameter.ParameterType;
-        string parameterName = parameter.Name;
+        string parameterName = parameter.Name ?? "<unknown>";
 
         if (AllowUnsafe && !to.NoRefType.IsValueType && !from.NoRefType.IsValueType)
             return;

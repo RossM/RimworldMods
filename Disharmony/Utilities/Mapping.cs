@@ -9,7 +9,7 @@ internal record MappingElement<T>(T Input, T Output);
 ///     where an element not explicitly set maps to itself.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal class Mapping<T> : IEnumerable<MappingElement<T>>
+internal class Mapping<T> : IEnumerable<MappingElement<T>> where T : notnull
 {
     internal IEnumerable<MappingElement<T>> EnumerableImplementation => elements.Select(kvp => new MappingElement<T>(kvp.Key, kvp.Value));
 
@@ -26,7 +26,7 @@ internal class Mapping<T> : IEnumerable<MappingElement<T>>
 
     public T this[T input]
     {
-        get => elements.TryGetValue(input, out T value) ? value : input;
+        get => elements.TryGetValue(input, out T? value) ? value : input;
         set
         {
             if (Equals(input, value))

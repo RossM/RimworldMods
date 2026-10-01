@@ -1,4 +1,5 @@
-﻿namespace Xylib;
+﻿#pragma warning disable CA2211
+namespace Xylib;
 
 /// <summary>
 ///     Provides pawn-generation context to early generation callbacks.
@@ -38,8 +39,8 @@ public interface IEventListener
     ///     The <see cref="EventManager" /> that should be registered with. This is always
     ///     <see cref="EventManager.Instance" />.
     /// </param>
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
     public void RegisterWith(EventManager manager);
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
     /// <summary>
     ///     Called before a listener is removed from the <see cref="EventManager" />. Events registered directly by the
@@ -282,7 +283,7 @@ public class EventManager
     {
         public bool usesPriority = false;
         public readonly List<CallbackInfo> globalCallbacks = [];
-        public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = new();
+        public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = [];
     }
 
     /// <summary>
@@ -310,7 +311,7 @@ public class EventManager
         public string name;
         public int priority;
 
-        public override string ToString()
+        public readonly override string ToString()
         {
             return $"{name}[{listener}]";
         }
@@ -336,7 +337,7 @@ public class EventManager
     /// <summary>
     ///     Registrations owned by each listener, used by <see cref="RemoveListener" />.
     /// </summary>
-    private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = new();
+    private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = [];
 
     /// <summary>
     ///     Temporary callback list used when a notification needs priority ordering.
@@ -456,8 +457,7 @@ public class EventManager
     /// </typeparam>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0)
     {
-        if (callback == null)
-            throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
@@ -499,8 +499,7 @@ public class EventManager
     /// </typeparam>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0)
     {
-        if (callback == null)
-            throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
@@ -539,8 +538,7 @@ public class EventManager
     /// </param>
     public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0)
     {
-        if (callback == null)
-            throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
@@ -570,8 +568,7 @@ public class EventManager
     /// </param>
     public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0)
     {
-        if (callback == null)
-            throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
@@ -623,10 +620,8 @@ public class EventManager
         Thing? target,
         Action<Thing?, T?> callback)
     {
-        if (listener == null)
-            throw new ArgumentNullException(nameof(listener));
-        if (callback == null)
-            throw new ArgumentNullException(nameof(callback));
+        ArgumentNullException.ThrowIfNull(listener);
+        ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
@@ -658,7 +653,7 @@ public class EventManager
     {
         listener.PreUnregister(this);
 
-        if (!registrations.TryGetValue(listener, out List<RegistrationInfo> records))
+        if (!registrations.TryGetValue(listener, out List<RegistrationInfo>? records))
             return;
 
         // Resharper seems to not have correct annotations for ConditionalWeakTable
@@ -672,10 +667,10 @@ public class EventManager
             }
             else
             {
-                if (!record.target.TryGetTarget(out Thing target))
+                if (!record.target.TryGetTarget(out Thing? target))
                     continue;
 
-                if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
+                if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
                 {
                     // Resharper seems to not have correct annotations for ConditionalWeakTable
                     DebugAssert.NotNull(callbacks);
@@ -721,7 +716,7 @@ public class EventManager
         if (notificationInfo == null)
             return;
 
-        List<CallbackInfo> localCallbacks;
+        List<CallbackInfo>? localCallbacks;
 
         if (!notificationInfo.usesPriority)
         {
@@ -928,7 +923,7 @@ public class EventManager
     /// </summary>
     public void Reset()
     {
-        registrations = new();
+        registrations = [];
         for (int i = 0; i < Notifications.Length; i++)
             Notifications[i] = null;
         alreadyRegisteredStaticListeners.Clear();

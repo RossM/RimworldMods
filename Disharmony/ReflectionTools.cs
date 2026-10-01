@@ -7,7 +7,7 @@ internal static class ReflectionTools
     private static Assembly[]? _allAssemblies = null;
     private static Dictionary<string, Type>? _typesByName = null;
 
-    private static void AssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
+    private static void AssemblyLoadHandler(object? sender, AssemblyLoadEventArgs args)
     {
         _allAssemblies = null;
         _typesByName = null;
@@ -186,7 +186,7 @@ internal static class ReflectionTools
         return null;
     }
 
-    private static IEnumerable<Type> AllTypes()
+    private static ParallelQuery<Type> AllTypes()
     {
         return AccessTools.AllAssemblies().AsParallel().SelectMany(AccessTools.GetTypesFromAssembly).AsUnordered();
     }
