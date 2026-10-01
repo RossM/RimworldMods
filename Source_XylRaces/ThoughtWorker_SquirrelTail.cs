@@ -1,7 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
-public class ThoughtWorker_BeaverTail : ThoughtWorker
+public class ThoughtWorker_SquirrelTail : ThoughtWorker
 {
     protected override ThoughtState CurrentSocialStateInternal(Pawn p, Pawn other)
     {
@@ -13,7 +13,7 @@ public class ThoughtWorker_BeaverTail : ThoughtWorker
             return false;
         if (PawnUtility.IsBiologicallyOrArtificiallyBlind(p))
             return false; 
-        if (!other.HasActiveGene(DefOf.XylTail_Beaver))
+        if (!other.HasActiveGene(DefOf.XylTail_Squirrel))
             return false;
         return true;
     }
