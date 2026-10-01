@@ -1,0 +1,27 @@
+Sea silk final set
+
+SeaSilk_a.png: single piece.
+SeaSilk_b.png: simplified flattened bolt.
+SeaSilk_c.png: full roll, unchanged from the approved smooth-shaded roll.
+
+All textures are 1024x1024 RGBA with transparent backgrounds. Outer black outline added with a 32-pixel radial mask dilation, equivalent to 2 pixels when scaled to 64x64.
+
+Verification: viewed all three at full resolution and in the 64x64 vanilla comparison; reduced scrap highlight bands and mottling, removed bolt lower rim light, retained flat low-contrast end seam. Source colors and broad golden shading remain distinct from cloth and hyperweave while matching their sparse rendering and line weight.
+
+contact-64.png: each icon occupies its own 64x64 canvas, vanilla references unmodified.
+contact-3x.png: nearest-neighbor enlargement of that sheet.
+comparison-full-resolution.png: all final textures side-by-side at native resolution.
+
+Generated with built-in image_gen. Outline compositing and contact sheets produced with ImageMagick using temp/sea-silk-style/compose.ps1 -Iteration v6 -Inset 2. All intermediate output remains in temp/sea-silk-style. Prior Art/Codex files were preserved.
+
+SHADING-PASS PROMPTS
+
+single-v5
+Image 1 is the TARGET scrap; Image 2 is the APPROVED sea silk roll whose smooth paint treatment must match. Repaint ALL interior shading of target from scratch, without changing the scrap silhouette, dimensions, orientation or framing. Remove the existing satin ripples, cloudy patches, wrinkles, sharp light bands, and mottled texture completely. The sheet is nearly flat: show ONE very broad low-contrast sweep from golden-ochre base into a subdued honey-gold highlight, with a simple softly blended bronze shadow near one side. It must be as clean and smooth as the roll's cylinder in Image 2, with no high-frequency surface texture even viewed at full resolution, and much less light/dark variation than the target currently has. Base gold #C79A44, highlight #E3BA60, shadow #A77A35; three anchor tones softly blended, no extra reflected glints. Smooth simple painted sprite, not photoreal satin, not a foil wrapper. Preserve warm valuable sea silk identity. No white streaks, edge highlight, rim lighting, fine weave or grain. Keep exactly one thin flat rectangular scrap, no added folds, thickness, or flap. Remove exterior black outline for later exact outline compositing. True transparent alpha, no background or glow. Square1024 canvas.
+
+bolt-v5
+Image 1 is TARGET simplified flat bolt; Image 2 is APPROVED sea silk roll. Match the roll's smooth restrained painted shading EXACTLY in the target. Preserve target's flattened oblong geometry, near-end flat oval face and single thin brown return seam, tiny tail, orientation and framing. REPLACE the entire body's existing cloudy/mottled/satin-stripe shading with one CLEAN SMOOTH BROAD gradient: dominant golden ochre body, ONE broad subdued honey-gold upper-left light region gradually transitioning into ONE bronze-gold lower-right shadow. Smooth as Image 2 at full resolution. No patchy color variation, ripples, secondary light bands, texture, noise, visible brush grain or shiny strip along lower edge. IMPORTANT erase the bright rim encircling the near-end face. The face must meet the body with a quiet change of plane, like Image 2's flat spiral face; solid ochre with its existing low-contrast brown U seam, no bevel or glow, no cavity. Body diffuse satin sheen should have same contrast and palette as roll. No white, no metallic glints, no new folds or geometry. Remove exterior black outline for exact later compositing. True transparent alpha background, no backdrop, shadow or aura. Square1024 canvas.
+
+FINAL BOLT RIM CORRECTION
+
+Make one focused PAINT correction to this golden sea-silk bolt: REMOVE the long bright stripe along its LOWER-RIGHT EDGE, and REMOVE the bright rim around its FRONT OVAL END. Paint over those illuminated borders with the neighboring bronze shadow color so the body simply gets gradually DARKER toward the lower-right outline. There should be absolutely no second highlight near that edge. Keep ONE broad diffuse highlight toward the upper-left center of the body. The front oval is a FLAT GOLD plane with the existing muted brown return line; replace its bright rim with an ordinary quiet boundary between planes. Keep ALL geometry, the tail, the seam, silhouette, framing and other colors unchanged. Completely smooth, untextured, softly blended painted game-art shading. No bright edge highlights or bevels anywhere. Maintain transparent background and no exterior outline; that is added separately.
