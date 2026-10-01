@@ -12,6 +12,8 @@ public class GeneCompProperties_Psycast : GeneCompProperties
     {
         compClass = typeof(GeneComp_Psycast);
     }
+
+    public override IEnumerable<string> CustomEffectDescriptions() => ["XylEnablesPsyfocus".Translate()];
 }
 
 public class GeneComp_Psycast : GeneComp

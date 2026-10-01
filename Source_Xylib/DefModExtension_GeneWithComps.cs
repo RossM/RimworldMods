@@ -204,14 +204,11 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     public override void ResolveReferences(Def parentDef)
     {
-        // If this is a child of a GeneTemplateDef, we'll be called again with each GeneDef created from it.
-        // We need to avoid clobbering an already-set parent.
-        if (parent is not null)
-            return;
-
         base.ResolveReferences(parentDef);
 
-        parent = parentDef;
+        // If this is a child of a GeneTemplateDef, we'll be called again with each GeneDef created from it.
+        // We need to avoid clobbering an already-set parent.
+        parent ??= parentDef;
 
         Extensions.defExtCache.Clear();
 
@@ -223,7 +220,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
             return;
 
         foreach (var comp in comps)
-            comp?.ResolveReferences(parentDef);
+            comp.ResolveReferences(parentDef);
     }
 
     public T? CompProps<T>() where T : GeneCompProperties
