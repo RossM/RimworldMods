@@ -27,7 +27,7 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 
 ### Trivia
 
-"Bossaps" is a contraction of "Bos sapiens", a made-up scientific name that means "Wise cow".
+"Bossaps" is a contraction of "Bos sapiens", a fictional scientific name that means "Wise cow".
 
 ### Genes
 
