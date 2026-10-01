@@ -84,7 +84,7 @@ internal class PatchRegistry
         foreach (TypeInfo type in assembly.DefinedTypes)
         {
             if (type.GetCustomAttribute<PatchAttribute>() != null || type.GetCustomAttribute<HarmonyPatch>() != null)
-                ProcessType(type, unpatchKey, type.FullName);
+                ProcessType(type, unpatchKey, type.FullName ?? "");
         }
     }
 
@@ -102,7 +102,7 @@ internal class PatchRegistry
             if (!categories.Contains(category) && (categories.Length != 0 || category != null))
                 continue;
 
-            ProcessType(type, unpatchKey, type.FullName);
+            ProcessType(type, unpatchKey, type.FullName ?? "");
         }
     }
 
@@ -313,7 +313,7 @@ internal class PatchRegistry
             throw new PatchDefinitionException(method, "Can't patch instantiated generic method");
         // MonoMod can sometimes patch methods in instantiated generic types, but only if all type arguments
         // are value types. We don't want to rely on this, so reject all generic types.
-        if (TypeOrAnyContainingTypeIsGeneric(target.DeclaringType))
+        if (target.DeclaringType != null && TypeOrAnyContainingTypeIsGeneric(target.DeclaringType))
             throw new PatchDefinitionException(method, "Can't patch method on generic type");
         
         if ((target.Attributes & MethodAttributes.PinvokeImpl) != 0)
