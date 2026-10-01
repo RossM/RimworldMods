@@ -64,7 +64,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         void IEventListener.PreUnregister(EventManager manager) { }
     }
 
-    private static readonly Dictionary<int, T> data = new();
+    private static readonly Dictionary<int, T> data = [];
 
     private static readonly Listener listener = new();
 
@@ -88,7 +88,7 @@ public static class PawnExtraData<T> where T : IPawnData, new()
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Get(Pawn pawn)
     {
-        if (!data.TryGetValue(pawn.thingIDNumber, out T result))
+        if (!data.TryGetValue(pawn.thingIDNumber, out var result))
         {
             result = new T { Pawn = pawn };
             result.Init();

@@ -122,7 +122,7 @@ public class GeneComp
     ///     inactive.
     /// </summary>
     /// <returns></returns>
-    public bool CompAllowActive()
+    public virtual bool CompAllowActive()
     {
         return true;
     }
@@ -134,8 +134,8 @@ public class GeneComp
 [PublicAPI]
 public class GeneWithComps : Gene, IEventListener
 {
-    private static readonly Dictionary<Type, bool> hasTickCache = new();
-    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
+    private static readonly Dictionary<Type, bool> hasTickCache = [];
+    private static readonly Dictionary<Type, bool> hasTickIntervalCache = [];
 
     [Unsaved] private GeneType? geneTypeInternal;
     [Unsaved] private bool activeStateNeedsUpdating = true;
@@ -277,7 +277,7 @@ public class GeneWithComps : Gene, IEventListener
             GeneComp? comp = null;
             try
             {
-                comp = (GeneComp)Activator.CreateInstance(compClass);
+                comp = (GeneComp)Activator.CreateInstance(compClass)!;
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);

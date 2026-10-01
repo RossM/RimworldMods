@@ -157,7 +157,7 @@ internal static class ExceptionFixup
             int argumentIndex = instruction.ArgumentIndex();
             Type parameterType;
             if (method.HasThis && argumentIndex == 0)
-                parameterType = method.DeclaringType.CallableType;
+                parameterType = method.DeclaringType!.CallableType;
             else if (method.HasThis)
                 parameterType = parameters[argumentIndex - 1].ParameterType;
             else

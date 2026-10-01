@@ -32,7 +32,6 @@ public class GeneTemplateDef : Def
 
     public float selectionWeight = 1f;
 
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (string item in base.ConfigErrors())
