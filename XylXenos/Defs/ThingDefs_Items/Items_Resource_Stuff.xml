@@ -57,9 +57,8 @@
     <label>sea silk</label>
     <description>Cloth produced by spinning the fine threads that certain bivalves use to attach themselves to rocks. It is remarkably strong, with a distinctive golden sheen.</description>
     <graphicData>
-      <texPath>Things/Item/Resource/Cloth</texPath>
+      <texPath>Xyl/Things/Item/Resource/SeaSilk</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
-      <color>(215,170,90)</color>
     </graphicData>
     <statBases>
       <MaxHitPoints>150</MaxHitPoints>
