@@ -19,7 +19,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     public override bool ValidateTarget(Pawn? target)
     {
-        return target?.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>() is { ReadyToMilk: true };
+        return target?.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.ReadyToMilk) is true;
     }
 
     private void Gather(Pawn doer)
@@ -28,7 +28,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         if (Target is null)
             return;
 
-        var comp = Target.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>();
+        var comp = Target.ActiveGeneCompsOfType<GeneComp_Milkable>().FirstOrDefault(comp => comp.ReadyToMilk);
         if (comp == null)
             return;
 
@@ -37,13 +37,11 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
         comp.Notify_Milked(doer);
 
-        var lactationCharge = comp.Lactating;
-        if (lactationCharge == null)
+        if (comp.Chargeable is not { } chargeable)
             return;
 
-        int qty = comp.MilkCount;
-        lactationCharge.GreedyConsume(comp.Props.chargePerItem * qty);
-
+        int qty = comp.ItemCount;
+        chargeable.GreedyConsume(comp.Props.chargePerItem * qty);
 
         if (!Rand.Chance(doer.GetStatValue(StatDefOf.AnimalGatherYield)))
         {

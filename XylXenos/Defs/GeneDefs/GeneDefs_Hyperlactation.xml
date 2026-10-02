@@ -21,6 +21,9 @@
         <gender>Female</gender>
         <comps>
           <li Class="XylXenos.GeneCompProperties_Hyperlactation">
+            <hediff>XylHyperlactating</hediff>
+          </li>
+          <li Class="XylXenos.GeneCompProperties_Milkable">
             <item>Milk</item>
             <chargePerItem>0.05</chargePerItem>
             <hediff>XylHyperlactating</hediff>
@@ -92,7 +95,7 @@
   <ThoughtDef>
     <defName>XylSoreBreasts</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
-    <workerClass>XylXenos.ThoughtWorker_SoreBreasts</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_MilkableFullness</workerClass>
     <requiredGenes>
       <li>XylHyperlactation</li>
     </requiredGenes>
@@ -109,6 +112,11 @@
         <baseMoodEffect>-6</baseMoodEffect>
       </li>
     </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought">
+        <gene>XylHyperlactation</gene>
+      </li>
+    </modExtensions>
   </ThoughtDef>
 
   <ThoughtDef>

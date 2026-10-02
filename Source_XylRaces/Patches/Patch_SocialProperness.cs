@@ -9,7 +9,7 @@ public static class Patch_SocialProperness
     [Target(nameof(SocialProperness.IsSociallyProper), typeof(Thing), typeof(Pawn), typeof(bool), typeof(bool))]
     public static void IsInPrisonCell_Postfix(Thing t, ref bool __result)
     {
-        if (PatchHelpers.HyperlactatingPrisonerInRoomCanProduce(t.GetRoom(), t.def))
+        if (PatchHelpers.MilkablePrisonerInRoomCanProduce(t.GetRoom(), t.def))
             __result = false;
     }
 }
