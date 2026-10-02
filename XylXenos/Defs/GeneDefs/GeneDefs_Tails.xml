@@ -149,7 +149,7 @@
   <ThoughtDef>
     <defName>XylSquirrelTail</defName>
     <thoughtClass>Thought_SituationalSocial</thoughtClass>
-    <workerClass>XylXenos.ThoughtWorker_SquirrelTail</workerClass>
+    <workerClass>XylXenos.ThoughtWorker_HasGene</workerClass>
     <validWhileDespawned>true</validWhileDespawned>
     <stages>
       <li>
@@ -157,6 +157,11 @@
         <baseOpinionOffset>3</baseOpinionOffset>
       </li>
     </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought">
+        <gene>XylTail_Squirrel</gene>
+      </li>
+    </modExtensions>
   </ThoughtDef>
 
 </Defs>
