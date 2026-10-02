@@ -114,6 +114,24 @@ public static class Extensions
             return false;
         }
 
+        public Gene? FirstActiveGene(GeneDef? def)
+        {
+            if (def == null || pawn.genes == null)
+                return null;
+
+            IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
+            for (var index = 0; index < genes.Count; index++)
+            {
+                Gene gene = genes[index];
+                DebugAssert.NotNull(gene);
+
+                if (gene.Active)
+                    return gene;
+            }
+
+            return null;
+        }
+
         /// <summary>
         ///     Gets all genes on the pawn that are assignable to the specified type.
         /// </summary>

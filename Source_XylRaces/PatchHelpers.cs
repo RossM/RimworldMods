@@ -200,13 +200,13 @@ public static class PatchHelpers
             .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_XenotypeStrength>()?.strength ?? 0);
     }
 
-    public static bool HyperlactatingPrisonerInRoomCanProduce(Room? r, ThingDef thingDef)
+    public static bool MilkablePrisonerInRoomCanProduce(Room? r, ThingDef thingDef)
     {
         if (r is not { IsPrisonCell: true })
             return false;
         foreach (Pawn owner in r.Owners)
         {
-            if (owner.FirstActiveGeneCompOfType<GeneComp_Hyperlactation>()?.Props.item == thingDef)
+            if (owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef))
                 return true;
         }
 
