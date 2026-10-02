@@ -10,8 +10,6 @@ public static class DefOf
 
     public static GeneCategoryDef Cosmetic_Skin;
 
-    public static GeneDef XylTail_Squirrel;
-
     public static GeneDef XylBioRejection;
 
     public static GeneDef XylDocile;
