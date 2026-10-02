@@ -1,11 +1,13 @@
 """Regenerate genes-contact-sheet.png. Requires Python 3 and Pillow.
 
 Run from any directory: python path/to/Art/Codex/render-genes-contact-sheet.py
+Use --rimworld-data PATH if RimWorld/Data is outside the default Steam location.
 Each PNG receives one tile, including alternate and unused textures. Labels and
-colors come from GeneDefs. Unreferenced textures use filename labels, and absent
+colors come from mod GeneDefs with Core/Biotech parent inheritance. Unreferenced textures use filename labels, and absent
 iconColor values use white (no multiplication change). Shared icons list all labels.
 """
 
+import argparse
 from dataclasses import dataclass
 from pathlib import Path
 import os
@@ -18,6 +20,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 ROOT = Path(__file__).resolve().parents[2]
 ICON_DIR = ROOT / "XylXenos/Textures/Xyl/UI/Icons/Genes"
 DEF_DIR = ROOT / "XylXenos/Defs/GeneDefs"
+GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 BACKGROUND = ROOT / "Art/Rimworld art/Genes/GeneBackground_Endogene.png"
 OUTPUT = Path(__file__).with_name("genes-contact-sheet.png")
 WHITE = (1.0, 1.0, 1.0, 1.0)
@@ -34,10 +37,19 @@ class IconMetadata:
     labels: tuple[str, ...] = ()
 
 
-def read_gene_metadata():
+def read_gene_metadata(game_data=GAME_DATA):
     genes = [gene for path in sorted(DEF_DIR.rglob("*.xml"))
              for gene in ET.parse(path).getroot().findall("GeneDef")]
-    parents = {gene.attrib["Name"]: gene for gene in genes if "Name" in gene.attrib}
+    game_genes = []
+    for expansion in ("Core", "Biotech"):
+        directory = game_data / expansion / "Defs/GeneDefs"
+        if not directory.is_dir():
+            raise FileNotFoundError(f"Missing {directory}; set --rimworld-data to RimWorld/Data")
+        game_genes.extend(gene for path in sorted(directory.rglob("*.xml"))
+                          for gene in ET.parse(path).getroot().findall("GeneDef"))
+    # Game definitions provide parents only; tiles still come from mod textures.
+    # Mod named definitions take precedence over game named definitions.
+    parents = {gene.attrib["Name"]: gene for gene in game_genes + genes if "Name" in gene.attrib}
 
     def inherited_text(gene, field, seen=()):
         value = gene.findtext(field)
@@ -46,7 +58,9 @@ def read_gene_metadata():
         parent = gene.get("ParentName")
         if parent in seen:
             raise ValueError(f"Cyclic GeneDef inheritance: {seen + (parent,)}")
-        if parent in parents:
+        if parent:
+            if parent not in parents:
+                raise ValueError(f"Unresolved GeneDef parent {parent!r} while reading {field}")
             return inherited_text(parents[parent], field, seen + (parent,))
         return None
 
@@ -108,10 +122,14 @@ def label_lines(path, metadata, draw, font):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--rimworld-data", type=Path, default=GAME_DATA,
+                        help="RimWorld Data directory containing Core and Biotech")
+    args = parser.parse_args()
     paths = sorted(ICON_DIR.rglob("*.png"), key=lambda path: path.as_posix().casefold())
     if not paths:
         raise ValueError(f"No icons found in {ICON_DIR}")
-    metadata = read_gene_metadata()
+    metadata = read_gene_metadata(args.rimworld_data)
     font = load_font()
     measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     entries = []
