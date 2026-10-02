@@ -172,4 +172,19 @@
     </forcedTraits>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylGreedy</defName>
+    <label>greedy</label>
+    <description>Carriers of this gene have an instinctive desire for material possessions. They get a mood penalty if they don't have an impressive bedroom.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>2</biostatMet>
+    <displayCategory>Mood</displayCategory>
+    <displayOrderInCategory>101</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Greedy</iconPath>
+    <forcedTraits>
+      <Greedy/>
+    </forcedTraits>
+  </GeneDef>
+
+
 </Defs>
