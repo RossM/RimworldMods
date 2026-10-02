@@ -247,7 +247,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 | Gene | Effect |
 | --- | --- |
 | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Doubles tree-cutting speed and bite damage. |
-| [Beaver tail](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Extends the comfortable temperature range by 5°C in both directions. |
+| [Beaver tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Extends the comfortable temperature range by 5°C in both directions. |
 | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | A smaller body with slightly slower movement. |
 | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Works faster. |
 
@@ -272,6 +272,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Adds retractable claws as melee weapons. |
 | [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Gets more nutrition from raw meat and less from plants. Can eat raw meat without the usual raw-food mood penalty or food poisoning. |
 | [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Scales provide natural protection against sharp and blunt attacks. |
+| [Greedy](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Greedy: suffers a mood penalty without an impressive bedroom. |
 | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
 
 **Other genes and appearance**
@@ -314,7 +315,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 | Gene | Effect |
 | --- | --- |
 | [Word of Love](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | Influences romantic attraction. Requires Royalty, but no psylink. |
-| [Pointed tail](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Adds 40 percentage points to social impact. |
+| [Pointed tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Adds 40 percentage points to social impact. |
 | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Allows short flights at the cost of some manipulation. Heavy torso apparel can prevent flight. |
 | [Always female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers are always female. |
 | [Strong genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the carrier's endogenes when the other parent has a different xenotype, unless both parents have strong genes. |
@@ -342,6 +343,7 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 | [Parthenogenic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Females can become pregnant without a father. |
 | [Precognition](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Improves melee and ranged dodging in proportion to psychic sensitivity. |
 | [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Grants +4 aptitude in a random non-combat skill. |
+| [Squirrel tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Lowers the minimum comfortable temperature by 5°C and grants +3 opinion from other pawns. |
 | [Weak genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the other parent's endogenes when that parent has a different xenotype, unless both parents have weak genes. |
 | [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | An archite gene that rapidly heals wounds, but not permanent scars or blood loss. |
 
