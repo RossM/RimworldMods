@@ -132,13 +132,14 @@ internal static class ReflectionTools
         if (parameterTypes != null || genericTypes != null)
             candidates = FilterMethods(candidates, parameterTypes, genericTypes);
 
+        // ReSharper disable once RedundantEnumerableCastCall
         candidates = candidates.Select(result =>
             result switch
             {
                 PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
                 _ => result,
             }
-        ).Where(m => m is not null);
+        ).OfType<MemberInfo>();
 
         List<MemberInfo> results = [.. candidates];
 
