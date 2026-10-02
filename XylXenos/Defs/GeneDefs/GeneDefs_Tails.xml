@@ -7,7 +7,6 @@
     <label>beaver tail</label>
     <description>Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver that helps with temperature regulation.</description>
     <iconPath>Xyl/UI/Icons/Genes/Gene_TailBeaver</iconPath>
-    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>1001</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
