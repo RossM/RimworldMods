@@ -67,4 +67,13 @@
     </value>
   </Operation>
 
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="KindInstinct"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>Empathy</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
 </Patch>
