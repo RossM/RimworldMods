@@ -93,7 +93,7 @@ internal static class ReflectionTools
         Type[]? genericTypes,
         bool searchBaseTypes = false)
     {
-        List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes, searchBaseTypes);
+        var candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes, searchBaseTypes);
 
         switch (candidates.Count)
         {
@@ -105,7 +105,7 @@ internal static class ReflectionTools
         return result;
     }
 
-    public static List<MemberInfo> GetMembers(
+    public static IReadOnlyList<MemberInfo> GetMembers(
         Type? type,
         string? name,
         MemberType memberType,
@@ -183,7 +183,7 @@ internal static class ReflectionTools
         return null;
     }
 
-    private static List<MemberInfo> GetResults(
+    private static IReadOnlyList<MemberInfo> GetResults(
         Type type,
         List<string> nameParts,
         MemberType memberType,
@@ -194,12 +194,19 @@ internal static class ReflectionTools
         IEnumerable<MemberInfo> candidates = nameParts.Count switch
         {
             0 => type.GetConstructors(),
-            1 => type.GetMember(nameParts[0], DeclaredOnly).Where(m => m.Name == nameParts[0]),
+            1 => type.GetMember(nameParts[0], DeclaredOnly),
             2 => GetLocalMethods(type, nameParts[1] == "*"
                 ? $"<{nameParts[0]}>b__"
                 : $"<{nameParts[0]}>g__{nameParts[1]}|"),
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
+
+        if (candidates is ICollection<MemberInfo> { Count: 0 })
+        {
+            if (searchBaseTypes && type.BaseType is { } baseType)
+                return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, true);
+            return [];
+        }
 
         MemberTypes kinds = memberType switch
         {
@@ -216,8 +223,8 @@ internal static class ReflectionTools
                 matches.Add(candidate);
 
         // Name/kind shadowing precedes signature filtering and accessor conversion.
-        if (matches.Count == 0 && searchBaseTypes && type.BaseType is { } baseType)
-            return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, true);
+        if (matches.Count == 0 && searchBaseTypes && type.BaseType is { } baseType2)
+            return GetResults(baseType2, nameParts, memberType, parameterTypes, genericTypes, true);
 
         if (parameterTypes is not null || genericTypes is not null)
             return [.. FilterMethods(matches, parameterTypes, genericTypes)];
