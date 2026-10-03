@@ -386,6 +386,14 @@ public static class PatchPriority
 ///         Use <c>Method.LocalFunction</c> to select a local function or <c>Method.*</c> to select lambdas within a method.
 ///     </para>
 ///     <para>
+///         To disambiguate nested types, use <c>Namespace.Outer+Inner:Member</c>. If multiple assemblies define
+///         the same full type name, use <c>Namespace.Outer+Inner, AssemblyName:Member</c> or a complete
+///         <see cref="System.Type.AssemblyQualifiedName" /> before the colon.
+///     </para>
+///     <para>
+///         Full type names take precedence over abbreviated names and generally resolve faster.
+///     </para>
+///     <para>
 ///         A <see langword="null" /> parameter signature omits overload filtering; an empty array selects parameterless overloads.
 ///         Use <see cref="Ref{T}" />, <see cref="In{T}" />, and <see cref="Out{T}" /> in the signature for
 ///         by-reference parameters. To select a constructor, set <paramref name="memberType" /> to
