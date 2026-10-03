@@ -70,6 +70,7 @@
         <tools>
           <li>
             <label>horns</label>
+            <labelUsedInLogging>false</labelUsedInLogging>
             <capacities>
               <li>Stab</li>
             </capacities>
@@ -143,6 +144,7 @@
         <tools>
           <li>
             <label>claws</label>
+            <labelUsedInLogging>false</labelUsedInLogging>
             <capacities>
               <li>Scratch</li>
             </capacities>
