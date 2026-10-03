@@ -331,10 +331,11 @@ public static class PatchHelpers
         if (!Settings.instance.ShouldFixLactationBugsFor(pawn))
             return;
 
-        if (pawn.LactationHediff?.TryGetComp<HediffComp_Lactating>() is { } hediffComp_Lactating)
+        foreach (var hediff in pawn.HediffsWithComp<HediffComp_Lactating>())
         {
+            var hediffComp_Lactating = hediff.GetComp<HediffComp_Lactating>();
             stringBuilder.AppendLine(
-                $"{pawn.LactationHediff!.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
+                $"{hediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
             stringBuilder.AppendLine();
         }
     }
