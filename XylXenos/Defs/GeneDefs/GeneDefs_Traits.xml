@@ -186,5 +186,21 @@
     </forcedTraits>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylNoEmpathy</defName>
+    <label>no empathy</label>
+    <description>Carriers of this gene lack empathy, and aren't affected by the suffering of others.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <displayCategory>Violence</displayCategory>
+    <displayOrderInCategory>61</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <exclusionTags>
+      <li>Empathy</li>
+    </exclusionTags>
+    <forcedTraits>
+      <Psychopath/>
+    </forcedTraits>
+  </GeneDef>
 
 </Defs>
