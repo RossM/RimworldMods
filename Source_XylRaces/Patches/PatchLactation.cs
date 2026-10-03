@@ -11,12 +11,12 @@ public static class PatchLactation
     [Target(typeof(QuestPart_LendColonistsToFaction), "QuestPartTick")]
     [Target(typeof(Need_Food), "FoodFallPerTickAssumingCategory")]
     [Target(typeof(ITab_Pawn_Feeding), "DrawRow")]
-    public static void GetFirstHediffOfDef_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref Hediff __result)
+    public static void GetFirstHediffOfDef_Postfix(HediffSet __instance, HediffDef def, bool mustBeVisible, ref Hediff? __result)
     {
         DebugAssert.NotNull(__instance.pawn);
 
-        if (def == HediffDefOf.Lactating && !mustBeVisible)
-            __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
+        if (def == HediffDefOf.Lactating)
+            __result ??= __instance.pawn.health.hediffSet.GetFirstHediffOfDef(DefOf.XylHyperlactating, mustBeVisible);
     }
 
     [Feature(typeof(GeneComp_Hyperlactation))]
@@ -27,7 +27,7 @@ public static class PatchLactation
     {
         DebugAssert.NotNull(__instance.pawn);
 
-        if (def == HediffDefOf.Lactating && !mustBeVisible)
-            __result = __instance.pawn.HediffsWithComp<HediffComp_Lactating>().Any();
+        if (def == HediffDefOf.Lactating)
+            __result |= __instance.pawn.health.hediffSet.HasHediff(DefOf.XylHyperlactating, mustBeVisible);
     }
 }

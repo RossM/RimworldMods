@@ -19,6 +19,8 @@ public static class DefOf
 
     public static HediffDef XylCultistSong;
 
+    public static HediffDef XylHyperlactating;
+
     public static JobDef XylTakeShower;
 
     public static PawnKindDef XylSelkie;

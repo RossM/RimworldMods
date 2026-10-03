@@ -25,7 +25,7 @@
   <XylGenderRatioAlwaysFemale>Always female</XylGenderRatioAlwaysFemale>
   <XylGenderRatioAlwaysMale>Always male</XylGenderRatioAlwaysMale>
   <XylMilkProductionLabel>{0} production</XylMilkProductionLabel>
-  <XylMilkProductionDesc>The number of {0} items this character can produce in a day.</XylMilkProductionDesc>
+  <XylMilkProductionDesc>The number of {0} items this character can produce in a day if well-fed.</XylMilkProductionDesc>
   <XylRageChanceLabel>Rage chance</XylRageChanceLabel>
   <XylRageChanceDesc>The chance of this character flying into a rage when damaged. While enraged, the character is uncontrollable and automatically charges at nearby enemies.</XylRageChanceDesc>
   <XylSubstituteCapacityAlwaysDesc>{0} is used instead of {1} for stat calculations.</XylSubstituteCapacityAlwaysDesc>
