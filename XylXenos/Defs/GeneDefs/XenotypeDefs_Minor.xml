@@ -107,7 +107,7 @@
     <descriptionShort>Succuboids are beautiful, charming companions with pink skin, horns, wings, and tails. Intimacy gives their partners a lasting, addictive euphoria. Their inherent laziness and increased need for sleep make them poor workers.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Succuboid_small</iconPath>
     <displayPriority>-202</displayPriority>
-    <combatPowerFactor>0.8</combatPowerFactor>
+    <combatPowerFactor>0.75</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
       <li MayRequire="Ludeon.RimWorld.Royalty">XylPsycast_WordOfLove</li>

@@ -10,7 +10,7 @@
     <iconPath>Xyl/UI/Icons/Xenotypes/Warcat_small</iconPath>
     <displayPriority>-107</displayPriority>
     <inheritable>true</inheritable>
-    <combatPowerFactor>1.85</combatPowerFactor>
+    <combatPowerFactor>1.75</combatPowerFactor>
     <nameMaker>NamerXylPersonWarcat</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
     <genes>

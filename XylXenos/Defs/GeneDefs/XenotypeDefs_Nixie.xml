@@ -14,7 +14,7 @@
     <descriptionShort>Nixies are beautiful aquatic xenohumans with innate psychic powers. Tough scales protect them, and they move quickly in water, but prolonged dryness leaves them miserable. They are skilled negotiators but poor miners and builders.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Nixie_small</iconPath>
     <displayPriority>-104</displayPriority>
-    <combatPowerFactor>0.95</combatPowerFactor>
+    <combatPowerFactor>1.0</combatPowerFactor>
     <inheritable>true</inheritable>
     <nameMaker>NamerXylPersonNixie</nameMaker>
     <chanceToUseNameMaker>1</chanceToUseNameMaker>
