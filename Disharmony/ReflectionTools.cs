@@ -66,7 +66,8 @@ internal static class ReflectionTools
         var nameParts = name?.Split('.').ToList() ?? [];
 
         // Search for the type by considering foo, then foo.bar, then foo.bar.baz, etc.
-        if (nameParts.Count > 1)
+        // GetTypeByName is expensive so we only do this if it doesn't look like a local function lookup
+        if (nameParts.Count > 1 && type?.GetMembers(DeclaredOnly).Any(m => m.Name == nameParts[0]) is not true)
             for (int i = 1; i <= nameParts.Count - 1; i++)
             {
                 typeName = string.Join(".", nameParts.Take(i));
