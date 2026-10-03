@@ -194,7 +194,8 @@
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>61</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_NoEmpathy</iconPath>
+    <iconColor>(0.7, 0.4, 0.4)</iconColor>
     <exclusionTags>
       <li>Empathy</li>
     </exclusionTags>
