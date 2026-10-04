@@ -91,7 +91,7 @@ Dvergr hail from the vast underground cities beneath the inhospitable surface of
 
 Dvergr society is organized around the clan and the corporation; the two are one and the same. They are renowned for their skill with explosives, deep understanding of geology, excellent legal departments, and remarkably short safety manuals.
 
-### Rough dvergr union
+### Faction: Rough dvergr union
 
 A union of dvergr mining settlements, where the clan owns the company and the company owns whatever it can take. Their underground halls are full of machinery, strong beer, and relatives arguing over mineral rights.
 
@@ -130,7 +130,7 @@ Originally engineered for the water world of Atlantis, nixies have spread across
 
 The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without access to dry land, nixies were unable to develop advanced technology and industry. Instead, they put their efforts into developing art and culture, creating beautiful coral gardens and ethereal songs that echo for miles underwater. The source of their psychic abilities is a mystery.
 
-### Gentle nixie tribe
+### Faction: Gentle nixie tribe
 
 A tribe of beautiful aquatic nixies, settled along rivers and sheltered coasts. They tend coral gardens and compose songs that carry for miles underwater. To them, a lifetime on dry land sounds like a punishment.
 
@@ -205,7 +205,7 @@ Trogs emerged from generations of interbreeding among wasters, dirtmoles, and ne
 
 Trogs can be found anywhere other xenotypes don’t want to live, from polluted wastelands to underground caverns to volcanic lava fields. They form aggressive, territorial clans that often squabble as much among themselves as they do with outsiders. Despite their unwholesome reputation, they can be quite welcoming to outcast and shunned people of any xenotype.
 
-### Savage trog tribe
+### Faction: Savage trog tribe
 
 A collection of belligerent clans dominated by hideous trogs, inhabiting polluted wastes and volcanic badlands. Megaspiders wander between their huts as casually as livestock and accompany their handlers on raids.
 
@@ -245,7 +245,7 @@ Warcats were created in military gene-vats as experimental supersoldiers - part 
 
 Warcat tribes are a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.
 
-### Cannibal warcat tribe
+### Faction: Cannibal warcat tribe
 
 A loose confederation of roaming warcat hunting bands, descended from soldiers grown in gene-vats. Driven by their need for raw meat, they hunt whatever they can overpower with their razor-sharp claws. Successful hunters hang the skulls of eaten enemies from their belts.
 
