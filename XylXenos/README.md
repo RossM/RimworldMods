@@ -126,7 +126,7 @@ They bring the same determination to fighting that they do to excavating mountai
 
 ## <img src="Docs/Images/Xenotypes/XylNixie.png" alt="Nixie" width="48" height="48"> <br> Nixie
 
-Originally engineered for the water world of Atlantis, nixies have spread across inhabited space. Their scaled skin and webbed hands provide protection and let them move quickly in water, but long periods outside it will leave them miserable with cracked, bleeding skin. Beyond their physical adaptations, they possess otherworldly beauty and innate psychic powers that draw others towards them. They are skilled negotiators but poor miners and builders, trading with “dryskins” for manufactured goods.
+Originally engineered for the water world of Atlantis, nixies have spread across inhabited space. Their scaled skin provides protection and webbed hands let them move quickly in water, but long periods outside it will leave them miserable with cracked, bleeding skin. Beyond their physical adaptations, they possess otherworldly beauty and innate psychic powers that draw others towards them. They are skilled negotiators but poor miners and builders, trading with “dryskins” for manufactured goods.
 
 The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without access to dry land, nixies were unable to develop advanced technology and industry. Instead, they put their efforts into developing art and culture, creating beautiful coral gardens and ethereal songs that echo for miles underwater. The source of their psychic abilities is a mystery.
 
