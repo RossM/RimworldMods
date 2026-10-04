@@ -350,7 +350,7 @@
 
   <GeneDef>
     <defName>XylEMPBlast</defName>
-    <label>EMP blast</label>
+    <label>EMP burst</label>
     <description>Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices.</description>
     <descriptionHyperlinks>
       <AbilityDef>XylEMPBlast</AbilityDef>
@@ -370,7 +370,7 @@
 
   <AbilityDef>
     <defName>XylEMPBlast</defName>
-    <label>EMP blast</label>
+    <label>EMP burst</label>
     <description>Releases an electromagnetic pulse in an area around the user, disabling nearby electronic devices.</description>
     <descriptionHyperlinks>
       <GeneDef>XylEMPBlast</GeneDef>
@@ -386,7 +386,7 @@
     </statBases>
     <verbProperties>
       <verbClass>Verb_CastAbility</verbClass>
-      <label>EMP blast</label>
+      <label>EMP burst</label>
       <drawAimPie>false</drawAimPie>
       <range>3.5</range>
       <warmupTime>0.5</warmupTime>
