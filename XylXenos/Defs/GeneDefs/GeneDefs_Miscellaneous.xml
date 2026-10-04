@@ -548,7 +548,7 @@
     </descriptionHyperlinks>
     <displayCategory>Healing</displayCategory>
     <displayOrderInCategory>220</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_PlanetSickness</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
     <modExtensions>
