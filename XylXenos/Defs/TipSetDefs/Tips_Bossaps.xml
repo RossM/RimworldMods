@@ -8,6 +8,7 @@
 
       <li TKey="XylBossapsPrisoners">Bossaps prisoners can be milked. What you do with this information is up to you.</li>
       <li TKey="XylBossapsFriendlyFire">An enraged bossaps will attack anyone who hurts them, even allies. In that situation my best advice is to run.</li>
+      <li TKey="XylBossapsDocileSlaves">Docile slaves won't rebel unless their mood falls below the threshold for a minor mental break.</li>
 
     </tips>
   </TipSetDef>
