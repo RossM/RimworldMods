@@ -503,7 +503,7 @@
     <description>Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in.</description>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>36</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Focused</iconPath>
     <statOffsets>
       <XylLearnFactorPassionMajor>0.5</XylLearnFactorPassionMajor>
       <XylLearnFactorPassionNone>-0.25</XylLearnFactorPassionNone>
