@@ -4,8 +4,6 @@ Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown
 
 **Requires RimWorld 1.6, Biotech, and Harmony.** Royalty adds innate psycasts; Ideology and Odyssey provide additional features where noted.
 
-All xenotypes except titans are inheritable. The tables describe the mod's new functional and appearance genes; the lists below them include other existing genes and appearance options.
-
 - [Bossaps](#bossaps)
 - [Chyrr](#chyrr)
 - [Dvergr](#dvergr)
@@ -409,7 +407,7 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 | <img src="Docs/Images/Genes/Endo/XylEvenTemper.png" alt="Even temper" width="80" height="80"> | [Even temper](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have very stable neurochemistry, with less variation between individuals. |
 | <img src="Docs/Images/Genes/Endo/XylGender_AlwaysMale.png" alt="Always male" width="80" height="80"> | [Always male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always male.<br><br>This gene has no effect unless it is a germline gene. |
 | <img src="Docs/Images/Genes/Endo/XylGender_UsuallyMale.png" alt="Usually male" width="80" height="80"> | [Usually male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are mostly male.<br><br>This gene has no effect unless it is a germline gene. |
-| <img src="Docs/Images/Genes/Endo/XylParthenogenetic.png" alt="Parthenogenic" width="80" height="80"> | [Parthenogenic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Female carriers of this gene can become spontaneously pregnant without a father. The chance of becoming pregnant this way isn't affected by genetic fertility factors. |
+| <img src="Docs/Images/Genes/Endo/XylParthenogenetic.png" alt="Parthenogeneticic" width="80" height="80"> | [Parthenogeneticic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Female carriers of this gene can become spontaneously pregnant without a father. The chance of becoming pregnant this way isn't affected by genetic fertility factors. |
 | <img src="Docs/Images/Genes/Endo/XylPrecognition.png" alt="Precognition" width="80" height="80"> | [Precognition](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene can see a short distance into the future, giving the ability to dodge both melee and ranged attacks. The effect scales with psychic sensitivity. |
 | <img src="Docs/Images/Genes/Endo/XylSpecialist.png" alt="Specialist" width="80" height="80"> | [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level. |
 | <img src="Docs/Images/Genes/Endo/XylTail_Squirrel.png" alt="Squirrel tail" width="80" height="80"> | [Squirrel tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, fluffy tail that keeps them warm and increases the opinion of other characters towards them. |
@@ -428,7 +426,3 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 | <img src="Docs/Images/Genes/Endo/XylSkin_DarkPurple.png" alt="Dark purple skin" width="80" height="80"> | [Dark purple skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 Additional psycast genes are generated from the available abilities. The xenotypes above use Beckon, Focus, and Word of Love.
-
-## Mod data
-
-Browse the [xenotype and gene definitions](Defs/GeneDefs/), [factions](Defs/Factions/), and [scenarios](Defs/Scenarios/) for the full data.
