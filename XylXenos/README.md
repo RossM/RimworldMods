@@ -273,6 +273,8 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 | [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Gets more nutrition from raw meat and less from plants. Can eat raw meat without the usual raw-food mood penalty or food poisoning. |
 | [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Scales provide natural protection against sharp and blunt attacks. |
 | [Greedy](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Greedy: suffers a mood penalty without an impressive bedroom. |
+| [No empathy](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Psychopath: unaffected by the suffering of others. |
+| [Lizard tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Adds a long, heavy tail that slightly improves movement speed. |
 | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
 
 **Other genes and appearance**
@@ -290,12 +292,12 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 | Red | Fire spew, fire resistance, deep red skin |
 | Green | Acid spray, partial toxic resistance, dark green skin |
 | White | Foam spray, fast wound healing, sheer white skin |
-| Blue | EMP blast, unstoppable, dark blue skin |
+| Blue | EMP burst, unstoppable, dark blue skin |
 | Black | Oil spray, robust, slate gray skin |
 
 | Gene | Effect |
 | --- | --- |
-| [EMP blast](Defs/GeneDefs/GeneDefs_Abilities.xml) | Disables nearby electronics with an electromagnetic pulse. |
+| [EMP burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Disables nearby electronics with an electromagnetic pulse. |
 | [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Sprays oil that temporarily blinds targets and leaves flammable puddles. |
 
 ## Succuboid
