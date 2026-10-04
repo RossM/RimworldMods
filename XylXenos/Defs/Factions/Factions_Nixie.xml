@@ -7,7 +7,7 @@
     <label>gentle nixie tribe</label>
     <pawnSingular>nixie</pawnSingular>
     <pawnsPlural>nixies</pawnsPlural>
-    <description>A peaceful tribe of beautiful aquatic nixies. This particular tribe is open to contact and trade with the dryskins. They prefer to make their homes near rivers and coastlines, but small bands sometimes travel far inlands.\n\nOriginally engineered for the world Atlantis, nixies are now found on many planets. This one has had them for thousands of years.</description>
+    <description>A tribe of beautiful aquatic nixies, settled along rivers and sheltered coasts. They tend coral gardens and compose songs that carry for miles underwater. To them, a lifetime on dry land sounds like a punishment.\n\nDryskin tools and machinery are worth some discomfort, however. Their merchants venture inland with coral and sea silk, bargaining hard over fine cloth they would never dream of wearing.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/VillageNixie</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>
