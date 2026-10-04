@@ -4,7 +4,7 @@ Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown
 
 **Requires RimWorld 1.6, Biotech, and Harmony.** Royalty adds innate psycasts; Ideology and Odyssey provide additional features where noted.
 
-All xenotypes except titans are inheritable. The tables describe the mod's new functional and appearance genes; the lists below them include other existing genes and appearance options. Icons show endogenes except for titans, which use xenogenes.
+All xenotypes except titans are inheritable. The tables describe the mod's new functional and appearance genes; the lists below them include other existing genes and appearance options.
 
 - [Bossaps](#bossaps)
 - [Chyrr](#chyrr)
