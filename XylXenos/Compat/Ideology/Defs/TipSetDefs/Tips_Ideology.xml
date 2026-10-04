@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <TipSetDef>
+    <defName>XylXenosTips_Ideology</defName>
+    <tips>
+
+      <li TKey="XylBossapsDocileSlaves">Docile slaves won't rebel unless their mood falls below the threshold for a minor mental break.</li>
+
+      <li TKey="XylDvergrFungusBrewing">No soil? No problem. Dvergr can build fungal gravel underground, and brew the raw fungus grown there into alcohol.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>
