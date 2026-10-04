@@ -113,7 +113,6 @@
       <li>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/SquirrelTail/SquirrelTail</texPath>
-        <!--<overrideMeshSize>(1, 1)</overrideMeshSize>-->
         <parentTagDef>Body</parentTagDef>
         <colorType>Hair</colorType>        
         <useRottenColor>true</useRottenColor>
@@ -163,5 +162,54 @@
       </li>
     </modExtensions>
   </ThoughtDef>
+
+  <GeneDef ParentName="GeneTailBase">
+    <defName>XylTail_Reptile</defName>
+    <label>lizard tail</label>
+    <description>Carriers of this gene grow a long, heavy tail that improves balance and mobility.</description>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TailReptile</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
+    <displayOrderInCategory>1004</displayOrderInCategory>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <statOffsets>
+      <MoveSpeed>0.1</MoveSpeed>
+    </statOffsets>
+    <renderNodeProperties>
+      <li>
+        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/ReptileTail/ReptileTail</texPath>
+        <parentTagDef>Body</parentTagDef>
+        <colorType>Skin</colorType>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <visibleFacing>
+          <li>East</li>
+          <li>North</li>
+          <li>West</li>
+          <li>South</li>
+        </visibleFacing>
+        <drawData>
+          <scaleOffsetByBodySize>true</scaleOffsetByBodySize>
+          <defaultData>
+            <layer>-2</layer>
+          </defaultData>
+          <dataNorth>
+            <offset>(0, 0, 0)</offset>
+            <layer>90</layer>
+          </dataNorth>
+          <dataSouth>
+            <offset>(0, 0, 0.2)</offset>
+          </dataSouth>
+          <dataEast>
+            <offset>(-0.5, 0, 0)</offset>
+          </dataEast>
+          <dataWest>
+            <offset>(0.5, 0, 0)</offset>
+          </dataWest>
+        </drawData>
+      </li>
+    </renderNodeProperties>
+  </GeneDef>
 
 </Defs>
