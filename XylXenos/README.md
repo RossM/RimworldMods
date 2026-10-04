@@ -382,7 +382,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 | <img src="Docs/Images/Genes/Endo/XylBatWings.png" alt="Bat wings" width="128" height="128"> | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Allows short flights at the cost of some manipulation. Heavy torso apparel can prevent flight. |
 | <img src="Docs/Images/Genes/Endo/XylGender_AlwaysFemale.png" alt="Always female" width="128" height="128"> | [Always female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Germline carriers are always female. |
 | <img src="Docs/Images/Genes/Endo/XylStrongGenes.png" alt="Strong genes" width="128" height="128"> | [Strong genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Children inherit the carrier's endogenes when the other parent has a different xenotype, unless both parents have strong genes. |
-| <img src="Docs/Images/Genes/Endo/XylLoveEuphoria.png" alt="Love euphoria" width="128" height="128"> | [Love euphoria](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Intimacy gives partners euphoria and possible inspiration, but can cause addiction and withdrawal. |
+| <img src="Docs/Images/Genes/Endo/XylLoveEuphoria.png" alt="Love euphoria" width="128" height="128"> | [Love euphoria](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Intimacy gives partners euphoria and possible inspiration, but causes addiction and withdrawal. |
 | <img src="Docs/Images/Genes/Endo/XylShameless.png" alt="Shameless" width="128" height="128"> | [Shameless](Defs/GeneDefs/GeneDefs_Traits.xml) | Grants Nudist: happier without clothes. |
 | <img src="Docs/Images/Genes/Endo/XylLazy.png" alt="Lazy" width="128" height="128"> | [Lazy](Defs/GeneDefs/GeneDefs_Traits.xml) | Works slower. |
 
