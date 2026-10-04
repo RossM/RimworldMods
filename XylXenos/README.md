@@ -91,6 +91,12 @@ Dvergr hail from the vast underground cities beneath the inhospitable surface of
 
 Dvergr society is organized around the clan and the corporation; the two are one and the same. They are renowned for their skill with explosives, deep understanding of geology, excellent legal departments, and remarkably short safety manuals.
 
+### Rough dvergr union
+
+A union of dvergr mining settlements, where the clan owns the company and the company owns whatever it can take. Their underground halls are full of machinery, strong beer, and relatives arguing over mineral rights.
+
+They bring the same determination to fighting that they do to excavating mountains and negotiating contracts, and have an enthusiasm for explosives that their safety regulations have never quite caught up with. Their business disputes can last generations. So can their business relationships.
+
 ### Trivia
 
 "Dvergr" is an Old Norse word for dwarf, and their homeland in Old Norse mythology was either called "Svartálfheim" or "Niðavellir" depending on the source.
@@ -123,6 +129,12 @@ Dvergr society is organized around the clan and the corporation; the two are one
 Originally engineered for the water world of Atlantis, nixies have spread across inhabited space. Their scaled skin and webbed hands provide protection and let them move quickly in water, but long periods outside it will leave them miserable with cracked, bleeding skin. Beyond their physical adaptations, they possess otherworldly beauty and innate psychic powers that draw others towards them. They are skilled negotiators but poor miners and builders, trading with “dryskins” for manufactured goods.
 
 The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without access to dry land, nixies were unable to develop advanced technology and industry. Instead, they put their efforts into developing art and culture, creating beautiful coral gardens and ethereal songs that echo for miles underwater. The source of their psychic abilities is a mystery.
+
+### Gentle nixie tribe
+
+A tribe of beautiful aquatic nixies, settled along rivers and sheltered coasts. They tend coral gardens and compose songs that carry for miles underwater. To them, a lifetime on dry land sounds like a punishment.
+
+Dryskin tools and machinery are worth some discomfort, however. Their merchants venture inland with coral and sea silk, bargaining hard over fine cloth they would never dream of wearing.
 
 ### Trivia
 
@@ -193,6 +205,12 @@ Trogs emerged from generations of interbreeding among wasters, dirtmoles, and ne
 
 Trogs can be found anywhere other xenotypes don’t want to live, from polluted wastelands to underground caverns to volcanic lava fields. They form aggressive, territorial clans that often squabble as much among themselves as they do with outsiders. Despite their unwholesome reputation, they can be quite welcoming to outcast and shunned people of any xenotype.
 
+### Savage trog tribe
+
+A collection of belligerent clans dominated by hideous trogs, inhabiting polluted wastes and volcanic badlands. Megaspiders wander between their huts as casually as livestock and accompany their handlers on raids.
+
+The clans refuse peace with their neighbors, yet their settlements shelter mutants, fugitives, and others those same neighbors have driven out.
+
 ### Trivia
 
 "Trog" is an abbreviation of "troglodyte", meaning a person who lives in a cave.
@@ -227,7 +245,13 @@ Warcats were created in military gene-vats as experimental supersoldiers - part 
 
 Warcat tribes are a constant threat on the rim. Their need for meat drives them to hunt anything they can, even other xenohumans. Many warcat hunters carry the skulls of those they have eaten as trophies.
 
-## Trivia
+### Cannibal warcat tribe
+
+A loose confederation of roaming warcat hunting bands, descended from soldiers grown in gene-vats. Driven by their need for raw meat, they hunt whatever they can overpower with their razor-sharp claws. Successful hunters hang the skulls of eaten enemies from their belts.
+
+Win their friendship and they’ll put those claws to work for you, though sharing a battlefield with them is easier than sharing the victory feast.
+
+### Trivia
 
 Real cats are unable to produce adequate amounts of certain essential nutrients such as taurine, and must get them from meat as part of their diet.
 
