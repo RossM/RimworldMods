@@ -24,7 +24,7 @@ ART_DIR = ROOT / "Art/Rimworld art"
 OUTPUT = ROOT / "XylXenos/Docs/Images/Genes"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 WHITE = (1.0, 1.0, 1.0, 1.0)
-ICON_SIZE = 128
+ICON_SIZE = 60
 
 
 @dataclass(frozen=True)
