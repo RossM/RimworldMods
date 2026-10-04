@@ -351,7 +351,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 | <img src="Docs/Images/Genes/Endo/XylGreedy.png" alt="Greedy" width="80" height="80"> | [Greedy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have an instinctive desire for material possessions. They get a mood penalty if they don't have an impressive bedroom. |
 | <img src="Docs/Images/Genes/Endo/XylNoEmpathy.png" alt="No empathy" width="80" height="80"> | [No empathy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene lack empathy. They aren't affected by the suffering of others. |
 | <img src="Docs/Images/Genes/Endo/XylTail_Reptile.png" alt="Lizard tail" width="80" height="80"> | [Lizard tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, heavy tail that improves balance and mobility. |
-| <img src="Docs/Images/Genes/Endo/XylScalebornLineage.png" alt="Scaleborn lineage" width="80" height="80"> | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
+| <img src="Docs/Images/Genes/Endo/XylScalebornLineage.png" alt="Scaleborn lineage" width="80" height="80"> | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Replaces itself with one of five randomly selected gene packages representing five different lineages. |
 
 **Other genes and appearance**
 
