@@ -31,7 +31,7 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylHerdInstinct.png" alt="Herd instinct" width="80" height="80"> | [Herd instinct](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks. |
 | <img src="Docs/Images/Genes/Endo/XylDocile.png" alt="Docile" width="80" height="80"> | [Docile](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They also never start social fights. |
@@ -44,7 +44,7 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEars_Cow.png" alt="Cow ears" width="80" height="80"> | [Cow ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
@@ -66,7 +66,7 @@ According to chyrr myth, a blind woman named Marah came across an injured strang
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylSonicWave.png" alt="Sonic wave" width="80" height="80"> | [Sonic wave](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby. |
 | <img src="Docs/Images/Genes/Endo/XylBatWings.png" alt="Bat wings" width="80" height="80"> | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight. |
@@ -77,7 +77,7 @@ According to chyrr myth, a blind woman named Marah came across an injured strang
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEars_SmallPointed.png" alt="Small pointed ears" width="80" height="80"> | [Small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
@@ -99,7 +99,7 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylStoic.png" alt="Stoic" width="80" height="80"> | [Stoic](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are mentally tough and won't break down under stresses that would crack most people. |
 | <img src="Docs/Images/Genes/Endo/XylMelancholy.png" alt="Melancholy" width="80" height="80"> | [Melancholy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break. |
@@ -109,7 +109,7 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylHair_BaldOnly_Male.png" alt="Bald males" width="80" height="80"> | [Bald males](Defs/GeneDefs/GeneDefs_Hair.xml) |
 | <img src="Docs/Images/Genes/Endo/XylEars_SmallPointed.png" alt="Small pointed ears" width="80" height="80"> | [Small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
@@ -132,7 +132,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylPsycast_Beckon.png" alt="Beckon" width="80" height="80"> | [Beckon](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the beckon psycast, and can use it without a psylink.<br><br>Psychically command the target to approach the caster. |
 | <img src="Docs/Images/Genes/Endo/XylPsycast_Focus.png" alt="Focus" width="80" height="80"> | [Focus](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the focus psycast, and can use it without a psylink.<br><br>Psychically focus the target's mind, boosting their sight, hearing and moving capacities. |
@@ -142,7 +142,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEars_Fin.png" alt="Fin ears" width="80" height="80"> | [Fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
@@ -164,7 +164,7 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Xeno/XylRockToss.png" alt="Rock toss" width="80" height="80"> | [Rock toss](Defs/GeneDefs/GeneDefs_Abilities.xml) | The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands. |
 | <img src="Docs/Images/Genes/Xeno/XylLithoid.png" alt="Lithoid" width="80" height="80"> | [Lithoid](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on baseliners, and instead must use specialized drugs designed for lithoids. |
@@ -177,7 +177,7 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Xeno/XylHair_BaldOnly_Male.png" alt="Bald males" width="80" height="80"> | [Bald males](Defs/GeneDefs/GeneDefs_Hair.xml) |
 
@@ -201,7 +201,7 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylToxicBurst.png" alt="Toxic burst" width="80" height="80"> | [Toxic burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally. |
 | <img src="Docs/Images/Genes/Endo/XylBioRejection.png" alt="Bio-rejection" width="80" height="80"> | [Bio-rejection](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed. |
@@ -211,7 +211,7 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylHead_Trog.png" alt="Warped head" width="80" height="80"> | [Warped head](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 | <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
@@ -235,7 +235,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylFeralRage.png" alt="Feral rage" width="80" height="80"> | [Feral rage](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%). |
 | <img src="Docs/Images/Genes/Endo/XylMoody.png" alt="Moody" width="80" height="80"> | [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene have a volatile emotional state. They randomly get good and bad moods. |
@@ -246,7 +246,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEyes_Yellow.png" alt="Yellow eyes" width="80" height="80"> | [Yellow eyes](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 | <img src="Docs/Images/Genes/Endo/XylFacialStripes.png" alt="Facial stripes" width="80" height="80"> | [Facial stripes](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
@@ -269,7 +269,7 @@ Even the most colossal spaceborn habitat can eventually break down due to years 
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylPlanetSickness.png" alt="Planet sickness" width="80" height="80"> | [Planet sickness](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are prone to bouts of nausea and vomiting when on a planet's surface. |
 | <img src="Docs/Images/Genes/Endo/XylEmergencyReserves.png" alt="Emergency reserves" width="80" height="80"> | [Emergency reserves](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage. |
@@ -278,7 +278,7 @@ Even the most colossal spaceborn habitat can eventually break down due to years 
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylForeheadMark.png" alt="Forehead mark" width="80" height="80"> | [Forehead mark](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 | <img src="Docs/Images/Genes/Endo/XylSkin_DarkSilver.png" alt="Dark silver skin" width="80" height="80"> | [Dark silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
@@ -298,7 +298,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylNose_Beaver.png" alt="Beaver teeth" width="80" height="80"> | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have strong, chisel-shaped teeth. They cut trees twice as fast, and their bites deal twice as much damage. |
 | <img src="Docs/Images/Genes/Endo/XylTail_Beaver.png" alt="Beaver tail" width="80" height="80"> | [Beaver tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver that helps with temperature regulation. |
@@ -319,7 +319,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylTorpor.png" alt="Torpor" width="80" height="80"> | [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This will impair their capabilities and eventually cause unconsciousness. It also reduces food consumption and slows the progression of hypothermia and starvation. |
 | <img src="Docs/Images/Genes/Endo/XylLargeHorns.png" alt="Large horns" width="80" height="80"> | [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have large horns that function as a weapon. |
@@ -333,7 +333,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 | <img src="Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="80" height="80"> | [Dark blue skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
@@ -356,7 +356,7 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 | Blue | EMP burst, unstoppable, dark blue skin |
 | Black | Oil spray, robust, slate gray skin |
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEMPBlast.png" alt="EMP burst" width="80" height="80"> | [EMP burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices. |
 | <img src="Docs/Images/Genes/Endo/XylOilSpray.png" alt="Oil spray" width="80" height="80"> | [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have glands in their neck that can be used to spray a sticky oil that blinds opponents and leaves flammable puddles. |
@@ -375,7 +375,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 
 ### Genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylPsycast_WordOfLove.png" alt="Word of Love" width="80" height="80"> | [Word of Love](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the word of love psycast, and can use it without a psylink.<br><br>Speak about someone's romantic virtues while using psychic suggestion to implant romantic desire in the listener. For days afterward, the listener will feel psychically-induced romantic attraction towards the other person. This greatly increases opinion and makes them much more likely to attempt romantic advances and marriage proposals if they get the chance. This power can be used to connect two other people, induce love for the caster, or force oneself to love another. |
 | <img src="Docs/Images/Genes/Endo/XylTail_Demon.png" alt="Pointed tail" width="80" height="80"> | [Pointed tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a narrow, pointed tail that increases the character's impact in social interactions. |
@@ -388,7 +388,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 
 **Appearance genes**
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylSkin_Pink.png" alt="Pink skin" width="80" height="80"> | [Pink skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
@@ -404,7 +404,7 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 
 ### Functional genes
 
-| Icon | Gene | Effect |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEvenTemper.png" alt="Even temper" width="80" height="80"> | [Even temper](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have very stable neurochemistry, with less variation between individuals. |
 | <img src="Docs/Images/Genes/Endo/XylGender_AlwaysMale.png" alt="Always male" width="80" height="80"> | [Always male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always male.<br><br>This gene has no effect unless it is a germline gene. |
@@ -418,7 +418,7 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 
 ### Appearance genes
 
-| Icon | Gene |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
 | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylHair_BaldOnly_Female.png" alt="Bald females" width="80" height="80"> | [Bald females](Defs/GeneDefs/GeneDefs_Hair.xml) |
 | <img src="Docs/Images/Genes/Endo/XylHair_ShortOnly_Female.png" alt="Short-haired females" width="80" height="80"> | [Short-haired females](Defs/GeneDefs/GeneDefs_Hair.xml) |
