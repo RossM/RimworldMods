@@ -19,7 +19,7 @@ All xenotypes except titans are inheritable. The tables describe the mod's new f
 - [Succuboid](#succuboid)
 - [Currently unused genes](#currently-unused-genes)
 
-## Bossaps
+## <img src="Docs/Images/Xenotypes/XylBossaps.png" alt="Bossaps" width="48" height="48"> <br> Bossaps
 
 Bossaps were created as sentient livestock by the gene-engineers of a glitterworld best forgotten. They gain extra nourishment from raw plants, and their mostly female herds produce abundant milk. Naturally gregarious, they become unhappy in small colonies but tolerate shared barracks. While usually docile, injury can send a bossaps charging horns-first in an uncontrollable rage - even at the friend whose shot went astray.
 
@@ -54,7 +54,7 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 - **Skills:** poor cooking aptitude, strong plants aptitude.
 - **Appearance:** long hair, standard body, fat body, hulk body.
 
-## Chyrr
+## <img src="Docs/Images/Xenotypes/XylChyrr.png" alt="Chyrr" width="48" height="48"> <br> Chyrr
 
 Chyrr are batlike xenohumans who trace their origin to a legendary blind healer. They have a strong aptitude for medicine, and their echolocation and keen hearing let them “see” using sound as well as vision. Their bodies are easily injured, but they can stun living enemies with a cry of ultrasound and psychic energy, then take flight on membranous wings for a short escape. In colder weather, they naturally enter a state of hibernation, leaving them protected from hypothermia and frostbite but otherwise helpless.
 
@@ -87,7 +87,7 @@ According to chyrr myth, a blind woman named Marah came across an injured strang
 - **Skills:** poor mining aptitude, strong medicine aptitude.
 - **Appearance:** standard body, thin body, no beard.
 
-## Dvergr
+## <img src="Docs/Images/Xenotypes/XylDvergr.png" alt="Dvergr" width="48" height="48"> <br> Dvergr
 
 Dvergr hail from the vast underground cities beneath the inhospitable surface of the mineral world Svartalfheim. They see in darkness, tolerate great heat, and never need to go outdoors. They are fast workers and skilled miners, builders, and craftspeople. Their stomachs extract extra nourishment from raw fungus, although they hate the taste. They are both culturally and metabolically dependent on regular alcohol consumption, and going without it leads to illness and eventually death.
 
@@ -120,7 +120,7 @@ Dvergr society is organized around the clan and the corporation; the two are one
 - **Skills:** strong construction aptitude, strong mining aptitude, strong crafting aptitude, poor medicine aptitude, poor social aptitude.
 - **Appearance:** short hair, bushy beard, light gray skin, slate gray skin, ink-black skin.
 
-## Nixie
+## <img src="Docs/Images/Xenotypes/XylNixie.png" alt="Nixie" width="48" height="48"> <br> Nixie
 
 Originally engineered for the water world of Atlantis, nixies have spread across inhabited space. Their scaled skin and webbed hands provide protection and let them move quickly in water, but long periods outside it will leave them miserable with cracked, bleeding skin. Beyond their physical adaptations, they possess otherworldly beauty and innate psychic powers that draw others towards them. They are skilled negotiators but poor miners and builders, trading with “dryskins” for manufactured goods.
 
@@ -152,7 +152,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 - **Skills:** poor mining aptitude, poor construction aptitude, strong social aptitude.
 - **Appearance:** bald, snow-white hair, grayless hair, blue skin.
 
-## Titan
+## <img src="Docs/Images/Xenotypes/XylTitan.png" alt="Titan" width="48" height="48"> <br> Titan
 
 Titans are mass-produced workers originally designed for reclaiming deathworlds. Specialized carbon-silicate lithoid biochemistry makes them immune to toxins and highly resistant to injury and disease, letting them work in conditions that would be lethal for other xenotypes. Each is engineered with exceptional aptitude and passion for one random skill, but they have great difficulty learning skills that they aren’t passionate about. Their unusual biochemistry also leaves them susceptible to petrification, an incurable genetic disease that gradually turns their tissues to solid stone.
 
@@ -189,7 +189,7 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 **Lithoid drugs:** [Softener](Defs/Drugs/Drugs_Titan.xml) prevents petrification. Atlasite builds protective resistance with regular doses. Crystal improves performance and dulls pain, but is highly addictive.
 
-## Trog
+## <img src="Docs/Images/Xenotypes/XylTrog.png" alt="Trog" width="48" height="48"> <br> Trog
 
 Trogs emerged from generations of interbreeding among wasters, dirtmoles, and neanderthals on the worst rimworlds known to mankind. They are ugly, slow, and poor learners, but skilled miners and animal handlers. They emit special pheromones that let them move freely among giant insects, and even tame them and employ them as war animals. Like wasters, pollution invigorates them, but they are only partially resistant to its effects. Roughly half inherit additional random genes from who-knows-where.
 
@@ -223,7 +223,7 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 - **Skills:** strong mining aptitude, strong animals aptitude, terrible intellectual aptitude.
 - **Appearance:** bald, human headbone, mini-horns, green skin.
 
-## Warcat
+## <img src="Docs/Images/Xenotypes/XylWarcat.png" alt="Warcat" width="48" height="48"> <br> Warcat
 
 Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on a diet of raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.
 
@@ -257,7 +257,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 - **Skills:** remarkable melee aptitude, poor plants aptitude, poor crafting aptitude.
 - **Appearance:** long hair, no beard, cat ears, standard body, thin body.
 
-## Zeegee
+## <img src="Docs/Images/Xenotypes/XylZeegee.png" alt="Zeegee" width="48" height="48"> <br> Zeegee
 
 Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. They are comfortable indoors and in low gravity, but on planets they are prone to bouts of debilitating nausea. They learn quickly, excel at intellectual work, and have a natural connection to machines that makes them adept at controlling mechanoids and piloting gravships. In emergency situations oxygen and protective proteins stored in their bone marrow can briefly protect them against vacuum, toxins, and temperature extremes. Enhanced vision, adapted for the low light and vast distances of space, makes them excellent marksmen.
 
@@ -290,7 +290,7 @@ Even the most colossal spaceborn habitat can eventually break down due to years 
 - **Skills:** strong shooting aptitude, poor melee aptitude, poor animals aptitude, strong intellectual aptitude.
 - **Appearance:** short hair.
 
-## Omegabeaver
+## <img src="Docs/Images/Xenotypes/XylOmegabeaver.png" alt="Omegabeaver" width="48" height="48"> <br> Omegabeaver
 
 Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move effortlessly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
 
@@ -311,7 +311,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 - **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
 - **Appearance:** bald, no beard.
 
-## Scaleborn
+## <img src="Docs/Images/Xenotypes/XylScaleborn.png" alt="Scaleborn" width="48" height="48"> <br> Scaleborn
 
 Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.
 
@@ -361,7 +361,7 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 | <img src="Docs/Images/Genes/Endo/XylEMPBlast.png" alt="EMP burst" width="80" height="80"> | [EMP burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices. |
 | <img src="Docs/Images/Genes/Endo/XylOilSpray.png" alt="Oil spray" width="80" height="80"> | [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have glands in their neck that can be used to spray a sticky oil that blinds opponents and leaves flammable puddles. |
 
-## Succuboid
+## <img src="Docs/Images/Xenotypes/XylSuccuboid.png" alt="Succuboid" width="48" height="48"> <br> Succuboid
 
 Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.
 
