@@ -2,7 +2,8 @@
 
 Run from any directory: python path/to/Scripts/render-gene-icons.py
 Use --rimworld-data PATH if RimWorld/Data is outside the default Steam location.
-Outputs 128px PNGs named by defName in XylXenos/Docs/Images/Genes/{Endo,Xeno}.
+Outputs 80px PNGs named by defName in XylXenos/Docs/Images/Genes/{Endo,Xeno},
+plus contact-sheet.png with labeled 128px endogene icons in the Genes directory.
 
 Based on Art/Codex/render-genes-contact-sheet.py. Renders concrete mod genes
 and psycast genes used by xenotypes. Core/Biotech definitions supply parents only.
@@ -13,9 +14,10 @@ specified by a definition. Psycast PSDs come from Game art source - Royalty.zip.
 import argparse
 from dataclasses import dataclass
 from pathlib import Path
+import os
 import xml.etree.ElementTree as ET
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,11 +27,17 @@ OUTPUT = ROOT / "XylXenos/Docs/Images/Genes"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 WHITE = (1.0, 1.0, 1.0, 1.0)
 ICON_SIZE = 80
+SHEET_ICON_SIZE = 128
+COLUMNS = 8
+CELL_WIDTH = 218
+CELL_HEIGHT = 220
+MARGIN = 24
 
 
 @dataclass(frozen=True)
 class GeneIcon:
     name: str
+    label: str
     texture: Path
     color: tuple[float, ...]
 
@@ -100,7 +108,8 @@ def read_gene_icons(game_data):
         color = parse_color(skin or hair or inherited_text(gene, "iconColor", parents))
         if name in icons:
             raise ValueError(f"Duplicate gene: {name}")
-        icons[name] = GeneIcon(name, texture_path(icon_path), color)
+        label = inherited_text(gene, "label", parents) or name
+        icons[name] = GeneIcon(name, label, texture_path(icon_path), color)
 
     # Mirror GeneDefGenerator's template naming and ability icon substitution for
     # the psycasts referenced by the mod's xenotypes, rather than unused abilities.
@@ -124,7 +133,9 @@ def read_gene_icons(game_data):
                 continue
             path = inherited_text(ability, "iconPath", ability_parents)
             icon_path = template.findtext("iconPath").format(path)
-            icons[name] = GeneIcon(name, texture_path(icon_path), WHITE)
+            label = template.findtext("label").format(
+                inherited_text(ability, "label", ability_parents) or name)
+            icons[name] = GeneIcon(name, label, texture_path(icon_path), WHITE)
         if missing := wanted - icons.keys():
             raise ValueError(f"Missing psycast definitions: {sorted(missing)}")
     return sorted(icons.values(), key=lambda icon: icon.name)
@@ -138,10 +149,61 @@ def render_icon(gene, background):
     icon = Image.merge("RGBA", tuple(
         channel.point([round(value * factor) for value in range(256)])
         for channel, factor in zip(icon.split(), gene.color)))
-    icon = ImageOps.contain(icon, (ICON_SIZE, ICON_SIZE), Image.Resampling.LANCZOS)
+    icon = ImageOps.contain(icon, background.size, Image.Resampling.LANCZOS)
     tile = background.copy()
-    tile.alpha_composite(icon, ((ICON_SIZE - icon.width) // 2, (ICON_SIZE - icon.height) // 2))
+    tile.alpha_composite(icon, ((tile.width - icon.width) // 2, (tile.height - icon.height) // 2))
     return tile
+
+
+def load_font():
+    candidates = [Path(os.environ.get("WINDIR", "C:/Windows")) / "Fonts/segoeui.ttf",
+                  Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")]
+    for candidate in candidates:
+        if candidate.exists():
+            return ImageFont.truetype(str(candidate), 17)
+    return ImageFont.load_default(size=17)
+
+
+def label_lines(gene, draw, font):
+    label = gene.label[:1].upper() + gene.label[1:]
+    lines = [""]
+    for word in label.split():
+        candidate = f"{lines[-1]} {word}".strip()
+        if draw.textlength(candidate, font=font) > CELL_WIDTH - 16:
+            lines.append(word)
+        else:
+            lines[-1] = candidate
+    if any(draw.textlength(line, font=font) > CELL_WIDTH - 16 for line in lines):
+        raise ValueError(f"Label exceeds tile: {gene.name}")
+    return lines
+
+
+def render_contact_sheet(genes):
+    if not genes:
+        raise ValueError("No genes to render in contact sheet")
+    font = load_font()
+    measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    entries = [(gene, label_lines(gene, measure, font))
+               for gene in sorted(genes, key=lambda gene: (gene.label.casefold(), gene.name))]
+    # Preserve the original contact sheet's cell spacing, margins, and typography.
+    row_heights = [max(CELL_HEIGHT, SHEET_ICON_SIZE + 20 + 22 * max(len(lines) for _, lines
+                       in entries[start:start + COLUMNS]))
+                   for start in range(0, len(entries), COLUMNS)]
+    with Image.open(ART_DIR / "Genes/GeneBackground_Endogene.png") as source:
+        background = source.convert("RGBA").resize(
+            (SHEET_ICON_SIZE, SHEET_ICON_SIZE), Image.Resampling.LANCZOS)
+    sheet = Image.new("RGBA", (COLUMNS * CELL_WIDTH + 2 * MARGIN,
+                              sum(row_heights) + 2 * MARGIN), "#202428")
+    draw = ImageDraw.Draw(sheet)
+    for index, (gene, lines) in enumerate(entries):
+        x = MARGIN + index % COLUMNS * CELL_WIDTH
+        y = MARGIN + sum(row_heights[:index // COLUMNS])
+        sheet.alpha_composite(render_icon(gene, background),
+                              (x + (CELL_WIDTH - SHEET_ICON_SIZE) // 2, y))
+        for line_index, line in enumerate(lines):
+            draw.text((x + CELL_WIDTH // 2, y + SHEET_ICON_SIZE + 10 + line_index * 22),
+                      line, font=font, fill="#e8e9ea", anchor="mt")
+    return sheet.convert("RGB")
 
 
 def main():
@@ -160,6 +222,10 @@ def main():
         for gene in genes:
             render_icon(gene, background).save(directory / (gene.name + ".png"))
     print(f"Saved {len(genes)} genes in both Endo and Xeno variants to {OUTPUT}")
+    sheet = render_contact_sheet(genes)
+    sheet_path = OUTPUT / "contact-sheet.png"
+    sheet.save(sheet_path)
+    print(f"Saved {sheet_path}: {len(genes)} genes, {sheet.width} x {sheet.height}")
 
 
 if __name__ == "__main__":
