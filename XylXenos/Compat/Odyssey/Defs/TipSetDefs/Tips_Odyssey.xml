@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+  <TipSetDef>
+    <defName>XylXenosTips_Odyssey</defName>
+    <tips>
+
+      <li TKey="XylTitanVacuum">A titan fully saturated with atlasite can work in vacuum without protective gear.</li>
+
+    </tips>
+  </TipSetDef>
+
+</Defs>
