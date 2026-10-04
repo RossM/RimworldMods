@@ -23,6 +23,8 @@
       <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 31C/88F.</li>
 
       <li TKey="XylTitanAptitude">Titans get a random skill aptitude in construction, mining, cooking, plants, animals, crafting, artistic, or medical.</li>
+      <li TKey="XylTitanAtlasiteRequired">It takes ten doses of atlasite, taken once every three days, to reach maximum saturation.</li>
+      <li TKey="XylTitanCrystalBrainDamage">Built-up tolerance to crystal can cause chemical damage to the brain.</li>
       
       <li TKey="XylTrogPets">The insect pheromones gene will also protect colony animals.</li>
       <li TKey="XylTrogInsects">Trogs can make use of wild insects in multiple ways. You can try taming them, or just lure enemies close to a hive.</li>
