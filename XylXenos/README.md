@@ -329,13 +329,6 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 | <img src="Docs/Images/Genes/Endo/XylTail_Reptile.png" alt="Lizard tail" width="80" height="80"> | [Lizard tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, heavy tail that improves balance and mobility. |
 | <img src="Docs/Images/Genes/Endo/XylScalebornLineage.png" alt="Scaleborn lineage" width="80" height="80"> | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
 
-**Appearance genes**
-
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
-| --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="80" height="80"> | [Dark blue skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
-
 **Other genes and appearance**
 
 - **Traits:** psychically dull, slow runner, cold tolerant, heat tolerant, aggressive, strong melee damage, sleepy.
@@ -358,6 +351,11 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 | --- | --- | --- |
 | <img src="Docs/Images/Genes/Endo/XylEMPBlast.png" alt="EMP burst" width="80" height="80"> | [EMP burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices. |
 | <img src="Docs/Images/Genes/Endo/XylOilSpray.png" alt="Oil spray" width="80" height="80"> | [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have glands in their neck that can be used to spray a sticky oil that blinds opponents and leaves flammable puddles. |
+
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
+| --- | --- |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="80" height="80"> | [Dark blue skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 ## <img src="Docs/Images/Xenotypes/XylSuccuboid.png" alt="Succuboid" width="48" height="48"> <br> Succuboid
 
