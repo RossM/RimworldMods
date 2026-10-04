@@ -189,7 +189,7 @@
   <GeneDef>
     <defName>XylNoEmpathy</defName>
     <label>no empathy</label>
-    <description>Carriers of this gene lack empathy, and aren't affected by the suffering of others.</description>
+    <description>Carriers of this gene lack empathy. They aren't affected by the suffering of others.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Violence</displayCategory>
