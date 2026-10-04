@@ -8,21 +8,15 @@
 
       <li TKey="XylBossapsPrisoners">Bossaps prisoners can be milked. What you do with this information is up to you.</li>
       <li TKey="XylBossapsFriendlyFire">An enraged bossaps will attack anyone who hurts them, even allies. In that situation my best advice is to run.</li>
-      <li TKey="XylBossapsDocileSlaves">Docile slaves won't rebel unless their mood falls below the threshold for a minor mental break.</li>
 
       <li TKey="XylChyrrEcholocationSmoke">A blind, or blindfolded, character with the echolocation gene isn't affected by smoke when shooting.</li>
       <li TKey="XylChyrrEcholocationBlindness">Characters with the echolocation gene have a small chance to be born congenitally blind.</li>
 
-      <li TKey="XylDvergrFungusBrewing">No soil? No problem. Dvergr can build fungal gravel underground, and brew the raw fungus grown there into alcohol.</li>
-
-      <li TKey="XylNixieWaterskip">In an emergency, Waterskip can create puddles to satisfy a nixie's need for wetness.</li>
       <li TKey="XylNixieShower">Characters with the Aquatic gene can build showers and use them to stay wet.</li>
       <li TKey="XylNixieSpeed">Nixies move faster than almost anything else in the water. You can use this to your advantage in combat.</li>
       <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 31C/88F.</li>
-      <li TKey="XylNixiePsyfocus">Nixies need at least 25 psyfocus to use their innate psycasts, but don't need a psylink.</li>
 
       <li TKey="XylTrogPets">The insect pheromones gene will also protect colony animals.</li>
-      <li TKey="XylTrogPsylink">A psylink won't trigger bio-rejection in trogs, but a mechlink will.</li>
       <li TKey="XylTrogInsects">Trogs can make use of wild insects in multiple ways. You can try taming them, or just lure enemies close to a hive.</li>
 
       <li TKey="XylMeatDeficiency">Warcats' raw meat requirement is cumulative over time. Fixing a deficiency requires making up for all the raw meat that was missed.</li>
