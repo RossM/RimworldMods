@@ -4,17 +4,17 @@ Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown
 
 **Requires RimWorld 1.6, Biotech, and Harmony.** Royalty adds innate psycasts; Ideology and Odyssey provide additional features where noted.
 
-- [Bossaps](#bossaps)
-- [Chyrr](#chyrr)
-- [Dvergr](#dvergr)
-- [Nixie](#nixie)
-- [Titan](#titan)
-- [Trog](#trog)
-- [Warcat](#warcat)
-- [Zeegee](#zeegee)
-- [Omegabeaver](#omegabeaver)
-- [Scaleborn](#scaleborn)
-- [Succuboid](#succuboid)
+- [Bossaps](#--bossaps)
+- [Chyrr](#--chyrr)
+- [Dvergr](#--dvergr)
+- [Nixie](#--nixie)
+- [Titan](#--titan)
+- [Trog](#--trog)
+- [Warcat](#--warcat)
+- [Zeegee](#--zeegee)
+- [Omegabeaver](#--omegabeaver)
+- [Scaleborn](#--scaleborn)
+- [Succuboid](#--succuboid)
 - [Currently unused genes](#currently-unused-genes)
 
 ## <img src="Docs/Images/Xenotypes/XylBossaps.png" alt="Bossaps" width="48" height="48"> <br> Bossaps
