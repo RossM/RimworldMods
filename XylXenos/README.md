@@ -33,20 +33,20 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylHerdInstinct.png" alt="Herd instinct" width="60" height="60"> | [Herd instinct](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks. |
-| <img src="Docs/Images/Genes/Endo/XylDocile.png" alt="Docile" width="60" height="60"> | [Docile](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They also never start social fights. |
-| <img src="Docs/Images/Genes/Endo/XylLargeHorns.png" alt="Large horns" width="60" height="60"> | [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have large horns that function as a weapon. |
-| <img src="Docs/Images/Genes/Endo/XylSeeingRed.png" alt="Seeing red" width="60" height="60"> | [Seeing red](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled. |
-| <img src="Docs/Images/Genes/Endo/XylPainReversal.png" alt="Pain reversal" width="60" height="60"> | [Pain reversal](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have scrambled senses that make them feel pain as pleasurable. |
-| <img src="Docs/Images/Genes/Endo/XylHyperlactation.png" alt="Hyperlactation" width="60" height="60"> | [Hyperlactation](Defs/GeneDefs/GeneDefs_Hyperlactation.xml) | Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males. |
-| <img src="Docs/Images/Genes/Endo/XylGender_UsuallyFemale.png" alt="Usually female" width="60" height="60"> | [Usually female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are mostly female.<br><br>This gene has no effect unless it is a germline gene. |
-| <img src="Docs/Images/Genes/Endo/XylHerbivoreStomach.png" alt="Herbivore stomach" width="60" height="60"> | [Herbivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods. |
+| <img src="Docs/Images/Genes/Endo/XylHerdInstinct.png" alt="Herd instinct" width="80" height="80"> | [Herd instinct](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene need the comfort of being in a large group. They get a mood penalty if there are too few members of the colony. They also don't mind sleeping in a barracks. |
+| <img src="Docs/Images/Genes/Endo/XylDocile.png" alt="Docile" width="80" height="80"> | [Docile](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are generally docile. They are easy to enslave and rarely rebel. They also never start social fights. |
+| <img src="Docs/Images/Genes/Endo/XylLargeHorns.png" alt="Large horns" width="80" height="80"> | [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have large horns that function as a weapon. |
+| <img src="Docs/Images/Genes/Endo/XylSeeingRed.png" alt="Seeing red" width="80" height="80"> | [Seeing red](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have a chance of going into a blind range when they are damaged in combat, charging the nearest enemy and fighting in melee until all enemies are dead. During this state they are faster, stronger, and nearly immune to pain. This ability can't be controlled. |
+| <img src="Docs/Images/Genes/Endo/XylPainReversal.png" alt="Pain reversal" width="80" height="80"> | [Pain reversal](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have scrambled senses that make them feel pain as pleasurable. |
+| <img src="Docs/Images/Genes/Endo/XylHyperlactation.png" alt="Hyperlactation" width="80" height="80"> | [Hyperlactation](Defs/GeneDefs/GeneDefs_Hyperlactation.xml) | Female carriers of this gene produce large amounts of breast milk, and lactate even when not pregnant or breastfeeding. This gene is inactive on males. |
+| <img src="Docs/Images/Genes/Endo/XylGender_UsuallyFemale.png" alt="Usually female" width="80" height="80"> | [Usually female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are mostly female.<br><br>This gene has no effect unless it is a germline gene. |
+| <img src="Docs/Images/Genes/Endo/XylHerbivoreStomach.png" alt="Herbivore stomach" width="80" height="80"> | [Herbivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylEars_Cow.png" alt="Cow ears" width="60" height="60"> | [Cow ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylEars_Cow.png" alt="Cow ears" width="80" height="80"> | [Cow ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
 **Other genes and appearance**
 
@@ -68,18 +68,18 @@ According to chyrr myth, a blind woman named Marah came across an injured strang
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylSonicWave.png" alt="Sonic wave" width="60" height="60"> | [Sonic wave](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby. |
-| <img src="Docs/Images/Genes/Endo/XylBatWings.png" alt="Bat wings" width="60" height="60"> | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight. |
-| <img src="Docs/Images/Genes/Endo/XylTorpor.png" alt="Torpor" width="60" height="60"> | [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This will impair their capabilities and eventually cause unconsciousness. It also reduces food consumption and slows the progression of hypothermia and starvation. |
-| <img src="Docs/Images/Genes/Endo/XylNocturnal.png" alt="Nocturnal" width="60" height="60"> | [Nocturnal](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are naturally active at night. |
-| <img src="Docs/Images/Genes/Endo/XylKeenEars.png" alt="Keen ears" width="60" height="60"> | [Keen ears](Defs/GeneDefs/GeneDefs_Senses.xml) | Carriers of this gene have improved hearing. |
-| <img src="Docs/Images/Genes/Endo/XylEcholocation.png" alt="Echolocation" width="60" height="60"> | [Echolocation](Defs/GeneDefs/GeneDefs_Senses.xml) | Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes. |
+| <img src="Docs/Images/Genes/Endo/XylSonicWave.png" alt="Sonic wave" width="80" height="80"> | [Sonic wave](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers of this gene are able to release a wave of high-intensity ultrasonic noise and psychic energy at a target. The noise will stun any non-mechanoid creature nearby. |
+| <img src="Docs/Images/Genes/Endo/XylBatWings.png" alt="Bat wings" width="80" height="80"> | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight. |
+| <img src="Docs/Images/Genes/Endo/XylTorpor.png" alt="Torpor" width="80" height="80"> | [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This will impair their capabilities and eventually cause unconsciousness. It also reduces food consumption and slows the progression of hypothermia and starvation. |
+| <img src="Docs/Images/Genes/Endo/XylNocturnal.png" alt="Nocturnal" width="80" height="80"> | [Nocturnal](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are naturally active at night. |
+| <img src="Docs/Images/Genes/Endo/XylKeenEars.png" alt="Keen ears" width="80" height="80"> | [Keen ears](Defs/GeneDefs/GeneDefs_Senses.xml) | Carriers of this gene have improved hearing. |
+| <img src="Docs/Images/Genes/Endo/XylEcholocation.png" alt="Echolocation" width="80" height="80"> | [Echolocation](Defs/GeneDefs/GeneDefs_Senses.xml) | Carriers of this gene can use high-frequency sound waves to "see" with their ears instead of their eyes. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylEars_SmallPointed.png" alt="Small pointed ears" width="60" height="60"> | [Small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylEars_SmallPointed.png" alt="Small pointed ears" width="80" height="80"> | [Small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
 **Other genes and appearance**
 
@@ -101,18 +101,18 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylStoic.png" alt="Stoic" width="60" height="60"> | [Stoic](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are mentally tough and won't break down under stresses that would crack most people. |
-| <img src="Docs/Images/Genes/Endo/XylMelancholy.png" alt="Melancholy" width="60" height="60"> | [Melancholy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break. |
-| <img src="Docs/Images/Genes/Endo/XylDwarf.png" alt="Dwarf" width="60" height="60"> | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed. |
-| <img src="Docs/Images/Genes/Endo/XylFungusEater.png" alt="Fungus eater" width="60" height="60"> | [Fungus eater](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste. |
-| <img src="Docs/Images/Genes/Endo/XylIndustrious.png" alt="Industrious" width="60" height="60"> | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are exceptionally fast workers. |
+| <img src="Docs/Images/Genes/Endo/XylStoic.png" alt="Stoic" width="80" height="80"> | [Stoic](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are mentally tough and won't break down under stresses that would crack most people. |
+| <img src="Docs/Images/Genes/Endo/XylMelancholy.png" alt="Melancholy" width="80" height="80"> | [Melancholy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene always have the tortured artist trait, which gives them a permanent mood penalty but also grants a chance to gain creative inspiration after a mental break. |
+| <img src="Docs/Images/Genes/Endo/XylDwarf.png" alt="Dwarf" width="80" height="80"> | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed. |
+| <img src="Docs/Images/Genes/Endo/XylFungusEater.png" alt="Fungus eater" width="80" height="80"> | [Fungus eater](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste. |
+| <img src="Docs/Images/Genes/Endo/XylIndustrious.png" alt="Industrious" width="80" height="80"> | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are exceptionally fast workers. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylHair_BaldOnly_Male.png" alt="Bald males" width="60" height="60"> | [Bald males](Defs/GeneDefs/GeneDefs_Hair.xml) |
-| <img src="Docs/Images/Genes/Endo/XylEars_SmallPointed.png" alt="Small pointed ears" width="60" height="60"> | [Small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHair_BaldOnly_Male.png" alt="Bald males" width="80" height="80"> | [Bald males](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Endo/XylEars_SmallPointed.png" alt="Small pointed ears" width="80" height="80"> | [Small pointed ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
 **Other genes and appearance**
 
@@ -134,17 +134,17 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylPsycast_Beckon.png" alt="Beckon" width="60" height="60"> | [Beckon](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the beckon psycast, and can use it without a psylink.<br><br>Psychically command the target to approach the caster. |
-| <img src="Docs/Images/Genes/Endo/XylPsycast_Focus.png" alt="Focus" width="60" height="60"> | [Focus](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the focus psycast, and can use it without a psylink.<br><br>Psychically focus the target's mind, boosting their sight, hearing and moving capacities. |
-| <img src="Docs/Images/Genes/Endo/XylScaleskin.png" alt="Scaleskin" width="60" height="60"> | [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks. |
-| <img src="Docs/Images/Genes/Endo/XylDrugSensitive.png" alt="Drug sensitive" width="60" height="60"> | [Drug sensitive](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene are easily affected by drugs. Effects from a single dose last longer, they gain tolerance faster, and they are more likely to become addicted. |
-| <img src="Docs/Images/Genes/Endo/XylAquatic.png" alt="Aquatic" width="60" height="60"> | [Aquatic](Defs/GeneDefs/GeneDefs_Needs.xml) | Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long. |
+| <img src="Docs/Images/Genes/Endo/XylPsycast_Beckon.png" alt="Beckon" width="80" height="80"> | [Beckon](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the beckon psycast, and can use it without a psylink.<br><br>Psychically command the target to approach the caster. |
+| <img src="Docs/Images/Genes/Endo/XylPsycast_Focus.png" alt="Focus" width="80" height="80"> | [Focus](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the focus psycast, and can use it without a psylink.<br><br>Psychically focus the target's mind, boosting their sight, hearing and moving capacities. |
+| <img src="Docs/Images/Genes/Endo/XylScaleskin.png" alt="Scaleskin" width="80" height="80"> | [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks. |
+| <img src="Docs/Images/Genes/Endo/XylDrugSensitive.png" alt="Drug sensitive" width="80" height="80"> | [Drug sensitive](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene are easily affected by drugs. Effects from a single dose last longer, they gain tolerance faster, and they are more likely to become addicted. |
+| <img src="Docs/Images/Genes/Endo/XylAquatic.png" alt="Aquatic" width="80" height="80"> | [Aquatic](Defs/GeneDefs/GeneDefs_Needs.xml) | Carriers of this gene have a need to periodically soak in water, and will become unhappy if they stay dry for too long. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylEars_Fin.png" alt="Fin ears" width="60" height="60"> | [Fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylEars_Fin.png" alt="Fin ears" width="80" height="80"> | [Fin ears](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
 **Other genes and appearance**
 
@@ -166,20 +166,20 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Xeno/XylRockToss.png" alt="Rock toss" width="60" height="60"> | [Rock toss](Defs/GeneDefs/GeneDefs_Abilities.xml) | The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands. |
-| <img src="Docs/Images/Genes/Xeno/XylLithoid.png" alt="Lithoid" width="60" height="60"> | [Lithoid](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on baseliners, and instead must use specialized drugs designed for lithoids. |
-| <img src="Docs/Images/Genes/Xeno/XylMineralizedSkin.png" alt="Rockskin" width="60" height="60"> | [Rockskin](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks. The inflexible skin reduces movement speed. |
-| <img src="Docs/Images/Genes/Xeno/XylPetrification.png" alt="Petrification" width="60" height="60"> | [Petrification](Defs/GeneDefs/GeneDefs_Petrification.xml) | Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically. |
-| <img src="Docs/Images/Genes/Xeno/XylLearning_Focused.png" alt="Focused" width="60" height="60"> | [Focused](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in. |
-| <img src="Docs/Images/Genes/Xeno/XylGiant.png" alt="Giant" width="60" height="60"> | [Giant](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene are exceptionally large. They can take more damage, carry more, and are more resistant to drugs and toxins, but are also easier to hit with ranged weapons. |
-| <img src="Docs/Images/Genes/Xeno/XylJoyless.png" alt="Joyless" width="60" height="60"> | [Joyless](Defs/GeneDefs/GeneDefs_Needs.xml) | Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. |
-| <img src="Docs/Images/Genes/Xeno/XylSuperSpecialist.png" alt="Super-specialist" width="60" height="60"> | [Super-specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill. |
+| <img src="Docs/Images/Genes/Xeno/XylRockToss.png" alt="Rock toss" width="80" height="80"> | [Rock toss](Defs/GeneDefs/GeneDefs_Abilities.xml) | The carrier can pick up a rock chunk in combat and toss it. It will land near a targeted location, damaging everything in a radius around where it lands. |
+| <img src="Docs/Images/Genes/Xeno/XylLithoid.png" alt="Lithoid" width="80" height="80"> | [Lithoid](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene have a unique biochemistry that incorporates carbon-silicates. They are completely unaffected by most drugs that work on baseliners, and instead must use specialized drugs designed for lithoids. |
+| <img src="Docs/Images/Genes/Xeno/XylMineralizedSkin.png" alt="Rockskin" width="80" height="80"> | [Rockskin](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks. The inflexible skin reduces movement speed. |
+| <img src="Docs/Images/Genes/Xeno/XylPetrification.png" alt="Petrification" width="80" height="80"> | [Petrification](Defs/GeneDefs/GeneDefs_Petrification.xml) | Carriers of this gene have a chance to develop a disease named petrification. Petrification slowly replaces tissues throughout the body with stone. The disease is incurable, but progress can be slowed with medical treatment, and the affected tissues can be removed surgically. |
+| <img src="Docs/Images/Genes/Xeno/XylLearning_Focused.png" alt="Focused" width="80" height="80"> | [Focused](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene care deeply about subjects they are interested in. They learn faster for skills they have a burning passion in, but much slower at skills they have no passion in. |
+| <img src="Docs/Images/Genes/Xeno/XylGiant.png" alt="Giant" width="80" height="80"> | [Giant](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene are exceptionally large. They can take more damage, carry more, and are more resistant to drugs and toxins, but are also easier to hit with ranged weapons. |
+| <img src="Docs/Images/Genes/Xeno/XylJoyless.png" alt="Joyless" width="80" height="80"> | [Joyless](Defs/GeneDefs/GeneDefs_Needs.xml) | Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it. |
+| <img src="Docs/Images/Genes/Xeno/XylSuperSpecialist.png" alt="Super-specialist" width="80" height="80"> | [Super-specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Xeno/XylHair_BaldOnly_Male.png" alt="Bald males" width="60" height="60"> | [Bald males](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Xeno/XylHair_BaldOnly_Male.png" alt="Bald males" width="80" height="80"> | [Bald males](Defs/GeneDefs/GeneDefs_Hair.xml) |
 
 **Other genes and appearance**
 
@@ -203,19 +203,19 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylToxicBurst.png" alt="Toxic burst" width="60" height="60"> | [Toxic burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally. |
-| <img src="Docs/Images/Genes/Endo/XylBioRejection.png" alt="Bio-rejection" width="60" height="60"> | [Bio-rejection](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed. |
-| <img src="Docs/Images/Genes/Endo/XylInsectPheromones.png" alt="Insect pheromones" width="60" height="60"> | [Insect pheromones](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene produce special pheromones which prevent wild insects from attacking them. This protection is briefly disabled if their faction provokes the insects. |
-| <img src="Docs/Images/Genes/Endo/XylDrugResistant.png" alt="Drug resistant" width="60" height="60"> | [Drug resistant](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene are less affected by drugs. Effects from a single dose wear off faster, they gain tolerance slower, and they are less likely to become addicted. |
-| <img src="Docs/Images/Genes/Endo/XylGeneticAtavism.png" alt="Genetic atavism" width="60" height="60"> | [Genetic atavism](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Carriers of this gene have an unstable genome that may have random extra genes. |
+| <img src="Docs/Images/Genes/Endo/XylToxicBurst.png" alt="Toxic burst" width="80" height="80"> | [Toxic burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to release a cloud of tox gas around them from a special gland located near their anus. The gas affects the user normally. |
+| <img src="Docs/Images/Genes/Endo/XylBioRejection.png" alt="Bio-rejection" width="80" height="80"> | [Bio-rejection](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have a severe allergic reaction to any sort of artificial implant or body part. They will suffer continual pain until the implant or part is removed. |
+| <img src="Docs/Images/Genes/Endo/XylInsectPheromones.png" alt="Insect pheromones" width="80" height="80"> | [Insect pheromones](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene produce special pheromones which prevent wild insects from attacking them. This protection is briefly disabled if their faction provokes the insects. |
+| <img src="Docs/Images/Genes/Endo/XylDrugResistant.png" alt="Drug resistant" width="80" height="80"> | [Drug resistant](Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene are less affected by drugs. Effects from a single dose wear off faster, they gain tolerance slower, and they are less likely to become addicted. |
+| <img src="Docs/Images/Genes/Endo/XylGeneticAtavism.png" alt="Genetic atavism" width="80" height="80"> | [Genetic atavism](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Carriers of this gene have an unstable genome that may have random extra genes. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylHead_Trog.png" alt="Warped head" width="60" height="60"> | [Warped head](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="60" height="60"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_Olive.png" alt="Olive skin" width="60" height="60"> | [Olive skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHead_Trog.png" alt="Warped head" width="80" height="80"> | [Warped head](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_Olive.png" alt="Olive skin" width="80" height="80"> | [Olive skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 **Other genes and appearance**
 
@@ -237,19 +237,19 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylFeralRage.png" alt="Feral rage" width="60" height="60"> | [Feral rage](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%). |
-| <img src="Docs/Images/Genes/Endo/XylMoody.png" alt="Moody" width="60" height="60"> | [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene have a volatile emotional state. They randomly get good and bad moods. |
-| <img src="Docs/Images/Genes/Endo/XylFastReflexes.png" alt="Fast reflexes" width="60" height="60"> | [Fast reflexes](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps. |
-| <img src="Docs/Images/Genes/Endo/XylRetractableClaws.png" alt="Retractable claws" width="60" height="60"> | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have retractable claws that function as weapons. |
-| <img src="Docs/Images/Genes/Endo/XylCarnivoreStomach.png" alt="Carnivore stomach" width="60" height="60"> | [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat. |
-| <img src="Docs/Images/Genes/Endo/XylMeatDependence.png" alt="Meat dependence" width="60" height="60"> | [Meat dependence](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death. |
+| <img src="Docs/Images/Genes/Endo/XylFeralRage.png" alt="Feral rage" width="80" height="80"> | [Feral rage](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%). |
+| <img src="Docs/Images/Genes/Endo/XylMoody.png" alt="Moody" width="80" height="80"> | [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene have a volatile emotional state. They randomly get good and bad moods. |
+| <img src="Docs/Images/Genes/Endo/XylFastReflexes.png" alt="Fast reflexes" width="80" height="80"> | [Fast reflexes](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps. |
+| <img src="Docs/Images/Genes/Endo/XylRetractableClaws.png" alt="Retractable claws" width="80" height="80"> | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have retractable claws that function as weapons. |
+| <img src="Docs/Images/Genes/Endo/XylCarnivoreStomach.png" alt="Carnivore stomach" width="80" height="80"> | [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat. |
+| <img src="Docs/Images/Genes/Endo/XylMeatDependence.png" alt="Meat dependence" width="80" height="80"> | [Meat dependence](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylEyes_Yellow.png" alt="Yellow eyes" width="60" height="60"> | [Yellow eyes](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
-| <img src="Docs/Images/Genes/Endo/XylFacialStripes.png" alt="Facial stripes" width="60" height="60"> | [Facial stripes](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylEyes_Yellow.png" alt="Yellow eyes" width="80" height="80"> | [Yellow eyes](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylFacialStripes.png" alt="Facial stripes" width="80" height="80"> | [Facial stripes](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
 
 **Other genes and appearance**
 
@@ -271,18 +271,18 @@ Even the most colossal spaceborn habitat can eventually break down due to years 
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylPlanetSickness.png" alt="Planet sickness" width="60" height="60"> | [Planet sickness](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are prone to bouts of nausea and vomiting when on a planet's surface. |
-| <img src="Docs/Images/Genes/Endo/XylEmergencyReserves.png" alt="Emergency reserves" width="60" height="60"> | [Emergency reserves](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage. |
-| <img src="Docs/Images/Genes/Endo/XylTelescopicVision.png" alt="Telescopic vision" width="60" height="60"> | [Telescopic vision](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene can see exceptionally well at a distance. Their shooting accuracy at long ranges is increased. |
-| <img src="Docs/Images/Genes/Endo/XylTechAffinity.png" alt="Tech affinity" width="60" height="60"> | [Tech affinity](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are naturally adept with advanced technology. |
+| <img src="Docs/Images/Genes/Endo/XylPlanetSickness.png" alt="Planet sickness" width="80" height="80"> | [Planet sickness](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are prone to bouts of nausea and vomiting when on a planet's surface. |
+| <img src="Docs/Images/Genes/Endo/XylEmergencyReserves.png" alt="Emergency reserves" width="80" height="80"> | [Emergency reserves](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene store extra oxygen and special proteins in their bone marrow. When the carrier is exposed to extreme heat, cold, toxins, or vacuum, these reserves temporarily flood the body, protecting tissues from damage. |
+| <img src="Docs/Images/Genes/Endo/XylTelescopicVision.png" alt="Telescopic vision" width="80" height="80"> | [Telescopic vision](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene can see exceptionally well at a distance. Their shooting accuracy at long ranges is increased. |
+| <img src="Docs/Images/Genes/Endo/XylTechAffinity.png" alt="Tech affinity" width="80" height="80"> | [Tech affinity](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are naturally adept with advanced technology. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylForeheadMark.png" alt="Forehead mark" width="60" height="60"> | [Forehead mark](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkSilver.png" alt="Dark silver skin" width="60" height="60"> | [Dark silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_LightSilver.png" alt="Light silver skin" width="60" height="60"> | [Light silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylForeheadMark.png" alt="Forehead mark" width="80" height="80"> | [Forehead mark](Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkSilver.png" alt="Dark silver skin" width="80" height="80"> | [Dark silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_LightSilver.png" alt="Light silver skin" width="80" height="80"> | [Light silver skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 **Other genes and appearance**
 
@@ -300,10 +300,10 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylNose_Beaver.png" alt="Beaver teeth" width="60" height="60"> | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have strong, chisel-shaped teeth. They cut trees twice as fast, and their bites deal twice as much damage. |
-| <img src="Docs/Images/Genes/Endo/XylTail_Beaver.png" alt="Beaver tail" width="60" height="60"> | [Beaver tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver that helps with temperature regulation. |
-| <img src="Docs/Images/Genes/Endo/XylDwarf.png" alt="Dwarf" width="60" height="60"> | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed. |
-| <img src="Docs/Images/Genes/Endo/XylIndustrious.png" alt="Industrious" width="60" height="60"> | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are exceptionally fast workers. |
+| <img src="Docs/Images/Genes/Endo/XylNose_Beaver.png" alt="Beaver teeth" width="80" height="80"> | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have strong, chisel-shaped teeth. They cut trees twice as fast, and their bites deal twice as much damage. |
+| <img src="Docs/Images/Genes/Endo/XylTail_Beaver.png" alt="Beaver tail" width="80" height="80"> | [Beaver tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver that helps with temperature regulation. |
+| <img src="Docs/Images/Genes/Endo/XylDwarf.png" alt="Dwarf" width="80" height="80"> | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed. |
+| <img src="Docs/Images/Genes/Endo/XylIndustrious.png" alt="Industrious" width="80" height="80"> | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are exceptionally fast workers. |
 
 **Other genes and appearance**
 
@@ -321,22 +321,22 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylTorpor.png" alt="Torpor" width="60" height="60"> | [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This will impair their capabilities and eventually cause unconsciousness. It also reduces food consumption and slows the progression of hypothermia and starvation. |
-| <img src="Docs/Images/Genes/Endo/XylLargeHorns.png" alt="Large horns" width="60" height="60"> | [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have large horns that function as a weapon. |
-| <img src="Docs/Images/Genes/Endo/XylRetractableClaws.png" alt="Retractable claws" width="60" height="60"> | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have retractable claws that function as weapons. |
-| <img src="Docs/Images/Genes/Endo/XylCarnivoreStomach.png" alt="Carnivore stomach" width="60" height="60"> | [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat. |
-| <img src="Docs/Images/Genes/Endo/XylScaleskin.png" alt="Scaleskin" width="60" height="60"> | [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks. |
-| <img src="Docs/Images/Genes/Endo/XylGreedy.png" alt="Greedy" width="60" height="60"> | [Greedy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have an instinctive desire for material possessions. They get a mood penalty if they don't have an impressive bedroom. |
-| <img src="Docs/Images/Genes/Endo/XylNoEmpathy.png" alt="No empathy" width="60" height="60"> | [No empathy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene lack empathy. They aren't affected by the suffering of others. |
-| <img src="Docs/Images/Genes/Endo/XylTail_Reptile.png" alt="Lizard tail" width="60" height="60"> | [Lizard tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, heavy tail that improves balance and mobility. |
-| <img src="Docs/Images/Genes/Endo/XylScalebornLineage.png" alt="Scaleborn lineage" width="60" height="60"> | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
+| <img src="Docs/Images/Genes/Endo/XylTorpor.png" alt="Torpor" width="80" height="80"> | [Torpor](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | The body of a carrier of this gene automatically goes into hibernation in cold temperatures. This will impair their capabilities and eventually cause unconsciousness. It also reduces food consumption and slows the progression of hypothermia and starvation. |
+| <img src="Docs/Images/Genes/Endo/XylLargeHorns.png" alt="Large horns" width="80" height="80"> | [Large horns](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have large horns that function as a weapon. |
+| <img src="Docs/Images/Genes/Endo/XylRetractableClaws.png" alt="Retractable claws" width="80" height="80"> | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have retractable claws that function as weapons. |
+| <img src="Docs/Images/Genes/Endo/XylCarnivoreStomach.png" alt="Carnivore stomach" width="80" height="80"> | [Carnivore stomach](Defs/GeneDefs/GeneDefs_Diet.xml) | Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat. |
+| <img src="Docs/Images/Genes/Endo/XylScaleskin.png" alt="Scaleskin" width="80" height="80"> | [Scaleskin](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks. |
+| <img src="Docs/Images/Genes/Endo/XylGreedy.png" alt="Greedy" width="80" height="80"> | [Greedy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have an instinctive desire for material possessions. They get a mood penalty if they don't have an impressive bedroom. |
+| <img src="Docs/Images/Genes/Endo/XylNoEmpathy.png" alt="No empathy" width="80" height="80"> | [No empathy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene lack empathy. They aren't affected by the suffering of others. |
+| <img src="Docs/Images/Genes/Endo/XylTail_Reptile.png" alt="Lizard tail" width="80" height="80"> | [Lizard tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, heavy tail that improves balance and mobility. |
+| <img src="Docs/Images/Genes/Endo/XylScalebornLineage.png" alt="Scaleborn lineage" width="80" height="80"> | [Scaleborn lineage](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Adds one of the five lineage packages below. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="60" height="60"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="60" height="60"> | [Dark blue skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="80" height="80"> | [Dark blue skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 **Other genes and appearance**
 
@@ -358,8 +358,8 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylEMPBlast.png" alt="EMP burst" width="60" height="60"> | [EMP burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices. |
-| <img src="Docs/Images/Genes/Endo/XylOilSpray.png" alt="Oil spray" width="60" height="60"> | [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have glands in their neck that can be used to spray a sticky oil that blinds opponents and leaves flammable puddles. |
+| <img src="Docs/Images/Genes/Endo/XylEMPBlast.png" alt="EMP burst" width="80" height="80"> | [EMP burst](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices. |
+| <img src="Docs/Images/Genes/Endo/XylOilSpray.png" alt="Oil spray" width="80" height="80"> | [Oil spray](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have glands in their neck that can be used to spray a sticky oil that blinds opponents and leaves flammable puddles. |
 
 ## Succuboid
 
@@ -377,20 +377,20 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylPsycast_WordOfLove.png" alt="Word of Love" width="60" height="60"> | [Word of Love](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the word of love psycast, and can use it without a psylink.<br><br>Speak about someone's romantic virtues while using psychic suggestion to implant romantic desire in the listener. For days afterward, the listener will feel psychically-induced romantic attraction towards the other person. This greatly increases opinion and makes them much more likely to attempt romantic advances and marriage proposals if they get the chance. This power can be used to connect two other people, induce love for the caster, or force oneself to love another. |
-| <img src="Docs/Images/Genes/Endo/XylTail_Demon.png" alt="Pointed tail" width="60" height="60"> | [Pointed tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a narrow, pointed tail that increases the character's impact in social interactions. |
-| <img src="Docs/Images/Genes/Endo/XylBatWings.png" alt="Bat wings" width="60" height="60"> | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight. |
-| <img src="Docs/Images/Genes/Endo/XylGender_AlwaysFemale.png" alt="Always female" width="60" height="60"> | [Always female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always female.<br><br>This gene has no effect unless it is a germline gene. |
-| <img src="Docs/Images/Genes/Endo/XylStrongGenes.png" alt="Strong genes" width="60" height="60"> | [Strong genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's endogenes unless the other parent also has this gene. |
-| <img src="Docs/Images/Genes/Endo/XylLoveEuphoria.png" alt="Love euphoria" width="60" height="60"> | [Love euphoria](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a mood bonus but rewire the partner's brain causing an immediate and long-lasting addiction. |
-| <img src="Docs/Images/Genes/Endo/XylShameless.png" alt="Shameless" width="60" height="60"> | [Shameless](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are never ashamed by nudity, and are much happier when not wearing clothes. |
-| <img src="Docs/Images/Genes/Endo/XylLazy.png" alt="Lazy" width="60" height="60"> | [Lazy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are slow workers. |
+| <img src="Docs/Images/Genes/Endo/XylPsycast_WordOfLove.png" alt="Word of Love" width="80" height="80"> | [Word of Love](Defs/GeneDefs/GeneTemplateDefs_Psycasts.xml) | The carrier automatically learns the word of love psycast, and can use it without a psylink.<br><br>Speak about someone's romantic virtues while using psychic suggestion to implant romantic desire in the listener. For days afterward, the listener will feel psychically-induced romantic attraction towards the other person. This greatly increases opinion and makes them much more likely to attempt romantic advances and marriage proposals if they get the chance. This power can be used to connect two other people, induce love for the caster, or force oneself to love another. |
+| <img src="Docs/Images/Genes/Endo/XylTail_Demon.png" alt="Pointed tail" width="80" height="80"> | [Pointed tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a narrow, pointed tail that increases the character's impact in social interactions. |
+| <img src="Docs/Images/Genes/Endo/XylBatWings.png" alt="Bat wings" width="80" height="80"> | [Bat wings](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have bat-like wings, allowing them to fly for short periods. Wearing some heavy torso-covering items will prevent flight. |
+| <img src="Docs/Images/Genes/Endo/XylGender_AlwaysFemale.png" alt="Always female" width="80" height="80"> | [Always female](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always female.<br><br>This gene has no effect unless it is a germline gene. |
+| <img src="Docs/Images/Genes/Endo/XylStrongGenes.png" alt="Strong genes" width="80" height="80"> | [Strong genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's endogenes unless the other parent also has this gene. |
+| <img src="Docs/Images/Genes/Endo/XylLoveEuphoria.png" alt="Love euphoria" width="80" height="80"> | [Love euphoria](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a mood bonus but rewire the partner's brain causing an immediate and long-lasting addiction. |
+| <img src="Docs/Images/Genes/Endo/XylShameless.png" alt="Shameless" width="80" height="80"> | [Shameless](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are never ashamed by nudity, and are much happier when not wearing clothes. |
+| <img src="Docs/Images/Genes/Endo/XylLazy.png" alt="Lazy" width="80" height="80"> | [Lazy](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are slow workers. |
 
 **Appearance genes**
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylSkin_Pink.png" alt="Pink skin" width="60" height="60"> | [Pink skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_Pink.png" alt="Pink skin" width="80" height="80"> | [Pink skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 **Other genes and appearance**
 
@@ -406,26 +406,26 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 
 | Icon | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylEvenTemper.png" alt="Even temper" width="60" height="60"> | [Even temper](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have very stable neurochemistry, with less variation between individuals. |
-| <img src="Docs/Images/Genes/Endo/XylGender_AlwaysMale.png" alt="Always male" width="60" height="60"> | [Always male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always male.<br><br>This gene has no effect unless it is a germline gene. |
-| <img src="Docs/Images/Genes/Endo/XylGender_UsuallyMale.png" alt="Usually male" width="60" height="60"> | [Usually male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are mostly male.<br><br>This gene has no effect unless it is a germline gene. |
-| <img src="Docs/Images/Genes/Endo/XylParthenogenetic.png" alt="Parthenogenic" width="60" height="60"> | [Parthenogenic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Female carriers of this gene can become spontaneously pregnant without a father. The chance of becoming pregnant this way isn't affected by genetic fertility factors. |
-| <img src="Docs/Images/Genes/Endo/XylPrecognition.png" alt="Precognition" width="60" height="60"> | [Precognition](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene can see a short distance into the future, giving the ability to dodge both melee and ranged attacks. The effect scales with psychic sensitivity. |
-| <img src="Docs/Images/Genes/Endo/XylSpecialist.png" alt="Specialist" width="60" height="60"> | [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level. |
-| <img src="Docs/Images/Genes/Endo/XylTail_Squirrel.png" alt="Squirrel tail" width="60" height="60"> | [Squirrel tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, fluffy tail that keeps them warm and increases the opinion of other characters towards them. |
-| <img src="Docs/Images/Genes/Endo/XylWeakGenes.png" alt="Weak genes" width="60" height="60"> | [Weak genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the other parent's endogenes unless the other parent also has this gene. |
-| <img src="Docs/Images/Genes/Endo/XylWoundHealing_UltraFast.png" alt="Ultra-fast wound healing" width="60" height="60"> | [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss. |
+| <img src="Docs/Images/Genes/Endo/XylEvenTemper.png" alt="Even temper" width="80" height="80"> | [Even temper](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have very stable neurochemistry, with less variation between individuals. |
+| <img src="Docs/Images/Genes/Endo/XylGender_AlwaysMale.png" alt="Always male" width="80" height="80"> | [Always male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always male.<br><br>This gene has no effect unless it is a germline gene. |
+| <img src="Docs/Images/Genes/Endo/XylGender_UsuallyMale.png" alt="Usually male" width="80" height="80"> | [Usually male](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are mostly male.<br><br>This gene has no effect unless it is a germline gene. |
+| <img src="Docs/Images/Genes/Endo/XylParthenogenetic.png" alt="Parthenogenic" width="80" height="80"> | [Parthenogenic](Defs/GeneDefs/GeneDefs_Reproduction.xml) | Female carriers of this gene can become spontaneously pregnant without a father. The chance of becoming pregnant this way isn't affected by genetic fertility factors. |
+| <img src="Docs/Images/Genes/Endo/XylPrecognition.png" alt="Precognition" width="80" height="80"> | [Precognition](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene can see a short distance into the future, giving the ability to dodge both melee and ranged attacks. The effect scales with psychic sensitivity. |
+| <img src="Docs/Images/Genes/Endo/XylSpecialist.png" alt="Specialist" width="80" height="80"> | [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level. |
+| <img src="Docs/Images/Genes/Endo/XylTail_Squirrel.png" alt="Squirrel tail" width="80" height="80"> | [Squirrel tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, fluffy tail that keeps them warm and increases the opinion of other characters towards them. |
+| <img src="Docs/Images/Genes/Endo/XylWeakGenes.png" alt="Weak genes" width="80" height="80"> | [Weak genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the other parent's endogenes unless the other parent also has this gene. |
+| <img src="Docs/Images/Genes/Endo/XylWoundHealing_UltraFast.png" alt="Ultra-fast wound healing" width="80" height="80"> | [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss. |
 
 ### Appearance genes
 
 | Icon | Gene |
 | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylHair_BaldOnly_Female.png" alt="Bald females" width="60" height="60"> | [Bald females](Defs/GeneDefs/GeneDefs_Hair.xml) |
-| <img src="Docs/Images/Genes/Endo/XylHair_ShortOnly_Female.png" alt="Short-haired females" width="60" height="60"> | [Short-haired females](Defs/GeneDefs/GeneDefs_Hair.xml) |
-| <img src="Docs/Images/Genes/Endo/XylHair_LongOnly_Female.png" alt="Long-haired females" width="60" height="60"> | [Long-haired females](Defs/GeneDefs/GeneDefs_Hair.xml) |
-| <img src="Docs/Images/Genes/Endo/XylHair_ShortOnly_Male.png" alt="Short-haired males" width="60" height="60"> | [Short-haired males](Defs/GeneDefs/GeneDefs_Hair.xml) |
-| <img src="Docs/Images/Genes/Endo/XylHair_LongOnly_Male.png" alt="Long-haired males" width="60" height="60"> | [Long-haired males](Defs/GeneDefs/GeneDefs_Hair.xml) |
-| <img src="Docs/Images/Genes/Endo/XylSkin_DarkPurple.png" alt="Dark purple skin" width="60" height="60"> | [Dark purple skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHair_BaldOnly_Female.png" alt="Bald females" width="80" height="80"> | [Bald females](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHair_ShortOnly_Female.png" alt="Short-haired females" width="80" height="80"> | [Short-haired females](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHair_LongOnly_Female.png" alt="Long-haired females" width="80" height="80"> | [Long-haired females](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHair_ShortOnly_Male.png" alt="Short-haired males" width="80" height="80"> | [Short-haired males](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Endo/XylHair_LongOnly_Male.png" alt="Long-haired males" width="80" height="80"> | [Long-haired males](Defs/GeneDefs/GeneDefs_Hair.xml) |
+| <img src="Docs/Images/Genes/Endo/XylSkin_DarkPurple.png" alt="Dark purple skin" width="80" height="80"> | [Dark purple skin](Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
 Additional psycast genes are generated from the available abilities. The xenotypes above use Beckon, Focus, and Word of Love.
 
