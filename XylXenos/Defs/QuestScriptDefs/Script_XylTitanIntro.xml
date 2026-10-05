@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <PawnKindDef ParentName="SpaceRefugeeBase">
+    <defName>XylTitanRefugee</defName>
+    <label>titan refugee</label>
+    <apparelMoney>0~1000</apparelMoney>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>12~19</initialResistanceRange>
+    <useFactionXenotypes>false</useFactionXenotypes>
+    <xenotypeSet Inherit="false">
+      <xenotypeChances>
+        <XylTitan>1</XylTitan>
+      </xenotypeChances>
+    </xenotypeSet>
+  </PawnKindDef>
+
+  <QuestScriptDef>
+    <defName>XylTitanIntro</defName>
+    <rootSelectionWeight>0.6</rootSelectionWeight>
+    <rootMinPoints>300</rootMinPoints>
+    <rootEarliestDay>10</rootEarliestDay>
+    <rootIncreasesPopulation>true</rootIncreasesPopulation>
+    <minRefireDays>120</minRefireDays>
+    <expireDaysRange>1</expireDaysRange>
+    <defaultChallengeRating>1</defaultChallengeRating>
+    <questNameRules>
+      <rulesStrings>
+        <li>questName->A Titanic Problem</li>
+      </rulesStrings>
+    </questNameRules>
+    <questDescriptionRules>
+      <rulesStrings>
+        <li>questDescription->A titan named [joiner_nameDef] is calling from orbit. [joiner_pronoun] has stolen a shipment of valuable goods from an orbital factory and wishes to join you at [map_definite]. [joiner_pronoun] will arrive by transport pod, bringing the stolen goods.[joiner_relationInfo]\n\nIf you accept, the factory's overseer AI will provoke a group of mechanoids into attacking your colony [raidDelayTicks_duration] after you accept. The group is composed of:\n\n[raidPawnKinds]\n\n[joiner_nameDef] is too frantic to offer more information.</li>
+      </rulesStrings>
+    </questDescriptionRules>
+    <root Class="QuestNode_Sequence">
+      <nodes>
+        <li Class="QuestNode_GetMap" />
+        <li Class="QuestNode_FactionExists">
+          <faction>Mechanoid</faction>
+          <elseNode Class="QuestNode_CannotRun" />
+        </li>
+        <li Class="QuestNode_Set">
+          <name>enemyFaction</name>
+          <value>Mechanoid</value>
+          <convertTo>RimWorld.Faction</convertTo>
+        </li>
+
+        <li Class="QuestNode_GeneratePawn">
+          <kindDef>XylTitanRefugee</kindDef>
+          <storeAs>joiner</storeAs>
+        </li>
+
+        <!-- Preserve enough atlasite to reach full saturation even at the minimum quest points. -->
+        <li Class="QuestNode_GenerateThing">
+          <def>XylAtlasite</def>
+          <stackCount>$(randInt(12,15))</stackCount>
+          <addToList>cargo</addToList>
+        </li>
+        <li Class="QuestNode_GetMarketValue">
+          <things>$cargo</things>
+          <storeAs>atlasiteValue</storeAs>
+        </li>
+        <li Class="QuestNode_SubScript">
+          <def>Util_GetDefaultRewardValueFromPoints</def>
+        </li>
+        <li Class="QuestNode_Subtract">
+          <value1>$rewardValue</value1>
+          <value2>$atlasiteValue</value2>
+          <storeAs>minorGoodsValue</storeAs>
+        </li>
+        <!-- Skip tiny remainders; the guaranteed atlasite can exceed the early-game item budget. -->
+        <li Class="QuestNode_GreaterOrEqual">
+          <value1>$minorGoodsValue</value1>
+          <value2>150</value2>
+          <node Class="QuestNode_Sequence">
+            <nodes>
+              <li Class="QuestNode_GenerateThingSet">
+                <thingSetMaker>Reward_ItemsStandard</thingSetMaker>
+                <totalMarketValueRange>$minorGoodsValue~$minorGoodsValue</totalMarketValueRange>
+                <qualityGenerator>Reward</qualityGenerator>
+                <storeAs>minorGoods</storeAs>
+              </li>
+              <li Class="QuestNode_AddRangeToList">
+                <name>cargo</name>
+                <value>$minorGoods</value>
+              </li>
+            </nodes>
+          </node>
+        </li>
+
+        <li Class="XylXenos.QuestNode_AddPawnAndItemsReward">
+          <pawn>$joiner</pawn>
+          <items>$cargo</items>
+          <rewardDetailsHidden>true</rewardDetailsHidden>
+          <inSignalChoiceUsed>$inSignal</inSignalChoiceUsed>
+        </li>
+
+        <li Class="QuestNode_AddRangeToList">
+          <name>podContents</name>
+          <value>$cargo</value>
+        </li>
+        <li Class="QuestNode_AddToList">
+          <name>podContents</name>
+          <value>$joiner</value>
+        </li>
+        <li Class="QuestNode_DropPods">
+          <contents>$podContents</contents>
+          <joinPlayer>true</joinPlayer>
+          <useTradeDropSpot>true</useTradeDropSpot>
+          <customLetterLabel TKey="LetterLabelArrival">[joiner_nameDef] arrives</customLetterLabel>
+          <customLetterText TKey="LetterTextArrival">[joiner_nameDef] has arrived with the stolen goods and joined your colony.\n\nThe overseer AI's mechanoids will attack soon.</customLetterText>
+        </li>
+
+        <li Class="QuestNode_Set">
+          <name>raidDelayTicks</name>
+          <value>$(roundToTicksRough(randInt(10000,20000)))</value>
+        </li>
+        <li Class="QuestNode_Delay">
+          <delayTicks>$raidDelayTicks</delayTicks>
+          <node Class="QuestNode_Raid">
+            <arrivalMode>EdgeDrop</arrivalMode>
+            <customLetterLabel TKey="LetterLabelRaid">Mechanoids pursuing [joiner_nameDef]</customLetterLabel>
+            <customLetterText TKey="LetterTextRaid">{BASETEXT}\n\nAn AI has provoked these mechanoids into attacking your colony in retaliation for sheltering [joiner_nameDef].</customLetterText>
+          </node>
+        </li>
+        <!-- Like vanilla chased-joiner quests, finish after sending the raid rather than tracking victory. -->
+        <li Class="QuestNode_Delay">
+          <delayTicks>$($raidDelayTicks+600)</delayTicks>
+          <node Class="QuestNode_End">
+            <outcome>Success</outcome>
+          </node>
+        </li>
+      </nodes>
+    </root>
+  </QuestScriptDef>
+
+</Defs>
