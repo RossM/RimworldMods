@@ -16,6 +16,7 @@
     </statOffsets>
     <renderNodeProperties>
       <li>
+        <debugLabel>BeaverTail</debugLabel>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail</texPath>
         <overrideMeshSize>(1, 1)</overrideMeshSize>
@@ -62,6 +63,7 @@
     </statOffsets>
     <renderNodeProperties>
       <li>
+        <debugLabel>DemonTail</debugLabel>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/DemonTail/DemonTail</texPath>
         <overrideMeshSize>(1, 1)</overrideMeshSize>
@@ -111,6 +113,7 @@
     </customEffectDescriptions>
     <renderNodeProperties>
       <li>
+        <debugLabel>SquirrelTail</debugLabel>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/SquirrelTail/SquirrelTail</texPath>
         <parentTagDef>Body</parentTagDef>
@@ -176,13 +179,54 @@
       <MoveSpeed>0.1</MoveSpeed>
     </statOffsets>
     <renderNodeProperties>
-      <li>
-        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
+        <debugLabel>ReptileTail</debugLabel>
+        <useBodyGraphicScale>true</useBodyGraphicScale>
         <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/ReptileTail/ReptileTail</texPath>
         <parentTagDef>Body</parentTagDef>
         <colorType>Skin</colorType>
         <useRottenColor>true</useRottenColor>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <disallowedGenes>
+          <li>XylScaleskin</li>
+        </disallowedGenes>
+        <visibleFacing>
+          <li>East</li>
+          <li>North</li>
+          <li>West</li>
+          <li>South</li>
+        </visibleFacing>
+        <drawData>
+          <scaleOffsetByBodySize>true</scaleOffsetByBodySize>
+          <defaultData>
+            <layer>-2</layer>
+          </defaultData>
+          <dataNorth>
+            <offset>(0, 0, 0)</offset>
+            <layer>90</layer>
+          </dataNorth>
+          <dataSouth>
+            <offset>(0, 0, 0.2)</offset>
+          </dataSouth>
+          <dataEast>
+            <offset>(-0.5, 0, 0)</offset>
+          </dataEast>
+          <dataWest>
+            <offset>(0.5, 0, 0)</offset>
+          </dataWest>
+        </drawData>
+      </li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
+        <debugLabel>ReptileTail_Scaleskin</debugLabel>
+        <useBodyGraphicScale>true</useBodyGraphicScale>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/ReptileTail/ReptileTail_Scaleskin</texPath>
+        <parentTagDef>Body</parentTagDef>
+        <colorType>Skin</colorType>
+        <useRottenColor>true</useRottenColor>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <requiredGenes>
+          <li>XylScaleskin</li>
+        </requiredGenes>
         <visibleFacing>
           <li>East</li>
           <li>North</li>
