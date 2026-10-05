@@ -270,6 +270,10 @@
           <ComfyTemperatureMax>5</ComfyTemperatureMax>
           <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.1</VacuumResistance>
         </statOffsets>
+        <damageFactors>
+          <Burn>0.8</Burn>
+          <VacuumBurn>0.8</VacuumBurn>
+        </damageFactors>
       </li>
       <li>
         <minSeverity>0.4</minSeverity>
@@ -278,6 +282,10 @@
           <ComfyTemperatureMax>10</ComfyTemperatureMax>
           <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.2</VacuumResistance>
         </statOffsets>
+        <damageFactors>
+          <Burn>0.6</Burn>
+          <VacuumBurn>0.6</VacuumBurn>
+        </damageFactors>
       </li>
       <li>
         <minSeverity>0.6</minSeverity>
@@ -289,6 +297,10 @@
         <statFactors>
           <IncomingDamageFactor>0.9</IncomingDamageFactor>
         </statFactors>
+        <damageFactors>
+          <Burn>0.4</Burn>
+          <VacuumBurn>0.4</VacuumBurn>
+        </damageFactors>
       </li>
       <li>
         <minSeverity>0.8</minSeverity>
@@ -300,6 +312,10 @@
         <statFactors>
           <IncomingDamageFactor>0.7</IncomingDamageFactor>
         </statFactors>
+        <damageFactors>
+          <Burn>0.2</Burn>
+          <VacuumBurn>0.2</VacuumBurn>
+        </damageFactors>
       </li>
       <li>
         <minSeverity>0.99</minSeverity>
@@ -311,6 +327,10 @@
         <statFactors>
           <IncomingDamageFactor>0.5</IncomingDamageFactor>
         </statFactors>
+        <damageFactors>
+          <Burn>0</Burn>
+          <VacuumBurn>0</VacuumBurn>
+        </damageFactors>
       </li>
     </stages>
   </HediffDef>
