@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <PawnKindDef ParentName="SpaceRefugeeBase" MayRequire="Ludeon.RimWorld.Odyssey">
+    <defName>XylZeegeeRefugee</defName>
+    <label>zeegee refugee</label>
+    <apparelMoney>0~1000</apparelMoney>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>12~19</initialResistanceRange>
+    <useFactionXenotypes>false</useFactionXenotypes>
+    <xenotypeSet Inherit="false">
+      <xenotypeChances>
+        <XylZeegee>1</XylZeegee>
+      </xenotypeChances>
+    </xenotypeSet>
+  </PawnKindDef>
+
+  <IncidentDef MayRequire="Ludeon.RimWorld.Odyssey">
+    <defName>XylZeegeePodCrash</defName>
+    <label>zeegee transport pod crash</label>
+    <category>Misc</category>
+    <targetTags>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>IncidentWorker_GiveQuest_Map</workerClass>
+    <questScriptDef>XylZeegeePodCrash</questScriptDef>
+    <baseChance>1.5</baseChance>
+    <minRefireDays>120</minRefireDays>
+    <populationEffect>IncreaseMedium</populationEffect>
+    <requireColonistsPresent>true</requireColonistsPresent>
+    <layerWhitelist>
+      <li>Orbit</li>
+    </layerWhitelist>
+  </IncidentDef>
+
+  <QuestScriptDef MayRequire="Ludeon.RimWorld.Odyssey">
+    <defName>XylZeegeePodCrash</defName>
+    <autoAccept>true</autoAccept>
+    <defaultCharity>true</defaultCharity>
+    <successHistoryEvent MayRequire="Ludeon.RimWorld.Ideology">CharityFulfilled_RefugeePodCrash</successHistoryEvent>
+    <failedOrExpiredHistoryEvent MayRequire="Ludeon.RimWorld.Ideology">CharityRefused_RefugeePodCrash</failedOrExpiredHistoryEvent>
+    <defaultHidden>true</defaultHidden>
+    <sendAvailableLetter>false</sendAvailableLetter>
+    <isRootSpecial>true</isRootSpecial>
+    <questNameRules>
+      <rulesStrings>
+        <li>questName->Transport pod crash</li>
+      </rulesStrings>
+    </questNameRules>
+    <questDescriptionRules>
+      <rulesStrings>
+        <li>questDescription->A transport pod crashes with a zeegee refugee.</li>
+      </rulesStrings>
+    </questDescriptionRules>
+    <everAcceptableInSpace>true</everAcceptableInSpace>
+    <layerWhitelist>
+      <li>Orbit</li>
+    </layerWhitelist>
+    <root Class="QuestNode_Sequence">
+      <nodes>
+        <li Class="QuestNode_GetMap">
+          <canBeSpace>true</canBeSpace>
+          <layerWhitelist>
+            <li>Orbit</li>
+          </layerWhitelist>
+        </li>
+        <li Class="XylXenos.QuestNode_RefugeePodCrash_Space">
+          <kindDef>XylZeegeeRefugee</kindDef>
+          <forceNoGear>true</forceNoGear>
+        </li>
+      </nodes>
+    </root>
+  </QuestScriptDef>
+
+</Defs>
