@@ -230,6 +230,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
     <renderNodeProperties>
       <li>
+        <debugLabel>BatWings</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_Wings</nodeClass>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPaths>
@@ -717,6 +718,7 @@
     <iconColor>(1, 1, 1)</iconColor>
     <renderNodeProperties>
       <li>
+        <debugLabel>BeaverNose</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_AttachmentHeadComplex</nodeClass>
         <workerClass>XylXenos.PawnRenderNodeWorker_HeadAttachment</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverNose</texPath>

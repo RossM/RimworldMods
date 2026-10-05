@@ -11,6 +11,7 @@
     <displayOrderInCategory>72</displayOrderInCategory>
     <renderNodeProperties>
       <li>
+        <debugLabel>CowEars</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CowEars/CowEars</texPath>
@@ -37,6 +38,7 @@
     <displayOrderInCategory>73</displayOrderInCategory>
     <renderNodeProperties>
       <li>
+        <debugLabel>FinEars</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/FinEars/FinEars</texPath>
@@ -66,6 +68,7 @@
     <displayOrderInCategory>71</displayOrderInCategory>
     <renderNodeProperties>
       <li>
+        <debugLabel>SmallPointedEars</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/SmallPointedEars/SmallPointedEars</texPath>
@@ -91,6 +94,7 @@
     <displayOrderInCategory>0.1</displayOrderInCategory>
     <renderNodeProperties>
       <li Class="PawnRenderNodeProperties_Eye">
+        <debugLabel>CatEyes</debugLabel>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Male/CatEyes_Male</texPath>
         <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Female/CatEyes_Female</texPathFemale>
         <color>(240, 195, 47)</color>
@@ -107,6 +111,7 @@
         </drawData>
       </li>
       <li Class="PawnRenderNodeProperties_Eye">
+        <debugLabel>CatEyes</debugLabel>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Male/CatEyes_Male</texPath>
         <texPathFemale>Xyl/Things/Pawn/Humanlike/HeadAttachments/CatEyes/Female/CatEyes_Female</texPathFemale>
         <color>(240, 195, 47)</color>
@@ -157,6 +162,7 @@
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>
+        <debugLabel>FacialStripes</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_HeadPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <parentTagDef>Head</parentTagDef>
@@ -194,6 +200,7 @@
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>
+        <debugLabel>ForeheadMark</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <parentTagDef>Head</parentTagDef>
@@ -229,6 +236,7 @@
     <biostatCpx>0</biostatCpx>
     <renderNodeProperties>
       <li>
+        <debugLabel>Ribs</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_BodyPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_Body</workerClass>
         <parentTagDef>Body</parentTagDef>
