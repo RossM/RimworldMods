@@ -272,7 +272,7 @@
         </statOffsets>
         <damageFactors>
           <Burn>0.8</Burn>
-          <VacuumBurn>0.8</VacuumBurn>
+          <VacuumBurn MayRequire="Ludeon.RimWorld.Odyssey">0.8</VacuumBurn>
         </damageFactors>
       </li>
       <li>
@@ -284,7 +284,7 @@
         </statOffsets>
         <damageFactors>
           <Burn>0.6</Burn>
-          <VacuumBurn>0.6</VacuumBurn>
+          <VacuumBurn MayRequire="Ludeon.RimWorld.Odyssey">0.6</VacuumBurn>
         </damageFactors>
       </li>
       <li>
@@ -299,7 +299,7 @@
         </statFactors>
         <damageFactors>
           <Burn>0.4</Burn>
-          <VacuumBurn>0.4</VacuumBurn>
+          <VacuumBurn MayRequire="Ludeon.RimWorld.Odyssey">0.4</VacuumBurn>
         </damageFactors>
       </li>
       <li>
@@ -314,7 +314,7 @@
         </statFactors>
         <damageFactors>
           <Burn>0.2</Burn>
-          <VacuumBurn>0.2</VacuumBurn>
+          <VacuumBurn MayRequire="Ludeon.RimWorld.Odyssey">0.2</VacuumBurn>
         </damageFactors>
       </li>
       <li>
@@ -329,7 +329,7 @@
         </statFactors>
         <damageFactors>
           <Burn>0</Burn>
-          <VacuumBurn>0</VacuumBurn>
+          <VacuumBurn MayRequire="Ludeon.RimWorld.Odyssey">0</VacuumBurn>
         </damageFactors>
       </li>
     </stages>
