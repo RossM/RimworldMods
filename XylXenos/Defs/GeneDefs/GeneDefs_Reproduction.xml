@@ -117,7 +117,7 @@
   <GeneDef>
     <defName>XylStrongGenes</defName>
     <label>strong genes</label>
-    <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the carrier's endogenes unless the other parent also has this gene.</description>
+    <description>When a carrier of this gene has a baby with a partner without this gene, the baby will inherit all of the carrier's endogenes and none of the partner's.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -140,7 +140,7 @@
   <GeneDef>
     <defName>XylWeakGenes</defName>
     <label>weak genes</label>
-    <description>When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the other parent's endogenes unless the other parent also has this gene.</description>
+    <description>When a carrier of this gene has a baby with a partner without this gene, the baby will inherit all of the partner's endogenes and none of the carrier's.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
