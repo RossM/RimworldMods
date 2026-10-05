@@ -7,27 +7,27 @@
     <tips>
 
       <li TKey="XylBossapsPrisoners">Bossaps prisoners can be milked. What you do with this information is up to you.</li>
-      <li TKey="XylBossapsFriendlyFire">An enraged bossaps will attack anyone who hurts them, even allies. In that situation my best advice is to run.</li>
-      <li TKey="XylAllowMilking">You can configure how frequently a bossaps is milked by right-clicking the "Allow milking" button.</li>
-      <li TKey="XylSeeingRedDuration">The rage from the seeing red gene disappears after a short time, but the duration refereshes every time the character takes damage.</li>
-      <li TKey="XylSeeingRedArmor">The seeing red gene can trigger even if the attack is fully deflected by armor.</li>
+      <li TKey="XylBossapsFriendlyFire">An enraged bossaps will attack anyone who hurts them, even allies. In that situation, my best advice is to run.</li>
+      <li TKey="XylAllowMilking">You can set how often a bossaps is milked by right-clicking the "Allow milking" button.</li>
+      <li TKey="XylSeeingRedDuration">The rage from the seeing red gene fades after a short time, but its duration resets every time the character takes damage.</li>
+      <li TKey="XylSeeingRedArmor">The seeing red gene can trigger even if an attack is fully deflected by armor.</li>
 
-      <li TKey="XylChyrrEcholocationSmoke">A blind, or blindfolded, character with the echolocation gene isn't affected by smoke when shooting.</li>
-      <li TKey="XylChyrrEcholocationBlindness">Characters with the echolocation gene have a small chance to be born congenitally blind.</li>
+      <li TKey="XylChyrrEcholocationSmoke">A blind or blindfolded character with the echolocation gene isn't affected by smoke when shooting.</li>
+      <li TKey="XylChyrrEcholocationBlindness">Characters with the echolocation gene have a small chance of being born blind.</li>
       <li TKey="XylChyrrSonicWaveFriendlyFire">Sonic wave won't affect the character using it, but it will affect allies.</li>
 
       <li TKey="XylFoodPoisoning">The carnivore stomach and herbivore stomach genes prevent food poisoning from raw meat and raw plants, respectively.</li>
       
-      <li TKey="XylNixieShower">Characters with the Aquatic gene can build showers and use them to stay wet.</li>
+      <li TKey="XylNixieShower">Characters with the aquatic gene can build showers and use them to stay wet.</li>
       <li TKey="XylNixieSpeed">Nixies move faster than almost anything else in the water. You can use this to your advantage in combat.</li>
-      <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 31C/88F.</li>
+      <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 31°C (88°F).</li>
 
       <li TKey="XylTitanAptitude">Titans get a random skill aptitude in construction, mining, cooking, plants, animals, crafting, artistic, or medical.</li>
-      <li TKey="XylTitanAtlasiteRequired">It takes ten doses of atlasite, taken once every three days, to reach maximum saturation.</li>
-      <li TKey="XylTitanCrystalBrainDamage">Built-up tolerance to crystal can cause chemical damage to the brain.</li>
+      <li TKey="XylTitanAtlasiteRequired">Reaching maximum atlasite saturation takes ten doses, with one dose taken every three days.</li>
+      <li TKey="XylTitanCrystalBrainDamage">Building up a tolerance to crystal can cause chemical brain damage.</li>
       
-      <li TKey="XylTrogPets">The insect pheromones gene will also protect colony animals.</li>
-      <li TKey="XylTrogInsects">Trogs can make use of wild insects in multiple ways. You can try taming them, or just lure enemies close to a hive.</li>
+      <li TKey="XylTrogPets">The insect pheromones gene also protects colony animals.</li>
+      <li TKey="XylTrogInsects">Trogs can make use of wild insects in multiple ways. Try taming them, or just luring enemies close to a hive.</li>
 
       <li TKey="XylMeatDeficiency">Warcats' raw meat requirement is cumulative over time. Fixing a deficiency requires making up for all the raw meat that was missed.</li>
       <li TKey="XylHuntingVermin">Meat-deficient warcats may kill and eat wild animals to fulfil their need.</li>
