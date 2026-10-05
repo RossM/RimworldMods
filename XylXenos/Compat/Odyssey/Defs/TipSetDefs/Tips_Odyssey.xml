@@ -6,7 +6,7 @@
     <defName>XylXenosTips_Odyssey</defName>
     <tips>
 
-      <li TKey="XylTitanVacuum">A titan fully saturated with atlasite can work in vacuum without protective gear.</li>
+      <li TKey="XylTitanVacuum">A titan fully saturated with atlasite can work in a vacuum without protective gear.</li>
 
     </tips>
   </TipSetDef>
