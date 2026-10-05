@@ -434,7 +434,7 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 | <img src="Docs/Images/Genes/Endo/XylSpecialist.png" alt="Specialist" width="80" height="80"> | [Specialist](Defs/GeneDefs/GeneDefs_BonusGenes.xml) | The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level. |
 | <img src="Docs/Images/Genes/Endo/XylTail_Squirrel.png" alt="Squirrel tail" width="80" height="80"> | [Squirrel tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, fluffy tail that keeps them warm and increases the opinion of other characters towards them. |
 | <img src="Docs/Images/Genes/Endo/XylWeakGenes.png" alt="Weak genes" width="80" height="80"> | [Weak genes](Defs/GeneDefs/GeneDefs_Reproduction.xml) | When a carrier of this gene has a baby with a parent of a different xenotype, the baby will have an exact copy of the other parent's endogenes unless the other parent also has this gene. |
-| <img src="Docs/Images/Genes/Endo/XylWoundHealing_UltraFast.png" alt="Ultra-fast wound healing" width="80" height="80"> | [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss. |
+| <img src="Docs/Images/Genes/Arch/XylWoundHealing_UltraFast.png" alt="Ultra-fast wound healing" width="80" height="80"> | [Ultra-fast wound healing](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss. |
 
 ### Appearance genes
 
