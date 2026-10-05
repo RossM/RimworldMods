@@ -49,8 +49,8 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 **Other genes and appearance**
 
 - **Traits:** cold tolerant, heat tolerant, robust, fertile, nearsighted.
-- **Skills:** poor cooking aptitude, strong plants aptitude.
-- **Appearance:** long hair, standard body, fat body, hulk body.
+- **Skills:** poor cooking, strong plants.
+- **Appearance:** long-haired, standard body, fat body, hulk body.
 
 ## <img src="Docs/Images/Xenotypes/XylChyrr.png" alt="Chyrr" width="48" height="48"> <br> Chyrr
 
@@ -81,9 +81,9 @@ According to chyrr myth, a blind woman named Marah came across an injured strang
 
 **Other genes and appearance**
 
-- **Traits:** weak immunity, cold sensitive, heat tolerant, mild UV sensitivity, delicate, dark vision.
-- **Skills:** poor mining aptitude, strong medicine aptitude.
-- **Appearance:** standard body, thin body, no beard.
+- **Traits:** weak immunity, cold weakness, heat tolerant, mild UV sensitivity, delicate, dark vision.
+- **Skills:** poor mining, strong medical.
+- **Appearance:** standard body, thin body, beardless.
 
 ## <img src="Docs/Images/Xenotypes/XylDvergr.png" alt="Dvergr" width="48" height="48"> <br> Dvergr
 
@@ -120,9 +120,9 @@ They bring the same determination to fighting that they do to excavating mountai
 
 **Other genes and appearance**
 
-- **Traits:** psychically dull, very heat tolerant, aggressive, strong stomach, dark vision, cave dweller, unstoppable, alcohol dependency.
-- **Skills:** strong construction aptitude, strong mining aptitude, strong crafting aptitude, poor medicine aptitude, poor social aptitude.
-- **Appearance:** short hair, bushy beard, light gray skin, slate gray skin, ink-black skin.
+- **Traits:** psychically dull, heat super-tolerant, aggressive, strong stomach, dark vision, indoor dweller, unstoppable, alcohol dependency.
+- **Skills:** strong construction, strong mining, strong crafting, poor medical, poor social.
+- **Appearance:** short-haired, only bushy beards, light gray skin, slate gray skin, ink black skin.
 
 ## <img src="Docs/Images/Xenotypes/XylNixie.png" alt="Nixie" width="48" height="48"> <br> Nixie
 
@@ -158,9 +158,9 @@ Dryskin tools and machinery are worth some discomfort, however. Their merchants 
 
 **Other genes and appearance**
 
-- **Traits:** enhanced psychic sensitivity, naked speed, webbed phalanges, pessimist (Royalty), very cold tolerant, heat sensitive, weak melee damage, pretty.
-- **Skills:** poor mining aptitude, poor construction aptitude, strong social aptitude.
-- **Appearance:** bald, snow-white hair, grayless hair, blue skin.
+- **Traits:** psy-sensitive, naked speed, webbed phalanges, unhappy (Royalty), cold super-tolerant, heat weakness, weak melee damage, attractive.
+- **Skills:** poor mining, poor construction, strong social.
+- **Appearance:** no hair, snow-white hair, grayless hair, blue skin.
 
 ## <img src="Docs/Images/Xenotypes/XylTitan.png" alt="Titan" width="48" height="48"> <br> Titan
 
@@ -193,9 +193,9 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 **Other genes and appearance**
 
-- **Traits:** strong melee damage, super immunity, slow wound healing, superclotting, psychically deaf, slow runner, total toxic resistance, sterile, ugly.
-- **Skills:** poor social aptitude, poor intellectual aptitude.
-- **Appearance:** no beard, hulk body.
+- **Traits:** strong melee damage, super immunity, slow wound healing, superclotting, psychically deaf, slow runner, tox immunity, sterile, unattractive.
+- **Skills:** poor social, poor intellectual.
+- **Appearance:** beardless, hulk body.
 
 **Lithoid drugs:** [Softener](Defs/Drugs/Drugs_Titan.xml) prevents petrification. Atlasite builds protective resistance with regular doses. Crystal improves performance and dulls pain, but is highly addictive.
 
@@ -235,9 +235,9 @@ The clans refuse peace with their neighbors, yet their settlements shelter mutan
 
 **Other genes and appearance**
 
-- **Traits:** strong immunity, slow runner, partial toxic-environment resistance, mild UV sensitivity, aggressive, strong melee damage, reduced pain, very ugly, slow study, dark vision, pollution rush, mild cell instability.
-- **Skills:** strong mining aptitude, strong animals aptitude, terrible intellectual aptitude.
-- **Appearance:** bald, human headbone, mini-horns, green skin.
+- **Traits:** strong immunity, slow runner, partial antitoxic lungs, mild UV sensitivity, aggressive, strong melee damage, reduced pain, very unattractive, slow study, dark vision, pollution stimulus, mild cell instability.
+- **Skills:** strong mining, strong animals, awful intellectual.
+- **Appearance:** no hair, human headbone, mini-horns, green skin.
 
 ## <img src="Docs/Images/Xenotypes/XylWarcat.png" alt="Warcat" width="48" height="48"> <br> Warcat
 
@@ -276,8 +276,8 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 **Other genes and appearance**
 
 - **Traits:** hyper-aggressive, strong melee damage, sleepy, high libido, dark vision.
-- **Skills:** remarkable melee aptitude, poor plants aptitude, poor crafting aptitude.
-- **Appearance:** long hair, no beard, cat ears, standard body, thin body.
+- **Skills:** great melee, poor plants, poor crafting.
+- **Appearance:** long-haired, beardless, cat ears, standard body, thin body.
 
 ## <img src="Docs/Images/Xenotypes/XylZeegee.png" alt="Zeegee" width="48" height="48"> <br> Zeegee
 
@@ -308,9 +308,9 @@ Even the most colossal spaceborn habitat can eventually break down due to years 
 
 **Other genes and appearance**
 
-- **Traits:** weak immunity, weak melee damage, delicate, space movement speed (Odyssey), fast learning, dark vision, cave dweller.
-- **Skills:** strong shooting aptitude, poor melee aptitude, poor animals aptitude, strong intellectual aptitude.
-- **Appearance:** short hair.
+- **Traits:** weak immunity, weak melee damage, delicate, low gravity adapted (Odyssey), quick study, dark vision, indoor dweller.
+- **Skills:** strong shooting, poor melee, poor animals, strong intellectual.
+- **Appearance:** short-haired.
 
 ## <img src="Docs/Images/Xenotypes/XylOmegabeaver.png" alt="Omegabeaver" width="48" height="48"> <br> Omegabeaver
 
@@ -329,9 +329,9 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 
 **Other genes and appearance**
 
-- **Traits:** psychically deaf, webbed phalanges, optimist, slow wound healing, weak melee damage, kind instinct, fertile, furskin, slow study, nearsighted.
-- **Skills:** remarkable construction aptitude, strong cooking aptitude, strong plants aptitude, poor animals aptitude, poor intellectual aptitude.
-- **Appearance:** bald, no beard.
+- **Traits:** psychically deaf, webbed phalanges, happy, slow wound healing, weak melee damage, kind instinct, fertile, furskin, slow study, nearsighted.
+- **Skills:** great construction, strong cooking, strong plants, poor animals, poor intellectual.
+- **Appearance:** no hair, beardless.
 
 ## <img src="Docs/Images/Xenotypes/XylScaleborn.png" alt="Scaleborn" width="48" height="48"> <br> Scaleborn
 
@@ -356,8 +356,8 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 **Other genes and appearance**
 
 - **Traits:** psychically dull, slow runner, cold tolerant, heat tolerant, aggressive, strong melee damage, sleepy.
-- **Skills:** terrible cooking aptitude.
-- **Appearance:** bald, no beard, facial ridges.
+- **Skills:** awful cooking.
+- **Appearance:** no hair, beardless, facial ridges.
 
 ### Lineages
 
@@ -414,9 +414,9 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 
 **Other genes and appearance**
 
-- **Traits:** enhanced psychic sensitivity, naked speed, weak melee damage, very sleepy, delicate, high libido, beautiful.
-- **Skills:** strong social aptitude.
-- **Appearance:** long hair, mini-horns, standard body, pink hair, light purple hair, grayless hair.
+- **Traits:** psy-sensitive, naked speed, weak melee damage, very sleepy, delicate, high libido, very attractive.
+- **Skills:** strong social.
+- **Appearance:** long-haired, mini-horns, standard body, pink hair, purple hair, grayless hair.
 
 ## Currently unused genes
 
