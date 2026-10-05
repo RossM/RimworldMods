@@ -8,6 +8,7 @@
 
       <li TKey="XylNixiePsyfocus">Nixies need at least 25 psyfocus to use their innate psycasts, but don't need a psylink.</li>
       <li TKey="XylNixieWaterskip">In an emergency, Waterskip can create puddles to satisfy a nixie's need for wetness.</li>
+      <li TKey="XylNixieEnemies">Nixies' innate psycasts can greatly increase their combat effectiveness, but watch out: hostile nixies will use them too.</li>
 
       <li TKey="XylTrogPsylink">A psylink won't trigger bio-rejection in trogs, but a mechlink will.</li>
 
