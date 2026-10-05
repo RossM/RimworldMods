@@ -642,8 +642,8 @@
           <li Class="XylXenos.GeneCompProperties_EmergencyReserves">
             <hediff>XylEmergencyReserves</hediff>
             <triggers>
-              <!-- Visible onset 0.15 -->
-              <VacuumExposure>0.075</VacuumExposure>
+              <!-- Vacuum exposure has a visible onset of 0.15 but vacuum burns trigger independently of that -->
+              <VacuumExposure>0.02</VacuumExposure>
               <!-- Visible onset 0.04 -->
               <Hypothermia>0.02</Hypothermia>
               <!-- Visible onset 0.04 -->
