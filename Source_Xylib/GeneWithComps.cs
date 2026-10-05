@@ -121,11 +121,10 @@ public class GeneComp
     ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be
     ///     inactive.
     /// </summary>
-    /// <returns></returns>
-    public bool CompAllowActive()
-    {
-        return true;
-    }
+    /// <value></value>
+    public virtual bool CompAllowActive => true;
+
+    public virtual bool CompImmuneToVacuumBurns => false;
 }
 
 /// <summary>
@@ -134,8 +133,8 @@ public class GeneComp
 [PublicAPI]
 public class GeneWithComps : Gene, IEventListener
 {
-    private static readonly Dictionary<Type, bool> hasTickCache = new();
-    private static readonly Dictionary<Type, bool> hasTickIntervalCache = new();
+    private static readonly Dictionary<Type, bool> hasTickCache = [];
+    private static readonly Dictionary<Type, bool> hasTickIntervalCache = [];
 
     [Unsaved] private GeneType? geneTypeInternal;
     [Unsaved] private bool activeStateNeedsUpdating = true;
@@ -214,11 +213,29 @@ public class GeneWithComps : Gene, IEventListener
         if (comps != null)
             foreach (var comp in comps)
             {
-                if (!comp.CompAllowActive())
+                if (!comp.CompAllowActive)
                     return false;
             }
 
         return true;
+    }
+
+    public virtual bool ImmuneToVacuumBurns
+    {
+        get
+        {
+            if (def.immuneToVacuumBurns)
+                return true;
+
+            if (comps == null)
+                return false;
+
+            foreach (var comp in comps)
+                if (comp.CompImmuneToVacuumBurns)
+                    return true;
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -277,7 +294,7 @@ public class GeneWithComps : Gene, IEventListener
             GeneComp? comp = null;
             try
             {
-                comp = (GeneComp)Activator.CreateInstance(compClass);
+                comp = (GeneComp)Activator.CreateInstance(compClass)!;
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);

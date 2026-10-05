@@ -60,4 +60,8 @@ public class GeneComp_EmergencyReserves : GeneComp
         var hediff = Pawn.health.AddHediff(Props.hediff);
         hediff.Severity = Props.severityRange.RandomInRange;
     }
+
+    // Ensure that the pawn doesn't get vacuum burns before the hediff triggers, but can still get them
+    // during cooldown
+    public override bool CompImmuneToVacuumBurns => !Pawn.health.hediffSet.HasHediff(Props.hediff);
 }
