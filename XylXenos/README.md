@@ -259,7 +259,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylFeralRage.png" alt="Feral rage" width="80" height="80"> | [Feral rage](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to enter a state of feral rage, giving increased movement speed (+50%) and faster melee attacks (+50%). After the rage ends, there is a temporary backlash which causes pain (+10%) and slows movement (-20%). |
+| <img src="Docs/Images/Genes/Endo/XylFeralRage.png" alt="Feral rage" width="80" height="80"> | [Feral rage](Defs/GeneDefs/GeneDefs_Abilities.xml) | Carriers have the ability to enter a state of feral rage, giving increased movement speed and faster melee attacks. After the rage ends, there is a temporary backlash which causes pain and slows movement.. |
 | <img src="Docs/Images/Genes/Endo/XylMoody.png" alt="Moody" width="80" height="80"> | [Moody](Defs/GeneDefs/GeneDefs_Mood.xml) | Carriers of this gene have a volatile emotional state. They randomly get good and bad moods. |
 | <img src="Docs/Images/Genes/Endo/XylFastReflexes.png" alt="Fast reflexes" width="80" height="80"> | [Fast reflexes](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have excellent reflexes that allow them to dodge melee attacks and evade traps. |
 | <img src="Docs/Images/Genes/Endo/XylRetractableClaws.png" alt="Retractable claws" width="80" height="80"> | [Retractable claws](Defs/GeneDefs/GeneDefs_InnateWeapons.xml) | Carriers of this gene have retractable claws that function as weapons. |
