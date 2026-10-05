@@ -239,7 +239,8 @@ def main():
     args = parser.parse_args()
     genes = read_gene_icons(args.rimworld_data)
     for variant, filename in (("Endo", "GeneBackground_Endogene.png"),
-                              ("Xeno", "GeneBackground_Xenogene.png")):
+                              ("Xeno", "GeneBackground_Xenogene.png"),
+                              ("Arch", "GeneBackground_ArchiteGene.png")):
         with Image.open(ART_DIR / "Genes" / filename) as source:
             background = source.convert("RGBA").resize(
                 (ICON_SIZE, ICON_SIZE), Image.Resampling.LANCZOS)
