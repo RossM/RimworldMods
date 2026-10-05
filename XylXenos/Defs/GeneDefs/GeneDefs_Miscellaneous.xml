@@ -230,6 +230,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
     <renderNodeProperties>
       <li>
+        <debugLabel>BatWings</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_Wings</nodeClass>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPaths>
@@ -717,7 +718,8 @@
     <iconColor>(1, 1, 1)</iconColor>
     <renderNodeProperties>
       <li>
-        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <debugLabel>BeaverNose</debugLabel>
+        <nodeClass>XylXenos.PawnRenderNode_AttachmentHeadComplex</nodeClass>
         <workerClass>XylXenos.PawnRenderNodeWorker_HeadAttachment</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverNose</texPath>
         <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
@@ -734,22 +736,6 @@
         <drawData>
           <defaultData>
             <layer>66</layer>
-          </defaultData>
-        </drawData>
-      </li>
-      <li>
-        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
-        <workerClass>XylXenos.PawnRenderNodeWorker_HeadAttachment</workerClass>
-        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverTeeth</texPath>
-        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
-        <parentTagDef>Head</parentTagDef>
-        <rotDrawMode>Fresh, Rotting</rotDrawMode>
-        <visibleFacing>
-          <li>South</li>
-        </visibleFacing>
-        <drawData>
-          <defaultData>
-            <layer>67</layer>
           </defaultData>
         </drawData>
       </li>
