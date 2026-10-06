@@ -414,7 +414,7 @@
     </descriptionHyperlinks>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>202</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_OilSpray</iconPath>
     <abilities>
       <li>XylOilSpray</li>
     </abilities>
@@ -429,7 +429,7 @@
     <defName>XylOilSpray</defName>
     <label>oil spray</label>
     <description>Spray a sticky oil from glands in the neck up through the mouth and all over the target area. The oil will blind targets, and puddles of it can catch on fire.</description>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_OilSpray</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <displayOrder>300</displayOrder>
