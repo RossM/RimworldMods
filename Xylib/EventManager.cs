@@ -1,4 +1,5 @@
-﻿namespace Xylib;
+﻿#pragma warning disable CA2211
+namespace Xylib;
 
 /// <summary>
 ///     Provides pawn-generation context to early generation callbacks.
@@ -38,8 +39,8 @@ public interface IEventListener
     ///     The <see cref="EventManager" /> that should be registered with. This is always
     ///     <see cref="EventManager.Instance" />.
     /// </param>
-#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
     public void RegisterWith(EventManager manager);
+#pragma warning restore CS1574 // XML comment has cref attribute that could not be resolved
 
     /// <summary>
     ///     Called before a listener is removed from the <see cref="EventManager" />. Events registered directly by the
@@ -310,7 +311,7 @@ public class EventManager
         public string name;
         public int priority;
 
-        public override string ToString()
+        public readonly override string ToString()
         {
             return $"{name}[{listener}]";
         }
@@ -456,7 +457,7 @@ public class EventManager
     /// </typeparam>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0)
     {
-        if (callback == null)
+        if (callback is null)
             throw new ArgumentNullException(nameof(callback));
 
         if (eventDef == null)
@@ -499,7 +500,7 @@ public class EventManager
     /// </typeparam>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0)
     {
-        if (callback == null)
+        if (callback is null)
             throw new ArgumentNullException(nameof(callback));
 
         if (eventDef == null)
@@ -539,7 +540,7 @@ public class EventManager
     /// </param>
     public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0)
     {
-        if (callback == null)
+        if (callback is null)
             throw new ArgumentNullException(nameof(callback));
 
         if (eventDef == null)
@@ -570,7 +571,7 @@ public class EventManager
     /// </param>
     public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0)
     {
-        if (callback == null)
+        if (callback is null)
             throw new ArgumentNullException(nameof(callback));
 
         if (eventDef == null)
@@ -623,9 +624,9 @@ public class EventManager
         Thing? target,
         Action<Thing?, T?> callback)
     {
-        if (listener == null)
+        if (listener is null)
             throw new ArgumentNullException(nameof(listener));
-        if (callback == null)
+        if (callback is null)
             throw new ArgumentNullException(nameof(callback));
 
         if (eventDef == null)
@@ -658,7 +659,7 @@ public class EventManager
     {
         listener.PreUnregister(this);
 
-        if (!registrations.TryGetValue(listener, out List<RegistrationInfo> records))
+        if (!registrations.TryGetValue(listener, out List<RegistrationInfo>? records))
             return;
 
         // Resharper seems to not have correct annotations for ConditionalWeakTable
@@ -672,10 +673,10 @@ public class EventManager
             }
             else
             {
-                if (!record.target.TryGetTarget(out Thing target))
+                if (!record.target.TryGetTarget(out Thing? target))
                     continue;
 
-                if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo> callbacks) is true)
+                if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
                 {
                     // Resharper seems to not have correct annotations for ConditionalWeakTable
                     DebugAssert.NotNull(callbacks);
@@ -721,7 +722,7 @@ public class EventManager
         if (notificationInfo == null)
             return;
 
-        List<CallbackInfo> localCallbacks;
+        List<CallbackInfo>? localCallbacks;
 
         if (!notificationInfo.usesPriority)
         {

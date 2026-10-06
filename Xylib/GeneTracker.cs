@@ -33,6 +33,7 @@ public abstract class GeneTracker : IEventListener, IPawnData
     }
 
     protected static void Multiply<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keySelector, Func<TItem, float> valueSelector)
+        where TKey : notnull
     {
         if (source is null)
             return;
@@ -47,6 +48,7 @@ public abstract class GeneTracker : IEventListener, IPawnData
     }
 
     protected static void Add<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keySelector, Func<TItem, float> valueSelector)
+        where TKey : notnull
     {
         if (source is null)
             return;

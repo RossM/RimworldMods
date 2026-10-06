@@ -195,7 +195,7 @@ public static class Analyzer
 
                 if (baseMethod is not null && !callsBaseMethod)
                 {
-                    Type baseType = baseMethod.DeclaringType;
+                    Type? baseType = baseMethod.DeclaringType;
                     DebugAssert.NotNull(baseType);
 
                     if (baseType.GetFields().Any(field => ShouldExposeField(field, baseType)))

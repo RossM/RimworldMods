@@ -57,6 +57,10 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
         if (!Active)
             return;
 
+        // DamageUntilDowned can trigger this during map generation before the pawn has a map.
+        if (Pawn.Map is null)
+            return;
+
         Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
 
         if (hediff == null && !Rand.Chance(Props.chance))

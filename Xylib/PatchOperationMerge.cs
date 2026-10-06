@@ -54,7 +54,7 @@ public class PatchOperationMerge : PatchOperationPathed
 
     protected override bool ApplyWorker(XmlDocument xml)
     {
-        if (xml == null)
+        if (xml is null)
             throw new ArgumentNullException(nameof(xml));
 
         DebugAssert.NotNull(xpath);
@@ -117,7 +117,7 @@ public class PatchOperationMerge : PatchOperationPathed
                 {
                     case Order.Append: targetNode.AppendChild(xmlNodeOwnerDocument.ImportNode(child, deep: true)); break;
                     case Order.Prepend: targetNode.PrependChild(xmlNodeOwnerDocument.ImportNode(child, deep: true)); break;
-                    default: throw new ArgumentOutOfRangeException();
+                    default: throw new InvalidOperationException();
                 }
 
                 break;
@@ -133,7 +133,7 @@ public class PatchOperationMerge : PatchOperationPathed
         }
     }
 
-    private bool CanMerge(XmlNode first, XmlNode second)
+    private static bool CanMerge(XmlNode first, XmlNode second)
     {
         if (first.NodeType != XmlNodeType.Element || second.NodeType != XmlNodeType.Element)
             return false;
@@ -141,7 +141,7 @@ public class PatchOperationMerge : PatchOperationPathed
             return false;
         if (first.Attributes?["Class"]?.Value != second.Attributes?["Class"]?.Value)
             return false;
-        return second.Attributes?["Merge"]?.Value?.ToLowerInvariant() switch
+        return second.Attributes?["Merge"]?.Value.ToLowerInvariant() switch
         {
             "true" => true,
             "false" => false,

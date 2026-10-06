@@ -7,11 +7,11 @@
     <rulePack>
       <rulesStrings>
         <li>r_name->[BodyPart] [hunter]s</li>
-        <li>r_name->[BodyPart] [hunter] [rulesFiles]</li>
+        <li>r_name->[BodyPart] [hunter] [groupName]</li>
         <li>r_name->[AdjectiveBadass] [animals]</li>
-        <li>r_name->[AdjectiveBadass] [animal] [rulesFiles]</li>
+        <li>r_name->[AdjectiveBadass] [animal] [groupName]</li>
         <li>r_name->[TerrainFeature] [animals]</li>
-        <li>r_name->[TerrainFeature] [animal] [rulesFiles]</li>
+        <li>r_name->[TerrainFeature] [animal] [groupName]</li>
       </rulesStrings>
       <rulesFiles>
         <li>hunter->Xyl/Words/Warcat/Hunter</li>

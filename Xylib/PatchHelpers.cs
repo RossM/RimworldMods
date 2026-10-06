@@ -13,7 +13,7 @@ internal static class PatchHelpers
     private static readonly MethodInfo addDefsMethodInfo = typeof(PatchHelpers).GetMethod(nameof(AddDefs))!;
 
     private static readonly ConcurrentDictionary<Type, Action<object, List<string>>?> requiredMemberCheckerCache = new();
-    private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)]);
+    private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)])!;
 
     public static void RunDefGenerators(bool hotReload)
     {
@@ -149,7 +149,7 @@ internal static class PatchHelpers
 
         Designator GetCachedDesignator(BuildableDef def)
         {
-            DesignationCategoryDef.BuildablePreceptBuilding key = new DesignationCategoryDef.BuildablePreceptBuilding(def, null);
+            DesignationCategoryDef.BuildablePreceptBuilding key = new(def, null);
             if (!ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
             {
                 value = new Designator_Build(def);

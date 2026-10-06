@@ -720,7 +720,7 @@
       <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
         <debugLabel>BeaverNose</debugLabel>
         <flipWhenCrawling>true</flipWhenCrawling>
-        <nodeClass>XylXenos.PawnRenderNode_AttachmentHeadComplex</nodeClass>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverNose</texPath>
         <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
         <useSkinShader>true</useSkinShader>
@@ -736,6 +736,23 @@
         <drawData>
           <defaultData>
             <layer>66</layer>
+          </defaultData>
+        </drawData>
+      </li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
+        <debugLabel>BeaverTeeth</debugLabel>
+        <flipWhenCrawling>true</flipWhenCrawling>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverTeeth</texPath>
+        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
+        <parentTagDef>Head</parentTagDef>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <visibleFacing>
+          <li>South</li>
+        </visibleFacing>
+        <drawData>
+          <defaultData>
+            <layer>67</layer>
           </defaultData>
         </drawData>
       </li>

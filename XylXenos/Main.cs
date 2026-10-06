@@ -44,12 +44,6 @@ public class Main : Mod
         }
     }
 
-    [DebugAction(allowedGameStates = AllowedGameStates.Entry)]
-    public static void DebuggerBreak()
-    {
-        Debugger.Break();
-    }
-
     // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.
     private static void RegisterXmlLoaders()
     {
