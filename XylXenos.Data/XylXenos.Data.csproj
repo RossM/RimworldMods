@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net4.7.2</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Languages\English\Strings\Xyl\Names\Bossaps\" />
+    <Folder Include="Languages\English\Strings\Xyl\Names\Trog\" />
+    <Folder Include="Languages\English\Strings\Xyl\WordParts\Trog\" />
+    <Folder Include="Languages\English\Strings\Xyl\WordParts\Nixie\" />
+    <Folder Include="Languages\English\Strings\Xyl\Words\Trog\" />
+    <Folder Include="Textures\Xyl\Things\Pawn\Humanlike\BodyAttachments\DemonTail\" />
+  </ItemGroup>
+
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="@(None)" DestinationFiles="@(None->'$(MSBuildProjectDirectory)\..\ModBin\XylXenos\%(Identity)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CleanModOutput" AfterTargets="Clean">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\..\ModBin\XylXenos" />
+  </Target>
+</Project>

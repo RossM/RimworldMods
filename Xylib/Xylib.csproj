@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\Xylib.dll&quot; &quot;..\XylXenos\Assemblies\Xylib.dll&quot;" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" />
   </Target>
 
 </Project>

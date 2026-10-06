@@ -7,7 +7,7 @@ using System.Xml;
 
 var path = args.Length > 0
     ? args[0]
-    : Path.Combine("Source_XylRaces", "ExternalAnnotations", "Assembly-CSharp.xml");
+    : Path.Combine("XylXenos", "ExternalAnnotations", "Assembly-CSharp.xml");
 path = Path.GetFullPath(path);
 
 var bytes = File.ReadAllBytes(path);

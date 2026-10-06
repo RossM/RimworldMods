@@ -1,6 +1,6 @@
 # Beaver tail artwork
 
-Gene: `XylTail_Beaver` in `XylXenos/Defs/GeneDefs/GeneDefs_Cosmetic.xml`.
+Gene: `XylTail_Beaver` in `XylXenos.Data/Defs/GeneDefs/GeneDefs_Cosmetic.xml`.
 
 Full-resolution originals from the built-in imagegen tool are kept here. Runtime PNGs are 128 x 128 RGBA textures. The dark charcoal color is baked into the sprite, matching the alphabeaver rather than inheriting pawn hair color.
 
@@ -11,10 +11,10 @@ Rendering follows the installed RimWorld 1.6 `GeneTailBase` and `PawnRenderNodeW
 Exports (run from repository root with ImageMagick):
 
 ```powershell
-magick Art/Codex/BeaverTail/BeaverTail_east_source.png -resize 128x128 -strip PNG32:XylXenos/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_east.png
-magick Art/Codex/BeaverTail/BeaverTail_north_source.png -resize 100x100 -background none -gravity center -extent 128x128 -strip PNG32:XylXenos/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_north.png
-Copy-Item XylXenos/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_north.png XylXenos/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_south.png
-magick Art/Codex/BeaverTail/Gene_TailBeaver_source.png -resize 128x128 -strip PNG32:XylXenos/Textures/Xyl/UI/Icons/Genes/Gene_TailBeaver.png
+magick Art/Codex/BeaverTail/BeaverTail_east_source.png -resize 128x128 -strip PNG32:XylXenos.Data/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_east.png
+magick Art/Codex/BeaverTail/BeaverTail_north_source.png -resize 100x100 -background none -gravity center -extent 128x128 -strip PNG32:XylXenos.Data/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_north.png
+Copy-Item XylXenos.Data/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_north.png XylXenos.Data/Textures/Xyl/Things/Pawn/Humanlike/BodyAttachments/BeaverTail/BeaverTail_south.png
+magick Art/Codex/BeaverTail/Gene_TailBeaver_source.png -resize 128x128 -strip PNG32:XylXenos.Data/Textures/Xyl/UI/Icons/Genes/Gene_TailBeaver.png
 ```
 
 The tail is visible only when facing east, north, or west, using `visibleFacing`. It is hidden entirely when facing south. The south texture remains a copy of north to complete the directional texture set. RimWorld mirrors east for west. The rear sprite is padded to keep its width proportionate to the pawn.
