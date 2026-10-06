@@ -523,7 +523,7 @@
     <description>Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss.</description>
     <displayCategory>Archite</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_UltraFastWoundHealing</iconPath>
     <biostatCpx>4</biostatCpx>
     <biostatArc>2</biostatArc>
     <exclusionTags>
