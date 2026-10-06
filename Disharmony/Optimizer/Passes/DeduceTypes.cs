@@ -62,7 +62,7 @@ internal class TypeVisitor(Optimizer optimizer) : RewriteVisitor
 
     protected override Op Visit(StackSlot op) => GetReplacement(op);
 
-    private StackSlot GetReplacement(StackSlot op) => stackSlots.TryGetValue(op.Id, out StackSlot replacement) ? replacement : op;
+    private StackSlot GetReplacement(StackSlot op) => stackSlots.TryGetValue(op.Id, out StackSlot? replacement) ? replacement : op;
 
     public override ControlFlowGraph Visit(ControlFlowGraph cfg)
     {

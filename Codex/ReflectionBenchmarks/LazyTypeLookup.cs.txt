@@ -1,0 +1,56 @@
+    private sealed class TypeLookupGeneration
+    {
+        internal readonly Lazy<TypeIndex> Index = new(BuildTypeIndex);
+    }
+
+    // Each short name points to the last occurrence in AllTypes. Previous links retain
+    // same-named types in other namespaces without allocating a collection per type.
+    private sealed class TypeIndex(Type[] types, Dictionary<string, int> lastByName, int[] previous, Assembly[] assemblies)
+    {
+        internal readonly Assembly[] Assemblies = assemblies;
+
+        internal Type? FindAlias(string name)
+        {
+            int best = -1;
+            for (int dot = name.IndexOf('.'); dot >= 0; dot = name.IndexOf('.', dot + 1))
+            {
+                if (!lastByName.TryGetValue(name.Substring(dot + 1), out int index)) continue;
+                string ns = name.Substring(0, dot);
+                for (; index > best; index = previous[index])
+                    if ((types[index].Namespace ?? "") == ns) { best = index; break; }
+            }
+            if (best >= 0) return types[best];
+            return lastByName.TryGetValue(name, out int simple) ? types[simple] : null;
+        }
+    }
+
+    public static Type? GetTypeByName(string name)
+    {
+        if (Type.GetType(name, throwOnError: false) is { } runtimeType) return runtimeType;
+        TypeLookupGeneration generation;
+        TypeIndex index;
+        do
+        {
+            generation = System.Threading.Volatile.Read(ref _typeLookup);
+            index = generation.Index.Value;
+        } while (!ReferenceEquals(generation, System.Threading.Volatile.Read(ref _typeLookup)));
+
+        if (index.FindAlias(name) is { } alias) return alias;
+        foreach (Assembly assembly in index.Assemblies)
+            if (assembly.GetType(name, throwOnError: false) is { } found) return found;
+        return null;
+    }
+
+    private static TypeIndex BuildTypeIndex()
+    {
+        Type[] types = [.. AccessTools.AllAssemblies().AsParallel().SelectMany(AccessTools.GetTypesFromAssembly).AsUnordered()];
+        Dictionary<string, int> names = new(types.Length, StringComparer.Ordinal);
+        var previous = new int[types.Length];
+        for (int i = 0; i < types.Length; i++)
+        {
+            string name = types[i].Name;
+            previous[i] = names.TryGetValue(name, out int old) ? old : -1;
+            names[name] = i;
+        }
+        return new TypeIndex(types, names, previous, [.. AccessTools.AllAssemblies()]);
+    }

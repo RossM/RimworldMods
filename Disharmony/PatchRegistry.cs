@@ -138,7 +138,7 @@ internal class PatchRegistry
             {
                 var patchedType = targetAttribute.Type ?? defaultTargetType;
 
-                List<MemberInfo> candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
+                var candidates = ReflectionTools.GetMembers(patchedType, targetAttribute.MethodName,
                     targetAttribute.MemberType, targetAttribute.ParameterTypes, null);
 
                 var nameForErrors = targetAttribute.MemberType == MemberType.Constructor ? ".ctor" : targetAttribute.MethodName;
@@ -201,7 +201,7 @@ internal class PatchRegistry
 
         try
         {
-            MethodInvocation patchMethod = new MethodInvocation(patch.PatchMethod);
+            MethodInvocation patchMethod = new(patch.PatchMethod);
             Validate(patchKind, patch.Options, patchMethod.MethodInfo, target.MethodBase);
 
             MethodBaseInvocation outer = target;
@@ -282,7 +282,7 @@ internal class PatchRegistry
                 : new GetFieldInvocation(field),
             MethodInfo method => new MethodInvocation(method),
             ConstructorInfo constructor => new InnerConstructorInvocation(constructor),
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(inner), inner, null)
         };
     }
 
@@ -292,7 +292,7 @@ internal class PatchRegistry
         {
             MethodInfo outerMethod => new MethodInvocation(outerMethod),
             ConstructorInfo outerConstructor => new OuterConstructorInvocation(outerConstructor),
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(target), target, null),
         };
     }
 

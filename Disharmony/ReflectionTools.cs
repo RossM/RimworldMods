@@ -1,21 +1,77 @@
+using System.Threading;
+
 namespace Disharmony;
 
 internal static class ReflectionTools
 {
+    // Each cached assembly list and alias index belongs to one generation. Loads replace it instead of
+    // clearing fields that a concurrent index build might subsequently overwrite.
+    private sealed class TypeLookup
+    {
+        internal readonly Lazy<Assembly[]> Assemblies = new(() =>
+            [.. AccessTools.AllAssemblies().OrderBy(a => a.FullName, StringComparer.Ordinal)]);
+
+        internal readonly Lazy<Dictionary<string, Type>> Aliases;
+
+        internal TypeLookup() => Aliases = new(BuildAliases);
+
+        private Dictionary<string, Type> BuildAliases()
+        {
+            // Preserve assembly order through PLINQ; worker completion order must not
+            // select the winner of an ambiguous alias. FullName is read only on collisions.
+            Type[] types = [.. Assemblies.Value.AsParallel().AsOrdered().SelectMany(AccessTools.GetTypesFromAssembly)];
+            Dictionary<string, Type> aliases = new(StringComparer.Ordinal);
+            foreach (Type type in types)
+            {
+                string name = type.Name;
+                if (!aliases.TryGetValue(name, out Type? previous) || ComesBefore(type, previous))
+                    aliases[name] = type;
+            }
+
+            return aliases;
+        }
+
+        internal Assembly? ResolveAssembly(AssemblyName requested)
+        {
+            foreach (Assembly assembly in Assemblies.Value)
+            {
+                AssemblyName actual = assembly.GetName();
+                if (!StringComparer.OrdinalIgnoreCase.Equals(requested.Name, actual.Name))
+                    continue;
+                if (requested.Version is not null && requested.Version != actual.Version)
+                    continue;
+                if (requested.CultureName is not null &&
+                    !StringComparer.OrdinalIgnoreCase.Equals(requested.CultureName, actual.CultureName))
+                    continue;
+                if (requested.GetPublicKeyToken() is { } token &&
+                    !token.SequenceEqual(actual.GetPublicKeyToken() ?? []))
+                    continue;
+                return assembly;
+            }
+
+            return null;
+        }
+
+        private static bool ComesBefore(Type candidate, Type previous)
+        {
+            int assemblyOrder = StringComparer.Ordinal.Compare(candidate.Assembly.FullName, previous.Assembly.FullName);
+            return assemblyOrder < 0 || (assemblyOrder == 0 &&
+                                         StringComparer.Ordinal.Compare(candidate.FullName, previous.FullName) < 0);
+        }
+    }
+
     private static readonly BindingFlags DeclaredOnly = AccessTools.all | BindingFlags.DeclaredOnly;
 
-    private static Assembly[]? _allAssemblies = null;
-    private static Dictionary<string, Type>? _typesByName = null;
-
-    private static void AssemblyLoadHandler(object sender, AssemblyLoadEventArgs args)
-    {
-        _allAssemblies = null;
-        _typesByName = null;
-    }
+    private static TypeLookup _typeLookup = new();
 
     static ReflectionTools()
     {
         AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoadHandler;
+    }
+
+    private static void AssemblyLoadHandler(object? sender, AssemblyLoadEventArgs args)
+    {
+        Interlocked.Exchange(ref _typeLookup, new TypeLookup());
     }
 
     private static Type WrappedType(ParameterInfo parameter)
@@ -29,9 +85,15 @@ internal static class ReflectionTools
 
     public static Type[] WrapParameterTypes(MethodBase method) => [.. method.GetParameters().Select(WrappedType)];
 
-    public static MemberInfo GetMember(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
+    public static MemberInfo GetMember(
+        Type? type,
+        string? name,
+        MemberType memberType,
+        Type[]? parameterTypes,
+        Type[]? genericTypes,
+        bool searchBaseTypes = false)
     {
-        List<MemberInfo> candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes, searchBaseTypes);
+        var candidates = GetMembers(type, name, memberType, parameterTypes, genericTypes, searchBaseTypes);
 
         switch (candidates.Count)
         {
@@ -43,7 +105,13 @@ internal static class ReflectionTools
         return result;
     }
 
-    public static List<MemberInfo> GetMembers(Type? type, string? name, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
+    public static IReadOnlyList<MemberInfo> GetMembers(
+        Type? type,
+        string? name,
+        MemberType memberType,
+        Type[]? parameterTypes,
+        Type[]? genericTypes,
+        bool searchBaseTypes = false)
     {
         if (name is null && memberType is not MemberType.Constructor)
             throw new ArgumentException("name expected");
@@ -54,142 +122,167 @@ internal static class ReflectionTools
         if (genericTypes != null && memberType is not (MemberType.Any or MemberType.Method))
             throw new ArgumentException($"genericTypes is not supported for memberType {memberType}");
 
-        // Harmony uses ':' to separate the type name from the method name, so if it's there, use it
-        if (name?.Split([':'], 2) is [string typeName, string memberName])
+        // Resolve explicit types first, then exact type prefixes before a short type alias,
+        // then nested types and members/local functions. A declared first segment suppresses
+        // global type lookup even when it is not a method (including nested types).
+        int colon = name?.IndexOf(':') ?? -1;
+        if (colon >= 0)
         {
-            type = GetTypeByName(typeName) ??
-                   throw new ReflectionException($"Type not found: {typeName}");
-            name = memberName;
+            string explicitType = name!.Substring(0, colon);
+            type = GetTypeByName(explicitType) ??
+                   throw new ReflectionException($"Type not found: {explicitType}");
+            name = name.Substring(colon + 1);
             searchBaseTypes = false;
         }
 
-        var nameParts = name?.Split('.').ToList() ?? [];
-
-        // Search for the type by considering foo, then foo.bar, then foo.bar.baz, etc.
-        // GetTypeByName is expensive so we only do this if it doesn't look like a local function lookup
-        if (nameParts.Count > 1 && type?.GetMembers(DeclaredOnly).Any(m => m.Name == nameParts[0]) is not true)
-            for (int i = 1; i <= nameParts.Count - 1; i++)
+        int firstDot = name?.IndexOf('.') ?? -1;
+        int memberStart = 0;
+        if (firstDot >= 0)
+        {
+            string firstPart = name!.Substring(0, firstDot);
+            if (type?.GetMember(firstPart, DeclaredOnly).Any(m => m.Name == firstPart) is not true &&
+                FindTypePrefix(name) is { } resolved)
             {
-                typeName = string.Join(".", nameParts.Take(i));
-                var foundType = GetTypeByName(typeName);
-                if (foundType is null)
-                    continue;
-
-                type = foundType;
-                nameParts.RemoveRange(0, i);
+                type = resolved.Type;
+                memberStart = resolved.MemberStart;
                 searchBaseTypes = false;
-                break;
             }
+        }
 
         if (type is null)
             throw new ReflectionException($"type not found: {name}");
 
-        // Look for nested types
-        while (nameParts.Count > 1)
-        {
-            var nestedType = type.GetNestedType(nameParts[0], AccessTools.all);
-            if (nestedType == null)
-                break;
-            type = nestedType;
-            nameParts.RemoveAt(0);
-        }
+        if (name is not null)
+            for (int dot = name.IndexOf('.', memberStart); dot >= 0; dot = name.IndexOf('.', memberStart))
+            {
+                Type? nested = type.GetNestedType(name.Substring(memberStart, dot - memberStart), AccessTools.all);
+                if (nested is null)
+                    break;
+                type = nested;
+                memberStart = dot + 1;
+            }
+
+        var nameParts = name is null ? new List<string>() : name.Substring(memberStart).Split('.').ToList();
 
         return GetResults(type, nameParts, memberType, parameterTypes, genericTypes, searchBaseTypes);
     }
 
-    private static List<MemberInfo> GetResults(Type type, List<string> nameParts, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
+    private static (Type Type, int MemberStart)? FindTypePrefix(string name)
+    {
+        // Prefer the most completely specified runtime type. A shorter exact type
+        // or alias must not hide a longer namespace-qualified type prefix.
+        for (int dot = name.LastIndexOf('.'); dot >= 0; dot = dot == 0 ? -1 : name.LastIndexOf('.', dot - 1))
+        {
+            if (GetExactTypeByName(name.Substring(0, dot)) is { } type)
+                return (type, dot + 1);
+        }
+
+        int firstDot = name.IndexOf('.');
+        if (firstDot >= 0 && GetTypeByAlias(name.Substring(0, firstDot)) is { } shortType)
+            return (shortType, firstDot + 1);
+        return null;
+    }
+
+    private static IReadOnlyList<MemberInfo> GetResults(
+        Type type,
+        List<string> nameParts,
+        MemberType memberType,
+        Type[]? parameterTypes,
+        Type[]? genericTypes,
+        bool searchBaseTypes = false)
     {
         IEnumerable<MemberInfo> candidates = nameParts.Count switch
         {
             0 => type.GetConstructors(),
-
-            1 => type.GetMembers(DeclaredOnly).Where(m => m.Name == nameParts[0]),
-
-            2 when nameParts[1] == "*" =>
-                type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
-                    .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>b__")),
-
-            2 => type.GetNestedTypes(DeclaredOnly).Where(t => t.IsClosureType).Append(type)
-                .SelectMany(t => t.GetMethods(DeclaredOnly)).Where(m => m.Name.StartsWith($"<{nameParts[0]}>g__{nameParts[1]}|")),
-
+            1 => type.GetMember(nameParts[0], DeclaredOnly),
+            2 => GetLocalMethods(type, nameParts[1] == "*"
+                ? $"<{nameParts[0]}>b__"
+                : $"<{nameParts[0]}>g__{nameParts[1]}|"),
             _ => throw new NotSupportedException("Nested local functions are not supported"),
         };
 
-        candidates = memberType switch
+        if (candidates is ICollection<MemberInfo> { Count: 0 })
         {
-            MemberType.Any => candidates.Where(m => m is MethodInfo or FieldInfo or PropertyInfo),
-            MemberType.Method => candidates.Where(m => m is MethodInfo),
-            MemberType.Getter or MemberType.Setter => candidates.Where(m => m is FieldInfo or PropertyInfo),
-            MemberType.Constructor => candidates.Where(m => m is ConstructorInfo),
+            if (searchBaseTypes && type.BaseType is { } baseType)
+                return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, true);
+            return [];
+        }
+
+        MemberTypes kinds = memberType switch
+        {
+            MemberType.Any => MemberTypes.Method | MemberTypes.Field | MemberTypes.Property,
+            MemberType.Method => MemberTypes.Method,
+            MemberType.Getter or MemberType.Setter => MemberTypes.Field | MemberTypes.Property,
+            MemberType.Constructor => MemberTypes.Constructor,
             _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null),
         };
 
-        candidates = candidates as MemberInfo[] ?? [.. candidates];
+        List<MemberInfo> matches = [];
+        foreach (MemberInfo candidate in candidates)
+            if ((candidate.MemberType & kinds) != 0)
+                matches.Add(candidate);
 
-        // Search the resolved type's hierarchy with the same signature.
-        if (!candidates.Any() && searchBaseTypes && type.BaseType is { } baseType)
-            return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, searchBaseTypes: true);
+        // Name/kind shadowing precedes signature filtering and accessor conversion.
+        if (matches.Count == 0 && searchBaseTypes && type.BaseType is { } baseType2)
+            return GetResults(baseType2, nameParts, memberType, parameterTypes, genericTypes, true);
 
-        if (parameterTypes != null || genericTypes != null)
-            candidates = FilterMethods(candidates, parameterTypes, genericTypes);
+        if (parameterTypes is not null || genericTypes is not null)
+            return [.. FilterMethods(matches, parameterTypes, genericTypes)];
 
-        candidates = candidates.Select(result =>
-            result switch
+        for (int i = matches.Count - 1; i >= 0; i--)
+        {
+            if (matches[i] is PropertyInfo property)
             {
-                PropertyInfo property => memberType == MemberType.Setter ? property.SetMethod : property.GetMethod,
-                _ => result,
+                MethodInfo? accessor = memberType == MemberType.Setter ? property.SetMethod : property.GetMethod;
+                if (accessor is null)
+                    matches.RemoveAt(i);
+                else
+                    matches[i] = accessor;
             }
-        ).Where(m => m is not null);
+        }
 
-        List<MemberInfo> results = [.. candidates];
-
-        return results;
+        return matches;
     }
 
-    // This is equivalent to AccessTools.GetTypeByName but it caches the assembly list
-    // and precomputes a dictionary matching type names to types.
-    public static Type? GetTypeByName(string name)
+    private static IEnumerable<MethodInfo> GetLocalMethods(Type type, string prefix)
     {
+        foreach (Type nested in type.GetNestedTypes(DeclaredOnly))
         {
-            if (Type.GetType(name, throwOnError: false) is { } type)
+            if (nested.IsClosureType)
+                foreach (MethodInfo method in nested.GetMethods(DeclaredOnly))
+                    if (method.Name.StartsWith(prefix, StringComparison.Ordinal))
+                        yield return method;
+        }
+
+        foreach (MethodInfo method in type.GetMethods(DeclaredOnly))
+            if (method.Name.StartsWith(prefix, StringComparison.Ordinal))
+                yield return method;
+    }
+
+    public static Type? GetTypeByName(string name) => GetExactTypeByName(name) ?? GetTypeByAlias(name);
+
+    private static Type? GetExactTypeByName(string name)
+    {
+        if (Type.GetType(name, throwOnError: false) is { } runtimeType)
+            return runtimeType;
+        TypeLookup lookup = Volatile.Read(ref _typeLookup);
+        // The normal binder cannot find every loaded assembly (notably emitted
+        // assemblies). Let the runtime parse qualified/generic names with our resolver.
+        if (name.IndexOf(',') >= 0 &&
+            Type.GetType(name, lookup.ResolveAssembly, null, throwOnError: false) is { } qualifiedType)
+            return qualifiedType;
+        foreach (Assembly assembly in lookup.Assemblies.Value)
+            if (assembly.GetType(name, throwOnError: false) is { } type)
                 return type;
-        }
-
-        if (_typesByName is null)
-        {
-            // Calling AccessTools.AllTypes can result in assemblies being loaded which clears _typesByName,
-            // so this must happen before _typesByName is initialized.
-            Type[] allTypes = [.. AllTypes()];
-
-            Dictionary<string, Type> typesByName = [];
-            foreach (var type in allTypes)
-                typesByName[type.Name] = type;
-            foreach (var type in allTypes)
-                // RuntimeType.FullName is expensive on Mono because it calls RuntimeType.ContainsGenericParameters
-                typesByName[$"{type.Namespace}.{type.Name}"] = type;
-            _typesByName = typesByName;
-
-        }
-
-        {
-            if (_typesByName.TryGetValue(name, out var type))
-                return type;
-        }
-
-        _allAssemblies ??= [.. AccessTools.AllAssemblies()];
-
-        foreach (Assembly item in _allAssemblies)
-        {
-            if (item.GetType(name, throwOnError: false) is { } type)
-                return type;
-        }
-
         return null;
     }
 
-    private static IEnumerable<Type> AllTypes()
+    private static Type? GetTypeByAlias(string name)
     {
-        return AccessTools.AllAssemblies().AsParallel().SelectMany(AccessTools.GetTypesFromAssembly).AsUnordered();
+        if (name.IndexOf('.') >= 0)
+            return null;
+        TypeLookup lookup = Volatile.Read(ref _typeLookup);
+        return lookup.Aliases.Value.TryGetValue(name, out Type? type) ? type : null;
     }
 
     private static IEnumerable<MethodBase> FilterMethods(IEnumerable<MemberInfo> candidates, Type[]? parameterTypes, Type[]? genericTypes)
@@ -228,7 +321,15 @@ internal static class ReflectionTools
                 ParameterInfo[] parameters = method.GetParameters();
                 if (parameters.Length != parameterTypes.Length)
                     continue;
-                if (!parameters.Zip(parameterTypes, (p, t) => (p, t)).All(x => ParameterTypeMatcher(x.p, x.t)))
+                bool matches = true;
+                for (int i = 0; i < parameters.Length; i++)
+                    if (!ParameterTypeMatcher(parameters[i], parameterTypes[i]))
+                    {
+                        matches = false;
+                        break;
+                    }
+
+                if (!matches)
                     continue;
             }
 

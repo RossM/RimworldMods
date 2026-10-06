@@ -244,7 +244,10 @@ public static class Patch
         /// </summary>
         /// <param name="member">The property whose getter calls are matched. The property must have a getter.</param>
         /// <returns>A copy of the configuration whose inner target is the property's getter.</returns>
-        public PatchConfig InnerGet(PropertyInfo member) => patchConfig with { InnerTarget = new MethodInvocation(member.GetMethod) };
+        public PatchConfig InnerGet(PropertyInfo member) => patchConfig with
+        {
+            InnerTarget = new MethodInvocation(member.GetMethod ?? throw new ArgumentException(null, nameof(member))),
+        };
 
         /// <summary>
         ///     Returns a copy targeting reads of the specified field inside the outer target.
@@ -258,7 +261,10 @@ public static class Patch
         /// </summary>
         /// <param name="member">The property whose setter calls are matched. The property must have a setter.</param>
         /// <returns>A copy of the configuration whose inner target is the property's setter.</returns>
-        public PatchConfig InnerSet(PropertyInfo member) => patchConfig with { InnerTarget = new MethodInvocation(member.SetMethod) };
+        public PatchConfig InnerSet(PropertyInfo member) => patchConfig with
+        {
+            InnerTarget = new MethodInvocation(member.SetMethod ?? throw new ArgumentException(null, nameof(member))),
+        };
 
         /// <summary>
         ///     Returns a copy targeting writes to the specified field inside the outer target.

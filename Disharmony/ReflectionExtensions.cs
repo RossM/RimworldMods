@@ -59,7 +59,7 @@ public static class ReflectionExtensions
         /// <summary>
         ///     Gets the element type of a managed reference, or the original type if it is not a managed reference.
         /// </summary>
-        internal Type NoRefType => type.IsByRef ? type.GetElementType() : type;
+        internal Type NoRefType => type.IsByRef ? type.GetElementType()! : type;
 
         /// <summary>
         ///     Gets the type used for an invocation receiver: value types by reference and reference types unchanged.

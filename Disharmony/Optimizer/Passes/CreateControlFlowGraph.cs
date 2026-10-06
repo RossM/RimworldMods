@@ -8,7 +8,7 @@ internal class CreateControlFlowGraph : Pass
     public CreateControlFlowGraph(Optimizer optimizer) : base(optimizer)
     {
         if (Method.HasThis)
-            ParameterTypes = [Method.DeclaringType.CallableType, .. Method.GetParameters().Types()];
+            ParameterTypes = [Method.DeclaringType!.CallableType, .. Method.GetParameters().Types()];
         else
             ParameterTypes = [.. Method.GetParameters().Types()];
 
@@ -32,7 +32,7 @@ internal class CreateControlFlowGraph : Pass
     private int NextStackSlotId { get; set; }
     private int NextBlockLabelId { get; set; } = 1;
 
-    private MethodBody? GetMethodBodyOrNull(MethodBase method)
+    private static MethodBody? GetMethodBodyOrNull(MethodBase method)
     {
         try
         {
@@ -67,7 +67,7 @@ internal class CreateControlFlowGraph : Pass
         // so disable validation.
         Optimizer.cfg = new ControlFlowGraph(RootRegion, BasicBlocks, Edges, Arguments, Locals, validate: false);
 
-        ProtectedRegionRewriteVisitor visitor = new ProtectedRegionRewriteVisitor(ExceptionGroups);
+        ProtectedRegionRewriteVisitor visitor = new(ExceptionGroups);
         Optimizer.cfg = visitor.Visit(Optimizer.cfg);
     }
 
@@ -101,7 +101,7 @@ internal class CreateControlFlowGraph : Pass
 
         if (locals.Count > 0)
             for (int i = 0; i <= locals.Keys.Max(); i++)
-                Locals.Add(locals.TryGetValue(i, out Local local) ? local : new Local(TypeLattice.Any, i));
+                Locals.Add(locals.TryGetValue(i, out Local? local) ? local : new Local(TypeLattice.Any, i));
     }
 
     private BlockLabel CreateBlockLabel() => new(Id: NextBlockLabelId++);
@@ -214,7 +214,7 @@ internal class CreateControlFlowGraph : Pass
                     case ExceptionBlockType.EndExceptionBlock:
                         // Handled later
                         break;
-                    default: throw new ArgumentOutOfRangeException();
+                    default: throw new InvalidOperationException();
                 }
             }
 
@@ -318,7 +318,7 @@ internal class CreateControlFlowGraph : Pass
                 continue;
             }
 
-            ILInstruction il = new ILInstruction(instruction.opcode, instruction.operand, prefixes);
+            ILInstruction il = new(instruction.opcode, instruction.operand, prefixes);
             prefixes = [];
 
             if (EndsBasicBlock(instruction))
@@ -341,7 +341,7 @@ internal class CreateControlFlowGraph : Pass
                     curStack.Add(result);
                     break;
                 }
-                default: throw new ArgumentOutOfRangeException();
+                default: throw new InvalidOperationException();
             }
         }
 
@@ -370,7 +370,7 @@ internal class CreateControlFlowGraph : Pass
                         [fallthroughLabel ?? throw new InvalidOperationException(), .. labels.Select(label => BlockLabels[label])]),
                 FlowControl.Return when popped.Count == 0 => new Return(il, new VoidOp()),
                 FlowControl.Return => new Return(il, popped[0]),
-                _ => throw new ArgumentOutOfRangeException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(instruction), instruction, null),
             },
         };
         return branch;

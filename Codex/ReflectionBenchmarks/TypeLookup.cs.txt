@@ -1,0 +1,64 @@
+    // Replace the entire generation on assembly load. An older build can finish without
+    // publishing its snapshot over a newer generation; no lock spans assembly enumeration.
+    private sealed class TypeLookupGeneration
+    {
+        internal readonly Lazy<TypeIndex> Index = new(BuildTypeIndex);
+    }
+
+    private sealed class TypeIndex(Dictionary<string, Type> names, Assembly[] assemblies, Assembly[] fallbackAssemblies)
+    {
+        internal readonly Dictionary<string, Type> Names = names;
+        internal readonly Assembly[] Assemblies = assemblies;
+        internal readonly Assembly[] FallbackAssemblies = fallbackAssemblies;
+    }
+
+    private static readonly char[] TypeNameSyntax = ['+', '[', ']', '*', '&', '\\', ','];
+
+    public static Type? GetTypeByName(string name)
+    {
+        // Preserve runtime resolution precedence, including assembly-qualified and constructed types.
+        if (Type.GetType(name, throwOnError: false) is { } runtimeType)
+            return runtimeType;
+
+        TypeLookupGeneration generation;
+        TypeIndex index;
+        do
+        {
+            generation = System.Threading.Volatile.Read(ref _typeLookup);
+            index = generation.Index.Value;
+        } while (!ReferenceEquals(generation, System.Threading.Volatile.Read(ref _typeLookup)));
+        if (index.Names.TryGetValue(name, out Type? type))
+            return type;
+
+        // A plain top-level type name is already covered by the alias index. Only dynamic
+        // assemblies and assemblies whose types could not all be read can add an unseen
+        // match. Complex reflection names still require the runtime's parser and resolver.
+        Assembly[] assemblies = name.IndexOfAny(TypeNameSyntax) < 0 ? index.FallbackAssemblies : index.Assemblies;
+        foreach (Assembly assembly in assemblies)
+            if (assembly.GetType(name, throwOnError: false) is { } found)
+                return found;
+        return null;
+    }
+
+    private static TypeIndex BuildTypeIndex()
+    {
+        Assembly[] assemblies = [.. AccessTools.AllAssemblies()];
+        var fallback = new System.Collections.Concurrent.ConcurrentBag<Assembly>();
+        Type[] allTypes = [.. assemblies.AsParallel().SelectMany(assembly =>
+        {
+            if (assembly.IsDynamic) fallback.Add(assembly);
+            try { return assembly.GetTypes(); }
+            catch
+            {
+                if (!assembly.IsDynamic) fallback.Add(assembly);
+                return AccessTools.GetTypesFromAssembly(assembly);
+            }
+        }).AsUnordered()];
+
+        Dictionary<string, Type> names = [];
+        foreach (Type type in allTypes) names[type.Name] = type;
+        foreach (Type type in allTypes) names[$"{type.Namespace}.{type.Name}"] = type;
+        // Preserve the original assembly search order in the fallback path.
+        var fallbackSet = new HashSet<Assembly>(fallback);
+        return new TypeIndex(names, assemblies, assemblies.Where(fallbackSet.Contains).ToArray());
+    }

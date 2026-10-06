@@ -6,7 +6,7 @@ namespace Disharmony.Utilities;
 /// <summary>
 ///     Associates each key with an insertion-ordered collection of values.
 /// </summary>
-internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement>
+internal sealed class MultiDictionary<TKey, TElement> : ILookup<TKey, TElement> where TKey : notnull
 {
     private class Grouping(TKey key, IEnumerable<TElement> values) : IGrouping<TKey, TElement>
     {

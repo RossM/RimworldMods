@@ -1,0 +1,51 @@
+    private static List<MemberInfo> GetResults(Type type, List<string> nameParts, MemberType memberType, Type[]? parameterTypes, Type[]? genericTypes, bool searchBaseTypes = false)
+    {
+        IEnumerable<MemberInfo> candidates = nameParts.Count switch
+        {
+            0 => type.GetConstructors(),
+            1 => type.GetMember(nameParts[0], DeclaredOnly).Where(m => m.Name == nameParts[0]),
+            2 => GetLocalMethods(type, nameParts[1] == "*"
+                ? $"<{nameParts[0]}>b__" : $"<{nameParts[0]}>g__{nameParts[1]}|"),
+            _ => throw new NotSupportedException("Nested local functions are not supported"),
+        };
+
+        // Validate even when the name has no candidates, as in the original implementation.
+        MemberTypes kinds = memberType switch
+        {
+            MemberType.Any => MemberTypes.Method | MemberTypes.Field | MemberTypes.Property,
+            MemberType.Method => MemberTypes.Method,
+            MemberType.Getter or MemberType.Setter => MemberTypes.Field | MemberTypes.Property,
+            MemberType.Constructor => MemberTypes.Constructor,
+            _ => throw new ArgumentOutOfRangeException(nameof(memberType), memberType, null),
+        };
+
+        List<MemberInfo> matches = [];
+        foreach (MemberInfo candidate in candidates)
+            if ((candidate.MemberType & kinds) != 0) matches.Add(candidate);
+
+        // Name/kind shadowing precedes signature filtering and accessor conversion.
+        if (matches.Count == 0 && searchBaseTypes && type.BaseType is { } baseType)
+            return GetResults(baseType, nameParts, memberType, parameterTypes, genericTypes, true);
+
+        if (parameterTypes is not null || genericTypes is not null)
+            return [.. FilterMethods(matches, parameterTypes, genericTypes)];
+
+        for (int i = matches.Count - 1; i >= 0; i--)
+            if (matches[i] is PropertyInfo property)
+            {
+                MethodInfo? accessor = memberType == MemberType.Setter ? property.SetMethod : property.GetMethod;
+                if (accessor is null) matches.RemoveAt(i);
+                else matches[i] = accessor;
+            }
+        return matches;
+    }
+
+    private static IEnumerable<MethodInfo> GetLocalMethods(Type type, string prefix)
+    {
+        foreach (Type nested in type.GetNestedTypes(DeclaredOnly))
+            if (nested.IsClosureType)
+                foreach (MethodInfo method in nested.GetMethods(DeclaredOnly))
+                    if (method.Name.StartsWith(prefix)) yield return method;
+        foreach (MethodInfo method in type.GetMethods(DeclaredOnly))
+            if (method.Name.StartsWith(prefix)) yield return method;
+    }
