@@ -3,6 +3,8 @@
     <TargetFramework>net4.7.2</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <!-- Always run the data sync when Visual Studio builds before launching the game. -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
     <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
   </PropertyGroup>
@@ -14,6 +16,11 @@
   </PropertyGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <StaleModData Include="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\**\*"
+                    Exclude="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\**\*;@(None->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(Identity)')" />
+    </ItemGroup>
+    <Delete Files="@(StaleModData)" />
     <Copy SourceFiles="@(None)" DestinationFiles="@(None->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(Identity)')" SkipUnchangedFiles="true" />
   </Target>
 
