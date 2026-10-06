@@ -19,7 +19,7 @@
 
 ## Sources and fidelity
 
-The library was selected by inspecting all 49 gene icons in `XylXenos/Textures/Xyl/UI/Icons/Genes` and all 45 `Gene_*.png` icons in `Art/Rimworld art`. Corresponding layered GIMP artwork in `Art` supplied most exports. Hidden reference, outline and unused experiment layers were excluded, except for the clean standalone medical cross recovered from the emergency-reserves draft.
+The library was selected by inspecting all 49 gene icons in `XylXenos.Data/Textures/Xyl/UI/Icons/Genes` and all 45 `Gene_*.png` icons in `Art/Rimworld art`. Corresponding layered GIMP artwork in `Art` supplied most exports. Hidden reference, outline and unused experiment layers were excluded, except for the clean standalone medical cross recovered from the emergency-reserves draft.
 
 `sources.json` identifies the source file and GIMP layer names/indices for each component, its cropped source resolution, color treatment and any reconstruction. Most shapes were exported directly from existing layers. The vanilla-only PNGs are 128 x 128; their exports are enlarged for consistent canvas size and do not gain new detail. At small icon sizes this is usually inconsequential, but prefer the native-layer components when enlarging a composition.
 

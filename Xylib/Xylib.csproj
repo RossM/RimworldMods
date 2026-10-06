@@ -3,29 +3,29 @@
   <PropertyGroup>
     <TargetFramework>net4.7.2</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>XylIdeos</AssemblyName>
-    <RootNamespace>XylIdeos</RootNamespace>
+    <AssemblyName>Xylib</AssemblyName>
+    <RootNamespace>Xylib</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
-
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy &quot;bin\$(Configuration)\$(TargetFramework)\XylIdeos.dll&quot; &quot;..\XylIdeoTweaks\Assemblies\XylIdeos.dll&quot;" />
-  </Target>
 
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" />
-    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
     <PackageReference Include="PolySharp" Version="1.16.0">
-      <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Source_Xylib\Source_Xylib.csproj" />
     <ProjectReference Include="..\Disharmony\Disharmony.csproj" />
     <ProjectReference Include="..\Disharmony.Analyzers\Disharmony.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" />
+  </Target>
 
 </Project>

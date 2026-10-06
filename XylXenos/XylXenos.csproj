@@ -1,27 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net4.7.2</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-    <BaseOutputPath>..\Build\bin</BaseOutputPath>
-    <IntermediateOutputPath>..\Build\obj</IntermediateOutputPath>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <AssemblyName>XylXenos</AssemblyName>
+    <RootNamespace>XylXenos</RootNamespace>
+
+    <Version>1.0.0.0</Version>
+    <AssemblyInformationalVersion>1.0.0-alpha</AssemblyInformationalVersion>
+
+    <PublicizerClearCacheOnClean>true</PublicizerClearCacheOnClean>
+    <PublicizerLogFilePath>../Build/Publicizer.log.txt</PublicizerLogFilePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Folder Include="Languages\English\Strings\Xyl\Names\Bossaps\" />
-    <Folder Include="Languages\English\Strings\Xyl\Names\Trog\" />
-    <Folder Include="Languages\English\Strings\Xyl\WordParts\Trog\" />
-    <Folder Include="Languages\English\Strings\Xyl\WordParts\Nixie\" />
-    <Folder Include="Languages\English\Strings\Xyl\Words\Trog\" />
-    <Folder Include="Textures\Xyl\Things\Pawn\Humanlike\BodyAttachments\DemonTail\" />
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+    <PackageReference Include="PolySharp" Version="1.16.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Publicize Include="Assembly-CSharp:RimWorld.GameConditionManager.AllowEnjoyableOutsideNow" />
+    <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
+    <Publicize Include="Assembly-CSharp:RimWorld.XenotypeSet.xenotypeChances" />
+    <Publicize Include="Assembly-CSharp:Verse.HediffComp_TendDuration.totalTendQuality" />
+    <Publicize Include="Assembly-CSharp:Verse.ShotReport.factorFromCoveringGas" />
+    <Publicize Include="Assembly-CSharp:Verse.XmlToObjectUtils.customDataLoadMethodCache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XylXenos.Data\XylXenos.Data.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Xylib\Xylib.csproj" />
+    <ProjectReference Include="..\Disharmony\Disharmony.csproj" />
+    <ProjectReference Include="..\Disharmony.Analyzers\Disharmony.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <RemoveDir Directories="obj" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies" />
   </Target>
+
 </Project>

@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net4.7.2</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <BaseOutputPath>..\Build\bin</BaseOutputPath>
-    <IntermediateOutputPath>..\Build\obj</IntermediateOutputPath>
+    <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <RemoveDir Directories="obj" />
+    <Copy SourceFiles="@(None)" DestinationFiles="@(None->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(Identity)')" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CleanModOutput" AfterTargets="Clean">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos" />
   </Target>
 </Project>

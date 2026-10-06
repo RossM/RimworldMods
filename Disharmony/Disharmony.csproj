@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent" Condition="'$(DeployToMods)' == 'true' and '$(TargetFramework)' == 'net472'">
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)\..\XylIdeoTweaks\Assemblies\$(TargetFileName)" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)\..\XylXenos\Assemblies\$(TargetFileName)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\$(TargetFileName)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies\$(TargetFileName)" />
   </Target>
 
 </Project>

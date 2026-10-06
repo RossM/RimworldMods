@@ -22,7 +22,7 @@ def font(filename, size):
 
 
 def icon(name, size):
-    source = Image.open(ROOT / "XylXenos/Textures/Xyl/UI/Icons/Xenotypes" / f"{name}_small.png").convert("RGBA")
+    source = Image.open(ROOT / "XylXenos.Data/Textures/Xyl/UI/Icons/Xenotypes" / f"{name}_small.png").convert("RGBA")
     return ImageOps.contain(source, (size, size), Image.Resampling.LANCZOS)
 
 
