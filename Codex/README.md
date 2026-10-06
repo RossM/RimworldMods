@@ -1,0 +1,3 @@
+Files in this directory are artifacts produced by ChatGPT codex, preserved for possible future use. They have not been reviewed by a human. They are not to be taken as official product code, documentation, tests, or requirements of any sort.
+
+Use this directory only to store things which will be genuinely useful to future agents. Do not store random output files, status reports, or similar here. If in doubt, put it in temp/ instead.
