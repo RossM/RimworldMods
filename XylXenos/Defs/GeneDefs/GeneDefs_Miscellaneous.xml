@@ -709,7 +709,7 @@
   <GeneDef ParentName="GeneNoseBase">
     <defName>XylNose_Beaver</defName>
     <label>beaver teeth</label>
-    <description>Carriers of this gene have strong, chisel-shaped teeth. They cut trees twice as fast, and their bites deal twice as much damage.</description>
+    <description>Carriers of this gene have strong, chisel-shaped teeth and powerful jaw muscles. They cut trees twice as fast, and their bites deal twice as much damage.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>

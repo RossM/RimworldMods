@@ -322,7 +322,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
-| <img src="Docs/Images/Genes/Endo/XylNose_Beaver.png" alt="Beaver teeth" width="80" height="80"> | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have strong, chisel-shaped teeth. They cut trees twice as fast, and their bites deal twice as much damage. |
+| <img src="Docs/Images/Genes/Endo/XylNose_Beaver.png" alt="Beaver teeth" width="80" height="80"> | [Beaver teeth](Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene have strong, chisel-shaped teeth and powerful jaw muscles. They cut trees twice as fast, and their bites deal twice as much damage. |
 | <img src="Docs/Images/Genes/Endo/XylTail_Beaver.png" alt="Beaver tail" width="80" height="80"> | [Beaver tail](Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a broad, flat tail resembling that of an alphabeaver that helps with temperature regulation. |
 | <img src="Docs/Images/Genes/Endo/XylDwarf.png" alt="Dwarf" width="80" height="80"> | [Dwarf](Defs/GeneDefs/GeneDefs_Body.xml) | Carriers of this gene have smaller bodies with proportionately larger heads. Their short legs somewhat reduce their movement speed. |
 | <img src="Docs/Images/Genes/Endo/XylIndustrious.png" alt="Industrious" width="80" height="80"> | [Industrious](Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are exceptionally fast workers. |
