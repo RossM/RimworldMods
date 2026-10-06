@@ -717,10 +717,10 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_BeaverTeeth</iconPath>
     <iconColor>(1, 1, 1)</iconColor>
     <renderNodeProperties>
-      <li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
         <debugLabel>BeaverNose</debugLabel>
+        <flipWhenCrawling>true</flipWhenCrawling>
         <nodeClass>XylXenos.PawnRenderNode_AttachmentHeadComplex</nodeClass>
-        <workerClass>XylXenos.PawnRenderNodeWorker_HeadAttachment</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/BeaverNose/BeaverNose</texPath>
         <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
         <useSkinShader>true</useSkinShader>
