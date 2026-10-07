@@ -23,6 +23,12 @@ public static class XStatDefOf
     /// <summary>The character's multiplier on the learning rate for skills with no passion.</summary>
     public static StatDef XylLearnFactorPassionNone;
 
+    /// <summary>A multiplier on the chance that this animal becomes a manhunter when it takes damage.</summary>
+    public static StatDef XylManhunterChanceOnDamageFactor;
+
+    /// <summary>A multiplier on the chance that this animal becomes a manhunter when an attempt to tame it fails.</summary>
+    public static StatDef XylManhunterChanceOnTameFailFactor;
+
     /// <summary>Chance to dodge a ranged attack that would've otherwise hit.</summary>
     public static StatDef XylRangedDodgeChance;
 

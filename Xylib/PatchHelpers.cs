@@ -239,4 +239,14 @@ internal static class PatchHelpers
 
         return errors;
     }
+
+    public static void AppendExtraStatFactors(Pawn pawn, StatDef stat, StringBuilder sb)
+    {
+        float statValue = pawn.GetStatValue(stat);
+        if (Mathf.Approximately(statValue, 1.0f))
+            return;
+        sb.AppendLine($"{"XylOtherFactors".Translate()}: x{statValue.ToStringPercent()}");
+        sb.Append(StatUtility.GetOffsetsAndFactorsFor(stat, pawn));
+        sb.AppendLine();
+    }
 }

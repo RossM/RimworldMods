@@ -14,7 +14,7 @@
     <prisonBreakMTBFactor>-1</prisonBreakMTBFactor>
     <statFactors>
       <XylWillFallRate>4</XylWillFallRate>
-      <!--<XylSlaveRebellionMtbFactor>4</XylSlaveRebellionMtbFactor>-->
+      <XylManhunterChanceOnTameFailFactor>0</XylManhunterChanceOnTameFailFactor>
     </statFactors>
     <customEffectDescriptions>
       <li>Slave suppression fall rate: x0.25</li>
@@ -91,6 +91,9 @@
     <displayCategory>Violence</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SeeingRed</iconPath>
+    <statFactors>
+      <XylManhunterChanceOnDamageFactor>2</XylManhunterChanceOnDamageFactor>
+    </statFactors>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>

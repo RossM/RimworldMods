@@ -350,4 +350,29 @@
     <displayPriorityInCategory>4549</displayPriorityInCategory>
   </StatDef>
 
+  <StatDef>
+    <defName>XylManhunterChanceOnDamageFactor</defName>
+    <workerClass>Xylib.StatWorker_ManhunterChance</workerClass>
+    <label>manhunter chance on damage factor</label>
+    <description>A multiplier on the chance that this animal becomes a manhunter when it takes damage.</description>
+    <category>PawnCombat</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+  </StatDef>
+  <StatDef>
+    <defName>XylManhunterChanceOnTameFailFactor</defName>
+    <workerClass>Xylib.StatWorker_ManhunterChance</workerClass>
+    <label>manhunter chance on tame failure factor</label>
+    <description>A multiplier on the chance that this animal becomes a manhunter when an attempt to tame it fails.</description>
+    <category>PawnCombat</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+  </StatDef>
+
 </Defs>
