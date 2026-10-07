@@ -2,7 +2,7 @@
 
 Plain-text descriptions of the visible artwork, grouped by source folder and filename. These describe the icons themselves rather than the genes' gameplay effects. Most use simple flat shapes, thick black outlines, and transparent backgrounds.
 
-Includes all 75 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all 76 gene icons in Art/Rimworld art/Genes/. The NoArt placeholder and endogene background are listed separately as supporting assets. Unrelated xenotype icons, character textures, apparel, animals, items, and settlement artwork are excluded.
+Includes all 83 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all 77 gene icons in Art/Rimworld art/Genes/. The NoArt placeholder and three gene backgrounds are listed separately as supporting assets. Descriptions refer to the source artwork before in-game tinting or badge backgrounds. Contact-sheet entries without source art in these folders, unrelated xenotype icons, character textures, apparel, animals, items, and settlement artwork are excluded.
 
 ## XylXenos.Data/Textures/Xyl/UI/Icons/Genes/
 
@@ -10,7 +10,7 @@ Includes all 75 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_AlwaysMale.png: A light-blue male symbol: a circular ring with an arrow pointing diagonally up and right.
 - Gene_Aquatic.png: Three gray bubbles with white highlights, with one large bubble below two smaller rising bubbles.
 - Gene_BatWings.png: A small gray bat seen from the front, with pointed ears and broad, outstretched wings with scalloped lower edges.
-- Gene_BeaverTeeth.png: Two large white upper incisors and two small lower incisors against a round gray mouth area.
+- Gene_BeaverTeeth.png: Two large white upper incisors tapering toward their lower ends and two small lower incisors against a round gray mouth area.
 - Gene_BioRejection.png: An olive gear broken into separated sections around an empty center.
 - Gene_Blind.png: A gray eye covered by a large muted-red X.
 - Gene_CarnivoreStomach.png: A tan stomach with a reddish-brown steak overlapping its lower-right side.
@@ -21,43 +21,48 @@ Includes all 75 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_Dwarf.png: A vertical yellow measuring ruler with black tick marks and a muted-red downward arrow beside it.
 - Gene_EarSmallPointed.png: A single narrow, upright white ear tapering to a sharp point, with gray inner folds.
 - Gene_Echolocation.png: A gray head-and-torso bust flanked by three curved magenta sound-wave bands on each side.
-- Gene_EmergencyReserves.png: Two upright, rounded gray lobes with a light-blue medical cross centered over them.
+- Gene_EmergencyReserves.png: Two upright gray canisters with rounded necks, overlapped by a light-blue shield in the center.
 - Gene_EMPBlast.png: An irregular blue starburst with long pointed spikes and a darker blue inner border.
 - Gene_EvenTemper.png: Two gray mountain peaks, one taller than the other, with white snowcaps and a darker base.
-- Gene_FacialStripes.png: A white oval face with gray eyes, three short vertical forehead marks, and short stripes on both cheeks.
+- Gene_FacialStripes.png: A white oval face with gray eyes, three tapered gray stripes descending from the top of the forehead, and two short stripes on each cheek.
 - Gene_FastReflexes.png: An orange leaping cat silhouette in side view, stretched horizontally with its tail curled upward.
 - Gene_FeralRage.png: Four bright-red, tapered claw slashes slanting upward to the right.
 - Gene_FinEars.png: A white fin-shaped ear with a pointed outer tip, a scalloped lower edge, and curved gray ribs.
+- Gene_Focused.png: A single upright orange flame with a pale-yellow inner flame and a pointed tip curving to the right.
 - Gene_ForeheadMark.png: A white angular, hooked rune resembling a bent lightning bolt, with an open notch through its upper section.
-- Gene_GeneticAtavism.png: An upright, slightly tilted DNA double helix with pink and cyan strands and crossbars.
+- Gene_GeneticAtavism.png: An upright, slightly tilted DNA double helix with muted-red and light-gray strands and crossbars.
 - Gene_Giant.png: A vertical yellow measuring ruler with black tick marks and a green upward arrow beside it.
-- Gene_HairStyleBaldOnlyFemale.png: A white bald head with gray eyes, a four-point sparkle at its upper-left edge, and a small pink female symbol at the lower right.
-- Gene_HairStyleBaldOnlyMale.png: A white bald head with gray eyes, a four-point sparkle at its upper-left edge, and a small light-blue male symbol at the lower right.
-- Gene_HairStyleLongOnlyFemale.png: A white face framed by long, straight, center-parted hair, with a small pink female symbol at the lower right.
-- Gene_HairStyleLongOnlyMale.png: A white face framed by long, straight, center-parted hair, with a small light-blue male symbol at the lower right.
-- Gene_HairStyleShortOnlyFemale.png: A white head with a short, jagged fringe and gray eyes, with a small pink female symbol at the lower right.
-- Gene_HairStyleShortOnlyMale.png: A white head with a short, jagged fringe and gray eyes, with a small light-blue male symbol at the lower right.
+- Gene_Greedy.png: A stack of four gold coins with pale-yellow highlights and darker golden shading along their edges.
+- Gene_HairStyleBaldOnlyFemale.png: A light-gray bald head with gray eyes, a four-point sparkle at its upper-left edge, and a pink female symbol overlapping the lower right.
+- Gene_HairStyleBaldOnlyMale.png: A light-gray bald head with gray eyes, a four-point sparkle at its upper-left edge, and a light-blue male symbol overlapping the lower right.
+- Gene_HairStyleLongOnlyFemale.png: A light-gray face with gray eyes framed by long, straight, center-parted hair with pointed ends, with a pink female symbol overlapping the lower right.
+- Gene_HairStyleLongOnlyMale.png: A light-gray face with gray eyes framed by long, straight, center-parted hair with pointed ends, with a light-blue male symbol overlapping the lower right.
+- Gene_HairStyleShortOnlyFemale.png: A light-gray head with gray eyes and short hair with a dark-gray jagged hairline, with a pink female symbol overlapping the lower right.
+- Gene_HairStyleShortOnlyMale.png: A light-gray head with gray eyes and short hair with a dark-gray jagged hairline, with a light-blue male symbol overlapping the lower right.
 - Gene_Head_Trog.png: A broad, rounded white head with a slightly tapered chin and two small, downturned gray eyes.
 - Gene_HerbivoreStomach.png: A tan stomach with a yellow ear of corn in green husks overlapping its lower-right side.
 - Gene_HerdInstinct.png: A close cluster of five white head-and-torso figures, with two in front and three behind.
-- Gene_Hyperlactation.png: Two gray pails with arched handles, filled with white liquid and arranged with one slightly behind the other.
-- Gene_Industrious.png: A large gray gear meshing with a smaller one below and to the right, overlapped by a green upward arrow.
+- Gene_Hyperlactation.png: Two gray pails with arched handles and white liquid visible inside, with the right pail slightly lower and in front of the left.
+- Gene_Industrious.png: A large gray gear meshing with a smaller one below and to the right, overlapped on the right by a large green upward arrow.
 - Gene_InsectPheromones.png: An olive insect head with curved mandibles beneath a large pink heart.
 - Gene_Joyless.png: A gray chess knight covered by a large muted-red X.
 - Gene_KeenEars.png: A gray human ear with darker inner folds, overlapped at the lower right by a green upward arrow.
 - Gene_LargeHorns.png: A white head with gray eyes and two long horns that curve outward and upward from its sides.
-- Gene_Lazy.png: A large gray gear meshing with a smaller one below and to the right, overlapped by a muted-red downward arrow.
+- Gene_Lazy.png: A large gray gear meshing with a smaller one below and to the right, overlapped on the right by a large muted-red downward arrow.
 - Gene_Lithoid.png: A gray laboratory flask containing a single slanted purple crystal or mineral shard.
 - Gene_LoveEuphoria.png: A pink heart with a darker red center and two small, upward-curving horn-like points on its upper lobes.
-- Gene_MeatDependence.png: A red meat drumstick with a pale bone projecting from its lower-left end.
+- Gene_MeatDependence.png: A reddish-brown meat drumstick with a bite missing from its upper-left edge and a pale bone projecting from its lower-left end.
 - Gene_Melancholy.png: A blue sad face with closed eyes and a tear, overlapped at the lower right by a diagonal gray paintbrush.
 - Gene_MineralizedSkin.png: A white oval face with gray eyes and scattered angular gray mineral patches across its forehead and cheeks.
 - Gene_Moody.png: A circular face split vertically into a green smiling left half and a blue frowning right half.
 - Gene_MushroomEater.png: A brown stomach with a small gray mushroom overlapping its lower-right side; the cap has dark spots.
 - Gene_Nocturnal.png: A pale-yellow crescent moon partly hidden behind a small gray cloud.
+- Gene_NoEmpathy.png: A white oval mask-like face with two gray oval eyeholes and two staggered rows of small gray holes over the mouth.
+- Gene_OilSpray.png: A dark-gray splash spreading from a narrow point on the left into rounded lobes on the right, with small lighter-gray highlights.
 - Gene_PainReversal.png: A white broken bone laid diagonally across a pink heart, with the jagged break visible at the center.
 - Gene_Parthenogenetic.png: A pink cell pinched in the middle into two connected rounded lobes, with short darker marks at the constriction.
 - Gene_Petrification.png: An oval gray face divided by a jagged vertical boundary, with cracked stone plates on the left and a smoother face on the right.
+- Gene_PlanetSickness.png: A white rocket pointing diagonally up and right, with a round gray window, two side fins, and a gray central exhaust nozzle.
 - Gene_Precognition.png: Three overlapping, diagonally stacked purple almond shapes, with bright magenta lens-shaped intersections.
 - Gene_RetractableClaws.png: A raised white hand with a curved thumb and four long, curved, pointed claws.
 - Gene_RockToss.png: A thick olive arrow curves upward and to the right toward a faceted gray rock.
@@ -71,16 +76,19 @@ Includes all 75 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_Stoic.png: A white anvil silhouette with a broad top, a pointed left horn, a narrow waist, and a wide foot.
 - Gene_StrongGenes.png: A horizontal olive DNA double helix beneath a large green upward arrow.
 - Gene_SuperSpecialist.png: A gray three-dimensional die with black pips and a large green upward arrow covering much of its right face.
-- Gene_TailBeaver.png: A white paddle-shaped tail, narrow at the top and broad and rounded below, with a gray crosshatched scale pattern.
-- Gene_TailDemon.png: A white curved tail with gray shading, curling upward into an arrowhead-shaped tip on the left.
+- Gene_TailBeaver.png: A dark-gray paddle-shaped tail lying horizontally, with a broad rounded left end tapering to a short narrow base on the right.
+- Gene_TailDemon.png: A white tail with gray shading, curving down from a broad right end and back upward into an arrowhead-shaped tip on the left.
+- Gene_TailReptile.png: A smooth white tail with gray shading, curving from a broad rounded upper-right end down and left to a narrow upturned tip.
+- Gene_TailSquirrel.png: A thick white tail with gray shading, forming a broad rounded curl at the upper left and a narrower curved end at the lower right.
 - Gene_TechAffinity.png: Three gray crossing circuit-like tracks with circular terminals, topped by a green upward arrow.
 - Gene_TelescopicVision.png: A gray eye overlaid with green horizontal and vertical crosshairs, including short measuring ticks.
 - Gene_Torpor.png: A white-outlined thermometer with blue liquid in its bulb, accompanied by three descending olive Zs on the right.
 - Gene_ToxicBurst.png: A gray cloud with an olive radiation trefoil centered in front of it.
+- Gene_UltraFastWoundHealing.png: A large blue upward arrow covered by six light-blue medical crosses of varying sizes, several extending beyond its edges.
 - Gene_UsuallyFemale.png: A large pink female symbol paired with a smaller light-blue male symbol above and to the left.
 - Gene_UsuallyMale.png: A large light-blue male symbol paired with a smaller pink female symbol below and to the right.
 - Gene_WeakGenes.png: A horizontal olive DNA double helix above a large muted-red downward arrow.
-- Gene_YellowEyes.png: An almond-shaped eye with a yellow iris, a dark olive round pupil, and pale outer corners.
+- Gene_YellowEyes.png: An almond-shaped gray eye with a yellow iris and a tall, narrow dark-olive slit pupil.
 
 ### Supporting asset
 
@@ -114,6 +122,7 @@ Includes all 75 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_GauntHead.png: A narrow white face with a broad gray border around the upper head and cheeks tapering to a small chin.
 - Gene_GrayEyes.png: A gray almond-shaped eye with a large medium-gray circular iris and pale outer corners.
 - Gene_GreylessHair.png: A white-and-gray long-haired head covered by a large muted-red X.
+- Gene_HairColor.png: A white swept lock of hair with curved black parting lines, a broad rounded crown, and pointed ends.
 - Gene_HairStyleBaldOnly.png: A white bald head with gray eyes and a four-point white sparkle at its upper-left edge.
 - Gene_HairStyleLongOnly.png: A white face with gray eyes framed by long, straight, center-parted hair with uneven pointed ends.
 - Gene_HairStyleShortOnly.png: A white head with gray eyes and a short, jagged fringe across the forehead.
@@ -165,6 +174,8 @@ Includes all 75 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Strong.png: A gray paintbrush angled up and right, accompanied by a small green upward arrow at its lower right.
 - Terrible.png: A gray paintbrush angled up and right, accompanied by a large muted-red downward arrow covering much of its lower-right side.
 
-### Supporting asset
+### Supporting assets
 
+- GeneBackground_ArchiteGene.png: A vertically elongated yellow hexagonal badge with stepped, notched sides, a thick olive-gray rim, and a black outer outline.
 - GeneBackground_Endogene.png: A vertically elongated, rounded hexagonal badge with a black outer outline, a dark-gray rim, and a lighter gray center.
+- GeneBackground_Xenogene.png: A vertically elongated hexagonal badge with a black outer outline, a light blue-gray rim, and a dark blue-gray center.
