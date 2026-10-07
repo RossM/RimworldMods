@@ -7,7 +7,7 @@
     <label>zeegee refugee</label>
     <apparelMoney>0</apparelMoney>
     <initialWillRange>1~3</initialWillRange>
-    <initialResistanceRange>4~6</initialResistanceRange>
+    <initialResistanceRange>3~6</initialResistanceRange>
     <useFactionXenotypes>false</useFactionXenotypes>
     <xenotypeSet Inherit="false">
       <xenotypeChances>
