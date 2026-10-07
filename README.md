@@ -12,3 +12,25 @@ Current status:
 * Vereid: A plant-based race with abilities based on absorbing sunlight. Design in progress.
 * Voidborn: An anomaly-inspired race. Design in progress.
 * Zeegee: Descendants of the inhabitants of ancient generation ships, adapted for life in orbit. Design in progress.
+
+## Building with Disharmony
+
+Use the .NET 10 SDK and clone [Disharmony](https://github.com/RossM/Disharmony) alongside this repository:
+
+```text
+Repos/
+  RimworldMods/
+    XylRimworldMods.sln
+  Disharmony/
+    Disharmony.sln
+```
+
+XylIdeos, XylXenos, and Xylib reference the sibling Disharmony library and analyzer projects through relative paths. The mod solution also loads the Disharmony projects from that repository.
+
+```powershell
+dotnet build .\XylRimworldMods.sln
+```
+
+Each mod build copies the resolved `Disharmony.dll` from its build output into its `ModBin/<mod>/Assemblies` directory. Disharmony itself does not deploy mod files.
+
+For now, builds require the sibling source checkout. Once Disharmony is released, the project references can be replaced with references to the released library and analyzers; the mod deployment step already uses the resolved build output rather than a Disharmony source-build path.
