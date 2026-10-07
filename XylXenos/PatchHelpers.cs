@@ -4,6 +4,8 @@ namespace XylXenos;
 
 public static class PatchHelpers
 {
+    private const float DocileHappyThreshold = 0.5f;
+
     public enum DominantParent
     {
         None,
@@ -362,7 +364,5 @@ public static class PatchHelpers
     }
 
     public static bool DocileAndHappy(Pawn pawn) =>
-        pawn.genes?.HasActiveGene(DefOf.XylDocile) is true &&
-        pawn.mindState.mentalBreaker is { } breaker &&
-        breaker.CurMood >= breaker.BreakThresholdMinor;
+        pawn.genes?.HasActiveGene(DefOf.XylDocile) is true && pawn.mindState.mentalBreaker is { CurMood: >= DocileHappyThreshold };
 }
