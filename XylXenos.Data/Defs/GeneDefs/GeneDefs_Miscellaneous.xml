@@ -18,7 +18,7 @@
     </statFactors>
     <customEffectDescriptions>
       <li>Slave suppression fall rate: x0.25</li>
-      <li>Will never start or join a slave rebellion while happy.</li>
+      <li>Will never start or join a slave rebellion while mood is at least 50%.</li>
     </customEffectDescriptions>
     <suppressedTraits>
       <Bloodlust />
