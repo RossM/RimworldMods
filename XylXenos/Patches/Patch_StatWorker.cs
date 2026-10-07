@@ -34,7 +34,7 @@ public static class Patch_StatWorker
             capacity = foundHediff.DefExt.substituteCapacity;
     }
 
-    [Feature(typeof(Psycast))]
+    [Feature(typeof(GeneComp_Psycast))]
     [Postfix]
     [Target(typeof(StatWorker), nameof(StatWorker.ShouldShowFor))]
     public static void ShouldShowFor_Postfix(StatDef ___stat, StatRequest req, ref bool __result)
