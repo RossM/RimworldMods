@@ -169,50 +169,54 @@
       <options>
         <li>
           <maker Class="Xylib.GeneSetMaker_List">
-            <count>3</count>
             <genes>
               <li>FireSpew</li>
               <li>FireResistant</li>
+              <li>AptitudePoor_Cooking</li>
               <li>Skin_DeepRed</li>                      
             </genes>
           </maker>
         </li>
         <li>
           <maker Class="Xylib.GeneSetMaker_List">
-            <count>3</count>
             <genes>
               <li>AcidSpray</li>
               <li>ToxResist_Partial</li>
+              <li>AptitudeStrong_Shooting</li>
+              <li>AptitudeTerrible_Cooking</li>
               <li>XylSkin_DarkGreen</li>                      
             </genes>
           </maker>
         </li>
         <li>
           <maker Class="Xylib.GeneSetMaker_List">
-            <count>3</count>
             <genes>
               <li>FoamSpray</li>
               <li>WoundHealing_Fast</li>
+              <li>AptitudeStrong_Medicine</li>
+              <li>AptitudeTerrible_Cooking</li>
               <li>Skin_SheerWhite</li>                      
             </genes>
           </maker>
         </li>
         <li>
           <maker Class="Xylib.GeneSetMaker_List">
-            <count>3</count>
             <genes>
               <li>XylEMPBlast</li>
               <li>Unstoppable</li>
+              <li>AptitudeStrong_Intellectual</li>
+              <li>AptitudeTerrible_Cooking</li>
               <li>XylSkin_DarkBlue</li>                      
             </genes>
           </maker>
         </li>
         <li>
           <maker Class="Xylib.GeneSetMaker_List">
-            <count>3</count>
             <genes>
               <li>XylOilSpray</li>
               <li>Robust</li>
+              <li>AptitudeStrong_Melee</li>
+              <li>AptitudeTerrible_Cooking</li>
               <li>Skin_SlateGray</li>
             </genes>
           </maker>

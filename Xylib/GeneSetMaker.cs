@@ -211,6 +211,11 @@ public class GeneSetMaker_List : GeneSetMaker
 
     public required List<GeneDef> genes;
 
+    public GeneSetMaker_List()
+    {
+        count = new IntRange(int.MaxValue);
+    }
+
     private int CalculateBiostatMet()
     {
         if (count.min <= 0)

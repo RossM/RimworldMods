@@ -364,11 +364,11 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 
 | Lineage | Genes |
 | --- | --- |
-| Red | Fire spew, fire resistance, deep red skin |
-| Green | Acid spray, partial toxic resistance, dark green skin |
-| White | Foam spray, fast wound healing, sheer white skin |
-| Blue | EMP burst, unstoppable, dark blue skin |
-| Black | Oil spray, robust, slate gray skin |
+| Red | Fire spew, fire resistance, poor cooking (replaces awful cooking), deep red skin |
+| Green | Acid spray, partial toxic resistance, good shooting, dark green skin |
+| White | Foam spray, fast wound healing, good medical, sheer white skin |
+| Blue | EMP burst, unstoppable, good intellectual, dark blue skin |
+| Black | Oil spray, robust, good melee, slate gray skin |
 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene | Effect |
 | --- | --- | --- |
