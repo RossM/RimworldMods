@@ -31,6 +31,6 @@ XylIdeos, XylXenos, and Xylib reference the sibling Disharmony library and analy
 dotnet build .\XylRimworldMods.sln
 ```
 
-Each mod build copies the resolved `Disharmony.dll` from its build output into its `ModBin/<mod>/Assemblies` directory. Disharmony itself does not deploy mod files.
+XylXenos and XylIdeos build the sibling `Disharmony.RimWorld` project and copy `0Harmony.dll`, `Disharmony.dll`, and `Disharmony.RimWorld.dll` into their `ModBin/<mod>/Assemblies` directories. Both mods can run without installing the separate Disharmony mod. Their `loadAfter` entries place them after Disharmony when it is enabled.
 
-For now, builds require the sibling source checkout. Once Disharmony is released, the project references can be replaced with references to the released library and analyzers; the mod deployment step already uses the resolved build output rather than a Disharmony source-build path.
+For now, builds require the sibling source checkout. Once Disharmony is released, the library and analyzer references can use the released packages, and the bundled DLLs can come from the released RimWorld mod.

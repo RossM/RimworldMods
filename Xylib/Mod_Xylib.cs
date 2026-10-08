@@ -27,15 +27,6 @@ public static class LateInit
             }
         }
 
-        LongEventHandler.QueueLongEvent(EagerApplyPatches, "XylPatching", true, e => { Log.Error($"Patching error: {e}"); });
-    }
-
-    private static void EagerApplyPatches()
-    {
-        using (new ProfileBlock("Xylib apply patches"))
-        {
-            Task.Factory.StartNew(Patcher.ForceApply, TaskCreationOptions.LongRunning);
-        }
     }
 }
 
