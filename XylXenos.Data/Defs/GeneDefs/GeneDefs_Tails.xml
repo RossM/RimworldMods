@@ -165,6 +165,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Thought">
         <gene>XylTail_Squirrel</gene>
+        <requiresSight>true</requiresSight>
       </li>
     </modExtensions>
   </ThoughtDef>
