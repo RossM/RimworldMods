@@ -109,7 +109,8 @@
       <ComfyTemperatureMin>-5</ComfyTemperatureMin>
     </statOffsets>
     <customEffectDescriptions>
-      <li>Opinion +3</li>
+      <!-- Beauty gives +20 opinion per met, so this is a bit less than half a met worth -->
+      <li>Opinion +8</li>
     </customEffectDescriptions>
     <renderNodeProperties>
       <li>
@@ -159,7 +160,7 @@
     <stages>
       <li>
         <label>squirrel tail</label>
-        <baseOpinionOffset>3</baseOpinionOffset>
+        <baseOpinionOffset>8</baseOpinionOffset>
       </li>
     </stages>
     <modExtensions>
