@@ -153,6 +153,9 @@
     <thoughtClass>Thought_SituationalSocial</thoughtClass>
     <workerClass>XylXenos.ThoughtWorker_HasGene</workerClass>
     <validWhileDespawned>true</validWhileDespawned>
+    <nullifyingTraits>
+      <li>Psychopath</li>
+    </nullifyingTraits>
     <stages>
       <li>
         <label>squirrel tail</label>
