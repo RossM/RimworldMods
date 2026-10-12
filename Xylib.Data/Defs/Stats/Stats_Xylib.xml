@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <StatDef>
+    <defName>XylRawMeatNutritionFactor</defName>
+    <label>raw meat nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw meat is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawAnimalProductNutritionFactor</defName>
+    <label>raw animal product nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw animal products are for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawVegetableNutritionFactor</defName>
+    <label>raw vegetable nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw vegetables are for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawFungusNutritionFactor</defName>
+    <label>raw fungus nutrition multiplier</label>
+    <description>A multiplier on how nutritious raw fungus is for this person. Note that since meals usually have more nutrition than their raw ingredients, a boost to this stat may only mean the person gets the same nutrition from raw food as if it were cooked.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylCookedMeatNutritionFactor</defName>
+    <label>cooked meat nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked meat is for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylCookedAnimalProductNutritionFactor</defName>
+    <label>cooked animal product nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked animal products are for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylCookedVegetableNutritionFactor</defName>
+    <label>cooked vegetable nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked vegetables are for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylCookedFungusNutritionFactor</defName>
+    <label>cooked fungus nutrition multiplier</label>
+    <description>A multiplier on how nutritious cooked fungus is for this person.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylRawMeatFoodPoisonChanceFactor</defName>
+    <label>raw meat food poisoning chance</label>
+    <description>A multiplier to the chance of getting food poisoning from eating raw meat.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawAnimalProductFoodPoisonChanceFactor</defName>
+    <label>raw animal product food poisoning chance</label>
+    <description>A multiplier to the chance of getting food poisoning from eating raw animal products.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawVegetableFoodPoisonChanceFactor</defName>
+    <label>raw vegetable food poisoning chance</label>
+    <description>A multiplier to the chance of getting food poisoning from eating raw vegetables.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylRawFungusFoodPoisonChanceFactor</defName>
+    <label>raw fungus food poisoning chance</label>
+    <description>A multiplier to the chance of getting food poisoning from eating raw fungus.</description>
+    <category>PawnFood</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylResistanceFallRate</defName>
+    <label>global resistance loss factor</label>
+    <description>A multiplier on how quickly this character's resistance falls when they are being recruited.</description>
+    <category>PawnSocial</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylWillFallRate</defName>
+    <label>global will loss factor</label>
+    <description>A multiplier on how quickly this character's will falls when they are being enslaved.</description>
+    <category>PawnSocial</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0.0001</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylSlaveRebellionMtbFactor</defName>
+    <label>slave rebellion interval</label>
+    <description>Affects the average amount of time before the character will rebel as a slave.</description>
+    <category>PawnSocial</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1002</displayPriorityInCategory>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylRangedDodgeChance</defName>
+    <label>ranged dodge chance</label>
+    <description>Chance to dodge a ranged attack that would've otherwise hit.</description>
+    <category>PawnCombat</category>
+    <neverDisabled>true</neverDisabled>
+    <defaultBaseValue>0</defaultBaseValue>
+    <hideAtValue>0</hideAtValue>
+    <minValue>0</minValue>
+    <toStringStyle>PercentZero</toStringStyle>
+    <toStringStyleUnfinalized>FloatOne</toStringStyleUnfinalized>
+    <noSkillOffset>0</noSkillOffset>
+    <capacityOffsets>
+      <li>
+        <capacity>Moving</capacity>
+        <scale>18</scale>
+        <max>1</max>
+      </li>
+      <li>
+        <capacity>Sight</capacity>
+        <scale>8</scale>
+        <max>1</max>
+      </li>
+    </capacityOffsets>
+    <postProcessCurve>
+      <points>
+        <li>(5, 0)</li>
+        <li>(20, 0.30)</li>
+        <li>(60, 0.50)</li>
+      </points>
+    </postProcessCurve>
+    <displayPriorityInCategory>4099</displayPriorityInCategory>
+    <showDevelopmentalStageFilter>Child, Adult</showDevelopmentalStageFilter>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylDrugEffectMultiplier</defName>
+    <label>drug sensitivity</label>
+    <description>How sensitive the character is to drug effects. Characters with high drug sensitivity are more affected by the same dose, and build up tolerance faster.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1910</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylGlobalAddictionChanceFactor</defName>
+    <label>addiction chance</label>
+    <description>Multiplies the character's chance becoming addicted to a drug.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1900</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylLearnFactorPassionNone</defName>
+    <label>learning rate (no passion)</label>
+    <description>The character's multiplier on the learning rate for skills with no passion.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0.35</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>0.35</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>3501</displayPriorityInCategory>
+  </StatDef>
+  <StatDef>
+    <defName>XylLearnFactorPassionMinor</defName>
+    <label>learning rate (passion)</label>
+    <description>The character's multiplier on the learning rate for skills with regular passion.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>3501</displayPriorityInCategory>
+  </StatDef>
+  <StatDef>
+    <defName>XylLearnFactorPassionMajor</defName>
+    <label>learning rate (burning passion)</label>
+    <description>The character's multiplier on the learning rate for skills with burning passion.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1.5</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showOnDrones>false</showOnDrones>
+    <hideAtValue>1.5</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>3501</displayPriorityInCategory>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylBloodLossResistance</defName>
+    <label>blood loss resistance</label>
+    <description>Reduces the effect of blood loss.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0</defaultBaseValue>
+    <hideAtValue>0</hideAtValue>
+    <displayPriorityInCategory>1905</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylDrugOverdoseResistance</defName>
+    <label>drug overdose resistance</label>
+    <description>Reduces the effect of drug overdoses.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0</defaultBaseValue>
+    <hideAtValue>0</hideAtValue>
+    <displayPriorityInCategory>1905</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylHeatstrokeResistance</defName>
+    <label>heatstroke resistance</label>
+    <description>Reduces the effect of heatstroke.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0</defaultBaseValue>
+    <hideAtValue>0</hideAtValue>
+    <displayPriorityInCategory>1905</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylHypothermiaResistance</defName>
+    <label>hypothermia resistance</label>
+    <description>Reduces the effect of hypothermia.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0</defaultBaseValue>
+    <hideAtValue>0</hideAtValue>
+    <displayPriorityInCategory>1905</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+  <StatDef>
+    <defName>XylMalnutritionResistance</defName>
+    <label>malnutrition resistance</label>
+    <description>Reduces the effect of malnutrition.</description>
+    <category>PawnHealth</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0</defaultBaseValue>
+    <hideAtValue>0</hideAtValue>
+    <displayPriorityInCategory>1905</displayPriorityInCategory>
+    <showOnDrones>false</showOnDrones>
+  </StatDef>
+
+  <StatDef>
+    <defName>XylManhunterChanceOnDamageFactor</defName>
+    <workerClass>Xylib.StatWorker_ManhunterChance</workerClass>
+    <label>manhunter chance on damage factor</label>
+    <description>A multiplier on the chance that this animal becomes a manhunter when it takes damage.</description>
+    <category>PawnCombat</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+  </StatDef>
+  <StatDef>
+    <defName>XylManhunterChanceOnTameFailFactor</defName>
+    <workerClass>Xylib.StatWorker_ManhunterChance</workerClass>
+    <label>manhunter chance on tame failure factor</label>
+    <description>A multiplier on the chance that this animal becomes a manhunter when an attempt to tame it fails.</description>
+    <category>PawnCombat</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>1</defaultBaseValue>
+    <hideAtValue>1</hideAtValue>
+    <minValue>0</minValue>
+    <displayPriorityInCategory>1001</displayPriorityInCategory>
+  </StatDef>
+
+</Defs>
