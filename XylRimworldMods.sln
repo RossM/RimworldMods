@@ -9,14 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XylXenos.Data", "XylXenos.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylIdeos", "XylIdeos\XylIdeos.csproj", "{17C59BA0-3875-38FE-3411-A0644177718E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony", "..\Disharmony\Disharmony\Disharmony.csproj", "{C59418CE-8C09-429E-8D71-5A5C17622177}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XylIdeos.Data", "XylIdeos.Data\XylIdeos.Data.csproj", "{A866F0D8-C387-E006-5847-E398E59960F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		AGENTS.md = AGENTS.md
+		Directory.Build.props = Directory.Build.props
 		DataAnalysis\calculate_elo.py = DataAnalysis\calculate_elo.py
 		README.md = README.md
 	EndProjectSection
@@ -24,16 +23,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xylib", "Xylib\Xylib.csproj", "{BC603902-65BA-7AAC-30D5-173A0509DB7D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scripts", "Scripts\Scripts.csproj", "{76731B12-15F4-47BE-AFC9-675B8F6D6B43}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.Tests", "..\Disharmony\Disharmony.Tests\Disharmony.Tests.csproj", "{FBF266F8-A874-4A1C-9918-71580D51B833}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.TestTargets", "..\Disharmony\Disharmony.TestTargets\Disharmony.TestTargets.csproj", "{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.Analyzers", "..\Disharmony\Disharmony.Analyzers\Disharmony.Analyzers.csproj", "{7358300E-8646-4F80-AE2D-1E0228E151A2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.Analyzers.Tests", "..\Disharmony\Disharmony.Analyzers.Tests\Disharmony.Analyzers.Tests.csproj", "{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disharmony.RimWorld", "..\Disharmony\Disharmony.RimWorld\Disharmony.RimWorld.csproj", "{8A485533-B76C-488F-8BA3-C2D3DAFAB35B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +42,6 @@ Global
 		{17C59BA0-3875-38FE-3411-A0644177718E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C59BA0-3875-38FE-3411-A0644177718E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C59BA0-3875-38FE-3411-A0644177718E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C59418CE-8C09-429E-8D71-5A5C17622177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C59418CE-8C09-429E-8D71-5A5C17622177}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C59418CE-8C09-429E-8D71-5A5C17622177}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C59418CE-8C09-429E-8D71-5A5C17622177}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A866F0D8-C387-E006-5847-E398E59960F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A866F0D8-C387-E006-5847-E398E59960F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A866F0D8-C387-E006-5847-E398E59960F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,26 +54,6 @@ Global
 		{76731B12-15F4-47BE-AFC9-675B8F6D6B43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76731B12-15F4-47BE-AFC9-675B8F6D6B43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76731B12-15F4-47BE-AFC9-675B8F6D6B43}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBF266F8-A874-4A1C-9918-71580D51B833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBF266F8-A874-4A1C-9918-71580D51B833}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBF266F8-A874-4A1C-9918-71580D51B833}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBF266F8-A874-4A1C-9918-71580D51B833}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}.Debug|Any CPU.Build.0 = Release|Any CPU
-		{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B9EFC2E-4D3D-4D7D-A3B2-8FC3C7C035AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7358300E-8646-4F80-AE2D-1E0228E151A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7358300E-8646-4F80-AE2D-1E0228E151A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7358300E-8646-4F80-AE2D-1E0228E151A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7358300E-8646-4F80-AE2D-1E0228E151A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BF5ED722-D56D-402C-84F4-AF5EE67C3C77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A485533-B76C-488F-8BA3-C2D3DAFAB35B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A485533-B76C-488F-8BA3-C2D3DAFAB35B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A485533-B76C-488F-8BA3-C2D3DAFAB35B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A485533-B76C-488F-8BA3-C2D3DAFAB35B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

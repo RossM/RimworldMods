@@ -10,9 +10,15 @@
     <RootNamespace>XylIdeos</RootNamespace>
   </PropertyGroup>
 
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetPath);$(TargetDir)0Harmony.dll;$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" />
-  </Target>
+  <ItemGroup Condition="'$(DisharmonySourceDirectory)' == ''">
+    <PackageReference Include="Disharmony" Version="$(DisharmonyVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DisharmonySourceDirectory)' != ''">
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony\Disharmony.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" />
@@ -25,9 +31,15 @@
   <ItemGroup>
     <ProjectReference Include="..\XylIdeos.Data\XylIdeos.Data.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Xylib\Xylib.csproj" />
-    <ProjectReference Include="..\..\Disharmony\Disharmony\Disharmony.csproj" />
-    <ProjectReference Include="..\..\Disharmony\Disharmony.RimWorld\Disharmony.RimWorld.csproj" />
-    <ProjectReference Include="..\..\Disharmony\Disharmony.Analyzers\Disharmony.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)0Harmony.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" />
+    <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll"
+          DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />
+    <!-- Remove previously bundled copies when switching back to the published package. -->
+    <Delete Files="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\Disharmony.dll;$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\Disharmony.RimWorld.dll"
+            Condition="'$(DisharmonySourceDirectory)' == ''" />
+  </Target>
 
 </Project>

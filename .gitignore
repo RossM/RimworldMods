@@ -16,3 +16,4 @@ DataAnalysis/elo_ratings.csv
 .editorconfig
 /tmp
 /ModBin
+/Directory.Build.local.props

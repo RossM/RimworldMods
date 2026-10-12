@@ -13,24 +13,12 @@ Current status:
 * Voidborn: An anomaly-inspired race. Design in progress.
 * Zeegee: Descendants of the inhabitants of ancient generation ships, adapted for life in orbit. Design in progress.
 
-## Building with Disharmony
+## Building
 
-Use the .NET 10 SDK and clone [Disharmony](https://github.com/RossM/Disharmony) alongside this repository:
-
-```text
-Repos/
-  RimworldMods/
-    XylRimworldMods.sln
-  Disharmony/
-    Disharmony.sln
-```
-
-XylIdeos, XylXenos, and Xylib reference the sibling Disharmony library and analyzer projects through relative paths. The mod solution also loads the Disharmony projects from that repository.
+Use the .NET 10 SDK (10.0.400 or later):
 
 ```powershell
 dotnet build .\XylRimworldMods.sln
 ```
 
-XylXenos and XylIdeos build the sibling `Disharmony.RimWorld` project and copy `0Harmony.dll`, `Disharmony.dll`, and `Disharmony.RimWorld.dll` into their `ModBin/<mod>/Assemblies` directories. Both mods can run without installing the separate Disharmony mod. Their `loadAfter` entries place them after Disharmony when it is enabled.
-
-For now, builds require the sibling source checkout. Once Disharmony is released, the library and analyzer references can use the released packages, and the bundled DLLs can come from the released RimWorld mod.
+See [Building the mods](BUILDING.md) for build output, required runtime dependencies, and local Disharmony development.

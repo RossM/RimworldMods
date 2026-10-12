@@ -1,0 +1,14 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Build.local.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
+
+  <PropertyGroup>
+    <DisharmonyVersion>1.0.0-beta.2</DisharmonyVersion>
+    <DisharmonyProjectDirectory Condition="'$(DisharmonySourceDirectory)' != ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '$(DisharmonySourceDirectory)'))</DisharmonyProjectDirectory>
+  </PropertyGroup>
+
+  <!-- External project references should use the solution's selected configuration. -->
+  <PropertyGroup Condition="'$(DisharmonySourceDirectory)' != ''">
+    <ShouldUnsetParentConfigurationAndPlatform>false</ShouldUnsetParentConfigurationAndPlatform>
+  </PropertyGroup>
+</Project>
