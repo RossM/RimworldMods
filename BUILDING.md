@@ -12,6 +12,8 @@ Builds use the released Disharmony NuGet package by default. A Disharmony source
 
 The mods are written to `ModBin/XylXenos` and `ModBin/XylIdeos`. Enable the official [Disharmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3818084845) when running a build made with the NuGet package: these builds include Harmony, but do not bundle the Disharmony assemblies.
 
+Shared mod data belongs in `Xylib.Data`. Building either mod includes this data alongside its own data project; building `Xylib.Data` directly copies its files to both mod outputs.
+
 ## Developing with local Disharmony source
 
 To try changes in your own [Disharmony checkout](https://github.com/RossM/Disharmony), create `Directory.Build.local.props` in this repository's root:

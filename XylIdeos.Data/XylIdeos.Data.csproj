@@ -15,13 +15,23 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Xylib.Data\Xylib.Data.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <!-- Sync shared and mod-specific data together so stale-file cleanup preserves both. -->
+    <MSBuild Projects="$(MSBuildProjectDirectory)\..\Xylib.Data\Xylib.Data.csproj" Targets="GetModDataFiles"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="ModData" />
+    </MSBuild>
     <ItemGroup>
+      <ModData Include="@(None)" ModRelativePath="%(Identity)" />
       <StaleModData Include="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\**\*"
-                    Exclude="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\**\*;@(None->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(Identity)')" />
+                    Exclude="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\**\*;@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" />
     </ItemGroup>
     <Delete Files="@(StaleModData)" />
-    <Copy SourceFiles="@(None)" DestinationFiles="@(None->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(Identity)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="CleanModOutput" AfterTargets="Clean">

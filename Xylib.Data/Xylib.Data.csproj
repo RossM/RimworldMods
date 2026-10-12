@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net4.7.2</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <!-- Always run the data sync when Visual Studio builds before launching the game. -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- Return absolute source paths with destinations relative to each mod's root. -->
+  <Target Name="GetModDataFiles" Returns="@(ModData->'%(FullPath)')">
+    <ItemGroup>
+      <ModData Include="@(None)" ModRelativePath="%(Identity)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent" DependsOnTargets="GetModDataFiles">
+    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylXenos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
