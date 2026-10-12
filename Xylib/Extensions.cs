@@ -1,8 +1,5 @@
 using System.Reflection;
 
-// ReSharper disable ForCanBeConvertedToForeach
-
-// ReSharper disable LoopCanBeConvertedToQuery
 // ReSharper disable UnusedMember.Global
 
 namespace Xylib;
@@ -102,9 +99,8 @@ public static class Extensions
                 return false;
 
             IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
-            for (var index = 0; index < genes.Count; index++)
+            foreach (Gene gene in genes)
             {
-                Gene gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active)
@@ -120,9 +116,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<Gene> genes = pawn.GeneAndHediffCache.GetGenesWithDef(def);
-            for (var index = 0; index < genes.Count; index++)
+            foreach (Gene gene in genes)
             {
-                Gene gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active)
@@ -163,9 +158,8 @@ public static class Extensions
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
-                for (var index = 0; index < genes.Count; index++)
+                foreach (T gene in genes)
                 {
-                    T gene = genes[index];
                     DebugAssert.NotNull(gene);
 
                     if (gene.Active)
@@ -196,9 +190,8 @@ public static class Extensions
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
-                for (var index = 0; index < genes.Count; index++)
+                foreach (T gene in genes)
                 {
-                    T gene = genes[index];
                     DebugAssert.NotNull(gene);
 
                     if (gene.Active && predicate(gene))
@@ -222,9 +215,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (T gene in genes)
             {
-                T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active)
@@ -252,9 +244,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (T gene in genes)
             {
-                T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active && predicate(gene))
@@ -279,9 +270,8 @@ public static class Extensions
                 return false;
 
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (T gene in genes)
             {
-                T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active)
@@ -309,9 +299,8 @@ public static class Extensions
                 return false;
 
             IReadOnlyList<T> genes = pawn.GeneAndHediffCache.GetGenesOfType<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (T gene in genes)
             {
-                T gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active && predicate(gene))
@@ -353,9 +342,8 @@ public static class Extensions
             IEnumerable<GeneWithComps> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-                for (var index = 0; index < genes.Count; index++)
+                foreach (GeneWithComps gene in genes)
                 {
-                    GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
                     if (gene.Active)
@@ -387,9 +375,8 @@ public static class Extensions
             IEnumerable<GeneWithComps> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-                for (var index = 0; index < genes.Count; index++)
+                foreach (GeneWithComps gene in genes)
                 {
-                    GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
                     if (!gene.Active)
@@ -419,9 +406,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (GeneWithComps gene in genes)
             {
-                GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active)
@@ -450,9 +436,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (GeneWithComps gene in genes)
             {
-                GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (!gene.Active)
@@ -483,9 +468,8 @@ public static class Extensions
                 return false;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (GeneWithComps gene in genes)
             {
-                GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (gene.Active)
@@ -514,9 +498,8 @@ public static class Extensions
                 return false;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (GeneWithComps gene in genes)
             {
-                GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (!gene.Active)
@@ -551,9 +534,8 @@ public static class Extensions
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-                for (var index = 0; index < genes.Count; index++)
+                foreach (GeneWithComps gene in genes)
                 {
-                    GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
                     if (!gene.Active)
@@ -589,9 +571,8 @@ public static class Extensions
             IEnumerable<T> Iterator()
             {
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-                for (var index = 0; index < genes.Count; index++)
+                foreach (GeneWithComps gene in genes)
                 {
-                    GeneWithComps gene = genes[index];
                     DebugAssert.NotNull(gene);
 
                     if (!gene.Active)
@@ -621,9 +602,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (GeneWithComps gene in genes)
             {
-                GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (!gene.Active)
@@ -657,9 +637,8 @@ public static class Extensions
                 return null;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            for (var index = 0; index < genes.Count; index++)
+            foreach (GeneWithComps gene in genes)
             {
-                GeneWithComps gene = genes[index];
                 DebugAssert.NotNull(gene);
 
                 if (!gene.Active)
@@ -730,9 +709,8 @@ public static class Extensions
         public IEnumerable<HediffWithComps> HediffsWithComp<T>(Func<T, bool> predicate) where T : HediffComp
         {
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
-            for (var index = 0; index < hediffs.Count; index++)
+            foreach (HediffWithComps hediff in hediffs)
             {
-                HediffWithComps hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
                 if (predicate(hediff.GetComp<T>()))
@@ -767,9 +745,8 @@ public static class Extensions
         public HediffWithComps? FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp
         {
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
-            for (var index = 0; index < hediffs.Count; index++)
+            foreach (HediffWithComps hediff in hediffs)
             {
-                HediffWithComps hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
                 if (predicate(hediff.GetComp<T>()))
@@ -806,9 +783,8 @@ public static class Extensions
         public bool HasHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp
         {
             IReadOnlyList<HediffWithComps> hediffs = pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
-            for (var index = 0; index < hediffs.Count; index++)
+            foreach (HediffWithComps hediff in hediffs)
             {
-                HediffWithComps hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
                 if (predicate(hediff.GetComp<T>()))
@@ -873,9 +849,8 @@ public static class Extensions
         public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension
         {
             IReadOnlyList<Hediff> hediffs = pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
-            for (var index = 0; index < hediffs.Count; index++)
+            foreach (Hediff hediff in hediffs)
             {
-                Hediff hediff = hediffs[index];
                 DebugAssert.NotNull(hediff);
 
                 if (predicate(hediff.def.GetModExtension<T>()))

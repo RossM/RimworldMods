@@ -1,6 +1,4 @@
-﻿// ReSharper disable ForCanBeConvertedToForeach
-
-namespace Xylib;
+﻿namespace Xylib;
 
 /// <summary>
 ///     Represents a component that adds functionality to a <see cref="GeneWithComps" />.
@@ -414,8 +412,8 @@ public class GeneWithComps : Gene, IEventListener
 
         List<HediffGiver>? hediffGivers = DefExt.hediffGivers;
         if (hediffGivers is { Count: > 0 } && pawn.IsHashIntervalTick(60, delta))
-            for (var index = 0; index < hediffGivers.Count; index++)
-                hediffGivers[index]?.OnIntervalPassed(pawn, null);
+            foreach (HediffGiver hediffGiver in hediffGivers)
+                hediffGiver.OnIntervalPassed(pawn, null);
     }
 
     /// <summary>
@@ -449,9 +447,7 @@ public class GeneWithComps : Gene, IEventListener
 
         for (var index = 0; index < DefExt.hediffGivers.Count; index++)
         {
-            HediffGiver? hediffGiver = DefExt.hediffGivers[index];
-            if (hediffGiver is null)
-                continue;
+            HediffGiver hediffGiver = DefExt.hediffGivers[index];
             yield return new Command_Action
             {
                 defaultLabel = $"DEV: Trigger {Label} ({hediffGiver.hediff.label}) #{index}",
@@ -471,9 +467,9 @@ public class GeneWithComps : Gene, IEventListener
         if (comps == null)
             return null;
 
-        for (var index = 0; index < comps.Count; index++)
+        foreach (GeneComp geneComp in comps)
         {
-            if (comps[index] is T t)
+            if (geneComp is T t)
                 return t;
         }
 
