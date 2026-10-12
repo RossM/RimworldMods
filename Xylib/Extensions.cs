@@ -242,13 +242,7 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 foreach (GeneWithComps gene in genes)
                 {
-                    if (!gene.Active)
-                        continue;
-
-                    T? comp = gene.GetComp<T>();
-                    DebugAssert.NotNull(comp);
-
-                    if (predicate(comp))
+                    if (gene.Active && gene.GetComp<T>() is { } comp && predicate(comp))
                         yield return gene;
                 }
             }
@@ -263,9 +257,8 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public GeneWithComps? FirstActiveGeneWithComp<T>() where T : GeneComp => pawn.genes == null
-            ? null
-            : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active);
+        public GeneWithComps? FirstActiveGeneWithComp<T>() where T : GeneComp => 
+            pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active);
 
         /// <summary>
         ///     Gets the first active gene on the pawn that has a <see cref="GeneComp" /> of the specified type which satisfies a
@@ -280,26 +273,8 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public GeneWithComps? FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp
-        {
-            if (pawn.genes == null)
-                return null;
-
-            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            foreach (GeneWithComps gene in genes)
-            {
-                if (!gene.Active)
-                    continue;
-
-                T? comp = gene.GetComp<T>();
-                DebugAssert.NotNull(comp);
-
-                if (predicate(comp))
-                    return gene;
-            }
-
-            return null;
-        }
+        public GeneWithComps? FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp => 
+            pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with a <see cref="GeneComp" /> of the specified type.
@@ -326,26 +301,8 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp
-        {
-            if (pawn.genes == null)
-                return false;
-
-            IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
-            foreach (GeneWithComps gene in genes)
-            {
-                if (!gene.Active)
-                    continue;
-
-                T? comp = gene.GetComp<T>();
-                DebugAssert.NotNull(comp);
-
-                if (predicate(comp))
-                    return true;
-            }
-
-            return false;
-        }
+        public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp => 
+            pawn.genes != null && pawn.GeneAndHediffCache.GetGenesWithComp<T>().Any(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
 
         /// <summary>
         ///     Gets <see cref="GeneComp" /> instances of the specified type from the pawn's active genes.
@@ -368,13 +325,8 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 foreach (GeneWithComps gene in genes)
                 {
-                    if (!gene.Active)
-                        continue;
-
-                    T? comp = gene.GetComp<T>();
-                    DebugAssert.NotNull(comp);
-
-                    yield return comp;
+                    if (gene.Active && gene.GetComp<T>() is { } comp)
+                        yield return comp;
                 }
             }
         }
@@ -403,13 +355,7 @@ public static class Extensions
                 IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
                 foreach (GeneWithComps gene in genes)
                 {
-                    if (!gene.Active)
-                        continue;
-
-                    T? comp = gene.GetComp<T>();
-                    DebugAssert.NotNull(comp);
-
-                    if (predicate(comp))
+                    if (gene.Active && gene.GetComp<T>() is { } comp && predicate(comp))
                         yield return comp;
                 }
             }
@@ -432,13 +378,8 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             foreach (GeneWithComps gene in genes)
             {
-                if (!gene.Active)
-                    continue;
-
-                T? comp = gene.GetComp<T>();
-                DebugAssert.NotNull(comp);
-
-                return comp;
+                if (gene.Active && gene.GetComp<T>() is { } comp)
+                    return comp;
             }
 
             return null;
@@ -465,13 +406,7 @@ public static class Extensions
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
             foreach (GeneWithComps gene in genes)
             {
-                if (!gene.Active)
-                    continue;
-
-                var comp = gene.GetComp<T>();
-                DebugAssert.NotNull(comp);
-
-                if (predicate(comp))
+                if (gene.Active && gene.GetComp<T>() is { } comp && predicate(comp))
                     return comp;
             }
 
