@@ -265,7 +265,6 @@ public class GeneWithComps : Gene, IEventListener
             try
             {
                 var comp = comps[num];
-                DebugAssert.NotNull(comp);
 
                 comp.CompPostMake();
             }
@@ -352,9 +351,10 @@ public class GeneWithComps : Gene, IEventListener
 
         base.PostAdd();
 
-        if (comps != null)
-            foreach (var comp in comps)
-                comp.CompPostPostAdd();
+        if (comps == null)
+            return;
+        foreach (var comp in comps)
+            comp.CompPostPostAdd();
     }
 
     /// <summary>
@@ -368,9 +368,10 @@ public class GeneWithComps : Gene, IEventListener
 
         base.PostRemove();
 
-        if (comps != null)
-            foreach (var comp in comps)
-                comp.CompPostPostRemove();
+        if (comps == null)
+            return;
+        foreach (var comp in comps)
+            comp.CompPostPostRemove();
     }
 
     /// <summary>
@@ -380,9 +381,10 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.Reset();
 
-        if (comps != null)
-            foreach (var comp in comps)
-                comp.CompReset();
+        if (comps == null)
+            return;
+        foreach (var comp in comps)
+            comp.CompReset();
     }
 
     /// <summary>
@@ -391,10 +393,11 @@ public class GeneWithComps : Gene, IEventListener
     /// <returns></returns>
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
     {
-        if (comps != null)
-            foreach (var comp in comps)
-            foreach (var result in comp.SpecialDisplayStats())
-                yield return result;
+        if (comps == null)
+            yield break;
+        foreach (var comp in comps)
+        foreach (var result in comp.SpecialDisplayStats())
+            yield return result;
     }
 
     /// <summary>
@@ -411,9 +414,10 @@ public class GeneWithComps : Gene, IEventListener
         CompTickInterval?.Invoke(delta);
 
         List<HediffGiver>? hediffGivers = DefExt.hediffGivers;
-        if (hediffGivers is { Count: > 0 } && pawn.IsHashIntervalTick(60, delta))
-            foreach (HediffGiver hediffGiver in hediffGivers)
-                hediffGiver.OnIntervalPassed(pawn, null);
+        if (hediffGivers is not { Count: > 0 } || !pawn.IsHashIntervalTick(60, delta))
+            return;
+        foreach (HediffGiver hediffGiver in hediffGivers)
+            hediffGiver.OnIntervalPassed(pawn, null);
     }
 
     /// <summary>
@@ -436,9 +440,11 @@ public class GeneWithComps : Gene, IEventListener
     public override IEnumerable<Gizmo> GetGizmos()
     {
         if (comps != null)
+        {
             foreach (var comp in comps)
             foreach (var gizmo in comp.CompGetGizmos())
                 yield return gizmo;
+        }
 
         if (!DebugSettings.ShowDevGizmos)
             yield break;
@@ -464,16 +470,7 @@ public class GeneWithComps : Gene, IEventListener
     /// <returns>The component, or null if there is no matching component</returns>
     public T? GetComp<T>() where T : GeneComp
     {
-        if (comps == null)
-            return null;
-
-        foreach (GeneComp geneComp in comps)
-        {
-            if (geneComp is T t)
-                return t;
-        }
-
-        return null;
+        return comps?.OfType<T>().FirstOrDefault();
     }
 
     /// <summary>
