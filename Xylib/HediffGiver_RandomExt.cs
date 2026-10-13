@@ -96,10 +96,12 @@ public class HediffGiver_RandomExt : HediffGiver
                     parts = parts.Where(p => !pawn.health.hediffSet.HasHediff(hediff, p));
                 parts = parts.Where(p => !pawn.health.hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(p));
 
-                parts = parts.ToList();
+                parts = [.. parts];
+                // ReSharper disable once PossibleMultipleEnumeration
                 if (!parts.Any())
                     break;
 
+                // ReSharper disable once PossibleMultipleEnumeration
                 Hediff newHediff = HediffMaker.MakeHediff(partRecord: parts.RandomElementByWeight(x => x.coverageAbs), def: hediff,
                     pawn: pawn);
 

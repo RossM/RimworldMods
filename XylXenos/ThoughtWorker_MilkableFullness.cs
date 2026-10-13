@@ -5,10 +5,7 @@ public class ThoughtWorker_MilkableFullness : ThoughtWorker
 {
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {
-        if (ThoughtUtility.ThoughtNullified(p, def))
-            return ThoughtState.Inactive;
-
-        if (def.GetModExtension<DefModExtension_Thought>()?.gene is not { } geneDef)
+        if (ThoughtUtility.ThoughtNullified(p, def) || def.GetModExtension<DefModExtension_Thought>()?.gene is not { } geneDef)
             return ThoughtState.Inactive;
 
         var gene = p.FirstActiveGene(geneDef);

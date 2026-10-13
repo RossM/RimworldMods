@@ -1,6 +1,6 @@
 ﻿using RimWorld.Planet;
 
-namespace XylXenos;
+namespace XylXenos.Patches;
 
 [Patch(typeof(CaravanPawnsNeedsUtility))]
 public static class Patch_CaravanPawnsNeedsUtility

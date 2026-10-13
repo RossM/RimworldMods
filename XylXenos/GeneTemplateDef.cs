@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class GeneTemplateDef : Def

@@ -6,8 +6,6 @@ public static class PawnExtensions
 {
     extension(Pawn pawn)
     {
-        public Hediff? LactationHediff => pawn.HediffsWithComp<HediffComp_Lactating>().FirstOrDefault();
-
         public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast is true;
 
         public bool NeedsPsyfocus =>

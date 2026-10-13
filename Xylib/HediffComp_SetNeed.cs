@@ -6,7 +6,7 @@ public class HediffCompProperties_SetNeed : HediffCompProperties
 {
     public required NeedDef need;
     public FloatRange range;
-    public IntRange stages = new IntRange(int.MinValue, int.MaxValue);
+    public IntRange stages = new(int.MinValue, int.MaxValue);
 
     public HediffCompProperties_SetNeed()
     {

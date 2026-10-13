@@ -145,9 +145,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
         foreach (var comp in comps)
         {
-            if (comp is null)
-                continue;
-
             foreach (var result in comp.SpecialDisplayStats(req))
                 yield return result;
         }
@@ -160,14 +157,12 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
         foreach (var comp in comps)
         {
-            if (comp is null)
-                continue;
-
             foreach (var result in comp.CustomEffectDescriptions())
                 yield return result;
         }
     }
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         if (parent is null)

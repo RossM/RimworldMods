@@ -29,6 +29,7 @@
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <!-- Sync shared and mod-specific data together so stale-file cleanup preserves both. -->
+    <!-- ReSharper disable UnknownItemGroup -->
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\Xylib.Data\Xylib.Data.csproj" Targets="GetModDataFiles"
              Properties="Configuration=$(Configuration);Platform=$(Platform)">
       <Output TaskParameter="TargetOutputs" ItemName="ModData" />
@@ -40,6 +41,7 @@
     </ItemGroup>
     <Delete Files="@(StaleModData)" />
     <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylXenos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
+    <!-- ReSharper restore UnknownItemGroup -->
   </Target>
 
   <Target Name="CleanModOutput" AfterTargets="Clean">

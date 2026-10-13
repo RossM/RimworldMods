@@ -18,7 +18,9 @@
   </Target>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent" DependsOnTargets="GetModDataFiles">
+    <!-- ReSharper disable UnknownMetadata -->
     <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylXenos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
+    <!-- ReSharper restore UnknownMetadata -->
   </Target>
 </Project>
