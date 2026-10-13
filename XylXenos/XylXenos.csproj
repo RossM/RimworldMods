@@ -41,6 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XylXenos.Data\XylXenos.Data.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Xylib\Xylib.csproj" />
+    <ProjectReference Include="..\Xylib.Analyzer\Xylib.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DisharmonySourceDirectory)' == ''">

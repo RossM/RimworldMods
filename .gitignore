@@ -13,6 +13,7 @@ DataAnalysis/elo_ratings.csv
 /temp
 /TestResults
 /Disharmony.Tests/TestResults
+/Xylib.Analyzer.Tests/TestResults
 .editorconfig
 /tmp
 /ModBin

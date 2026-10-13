@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\XylIdeos.Data\XylIdeos.Data.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Xylib\Xylib.csproj" />
+    <ProjectReference Include="..\Xylib.Analyzer\Xylib.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">

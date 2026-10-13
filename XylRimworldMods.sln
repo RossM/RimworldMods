@@ -26,12 +26,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scripts", "Scripts\Scripts.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xylib.Data", "Xylib.Data\Xylib.Data.csproj", "{5659FB7B-2D76-4D75-BDD3-6E6F93C339AE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xylib.Analyzer", "Xylib.Analyzer\Xylib.Analyzer.csproj", "{B183F92C-7306-4D7A-B817-37F0904B942F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xylib.Analyzer.Tests", "Xylib.Analyzer.Tests\Xylib.Analyzer.Tests.csproj", "{41043180-5AD9-488B-A78B-EE65E8F17284}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41043180-5AD9-488B-A78B-EE65E8F17284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41043180-5AD9-488B-A78B-EE65E8F17284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41043180-5AD9-488B-A78B-EE65E8F17284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41043180-5AD9-488B-A78B-EE65E8F17284}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B183F92C-7306-4D7A-B817-37F0904B942F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B183F92C-7306-4D7A-B817-37F0904B942F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B183F92C-7306-4D7A-B817-37F0904B942F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B183F92C-7306-4D7A-B817-37F0904B942F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5659FB7B-2D76-4D75-BDD3-6E6F93C339AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5659FB7B-2D76-4D75-BDD3-6E6F93C339AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5659FB7B-2D76-4D75-BDD3-6E6F93C339AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
