@@ -5,7 +5,7 @@ public class ScenPart_StartingSlaves : ScenPart_PawnModifier
 {
     public int count;
 
-    private string? countBuf;
+    [Unsaved] private string? countBuf;
 
     public override void ExposeData()
     {

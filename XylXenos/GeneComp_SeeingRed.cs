@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class GeneCompProperties_SeeingRed : GeneCompProperties
 {
     public float chance = 1.0f;

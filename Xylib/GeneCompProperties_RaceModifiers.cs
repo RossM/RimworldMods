@@ -1,6 +1,7 @@
 ﻿namespace Xylib;
 
 [PublicAPI]
+[UsedFromXml]
 public class GeneCompProperties_RaceModifiers : GeneCompProperties
 {
     /// <summary>

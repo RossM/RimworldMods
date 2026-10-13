@@ -40,7 +40,7 @@ public class Need_Wetness : Need_Seeker
         new(2500f, 1.0f),
     ];
 
-    private int lastInstantWetnessCheckTick;
+    [Unsaved] private int lastInstantWetnessCheckTick;
 
     public Need_Wetness(Pawn pawn) : base(pawn)
     {

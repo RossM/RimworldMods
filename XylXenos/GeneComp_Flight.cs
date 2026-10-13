@@ -2,6 +2,7 @@
 
 namespace XylXenos;
 
+[UsedFromXml]
 public class GeneCompProperties_Flight : GeneCompProperties
 {
     public float autoFlyMinDistance = 25f;

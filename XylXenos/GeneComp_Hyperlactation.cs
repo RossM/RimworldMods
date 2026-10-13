@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class GeneCompProperties_Hyperlactation : GeneCompProperties
 {
     public required HediffDef hediff;

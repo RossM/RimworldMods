@@ -47,8 +47,8 @@ public static class StaticEventHandlers
         return;
 
         static bool HasGenderRatio(GeneDef geneDef, GeneType geneType) =>
-            geneDef.Extension_GeneWithComps is not null &&
+            geneDef.Extension_GeneWithComps is { } extension &&
             geneDef.CompProps<GeneCompProperties_GenderRatio>() != null && 
-            (geneDef.Extension_GeneWithComps.geneType is not { } type || type == geneType);
+            !(extension.geneType is { } type && type != geneType);
     }
 }

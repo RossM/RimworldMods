@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class GeneCompProperties_Regeneration : GeneCompProperties
 {
     public float healthPerHour;

@@ -44,6 +44,9 @@ public class PatchOperationMerge : PatchOperationPathed
 
     public override IEnumerable<string> ConfigErrors()
     {
+        foreach (var error in base.ConfigErrors())
+            yield return error;
+
         if (xpath is null)
             yield return $"{nameof(xpath)} is null";
         if (value is null)

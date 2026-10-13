@@ -6,7 +6,8 @@ public class HediffWithCompsExt : HediffWithComps
     public Pawn? SourcePawn => GetComp<HediffComp_Source>()?.OtherPawn;
 
     private static readonly StringBuilder tipSb = new();
-    protected HediffStage? curStageInternal;
+
+    [Unsaved] protected HediffStage? curStageInternal;
 
     public override HediffStage? CurStage
     {

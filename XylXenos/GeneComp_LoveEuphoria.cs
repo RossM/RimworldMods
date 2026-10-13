@@ -1,5 +1,6 @@
 ﻿namespace XylXenos;
 
+[UsedFromXml]
 public class GeneCompProperties_LoveEuphoria : GeneCompProperties
 {
     public required NeedDef need;

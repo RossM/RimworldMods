@@ -38,7 +38,7 @@ public class GeneComp_Milkable : GeneComp
         ? Mathf.FloorToInt((float)(Find.TickManager.TicksGame - value) / Props.ticksPerFullnessStage)
         : -1;
 
-    private int lastChargeableUpdateTick = -1;
+    [Unsaved] private int lastChargeableUpdateTick = -1;
     public bool allowMilking = true;
     public int milkingCooldownDays = 1;
 

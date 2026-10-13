@@ -256,6 +256,7 @@ public class GeneSetMaker_List : GeneSetMaker
 /// <summary>
 ///     Generates genes by calling a list of <see cref="GeneSetMaker" />s then accepting or rejecting the result based on total biostats.
 /// </summary>
+[UsedFromXml]
 public class GeneSetMaker_BiostatTotal : GeneSetMaker
 {
     private const int TryCount = 100;

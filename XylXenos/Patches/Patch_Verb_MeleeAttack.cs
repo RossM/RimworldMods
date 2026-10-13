@@ -1,7 +1,7 @@
 ﻿namespace XylXenos.Patches;
 
 [Patch(typeof(Verb_MeleeAttack))]
-public class Patch_Verb_MeleeAttack
+public static class Patch_Verb_MeleeAttack
 {
     [Feature("TODO")]
     [Postfix]
