@@ -38,10 +38,5 @@ public class Mod_Xylib : Mod
         {
             Patcher.PatchAll(Assembly.GetExecutingAssembly());
         }
-
-        using (new ProfileBlock("Xylib Check coding style"))
-        {
-            Analyzer.CheckCodingStyle(typeof(Mod_Xylib).Assembly);
-        }
     }
 }

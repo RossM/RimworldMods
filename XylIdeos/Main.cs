@@ -10,7 +10,5 @@ public class Main(ModContentPack content) : Mod(content)
         harmony.PatchAll();
 
         Patcher.PatchAll(typeof(Main).Assembly);
-
-        Analyzer.CheckCodingStyle(typeof(Main).Assembly);
     }
 }

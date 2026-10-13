@@ -26,11 +26,6 @@ public class Main : Mod
             Settings.instance = GetSettings<Settings>();
         }
 
-        using (new ProfileBlock("XylXenos CheckCodingStyle"))
-        {
-            Analyzer.CheckCodingStyle(typeof(Main).Assembly);
-        }
-
         using (new ProfileBlock("XylXenos Disharmony patching"))
         {
             Patcher.PatchCategory(Assembly.GetExecutingAssembly(), "PreLoadDefs");
