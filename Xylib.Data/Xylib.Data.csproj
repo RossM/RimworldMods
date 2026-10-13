@@ -1,13 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.Build.NoTargets/3.7.134">
   <PropertyGroup>
-    <TargetFramework>net4.7.2</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <TargetFramework>net10.0</TargetFramework>
     <!-- Always run the data sync when Visual Studio builds before launching the game. -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
     <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <!-- Return absolute source paths with destinations relative to each mod's root. -->
