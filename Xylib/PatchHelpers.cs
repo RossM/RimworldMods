@@ -177,18 +177,21 @@ internal static class PatchHelpers
         if (requiredMemberCheckerCache.TryGetValue(defType, out var checkerFunc))
             return checkerFunc;
 
+        requiredMemberCheckerCache[defType] = checkerFunc = CreateRequiredMemberCheckerFunc(defType);
+        return checkerFunc;
+    }
+
+    private static Action<object, List<string>>? CreateRequiredMemberCheckerFunc(Type defType)
+    {
         List<FieldInfo> requiredFields = [];
         for (var type = defType; type is not null; type = type.BaseType)
         {
             requiredFields.AddRange(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(IsRequiredField));
+                .Where(info => Attribute.IsDefined(info, typeof(RequiredAttribute), inherit: true)));
         }
 
         if (requiredFields.Count == 0)
-        {
-            requiredMemberCheckerCache[defType] = checkerFunc = null;
-            return checkerFunc;
-        }
+            return null;
 
         var defParamExpr = Expression.Parameter(typeof(object), "def");
         var errorsParamExpr = Expression.Parameter(typeof(List<string>), "errors");
@@ -213,19 +216,7 @@ internal static class PatchHelpers
         var blockExpr = Expression.Block(checkExpressions);
         var lambdaExpr = Expression.Lambda<Action<object, List<string>>>(blockExpr, defParamExpr, errorsParamExpr);
 
-        requiredMemberCheckerCache[defType] = checkerFunc = lambdaExpr.Compile();
-        return checkerFunc;
-
-        static bool IsRequiredField(MemberInfo member)
-        {
-            Attribute[] customAttributes = Attribute.GetCustomAttributes(member, inherit: true);
-            return customAttributes.Any(a =>
-                a.GetType() == typeof(RequiredAttribute) ||
-                // This is the attribute automatically added by the compiler on a "required" field.
-                // RimWorld's version of .NET doesn't include it, so we look for any attribute class
-                // with the right name so that polyfills will work.
-                a.GetType().FullName == "System.Runtime.CompilerServices.RequiredMemberAttribute");
-        }
+        return lambdaExpr.Compile();
     }
 
     public static List<string>? RequiredMemberErrors(object def)
