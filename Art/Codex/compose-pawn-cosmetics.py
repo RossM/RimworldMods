@@ -435,8 +435,10 @@ def render(cosmetic, facing, dimensions):
         tint_color = {"Skin": cosmetic.skin, "Hair": HAIR}.get(node.findtext("colorType"),
                          color(node.findtext("color", "(1,1,1)")))
         mask_path = path.with_name(path.stem + "m.png")
-        mask = load_image(mask_path).getchannel("R") if mask_path.is_file() else None
-        image = tint(image, tint_color, mask)
+        mask_image = load_image(mask_path) if mask_path.is_file() else None
+        image = tint(image, tint_color, mask_image.getchannel("R") if mask_image is not None else None)
+        if mask_image is not None:
+            image = tint(image, HAIR, mask_image.getchannel("G"))
         if draw_value(node, facing, "flip", "false").lower() == "true":
             image = ImageOps.mirror(image)
         overlay = layer(image, mesh, offset)
