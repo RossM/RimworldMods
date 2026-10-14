@@ -322,11 +322,6 @@ def catalog():
         if skin:
             destination.append(Cosmetic(label, skin=color(skin)))
 
-    # This asset is present, but its GeneDef is commented out. Preview it explicitly.
-    ribs = ET.fromstring("""<li><nodeClass>XylXenos.PawnRenderNode_BodyPattern</nodeClass>
-        <parentTagDef>Body</parentTagDef><baseLayer>3</baseLayer>
-        <visibleFacing><li>South</li><li>East</li><li>West</li></visibleFacing></li>""")
-    cosmetics.append(Cosmetic("Ribs (unused)", (Attachment(ribs, HUMANLIKE / "BodyAttachments/Ribs/Ribs"),)))
     groups = variant_groups
     for cosmetic in cosmetics:
         affects_head = any(attachment.properties.findtext("parentTagDef") == "Head"

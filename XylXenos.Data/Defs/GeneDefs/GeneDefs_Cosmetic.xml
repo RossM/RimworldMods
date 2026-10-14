@@ -226,34 +226,4 @@
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
   </GeneDef>
 
-  <!--<GeneDef>
-    <defName>XylRibs</defName>
-    <label>ribs</label>
-    <description>Carriers of this gene have visible ribs.</description>
-    <displayCategory>Cosmetic</displayCategory>
-    <displayOrderInCategory>503</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <biostatCpx>0</biostatCpx>
-    <renderNodeProperties>
-      <li>
-        <debugLabel>Ribs</debugLabel>
-        <nodeClass>XylXenos.PawnRenderNode_BodyPattern</nodeClass>
-        <workerClass>PawnRenderNodeWorker_Body</workerClass>
-        <parentTagDef>Body</parentTagDef>
-        <useRottenColor>true</useRottenColor>
-        <rotDrawMode>Fresh</rotDrawMode>
-        <texPaths>
-          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/Ribs/Ribs</li>
-        </texPaths>
-        <visibleFacing>
-          <li>East</li>
-          <li>South</li>
-          <li>West</li>
-        </visibleFacing>
-        <baseLayer>3</baseLayer>
-      </li>
-    </renderNodeProperties>
-    <randomBrightnessFactor>0</randomBrightnessFactor>
-  </GeneDef>-->
-
 </Defs>
