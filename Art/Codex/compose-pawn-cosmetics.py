@@ -260,8 +260,8 @@ def catalog():
                                   for item in attachment.properties.findall("requiredGenes/li")}
                 if "XylScaleskin" in required_genes:
                     scaleskin = next(item for item in genes if item.findtext("defName") == "XylScaleskin")
-                    body = TEXTURES / scaleskin.findtext(".//bodyTypeGraphicPaths/Female")
-                    head = TEXTURES / heads["Female_Scaleskin_Average_Normal"].findtext("graphicPath")
+                    #body = TEXTURES / scaleskin.findtext(".//bodyTypeGraphicPaths/Female")
+                    #head = TEXTURES / heads["Female_Scaleskin_Average_Normal"].findtext("graphicPath")
                 graphic_previews.append(Cosmetic(label + suffix, attachments, body=body, head=head))
         separate_gender_textures = any(attachment_paths(node, "Female") != attachment_paths(node, "Male")
                                       for node in nodes)
@@ -458,9 +458,7 @@ def verify_coverage(groups):
     used = {path for cosmetic in cosmetics for path in (cosmetic.body, cosmetic.head)}
     used.update(attachment.texture for cosmetic in cosmetics for attachment in cosmetic.attachments)
     relevant = [*HUMANLIKE.glob("HeadAttachments/**/*.png"), *HUMANLIKE.glob("BodyAttachments/**/*.png"),
-                *HUMANLIKE.glob("Heads/**/*.png"),
-                *HUMANLIKE.glob("Bodies/Scaleskin_Female_*.png"), *HUMANLIKE.glob("Bodies/Scaleskin_Male_*.png"),
-                *HUMANLIKE.glob("Bodies/Scaleskin_Thin_*.png")]
+                *HUMANLIKE.glob("Heads/**/*.png")]
     missing = []
     for path in relevant:
         if path.stem.endswith("m"):
