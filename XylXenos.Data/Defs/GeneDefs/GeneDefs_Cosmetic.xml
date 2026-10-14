@@ -166,7 +166,7 @@
         <nodeClass>XylXenos.PawnRenderNode_HeadPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <parentTagDef>Head</parentTagDef>
-        <color>(0.35,0.20,0.10,0.8)</color>
+        <color>(0,0,0,0.8)</color>
         <useRottenColor>true</useRottenColor>
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <texPaths>
