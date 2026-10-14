@@ -9,10 +9,9 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
         string? texPath = TexPathFor(pawn);
         if (texPath.NullOrEmpty())
             return null;
-        Shader? shader = ShaderFor(pawn);
-        if (shader == null)
-            return null;
-        return GraphicDatabase.Get<Graphic_Multi>(texPath, shader, Vector2.one, ColorFor(pawn));
+        Shader shader = ShaderFor(pawn);
+        Color hairColor = pawn.story?.HairColor ?? Color.white;
+        return GraphicDatabase.Get<Graphic_Multi>(texPath, shader, Vector2.one, ColorFor(pawn), hairColor);
     }
 
     protected override Shader DefaultShader => ShaderDatabase.CutoutComplex;
@@ -23,14 +22,7 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
             return props.shaderTypeDef.Shader;
         if (pawn.Drawer.renderer.StatueColor.HasValue)
             return DefaultShader;
-        if (props.useSkinShader)
-        {
-            Shader? skinShader = GetSkinShader(pawn);
-            if (skinShader != null)
-                return skinShader;
-        }
-
-        return DefaultShader;
+        return props.useSkinShader ? GetSkinShader(pawn) : DefaultShader;
     }
 
     public static Shader GetSkinShader(Pawn pawn)

@@ -12,7 +12,7 @@
     <renderNodeProperties>
       <li>
         <debugLabel>CowEars</debugLabel>
-        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <nodeClass>XylXenos.PawnRenderNode_AttachmentHeadComplex</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/CowEars/CowEars</texPath>
         <colorType>Skin</colorType>
