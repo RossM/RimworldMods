@@ -4,7 +4,10 @@ Run from any directory: python path/to/Art/Codex/compose-pawn-cosmetics.py
 Each labeled triplet is south, north, east; the default output is beside this script.
 Includes all female-compatible humanlike texture variants, XML skin colors, and
 the unused ribs art (explicitly labeled). Replacement heads/skin replace the
-reference part; other cosmetics use Naked_Female and Female_Average_Normal.
+reference part; the scaly lizard tail includes its required scaleskin. Other
+cosmetics use Naked_Female. Head attachments and patterns are grouped with both
+Female_Average_Normal and Female_Narrow_Normal previews. Skin color genes appear
+together at the end of the sheet.
 
 This is an art preview, without game lighting, random brightness, or animation.
 XML controls tint, mesh size, offsets, layers, facing visibility, and eye sides.
@@ -15,7 +18,7 @@ head offsets and eye anchors; --rimworld-data can select another installation.
 """
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 from itertools import product
 from pathlib import Path
@@ -31,6 +34,7 @@ HUMANLIKE = TEXTURES / "Xyl/Things/Pawn/Humanlike"
 ART = ROOT / "Art/Rimworld art"
 BODY = ART / "Bodies/Naked_Female"
 HEAD = ART / "Heads/Female_Average_Normal"
+NARROW_HEAD = ART / "Heads/Female_Narrow_Normal"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 FACINGS = ("south", "north", "east")
 WHITE = (1.0, 1.0, 1.0, 1.0)
@@ -58,11 +62,24 @@ class Cosmetic:
 
 
 @dataclass(frozen=True)
+class CosmeticGroup:
+    label: str
+    previews: tuple[Cosmetic, ...]
+
+
+@dataclass(frozen=True)
+class HeadGeometry:
+    hair_mesh: tuple[float, ...]
+    eye_east: tuple[float, ...]
+
+
+@dataclass(frozen=True)
 class Geometry:
     head_offset: tuple[float, ...]
     eye_south_right: tuple[float, ...]
     eye_south_left: tuple[float, ...]
-    eye_east: tuple[float, ...]
+    average_head: HeadGeometry
+    narrow_head: HeadGeometry
 
 
 def vector(text):
@@ -94,18 +111,23 @@ def definitions(directory, tag):
 
 def geometry(game_data):
     fallback = Geometry((0.10, 0.34), (-0.095, 0, 0.18),
-                        (0.095, 0, 0.18), (0.13, 0, 0.17))
+                        (0.095, 0, 0.18), HeadGeometry((1.5, 1.5), (0.13, 0, 0.17)),
+                        HeadGeometry((1.3, 1.5), (0.10, 0, 0.17)))
     if not game_data.is_dir():
         return fallback
     bodies = definitions(game_data / "Core/Defs/Misc/BodyTypeDefs", "BodyTypeDef")
     heads = definitions(game_data / "Core/Defs/HeadTypeDefs", "HeadTypeDef")
     body = next(node for node in bodies if node.findtext("defName") == "Female")
     head = next(node for node in heads if node.findtext("graphicPath", "").endswith("/Female_Average_Normal"))
+    average_base = next(node for node in heads if node.get("Name") == "AverageBase")
+    narrow_base = next(node for node in heads if node.get("Name") == "NarrowBase")
     anchors = {node.findtext("tag"): vector(node.findtext("offset"))
                for node in body.findall("woundAnchors/li")
                if node.findtext("rotation") == "South" and node.findtext("tag") in ("RightEye", "LeftEye")}
     return Geometry(vector(body.findtext("headOffset")), anchors["RightEye"],
-                    anchors["LeftEye"], vector(head.findtext("eyeOffsetEastWest")))
+                    anchors["LeftEye"],
+                    HeadGeometry(size(average_base.findtext("hairMeshSize")), vector(head.findtext("eyeOffsetEastWest"))),
+                    HeadGeometry(size(narrow_base.findtext("hairMeshSize")), vector(narrow_base.findtext("eyeOffsetEastWest"))))
 
 
 def attachment_paths(node):
@@ -131,10 +153,13 @@ def variant_label(name):
 
 def catalog():
     cosmetics = []
+    color_cosmetics = []
+    genes = definitions(DATA / "Defs/GeneDefs", "GeneDef")
     heads = {node.findtext("defName"): node for node in
              definitions(DATA / "Defs/HeadTypeDefs", "HeadTypeDef") if node.findtext("defName")}
-    for gene in definitions(DATA / "Defs/GeneDefs", "GeneDef"):
+    for gene in genes:
         label = gene.findtext("label", gene.findtext("defName", "")).capitalize()
+        destination = color_cosmetics if gene.find("skinColorOverride") is not None else cosmetics
         nodes = gene.findall("renderNodeProperties/li")
         # Gene-dependent render nodes are mutually exclusive variants, not a stack.
         conditional = [node for node in nodes if node.get("Class") == "XylXenos.PawnRenderNodeProperties_GeneDependent"
@@ -149,25 +174,43 @@ def catalog():
                 variants = [variant_label(attachment.texture.name) for attachment, options in zip(attachments, choices)
                             if len(options) > 1 or conditional]
                 suffix = f" ({', '.join(variants)})" if variants else ""
-                cosmetics.append(Cosmetic(label + suffix, attachments))
+                body, head = BODY, HEAD
+                required_genes = {item.text for attachment in attachments
+                                  for item in attachment.properties.findall("requiredGenes/li")}
+                if "XylScaleskin" in required_genes:
+                    scaleskin = next(item for item in genes if item.findtext("defName") == "XylScaleskin")
+                    body = TEXTURES / scaleskin.findtext(".//bodyTypeGraphicPaths/Female")
+                    head = TEXTURES / heads["Female_Scaleskin_Average_Normal"].findtext("graphicPath")
+                destination.append(Cosmetic(label + suffix, attachments, body=body, head=head))
         forced_heads = [heads[item.text] for item in gene.findall("forcedHeadTypes/li")
                         if item.text in heads and heads[item.text].findtext("gender") == "Female"]
         body_path = gene.findtext(".//bodyTypeGraphicPaths/Female")
         for head in forced_heads:
             head_path = TEXTURES / head.findtext("graphicPath")
             variant = variant_label(head_path.name.removeprefix("Female_"))
-            cosmetics.append(Cosmetic(f"{label} ({variant})", body=TEXTURES / body_path if body_path else BODY,
-                                      head=head_path))
+            destination.append(Cosmetic(f"{label} ({variant})", body=TEXTURES / body_path if body_path else BODY,
+                                       head=head_path))
         skin = gene.findtext("skinColorOverride")
         if skin:
-            cosmetics.append(Cosmetic(label, skin=color(skin)))
+            destination.append(Cosmetic(label, skin=color(skin)))
 
     # This asset is present, but its GeneDef is commented out. Preview it explicitly.
     ribs = ET.fromstring("""<li><nodeClass>XylXenos.PawnRenderNode_BodyPattern</nodeClass>
         <parentTagDef>Body</parentTagDef><baseLayer>3</baseLayer>
         <visibleFacing><li>South</li><li>East</li><li>West</li></visibleFacing></li>""")
     cosmetics.append(Cosmetic("Ribs (unused)", (Attachment(ribs, HUMANLIKE / "BodyAttachments/Ribs/Ribs"),)))
-    return sorted(cosmetics, key=lambda cosmetic: cosmetic.label.casefold())
+    ordered = (sorted(cosmetics, key=lambda cosmetic: cosmetic.label.casefold())
+               + sorted(color_cosmetics, key=lambda cosmetic: cosmetic.label.casefold()))
+    groups = []
+    for cosmetic in ordered:
+        affects_head = any(attachment.properties.findtext("parentTagDef") == "Head"
+                           for attachment in cosmetic.attachments)
+        previews = (cosmetic,)
+        if affects_head and cosmetic.head == HEAD:
+            previews = (replace(cosmetic, label="Average normal"),
+                        replace(cosmetic, label="Narrow normal", head=NARROW_HEAD))
+        groups.append(CosmeticGroup(cosmetic.label, previews))
+    return groups
 
 
 @lru_cache(maxsize=None)
@@ -217,6 +260,8 @@ def layer(image, mesh, offset):
 
 
 def render(cosmetic, facing, dimensions):
+    narrow = cosmetic.head == NARROW_HEAD
+    head_geometry = dimensions.narrow_head if narrow else dimensions.average_head
     head_offset = (dimensions.head_offset[0] if facing == "east" else 0, 0, dimensions.head_offset[1])
     body = layer(tint(load_image(directional_path(cosmetic.body, facing)), cosmetic.skin), (1.5, 1.5), (0, 0, 0))
     head = layer(tint(load_image(directional_path(cosmetic.head, facing)), cosmetic.skin), (1.5, 1.5), head_offset)
@@ -233,11 +278,21 @@ def render(cosmetic, facing, dimensions):
         offset = vector(draw_value(node, facing, "offset", "(0,0,0)"))
         origin = head_offset if parent_head else (0, 0, 0)
         if eye:
-            anchor = dimensions.eye_east if facing == "east" else (
+            anchor = head_geometry.eye_east if facing == "east" else (
                 dimensions.eye_south_right if node.findtext("side") == "Right" else dimensions.eye_south_left)
             offset = tuple(a + b for a, b in zip(offset, anchor))
         offset = tuple(a + b for a, b in zip(offset, origin))
-        mesh = size(node.findtext("overrideMeshSize", "(1.5,1.5)"))
+        # Only these workers apply narrowCrownHorizontalOffset in the game.
+        adjusts_narrow = (node.get("Class") == "XylXenos.PawnRenderNodeProperties_GeneDependent"
+                          or node.findtext("workerClass") == "PawnRenderNodeWorker_Head")
+        if narrow and facing == "east" and adjusts_narrow:
+            adjustment = float(node.findtext("narrowCrownHorizontalOffset", "0"))
+            offset = (offset[0] - adjustment, offset[1], offset[2] - adjustment)
+        node_class = node.findtext("nodeClass", "")
+        if eye or "PawnRenderNode_AttachmentHead" in node_class:
+            mesh = head_geometry.hair_mesh
+        else:
+            mesh = size(node.findtext("overrideMeshSize", "(1.5,1.5)"))
         draw_size = size(node.findtext("drawSize", "1"))
         mesh = tuple(a * b for a, b in zip(mesh, draw_size))
         path = directional_path(attachment.texture, facing)
@@ -261,7 +316,8 @@ def render(cosmetic, facing, dimensions):
     return composite
 
 
-def verify_coverage(cosmetics):
+def verify_coverage(groups):
+    cosmetics = [preview for group in groups for preview in group.previews]
     used = {path for cosmetic in cosmetics for path in (cosmetic.body, cosmetic.head)}
     used.update(attachment.texture for cosmetic in cosmetics for attachment in cosmetic.attachments)
     relevant = [*HUMANLIKE.glob("HeadAttachments/**/*.png"), *HUMANLIKE.glob("BodyAttachments/**/*.png"),
@@ -286,39 +342,53 @@ def label_font():
     return ImageFont.load_default()
 
 
-def make_sheet(cosmetics, dimensions, columns):
-    rendered = [[render(cosmetic, facing, dimensions) for facing in FACINGS] for cosmetic in cosmetics]
-    # Shared horizontal bounds keep each facing aligned at a consistent scale.
-    bounds = []
-    for index in range(len(FACINGS)):
-        boxes = [views[index].getchannel("A").getbbox() for views in rendered]
-        bounds.append((min(box[0] for box in boxes) - 7, min(box[1] for box in boxes) - 7,
-                       max(box[2] for box in boxes) + 7, max(box[3] for box in boxes) + 7))
-    top_edge = min(box[1] for box in bounds)
-    gap, margin, label_height = 12, 14, 27
-    card_width = sum(box[2] - box[0] for box in bounds) + 2 * gap
-    rows = (len(cosmetics) + columns - 1) // columns
+def make_sheet(groups, dimensions, columns):
+    rendered = [[[render(preview, facing, dimensions) for facing in FACINGS]
+                 for preview in group.previews] for group in groups]
+    boxes = [[[image.getchannel("A").getbbox() for image in views] for views in previews]
+             for previews in rendered]
+    top_edge = min(box[1] for previews in boxes for triplet in previews for box in triplet) - 7
+    view_gap, version_gap, group_gap, row_gap = 8, 24, 36, 12
+    padding, margin = 3, 14
+    # Keep rotations close and head versions together, without changing scale.
+    triplet_widths = [[sum(box[2] - box[0] + 2 * padding for box in triplet) + 2 * view_gap
+                       for triplet in previews] for previews in boxes]
+    group_widths = [sum(widths) + (len(widths) - 1) * version_gap for widths in triplet_widths]
+    font = label_font()
+    measuring_draw = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    card_width = max(max(group_widths),
+                     max(round(measuring_draw.textlength(group.label, font=font)) for group in groups))
+    rows = (len(groups) + columns - 1) // columns
     # Only the row containing the beaver tail needs its extra vertical space.
-    bottom_edges = [max(image.getchannel("A").getbbox()[3]
-                        for views in rendered[row * columns:(row + 1) * columns] for image in views) + 7
+    bottom_edges = [max(box[3] for previews in boxes[row * columns:(row + 1) * columns]
+                        for triplet in previews for box in triplet) + 7
                     for row in range(rows)]
-    row_heights = [bottom - top_edge + label_height for bottom in bottom_edges]
-    sheet = Image.new("RGB", (2 * margin + columns * card_width + (columns - 1) * gap,
-                              2 * margin + sum(row_heights) + (rows - 1) * gap), BACKGROUND)
-    draw, font = ImageDraw.Draw(sheet), label_font()
-    for index, (cosmetic, views) in enumerate(zip(cosmetics, rendered)):
-        left = margin + (index % columns) * (card_width + gap)
+    label_heights = [46 if any(len(group.previews) > 1 for group in groups[row * columns:(row + 1) * columns])
+                     else 27 for row in range(rows)]
+    row_heights = [bottom - top_edge + label_height for bottom, label_height in zip(bottom_edges, label_heights)]
+    sheet = Image.new("RGB", (2 * margin + columns * card_width + (columns - 1) * group_gap,
+                              2 * margin + sum(row_heights) + (rows - 1) * row_gap), BACKGROUND)
+    draw = ImageDraw.Draw(sheet)
+    for index, (group, previews) in enumerate(zip(groups, rendered)):
+        left = margin + (index % columns) * (card_width + group_gap)
         row = index // columns
-        top = margin + sum(row_heights[:row]) + row * gap
+        top = margin + sum(row_heights[:row]) + row * row_gap
         view_height = bottom_edges[row] - top_edge
-        x = left
-        for image, box in zip(views, bounds):
-            crop = image.crop((box[0], top_edge, box[2], bottom_edges[row]))
-            sheet.paste(crop, (x, top), crop)
-            x += crop.width + gap
-        if draw.textlength(cosmetic.label, font=font) > card_width:
-            raise ValueError(f"Label too wide: {cosmetic.label}")
-        draw.text((left + card_width / 2, top + view_height + 5), cosmetic.label,
+        x = left + (card_width - group_widths[index]) // 2
+        for preview, views, triplet, width in zip(group.previews, previews, boxes[index], triplet_widths[index]):
+            version_left = x
+            for image, box in zip(views, triplet):
+                crop = image.crop((box[0] - padding, top_edge, box[2] + padding, bottom_edges[row]))
+                sheet.paste(crop, (x, top), crop)
+                x += crop.width + view_gap
+            if len(group.previews) > 1:
+                draw.text((version_left + width / 2, top + view_height + 5), preview.label,
+                          fill=(40, 40, 40), font=font, anchor="mt")
+            x = version_left + width + version_gap
+        if draw.textlength(group.label, font=font) > card_width:
+            raise ValueError(f"Label too wide: {group.label}")
+        caption_offset = 24 if label_heights[row] == 46 else 5
+        draw.text((left + card_width / 2, top + view_height + caption_offset), group.label,
                   fill=(24, 24, 24), font=font, anchor="mt")
     return sheet
 
@@ -326,23 +396,25 @@ def make_sheet(cosmetics, dimensions, columns):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--output", type=Path, default=Path(__file__).with_name("pawn-cosmetics-sheet.png"))
-    parser.add_argument("--columns", type=int, default=4, help="Cosmetic triplets per row (default: 4)")
+    parser.add_argument("--columns", type=int, default=4, help="Cosmetic groups per row (default: 4)")
     parser.add_argument("--rimworld-data", type=Path, default=GAME_DATA)
     args = parser.parse_args()
     if args.columns < 1:
         parser.error("--columns must be positive")
     if args.rimworld_data != GAME_DATA and not args.rimworld_data.is_dir():
         parser.error("--rimworld-data must be an existing RimWorld/Data directory")
-    cosmetics = catalog()
-    verify_coverage(cosmetics)
-    sheet = make_sheet(cosmetics, geometry(args.rimworld_data), min(args.columns, len(cosmetics)))
+    groups = catalog()
+    verify_coverage(groups)
+    sheet = make_sheet(groups, geometry(args.rimworld_data), min(args.columns, len(groups)))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     sheet.save(args.output)
     # Reopen the saved artifact to catch truncated/invalid output immediately.
     with Image.open(args.output) as saved:
         saved.verify()
+    preview_count = sum(len(group.previews) for group in groups)
     print(f"Saved {args.output.resolve()}: {sheet.width} x {sheet.height}; "
-          f"{len(cosmetics)} cosmetics, {len(cosmetics) * 3} views (south, north, east)")
+          f"{len(groups)} cosmetic groups, {preview_count} head/body previews, "
+          f"{preview_count * 3} views (south, north, east)")
 
 
 if __name__ == "__main__":
