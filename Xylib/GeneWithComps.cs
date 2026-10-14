@@ -146,29 +146,13 @@ public class GeneWithComps : Gene, IEventListener
     /// <summary>
     ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
     /// </summary>
-    public DefModExtension_GeneWithComps DefExt
-    {
-        get
-        {
-            field ??= def.Extension_GeneWithComps;
-            DebugAssert.NotNull(field);
-
-            return field;
-        }
-    }
+    public DefModExtension_GeneWithComps DefExt => 
+        field ??= def.Extension_GeneWithComps ?? throw new InvalidOperationException("GeneWithComps is missing DefModExtension_GeneWithComps");
 
     /// <summary>
     ///     Whether this gene is an endogene or xenogene.
     /// </summary>
-    public GeneType GeneType
-    {
-        get
-        {
-            DebugAssert.NotNull(pawn.genes);
-
-            return geneTypeInternal ??= pawn.genes.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
-        }
-    }
+    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     /// <summary>
     ///     Whether the gene is currently active. Inactive genes shouldn't have any effect on the pawn.
