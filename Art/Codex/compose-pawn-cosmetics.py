@@ -5,8 +5,9 @@ Each labeled triplet is south, north, east; the default output is beside this sc
 Use --width PIXELS to set the sheet width (default: 2400). Complete cosmetic
 groups wrap into rows in catalog order, filling each row before starting another.
 Includes male/female humanlike texture variants, XML skin colors, and
-the unused ribs art (explicitly labeled). Replacement heads/skin replace the
-reference part; the scaly lizard tail includes its required scaleskin. Wings and
+the unused ribs art (explicitly labeled). Replacement heads replace the reference
+head; required genes contribute their XML render nodes, including the scaleskin
+head/body overlays for the scaly lizard tail. Wings and
 tails include female and thin bodies. Other shared textures stay female-only.
 Head attachments and patterns are grouped with both
 Female_Average_Normal and Female_Narrow_Normal previews. Distinct male textures
@@ -230,6 +231,27 @@ def is_body_attachment(node):
             and node.findtext("useBodyGraphicScale", "false").lower() == "true"))
 
 
+def add_required_graphics(cosmetic, gender, genes):
+    attachments = list(cosmetic.attachments)
+    included = set()
+    # Appended nodes are visited too, so nested prerequisites are included once.
+    for attachment in attachments:
+        for reference in attachment.properties.findall("requiredGenes/li"):
+            name = reference.text.strip()
+            if name in included:
+                continue
+            included.add(name)
+            gene = genes.get(name)
+            if gene is None:
+                raise ValueError(f"Unknown render-node prerequisite: {name}")
+            for node in gene.findall("renderNodeProperties/li"):
+                paths = attachment_paths(node, gender)
+                if len(paths) != 1:
+                    raise ValueError(f"Prerequisite {name} needs an explicit texture variant")
+                attachments.append(Attachment(node, paths[0]))
+    return replace(cosmetic, attachments=tuple(attachments))
+
+
 def catalog():
     cosmetics = []
     color_cosmetics = []
@@ -255,14 +277,7 @@ def catalog():
                 variants = [variant_label(attachment.texture.name) for attachment, options in zip(attachments, choices)
                             if len(options) > 1 or conditional]
                 suffix = f" ({', '.join(variants)})" if variants else ""
-                body, head = BODY, HEAD
-                required_genes = {item.text for attachment in attachments
-                                  for item in attachment.properties.findall("requiredGenes/li")}
-                if "XylScaleskin" in required_genes:
-                    scaleskin = next(item for item in genes if item.findtext("defName") == "XylScaleskin")
-                    #body = TEXTURES / scaleskin.findtext(".//bodyTypeGraphicPaths/Female")
-                    #head = TEXTURES / heads["Female_Scaleskin_Average_Normal"].findtext("graphicPath")
-                graphic_previews.append(Cosmetic(label + suffix, attachments, body=body, head=head))
+                graphic_previews.append(Cosmetic(label + suffix, attachments))
         separate_gender_textures = any(attachment_paths(node, "Female") != attachment_paths(node, "Male")
                                       for node in nodes)
         if separate_gender_textures:
@@ -336,9 +351,17 @@ def catalog():
                 previews.extend((replace(preview, label=prefix + "Female"),
                                  replace(preview, label=prefix + "Thin", body=thin_bodies[preview.body])))
             groups[index] = CosmeticGroup(group.label, tuple(previews))
-    return (sorted(groups, key=lambda group: group.label.casefold())
-            + [CosmeticGroup(cosmetic.label, (cosmetic,))
-               for cosmetic in sorted(color_cosmetics, key=lambda cosmetic: cosmetic.label.casefold())])
+    ordered = (sorted(groups, key=lambda group: group.label.casefold())
+               + [CosmeticGroup(cosmetic.label, (cosmetic,))
+                  for cosmetic in sorted(color_cosmetics, key=lambda cosmetic: cosmetic.label.casefold())])
+    head_genders = {head: gender for gender, reference in REFERENCES.items()
+                    for head in (reference.average_head, reference.narrow_head)}
+    head_genders.update({TEXTURES / head.findtext("graphicPath"): head.findtext("gender")
+                         for head in heads.values() if head.findtext("gender") in REFERENCES})
+    genes_by_name = {gene.findtext("defName"): gene for gene in genes if gene.findtext("defName")}
+    # Choose grouping and body types from the primary cosmetic before adding overlays.
+    return [replace(group, previews=tuple(add_required_graphics(preview, head_genders[preview.head], genes_by_name)
+                                         for preview in group.previews)) for group in ordered]
 
 
 @lru_cache(maxsize=None)
