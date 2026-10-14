@@ -1,34 +1,10 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.134">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <!-- Always run the data sync when Visual Studio builds before launching the game. -->
-    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-    <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
-    <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
+    <SharedModDataDirectory>$(MSBuildProjectDirectory)\..\Xylib.Data</SharedModDataDirectory>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Xylib.Data\Xylib.Data.csproj" ReferenceOutputAssembly="false" />
+    <ModDataDestination Include="..\ModBin\XylIdeos" OwnsOutput="true" />
   </ItemGroup>
-
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <!-- Sync shared and mod-specific data together so stale-file cleanup preserves both. -->
-    <!-- ReSharper disable UnknownItemGroup -->
-    <MSBuild Projects="$(MSBuildProjectDirectory)\..\Xylib.Data\Xylib.Data.csproj" Targets="GetModDataFiles"
-             Properties="Configuration=$(Configuration);Platform=$(Platform)">
-      <Output TaskParameter="TargetOutputs" ItemName="ModData" />
-    </MSBuild>
-    <ItemGroup>
-      <ModData Include="@(None)" ModRelativePath="%(Identity)" />
-      <StaleModData Include="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\**\*"
-                    Exclude="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\**\*;@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" />
-    </ItemGroup>
-    <Delete Files="@(StaleModData)" />
-    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
-    <!-- ReSharper restore UnknownItemGroup -->
-  </Target>
-
-  <Target Name="CleanModOutput" AfterTargets="Clean">
-    <RemoveDir Directories="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos" />
-  </Target>
+  <Import Project="..\ModData.targets" />
 </Project>

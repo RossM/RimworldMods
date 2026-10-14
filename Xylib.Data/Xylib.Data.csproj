@@ -1,23 +1,6 @@
 <Project Sdk="Microsoft.Build.NoTargets/3.7.134">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <!-- Always run the data sync when Visual Studio builds before launching the game. -->
-    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-    <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
-    <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
-  </PropertyGroup>
-
-  <!-- Return absolute source paths with destinations relative to each mod's root. -->
-  <Target Name="GetModDataFiles" Returns="@(ModData->'%(FullPath)')">
-    <ItemGroup>
-      <ModData Include="@(None)" ModRelativePath="%(Identity)" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent" DependsOnTargets="GetModDataFiles">
-    <!-- ReSharper disable UnknownMetadata -->
-    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylXenos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\%(ModRelativePath)')" SkipUnchangedFiles="true" />
-    <!-- ReSharper restore UnknownMetadata -->
-  </Target>
+  <ItemGroup>
+    <ModDataDestination Include="..\ModBin\XylXenos;..\ModBin\XylIdeos" OwnsOutput="false" />
+  </ItemGroup>
+  <Import Project="..\ModData.targets" />
 </Project>

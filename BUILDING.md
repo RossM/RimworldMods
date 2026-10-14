@@ -14,6 +14,8 @@ The mods are written to `ModBin/XylXenos` and `ModBin/XylIdeos`. Enable the offi
 
 Shared mod data belongs in `Xylib.Data`. Building either mod includes this data alongside its own data project; building `Xylib.Data` directly copies its files to both mod outputs. Shared XML files use distinct filenames to avoid collisions with mod-specific data.
 
+The data projects use `ModData.targets` for copying; each mod data project declares its shared source and owns its destination, so builds remove stale data while preserving `Assemblies`, and clean removes that mod output.
+
 ## Developing with local Disharmony source
 
 To try changes in your own [Disharmony checkout](https://github.com/RossM/Disharmony), create `Directory.Build.local.props` in this repository's root:
