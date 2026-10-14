@@ -1,22 +1,25 @@
-"""Render female pawn cosmetics from XylXenos.Data. Requires Python 3.10+ / Pillow.
+"""Render pawn cosmetics from XylXenos.Data. Requires Python 3.10+ / Pillow.
 
 Run from any directory: python path/to/Art/Codex/compose-pawn-cosmetics.py
 Each labeled triplet is south, north, east; the default output is beside this script.
 Use --width PIXELS to set the sheet width (default: 2400). Complete cosmetic
 groups wrap into rows in catalog order, filling each row before starting another.
-Includes all female-compatible humanlike texture variants, XML skin colors, and
+Includes male/female humanlike texture variants, XML skin colors, and
 the unused ribs art (explicitly labeled). Replacement heads/skin replace the
-reference part; the scaly lizard tail includes its required scaleskin. Other
-cosmetics use Naked_Female. Head attachments and patterns are grouped with both
-Female_Average_Normal and Female_Narrow_Normal previews. Bat-wing and lizard-tail
+reference part; the scaly lizard tail includes its required scaleskin. Wings and
+tails include female and thin bodies. Other shared textures stay female-only.
+Head attachments and patterns are grouped with both
+Female_Average_Normal and Female_Narrow_Normal previews. Distinct male textures
+are included for replacement head types and yellow eyes, on a male body.
+Yellow eyes includes average/narrow previews for each gender. Bat-wing and lizard-tail
 graphics are paired the same way. Skin color genes appear together at the end.
 
 This is an art preview, without game lighting, random brightness, or animation.
 XML controls tint, mesh size, offsets, layers, facing visibility, and eye sides.
 Missing directions follow Graphic_Multi's texture fallback rules. Pattern nodes
 are clipped to the reference silhouette; complex masks preserve untinted teeth.
-Adult female geometry defaults match RimWorld 1.6. If installed, Core XML supplies
-head offsets and eye anchors; --rimworld-data can select another installation.
+Adult geometry defaults match RimWorld 1.6. If installed, Core XML supplies body
+scales, head offsets, and eye anchors; --rimworld-data can select another installation.
 """
 
 import argparse
@@ -37,9 +40,12 @@ ART = ROOT / "Art/Rimworld art"
 BODY = ART / "Bodies/Naked_Female"
 HEAD = ART / "Heads/Female_Average_Normal"
 NARROW_HEAD = ART / "Heads/Female_Narrow_Normal"
+MALE_BODY = ART / "Bodies/Naked_Male"
+MALE_HEAD = ART / "Heads/Male_Average_Normal"
+MALE_NARROW_HEAD = ART / "Heads/Male_Narrow_Normal"
+THIN_BODY = ART / "Bodies/Naked_Thin"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 FACINGS = ("south", "north", "east")
-WHITE = (1.0, 1.0, 1.0, 1.0)
 SKIN = (0.88, 0.77, 0.65, 1.0)
 HAIR = (0.42, 0.30, 0.21, 1.0)
 BACKGROUND = (128, 128, 128)
@@ -73,16 +79,37 @@ class CosmeticGroup:
 @dataclass(frozen=True)
 class HeadGeometry:
     hair_mesh: tuple[float, ...]
-    eye_east: tuple[float, ...]
+    eye_east: tuple[float, ...] | None
+    narrow: bool
+
+
+@dataclass(frozen=True)
+class BodyGeometry:
+    head_offset: tuple[float, ...]
+    graphic_scale: tuple[float, ...]
+    eye_anchors: dict[tuple[str, str, bool], tuple[float, ...]]
+
+    @property
+    def attachment_scale(self):
+        return sum(self.graphic_scale) / 2
 
 
 @dataclass(frozen=True)
 class Geometry:
-    head_offset: tuple[float, ...]
-    eye_south_right: tuple[float, ...]
-    eye_south_left: tuple[float, ...]
-    average_head: HeadGeometry
-    narrow_head: HeadGeometry
+    bodies: dict[Path, BodyGeometry]
+    heads: dict[Path, HeadGeometry]
+
+
+@dataclass(frozen=True)
+class ReferenceArt:
+    body: Path
+    average_head: Path
+    narrow_head: Path
+
+
+REFERENCES = {"Female": ReferenceArt(BODY, HEAD, NARROW_HEAD),
+              "Male": ReferenceArt(MALE_BODY, MALE_HEAD, MALE_NARROW_HEAD)}
+BODY_TYPES = {gender: reference.body for gender, reference in REFERENCES.items()} | {"Thin": THIN_BODY}
 
 
 def vector(text):
@@ -112,30 +139,72 @@ def definitions(directory, tag):
             for node in ET.parse(path).getroot().findall(tag)]
 
 
+def inherited_text(node, field, parents, default=None):
+    value = node.findtext(field)
+    if value is not None:
+        return value
+    parent = parents.get(node.get("ParentName"))
+    return inherited_text(parent, field, parents, default) if parent is not None else default
+
+
 def geometry(game_data):
-    fallback = Geometry((0.10, 0.34), (-0.095, 0, 0.18),
-                        (0.095, 0, 0.18), HeadGeometry((1.5, 1.5), (0.13, 0, 0.17)),
-                        HeadGeometry((1.3, 1.5), (0.10, 0, 0.17)))
-    if not game_data.is_dir():
-        return fallback
-    bodies = definitions(game_data / "Core/Defs/Misc/BodyTypeDefs", "BodyTypeDef")
-    heads = definitions(game_data / "Core/Defs/HeadTypeDefs", "HeadTypeDef")
-    body = next(node for node in bodies if node.findtext("defName") == "Female")
-    head = next(node for node in heads if node.findtext("graphicPath", "").endswith("/Female_Average_Normal"))
-    average_base = next(node for node in heads if node.get("Name") == "AverageBase")
-    narrow_base = next(node for node in heads if node.get("Name") == "NarrowBase")
-    anchors = {node.findtext("tag"): vector(node.findtext("offset"))
-               for node in body.findall("woundAnchors/li")
-               if node.findtext("rotation") == "South" and node.findtext("tag") in ("RightEye", "LeftEye")}
-    return Geometry(vector(body.findtext("headOffset")), anchors["RightEye"],
-                    anchors["LeftEye"],
-                    HeadGeometry(size(average_base.findtext("hairMeshSize")), vector(head.findtext("eyeOffsetEastWest"))),
-                    HeadGeometry(size(narrow_base.findtext("hairMeshSize")), vector(narrow_base.findtext("eyeOffsetEastWest"))))
+    body_geometry, head_geometry = {}, {}
+    for gender, reference in REFERENCES.items():
+        body_geometry[reference.body] = BodyGeometry((0.10 if gender == "Female" else 0.04, 0.34),
+                (1, 1) if gender == "Female" else (1, 0.9), {
+            ("south", "RightEye", False): (-0.095, 0, 0.18),
+            ("south", "LeftEye", False): (0.095, 0, 0.18),
+            ("east", "RightEye", False): (0.135, 0, 0.18) if gender == "Female" else (0.15, 0, 0.16),
+            ("east", "RightEye", True): (0.10, 0, 0.18),
+        })
+        head_geometry[reference.average_head] = HeadGeometry((1.5, 1.5),
+                (0.13 if gender == "Female" else 0.18, 0, 0.17), False)
+        head_geometry[reference.narrow_head] = HeadGeometry((1.3, 1.5), (0.10, 0, 0.17), True)
+    body_geometry[THIN_BODY] = BodyGeometry((0.09, 0.34), (0.6, 1), {
+        ("south", "RightEye", False): (-0.092, 0, 0.18),
+        ("south", "LeftEye", False): (0.092, 0, 0.18),
+        ("east", "RightEye", False): (0.10, 0, 0.18),
+        ("east", "RightEye", True): (0.10, 0, 0.18),
+    })
+    # Core parents are also needed to resolve the mod's replacement head types.
+    parents = {"AverageBase": ET.fromstring("<HeadTypeDef><hairMeshSize>(1.5,1.5)</hairMeshSize></HeadTypeDef>"),
+               "NarrowBase": ET.fromstring("""<HeadTypeDef><hairMeshSize>(1.3,1.5)</hairMeshSize>
+                   <eyeOffsetEastWest>(0.10,0,0.17)</eyeOffsetEastWest><narrow>true</narrow></HeadTypeDef>""")}
+    mod_heads = definitions(DATA / "Defs/HeadTypeDefs", "HeadTypeDef")
+    core_heads = []
+    if game_data.is_dir():
+        core_bodies = definitions(game_data / "Core/Defs/Misc/BodyTypeDefs", "BodyTypeDef")
+        core_heads = definitions(game_data / "Core/Defs/HeadTypeDefs", "HeadTypeDef")
+        for body_type, path in BODY_TYPES.items():
+            body = next(node for node in core_bodies if node.findtext("defName") == body_type)
+            anchors = {(node.findtext("rotation").lower(), node.findtext("tag"),
+                        node.findtext("narrowCrown", "false").lower() == "true"): vector(node.findtext("offset"))
+                       for node in body.findall("woundAnchors/li")
+                       if node.findtext("rotation", "").lower() in FACINGS
+                       and node.findtext("tag") in ("RightEye", "LeftEye")}
+            body_geometry[path] = BodyGeometry(vector(body.findtext("headOffset")),
+                                               size(body.findtext("bodyGraphicScale")), anchors)
+    parents.update({node.get("Name"): node for node in core_heads + mod_heads if node.get("Name")})
+    for node in core_heads + mod_heads:
+        graphic = node.findtext("graphicPath")
+        if not graphic:
+            continue
+        path = TEXTURES / graphic if graphic.startswith("Xyl/") else ART / "Heads" / Path(graphic).name
+        eye_offset = inherited_text(node, "eyeOffsetEastWest", parents)
+        head_geometry[path] = HeadGeometry(size(inherited_text(node, "hairMeshSize", parents, "(1.5,1.5)")),
+                vector(eye_offset) if eye_offset is not None else None,
+                inherited_text(node, "narrow", parents, "false").lower() == "true")
+    for gene in definitions(DATA / "Defs/GeneDefs", "GeneDef"):
+        for body_type, path in BODY_TYPES.items():
+            graphic = gene.findtext(f".//bodyTypeGraphicPaths/{body_type}")
+            if graphic:
+                body_geometry[TEXTURES / graphic] = body_geometry[path]
+    return Geometry(body_geometry, head_geometry)
 
 
-def attachment_paths(node):
-    single = node.findtext("texPathFemale") or node.findtext("texPath")
-    multiple = node.findall("texPathsFemale/li") or node.findall("texPaths/li")
+def attachment_paths(node, gender="Female"):
+    single = (node.findtext("texPathFemale") if gender == "Female" else None) or node.findtext("texPath")
+    multiple = (node.findall("texPathsFemale/li") if gender == "Female" else []) or node.findall("texPaths/li")
     paths = [single] if single else [item.text for item in multiple]
     if not paths:
         raise ValueError(f"No texture in render node: {ET.tostring(node, encoding='unicode')}")
@@ -154,10 +223,17 @@ def variant_label(name):
     return name
 
 
+def is_body_attachment(node):
+    return node.findtext("parentTagDef") == "Body" and (
+        node.findtext("workerClass") == "PawnRenderNodeWorker_AttachmentBody"
+        or (node.get("Class") == "XylXenos.PawnRenderNodeProperties_GeneDependent"
+            and node.findtext("useBodyGraphicScale", "false").lower() == "true"))
+
+
 def catalog():
     cosmetics = []
     color_cosmetics = []
-    graphic_pairs = []
+    variant_groups = []
     genes = definitions(DATA / "Defs/GeneDefs", "GeneDef")
     heads = {node.findtext("defName"): node for node in
              definitions(DATA / "Defs/HeadTypeDefs", "HeadTypeDef") if node.findtext("defName")}
@@ -187,23 +263,46 @@ def catalog():
                     body = TEXTURES / scaleskin.findtext(".//bodyTypeGraphicPaths/Female")
                     head = TEXTURES / heads["Female_Scaleskin_Average_Normal"].findtext("graphicPath")
                 graphic_previews.append(Cosmetic(label + suffix, attachments, body=body, head=head))
+        separate_gender_textures = any(attachment_paths(node, "Female") != attachment_paths(node, "Male")
+                                      for node in nodes)
+        if separate_gender_textures:
+            for cosmetic in graphic_previews:
+                previews = []
+                for gender, reference in REFERENCES.items():
+                    attachments = []
+                    for attachment in cosmetic.attachments:
+                        female_paths = attachment_paths(attachment.properties, "Female")
+                        gender_paths = attachment_paths(attachment.properties, gender)
+                        if len(female_paths) != len(gender_paths):
+                            raise ValueError(f"Mismatched male/female texture variants for {label}")
+                        attachments.append(Attachment(attachment.properties,
+                            gender_paths[female_paths.index(attachment.texture)]))
+                    for shape, head in (("Average normal", reference.average_head), ("Narrow normal", reference.narrow_head)):
+                        previews.append(replace(cosmetic, label=f"{gender} {shape.lower()}",
+                                                attachments=tuple(attachments), body=reference.body, head=head))
+                variant_groups.append(CosmeticGroup(cosmetic.label, tuple(previews)))
         # A pair of body graphics shares one card, like the paired head previews.
-        if len(graphic_previews) == 2 and all(len(preview.attachments) == 1
+        elif len(graphic_previews) == 2 and all(len(preview.attachments) == 1
                 and preview.attachments[0].properties.findtext("parentTagDef") == "Body"
                 for preview in graphic_previews):
-            graphic_pairs.append(CosmeticGroup(label, tuple(
+            variant_groups.append(CosmeticGroup(label, tuple(
                 replace(preview, label=variant_label(preview.attachments[0].texture.name).capitalize())
                 for preview in graphic_previews)))
         else:
             destination.extend(graphic_previews)
         forced_heads = [heads[item.text] for item in gene.findall("forcedHeadTypes/li")
-                        if item.text in heads and heads[item.text].findtext("gender") == "Female"]
-        body_path = gene.findtext(".//bodyTypeGraphicPaths/Female")
+                        if item.text in heads and heads[item.text].findtext("gender") in REFERENCES]
+        replacements = {}
         for head in forced_heads:
+            gender = head.findtext("gender")
+            body_path = gene.findtext(f".//bodyTypeGraphicPaths/{gender}")
             head_path = TEXTURES / head.findtext("graphicPath")
-            variant = variant_label(head_path.name.removeprefix("Female_"))
-            destination.append(Cosmetic(f"{label} ({variant})", body=TEXTURES / body_path if body_path else BODY,
-                                       head=head_path))
+            variant = variant_label(head_path.name.removeprefix(gender + "_"))
+            replacements.setdefault(f"{label} ({variant})", []).append(Cosmetic(gender,
+                body=TEXTURES / body_path if body_path else REFERENCES[gender].body, head=head_path))
+        for replacement_label, previews in replacements.items():
+            variant_groups.append(CosmeticGroup(replacement_label,
+                tuple(sorted(previews, key=lambda preview: preview.label))))
         skin = gene.findtext("skinColorOverride")
         if skin:
             destination.append(Cosmetic(label, skin=color(skin)))
@@ -213,7 +312,7 @@ def catalog():
         <parentTagDef>Body</parentTagDef><baseLayer>3</baseLayer>
         <visibleFacing><li>South</li><li>East</li><li>West</li></visibleFacing></li>""")
     cosmetics.append(Cosmetic("Ribs (unused)", (Attachment(ribs, HUMANLIKE / "BodyAttachments/Ribs/Ribs"),)))
-    groups = graphic_pairs
+    groups = variant_groups
     for cosmetic in cosmetics:
         affects_head = any(attachment.properties.findtext("parentTagDef") == "Head"
                            for attachment in cosmetic.attachments)
@@ -222,6 +321,21 @@ def catalog():
             previews = (replace(cosmetic, label="Average normal"),
                         replace(cosmetic, label="Narrow normal", head=NARROW_HEAD))
         groups.append(CosmeticGroup(cosmetic.label, previews))
+    thin_bodies = {BODY: THIN_BODY}
+    for gene in genes:
+        female = gene.findtext(".//bodyTypeGraphicPaths/Female")
+        thin = gene.findtext(".//bodyTypeGraphicPaths/Thin")
+        if female and thin:
+            thin_bodies[TEXTURES / female] = TEXTURES / thin
+    for index, group in enumerate(groups):
+        if all(preview.attachments and all(is_body_attachment(attachment.properties)
+               for attachment in preview.attachments) for preview in group.previews):
+            previews = []
+            for preview in group.previews:
+                prefix = preview.label + " " if len(group.previews) > 1 else ""
+                previews.extend((replace(preview, label=prefix + "Female"),
+                                 replace(preview, label=prefix + "Thin", body=thin_bodies[preview.body])))
+            groups[index] = CosmeticGroup(group.label, tuple(previews))
     return (sorted(groups, key=lambda group: group.label.casefold())
             + [CosmeticGroup(cosmetic.label, (cosmetic,))
                for cosmetic in sorted(color_cosmetics, key=lambda cosmetic: cosmetic.label.casefold())])
@@ -274,9 +388,10 @@ def layer(image, mesh, offset):
 
 
 def render(cosmetic, facing, dimensions):
-    narrow = cosmetic.head == NARROW_HEAD
-    head_geometry = dimensions.narrow_head if narrow else dimensions.average_head
-    head_offset = (dimensions.head_offset[0] if facing == "east" else 0, 0, dimensions.head_offset[1])
+    body_geometry = dimensions.bodies[cosmetic.body]
+    head_geometry = dimensions.heads[cosmetic.head]
+    narrow = head_geometry.narrow
+    head_offset = (body_geometry.head_offset[0] if facing == "east" else 0, 0, body_geometry.head_offset[1])
     body = layer(tint(load_image(directional_path(cosmetic.body, facing)), cosmetic.skin), (1.5, 1.5), (0, 0, 0))
     head = layer(tint(load_image(directional_path(cosmetic.head, facing)), cosmetic.skin), (1.5, 1.5), head_offset)
     layers = [(0.0, body), (50.0, head)]
@@ -290,11 +405,15 @@ def render(cosmetic, facing, dimensions):
             continue
         parent_head = node.findtext("parentTagDef") == "Head"
         offset = vector(draw_value(node, facing, "offset", "(0,0,0)"))
+        if node.findtext("drawData/scaleOffsetByBodySize", "false").lower() == "true":
+            offset = tuple(value * body_geometry.attachment_scale for value in offset)
         origin = head_offset if parent_head else (0, 0, 0)
         if eye:
-            anchor = head_geometry.eye_east if facing == "east" else (
-                dimensions.eye_south_right if node.findtext("side") == "Right" else dimensions.eye_south_left)
-            offset = tuple(a + b for a, b in zip(offset, anchor))
+            anchor = body_geometry.eye_anchors.get((facing, node.findtext("anchorTag"), narrow if facing == "east" else False))
+            if anchor is not None:
+                if facing == "east" and head_geometry.eye_east is not None:
+                    anchor = head_geometry.eye_east
+                offset = tuple(a + b for a, b in zip(offset, anchor))
         offset = tuple(a + b for a, b in zip(offset, origin))
         # Only these workers apply narrowCrownHorizontalOffset in the game.
         adjusts_narrow = (node.get("Class") == "XylXenos.PawnRenderNodeProperties_GeneDependent"
@@ -309,6 +428,8 @@ def render(cosmetic, facing, dimensions):
             mesh = size(node.findtext("overrideMeshSize", "(1.5,1.5)"))
         draw_size = size(node.findtext("drawSize", "1"))
         mesh = tuple(a * b for a, b in zip(mesh, draw_size))
+        if is_body_attachment(node):
+            mesh = tuple(value * body_geometry.attachment_scale for value in mesh)
         path = directional_path(attachment.texture, facing)
         image = load_image(path)
         tint_color = {"Skin": cosmetic.skin, "Hair": HAIR}.get(node.findtext("colorType"),
@@ -335,16 +456,18 @@ def verify_coverage(groups):
     used = {path for cosmetic in cosmetics for path in (cosmetic.body, cosmetic.head)}
     used.update(attachment.texture for cosmetic in cosmetics for attachment in cosmetic.attachments)
     relevant = [*HUMANLIKE.glob("HeadAttachments/**/*.png"), *HUMANLIKE.glob("BodyAttachments/**/*.png"),
-                *HUMANLIKE.glob("Heads/Female/*.png"), *HUMANLIKE.glob("Bodies/Scaleskin_Female_*.png")]
+                *HUMANLIKE.glob("Heads/**/*.png"),
+                *HUMANLIKE.glob("Bodies/Scaleskin_Female_*.png"), *HUMANLIKE.glob("Bodies/Scaleskin_Male_*.png"),
+                *HUMANLIKE.glob("Bodies/Scaleskin_Thin_*.png")]
     missing = []
     for path in relevant:
-        if "Male" in path.parts or path.stem.endswith("m"):
+        if path.stem.endswith("m"):
             continue
         base = path.with_name(path.stem.rsplit("_", 1)[0])
         if base not in used:
             missing.append(str(path.relative_to(ROOT)))
     if missing:
-        raise ValueError("Female-compatible art omitted from catalog:\n" + "\n".join(missing))
+        raise ValueError("Humanlike male/female art omitted from catalog:\n" + "\n".join(missing))
 
 
 def label_font():
