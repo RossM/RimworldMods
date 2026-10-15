@@ -28,6 +28,7 @@
           <li>East</li>
           <li>North</li>
           <li>West</li>
+          <li>South</li>
         </visibleFacing>
         <drawData>
           <scaleOffsetByBodySize>true</scaleOffsetByBodySize>
@@ -38,6 +39,10 @@
             <offset>(0, 0, -0.5)</offset>
             <layer>90</layer>
           </dataNorth>
+          <dataSouth>
+            <offset>(0, 0, -0.1)</offset>
+            <rotationOffset>180</rotationOffset>
+          </dataSouth>
           <dataEast>
             <offset>(-0.5, 0, -0.3)</offset>
           </dataEast>
