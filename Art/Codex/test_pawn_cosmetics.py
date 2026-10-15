@@ -18,16 +18,17 @@ from pawn_cosmetics.settings import RenderStyle, SheetStyle
 class CatalogTests(unittest.TestCase):
     def test_horns_share_art_but_keep_names_colors_and_dependencies(self):
         groups = CatalogBuilder(DefinitionLibrary(game_data=None)).build()
-        cow = next(group for group in groups if group.label == "Cow horns")
-        dragon = next(group for group in groups if group.label == "Dragon horns")
-        cow_graphics, dragon_graphics = cow.previews[0].graphics, dragon.previews[0].graphics
+        horns = [group for group in groups if group.gene == "XylLargeHorns"]
+        self.assertEqual(len(horns), 1)
+        self.assertEqual(horns[0].label, "Large horns")
+        self.assertEqual([preview.label for preview in horns[0].previews],
+                         ["Cow average normal", "Cow narrow normal", "Dragon average normal", "Dragon narrow normal"])
+        cow_graphics, dragon_graphics = horns[0].previews[0].graphics, horns[0].previews[2].graphics
         self.assertEqual(cow_graphics[0].texture(Gender.FEMALE), dragon_graphics[0].texture(Gender.FEMALE))
         self.assertEqual(cow_graphics[0].node.tint, (1, 1, 1, 1))
         self.assertEqual(dragon_graphics[0].node.tint, ColorSource.SKIN)
         self.assertEqual(len(cow_graphics), 1)
         self.assertEqual({graphic.node.key[0] for graphic in dragon_graphics[1:]}, {"XylScaleskin"})
-        self.assertEqual(len(cow.previews), 2)
-        self.assertEqual(len(dragon.previews), 2)
 
     def test_scaly_tail_keeps_body_comparisons_with_head_and_body_overlays(self):
         groups = CatalogBuilder(DefinitionLibrary(game_data=None)).build()
@@ -162,13 +163,13 @@ class LayoutTests(unittest.TestCase):
 
     def test_sheet_honors_width_background_and_reports_oversize_groups(self):
         groups = CatalogBuilder(DefinitionLibrary(game_data=None)).build()
-        cow = next(group for group in groups if group.label == "Cow horns")
+        horns = next(group for group in groups if group.label == "Large horns")
         composer = SheetComposer(Renderer(), SheetStyle(background=(110, 120, 130)))
-        sheet = composer.compose((cow,), 1000)
-        self.assertEqual(sheet.width, 1000)
+        sheet = composer.compose((horns,), 1600)
+        self.assertEqual(sheet.width, 1600)
         self.assertEqual(sheet.getpixel((0, 0)), (110, 120, 130))
-        with self.assertRaisesRegex(ValueError, "Cow horns"):
-            composer.compose((cow,), 50)
+        with self.assertRaisesRegex(ValueError, "Large horns"):
+            composer.compose((horns,), 50)
 
 
 if __name__ == "__main__":

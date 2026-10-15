@@ -14,10 +14,9 @@ BODY_ATTACHMENT_TYPES = ("Female", "Thin")
 DEFAULT_WIDTH = 2400
 DEFAULT_PALETTE = Palette(skin=(0.88, 0.77, 0.65, 1.0), hair=(0.42, 0.30, 0.21, 1.0))
 
-# Overrides identify the XML node, so shared textures can still have distinct names.
-NODE_LABELS = {
-    ("XylLargeHorns", "LargeHorns"): "Cow horns",
-    ("XylLargeHorns", "LargeHorns_Scaleskin"): "Dragon horns",
+# Keep these variants in one gene group, with captions keyed by XML debug label.
+GROUPED_VARIANTS = {
+    "XylLargeHorns": {"LargeHorns": "Cow", "LargeHorns_Scaleskin": "Dragon"},
 }
 VARIANT_CAPTIONS = {"BatWings": "Folded", "BatWingsExtended": "Extended",
                     "ReptileTail": "Smooth", "ReptileTail_Scaleskin": "Scaly"}

@@ -26,9 +26,10 @@ and geometry defaults make the script usable without it.
 | Typed definitions and selected preview data | `model.py` |
 | Command arguments and output | `../compose-pawn-cosmetics.py` |
 
-New XML cosmetics normally require no script edits. A label override is keyed
-by gene name and render-node debug label, so two nodes sharing a texture can
-have different names (cow/dragon horns). Coverage validation rejects omitted
+New XML cosmetics normally require no script edits. `GROUPED_VARIANTS` keeps
+selected variants under one gene caption and names their subitems by render-node
+debug label, so shared textures can have distinct names (cow/dragon horns).
+Coverage validation rejects omitted
 humanlike attachment/head art before saving.
 
 Definitions are parsed once. The catalog first selects the primary cosmetic's

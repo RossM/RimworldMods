@@ -4,7 +4,7 @@ from dataclasses import replace
 from itertools import product
 
 from .model import Gender, Graphic, Group, Part, Pawn, Preview
-from .settings import BODY_ATTACHMENT_TYPES, DEFAULT_PALETTE, HEAD_SHAPES, NODE_LABELS, variant_caption
+from .settings import BODY_ATTACHMENT_TYPES, DEFAULT_PALETTE, GROUPED_VARIANTS, HEAD_SHAPES, variant_caption
 
 
 class CatalogBuilder:
@@ -28,19 +28,19 @@ class CatalogBuilder:
 
     @staticmethod
     def variant_caption(graphics):
-        return ", ".join(variant_caption(graphic.node.debug_label if graphic.node.conditional
-                                        else graphic.texture(Gender.FEMALE).name)
-                         for graphic in graphics
-                         if graphic.node.conditional or len(graphic.node.textures.female) > 1)
+        captions = []
+        for graphic in graphics:
+            node = graphic.node
+            override = GROUPED_VARIANTS.get(node.key[0], {}).get(node.debug_label)
+            if override is not None:
+                captions.append(override)
+            elif node.conditional or len(node.textures.female) > 1:
+                name = node.debug_label if node.conditional else graphic.texture(Gender.FEMALE).name
+                captions.append(variant_caption(name))
+        return ", ".join(captions)
 
     @staticmethod
     def variant_label(gene, graphics):
-        overrides = [NODE_LABELS[(gene.name, graphic.node.debug_label)] for graphic in graphics
-                     if (gene.name, graphic.node.debug_label) in NODE_LABELS]
-        if overrides:
-            if len(set(overrides)) != 1:
-                raise ValueError(f"Conflicting display labels for {gene.name}")
-            return overrides[0]
         caption = CatalogBuilder.variant_caption(graphics)
         return f"{gene.label} ({caption})" if caption else gene.label
 
@@ -71,10 +71,10 @@ class CatalogBuilder:
     def body_variant(graphics):
         return bool(graphics) and all(graphic.node.body_attachment for graphic in graphics)
 
-    def _previews(self, gene, graphics, *, body_caption=""):
+    def _previews(self, gene, graphics, *, prefix=""):
         complete = self._complete_graphics(gene, graphics)
         if self.body_variant(graphics):
-            return tuple(Preview(f"{body_caption} {body}".strip(), self.pawn(body=body), complete)
+            return tuple(Preview(f"{prefix} {body}".strip(), self.pawn(body=body), complete)
                          for body in BODY_ATTACHMENT_TYPES)
         affects_head = any(graphic.node.parent == Part.HEAD for graphic in graphics)
         sexed = any(graphic.node.textures.sexed for graphic in graphics)
@@ -88,6 +88,8 @@ class CatalogBuilder:
                     label = f"{gender.value} {caption.lower()}" if sexed else caption
                 else:
                     label = gender.value if sexed else gene.label
+                if prefix:
+                    label = f"{prefix} {label.lower()}"
                 previews.append(Preview(label, self.pawn(gender, shape), complete))
         return tuple(previews)
 
@@ -96,9 +98,9 @@ class CatalogBuilder:
         for gene in self.library.genes.values():
             variants = self.variants(gene)
             paired_body = len(variants) == 2 and all(self.body_variant(graphics) for graphics in variants)
-            if paired_body:
+            if paired_body or gene.name in GROUPED_VARIANTS:
                 previews = tuple(preview for graphics in variants
-                                 for preview in self._previews(gene, graphics, body_caption=self.variant_caption(graphics)))
+                                 for preview in self._previews(gene, graphics, prefix=self.variant_caption(graphics)))
                 groups.append(Group(gene.name, gene.label, previews))
             else:
                 for graphics in variants:
