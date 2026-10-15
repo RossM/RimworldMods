@@ -12,7 +12,7 @@ DEFAULT_OUTPUT = ROOT / "Art/Generated/pawn-cosmetics-sheet.png"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 HEAD_SHAPES = ("Average_Normal", "Narrow_Normal")
 BODY_ATTACHMENT_TYPES = ("Female", "Thin")
-DEFAULT_WIDTH = 2400
+DEFAULT_WIDTH = 1920
 DEFAULT_PALETTE = Palette(skin=(0.88, 0.77, 0.65, 1.0), hair=(0.42, 0.30, 0.21, 1.0))
 
 # Keep these variants in one gene group, with captions keyed by XML debug label.
