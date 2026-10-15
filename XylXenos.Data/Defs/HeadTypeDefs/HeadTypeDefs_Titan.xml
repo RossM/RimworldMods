@@ -3,7 +3,7 @@
 <Defs>
 
   <HeadTypeDef ParentName="AverageBase">
-    <defName>Male_Osteoliths_Average_Normal</defName>
+    <defName>Male_XylOsteoliths_Average_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Average_Normal</graphicPath>
     <gender>Male</gender>
     <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
@@ -13,7 +13,7 @@
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
-    <defName>Male_Osteoliths_Average_Wide</defName>
+    <defName>Male_XylOsteoliths_Average_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Average_Wide</graphicPath>
     <gender>Male</gender>
     <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
@@ -23,7 +23,7 @@
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
-    <defName>Male_Osteoliths_Narrow_Wide</defName>
+    <defName>Male_XylOsteoliths_Narrow_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Male/Male_Osteoliths_Narrow_Wide</graphicPath>
     <gender>Male</gender>
     <randomChosen>false</randomChosen>
@@ -33,7 +33,7 @@
   </HeadTypeDef>
 
   <HeadTypeDef ParentName="AverageBase">
-    <defName>Female_Osteoliths_Average_Normal</defName>
+    <defName>Female_XylOsteoliths_Average_Normal</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Average_Normal</graphicPath>
     <gender>Female</gender>
     <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
@@ -43,7 +43,7 @@
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
-    <defName>Female_Osteoliths_Average_Wide</defName>
+    <defName>Female_XylOsteoliths_Average_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Average_Wide</graphicPath>
     <gender>Female</gender>
     <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
@@ -53,7 +53,7 @@
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
-    <defName>Female_Osteoliths_Narrow_Wide</defName>
+    <defName>Female_XylOsteoliths_Narrow_Wide</defName>
     <graphicPath>Xyl/Things/Pawn/Humanlike/Heads/Female/Female_Osteoliths_Narrow_Wide</graphicPath>
     <gender>Female</gender>
     <randomChosen>false</randomChosen>

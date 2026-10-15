@@ -8,7 +8,7 @@
     <displayCategory>Reproduction</displayCategory>
     <selectionWeight>0</selectionWeight>
     <exclusionTags>
-      <li>Gender</li>
+      <li>XylGender</li>
     </exclusionTags>
   </GeneDef>
 
@@ -124,7 +124,7 @@
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_StrongGenes</iconPath>
     <exclusionTags>
-      <li>XenotypeStrength</li>
+      <li>XylXenotypeStrength</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -147,7 +147,7 @@
     <displayOrderInCategory>401</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_WeakGenes</iconPath>
     <exclusionTags>
-      <li>XenotypeStrength</li>
+      <li>XylXenotypeStrength</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">

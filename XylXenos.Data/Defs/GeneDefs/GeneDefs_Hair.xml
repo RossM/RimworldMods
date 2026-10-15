@@ -17,7 +17,7 @@
       </tags>
     </hairTagFilter>
     <exclusionTags Inherit="false">
-      <li>HairStyleMale</li>
+      <li>XylHairStyleMale</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -41,7 +41,7 @@
       </tags>
     </hairTagFilter>
     <exclusionTags Inherit="false">
-      <li>HairStyleMale</li>
+      <li>XylHairStyleMale</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -65,7 +65,7 @@
       </tags>
     </hairTagFilter>
     <exclusionTags Inherit="false">
-      <li>HairStyleMale</li>
+      <li>XylHairStyleMale</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -89,7 +89,7 @@
       </tags>
     </hairTagFilter>
     <exclusionTags Inherit="false">
-      <li>HairStyleFemale</li>
+      <li>XylHairStyleFemale</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -113,7 +113,7 @@
       </tags>
     </hairTagFilter>
     <exclusionTags Inherit="false">
-      <li>HairStyleFemale</li>
+      <li>XylHairStyleFemale</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -137,7 +137,7 @@
       </tags>
     </hairTagFilter>
     <exclusionTags Inherit="false">
-      <li>HairStyleFemale</li>
+      <li>XylHairStyleFemale</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">

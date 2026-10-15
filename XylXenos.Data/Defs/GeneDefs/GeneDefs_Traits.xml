@@ -28,7 +28,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_Melancholy</iconPath>
     <exclusionTags>
       <li>Mood</li>
-      <li>MelancholyAndEvenTemper</li>
+      <li>XylMelancholyAndEvenTemper</li>
     </exclusionTags>
     <forcedTraits>
       <TorturedArtist />
@@ -120,7 +120,7 @@
       <TorturedArtist />
     </suppressedTraits>
     <exclusionTags>
-      <li>MelancholyAndEvenTemper</li>
+      <li>XylMelancholyAndEvenTemper</li>
     </exclusionTags>
   </GeneDef>
 
@@ -148,7 +148,7 @@
     <displayOrderInCategory>25</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Industrious</iconPath>
     <exclusionTags>
-      <li>WorkSpeed</li>
+      <li>XylWorkSpeed</li>
     </exclusionTags>
     <forcedTraits>
       <Industriousness>1</Industriousness>
@@ -165,7 +165,7 @@
     <displayOrderInCategory>26</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Lazy</iconPath>
     <exclusionTags>
-      <li>WorkSpeed</li>
+      <li>XylWorkSpeed</li>
     </exclusionTags>
     <forcedTraits>
       <Industriousness>-1</Industriousness>
@@ -197,7 +197,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_NoEmpathy</iconPath>
     <iconColor>(0.7, 0.4, 0.4)</iconColor>
     <exclusionTags>
-      <li>Empathy</li>
+      <li>XylEmpathy</li>
     </exclusionTags>
     <forcedTraits>
       <Psychopath/>

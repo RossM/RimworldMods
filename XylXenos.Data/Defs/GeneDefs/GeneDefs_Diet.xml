@@ -19,7 +19,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
-      <li>Digestion</li>
+      <li>XylDigestion</li>
     </exclusionTags>
     <statFactors>
       <XylRawMeatNutritionFactor>1.8</XylRawMeatNutritionFactor>
@@ -58,7 +58,7 @@
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
-      <li>Digestion</li>
+      <li>XylDigestion</li>
     </exclusionTags>
     <statFactors>
       <XylRawVegetableNutritionFactor>1.8</XylRawVegetableNutritionFactor>
@@ -97,7 +97,7 @@
     <displayOrderInCategory>102</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
     <exclusionTags>
-      <li>Digestion</li>
+      <li>XylDigestion</li>
     </exclusionTags>
     <statFactors>
       <XylRawFungusNutritionFactor>1.8</XylRawFungusNutritionFactor>

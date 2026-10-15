@@ -188,8 +188,8 @@
     </renderNodeProperties>
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
     <exclusionTags>
-      <li>Face</li>
-      <li>Brow</li>
+      <li>XylFace</li>
+      <li>XylBrow</li>
     </exclusionTags>
   </GeneDef>
 

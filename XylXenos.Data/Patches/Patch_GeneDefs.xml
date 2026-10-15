@@ -34,7 +34,7 @@
     <xpath>Defs/GeneDef[defName="RobustDigestion"]</xpath>
     <value>
       <exclusionTags>
-        <li>Digestion</li>
+        <li>XylDigestion</li>
       </exclusionTags>
     </value>
   </Operation>
@@ -43,7 +43,7 @@
     <xpath>Defs/GeneDef[defName="FacialRidges"]</xpath>
     <value>
       <exclusionTags>
-        <li>Face</li>
+        <li>XylFace</li>
       </exclusionTags>
     </value>
   </Operation>
@@ -52,7 +52,7 @@
     <xpath>Defs/GeneDef[defName="Brow_Heavy"]</xpath>
     <value>
       <exclusionTags>
-        <li>Brow</li>
+        <li>XylBrow</li>
       </exclusionTags>
     </value>
   </Operation>
@@ -61,8 +61,8 @@
     <xpath>Defs/GeneDef[@Name="GeneHairStyleBase"]</xpath>
     <value>
       <exclusionTags>
-        <li>HairStyleMale</li>
-        <li>HairStyleFemale</li>
+        <li>XylHairStyleMale</li>
+        <li>XylHairStyleFemale</li>
       </exclusionTags>
     </value>
   </Operation>
@@ -71,7 +71,7 @@
     <xpath>Defs/GeneDef[defName="KindInstinct"]</xpath>
     <value>
       <exclusionTags>
-        <li>Empathy</li>
+        <li>XylEmpathy</li>
       </exclusionTags>
     </value>
   </Operation>

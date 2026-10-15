@@ -18,7 +18,7 @@
     <displayOrderInCategory>0</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Dwarf</iconPath>
     <exclusionTags>
-      <li>BodySize</li>
+      <li>XylBodySize</li>
     </exclusionTags>
     <statOffsets>
       <MoveSpeed>-0.1</MoveSpeed>
@@ -47,7 +47,7 @@
     <displayOrderInCategory>1</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
     <exclusionTags>
-      <li>BodySize</li>
+      <li>XylBodySize</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
