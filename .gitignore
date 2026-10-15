@@ -18,3 +18,4 @@ DataAnalysis/elo_ratings.csv
 /tmp
 /ModBin
 /Directory.Build.local.props
+*.pyc
