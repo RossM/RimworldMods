@@ -16,13 +16,35 @@
       <li>Headbone</li>
     </exclusionTags>
     <renderNodeProperties>
-      <li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
         <debugLabel>LargeHorns</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns</texPath>
         <color>(255, 255, 255)</color>
         <parentTagDef>Head</parentTagDef>
+        <disallowedGenes>
+          <li>XylScaleskin</li>
+        </disallowedGenes>
+        <drawData>
+          <defaultData>
+            <layer>80</layer>
+          </defaultData>
+          <dataNorth>
+            <layer>10</layer>
+          </dataNorth>
+        </drawData>
+      </li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
+        <debugLabel>LargeHorns_Scaleskin</debugLabel>
+        <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
+        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns</texPath>
+        <colorType>Skin</colorType>
+        <parentTagDef>Head</parentTagDef>
+        <requiredGenes>
+          <li>XylScaleskin</li>
+        </requiredGenes>
         <drawData>
           <defaultData>
             <layer>80</layer>
