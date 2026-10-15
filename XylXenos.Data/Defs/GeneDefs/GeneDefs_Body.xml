@@ -115,7 +115,7 @@
   </GeneDef>
 
   <GeneDef>
-    <defName>XylMineralizedSkin</defName>
+    <defName>XylRockskin</defName>
     <label>rockskin</label>
     <labelShortAdj>rock</labelShortAdj>
     <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks. The inflexible skin reduces movement speed.</description>
@@ -123,7 +123,7 @@
     <biostatMet>-4</biostatMet>
     <displayCategory>XylBody</displayCategory>
     <displayOrderInCategory>460</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_MineralizedSkin</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Rockskin</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <exclusionTags>
       <li>Fur</li>
@@ -136,7 +136,7 @@
     </statOffsets>
     <renderNodeProperties>
       <li>
-        <debugLabel>Osteoliths</debugLabel>
+        <debugLabel>Rockskin</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_HeadPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
         <baseLayer>51</baseLayer>
@@ -145,11 +145,11 @@
         <useSkinShader>true</useSkinShader>
         <parentTagDef>Head</parentTagDef>
         <texPaths>
-          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/Osteoliths/Osteoliths</li>
+          <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/Rockskin/Rockskin</li>
         </texPaths>
       </li>
       <li>
-        <debugLabel>Osteoliths</debugLabel>
+        <debugLabel>Rockskin</debugLabel>
         <nodeClass>XylXenos.PawnRenderNode_BodyPattern</nodeClass>
         <workerClass>PawnRenderNodeWorker_Body</workerClass>
         <baseLayer>1</baseLayer>
@@ -158,7 +158,7 @@
         <useSkinShader>true</useSkinShader>
         <parentTagDef>Body</parentTagDef>
         <texPaths>
-          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/Osteoliths/Osteoliths</li>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/Rockskin/Rockskin</li>
         </texPaths>
       </li>
     </renderNodeProperties>

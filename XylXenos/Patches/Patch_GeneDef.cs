@@ -1,7 +1,7 @@
 ﻿namespace XylXenos.Patches;
 
 // GeneDef.GetDescriptionFull doesn't check whether thought stages are null, resulting in a NullReferenceException
-// when processing XylHyperlactation and XylSoreBreasts.
+// when processing XylHyperlactation and XylFullMilk.
 [Patch(typeof(GeneDef))]
 public static class Patch_GeneDef_GetDescriptionFull
 {

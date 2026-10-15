@@ -22,7 +22,7 @@ Includes all 83 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_EarSmallPointed.png: A single narrow, upright white ear tapering to a sharp point, with gray inner folds.
 - Gene_Echolocation.png: A gray head-and-torso bust flanked by three curved magenta sound-wave bands on each side.
 - Gene_EmergencyReserves.png: Two upright gray canisters with rounded necks, overlapped by a light-blue shield in the center.
-- Gene_EMPBlast.png: An irregular blue starburst with long pointed spikes and a darker blue inner border.
+- Gene_EMPBurst.png: An irregular blue starburst with long pointed spikes and a darker blue inner border.
 - Gene_EvenTemper.png: Two gray mountain peaks, one taller than the other, with white snowcaps and a darker base.
 - Gene_FacialStripes.png: A white oval face with gray eyes, three tapered gray stripes descending from the top of the forehead, and two short stripes on each cheek.
 - Gene_FastReflexes.png: An orange leaping cat silhouette in side view, stretched horizontally with its tail curled upward.
@@ -39,7 +39,7 @@ Includes all 83 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_HairStyleLongOnlyMale.png: A light-gray face with gray eyes framed by long, straight, center-parted hair with pointed ends, with a light-blue male symbol overlapping the lower right.
 - Gene_HairStyleShortOnlyFemale.png: A light-gray head with gray eyes and short hair with a dark-gray jagged hairline, with a pink female symbol overlapping the lower right.
 - Gene_HairStyleShortOnlyMale.png: A light-gray head with gray eyes and short hair with a dark-gray jagged hairline, with a light-blue male symbol overlapping the lower right.
-- Gene_Head_Trog.png: A broad, rounded white head with a slightly tapered chin and two small, downturned gray eyes.
+- Gene_Head_Warped.png: A broad, rounded white head with a slightly tapered chin and two small, downturned gray eyes.
 - Gene_HerbivoreStomach.png: A tan stomach with a yellow ear of corn in green husks overlapping its lower-right side.
 - Gene_HerdInstinct.png: A close cluster of five white head-and-torso figures, with two in front and three behind.
 - Gene_Hyperlactation.png: Two gray pails with arched handles and white liquid visible inside, with the right pail slightly lower and in front of the left.
@@ -53,7 +53,7 @@ Includes all 83 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_LoveEuphoria.png: A pink heart with a darker red center and two small, upward-curving horn-like points on its upper lobes.
 - Gene_MeatDependence.png: A reddish-brown meat drumstick with a bite missing from its upper-left edge and a pale bone projecting from its lower-left end.
 - Gene_Melancholy.png: A blue sad face with closed eyes and a tear, overlapped at the lower right by a diagonal gray paintbrush.
-- Gene_MineralizedSkin.png: A white oval face with gray eyes and scattered angular gray mineral patches across its forehead and cheeks.
+- Gene_Rockskin.png: A white oval face with gray eyes and scattered angular gray mineral patches across its forehead and cheeks.
 - Gene_Moody.png: A circular face split vertically into a green smiling left half and a blue frowning right half.
 - Gene_MushroomEater.png: A brown stomach with a small gray mushroom overlapping its lower-right side; the cap has dark spots.
 - Gene_Nocturnal.png: A pale-yellow crescent moon partly hidden behind a small gray cloud.
@@ -77,8 +77,8 @@ Includes all 83 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all
 - Gene_StrongGenes.png: A horizontal olive DNA double helix beneath a large green upward arrow.
 - Gene_SuperSpecialist.png: A gray three-dimensional die with black pips and a large green upward arrow covering much of its right face.
 - Gene_TailBeaver.png: A dark-gray paddle-shaped tail lying horizontally, with a broad rounded left end tapering to a short narrow base on the right.
-- Gene_TailDemon.png: A white tail with gray shading, curving down from a broad right end and back upward into an arrowhead-shaped tip on the left.
-- Gene_TailReptile.png: A smooth white tail with gray shading, curving from a broad rounded upper-right end down and left to a narrow upturned tip.
+- Gene_TailPointed.png: A white tail with gray shading, curving down from a broad right end and back upward into an arrowhead-shaped tip on the left.
+- Gene_TailLizard.png: A smooth white tail with gray shading, curving from a broad rounded upper-right end down and left to a narrow upturned tip.
 - Gene_TailSquirrel.png: A thick white tail with gray shading, forming a broad rounded curl at the upper left and a narrower curved end at the lower right.
 - Gene_TechAffinity.png: Three gray crossing circuit-like tracks with circular terminals, topped by a green upward arrow.
 - Gene_TelescopicVision.png: A gray eye overlaid with green horizontal and vertical crosshairs, including short measuring ticks.

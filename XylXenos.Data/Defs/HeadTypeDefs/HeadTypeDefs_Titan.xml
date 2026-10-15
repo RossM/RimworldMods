@@ -9,7 +9,7 @@
     <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylMineralizedSkin</li>
+      <li>XylRockskin</li>
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
@@ -19,7 +19,7 @@
     <eyeOffsetEastWest>(0.18, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylMineralizedSkin</li>
+      <li>XylRockskin</li>
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
@@ -28,7 +28,7 @@
     <gender>Male</gender>
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylMineralizedSkin</li>
+      <li>XylRockskin</li>
     </requiredGenes>
   </HeadTypeDef>
 
@@ -39,7 +39,7 @@
     <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylMineralizedSkin</li>
+      <li>XylRockskin</li>
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
@@ -49,7 +49,7 @@
     <eyeOffsetEastWest>(0.13, 0, 0.17)</eyeOffsetEastWest>
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylMineralizedSkin</li>
+      <li>XylRockskin</li>
     </requiredGenes>
   </HeadTypeDef>
   <HeadTypeDef ParentName="AverageBase">
@@ -58,7 +58,7 @@
     <gender>Female</gender>
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylMineralizedSkin</li>
+      <li>XylRockskin</li>
     </requiredGenes>
   </HeadTypeDef>
 

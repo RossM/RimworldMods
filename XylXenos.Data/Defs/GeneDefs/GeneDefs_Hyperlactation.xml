@@ -91,7 +91,7 @@
   </HediffDef>
 
   <ThoughtDef>
-    <defName>XylSoreBreasts</defName>
+    <defName>XylFullMilk</defName>
     <thoughtClass>Thought_Situational</thoughtClass>
     <workerClass>XylXenos.ThoughtWorker_MilkableFullness</workerClass>
     <requiredGenes>

@@ -54,10 +54,10 @@
   </GeneDef>
 
   <GeneDef ParentName="GeneTailBase">
-    <defName>XylTail_Demon</defName>
+    <defName>XylTail_Pointed</defName>
     <label>pointed tail</label>
     <description>Carriers of this gene grow a narrow, pointed tail that increases the character's impact in social interactions.</description>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_TailDemon</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TailPointed</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>1002</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
@@ -67,9 +67,9 @@
     </statOffsets>
     <renderNodeProperties>
       <li>
-        <debugLabel>DemonTail</debugLabel>
+        <debugLabel>PointedTail</debugLabel>
         <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
-        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/DemonTail/DemonTail</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/PointedTail/PointedTail</texPath>
         <overrideMeshSize>(1, 1)</overrideMeshSize>
         <parentTagDef>Body</parentTagDef>
         <colorType>Skin</colorType>
@@ -176,10 +176,10 @@
   </ThoughtDef>
 
   <GeneDef ParentName="GeneTailBase">
-    <defName>XylTail_Reptile</defName>
+    <defName>XylTail_Lizard</defName>
     <label>lizard tail</label>
     <description>Carriers of this gene grow a long, heavy tail that improves balance and mobility.</description>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_TailReptile</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_TailLizard</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <displayOrderInCategory>1004</displayOrderInCategory>
     <biostatCpx>1</biostatCpx>
@@ -189,9 +189,9 @@
     </statOffsets>
     <renderNodeProperties>
       <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
-        <debugLabel>ReptileTail</debugLabel>
+        <debugLabel>LizardTail</debugLabel>
         <useBodyGraphicScale>true</useBodyGraphicScale>
-        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/ReptileTail/ReptileTail</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/LizardTail/LizardTail</texPath>
         <parentTagDef>Body</parentTagDef>
         <colorType>Skin</colorType>
         <useRottenColor>true</useRottenColor>
@@ -226,9 +226,9 @@
         </drawData>
       </li>
       <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
-        <debugLabel>ReptileTail_Scaleskin</debugLabel>
+        <debugLabel>LizardTail_Scaleskin</debugLabel>
         <useBodyGraphicScale>true</useBodyGraphicScale>
-        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/ReptileTail/ReptileTail_Scaleskin</texPath>
+        <texPath>Xyl/Things/Pawn/Humanlike/BodyAttachments/LizardTail/LizardTail_Scaleskin</texPath>
         <parentTagDef>Body</parentTagDef>
         <colorType>Skin</colorType>
         <useRottenColor>true</useRottenColor>

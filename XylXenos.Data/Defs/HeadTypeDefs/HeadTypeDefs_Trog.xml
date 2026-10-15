@@ -5,7 +5,7 @@
   <HeadTypeDef Name="XylTrogBase" ParentName="AverageBase" Abstract="True">
     <randomChosen>false</randomChosen>
     <requiredGenes>
-      <li>XylHead_Trog</li>
+      <li>XylHead_Warped</li>
     </requiredGenes>
   </HeadTypeDef>
 

@@ -349,17 +349,17 @@
   </AbilityDef>
 
   <GeneDef>
-    <defName>XylEMPBlast</defName>
+    <defName>XylEMPBurst</defName>
     <label>EMP burst</label>
     <description>Carriers have a specialized muscle-derived organ that can release an electric shock in an area around them, disabling nearby electronic devices.</description>
     <descriptionHyperlinks>
-      <AbilityDef>XylEMPBlast</AbilityDef>
+      <AbilityDef>XylEMPBurst</AbilityDef>
     </descriptionHyperlinks>
     <displayCategory>Ability</displayCategory>
     <displayOrderInCategory>202</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_EMPBlast</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EMPBurst</iconPath>
     <abilities>
-      <li>XylEMPBlast</li>
+      <li>XylEMPBurst</li>
     </abilities>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
@@ -369,13 +369,13 @@
   </GeneDef>
 
   <AbilityDef>
-    <defName>XylEMPBlast</defName>
+    <defName>XylEMPBurst</defName>
     <label>EMP burst</label>
     <description>Releases an electromagnetic pulse in an area around the user, disabling nearby electronic devices.</description>
     <descriptionHyperlinks>
-      <GeneDef>XylEMPBlast</GeneDef>
+      <GeneDef>XylEMPBurst</GeneDef>
     </descriptionHyperlinks>
-    <iconPath>Xyl/UI/Icons/Genes/Gene_EMPBlast</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_EMPBurst</iconPath>
     <cooldownTicksRange>300000</cooldownTicksRange>
     <aiCanUse>true</aiCanUse>
     <showPsycastEffects>false</showPsycastEffects>

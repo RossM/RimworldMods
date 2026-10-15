@@ -20,7 +20,7 @@ GROUPED_VARIANTS = {
     "XylLargeHorns": {"LargeHorns": "Cow", "LargeHorns_Scaleskin": "Dragon"},
 }
 VARIANT_CAPTIONS = {"BatWings": "Folded", "BatWingsExtended": "Extended",
-                    "ReptileTail": "Smooth", "ReptileTail_Scaleskin": "Scaly"}
+                    "LizardTail": "Smooth", "LizardTail_Scaleskin": "Scaly"}
 
 
 def variant_caption(name):
