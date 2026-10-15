@@ -27,6 +27,7 @@ DEF_DIR = ROOT / "XylXenos.Data/Defs/GeneDefs"
 ART_DIR = ROOT / "Art/Rimworld art"
 OUTPUT = ROOT / "XylXenos.Data/Docs/Images/Genes"
 XENOTYPE_OUTPUT = ROOT / "XylXenos.Data/Docs/Images/Xenotypes"
+CONTACT_SHEET_OUTPUT = ROOT / "Art/Generated"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 WHITE = (1.0, 1.0, 1.0, 1.0)
 ICON_SIZE = 80
@@ -250,7 +251,7 @@ def main():
             render_icon(gene.texture, background, gene.color).save(directory / (gene.name + ".png"))
     print(f"Saved {len(genes)} genes in both Endo and Xeno variants to {OUTPUT}")
     sheet = render_contact_sheet(genes)
-    sheet_path = OUTPUT / "contact-sheet.png"
+    sheet_path = CONTACT_SHEET_OUTPUT / "gene-icon-sheet.png"
     sheet.save(sheet_path)
     print(f"Saved {sheet_path}: {len(genes)} genes, {sheet.width} x {sheet.height}")
     render_xenotype_icons()
