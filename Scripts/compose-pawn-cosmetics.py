@@ -1,8 +1,8 @@
 """Render a labeled pawn cosmetic sheet from XylXenos.Data (Python 3.10+ / Pillow).
 
-Run from any directory: python path/to/Art/Codex/compose-pawn-cosmetics.py
+Run from any directory: python path/to/Scripts/compose-pawn-cosmetics.py
 Each triplet shows south, north, east. Complete cosmetic groups wrap at --width.
-The default output is pawn-cosmetics-sheet.png beside this script.
+The default output is Art/Generated/pawn-cosmetics-sheet.png in the repository.
 
 XML supplies textures, colors, offsets, layers, and prerequisite overlays.
 Head cosmetics compare average/narrow heads; sex-specific art includes both sexes.
@@ -22,12 +22,12 @@ from pawn_cosmetics.definitions import DefinitionLibrary
 from pawn_cosmetics.layout import SheetComposer
 from pawn_cosmetics.model import OUTPUT_FACINGS
 from pawn_cosmetics.rendering import Renderer
-from pawn_cosmetics.settings import DEFAULT_WIDTH, GAME_DATA
+from pawn_cosmetics.settings import DEFAULT_OUTPUT, DEFAULT_WIDTH, GAME_DATA
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--output", type=Path, default=Path(__file__).with_name("pawn-cosmetics-sheet.png"))
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--width", type=int, default=DEFAULT_WIDTH,
                         help="Fixed sheet width in pixels (default: %(default)s)")
     parser.add_argument("--rimworld-data", type=Path, default=GAME_DATA)

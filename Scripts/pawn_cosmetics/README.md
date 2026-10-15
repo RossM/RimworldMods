@@ -3,12 +3,15 @@
 From the repository root (requires Python 3.10+ and Pillow):
 
 ```powershell
-python -B Art/Codex/compose-pawn-cosmetics.py
-python -B Art/Codex/compose-pawn-cosmetics.py --width 3000 --output Art/Codex/custom-sheet.png
-python -B -m unittest discover -s Art/Codex -p test_pawn_cosmetics.py
+python -B Scripts/compose-pawn-cosmetics.py
+python -B Scripts/compose-pawn-cosmetics.py --width 3000 --output Art/Generated/custom-sheet.png
+python -B -m unittest discover -s Scripts -p test_pawn_cosmetics.py
 ```
 
 The command also works from other directories using an absolute script path.
+The default output is `Art/Generated/pawn-cosmetics-sheet.png` in the repository,
+regardless of the current directory. An explicit `--output` path is relative to
+the current directory unless absolute.
 `--rimworld-data PATH` selects an installed RimWorld/Data directory for adult
 geometry. The default Steam installation is optional; extracted reference art
 and geometry defaults make the script usable without it.

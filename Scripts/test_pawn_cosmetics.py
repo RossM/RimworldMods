@@ -1,4 +1,4 @@
-"""Run with: python -B -m unittest discover -s Art/Codex -p test_pawn_cosmetics.py"""
+"""Run with: python -B -m unittest discover -s Scripts -p test_pawn_cosmetics.py"""
 
 from dataclasses import replace
 from pathlib import Path

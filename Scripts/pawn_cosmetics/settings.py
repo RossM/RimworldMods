@@ -7,7 +7,8 @@ from types import MappingProxyType
 from .model import BodyGeometry, Facing, Gender, HeadGeometry, Palette
 
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_OUTPUT = ROOT / "Art/Generated/pawn-cosmetics-sheet.png"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 HEAD_SHAPES = ("Average_Normal", "Narrow_Normal")
 BODY_ATTACHMENT_TYPES = ("Female", "Thin")
