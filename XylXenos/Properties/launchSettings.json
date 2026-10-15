@@ -1,9 +1,10 @@
 {
   "profiles": {
-    "Source_XylRaces": {
+    "RimWorld": {
       "commandName": "Executable",
-	  "executablePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\RimWorld.exe",
-	  "workingDirectory": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld"
+      "executablePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld\\RimWorld.exe",
+      "commandLineArgs": "-WatchShaders",
+      "workingDirectory": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\RimWorld"
     }
   }
 }
