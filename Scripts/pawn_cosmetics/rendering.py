@@ -43,9 +43,13 @@ class Renderer:
         self._images[path] = image
         return image
 
-    def layer(self, image, mesh, offset):
+    def layer(self, image, mesh, offset, rotation=0):
         ppu, size = self.style.pixels_per_unit, self.style.canvas_size
         image = image.resize(tuple(round(value * ppu) for value in mesh), Image.Resampling.LANCZOS)
+        if rotation % 360:
+            # Positive rotation around the game's Y axis is clockwise on the sheet.
+            # Rotate the scaled mesh before translation; expansion avoids clipping.
+            image = image.rotate(-rotation, resample=Image.Resampling.BICUBIC, expand=True)
         position = (round(size // 2 + offset[0] * ppu - image.width / 2),
                     round(size // 2 - offset[2] * ppu - image.height / 2))
         if min(position) < 0 or position[0] + image.width > size or position[1] + image.height > size:
@@ -84,7 +88,7 @@ class Renderer:
             image = tint(image, pawn.palette.hair, mask.getchannel("G"))
         if draw.flip:
             image = ImageOps.mirror(image)
-        return self.layer(image, mesh, offset)
+        return self.layer(image, mesh, offset, rotation=draw.rotation)
 
     def render(self, preview, facing):
         pawn = preview.pawn

@@ -24,7 +24,7 @@ and geometry defaults make the script usable without it.
 | Spacing, fonts, background, rendering scale | `SheetStyle` / `RenderStyle` in `settings.py` |
 | XML interpretation, game class behavior, inherited head geometry | `definitions.py` |
 | Which variants share a group, body/head/sex comparisons, prerequisites, sorting | `catalog.py` |
-| Tint masks, silhouettes, offsets, mesh scaling, compositing | `rendering.py` |
+| Tint masks, silhouettes, offsets, rotations, mesh scaling, compositing | `rendering.py` |
 | Measuring, cropping, captions, fixed-width row packing | `layout.py` |
 | Typed definitions and selected preview data | `model.py` |
 | Command arguments and output | `../compose-pawn-cosmetics.py` |
@@ -41,6 +41,10 @@ scaly tail grouped with the smooth tail even though scaleskin contributes head
 and body overlays. The renderer receives complete previews and never reads XML
 or decides grouping. Packing measures rendered alpha bounds and captions, keeps
 each group intact, and preserves catalog order.
+
+Draw data supports `rotationOffset` in degrees, inherited from `defaultData`
+unless overridden for a facing. Rotation is clockwise around the scaled mesh's
+center before placement at its draw offset; it does not rotate the offset itself.
 
 This is a focused static art preview, not a complete RimWorld renderer. It
 approximates adult geometry and cutout/pattern shaders without lighting,

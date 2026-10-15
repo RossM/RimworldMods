@@ -68,6 +68,7 @@ class Draw:
     offset: Vec3 = (0, 0, 0)
     layer: float = 0
     flip: bool = False
+    rotation: float = 0
 
 
 @dataclass(frozen=True)

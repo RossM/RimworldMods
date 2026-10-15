@@ -62,7 +62,8 @@ def _draw(node, facing):
 
     return Draw(offset=vector(value("offset", "(0,0,0)"), 3),
                 layer=float(value("layer", node.findtext("baseLayer", "0"))),
-                flip=value("flip", "false").lower() == "true")
+                flip=value("flip", "false").lower() == "true",
+                rotation=float(value("rotationOffset", "0")))
 
 
 class DefinitionLibrary:

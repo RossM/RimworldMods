@@ -73,8 +73,10 @@ class DefinitionTests(unittest.TestCase):
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs><GeneDef><defName>Test</defName>
                 <renderNodeProperties><li><parentTagDef>Head</parentTagDef><texPath>test</texPath>
-                <baseLayer>12</baseLayer><drawData><defaultData><offset>(1,2,3)</offset></defaultData>
-                <dataNorth><layer>4</layer><flip>true</flip></dataNorth></drawData></li>
+                <baseLayer>12</baseLayer><drawData><defaultData><offset>(1,2,3)</offset>
+                <rotationOffset>35</rotationOffset></defaultData>
+                <dataNorth><layer>4</layer><flip>true</flip><rotationOffset>180</rotationOffset></dataNorth>
+                <dataSouth><rotationOffset>0</rotationOffset></dataSouth></drawData></li>
                 </renderNodeProperties></GeneDef></Defs>""")
             node = DefinitionLibrary(root=root, game_data=None).genes["Test"].nodes[0]
             self.assertEqual(node.draws[Facing.NORTH].offset, (1, 2, 3))
@@ -82,6 +84,9 @@ class DefinitionTests(unittest.TestCase):
             self.assertTrue(node.draws[Facing.NORTH].flip)
             self.assertEqual(node.draws[Facing.SOUTH].layer, 12)
             self.assertFalse(node.draws[Facing.SOUTH].flip)
+            self.assertEqual(node.draws[Facing.NORTH].rotation, 180)
+            self.assertEqual(node.draws[Facing.EAST].rotation, 35)
+            self.assertEqual(node.draws[Facing.SOUTH].rotation, 0)
 
     def test_color_and_size_accept_xml_conventions_and_reject_invalid_values(self):
         self.assertEqual(color("(255,128,0)"), (1, 128 / 255, 0, 1))
@@ -112,6 +117,38 @@ class DefinitionTests(unittest.TestCase):
 
 
 class RenderingTests(unittest.TestCase):
+    def test_rotation_turns_a_scaled_mesh_clockwise_around_its_offset(self):
+        renderer = Renderer(RenderStyle(pixels_per_unit=1, canvas_size=12))
+        source = Image.new("RGBA", (4, 2))
+        source.putpixel((0, 0), (255, 0, 0, 255))
+        source.putpixel((3, 0), (0, 0, 255, 255))
+        quarter_turn = renderer.layer(source, (4, 2), (2, 0, 1), rotation=90)
+        self.assertEqual(quarter_turn.getpixel((8, 3)), (255, 0, 0, 255))
+        self.assertEqual(quarter_turn.getpixel((8, 6)), (0, 0, 255, 255))
+        half_turn = renderer.layer(source, (4, 2), (2, 0, 1), rotation=180)
+        self.assertEqual(half_turn.getpixel((9, 5)), (255, 0, 0, 255))
+        self.assertEqual(half_turn.getpixel((6, 5)), (0, 0, 255, 255))
+        self.assertEqual(source.getpixel((0, 0)), (255, 0, 0, 255))
+
+    def test_beaver_tail_rotation_is_applied_only_to_south_on_both_bodies(self):
+        groups = CatalogBuilder(DefinitionLibrary(game_data=None)).build()
+        tail = next(group for group in groups if group.label == "Beaver tail")
+        self.assertEqual({preview.pawn.body.name for preview in tail.previews}, {"Female", "Thin"})
+        renderer = Renderer()
+        for preview in tail.previews:
+            graphic = preview.graphics[0]
+            self.assertEqual([draw.rotation for draw in graphic.node.draws], [0, 0, 180, 0])
+            unrotated = replace(graphic.node, draws=tuple(replace(draw, rotation=0) for draw in graphic.node.draws))
+            original = replace(preview, graphics=(replace(graphic, node=unrotated),))
+            for facing in (Facing.SOUTH, Facing.NORTH, Facing.EAST):
+                with self.subTest(body=preview.pawn.body.name, facing=facing):
+                    before = renderer.render(original, facing).tobytes()
+                    after = renderer.render(preview, facing).tobytes()
+                    if facing == Facing.SOUTH:
+                        self.assertNotEqual(before, after)
+                    else:
+                        self.assertEqual(before, after)
+
     def test_mask_tint_preserves_unmasked_pixels_and_partial_alpha(self):
         source = Image.new("RGBA", (2, 1), (200, 100, 50, 128))
         mask = Image.new("L", (2, 1))
