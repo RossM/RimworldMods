@@ -12,7 +12,7 @@ namespace Xylib;
 ///     Each xenotype gene entry is replaced once, so replacements are not chained.
 /// </remarks>
 [UsedFromXml]
-public class PatchOperation_ReplaceGenes : PatchOperation
+public class PatchOperationReplaceGenes : PatchOperation
 {
     [UsedFromXml]
     public class Replacement
