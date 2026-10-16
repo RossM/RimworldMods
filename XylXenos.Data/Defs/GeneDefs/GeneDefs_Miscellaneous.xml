@@ -231,6 +231,10 @@
     <displayCategory>Movement</displayCategory>
     <displayOrderInCategory>510</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BatWings</iconPath>
+    <exclusionTags>
+      <!-- Matches Alpha Genes and Big and Small. -->
+      <li>Wings</li>
+    </exclusionTags>
     <renderNodeProperties>
       <li>
         <debugLabel>BatWings</debugLabel>
@@ -474,6 +478,10 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_TechAffinity</iconPath>
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
+    <exclusionTags>
+      <!-- Matches Alpha Genes. -->
+      <li>AG_Bandwidth</li>
+    </exclusionTags>
     <statOffsets>
       <MechBandwidth>3</MechBandwidth>
       <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.3</PilotingAbility>
@@ -514,6 +522,10 @@
     </statOffsets>
     <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
+    <exclusionTags>
+      <!-- Matches Big and Small. -->
+      <li>BS_Passioned_Learning_Gene</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>

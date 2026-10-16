@@ -18,7 +18,10 @@
     <displayOrderInCategory>0</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Dwarf</iconPath>
     <exclusionTags>
-      <li>XylBodySize</li>
+      <!-- Matches Alpha Genes and Big and Small. -->
+      <li>BodySize</li>
+      <!-- Matches Big and Small. -->
+      <li>Body_Size_Multiplier</li>
     </exclusionTags>
     <statOffsets>
       <MoveSpeed>-0.1</MoveSpeed>
@@ -47,7 +50,10 @@
     <displayOrderInCategory>1</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Giant</iconPath>
     <exclusionTags>
-      <li>XylBodySize</li>
+      <!-- Matches Alpha Genes and Big and Small. -->
+      <li>BodySize</li>
+      <!-- Matches Big and Small. -->
+      <li>Body_Size_Multiplier</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -79,6 +85,8 @@
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <exclusionTags>
       <li>Fur</li>
+      <!-- Matches Alpha Genes and Big and Small. -->
+      <li>Armor</li>
     </exclusionTags>
     <statOffsets>
       <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
@@ -127,6 +135,8 @@
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <exclusionTags>
       <li>Fur</li>
+      <!-- Matches Alpha Genes and Big and Small. -->
+      <li>Armor</li>
     </exclusionTags>
     <statOffsets>
       <ArmorRating_Sharp>0.7</ArmorRating_Sharp>

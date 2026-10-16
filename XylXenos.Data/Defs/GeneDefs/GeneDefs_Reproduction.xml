@@ -8,7 +8,10 @@
     <displayCategory>Reproduction</displayCategory>
     <selectionWeight>0</selectionWeight>
     <exclusionTags>
-      <li>XylGender</li>
+      <!-- Matches Alpha Genes. -->
+      <li>Gender</li>
+      <!-- Matches Big and Small. -->
+      <li>ForcedSex</li>
     </exclusionTags>
   </GeneDef>
 
@@ -124,7 +127,8 @@
     <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_StrongGenes</iconPath>
     <exclusionTags>
-      <li>XylXenotypeStrength</li>
+      <!-- Matches Vanilla Races Expanded - Highmate and Better Gene Inheritance. -->
+      <li>VRE_Dominance</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -147,7 +151,8 @@
     <displayOrderInCategory>401</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_WeakGenes</iconPath>
     <exclusionTags>
-      <li>XylXenotypeStrength</li>
+      <!-- Matches Vanilla Races Expanded - Highmate and Better Gene Inheritance. -->
+      <li>VRE_Dominance</li>
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">

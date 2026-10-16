@@ -19,6 +19,9 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
+      <!-- Matches Big and Small. MeatDependence + Herbivore remains an unresolved conflict. -->
+      <li>Diet</li>
+      <!-- Also used by our RobustDigestion patch. -->
       <li>XylDigestion</li>
     </exclusionTags>
     <statFactors>
@@ -58,6 +61,9 @@
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
+      <!-- Matches Big and Small. -->
+      <li>Diet</li>
+      <!-- Also used by our RobustDigestion patch. -->
       <li>XylDigestion</li>
     </exclusionTags>
     <statFactors>
@@ -97,6 +103,9 @@
     <displayOrderInCategory>102</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
     <exclusionTags>
+      <!-- Matches Big and Small. -->
+      <li>Diet</li>
+      <!-- Also used by our RobustDigestion patch. -->
       <li>XylDigestion</li>
     </exclusionTags>
     <statFactors>
