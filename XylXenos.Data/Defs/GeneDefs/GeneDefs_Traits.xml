@@ -44,6 +44,10 @@
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>71</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Nocturnal</iconPath>
+    <exclusionTags>
+      <!-- Also used by our Alpha Genes and Big and Small patches. -->
+      <li>XylNightOwl</li>
+    </exclusionTags>
     <forcedTraits>
       <NightOwl />
     </forcedTraits>
@@ -198,6 +202,8 @@
     <iconColor>(0.7, 0.4, 0.4)</iconColor>
     <exclusionTags>
       <li>XylEmpathy</li>
+      <!-- Also used by our Vanilla Races Expanded - Highmate patch. -->
+      <li>XylSufferingResponse</li>
     </exclusionTags>
     <forcedTraits>
       <Psychopath/>

@@ -119,6 +119,10 @@
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Moody</iconPath>
+    <exclusionTags>
+      <!-- Also used by our Alpha Genes patch. -->
+      <li>XylMoodFluctuation</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <hediffGivers>

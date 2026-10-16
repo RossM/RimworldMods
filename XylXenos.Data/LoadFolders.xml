@@ -3,8 +3,10 @@
 <loadFolders>
   <v1.6>
     <li>/</li>
+    <li IfModActive="sarg.alphagenes">Compat/AlphaGenes</li>
     <li IfModActive="RedMattis.BetterGeneInheritance">Compat/BetterGeneInheritance</li>
     <li IfModActive="RedMattis.BigSmall.Core">Compat/BigAndSmall</li>
+    <li IfModActive="vanillaracesexpanded.highmate">Compat/VREHighmate</li>
     <li IfModActive="Ludeon.RimWorld.Ideology">Compat/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Odyssey">Compat/Odyssey</li>
     <li IfModActive="Ludeon.RimWorld.Royalty">Compat/Royalty</li>
@@ -12,8 +14,10 @@
   </v1.6>
   <v1.7>
     <li>/</li>
+    <li IfModActive="sarg.alphagenes">Compat/AlphaGenes</li>
     <li IfModActive="RedMattis.BetterGeneInheritance">Compat/BetterGeneInheritance</li>
     <li IfModActive="RedMattis.BigSmall.Core">Compat/BigAndSmall</li>
+    <li IfModActive="vanillaracesexpanded.highmate">Compat/VREHighmate</li>
     <li IfModActive="Ludeon.RimWorld.Ideology">Compat/Ideology</li>
     <li IfModActive="Ludeon.RimWorld.Odyssey">Compat/Odyssey</li>
     <li IfModActive="Ludeon.RimWorld.Royalty">Compat/Royalty</li>

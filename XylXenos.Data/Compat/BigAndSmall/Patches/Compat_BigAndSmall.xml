@@ -11,4 +11,31 @@
     </entries>
   </Operation>
 
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="BS_NightOwl"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>XylNightOwl</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="BS_AutoPregnancy" or defName="BS_AutoPregnancyArchite"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>XylAsexualPregnancy</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="BS_Diet_Herbivore" or defName="BS_Diet_Fuel"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>XylMeatRequirement</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
 </Patch>

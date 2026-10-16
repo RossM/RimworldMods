@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="VRE_Distressed"]</xpath>
+    <value>
+      <exclusionTags>
+        <li>XylSufferingResponse</li>
+      </exclusionTags>
+    </value>
+  </Operation>
+
+</Patch>

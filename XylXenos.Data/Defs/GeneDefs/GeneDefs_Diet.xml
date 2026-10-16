@@ -19,7 +19,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
-      <!-- Matches Big and Small. MeatDependence + Herbivore remains an unresolved conflict. -->
+      <!-- Matches Big and Small. -->
       <li>Diet</li>
       <!-- Also used by our RobustDigestion patch. -->
       <li>XylDigestion</li>
@@ -139,6 +139,10 @@
     <displayCategory>XylDiet</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
+    <exclusionTags>
+      <!-- Also used by our Big and Small patch. -->
+      <li>XylMeatRequirement</li>
+    </exclusionTags>
     <minAgeActive>13</minAgeActive>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
