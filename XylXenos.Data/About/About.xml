@@ -18,6 +18,8 @@
   </modDependencies>
   <loadAfter>
     <li>Xylthixlm.Disharmony</li>
+    <li>RedMattis.BetterGeneInheritance</li>
+    <li>RedMattis.BigSmall.Core</li>
   </loadAfter>
 
 </ModMetaData>

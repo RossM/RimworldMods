@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationReplaceGenes">
+    <entries>
+      <li>
+        <original>XylStrongGenes</original>
+        <replacement>BGI_DominantGenes</replacement>
+      </li>
+      <li>
+        <original>XylWeakGenes</original>
+        <replacement>BGI_RecessiveGenes</replacement>
+      </li>
+    </entries>
+  </Operation>
+
+</Patch>

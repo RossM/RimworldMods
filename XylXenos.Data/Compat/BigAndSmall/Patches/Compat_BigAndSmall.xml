@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationReplaceGenes">
+    <entries>
+      <li>
+        <original>XylNocturnal</original>
+        <replacement>BS_NightOwl</replacement>
+      </li>
+    </entries>
+  </Operation>
+
+</Patch>
