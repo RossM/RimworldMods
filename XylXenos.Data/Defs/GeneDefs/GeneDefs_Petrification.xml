@@ -9,6 +9,7 @@
     <descriptionHyperlinks>
       <HediffDef>XylPetrification</HediffDef>
       <HediffDef>XylPetrifiedFlesh</HediffDef>
+      <ThingDef>XylSoftener</ThingDef>
     </descriptionHyperlinks>
     <biostatCpx>1</biostatCpx>
     <biostatMet>4</biostatMet>
@@ -41,6 +42,7 @@
     <descriptionHyperlinks>
       <GeneDef>XylPetrification</GeneDef>
       <HediffDef>XylPetrifiedFlesh</HediffDef>
+      <ThingDef>XylSoftener</ThingDef>
     </descriptionHyperlinks>
     <initialSeverity>0.1</initialSeverity>
     <lethalSeverity>1.0</lethalSeverity>
