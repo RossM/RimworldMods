@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>
+      Defs/*[
+        self::JobDef or
+        self::DubsBadHygiene.WashingJobDef
+      ][
+        defName="useWashBucket" or
+        defName="washAtCell" or
+        defName="takeShower" or
+        defName="takeBath"
+      ]
+    </xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Job_WetnessSource"/>
+      </modExtensions>
+    </value>
+  </Operation>
+
+</Patch>

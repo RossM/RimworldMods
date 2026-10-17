@@ -9,6 +9,7 @@
     <li IfModActive="RedMattis.BetterPrerequisites">Compat/BigAndSmallFramework</li>
     <li IfModActive="vanillaracesexpanded.highmate">Compat/VREHighmate</li>
     <li IfModActive="Euterpe.MilkyTitfuck">Compat/LactationExpansion</li>
+    <li IfModActive="Dubwise.DubsBadHygiene">Compat/DubsBadHygiene</li>
     <li IfModNotActive="sarg.alphagenes">Compat/NoAlphaGenes</li>
     <li IfModNotActive="RedMattis.BigSmall.Core">Compat/NoBigAndSmall</li>
     <li IfModNotActive="RedMattis.BetterPrerequisites">Compat/NoBigAndSmallFramework</li>
