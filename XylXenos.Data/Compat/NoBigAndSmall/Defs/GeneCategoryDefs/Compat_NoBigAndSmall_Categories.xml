@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <!-- Matches Big and Small - Genes & More; use its native definitions when installed. -->
+
+  <GeneCategoryDef>
+    <defName>BS_Diet</defName>
+    <label>Diet</label>
+    <displayPriorityInXenotype>707</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
+</Defs>

@@ -12,19 +12,21 @@
       ]/displayCategory
     </xpath>
     <value>
-      <displayCategory>XylDiet</displayCategory>
+      <displayCategory>BS_Diet</displayCategory>
     </value>
   </Operation>
 
   <Operation Class="PatchOperationReplace">
-    <xpath>
-      Defs/GeneDef[
-        @Name="GeneTailBase" or
-        defName="Furskin"
-      ]/displayCategory
-    </xpath>
+    <xpath>Defs/GeneDef[@Name="GeneTailBase"]/displayCategory</xpath>
     <value>
-      <displayCategory>XylBody</displayCategory>
+      <displayCategory>AG_Cosmetic_Tails</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/GeneDef[@Name="GeneEarsBase"]/displayCategory</xpath>
+    <value>
+      <displayCategory>AG_Cosmetic_Ears</displayCategory>
     </value>
   </Operation>
 

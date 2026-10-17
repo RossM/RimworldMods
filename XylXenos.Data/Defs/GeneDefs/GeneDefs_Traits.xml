@@ -41,7 +41,7 @@
     <description>Carriers of this gene are naturally active at night.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
+    <displayCategory>Sleep</displayCategory>
     <displayOrderInCategory>71</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Nocturnal</iconPath>
     <exclusionTags>
@@ -88,7 +88,7 @@
     <description>TODO</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
-    <displayCategory>XylDiet</displayCategory>
+    <displayCategory>BS_Diet</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
     <forcedTraits>
@@ -103,7 +103,7 @@
     <description>Carriers of this gene have very stable neurochemistry, with less variation between individuals.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
+    <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>602</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_EvenTemper</iconPath>
     <suppressedTraits>

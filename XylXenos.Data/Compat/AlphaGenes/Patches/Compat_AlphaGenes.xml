@@ -20,4 +20,63 @@
     </value>
   </Operation>
 
+  <!-- Display categories -->
+
+  <!-- Keep the food family together, including sustenance, foraging and meal behavior. -->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/GeneDef[displayCategory="AG_FoodConsumption"]/displayCategory</xpath>
+    <value>
+      <displayCategory>BS_Diet</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="XylBatWings"]</xpath>
+    <value>
+      <displayCategory>AG_Wings</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="XylScaleskin" or defName="XylRockskin"]</xpath>
+    <value>
+      <displayCategory>AG_Armour</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="Furskin"]</xpath>
+    <value>
+      <displayCategory>AG_Cosmetic_Bodies</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[@Name="XylGenderRatioBase" or @Name="AG_GenderBase"]</xpath>
+    <value>
+      <displayCategory>ForcedSex</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="AG_Deaf" or defName="AG_NearBlindness" or defName="AG_FeraliskEyes" or defName="AG_ChameleonVision" or defName="AG_ThirdEye"]</xpath>
+    <value>
+      <displayCategory>XylSenses</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[@Name="GeneJawBase"]</xpath>
+    <value>
+      <displayCategory>AG_Cosmetic_Heads</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="XylTechAffinity"]</xpath>
+    <value>
+      <displayCategory>AG_Mechanitor</displayCategory>
+    </value>
+  </Operation>
+
 </Patch>

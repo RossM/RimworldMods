@@ -18,6 +18,7 @@
   <loadAfter>
     <li>Xylthixlm.Disharmony</li>
     <li>RedMattis.BetterGeneInheritance</li>
+    <li>RedMattis.BetterPrerequisites</li>
     <li>RedMattis.BigSmall.Core</li>
     <li>sarg.alphagenes</li>
     <li>vanillaracesexpanded.highmate</li>

@@ -2,12 +2,6 @@
 
 <Defs>
 
-  <GeneCategoryDef>
-    <defName>XylDiet</defName>
-    <label>diet</label>
-    <displayPriorityInXenotype>275</displayPriorityInXenotype>
-  </GeneCategoryDef>
-
   <GeneDef>
     <defName>XylCarnivoreStomach</defName>
     <label>carnivore stomach</label>
@@ -15,7 +9,7 @@
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw meat, but are poor at digesting plant-based foods. They never get negative thoughts from eating meat.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
-    <displayCategory>XylDiet</displayCategory>
+    <displayCategory>BS_Diet</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_CarnivoreStomach</iconPath>
     <exclusionTags>
@@ -57,7 +51,7 @@
     <description>Carriers of this gene have specialized stomachs that can extract more nutrition from raw plant-based foods, but are poor at digesting meat. They never get negative thoughts from eating plant-based foods.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>1</biostatMet>
-    <displayCategory>XylDiet</displayCategory>
+    <displayCategory>BS_Diet</displayCategory>
     <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerbivoreStomach</iconPath>
     <exclusionTags>
@@ -99,7 +93,7 @@
     <description>Carriers of this gene have special digestive enzymes that extract more nutrition from raw fungus - but they don't do anything about the taste.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>XylDiet</displayCategory>
+    <displayCategory>BS_Diet</displayCategory>
     <displayOrderInCategory>102</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MushroomEater</iconPath>
     <exclusionTags>
@@ -136,7 +130,7 @@
     <description>Carriers of this gene are unable to synthesize certain essential nutrients and must obtain them by eating raw meat. Without it, their health and mood will steadily decline, leading to pain, muscle weakness, mental instability, coma, and eventually death.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>3</biostatMet>
-    <displayCategory>XylDiet</displayCategory>
+    <displayCategory>BS_Diet</displayCategory>
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_MeatDependence</iconPath>
     <exclusionTags>

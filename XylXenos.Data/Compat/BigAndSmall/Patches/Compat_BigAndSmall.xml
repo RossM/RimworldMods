@@ -38,4 +38,34 @@
     </value>
   </Operation>
 
+  <!-- Display categories -->
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[@Name="BS_FunctionalWingBase" or defName="XylBatWings"]</xpath>
+    <value>
+      <displayCategory>AG_Wings</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="XylDwarf" or defName="XylGiant"]</xpath>
+    <value>
+      <displayCategory>Body_Size</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[@Name="GeneLearningBase" or defName="XylLearning_Focused"]</xpath>
+    <value>
+      <displayCategory>BS_Learning</displayCategory>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="XylLargeHorns" or defName="XylRetractableClaws"]</xpath>
+    <value>
+      <displayCategory>BS_InnateAttacks</displayCategory>
+    </value>
+  </Operation>
+
 </Patch>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <!-- Matches Alpha Genes; use its native definitions when installed. -->
+
+  <GeneCategoryDef>
+    <defName>AG_Cosmetic_Tails</defName>
+    <label>cosmetic - tails</label>
+    <displayPriorityInXenotype>314.59</displayPriorityInXenotype>
+    <displayPriorityInGenepack>-110.69</displayPriorityInGenepack>
+  </GeneCategoryDef>
+
+  <GeneCategoryDef>
+    <defName>AG_Cosmetic_Ears</defName>
+    <label>cosmetic - ears</label>
+    <displayPriorityInXenotype>313.59</displayPriorityInXenotype>
+    <displayPriorityInGenepack>-110.69</displayPriorityInGenepack>
+  </GeneCategoryDef>
+
+  <GeneCategoryDef>
+    <defName>AG_Wings</defName>
+    <label>functional wings</label>
+    <displayPriorityInXenotype>315.69</displayPriorityInXenotype>
+    <displayPriorityInGenepack>-110.69</displayPriorityInGenepack>
+  </GeneCategoryDef>
+
+</Defs>

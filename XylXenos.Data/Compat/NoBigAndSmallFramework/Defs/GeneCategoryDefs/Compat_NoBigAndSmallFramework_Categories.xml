@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <!-- Matches Big and Small - Framework; use its native definitions when installed. -->
+
+  <GeneCategoryDef>
+    <defName>ForcedSex</defName>
+    <label>Biological Sex</label>
+    <displayPriorityInXenotype>401</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
+</Defs>
