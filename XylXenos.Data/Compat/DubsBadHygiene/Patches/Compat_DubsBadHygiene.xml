@@ -2,6 +2,11 @@
 
 <Patch>
 
+  <!-- Keep the shower def for existing saves, but stop the aquatic gene from unlocking construction. -->
+  <Operation Class="PatchOperationRemove">
+    <xpath>Defs/GeneDef[defName="XylAquatic"]/modExtensions/li[@Class="Xylib.DefModExtension_GeneWithComps"]/comps/li[@Class="Xylib.GeneCompProperties_UnlockBuildables"][buildables/li="XylShower"]</xpath>
+  </Operation>
+
   <Operation Class="Xylib.PatchOperationMerge">
     <xpath>
       Defs/*[
