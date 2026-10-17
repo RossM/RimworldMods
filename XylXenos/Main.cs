@@ -30,6 +30,9 @@ public class Main : Mod
         {
             Patcher.PatchCategory(Assembly.GetExecutingAssembly(), "PreLoadDefs");
             Patcher.PatchCategory(Assembly.GetExecutingAssembly(), null);
+
+            if (ModLister.GetActiveModWithIdentifier(ModIdOf.DubsBadHygiene) is not null)
+                Patcher.PatchCategory(Assembly.GetExecutingAssembly(), ModIdOf.DubsBadHygiene);
         }
 
         using (new ProfileBlock("XylXenos Register XML loaders"))
