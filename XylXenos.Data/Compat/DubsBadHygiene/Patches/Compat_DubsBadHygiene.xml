@@ -10,17 +10,28 @@
     </xpath>
   </Operation>
 
+  <!-- 
+  washAtCell does not need a marker because it takes place in a water cell, which is already wet.
+  If going to a water cell specifically for wetness is needed it will be handled by JobDriver_Soak.
+  -->
+    
   <Operation Class="Xylib.PatchOperationMerge">
-    <xpath>Defs/JobDef[defName="useWashBucket" or defName="washAtCell"]</xpath>
+    <xpath>Defs/JobDef[defName="useWashBucket"]</xpath>
     <value>
       <modExtensions>
         <li Class="XylXenos.DefModExtension_Job_WetnessSource">
           <overrideDuration>3000</overrideDuration>
+          <wetnessLevel>0.65</wetnessLevel>
         </li>
       </modExtensions>
     </value>
   </Operation>
 
+  <!-- 
+  washPatient won't work as a wetness source yet because it would grant the wetness to the pawn
+  doing the job, not the target.
+  -->
+    
   <Operation Class="Xylib.PatchOperationMerge">
     <xpath>Defs/DubsBadHygiene.WashingJobDef[defName="takeShower"]</xpath>
     <value>

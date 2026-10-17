@@ -10,11 +10,14 @@ public static class Compat_DubsBadHygiene
     [Target("DubsBadHygiene.JobDriver_takeBath.MakeNewToils")]
     [Target("DubsBadHygiene.JobDriver_takeShower.MakeNewToils")]
     [Target("DubsBadHygiene.JobDriver_useWashBucket.MakeNewToils")]
+    [Target("DubsBadHygiene.washPatient.MakeNewToils")]
     public static void AddFinishAction_Postfix(Toil __instance, [Field("job", Scope.Outer)] Job job, [Field("pawn", Scope.Outer)] Pawn pawn)
     {
+        Pawn washedPawn = job.def.defName == "washPatient" ? (Pawn)job.targetA.Thing : pawn;
+
         if (__instance.endConditions is not { Count: >= 1 })
             return;
-        if (pawn.needs.TryGetNeed<Need_Wetness>() is not { } need)
+        if (washedPawn.needs.TryGetNeed<Need_Wetness>() is not { } need)
             return;
         if (job.def.GetModExtension<DefModExtension_Job_WetnessSource>() is not { } wetnessSourceJob)
             return;
