@@ -4,8 +4,6 @@
 public class Config : Def
 {
     public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
-
-    public List<JobDef>? wetnessGivingJobs;
 }
 
 public static class FeatureNameOf
