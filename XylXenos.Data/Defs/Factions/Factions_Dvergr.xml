@@ -66,6 +66,67 @@
     </modExtensions>
   </FactionDef>
 
+  <PawnKindDef ParentName="VillagerBase">
+    <defName>Villager_XylDvergr</defName>
+    <label>prospector</label>
+    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <weaponTags Inherit="False">
+      <li>NeolithicMeleeDestructive</li>
+    </weaponTags>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenarySlasherBase">
+    <defName>Mercenary_Slasher_XylDvergr</defName>
+    <label>ironclad</label>
+    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <apparelRequired>
+      <li>Apparel_PlateArmor</li>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+    <initialResistanceRange>10~16</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="GuardBase">
+    <defName>Town_Guard_XylDvergr</defName>
+    <label>claim guard</label>
+    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <weaponTags Inherit="False">
+      <li>PumpShotgun</li>
+    </weaponTags>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenaryGunnerBase">
+    <defName>Mercenary_Gunner_XylDvergr</defName>
+    <label>tunnel sweeper</label>
+    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <weaponTags Inherit="False">
+      <li>ShortShots</li>
+    </weaponTags>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+    <initialResistanceRange>6~10</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenaryHeavyBase">
+    <defName>Mercenary_Heavy_XylDvergr</defName>
+    <label>rocketeer</label>
+    <labelPlural>rocketeers</labelPlural>
+    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <weaponTags Inherit="False">
+      <li>GunSingleUse</li>
+    </weaponTags>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
   <ThingSetMakerDef>
     <defName>XylDvergrRaidLootMaker</defName>
     <debugParams>
