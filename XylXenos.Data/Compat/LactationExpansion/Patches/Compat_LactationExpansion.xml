@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <!-- XylHyperlactating disables inherited comps, so supply LE's storage and toggle explicitly. -->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/HediffDef[defName="XylHyperlactating"]/comps/li[@Class="HediffCompProperties_Lactating"]</xpath>
+    <value>
+      <li Class="EuterpeMilkyTitfuck.HediffCompProperties_Lactation"/>
+      <li Class="EuterpeMilkyTitfuck.HediffCompProperties_SelfMilkingToggle"/>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationRemove">
+    <xpath>Defs/GeneDef[defName="XylHyperlactation"]/modExtensions/li[@Class="Xylib.DefModExtension_GeneWithComps"]/comps/li[@Class="XylXenos.GeneCompProperties_Milkable"]</xpath>
+  </Operation>
+
+  <!-- The fullness worker needs the removed Milkable comp; omit its inactive effects from the gene tooltip. -->
+  <Operation Class="PatchOperationRemove">
+    <xpath>Defs/ThoughtDef[defName="XylFullMilk"]/requiredGenes</xpath>
+  </Operation>
+
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/GeneDef[defName="XylHyperlactation"]//item</xpath>
+    <value>
+      <item>SEX_BreastMilk</item>
+    </value>
+  </Operation>
+
+</Patch>

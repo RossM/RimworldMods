@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <Xylib.CompatPatchSet>
+    <defName>XylCompat_LactationExpansion</defName>
+    <patches>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>CalculateMilkYieldForPawn</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>GenerateMilk</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>Suckle</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>CanBreastfeedNow</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>PawnCanBeMilked</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>PawnIsLactating</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>RaiseLactationSeverity</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>GetFirstHediffOfDef_Postfix</patchMethod>
+      </li>
+      <li>
+        <target>EuterpeMilkyTitfuck.LactationUtilities</target>
+        <targetMethod>Lactate</targetMethod>
+        <patch>XylXenos.Patches.PatchLactation</patch>
+        <patchMethod>HasHediff_Postfix</patchMethod>
+      </li>
+    </patches>
+  </Xylib.CompatPatchSet>
+
+</Defs>
