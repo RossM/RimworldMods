@@ -67,9 +67,11 @@
   </FactionDef>
 
   <PawnKindDef ParentName="VillagerBase">
-    <defName>Villager_XylDvergr</defName>
+    <defName>Villager_Breach_XylDvergr</defName>
     <label>prospector</label>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <canBeSapper>true</canBeSapper>
+    <isGoodBreacher>true</isGoodBreacher>
     <weaponTags Inherit="False">
       <li>NeolithicMeleeDestructive</li>
     </weaponTags>
@@ -79,10 +81,10 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="MercenarySlasherBase">
-    <defName>Mercenary_Slasher_XylDvergr</defName>
+    <defName>Mercenary_Slasher_Plate_XylDvergr</defName>
     <label>ironclad</label>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
-    <apparelRequired>
+    <apparelRequired Inherit="false">
       <li>Apparel_PlateArmor</li>
       <li>Apparel_SimpleHelmet</li>
     </apparelRequired>
@@ -102,11 +104,12 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="MercenaryGunnerBase">
-    <defName>Mercenary_Gunner_XylDvergr</defName>
+    <defName>Mercenary_Gunner_Short_XylDvergr</defName>
     <label>tunnel sweeper</label>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
     <weaponTags Inherit="False">
       <li>ShortShots</li>
+      <li>Flamethrower</li>
     </weaponTags>
     <apparelRequired>
       <li>Apparel_SimpleHelmet</li>
@@ -115,7 +118,18 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="MercenaryHeavyBase">
-    <defName>Mercenary_Heavy_XylDvergr</defName>
+    <defName>Mercenary_Heavy_Gun_XylDvergr</defName>
+    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <weaponTags Inherit="False">
+      <li>GunHeavy</li>
+    </weaponTags>
+    <apparelRequired>
+      <li>Apparel_SimpleHelmet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="MercenaryHeavyBase">
+    <defName>Mercenary_Heavy_Rocket_XylDvergr</defName>
     <label>rocketeer</label>
     <labelPlural>rocketeers</labelPlural>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
