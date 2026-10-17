@@ -97,10 +97,11 @@ public class Need_Wetness : Need_Seeker
         DebugAssert.NotNull(pawn.Map);
         DebugAssert.NotNull(pawn.pather);
 
-        if (Config.Instance.wetnessGivingJobs?.Contains(pawn.CurJobDef) is true && !pawn.pather.Moving)
+        if (pawn.CurJobDef.GetModExtension<DefModExtension_Job_WetnessSource>() is { } wetnessSourceJob &&
+            !(wetnessSourceJob.notIfMoving && pawn.pather.Moving))
         {
-            var wetnessSource = pawn.CurJob?.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
-            return wetnessSource?.wetnessLevel ?? 1.0f;
+            var wetnessSourceThing = pawn.CurJob?.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
+            return wetnessSourceJob.wetnessLevel ?? wetnessSourceThing?.wetnessLevel ?? 1.0f;
         }
 
         return GetWetness(pawn.Position, pawn.Map);

@@ -11,6 +11,7 @@
       <li Class="XylXenos.DefModExtension_Job_TakeShower">
         <effecter>XylShowerSplash</effecter>
       </li>
+      <li Class="XylXenos.DefModExtension_Job_WetnessSource"/>
     </modExtensions>
   </JobDef>
 
