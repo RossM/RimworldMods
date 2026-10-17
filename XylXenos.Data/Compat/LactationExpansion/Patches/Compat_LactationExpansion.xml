@@ -2,7 +2,11 @@
 
 <Patch>
 
-  <!-- XylHyperlactating disables inherited comps, so supply LE's storage and toggle explicitly. -->
+  <!-- 
+  XylHyperlactating disables inherited comps, so supply LE's storage and toggle explicitly.
+  After this patch the differences between Lactating and XylHyperlactating are that XylHyperlactating doesn't decay
+  and doesn't reduce fertility.
+  -->
   <Operation Class="PatchOperationReplace">
     <xpath>Defs/HediffDef[defName="XylHyperlactating"]/comps/li[@Class="HediffCompProperties_Lactating"]</xpath>
     <value>

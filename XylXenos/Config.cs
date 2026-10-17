@@ -16,3 +16,8 @@ public class Config : Def
 
     public List<JobDef>? wetnessGivingJobs;
 }
+
+public static class ModIdOf
+{
+    public const string LactationExpansion = "Euterpe.MilkyTitfuck";
+}

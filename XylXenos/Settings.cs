@@ -36,7 +36,8 @@ public class Settings : ModSettings
         listing.Begin(inRect);
 
         EnumSetting<ThreeStateMode>(listing, nameof(allowBackerBackstories));
-        EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
+        if (ModLister.GetActiveModWithIdentifier(ModIdOf.LactationExpansion) is null)
+            EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
         BoolSetting(listing, nameof(useDistinctiveFactionColors));
         BoolSetting(listing, nameof(fixGeneticPassions));
 
