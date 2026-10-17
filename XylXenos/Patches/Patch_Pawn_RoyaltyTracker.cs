@@ -3,7 +3,7 @@
 [Patch(typeof(Pawn_RoyaltyTracker))]
 public static class Patch_Pawn_RoyaltyTracker
 {
-    [Feature(nameof(Config.Feature.Bugfix_Misc))]
+    [Feature(FeatureNameOf.Bugfix_Misc)]
     [Prefix]
     [Inner(typeof(LetterStack), nameof(LetterStack.ReceiveLetter), typeof(TaggedString), typeof(TaggedString), typeof(LetterDef),
         typeof(LookTargets), typeof(Faction), typeof(Quest), typeof(List<ThingDef>), typeof(string), typeof(int), typeof(bool))]

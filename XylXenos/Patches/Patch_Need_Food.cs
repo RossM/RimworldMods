@@ -3,7 +3,7 @@
 [Patch(typeof(Need_Food))]
 public static class Patch_Need_Food
 {
-    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Postfix]
     [Inner(typeof(HediffComp_Lactating), nameof(HediffComp_Lactating.AddedNutritionPerDay))]
     [Target("FoodFallPerTickAssumingCategory")]

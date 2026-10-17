@@ -4,7 +4,7 @@
 public static class Patch_LovePartnerRelationUtility
 {
 
-    [Feature(nameof(Config.Feature.Bugfix_Misc))]
+    [Feature(FeatureNameOf.Bugfix_Misc)]
     [Postfix]
     [Target("LovinMtbSinglePawnFactor")]
     public static void LovinMtbSinglePawnFactor_Postfix(Pawn pawn, ref float __result)

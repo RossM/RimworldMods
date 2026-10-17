@@ -3,7 +3,7 @@
 [Patch(typeof(Hediff_Pregnant))]
 public static class Patch_Hediff_Pregnant
 {
-    [Feature(nameof(Config.Feature.Parthenogenesis))]
+    [Feature(FeatureNameOf.Parthenogenesis)]
     [Postfix]
     [Target(nameof(Hediff_Pregnant.PostAdd))]
     public static void PostAdd_Postfix(Hediff_Pregnant __instance)

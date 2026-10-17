@@ -3,7 +3,7 @@
 [Patch(typeof(Alert_NeedJoySources))]
 public static class Patch_Alert_NeedJoySources
 {
-    [Feature(nameof(Config.Feature.Joyless))]
+    [Feature(FeatureNameOf.Joyless)]
     [Postfix]
     [Target("NeedJoySource")]
     public static void NeedJoySource_Postfix(Map map, ref bool __result)

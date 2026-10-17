@@ -3,7 +3,7 @@
 [Patch(typeof(RaceProperties))]
 public static class Patch_RaceProperties
 {
-    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Prefix]
     [Inner(typeof(HediffSet), nameof(HediffSet.GetFirstHediffOfDef))]
     [Target(typeof(RaceProperties), "NutritionEatenPerDayExplanation")]
@@ -18,7 +18,7 @@ public static class Patch_RaceProperties
         return !Settings.instance.ShouldFixLactationBugsFor(__instance.pawn);
     }
 
-    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Prefix]
     [Target(nameof(RaceProperties.NutritionEatenPerDay))]
     private static bool NutritionEatenPerDay_Prefix(Pawn p, out string? __result)
@@ -42,7 +42,7 @@ public static class Patch_RaceProperties
         return false;
     }
 
-    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Postfix]
     [InnerConstant("StatsReport_FinalValue")]
     [Target("NutritionEatenPerDayExplanation")]
@@ -51,7 +51,7 @@ public static class Patch_RaceProperties
         PatchHelpers.AddLactationExplanation(sb, pawn);
     }
 
-    [Feature(nameof(Config.Feature.Bugfix_Lactation))]
+    [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Postfix]
     [Inner(typeof(StringBuilder), memberType: MemberType.Constructor, parameterTypes: [])]
     [Target("NutritionEatenPerDayExplanation")]

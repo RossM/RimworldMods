@@ -5,7 +5,7 @@
 [Patch(typeof(GeneDef))]
 public static class Patch_GeneDef_GetDescriptionFull
 {
-    [Feature(nameof(Config.Feature.Bugfix_Misc))]
+    [Feature(FeatureNameOf.Bugfix_Misc)]
     [Prefix]
     [Targets("GetDescriptionFull.*", typeof(ThoughtStage))]
     [PatchOptions(PatchOptions.Inline)]

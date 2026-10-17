@@ -3,7 +3,7 @@
 [Patch(typeof(GatheringsUtility))]
 public static class Patch_GatheringsUtility
 {
-    [Feature(nameof(Config.Feature.Joyless))]
+    [Feature(FeatureNameOf.Joyless)]
     [Postfix]
     [Target(nameof(GatheringsUtility.ShouldPawnKeepGathering))]
     public static void ShouldPawnKeepGathering_Postfix(Pawn p, GatheringDef gatheringDef, ref bool __result)

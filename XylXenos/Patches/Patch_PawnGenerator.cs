@@ -3,7 +3,7 @@
 [Patch(typeof(PawnGenerator))]
 public static class Patch_PawnGenerator
 {
-    [Feature(nameof(Config.Feature.Bugfix_Misc))]
+    [Feature(FeatureNameOf.Bugfix_Misc)]
     [Prefix]
     [Inner(typeof(PawnGenerator), "GenerateSkills.CreatePassion")]
     [Target("GenerateSkills")]

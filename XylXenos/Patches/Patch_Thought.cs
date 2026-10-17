@@ -3,7 +3,7 @@
 [Patch(typeof(Thought))]
 public static class Patch_Thought
 {
-    [Feature(nameof(Config.Feature.UI_Misc))]
+    [Feature(FeatureNameOf.UI_Misc)]
     [Postfix]
     [Target(nameof(Thought.Description), MemberType.Getter)]
     public static void Description_Postfix(Thought __instance, ref string __result)
