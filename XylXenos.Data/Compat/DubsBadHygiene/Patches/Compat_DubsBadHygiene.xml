@@ -4,31 +4,14 @@
 
   <!-- Keep the shower def for existing saves, but stop the aquatic gene from unlocking construction. -->
   <Operation Class="PatchOperationRemove">
-    <xpath>Defs/GeneDef[defName="XylAquatic"]/modExtensions/li[@Class="Xylib.DefModExtension_GeneWithComps"]/comps/li[@Class="Xylib.GeneCompProperties_UnlockBuildables"][buildables/li="XylShower"]</xpath>
-  </Operation>
-
-  <Operation Class="Xylib.PatchOperationMerge">
     <xpath>
-      Defs/*[
-        self::JobDef or
-        self::DubsBadHygiene.WashingJobDef
-      ][
-        defName="useWashBucket" or
-        defName="washAtCell" or
-        defName="takeShower" or
-        defName="takeBath"
-      ]
+      Defs/GeneDef[defName="XylAquatic"]/modExtensions/li[@Class="Xylib.DefModExtension_GeneWithComps"]/comps/
+      li[@Class="Xylib.GeneCompProperties_UnlockBuildables"][buildables/li="XylShower"]
     </xpath>
-    <value>
-      <modExtensions>
-        <li Class="XylXenos.DefModExtension_Job_WetnessSource"/>
-      </modExtensions>
-    </value>
   </Operation>
 
-  <!-- Match the Nixie shower job's maximum duration. -->
   <Operation Class="Xylib.PatchOperationMerge">
-    <xpath>Defs/*[self::JobDef or self::DubsBadHygiene.WashingJobDef][defName="useWashBucket" or defName="takeShower"]</xpath>
+    <xpath>Defs/JobDef[defName="useWashBucket" or defName="washAtCell"]</xpath>
     <value>
       <modExtensions>
         <li Class="XylXenos.DefModExtension_Job_WetnessSource">
@@ -39,11 +22,22 @@
   </Operation>
 
   <Operation Class="Xylib.PatchOperationMerge">
-    <xpath>Defs/*[self::JobDef or self::DubsBadHygiene.WashingJobDef][defName="takeBath"]</xpath>
+    <xpath>Defs/DubsBadHygiene.WashingJobDef[defName="takeShower"]</xpath>
     <value>
       <modExtensions>
         <li Class="XylXenos.DefModExtension_Job_WetnessSource">
-          <neverEndsEarly>true</neverEndsEarly>
+          <overrideDuration>3000</overrideDuration>          
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/DubsBadHygiene.WashingJobDef[defName="takeBath"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Job_WetnessSource">
+          <neverEndsEarly>true</neverEndsEarly>          
         </li>
       </modExtensions>
     </value>
