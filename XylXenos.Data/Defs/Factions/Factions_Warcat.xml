@@ -7,7 +7,7 @@
     <label>cannibal warcat tribe</label>
     <pawnSingular>warcat</pawnSingular>
     <pawnsPlural>warcats</pawnsPlural>
-    <description>A loose confederation of roaming warcat hunting bands, descended from soldiers grown in gene-vats. Driven by their need for raw meat, they hunt whatever they can overpower with their razor-sharp claws. Successful hunters hang the skulls of eaten enemies from their belts.\n\nWin their friendship and they’ll put those claws to work for you, though sharing a battlefield with them is easier than sharing the victory feast.</description>
+    <description>A loose confederation of warcat hunting bands, descended from soldiers created in military gene-vats. Dependent on raw meat, they roam in search of prey and hunt other xenohumans as readily as animals. Successful hunters keep the skulls of eaten enemies as trophies.\n\nThey fight with bows and simple melee weapons, but remain dangerous at close quarters even when unarmed. Razor-sharp claws, powerful muscles, and catlike reflexes are the surviving legacy of their military origins.\n\nThis particular tribe is hostile to outsiders, but can be persuaded to trade and form alliances.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/VillageWarcat</factionIconPath>
     <xenotypeSet Inherit="False">
       <xenotypeChances>

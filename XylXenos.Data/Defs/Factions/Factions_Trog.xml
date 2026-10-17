@@ -7,7 +7,7 @@
     <label>savage trog tribe</label>
     <pawnSingular>trog</pawnSingular>
     <pawnsPlural>trogs</pawnsPlural>
-    <description>A collection of belligerent clans dominated by hideous trogs, inhabiting polluted wastes and volcanic badlands. Megaspiders wander between their huts as casually as livestock and accompany their handlers on raids.\n\nThe clans refuse peace with their neighbors, yet their settlements shelter mutants, fugitives, and others those same neighbors have driven out.</description>
+    <description>A collection of territorial clans led by trogs, descendants of interbreeding wasters, dirtmoles, and neanderthals. They inhabit polluted wastes, underground caverns, and volcanic badlands, making homes in places most other peoples avoid. Their settlements shelter mutants, fugitives, and outcasts of many xenotypes.\n\nTheir miners use simple tools, and their warriors carry bows and crude melee weapons. Their ability to tame giant insects makes up for much of their technological weakness: megaspiders and other war insects accompany their raiders into battle.\n\nThis particular tribe refuses peaceful relations with outsiders. You will not be able to trade or ally with them.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/VillageTrog</factionIconPath>
     <xenotypeSet Inherit="False" Class="Xylib.XenotypeSetWithDefault">
       <defaultXenotype>XylTrog</defaultXenotype>

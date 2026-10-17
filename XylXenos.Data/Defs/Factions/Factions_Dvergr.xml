@@ -7,7 +7,7 @@
     <label>rough dvergr union</label>
     <pawnSingular>dvergr</pawnSingular>
     <pawnsPlural>dvergr</pawnsPlural>
-    <description>A union of dvergr mining settlements, where the clan owns the company and the company owns whatever it can take. Their underground halls are full of machinery, strong beer, and relatives arguing over mineral rights.\n\nThey bring the same determination to fighting that they do to excavating mountains and negotiating contracts, and have an enthusiasm for explosives that their safety regulations have never quite caught up with. Their business disputes can last generations. So can their business relationships.</description>
+    <description>A union of industrial mining settlements led by dvergr clan corporations. Their people trace their origins to the underground cities of Svartalfheim, and build their lives around mining, manufacturing, and the interests of the clan. Their mountain halls are filled with workshops, breweries, and machinery.\n\nThey defend their claims with firearms and explosives, applying their knowledge of excavation as readily to an enemy's walls as to a mineral deposit. Competition over resources can turn violent, and their enthusiasm for blasting often exceeds their concern for safety.\n\nThis particular union is unfriendly to outsiders, but can be persuaded to trade and form alliances.</description>
     <factionIconPath>Xyl/World/WorldObjects/Expanding/TownDvergr</factionIconPath>
     <xenotypeSet Inherit="False" Class="Xylib.XenotypeSetWithDefault">
       <defaultXenotype>XylDvergr</defaultXenotype>

@@ -93,9 +93,11 @@ Dvergr society is organized around the clan and the corporation; the two are one
 
 ### Faction: Rough dvergr union
 
-A union of dvergr mining settlements, where the clan owns the company and the company owns whatever it can take. Their underground halls are full of machinery, strong beer, and relatives arguing over mineral rights.
+A union of industrial mining settlements led by dvergr clan corporations. Their people trace their origins to the underground cities of Svartalfheim, and build their lives around mining, manufacturing, and the interests of the clan. Their mountain halls are filled with workshops, breweries, and machinery.
 
-They bring the same determination to fighting that they do to excavating mountains and negotiating contracts, and have an enthusiasm for explosives that their safety regulations have never quite caught up with. Their business disputes can last generations. So can their business relationships.
+They defend their claims with firearms and explosives, applying their knowledge of excavation as readily to an enemy's walls as to a mineral deposit. Competition over resources can turn violent, and their enthusiasm for blasting often exceeds their concern for safety.
+
+This particular union is unfriendly to outsiders, but can be persuaded to trade and form alliances.
 
 ### Trivia
 
@@ -132,9 +134,11 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 ### Faction: Gentle nixie tribe
 
-A tribe of beautiful aquatic nixies, settled along rivers and sheltered coasts. They tend coral gardens and compose songs that carry for miles underwater. To them, a lifetime on dry land sounds like a punishment.
+A tribe of aquatic nixies descended from people engineered for the ocean world Atlantis. They settle along rivers and coasts, cultivating coral gardens and producing sea silk. Their culture values beauty, music, and a life spent in the water, with little use for clothing.
 
-Dryskin tools and machinery are worth some discomfort, however. Their merchants venture inland with coral and sea silk, bargaining hard over fine cloth they would never dream of wearing.
+They use simple tools and weapons, relying on trade for machinery and manufactured goods they cannot easily make themselves. Their warriors carry bows and melee weapons; tough scales and swift movement through water help compensate for their lack of advanced equipment.
+
+This particular tribe pursues a gentle way of life. They are open to trade and alliances, even with dryland peoples.
 
 ### Trivia
 
@@ -207,9 +211,11 @@ Trogs can be found anywhere other xenotypes don’t want to live, from polluted 
 
 ### Faction: Savage trog tribe
 
-A collection of belligerent clans dominated by hideous trogs, inhabiting polluted wastes and volcanic badlands. Megaspiders wander between their huts as casually as livestock and accompany their handlers on raids.
+A collection of territorial clans led by trogs, descendants of interbreeding wasters, dirtmoles, and neanderthals. They inhabit polluted wastes, underground caverns, and volcanic badlands, making homes in places most other peoples avoid. Their settlements shelter mutants, fugitives, and outcasts of many xenotypes.
 
-The clans refuse peace with their neighbors, yet their settlements shelter mutants, fugitives, and others those same neighbors have driven out.
+Their miners use simple tools, and their warriors carry bows and crude melee weapons. Their ability to tame giant insects makes up for much of their technological weakness: megaspiders and other war insects accompany their raiders into battle.
+
+This particular tribe refuses peaceful relations with outsiders. You will not be able to trade or ally with them.
 
 ### Trivia
 
@@ -247,9 +253,11 @@ Warcat tribes are a constant threat on the rim. Their need for meat drives them 
 
 ### Faction: Cannibal warcat tribe
 
-A loose confederation of roaming warcat hunting bands, descended from soldiers grown in gene-vats. Driven by their need for raw meat, they hunt whatever they can overpower with their razor-sharp claws. Successful hunters hang the skulls of eaten enemies from their belts.
+A loose confederation of warcat hunting bands, descended from soldiers created in military gene-vats. Dependent on raw meat, they roam in search of prey and hunt other xenohumans as readily as animals. Successful hunters keep the skulls of eaten enemies as trophies.
 
-Win their friendship and they’ll put those claws to work for you, though sharing a battlefield with them is easier than sharing the victory feast.
+They fight with bows and simple melee weapons, but remain dangerous at close quarters even when unarmed. Razor-sharp claws, powerful muscles, and catlike reflexes are the surviving legacy of their military origins.
+
+This particular tribe is hostile to outsiders, but can be persuaded to trade and form alliances.
 
 ### Trivia
 
