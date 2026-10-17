@@ -21,4 +21,60 @@
     </value>
   </Operation>
 
+  <!-- Match the Nixie shower job's maximum duration. -->
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/*[self::JobDef or self::DubsBadHygiene.WashingJobDef][defName="useWashBucket" or defName="takeShower"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Job_WetnessSource">
+          <overrideDuration>3000</overrideDuration>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/*[self::JobDef or self::DubsBadHygiene.WashingJobDef][defName="takeBath"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Job_WetnessSource">
+          <neverEndsEarly>true</neverEndsEarly>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/ThingDef[@Name="DubsDirtyShowerBase"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Thing_WetnessSource">
+          <job>takeShower</job>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/ThingDef[@Name="DubsDirtyBathtubBase"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Thing_WetnessSource">
+          <job>takeBath</job>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/ThingDef[defName="WashBucket"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="XylXenos.DefModExtension_Thing_WetnessSource">
+          <job>useWashBucket</job>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
 </Patch>

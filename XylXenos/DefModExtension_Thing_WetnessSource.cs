@@ -5,5 +5,4 @@ public class DefModExtension_Thing_WetnessSource : DefModExtension
 {
     public float wetnessLevel = 1.0f;
     public required JobDef job;
-    public bool neverEndsEarly = false;
 }

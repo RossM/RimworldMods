@@ -21,7 +21,7 @@ public static class Compat_DubsBadHygiene
         DefModExtension_Thing_WetnessSource? wetnessSourceThing
             = job.targetA.Thing?.def.GetModExtension<DefModExtension_Thing_WetnessSource>();
 
-        if (wetnessSourceThing is not { neverEndsEarly: true })
+        if (!wetnessSourceJob.neverEndsEarly)
         {
             var oldEndCondition = __instance.endConditions[^1];
 
