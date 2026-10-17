@@ -72,6 +72,7 @@
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
+    <weaponMoney>100~250</weaponMoney>
     <weaponTags Inherit="False">
       <li>NeolithicMeleeDestructive</li>
     </weaponTags>
@@ -95,6 +96,7 @@
     <defName>Town_Guard_XylDvergr</defName>
     <label>claim guard</label>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <weaponMoney>300~400</weaponMoney>
     <weaponTags Inherit="False">
       <li>PumpShotgun</li>
     </weaponTags>
