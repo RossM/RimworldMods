@@ -11,7 +11,7 @@ public static class Patch_PregnancyUtility
     [Postfix]
     [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
-    public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
+    public static void GeneratePawn_Postfix(Pawn? geneticMother, Pawn? father, ref Pawn __result)
     { 
         List<GeneDef> childGenes = InheritableGenesFrom(__result);
 
@@ -19,7 +19,8 @@ public static class Patch_PregnancyUtility
         {
             case PatchHelpers.DominantParent.Father:
             {
-                if (childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) && !childGenes.SetsEqual(InheritableGenesFrom(father)))
+                DebugAssert.NotNull(father);
+                if (geneticMother != null && childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) && !childGenes.SetsEqual(InheritableGenesFrom(father)))
                     PatchHelpers.CopyXenotype(__result, geneticMother);
                 else
                     PatchHelpers.CopyXenotype(__result, father);
@@ -27,7 +28,8 @@ public static class Patch_PregnancyUtility
             }
             case PatchHelpers.DominantParent.Mother:
             {
-                if (childGenes.SetsEqual(InheritableGenesFrom(father)) && !childGenes.SetsEqual(InheritableGenesFrom(geneticMother)))
+                DebugAssert.NotNull(geneticMother);
+                if (father != null && childGenes.SetsEqual(InheritableGenesFrom(father)) && !childGenes.SetsEqual(InheritableGenesFrom(geneticMother)))
                     PatchHelpers.CopyXenotype(__result, father);
                 else
                     PatchHelpers.CopyXenotype(__result, geneticMother);
