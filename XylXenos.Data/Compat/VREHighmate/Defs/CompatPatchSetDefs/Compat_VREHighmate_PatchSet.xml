@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <Xylib.CompatPatchSet>
+    <defName>XylCompat_LactationExpansion</defName>
+    <patches>
+      <li>
+        <target>VanillaRacesExpandedHighmate.JobDriver_InitiateLovin</target>
+        <targetMethod>&lt;MakeNewToils&gt;b__10_6</targetMethod>
+        <patch>Xylib.Patches.Patch_JobDriver_Lovin</patch>
+        <patchMethod>MakeNewToils_Postfix</patchMethod>
+      </li>
+    </patches>
+  </Xylib.CompatPatchSet>
+
+</Defs>
