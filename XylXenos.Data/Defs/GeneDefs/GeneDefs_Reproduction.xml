@@ -335,4 +335,18 @@
     </stages>
   </ThoughtDef>
 
+  <GeneDef>
+    <defName>XylLineageInheritance</defName>
+    <label>lineage inheritance</label>
+    <description>When a carrier of this gene has a baby with a partner who also has this gene, the baby will inherit all of one parent's endogenes and none of the other's.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Reproduction</displayCategory>
+    <displayOrderInCategory>410</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_LineageInheritance</iconPath>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps"/>
+    </modExtensions>
+  </GeneDef>
+
 </Defs>

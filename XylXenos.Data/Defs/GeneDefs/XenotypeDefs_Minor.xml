@@ -85,11 +85,11 @@
       <li>XylScaleskin</li>
       <li>FacialRidges</li>
       <li>XylScalebornLineage</li>
+      <li>XylLineageInheritance</li>
     </genes>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Xenotype">
         <allowSolidBackstories>true</allowSolidBackstories>
-        <lineageInheritance>true</lineageInheritance>
         <agreeingMemes>
           <!-- Dragons are associated with arrogance -->
           <li MayRequire="Ludeon.RimWorld.Ideology">Supremacist</li>

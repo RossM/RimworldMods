@@ -12,23 +12,31 @@ public static class Patch_PregnancyUtility
     [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void GeneratePawn_Postfix(Pawn geneticMother, Pawn father, ref Pawn __result)
-    {
+    { 
+        List<GeneDef> childGenes = InheritableGenesFrom(__result);
+
         switch (PatchHelpers.GetDominantParent(geneticMother, father))
         {
-            case PatchHelpers.DominantParent.Mother:
-            {
-                PatchHelpers.CopyXenotype(__result, geneticMother);
-                break;
-            }
             case PatchHelpers.DominantParent.Father:
             {
-                PatchHelpers.CopyXenotype(__result, father);
+                if (childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) && !childGenes.SetsEqual(InheritableGenesFrom(father)))
+                    PatchHelpers.CopyXenotype(__result, geneticMother);
+                else
+                    PatchHelpers.CopyXenotype(__result, father);
                 break;
             }
-            case PatchHelpers.DominantParent.None:
-            default:
+            case PatchHelpers.DominantParent.Mother:
+            {
+                if (childGenes.SetsEqual(InheritableGenesFrom(father)) && !childGenes.SetsEqual(InheritableGenesFrom(geneticMother)))
+                    PatchHelpers.CopyXenotype(__result, father);
+                else
+                    PatchHelpers.CopyXenotype(__result, geneticMother);
                 break;
+            }
         }
+
+        static List<GeneDef> InheritableGenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(
+            gene => gene is { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) })];
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]
@@ -38,13 +46,13 @@ public static class Patch_PregnancyUtility
     {
         __result = PatchHelpers.GetDominantParent(mother, father) switch
         {
-            PatchHelpers.DominantParent.Mother => GenesFrom(mother),
-            PatchHelpers.DominantParent.Father => GenesFrom(father),
+            PatchHelpers.DominantParent.Mother => InheritableGenesFrom(mother),
+            PatchHelpers.DominantParent.Father => InheritableGenesFrom(father),
             _ => __result,
         };
         return;
 
-        static List<GeneDef> GenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
+        static List<GeneDef> InheritableGenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
     }
 
     [Feature(typeof(GeneCompProperties_XenotypeStrength))]

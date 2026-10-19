@@ -12,6 +12,10 @@
         <original>XylWeakGenes</original>
         <replacement>BGI_RecessiveGenes</replacement>
       </li>
+      <li>
+        <original>XylLineageInheritance</original>
+        <replacement>BGI_BinaryInheritance</replacement>
+      </li>
     </entries>
   </Operation>
 

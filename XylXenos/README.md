@@ -359,6 +359,7 @@ On the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylGreedy.png" alt="Greedy" width="80" height="80"> | [Greedy](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have an instinctive desire for material possessions. They get a mood penalty if they don't have an impressive bedroom. |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylTail_Lizard.png" alt="Lizard tail" width="80" height="80"> | [Lizard tail](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Tails.xml) | Carriers of this gene grow a long, heavy tail that improves balance and mobility. |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylScalebornLineage.png" alt="Scaleborn lineage" width="80" height="80"> | [Scaleborn lineage](../XylXenos.Data/Defs/GeneDefs/GeneDefs_BonusGenes.xml) | Replaces itself with one of five randomly selected gene packages representing five different lineages. |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylLineageInheritance.png" alt="Lineage inheritance" width="80" height="80"> | [Lineage inheritance](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Reproduction.xml) | When a carrier of this gene has a baby with a partner who also has this gene, the baby will inherit all of one parent's endogenes and none of the other's. |
 
 **Other genes and appearance**
 

@@ -176,8 +176,8 @@ public static class PatchHelpers
             return DominantParent.Mother;
 
         // Special handling for scaleborn lineages
-        if (mother?.genes?.Xenotype == father?.genes?.Xenotype &&
-            mother?.genes?.Xenotype?.GetModExtension<DefModExtension_Xenotype>()?.lineageInheritance == true)
+        if (mother?.HasActiveGene(DefOf.XylLineageInheritance) is true &&
+            father?.HasActiveGene(DefOf.XylLineageInheritance) is true)
             return Rand.Bool ? DominantParent.Father : DominantParent.Mother;
 
         return DominantParent.None;

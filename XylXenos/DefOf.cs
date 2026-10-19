@@ -17,6 +17,8 @@ public static class DefOf
 
     public static GeneDef XylEcholocation;
 
+    public static GeneDef XylLineageInheritance;
+
     public static HediffDef XylCultistSong;
 
     public static HediffDef XylHyperlactating;

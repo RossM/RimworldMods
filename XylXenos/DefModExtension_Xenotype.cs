@@ -9,12 +9,6 @@ public class DefModExtension_Xenotype : DefModExtension
     public bool allowSolidBackstories = true;
 
     /// <summary>
-    ///     If true, children where both parents are this xenotype will inherit all of their endogenes from one parent.
-    ///     This is used to keep scaleborn lineages together.
-    /// </summary>
-    public bool lineageInheritance = false;
-
-    /// <summary>
     ///     Memes which this xenotype prefers. Affects ideoligeon conversion.
     /// </summary>
     public List<MemeDef>? agreeingMemes;
