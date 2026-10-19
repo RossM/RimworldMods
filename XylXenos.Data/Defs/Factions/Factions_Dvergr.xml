@@ -55,6 +55,97 @@
       <li MayRequire="Ludeon.RimWorld.Anomaly">Inhuman</li>
       <li MayRequire="Ludeon.RimWorld.Anomaly">Ritualist</li>
     </disallowedMemes>
+    <pawnGroupMakers Inherit="false">
+      <li>
+        <!-- Normal fights, standard mix -->
+        <kindDef>Combat</kindDef>
+        <options>
+          <Villager_Breach_XylDvergr>5</Villager_Breach_XylDvergr>
+          <Town_Guard_XylDvergr>10</Town_Guard_XylDvergr>
+          <Grenadier_Destructive>5</Grenadier_Destructive>
+          <Mercenary_Slasher_Plate_XylDvergr>7</Mercenary_Slasher_Plate_XylDvergr>
+          <Mercenary_Gunner>5</Mercenary_Gunner>
+          <Mercenary_Gunner_Short_XylDvergr>5</Mercenary_Gunner_Short_XylDvergr>
+          <Mercenary_Elite>10</Mercenary_Elite>
+          <Mercenary_Heavy_Rocket_XylDvergr>1.5</Mercenary_Heavy_Rocket_XylDvergr>
+          <Town_Councilman>10</Town_Councilman>
+        </options>
+      </li>
+      <li>
+        <kindDef>Peaceful</kindDef>
+        <options>
+          <Villager>10</Villager>
+          <Villager_Breach_XylDvergr>10</Villager_Breach_XylDvergr>
+          <Villager_Child MayRequire="Ludeon.RimWorld.Biotech">10</Villager_Child>
+          <Town_Guard_XylDvergr>10</Town_Guard_XylDvergr>
+          <Town_Councilman>10</Town_Councilman>
+        </options>
+      </li>
+      <li>
+        <kindDef>Trader</kindDef>
+        <traders>
+          <Town_Trader>1</Town_Trader>
+        </traders>
+        <carriers>
+          <Muffalo>6</Muffalo>
+          <Dromedary>5</Dromedary>
+          <Alpaca>2</Alpaca>
+          <Elephant>1</Elephant>
+        </carriers>
+        <guards>
+          <Villager>3</Villager>
+          <Town_Guard_XylDvergr>10</Town_Guard_XylDvergr>
+          <Grenadier_Destructive>5</Grenadier_Destructive>
+          <Mercenary_Slasher_Plate_XylDvergr>7</Mercenary_Slasher_Plate_XylDvergr>
+          <Mercenary_Gunner>5</Mercenary_Gunner>
+          <Mercenary_Gunner_Short_XylDvergr>5</Mercenary_Gunner_Short_XylDvergr>
+          <Mercenary_Elite>10</Mercenary_Elite>
+        </guards>
+      </li>
+      <li>
+        <kindDef>Settlement</kindDef>
+        <options>
+          <Villager>5</Villager>
+          <Villager_Breach_XylDvergr>5</Villager_Breach_XylDvergr>
+          <Town_Guard_XylDvergr>10</Town_Guard_XylDvergr>
+          <Grenadier_Destructive>5</Grenadier_Destructive>
+          <Mercenary_Slasher_Plate_XylDvergr>7</Mercenary_Slasher_Plate_XylDvergr>
+          <Mercenary_Gunner>5</Mercenary_Gunner>
+          <Mercenary_Gunner_Short_XylDvergr>5</Mercenary_Gunner_Short_XylDvergr>
+          <Mercenary_Elite>10</Mercenary_Elite>
+          <Mercenary_Heavy_Rocket_XylDvergr>1.5</Mercenary_Heavy_Rocket_XylDvergr>
+          <Town_Councilman>10</Town_Councilman>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Miners</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Miner>1</Miner>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Hunters</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Hunter>1</Hunter>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Loggers</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Logger>1</Logger>
+        </options>
+      </li>
+      <li MayRequire="Ludeon.RimWorld.Ideology">
+        <kindDef>Farmers</kindDef>
+        <commonality>1</commonality>
+        <options>
+          <Farmer>1</Farmer>
+        </options>
+      </li>
+    </pawnGroupMakers>
     <raidLootMaker>XylDvergrRaidLootMaker</raidLootMaker>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Faction">
@@ -85,6 +176,7 @@
     <defName>Mercenary_Slasher_Plate_XylDvergr</defName>
     <label>ironclad</label>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <combatPower>120</combatPower>
     <apparelRequired Inherit="false">
       <li>Apparel_PlateArmor</li>
       <li>Apparel_SimpleHelmet</li>
@@ -120,21 +212,11 @@
   </PawnKindDef>
 
   <PawnKindDef ParentName="MercenaryHeavyBase">
-    <defName>Mercenary_Heavy_Gun_XylDvergr</defName>
-    <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
-    <weaponTags Inherit="False">
-      <li>GunHeavy</li>
-    </weaponTags>
-    <apparelRequired>
-      <li>Apparel_SimpleHelmet</li>
-    </apparelRequired>
-  </PawnKindDef>
-
-  <PawnKindDef ParentName="MercenaryHeavyBase">
     <defName>Mercenary_Heavy_Rocket_XylDvergr</defName>
     <label>rocketeer</label>
     <labelPlural>rocketeers</labelPlural>
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
+    <combatPower>150</combatPower>
     <weaponTags Inherit="False">
       <li>GunSingleUse</li>
     </weaponTags>
