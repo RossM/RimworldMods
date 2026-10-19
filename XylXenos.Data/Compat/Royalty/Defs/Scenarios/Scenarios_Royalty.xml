@@ -2,7 +2,7 @@
 
 <Defs>
 
-  <!--<ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
+  <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylTheSiren</defName>
     <label>The Siren</label>
     <description>No one was ever quite sure what the cult believed. Their words were a little too smooth, their smiles a little too still. They spoke of voices from beyond the void, of unity, of dissolving into something greater. When the authorities came, they came hard: dropships, psychic dampeners, orbital jammers. In the aftermath, the cult was gone. Scattered. Burned. Forgotten. But you survived. You've come to this rimworld not to hide, exactly, but to begin again. To wait. To gather. The song is louder here, if you know how to listen.</description>
@@ -10,7 +10,7 @@
       <summary>One nixie with powerful non-combat psychic abilities. Very difficult.</summary>
       <parts>
 
-        --><!-- Config pages --><!--
+        <!-- Config pages -->
         <li Class="XylXenos.ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext">
           <def>ConfigurePawnsXenotypes</def>
           <pawnChoiceCount>8</pawnChoiceCount>
@@ -33,7 +33,7 @@
           <method>DropPods</method>
         </li>
 
-        --><!-- Starting psychics --><!--
+        <!-- Starting psychics -->
         <li Class="XylXenos.ScenPart_PsylinkLevels">
           <def>XylPsylinkLevels</def>
           <count>3</count>
@@ -67,7 +67,7 @@
           <context>PlayerStarter</context>
         </li>
 
-        --><!-- Player starting stuff spawn method--><!--
+        <!-- Player starting stuff spawn method-->
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
           <thingDef>Silver</thingDef>
@@ -98,7 +98,7 @@
           <bondToRandomPlayerPawnChance>1</bondToRandomPlayerPawnChance>
         </li>
 
-        --><!-- Scatter some things near player start --><!--
+        <!-- Scatter some things near player start -->
         <li Class="ScenPart_ScatterThingsNearPlayerStart">
           <def>ScatterThingsNearPlayerStart</def>
           <thingDef>Steel</thingDef>
@@ -112,7 +112,7 @@
           <allowRoofed>True</allowRoofed>
         </li>
 
-        --><!-- Game start dialog --><!--
+        <!-- Game start dialog -->
         <li Class="ScenPart_GameStartDialog">
           <def>GameStartDialog</def>
           <text>You wake from cryptosleep as your pod tears through the rimworld's upper atmosphere. The restraints release. The hull groans. The air is thin and dry.\n\nThe song is loud here, louder than it has been in years. You can hear it even over the roar of re-entry. It welcomes you... or warns you. Hard to say.\n\nYou have work to do. Shelter. Supplies. Allies. You're alone for now. But you've done this before. You can do it again.</text>
@@ -165,7 +165,7 @@
     <apparelAllowHeadgearChance>1</apparelAllowHeadgearChance>
     <apparelMoney>0</apparelMoney>
     <fixedAdultBackstories>
-      --><!-- Selected for flavor, not balance :) --><!--
+      <!-- Selected for flavor, not balance :) -->
       <li>Inventor6</li>
       <li>Teacher20</li>
       <li>GlitterworldEmpath26</li>
@@ -230,6 +230,6 @@
         </statOffsets>
       </li>
     </stages>
-  </HediffDef>-->
+  </HediffDef>
 
 </Defs>
