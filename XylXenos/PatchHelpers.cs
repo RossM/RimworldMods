@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using RimWorld.Planet;
 
 namespace XylXenos;
@@ -365,4 +366,10 @@ public static class PatchHelpers
 
     public static bool DocileAndHappy(Pawn pawn) =>
         pawn.genes?.HasActiveGene(DefOf.XylDocile) is true && pawn.mindState.mentalBreaker is { CurMood: >= DocileHappyThreshold };
+
+    public static bool GenesEnableMeditationDef(Pawn p, MeditationFocusDef type, [NotNullWhen(true)] out GeneWithComps? gene)
+    {
+        gene = p.FirstActiveGeneWithComp<GeneComp_MeditationFocus>(comp => comp.EnablesMeditationType(type));
+        return gene is not null;
+    }
 }

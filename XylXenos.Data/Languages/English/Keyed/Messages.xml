@@ -76,5 +76,6 @@
   <XylPatching>Patching</XylPatching>
   <XylCausesBioRejection>causes bio-rejection</XylCausesBioRejection>
   <XylEnablesPsyfocus>Enables psyfocus</XylEnablesPsyfocus>
+  <XylEnabledByGene>Enabled by gene</XylEnabledByGene>
 
 </LanguageData>
