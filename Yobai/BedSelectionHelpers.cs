@@ -46,8 +46,10 @@ internal static class BedSelectionHelpers
             || !BedSharingHelpers.IsBedInAssignedPolyculeBedroom(pawn, bed))
             return null;
 
-        // A bedroom's temporary sleepers may use any of its beds' sleeping places.
-        return TryMakeSleepJobInSlots(pawn, bed, Enumerable.Range(0, bed.SleepingSlotsCount));
+        IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
+        if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot)
+            slots = slots.Prepend(ownedSlot).Distinct();
+        return TryMakeSleepJobInSlots(pawn, bed, slots);
     }
 
     private static IEnumerable<Building_Bed> GetPolyculeBedroomBeds(Pawn pawn)

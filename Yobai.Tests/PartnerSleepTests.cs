@@ -785,7 +785,7 @@ public sealed class PartnerSleepTests
         Expect.IsFalse(NightVisitHelpers.FindVisits(first, visitBed).Any());
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, visitBed));
         Expect.IsNull(new JobGiver_NightVisit().TryIssueJobPackage(first, default).Job);
-        Expect.IsFalse(visitBed.GetComp<CompBedSharing>().CompGetGizmosExtra().Any());
+        Expect.IsTrue(visitBed.GetComp<CompBedSharing>().CompGetGizmosExtra().Any());
         using (new RandBlock(45678))
         {
             for (int attempt = 0; attempt < 100; attempt++)
@@ -1087,6 +1087,238 @@ public sealed class PartnerSleepTests
         Expect.IsTrue(RestUtility.CanUseBedNow(secondBed, second, true));
         JobMaker.ReturnToPool(ownerSleep);
         JobMaker.ReturnToPool(incoming);
+    }
+
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    public IEnumerator BedroomSleepPrefersOwnersAssignedSlot(int ownerSlot)
+    {
+        IntVec3 bedPosition = firstBed.Position;
+        firstBed.Destroy();
+        firstBed = (Building_Bed)ThingMaker.MakeThing(
+            DefDatabase<ThingDef>.GetNamed("Yobai_TestThreeSlotBed"), ThingDefOf.WoodLog);
+        firstBed.SetFaction(Faction.OfPlayer);
+        GenSpawn.Spawn(firstBed, bedPosition, Find.CurrentMap);
+        spawned.Add(firstBed);
+        Pawn[] owners = [first, second, third];
+        foreach (Pawn owner in owners)
+            owner.ownership.ClaimBedIfNonMedical(firstBed);
+        secondBed.Destroy();
+        thirdBed.Destroy();
+        Pawn sleeper = owners[ownerSlot];
+        Expect.IsTrue(firstBed.IsOwner(sleeper, out int? assignedSlot));
+        Expect.AreEqual(ownerSlot, assignedSlot);
+        Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
+        Expect.IsFalse(firstBed.CurOccupants.Any());
+        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(sleeper);
+        Expect.IsNotNull(sleep);
+        Expect.ReferencesAreEqual(firstBed, sleep!.targetA.Thing);
+        Expect.AreEqual(firstBed.GetSleepingSlotPos(ownerSlot), RestUtility.GetBedSleepingSlotPosFor(sleeper, firstBed));
+        sleeper.jobs.StartJob(sleep, JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => sleeper.CurrentBed() == firstBed, 600);
+        Expect.AreEqual(firstBed.GetSleepingSlotPos(ownerSlot), sleeper.Position);
+        Expect.IsTrue(firstBed.IsOwner(sleeper, out int? unchangedSlot));
+        Expect.AreEqual(ownerSlot, unchangedSlot);
+        Expect.AreEqual(3, firstBed.OwnersForReading.Count);
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public IEnumerator BedroomOwnerUsesAnotherPlaceWhenAssignedSlotIsTaken(bool occupantArrived)
+    {
+        IntVec3 bedPosition = firstBed.Position;
+        firstBed.Destroy();
+        firstBed = (Building_Bed)ThingMaker.MakeThing(
+            DefDatabase<ThingDef>.GetNamed("Yobai_TestThreeSlotBed"), ThingDefOf.WoodLog);
+        firstBed.SetFaction(Faction.OfPlayer);
+        GenSpawn.Spawn(firstBed, bedPosition, Find.CurrentMap);
+        spawned.Add(firstBed);
+        foreach (Pawn owner in new[] { first, second, third })
+            owner.ownership.ClaimBedIfNonMedical(firstBed);
+        secondBed.Destroy();
+        thirdBed.Destroy();
+        Job? occupantSleep = BedSharingJobHelpers.TryMakeSleepJob(first, new SleepingPlace(firstBed, 2));
+        Expect.IsNotNull(occupantSleep);
+        if (occupantArrived)
+        {
+            first.jobs.StartJob(occupantSleep!, JobCondition.InterruptForced);
+            yield return new WaitUntilTimeout(() => first.CurrentBed() == firstBed, 600);
+        }
+        try
+        {
+            Expect.IsTrue(firstBed.IsOwner(third, out int? assignedSlot));
+            Expect.AreEqual(2, assignedSlot);
+            Expect.IsTrue(firstBed.GetComp<CompBedSharing>().TryGetSleepingSlot(first, out int occupiedSlot));
+            Expect.AreEqual(2, occupiedSlot);
+            Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(third);
+            Expect.IsNotNull(sleep);
+            Expect.AreEqual(firstBed.GetSleepingSlotPos(0), RestUtility.GetBedSleepingSlotPosFor(third, firstBed));
+            third.jobs.StartJob(sleep!, JobCondition.InterruptForced);
+            yield return new WaitUntilTimeout(() => third.CurrentBed() == firstBed, 600);
+            Expect.AreEqual(firstBed.GetSleepingSlotPos(0), third.Position);
+            Expect.AreEqual(firstBed.GetSleepingSlotPos(2), RestUtility.GetBedSleepingSlotPosFor(first, firstBed));
+            Expect.IsTrue(firstBed.IsOwner(third, out int? unchangedSlot));
+            Expect.AreEqual(2, unchangedSlot);
+        }
+        finally
+        {
+            if (!occupantArrived)
+            {
+                first.ClearReservationsForJob(occupantSleep!);
+                JobMaker.ReturnToPool(occupantSleep!);
+            }
+        }
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public IEnumerator NightVisitPrefersOwnersAssignedSlotWhenAvailable(bool ownPlaceAvailable)
+    {
+        IntVec3 bedPosition = firstBed.Position;
+        firstBed.Destroy();
+        firstBed = (Building_Bed)ThingMaker.MakeThing(
+            DefDatabase<ThingDef>.GetNamed("Yobai_TestThreeSlotBed"), ThingDefOf.WoodLog);
+        firstBed.SetFaction(Faction.OfPlayer);
+        GenSpawn.Spawn(firstBed, bedPosition, Find.CurrentMap);
+        spawned.Add(firstBed);
+        first.ownership.ClaimBedIfNonMedical(firstBed);
+        second.ownership.ClaimBedIfNonMedical(firstBed);
+        secondBed.Destroy();
+        first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => first.CurrentBed() == firstBed && !first.Awake(), 1200);
+        Job? incoming = null;
+        Job? visit = null;
+        try
+        {
+            if (!ownPlaceAvailable)
+            {
+                incoming = BedSharingJobHelpers.TryMakeSleepJob(third, new SleepingPlace(firstBed, 1));
+                Expect.IsNotNull(incoming);
+                Expect.IsNull(third.CurrentBed());
+            }
+            Expect.IsTrue(firstBed.IsOwner(second, out int? assignedSlot));
+            Expect.AreEqual(1, assignedSlot);
+            visit = NightVisitHelpers.TryMakeVisitJob(second, firstBed);
+            Expect.IsNotNull(visit);
+            Expect.ReferencesAreEqual(first, visit!.targetA.Thing);
+            Expect.AreEqual(firstBed.GetSleepingSlotPos(ownPlaceAvailable ? 1 : 2),
+                RestUtility.GetBedSleepingSlotPosFor(second, firstBed));
+            Expect.IsTrue(firstBed.IsOwner(second, out int? unchangedSlot));
+            Expect.AreEqual(1, unchangedSlot);
+            if (incoming != null)
+            {
+                Expect.IsTrue(third.HasReserved(firstBed));
+                Expect.AreEqual(firstBed.GetSleepingSlotPos(1), RestUtility.GetBedSleepingSlotPosFor(third, firstBed));
+            }
+        }
+        finally
+        {
+            if (visit != null)
+            {
+                second.ClearReservationsForJob(visit);
+                JobMaker.ReturnToPool(visit);
+            }
+            if (incoming != null)
+            {
+                third.ClearReservationsForJob(incoming);
+                JobMaker.ReturnToPool(incoming);
+            }
+        }
+    }
+
+    [Test]
+    public IEnumerator ReturningOwnerCanVisitWhenUnassignedPlaceIsBooked()
+    {
+        IntVec3 bedPosition = firstBed.Position;
+        firstBed.Destroy();
+        firstBed = (Building_Bed)ThingMaker.MakeThing(
+            DefDatabase<ThingDef>.GetNamed("Yobai_TestThreeSlotBed"), ThingDefOf.WoodLog);
+        firstBed.SetFaction(Faction.OfPlayer);
+        GenSpawn.Spawn(firstBed, bedPosition, Find.CurrentMap);
+        spawned.Add(firstBed);
+        first.ownership.ClaimBedIfNonMedical(firstBed);
+        second.ownership.ClaimBedIfNonMedical(firstBed);
+        secondBed.Destroy();
+        first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => first.CurrentBed() == firstBed && !first.Awake(), 1200);
+        Job? incoming = BedSharingJobHelpers.TryMakeSleepJob(third, new SleepingPlace(firstBed, 2));
+        Expect.IsNotNull(incoming);
+        Job? visit = null;
+        try
+        {
+            Expect.IsTrue(firstBed.GetComp<CompBedSharing>().IsSleepingPlaceAvailable(second, firstBed.GetSleepingSlotPos(1)));
+            Expect.IsTrue(firstBed.AnyUnownedSleepingSlot);
+            visit = NightVisitHelpers.TryMakeVisitJob(second, firstBed);
+            Expect.IsNotNull(visit);
+            Expect.AreEqual(firstBed.GetSleepingSlotPos(1), RestUtility.GetBedSleepingSlotPosFor(second, firstBed));
+            Expect.AreEqual(firstBed.GetSleepingSlotPos(2), RestUtility.GetBedSleepingSlotPosFor(third, firstBed));
+            Expect.IsTrue(third.HasReserved(firstBed));
+        }
+        finally
+        {
+            if (visit != null)
+            {
+                second.ClearReservationsForJob(visit);
+                JobMaker.ReturnToPool(visit);
+            }
+            third.ClearReservationsForJob(incoming!);
+            JobMaker.ReturnToPool(incoming!);
+        }
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public IEnumerator ReturningOwnerCanVisitFullyAssignedBedOnlyWhenOwnPlaceIsFree(bool ownPlaceAvailable)
+    {
+        second.ownership.ClaimBedIfNonMedical(firstBed);
+        secondBed.Destroy();
+        first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
+        second.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, thirdBed)!,
+            JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => first.CurrentBed() == firstBed && !first.Awake()
+            && second.CurrentBed() == thirdBed && !second.Awake(), 1200);
+        Job? incoming = null;
+        try
+        {
+            if (!ownPlaceAvailable)
+            {
+                incoming = BedSharingJobHelpers.TryMakeSleepJob(third, new SleepingPlace(firstBed, 1));
+                Expect.IsNotNull(incoming);
+            }
+            Expect.IsFalse(firstBed.AnyUnownedSleepingSlot);
+            Expect.IsTrue(firstBed.GetComp<CompBedSharing>().CompGetGizmosExtra().Any());
+            firstBed.GetComp<CompBedSharing>().NightVisitsEnabled = false;
+            Expect.IsFalse(NightVisitHelpers.FindVisits(second, firstBed).Any());
+            firstBed.GetComp<CompBedSharing>().NightVisitsEnabled = true;
+            first.mindState.canLovinTick = 0;
+            second.mindState.canLovinTick = 0;
+            Job? visit = NightVisitHelpers.TryMakeVisitJob(second, firstBed);
+            if (ownPlaceAvailable)
+            {
+                Expect.IsNotNull(visit);
+                second.jobs.StartJob(visit!, JobCondition.InterruptForced);
+                yield return new WaitUntilTimeout(() => second.CurrentBed() == firstBed, 1200);
+                Expect.AreEqual(firstBed.GetSleepingSlotPos(1), second.Position);
+                Expect.ReferencesAreEqual(firstBed, second.ownership.OwnedBed);
+                Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+            }
+            else
+            {
+                Expect.IsNull(visit);
+                Expect.ReferencesAreEqual(thirdBed, second.CurrentBed());
+                Expect.AreEqual(firstBed.GetSleepingSlotPos(1), RestUtility.GetBedSleepingSlotPosFor(third, firstBed));
+                Expect.IsTrue(third.HasReserved(firstBed));
+            }
+        }
+        finally
+        {
+            if (incoming != null)
+            {
+                third.ClearReservationsForJob(incoming);
+                JobMaker.ReturnToPool(incoming);
+            }
+        }
     }
 
     [Test]

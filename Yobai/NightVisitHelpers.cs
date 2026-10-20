@@ -35,8 +35,11 @@ internal static class NightVisitHelpers
             || PolyculeHelpers.AreBedSharingPartners(visitor, other)))
             yield break;
 
-        int slot = Enumerable.Range(bed.OwnersForReading.Count, bed.SleepingSlotsCount - bed.OwnersForReading.Count)
-            .FirstOrDefault(slot => assignments.CanAssignSleepingSlot(visitor, slot), -1);
+        IEnumerable<int> slots = Enumerable.Range(bed.OwnersForReading.Count,
+            bed.SleepingSlotsCount - bed.OwnersForReading.Count);
+        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
+            slots = slots.Prepend(ownedSlot);
+        int slot = slots.FirstOrDefault(slot => assignments.CanAssignSleepingSlot(visitor, slot), -1);
         if (slot < 0)
             yield break;
 
