@@ -136,7 +136,7 @@ The planet Atlantis is entirely covered by a shallow, planet-wide sea. Without a
 
 A tribe of aquatic nixies descended from people engineered for the ocean world Atlantis. They settle along rivers and coasts, cultivating coral gardens and producing sea silk. Their culture values beauty, music, and a life spent in the water, with little use for clothing.
 
-They use simple tools and weapons, relying on trade for machinery and manufactured goods they cannot easily make themselves. Their warriors carry bows and melee weapons; tough scales and innate psychic abilities help compensate for their lack of advanced equipment.
+They use simple tools and weapons, relying on trade for machinery and manufactured goods they cannot easily make themselves. In combaat, tough scales and innate psychic abilities help compensate for their lack of advanced equipment.
 
 This particular tribe pursues a gentle way of life. They are open to trade and alliances, even with dryland peoples.
 
