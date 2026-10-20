@@ -13,16 +13,16 @@ internal static class BedSelectionHelpers
     private static Job? ChooseOccupiedPolyculeBedroomSleepJob(Pawn pawn)
     {
         return TryBedsInRandomOrder(GetPolyculeBedroomBeds(pawn)
-            .Where(bed => bed.GetComp<CompBedSharing>()?.GetBedmates().Any(other => other != pawn) == true
-                && HasOnlyPartnerBedmates(pawn, bed)),
+                .Where(bed => bed.GetComp<CompBedSharing>()?.GetBedmates().Any(other => other != pawn) == true
+                              && HasOnlyPartnerBedmates(pawn, bed)),
             bed => TryMakePolyculeBedroomSleepJob(pawn, bed));
     }
 
     private static Job? ChooseEmptyPolyculeBedroomSleepJob(Pawn pawn)
     {
         return TryBedsInRandomOrder(GetPolyculeBedroomBeds(pawn)
-            .Where(bed => bed.GetComp<CompBedSharing>()?.GetBedmates().Any(other => other != pawn) != true
-                && HasOnlyPartnerBedmates(pawn, bed)),
+                .Where(bed => bed.GetComp<CompBedSharing>()?.GetBedmates().Any(other => other != pawn) != true
+                              && HasOnlyPartnerBedmates(pawn, bed)),
             bed => TryMakePolyculeBedroomSleepJob(pawn, bed));
     }
 
@@ -36,7 +36,7 @@ internal static class BedSelectionHelpers
     {
         // A booked arrival affects the choice even before that pawn reaches the bed.
         return bed.GetComp<CompBedSharing>()?.GetBedmates().All(other => other == pawn
-            || PolyculeHelpers.AreBedSharingPartners(pawn, other)) == true;
+                                                                         || PolyculeHelpers.AreBedSharingPartners(pawn, other)) == true;
     }
 
     public static Job? TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
@@ -66,6 +66,7 @@ internal static class BedSelectionHelpers
             if (job != null)
                 return job;
         }
+
         return null;
     }
 
@@ -83,6 +84,7 @@ internal static class BedSelectionHelpers
             if (job != null)
                 return job;
         }
+
         return null;
     }
 }

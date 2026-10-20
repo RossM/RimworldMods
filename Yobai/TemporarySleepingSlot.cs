@@ -2,11 +2,10 @@ namespace Yobai;
 
 internal sealed class TemporarySleepingSlot : IExposable
 {
-    private Pawn? pawn;
-    private int slot;
-
     public Pawn? Pawn => pawn;
     public int Slot => slot;
+    private Pawn? pawn;
+    private int slot;
 
     public TemporarySleepingSlot() { }
 
@@ -26,7 +25,7 @@ internal sealed class TemporarySleepingSlot : IExposable
 
         // Reservations retain a place during travel; physical presence retains it between jobs.
         return pawn.HasReserved(bed)
-            || pawn.GetPosture().InBed() && pawn.Position == bed.GetSleepingSlotPos(slot);
+               || (pawn.GetPosture().InBed() && pawn.Position == bed.GetSleepingSlotPos(slot));
     }
 
     public void ExposeData()

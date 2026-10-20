@@ -15,6 +15,7 @@ internal static class BedSharingJobHelpers
             JobMaker.ReturnToPool(job);
             return null;
         }
+
         return TryBookSleepingPlace(pawn, place, job);
     }
 
@@ -26,7 +27,7 @@ internal static class BedSharingJobHelpers
         try
         {
             if (assignments == null || !BedSharingHelpers.CanSleepInSharedBed(pawn, place.Bed)
-                || !pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0, errorOnFailed: false))
+                                    || !pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0, errorOnFailed: false))
                 return null;
             assignment = assignments.TryAssignSleepingSlot(pawn, place.Slot);
             if (assignment == null

@@ -36,6 +36,7 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
         {
             Rand.PopState();
         }
+
         return willing ? NightVisitHelpers.TryMakeVisitJob(pawn, visit) : null;
     }
 }

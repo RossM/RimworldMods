@@ -2,9 +2,6 @@ namespace Yobai;
 
 internal sealed class SleepingPlace
 {
-    public Building_Bed Bed { get; }
-    public int Slot { get; }
-
     public SleepingPlace(Building_Bed bed, int slot)
     {
         ArgumentNullException.ThrowIfNull(bed);
@@ -13,4 +10,7 @@ internal sealed class SleepingPlace
         Bed = bed;
         Slot = slot;
     }
+
+    public Building_Bed Bed { get; }
+    public int Slot { get; }
 }

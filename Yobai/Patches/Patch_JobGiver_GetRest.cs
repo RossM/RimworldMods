@@ -8,7 +8,7 @@ internal static class Patch_JobGiver_GetRest
     public static void TryGiveJob_Postfix(Pawn pawn, ref Job? __result)
     {
         if (__result?.def != JobDefOf.LayDown || __result.targetA.Thing is Building_Bed { Medical: true }
-            || !BedSharingHelpers.CanChooseSharedBed(pawn))
+                                              || !BedSharingHelpers.CanChooseSharedBed(pawn))
             return;
 
         // Keep the chosen destination when the AI checks for another job on the way to bed.
@@ -20,6 +20,7 @@ internal static class Patch_JobGiver_GetRest
             __result = pawn.CurJob;
             return;
         }
+
         if (pawn.CurrentBed() != null)
             return;
 

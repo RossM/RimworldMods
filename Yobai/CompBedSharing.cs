@@ -50,9 +50,9 @@ public sealed class CompBedSharing : ThingComp
         {
             Pawn owner = reservation.Claimant;
             if (reservation.Target.Thing == bed && reservation.Job.targetA.Thing == bed
-                && typeof(JobDriver_LayDown).IsAssignableFrom(reservation.Job.def.driverClass)
-                && bed.IsOwner(owner, out int? slot) && slot is int assignedSlot
-                && !temporarySleepingSlots.Any(assignment => assignment.Pawn == owner))
+                                                && typeof(JobDriver_LayDown).IsAssignableFrom(reservation.Job.def.driverClass)
+                                                && bed.IsOwner(owner, out int? slot) && slot is int assignedSlot
+                                                && !temporarySleepingSlots.Any(assignment => assignment.Pawn == owner))
                 yield return (owner, bed.GetSleepingSlotPos(assignedSlot));
         }
     }
@@ -118,7 +118,7 @@ public sealed class CompBedSharing : ThingComp
             defaultDesc = "Yobai_NightVisitsDesc".Translate(),
             icon = ContentFinder<Texture2D>.Get("UI/Commands/ForColonists"),
             isActive = () => NightVisitsEnabled,
-            toggleAction = () => NightVisitsEnabled = !NightVisitsEnabled
+            toggleAction = () => NightVisitsEnabled = !NightVisitsEnabled,
         };
     }
 }

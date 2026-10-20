@@ -5,8 +5,8 @@ internal static class PolyculeHelpers
     public static bool AreBedSharingPartners(Pawn first, Pawn second)
     {
         return first != second && !first.Dead && !second.Dead
-            && LovePartnerRelationUtility.LovePartnerRelationExists(first, second)
-            && BedUtility.WillingToShareBed(first, second);
+               && LovePartnerRelationUtility.LovePartnerRelationExists(first, second)
+               && BedUtility.WillingToShareBed(first, second);
     }
 
     public static IEnumerable<Pawn> GetBedSharingPartners(Pawn pawn)
@@ -32,6 +32,7 @@ internal static class PolyculeHelpers
                     pending.Push(partner);
             }
         }
+
         return members;
     }
 }

@@ -17,10 +17,10 @@ internal static class NightVisitHelpers
     {
         int now = Find.TickManager.TicksGame;
         return LovePartnerRelationUtility.LovePartnerRelationExists(first, second)
-            && now >= first.mindState.canLovinTick && now >= second.mindState.canLovinTick
-            && first.health.capacities.CanBeAwake && second.health.capacities.CanBeAwake
-            && first.CanReserve(second) && second.CanReserve(first)
-            && LovePartnerRelationUtility.GetLovinMtbHours(first, second) > 0f;
+               && now >= first.mindState.canLovinTick && now >= second.mindState.canLovinTick
+               && first.health.capacities.CanBeAwake && second.health.capacities.CanBeAwake
+               && first.CanReserve(second) && second.CanReserve(first)
+               && LovePartnerRelationUtility.GetLovinMtbHours(first, second) > 0f;
     }
 
     public static IEnumerable<NightVisit> FindVisits(Pawn visitor, Building_Bed bed)
@@ -32,7 +32,7 @@ internal static class NightVisitHelpers
             yield break;
 
         if (!assignments.GetBedmates().All(other => other == visitor
-            || PolyculeHelpers.AreBedSharingPartners(visitor, other)))
+                                                    || PolyculeHelpers.AreBedSharingPartners(visitor, other)))
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(bed.OwnersForReading.Count,
@@ -47,7 +47,7 @@ internal static class NightVisitHelpers
         foreach (Pawn partner in bed.CurOccupants)
         {
             if (PolyculeHelpers.AreBedSharingPartners(visitor, partner) && !partner.Awake()
-                && BedSharingHelpers.CanShareBedsNow(partner))
+                                                                        && BedSharingHelpers.CanShareBedsNow(partner))
                 yield return new NightVisit(partner, place);
         }
     }

@@ -19,6 +19,7 @@ internal static class Patch_RestUtility
             __result = false;
             return;
         }
+
         // Permanent and temporary sleepers must both respect occupants and booked arrivals.
         IntVec3 sleepingPosition = RestUtility.GetBedSleepingSlotPosFor(sleeper, bed);
         __result = assignments.IsSleepingPlaceAvailable(sleeper, sleepingPosition);
@@ -27,9 +28,11 @@ internal static class Patch_RestUtility
     [Postfix]
     [Inner(typeof(Building_Bed), nameof(Building_Bed.IsOwner), typeof(Pawn), typeof(Out<int?>))]
     [Target(nameof(RestUtility.CanUseBedNow))]
-    public static void IsOwner_Postfix([Instance] Building_Bed bed,
+    public static void IsOwner_Postfix(
+        [Instance] Building_Bed bed,
         [Argument("sleeper", Scope.Outer)] Pawn sleeper,
-        ref int? assignedSleepingSlot, ref bool __result)
+        ref int? assignedSleepingSlot,
+        ref bool __result)
     {
         if (!BedSharingHelpers.CanSleepInSharedBed(sleeper, bed))
             return;
@@ -43,8 +46,10 @@ internal static class Patch_RestUtility
     [Postfix]
     [Inner(typeof(CompAssignableToPawn), nameof(CompAssignableToPawn.IdeoligionForbids))]
     [Target(nameof(RestUtility.CanUseBedNow))]
-    public static void IdeoligionForbids_Postfix([Argument("sleeper", Scope.Outer)] Pawn sleeper,
-        [Argument("bedThing", Scope.Outer)] Thing bedThing, ref bool __result)
+    public static void IdeoligionForbids_Postfix(
+        [Argument("sleeper", Scope.Outer)] Pawn sleeper,
+        [Argument("bedThing", Scope.Outer)] Thing bedThing,
+        ref bool __result)
     {
         // A temporary assignment concerns the bedmates present, rather than absent permanent owners.
         if (bedThing is Building_Bed bed && BedSharingHelpers.CanUseTemporarySleepingSlot(sleeper, bed))
