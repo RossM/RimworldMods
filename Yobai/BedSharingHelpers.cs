@@ -6,17 +6,17 @@ internal static class BedSharingHelpers
 {
     public static bool IsBedEligibleForSharing(Building_Bed bed)
     {
-        return bed.Spawned && bed.Faction == Faction.OfPlayer && !bed.Medical && !bed.ForPrisoners
-               && bed.def.building.bed_humanlike && !bed.ForHumanBabies
-               && bed.def != ThingDefOf.DeathrestCasket;
+        return bed.Spawned && bed.Faction == Faction.OfPlayer && bed is { Medical: false, ForPrisoners: false, ForHumanBabies: false } &&
+               bed.def.building.bed_humanlike && bed.def != ThingDefOf.DeathrestCasket;
     }
 
     public static bool CanShareBedsNow(Pawn pawn)
     {
-        return pawn.Spawned && pawn.Faction == Faction.OfPlayer && pawn.RaceProps.Humanlike
-               && !pawn.Dead && !pawn.Downed && !pawn.Drafted && !pawn.InMentalState && !pawn.IsPrisoner
-               && !pawn.Deathresting && pawn.needs?.rest != null && pawn.health.capacities.CanBeAwake
-               && !HealthAIUtility.ShouldSeekMedicalRest(pawn);
+        return pawn.Spawned && pawn.Faction == Faction.OfPlayer && pawn.RaceProps.Humanlike && pawn is
+        {
+            Dead: false, Downed: false, Drafted: false, InMentalState: false, IsPrisoner: false, Deathresting: false, needs.rest: not null,
+            health.capacities.CanBeAwake: true,
+        } && !HealthAIUtility.ShouldSeekMedicalRest(pawn);
     }
 
     public static bool CanChooseSharedBed(Pawn pawn)
@@ -36,7 +36,7 @@ internal static class BedSharingHelpers
 
     public static bool IsBedInAssignedPolyculeBedroom(Pawn pawn, Building_Bed bed)
     {
-        Building_Bed? ownedBed = pawn.ownership?.OwnedBed;
+        Building_Bed? ownedBed = pawn.ownership.OwnedBed;
         Room? room = ownedBed?.GetRoom();
         if (room == null || room.PsychologicallyOutdoors || bed.GetRoom() != room
             || room.Role != RoomRoleDefOf.Bedroom)

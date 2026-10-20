@@ -54,7 +54,7 @@ internal static class BedSelectionHelpers
 
     private static IEnumerable<Building_Bed> GetPolyculeBedroomBeds(Pawn pawn)
     {
-        return pawn.ownership?.OwnedBed?.GetRoom()?.ContainedBeds ?? Enumerable.Empty<Building_Bed>();
+        return pawn.ownership.OwnedBed?.GetRoom()?.ContainedBeds ?? [];
     }
 
     private static Job? TryBedsInRandomOrder(IEnumerable<Building_Bed> beds, Func<Building_Bed, Job?> makeJob)

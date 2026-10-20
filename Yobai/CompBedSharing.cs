@@ -1,8 +1,9 @@
 namespace Yobai;
 
+[UsedImplicitly]
 public sealed class CompBedSharing : ThingComp
 {
-    public bool NightVisitsEnabled = true;
+    public bool nightVisitsEnabled = true;
     private List<TemporarySleepingSlot> temporarySleepingSlots = [];
 
     internal bool HasTemporaryAssignments
@@ -97,7 +98,7 @@ public sealed class CompBedSharing : ThingComp
         base.PostExposeData();
         if (Scribe.mode == LoadSaveMode.Saving)
             RemoveDepartedSleepers();
-        Scribe_Values.Look(ref NightVisitsEnabled, "Yobai_NightVisits", true);
+        Scribe_Values.Look(ref nightVisitsEnabled, "Yobai_NightVisits", true);
         Scribe_Collections.Look(ref temporarySleepingSlots, "Yobai_TemporarySleepingSlots",
             LookMode.Deep);
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
@@ -109,7 +110,7 @@ public sealed class CompBedSharing : ThingComp
         Building_Bed bed = (Building_Bed)parent;
         if (!BedSharingHelpers.IsBedEligibleForNightVisits(bed)
             || !bed.OwnersForReading.Any(owner => PolyculeHelpers.GetBedSharingPartners(owner)
-                .Any(partner => partner.ownership?.OwnedBed != bed)))
+                .Any(partner => partner.ownership.OwnedBed != bed)))
             yield break;
 
         yield return new Command_Toggle
@@ -117,8 +118,8 @@ public sealed class CompBedSharing : ThingComp
             defaultLabel = "Yobai_NightVisits".Translate(),
             defaultDesc = "Yobai_NightVisitsDesc".Translate(),
             icon = ContentFinder<Texture2D>.Get("UI/Commands/ForColonists"),
-            isActive = () => NightVisitsEnabled,
-            toggleAction = () => NightVisitsEnabled = !NightVisitsEnabled,
+            isActive = () => nightVisitsEnabled,
+            toggleAction = () => nightVisitsEnabled = !nightVisitsEnabled,
         };
     }
 }

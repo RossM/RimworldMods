@@ -14,10 +14,14 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
             return null;
         pawn.mindState.thinkData[UniqueSaveKey] = now;
 
-        List<NightVisit> visits = PolyculeHelpers.GetBedSharingPartners(pawn)
-            .Select(partner => partner.CurrentBed()).OfType<Building_Bed>().Distinct()
-            .SelectMany(bed => NightVisitHelpers.FindVisits(pawn, bed))
-            .Where(visit => NightVisitHelpers.AreReadyForLovin(pawn, visit.Partner)).ToList();
+        List<NightVisit> visits =
+        [
+            .. PolyculeHelpers.GetBedSharingPartners(pawn)
+                // ReSharper disable once RedundantEnumerableCastCall
+                .Select(partner => partner.CurrentBed()).OfType<Building_Bed>().Distinct()
+                .SelectMany(bed => NightVisitHelpers.FindVisits(pawn, bed))
+                .Where(visit => NightVisitHelpers.AreReadyForLovin(pawn, visit.Partner)),
+        ];
         if (visits.Count == 0)
             return null;
 

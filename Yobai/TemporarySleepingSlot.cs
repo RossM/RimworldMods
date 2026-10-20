@@ -7,6 +7,7 @@ internal sealed class TemporarySleepingSlot : IExposable
     private Pawn? pawn;
     private int slot;
 
+    [UsedImplicitly]
     public TemporarySleepingSlot() { }
 
     public TemporarySleepingSlot(Pawn pawn, int slot)

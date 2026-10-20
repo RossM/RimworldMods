@@ -447,7 +447,7 @@ public sealed class PartnerSleepTests
     {
         second.ownership.ClaimBedIfNonMedical(visitBed);
         visitBed.CompAssignableToPawn.TryUnassignPawn(outsider);
-        firstBed.GetComp<CompBedSharing>().NightVisitsEnabled = false;
+        firstBed.GetComp<CompBedSharing>().nightVisitsEnabled = false;
         first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
         second.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => first.CurrentBed() == firstBed && !first.Awake()
@@ -616,7 +616,7 @@ public sealed class PartnerSleepTests
         first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => second.CurrentBed() == visitBed && !second.Awake()
             && first.CurrentBed() == firstBed && !first.Awake(), 1200);
-        visitBed.GetComp<CompBedSharing>().NightVisitsEnabled = false;
+        visitBed.GetComp<CompBedSharing>().nightVisitsEnabled = false;
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, visitBed));
         Expect.IsNull(new JobGiver_NightVisit().TryIssueJobPackage(first, default).Job);
         Expect.ReferencesAreEqual(firstBed, first.CurrentBed());
@@ -650,7 +650,7 @@ public sealed class PartnerSleepTests
         first.relations.AddDirectRelation(PawnRelationDefOf.Spouse, third);
         second.ownership.ClaimBedIfNonMedical(bed);
         third.ownership.ClaimBedIfNonMedical(bed);
-        firstBed.GetComp<CompBedSharing>().NightVisitsEnabled = false;
+        firstBed.GetComp<CompBedSharing>().nightVisitsEnabled = false;
         first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
         second.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, bed), JobCondition.InterruptForced);
         third.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, bed), JobCondition.InterruptForced);
@@ -920,15 +920,15 @@ public sealed class PartnerSleepTests
     {
         CompBedSharing comp = firstBed.GetComp<CompBedSharing>();
         string path = Path.Combine(GenFilePaths.SaveDataFolderPath, "Yobai-toggle-test.xml");
-        comp.NightVisitsEnabled = false;
+        comp.nightVisitsEnabled = false;
         Scribe.saver.InitSaving(path, "YobaiTest");
         comp.PostExposeData();
         Scribe.saver.FinalizeSaving();
-        comp.NightVisitsEnabled = true;
+        comp.nightVisitsEnabled = true;
         Scribe.loader.InitLoading(path);
         comp.PostExposeData();
         Scribe.loader.FinalizeLoading();
-        Expect.IsFalse(comp.NightVisitsEnabled);
+        Expect.IsFalse(comp.nightVisitsEnabled);
         File.Delete(path);
     }
 
@@ -1288,9 +1288,9 @@ public sealed class PartnerSleepTests
             }
             Expect.IsFalse(firstBed.AnyUnownedSleepingSlot);
             Expect.IsTrue(firstBed.GetComp<CompBedSharing>().CompGetGizmosExtra().Any());
-            firstBed.GetComp<CompBedSharing>().NightVisitsEnabled = false;
+            firstBed.GetComp<CompBedSharing>().nightVisitsEnabled = false;
             Expect.IsFalse(NightVisitHelpers.FindVisits(second, firstBed).Any());
-            firstBed.GetComp<CompBedSharing>().NightVisitsEnabled = true;
+            firstBed.GetComp<CompBedSharing>().nightVisitsEnabled = true;
             first.mindState.canLovinTick = 0;
             second.mindState.canLovinTick = 0;
             Job? visit = NightVisitHelpers.TryMakeVisitJob(second, firstBed);
@@ -1535,7 +1535,7 @@ public sealed class PartnerSleepTests
         Job? visit = NightVisitHelpers.TryMakeVisitJob(first, visitBed);
         Expect.IsNotNull(visit);
         second.jobs.curDriver.asleep = false;
-        visitBed.GetComp<CompBedSharing>().NightVisitsEnabled = false;
+        visitBed.GetComp<CompBedSharing>().nightVisitsEnabled = false;
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(third, visitBed));
         Expect.IsTrue(visit!.TryMakePreToilReservations(first, false));
         first.jobs.StartJob(visit, JobCondition.InterruptForced);

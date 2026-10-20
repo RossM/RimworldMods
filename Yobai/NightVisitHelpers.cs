@@ -28,7 +28,7 @@ internal static class NightVisitHelpers
         if (!BedSharingHelpers.CanChooseSharedBed(visitor)
             || !BedSharingHelpers.CanSleepInSharedBed(visitor, bed)
             || !BedSharingHelpers.IsBedEligibleForNightVisits(bed)
-            || bed.GetComp<CompBedSharing>() is not { NightVisitsEnabled: true } assignments)
+            || bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true } assignments)
             yield break;
 
         if (!assignments.GetBedmates().All(other => other == visitor

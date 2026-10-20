@@ -1,5 +1,6 @@
 namespace Yobai;
 
+[UsedImplicitly]
 public sealed class Main : Mod
 {
     public Main(ModContentPack content) : base(content)
