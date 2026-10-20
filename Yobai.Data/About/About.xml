@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>Xylthixlm.Yobai</packageId>
+  <name>Yobai</name>
+  <author>Xylthixlm</author>
+  <description>Let pawns choose beds within their polycule bedroom and make night visits to partners without changing bed assignments. Vanilla bedroom classification is preserved. Ideoligions determine which romantic relationships connect a polycule; members can share a bed there as a last resort despite the usual pairwise restrictions.</description>
+  <supportedVersions>
+    <li>1.7</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>Xylthixlm.Disharmony</packageId>
+      <displayName>Disharmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/3818084845</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>Xylthixlm.Disharmony</li>
+  </loadAfter>
+</ModMetaData>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Yobai.Tests" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
+    <ProjectReference Include="..\Yobai.Data\Yobai.Data.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(DisharmonySourceDirectory)' == ''">
+    <PackageReference Include="Disharmony" Version="$(DisharmonyVersion)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(DisharmonySourceDirectory)' != ''">
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony\Disharmony.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetPath);$(TargetDir)0Harmony.dll" DestinationFolder="..\ModBin\Yobai\Assemblies" />
+    <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="..\ModBin\Yobai\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />
+    <Delete Files="..\ModBin\Yobai\Assemblies\Disharmony.dll;..\ModBin\Yobai\Assemblies\Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' == ''" />
+  </Target>
+</Project>

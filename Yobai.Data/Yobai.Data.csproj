@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.134">
+  <ItemGroup>
+    <ModDataDestination Include="..\ModBin\Yobai" OwnsOutput="true" />
+  </ItemGroup>
+  <Import Project="..\ModData.targets" />
+  <Target Name="ConfigureBundledDisharmony" AfterTargets="SyncModData" Condition="'$(DisharmonySourceDirectory)' != ''">
+    <XmlPoke XmlInputPath="..\ModBin\Yobai\About\About.xml" Query="/ModMetaData/modDependencies" Value="" />
+  </Target>
+</Project>

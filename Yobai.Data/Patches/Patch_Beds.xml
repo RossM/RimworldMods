@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <!-- Inherited by vanilla beds and modded beds using the standard bed hierarchy. -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThingDef[@Name="BedBase"]/comps</xpath>
+    <value>
+      <li>
+        <compClass>Yobai.CompBedSharing</compClass>
+      </li>
+    </value>
+  </Operation>
+</Patch>

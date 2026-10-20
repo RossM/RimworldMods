@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>Xylthixlm.Yobai.Tests</packageId>
+  <name>Yobai tests</name>
+  <author>Xylthixlm</author>
+  <description>Tests for Yobai, run through SmashPhil's DevTools. Enable this mod when testing Yobai; it is not needed for normal play.</description>
+  <supportedVersions><li>1.7</li></supportedVersions>
+  <modDependencies>
+    <li><packageId>Xylthixlm.Yobai</packageId><displayName>Yobai</displayName></li>
+    <li><packageId>SmashPhil.DevTools</packageId><displayName>DevTools</displayName></li>
+  </modDependencies>
+  <loadAfter>
+    <li>Xylthixlm.Yobai</li>
+    <li>SmashPhil.DevTools</li>
+  </loadAfter>
+</ModMetaData>
