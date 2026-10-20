@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThinkTreeDef[defName="Humanlike"]/thinkRoot/subNodes/li[@Class="ThinkNode_ConditionalLyingDown"]/subNodes</xpath>
+    <value>
+      <li Class="ThinkNode_Tagger">
+        <tagToGive>SatisfyingNeeds</tagToGive>
+        <subNodes>
+          <li Class="Yobai.JobGiver_NightVisit" />
+        </subNodes>
+      </li>
+    </value>
+  </Operation>
+</Patch>

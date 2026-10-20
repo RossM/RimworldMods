@@ -22,17 +22,17 @@ Pawns already on their way to a bed count as bedmates when making these choices,
 
 ## Night visits
 
-A pawn going to bed first tries to join a partner in their own polycule bedroom. If they don't find one there, they have a 50% chance to visit a partner sleeping alone in a double bed. If more than one partner can receive a visit, each bed has an equal chance of being chosen.
+A pawn sleeping alone can wake up to visit a sleeping partner in a bed with room for another pawn. Both pawns must be ready for lovin': their cooldowns must have expired, and the usual health and reservation checks must allow it. If several partners can receive a visit, one is chosen at random.
 
-Night visits require a free place that isn't assigned to anyone. A place assigned to an absent pawn is kept for that pawn.
+Night visits require a free place that isn't assigned to anyone. A place assigned to an absent pawn is kept for that pawn. Beds with three or more places can receive visits too. Everyone already in the bed or on the way to it must be a partner the visitor is allowed to share with.
 
-A pawn sleeping alone may also wake up and go to a partner's bed. These opportunities occur at random, with an average wait of about four in-game hours when a visit is possible. Pawns already sharing a bed, or waiting for someone on the way to join them, won't leave to make a visit.
+Visits are considered through the pawn's think tree, at most once per in-game hour. The chance uses RimWorld's normal lovin' calculation for the chosen pair, including age, health, attraction and opinion. Going to bed does not trigger a separate visit roll. Pawns already sharing a bed, or waiting for someone on the way to join them, won't leave to make a visit.
 
-Select a double bed and use the **Night visits** button to allow or prevent visits to that bed. Night visits are enabled by default, and the setting is saved with the bed. The button appears when the bed has an unassigned place and an assigned pawn has a partner assigned to a different bed. Turning visits off prevents new visits; an already arranged visit can finish. It does not stop pawns in a polycule bedroom from sharing its beds.
+Select a bed with room for more than one pawn and use the **Night visits** button to allow or prevent visits to that bed. Night visits are enabled by default, and the setting is saved with the bed. The button appears when the bed has an unassigned place and an assigned pawn has a partner assigned to a different bed. Turning visits off prevents new visits; an already arranged visit can finish. It does not stop pawns in a polycule bedroom from sharing its beds.
 
 Normal bed restrictions still apply, and the visitor must be able to reach the bed. Pawns who are drafted, downed, in a mental state, deathresting or in need of medical rest don't take part. Prisoners are excluded, and pawns ordered to sleep by the player won't wake up for visits.
 
-Once partners are together, RimWorld decides whether they do lovin' as usual. Sharing a bed does not make non-partners eligible for lovin'. If romantic partners share as a last resort despite their ideoligions, vanilla lovin' and its mood and opinion penalties still apply. Bedroom mood effects come from the room where they actually sleep.
+A night visitor travels to the chosen partner, does lovin', then stays to sleep. If the partner leaves or becomes unavailable during the journey, the visit is cancelled. Partners already sharing a bed use RimWorld's usual lovin' decisions. Sharing a bed does not make non-partners eligible for lovin'. If romantic partners share as a last resort despite their ideoligions, vanilla lovin' and its mood and opinion penalties still apply. Bedroom mood effects come from the room where they actually sleep.
 
 ## Building and installing
 
@@ -48,7 +48,7 @@ The default build requires the separate Disharmony mod, loaded before Yobai. If 
 
 ## For mod authors
 
-An XML patch adds `Yobai.CompBedSharing` to `BedBase`, so beds that inherit from it support temporary sleeping assignments and night visits. Beds with a separate XML inheritance chain need to add that comp themselves. Yobai excludes medical beds, prisoner beds, cribs and deathrest caskets from bed sharing. Temporary sleepers use the regular `LayDown` job and `JobDriver_LayDown`.
+An XML patch adds `Yobai.CompBedSharing` to `BedBase`, so beds that inherit from it support temporary sleeping assignments and night visits. Beds with a separate XML inheritance chain need to add that comp themselves. Yobai excludes medical beds, prisoner beds, cribs and deathrest caskets from bed sharing. Bedroom sharing uses the regular `LayDown` job and `JobDriver_LayDown`. Night visits use the regular `Lovin` job and `JobDriver_Lovin`, then resume normal sleep.
 
 The [DevTools tests](../Yobai.Tests/README.md) are an optional development project. They are not needed to play.
 

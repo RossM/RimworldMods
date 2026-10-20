@@ -95,6 +95,8 @@ public sealed class CompBedSharing : ThingComp
     public override void PostExposeData()
     {
         base.PostExposeData();
+        if (Scribe.mode == LoadSaveMode.Saving)
+            RemoveDepartedSleepers();
         Scribe_Values.Look(ref NightVisitsEnabled, "Yobai_NightVisits", true);
         Scribe_Collections.Look(ref temporarySleepingSlots, "Yobai_TemporarySleepingSlots",
             LookMode.Deep);

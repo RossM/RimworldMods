@@ -31,7 +31,7 @@ internal static class BedSharingHelpers
 
     public static bool IsBedEligibleForNightVisits(Building_Bed bed)
     {
-        return IsBedEligibleForSharing(bed) && bed.SleepingSlotsCount == 2 && bed.AnyUnownedSleepingSlot;
+        return IsBedEligibleForSharing(bed) && bed.SleepingSlotsCount > 1 && bed.AnyUnownedSleepingSlot;
     }
 
     public static bool IsBedInAssignedPolyculeBedroom(Pawn pawn, Building_Bed bed)

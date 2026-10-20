@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="DoubleBed">
+    <defName>Yobai_TestThreeSlotBed</defName>
+    <label>three-person test bed</label>
+    <description>A bed with three sleeping places for Yobai's tests.</description>
+    <size>(3,2)</size>
+    <designationCategory IsNull="True" />
+  </ThingDef>
+</Defs>

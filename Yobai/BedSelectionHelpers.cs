@@ -7,12 +7,6 @@ internal static class BedSelectionHelpers
         Job? sleep = ChooseOccupiedPolyculeBedroomSleepJob(pawn);
         if (sleep != null)
             return sleep;
-        if (Rand.Chance(0.5f))
-        {
-            Job? visit = ChooseNightVisitSleepJob(pawn);
-            if (visit != null)
-                return visit;
-        }
         return ChooseEmptyPolyculeBedroomSleepJob(pawn) ?? ChooseFallbackPolyculeBedroomSleepJob(pawn);
     }
 
@@ -45,14 +39,6 @@ internal static class BedSelectionHelpers
             || PolyculeHelpers.AreBedSharingPartners(pawn, other)) == true;
     }
 
-    public static Job? ChooseNightVisitSleepJob(Pawn pawn)
-    {
-        IEnumerable<Building_Bed> beds = PolyculeHelpers.GetBedSharingPartners(pawn)
-            .Select(partner => partner.CurrentBed()).OfType<Building_Bed>().Distinct()
-            .Where(bed => bed != pawn.CurrentBed());
-        return TryBedsInRandomOrder(beds, bed => TryMakeNightVisitSleepJob(pawn, bed));
-    }
-
     public static Job? TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
     {
         if (!BedSharingHelpers.CanChooseSharedBed(pawn)
@@ -62,29 +48,6 @@ internal static class BedSelectionHelpers
 
         // A bedroom's temporary sleepers may use any of its beds' sleeping places.
         return TryMakeSleepJobInSlots(pawn, bed, Enumerable.Range(0, bed.SleepingSlotsCount));
-    }
-
-    public static Job? TryMakeNightVisitSleepJob(Pawn visitor, Building_Bed bed)
-    {
-        if (!BedSharingHelpers.CanChooseSharedBed(visitor)
-            || !BedSharingHelpers.CanSleepInSharedBed(visitor, bed)
-            || !BedSharingHelpers.IsBedEligibleForNightVisits(bed)
-            || bed.GetComp<CompBedSharing>()?.NightVisitsEnabled != true)
-            return null;
-
-        List<Pawn> occupants = bed.CurOccupants.ToList();
-        if (occupants.Count != 1)
-            return null;
-        Pawn host = occupants[0];
-        if (!PolyculeHelpers.AreBedSharingPartners(visitor, host)
-            || !HasOnlyPartnerBedmates(visitor, bed)
-            || host.Awake() || !BedSharingHelpers.CanShareBedsNow(host))
-            return null;
-
-        // Permanent assignments use the first slots. A visit may use only the remaining slots.
-        int firstUnassignedSlot = bed.OwnersForReading.Count;
-        return TryMakeSleepJobInSlots(visitor, bed,
-            Enumerable.Range(firstUnassignedSlot, bed.SleepingSlotsCount - firstUnassignedSlot));
     }
 
     private static IEnumerable<Building_Bed> GetPolyculeBedroomBeds(Pawn pawn)
@@ -114,7 +77,7 @@ internal static class BedSelectionHelpers
         {
             if (!assignments.CanAssignSleepingSlot(pawn, slot))
                 continue;
-            Job? job = SharedSleepJobHelpers.TryMakeSleepJob(pawn, new SleepingPlace(bed, slot));
+            Job? job = BedSharingJobHelpers.TryMakeSleepJob(pawn, new SleepingPlace(bed, slot));
             if (job != null)
                 return job;
         }

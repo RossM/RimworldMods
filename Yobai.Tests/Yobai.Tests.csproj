@@ -15,5 +15,6 @@
   <Target Name="DeployTests" AfterTargets="Build">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\ModBin\Yobai.Tests\Assemblies" />
     <Copy SourceFiles="About\About.xml" DestinationFolder="..\ModBin\Yobai.Tests\About" />
+    <Copy SourceFiles="Defs\TestBeds.xml" DestinationFolder="..\ModBin\Yobai.Tests\Defs" />
   </Target>
 </Project>
