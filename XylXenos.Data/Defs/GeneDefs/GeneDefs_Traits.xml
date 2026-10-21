@@ -218,7 +218,7 @@
     <biostatMet>0</biostatMet>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>1000</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Flirty</iconPath>
     <forcedTraits>
       <XylFlirt/>
     </forcedTraits>
