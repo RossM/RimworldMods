@@ -210,4 +210,38 @@
     </forcedTraits>
   </GeneDef>
 
+  <GeneDef>
+    <defName>XylFlirty</defName>
+    <label>flirty</label>
+    <description>Carriers of this gene are more likely to attempt romantic interactions.</description>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>0</biostatMet>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>1000</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <forcedTraits>
+      <XylFlirt/>
+    </forcedTraits>
+  </GeneDef>
+  <TraitDef>
+    <defName>XylFlirt</defName>
+    <commonality>0.5</commonality>
+    <degreeDatas>
+      <li>
+        <label>flirt</label>
+        <description>{PAWN_nameDef} has a flirtatious personality. {PAWN_pronoun} is more likely to attempt to romance other characters.</description>
+        <statFactors>
+          <XylRomanceChanceFactor>3</XylRomanceChanceFactor>
+        </statFactors>
+        <allowedMeditationFocusTypes>
+          <li>XylRomantic</li>
+        </allowedMeditationFocusTypes>
+      </li>
+    </degreeDatas>
+  </TraitDef>
+  <MeditationFocusDef>
+    <defName>XylRomantic</defName>
+    <label>romantic</label>
+  </MeditationFocusDef>
+
 </Defs>

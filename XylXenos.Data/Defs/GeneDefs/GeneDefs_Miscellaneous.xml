@@ -776,34 +776,4 @@
     </modExtensions>
   </GeneDef>
 
-  <GeneDef>
-    <defName>XylFlirty</defName>
-    <label>flirty</label>
-    <description>Carriers of this gene are more likely to attempt romantic interactions.</description>
-    <biostatCpx>1</biostatCpx>
-    <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
-    <displayOrderInCategory>1000</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
-    <statFactors>
-      <XylRomanceChanceFactor>3</XylRomanceChanceFactor>
-    </statFactors>
-    <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps">
-        <comps>
-          <li Class="XylXenos.GeneCompProperties_MeditationFocus">
-            <allowedMeditationFocusTypes>
-              <li>XylRomantic</li>
-            </allowedMeditationFocusTypes>
-          </li>
-        </comps>
-      </li>
-    </modExtensions>
-  </GeneDef>
-
-  <MeditationFocusDef>
-    <defName>XylRomantic</defName>
-    <label>romantic</label>
-  </MeditationFocusDef>
-
 </Defs>
