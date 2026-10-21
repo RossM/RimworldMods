@@ -413,6 +413,7 @@ The succuboid mode of reproduction resembles [gynogenesis](https://en.wikipedia.
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylLoveEuphoria.png" alt="Love euphoria" width="80" height="80"> | [Love euphoria](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene secrete chemicals that cause a euphoric, drug-like high in their partner after lovin'. The chemicals grant a mood bonus but rewire the partner's brain causing an immediate and long-lasting addiction. |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylShameless.png" alt="Shameless" width="80" height="80"> | [Shameless](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are never ashamed by nudity, and are much happier when not wearing clothes. |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylLazy.png" alt="Lazy" width="80" height="80"> | [Lazy](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are slow workers. |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylFlirty.png" alt="Flirty" width="80" height="80"> | [Flirty](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are more likely to attempt romantic interactions. |
 
 **Appearance genes**
 
