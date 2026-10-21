@@ -216,7 +216,7 @@
     <description>Carriers of this gene are more likely to attempt romantic interactions.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Miscellaneous</displayCategory>
+    <displayCategory>Reproduction</displayCategory>
     <displayOrderInCategory>1000</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Flirty</iconPath>
     <forcedTraits>
