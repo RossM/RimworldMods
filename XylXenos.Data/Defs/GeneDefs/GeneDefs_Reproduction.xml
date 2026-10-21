@@ -223,20 +223,10 @@
             <addictionHediff>XylLovinAddiction</addictionHediff>
             <maxLovinMtbHours>4</maxLovinMtbHours>
           </li>
-          <li Class="XylXenos.GeneCompProperties_MeditationFocus">
-            <allowedMeditationFocusTypes>
-              <li>XylRomantic</li>
-            </allowedMeditationFocusTypes>
-          </li>
         </comps>
       </li>
     </modExtensions>
   </GeneDef>
-
-  <MeditationFocusDef>
-    <defName>XylRomantic</defName>
-    <label>romantic</label>
-  </MeditationFocusDef>
 
   <NeedDef>
     <defName>XylLovin</defName>

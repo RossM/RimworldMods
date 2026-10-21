@@ -35,6 +35,9 @@ public static class XStatDefOf
     /// <summary>A multiplier on how quickly this character's resistance falls when they are being recruited.</summary>
     public static StatDef XylResistanceFallRate;
 
+    /// <summary>A multiplier on the chance that this character will attempt to initiate romance.</summary>
+    public static StatDef XylRomanceChanceFactor;
+
     /// <summary>Affects the average amount of time before the character will rebel as a slave.</summary>
     public static StatDef XylSlaveRebellionMtbFactor;
 
