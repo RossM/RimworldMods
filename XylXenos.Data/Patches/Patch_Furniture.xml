@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/ThingDef[defName="DoubleBed"]</xpath>
+    <value>
+      <statBases>
+        <MeditationFocusStrength>0.0</MeditationFocusStrength>
+      </statBases>
+      <comps>
+        <li Class="CompProperties_MeditationFocus">
+          <statDef>MeditationFocusStrength</statDef>
+          <focusTypes>
+            <li>XylRomantic</li>
+          </focusTypes>
+          <offsets>
+            <li Class="FocusStrengthOffset_Quality">
+              <curve>
+                <points>
+                  <li>(0,0.12)</li> <!-- awful -->
+                  <li>(1,0.16)</li> <!-- poor -->
+                  <li>(2,0.20)</li> <!-- normal -->
+                  <li>(3,0.22)</li> <!-- good -->
+                  <li>(4,0.24)</li> <!-- excellent -->
+                  <li>(5,0.26)</li> <!-- masterwork -->
+                  <li>(6,0.28)</li> <!-- legendary -->
+                </points>
+              </curve>
+            </li>
+            <li Class="FocusStrengthOffset_BuildingDefs">
+              <defs>
+                <li MayRequire="Ludeon.RimWorld.Ideology">Drape</li>
+              </defs>
+              <offsetPerBuilding>0.01</offsetPerBuilding>
+              <radius>9.9</radius>
+              <maxBuildings>6</maxBuildings>
+              <drawRingRadius>false</drawRingRadius>
+              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
+              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+            </li>
+            <li Class="FocusStrengthOffset_BuildingDefsLit">
+              <defs>
+                <li MayRequire="Ludeon.RimWorld.Ideology">Brazier</li>
+                <li MayRequire="Ludeon.RimWorld.Ideology">DarklightBrazier</li>
+              </defs>
+              <offsetPerBuilding>0.01</offsetPerBuilding>
+              <radius>9.9</radius>
+              <maxBuildings>2</maxBuildings>
+              <drawRingRadius>false</drawRingRadius>
+              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
+              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+            </li>
+          </offsets>
+          </li>
+      </comps>
+    </value>
+  </Operation>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/ThingDef[defName="RoyalBed"]</xpath>
+    <value>
+      <statBases>
+        <MeditationFocusStrength>0.0</MeditationFocusStrength>
+      </statBases>
+      <comps>
+        <li Class="CompProperties_MeditationFocus">
+          <statDef>MeditationFocusStrength</statDef>
+          <focusTypes>
+            <li>XylRomantic</li>
+          </focusTypes>
+          <offsets>
+            <li Class="FocusStrengthOffset_Quality">
+              <curve>
+                <points>
+                  <li>(0,0.18)</li>
+                  <!-- awful -->
+                  <li>(1,0.22)</li>
+                  <!-- poor -->
+                  <li>(2,0.26)</li>
+                  <!-- normal -->
+                  <li>(3,0.28)</li>
+                  <!-- good -->
+                  <li>(4,0.30)</li>
+                  <!-- excellent -->
+                  <li>(5,0.32)</li>
+                  <!-- masterwork -->
+                  <li>(6,0.34)</li>
+                  <!-- legendary -->
+                </points>
+              </curve>
+            </li>
+            <li Class="FocusStrengthOffset_BuildingDefs">
+              <defs>
+                <li MayRequire="Ludeon.RimWorld.Ideology">Drape</li>
+              </defs>
+              <offsetPerBuilding>0.01</offsetPerBuilding>
+              <radius>9.9</radius>
+              <maxBuildings>6</maxBuildings>
+              <drawRingRadius>false</drawRingRadius>
+              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
+              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+            </li>
+            <li Class="FocusStrengthOffset_BuildingDefsLit">
+              <defs>
+                <li MayRequire="Ludeon.RimWorld.Ideology">Brazier</li>
+                <li MayRequire="Ludeon.RimWorld.Ideology">DarklightBrazier</li>
+              </defs>
+              <offsetPerBuilding>0.01</offsetPerBuilding>
+              <radius>9.9</radius>
+              <maxBuildings>2</maxBuildings>
+              <drawRingRadius>false</drawRingRadius>
+              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
+              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+            </li>
+          </offsets>
+        </li>
+      </comps>
+    </value>
+  </Operation>
+
+</Patch>
