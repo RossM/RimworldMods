@@ -30,7 +30,7 @@
             </li>
             <li Class="FocusStrengthOffset_BuildingDefs">
               <defs>
-                <li MayRequire="Ludeon.RimWorld.Ideology">Drape</li>
+                <li MayRequire="Ludeon.RimWorld.Royalty">Drape</li>
               </defs>
               <offsetPerBuilding>0.01</offsetPerBuilding>
               <radius>9.9</radius>
@@ -41,8 +41,8 @@
             </li>
             <li Class="FocusStrengthOffset_BuildingDefsLit">
               <defs>
-                <li MayRequire="Ludeon.RimWorld.Ideology">Brazier</li>
-                <li MayRequire="Ludeon.RimWorld.Ideology">DarklightBrazier</li>
+                <li MayRequire="Ludeon.RimWorld.Royalty">Brazier</li>
+                <li MayRequire="Ludeon.RimWorld.Royalty">DarklightBrazier</li>
               </defs>
               <offsetPerBuilding>0.01</offsetPerBuilding>
               <radius>9.9</radius>
@@ -92,7 +92,7 @@
             </li>
             <li Class="FocusStrengthOffset_BuildingDefs">
               <defs>
-                <li MayRequire="Ludeon.RimWorld.Ideology">Drape</li>
+                <li MayRequire="Ludeon.RimWorld.Royalty">Drape</li>
               </defs>
               <offsetPerBuilding>0.01</offsetPerBuilding>
               <radius>9.9</radius>
@@ -103,8 +103,8 @@
             </li>
             <li Class="FocusStrengthOffset_BuildingDefsLit">
               <defs>
-                <li MayRequire="Ludeon.RimWorld.Ideology">Brazier</li>
-                <li MayRequire="Ludeon.RimWorld.Ideology">DarklightBrazier</li>
+                <li MayRequire="Ludeon.RimWorld.Royalty">Brazier</li>
+                <li MayRequire="Ludeon.RimWorld.Royalty">DarklightBrazier</li>
               </defs>
               <offsetPerBuilding>0.01</offsetPerBuilding>
               <radius>9.9</radius>
