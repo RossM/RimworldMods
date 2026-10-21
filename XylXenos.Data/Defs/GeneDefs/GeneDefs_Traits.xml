@@ -229,6 +229,7 @@
     <degreeDatas>
       <li>
         <label>flirt</label>
+        <labelMale>Don Juan</labelMale>
         <description>{PAWN_nameDef} has a flirtatious personality. {PAWN_pronoun} is more likely to attempt to romance other characters.</description>
         <statFactors>
           <XylRomanceChanceFactor>3</XylRomanceChanceFactor>
