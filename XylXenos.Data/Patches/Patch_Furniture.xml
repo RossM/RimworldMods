@@ -36,8 +36,8 @@
               <radius>9.9</radius>
               <maxBuildings>6</maxBuildings>
               <drawRingRadius>false</drawRingRadius>
-              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
-              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+              <explanationKey>XylMeditationFocusPerDrape</explanationKey>
+              <explanationKeyAbstract>XylMeditationFocusPerDrapeAbstract</explanationKeyAbstract>
             </li>
             <li Class="FocusStrengthOffset_BuildingDefsLit">
               <defs>
@@ -48,8 +48,8 @@
               <radius>9.9</radius>
               <maxBuildings>2</maxBuildings>
               <drawRingRadius>false</drawRingRadius>
-              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
-              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+              <explanationKey>XylMeditationFocusPerBrazier</explanationKey>
+              <explanationKeyAbstract>XylMeditationFocusPerBrazierAbstract</explanationKeyAbstract>
             </li>
           </offsets>
           </li>
@@ -98,8 +98,8 @@
               <radius>9.9</radius>
               <maxBuildings>6</maxBuildings>
               <drawRingRadius>false</drawRingRadius>
-              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
-              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+              <explanationKey>XylMeditationFocusPerDrape</explanationKey>
+              <explanationKeyAbstract>XylMeditationFocusPerDrapeAbstract</explanationKeyAbstract>
             </li>
             <li Class="FocusStrengthOffset_BuildingDefsLit">
               <defs>
@@ -110,8 +110,8 @@
               <radius>9.9</radius>
               <maxBuildings>2</maxBuildings>
               <drawRingRadius>false</drawRingRadius>
-              <!--<explanationKey>MeditationFocusPerSculpture</explanationKey>
-              <explanationKeyAbstract>MeditationFocusPerSculptureAbstract</explanationKeyAbstract>-->
+              <explanationKey>XylMeditationFocusPerBrazier</explanationKey>
+              <explanationKeyAbstract>XylMeditationFocusPerBrazierAbstract</explanationKeyAbstract>
             </li>
           </offsets>
         </li>
