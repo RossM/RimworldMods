@@ -74,6 +74,6 @@ internal static class BedSharingHelpers
         return bed != null && CanSleepInSharedBed(pawn, bed)
                            && bed.GetComp<CompBedSharing>() is { } comp
                            && comp.TryGetSleepingSlot(pawn, out int slot)
-                           && comp.IsSleepingPlaceAvailable(pawn, bed.GetSleepingSlotPos(slot));
+                           && comp.IsSleepingPlaceAvailable(pawn, slot);
     }
 }

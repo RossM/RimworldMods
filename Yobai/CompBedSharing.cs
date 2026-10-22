@@ -3,6 +3,8 @@ namespace Yobai;
 [UsedImplicitly]
 public sealed class CompBedSharing : ThingComp
 {
+    private Building_Bed Bed => (Building_Bed)parent;
+
     public bool nightVisitsEnabled = true;
     private List<TemporarySleepingSlot> temporarySleepingSlots = [];
 
@@ -33,43 +35,43 @@ public sealed class CompBedSharing : ThingComp
         return GetSleepingPlaces().All(place => place.Pawn == pawn || place.Position != position);
     }
 
+    internal bool IsSleepingPlaceAvailable(Pawn pawn, int slot) => IsSleepingPlaceAvailable(pawn, Bed.GetSleepingSlotPos(slot));
+
     private IEnumerable<(Pawn Pawn, IntVec3 Position)> GetSleepingPlaces()
     {
         RemoveDepartedSleepers();
-        Building_Bed bed = (Building_Bed)parent;
-        foreach (Pawn occupant in bed.CurOccupants)
+        foreach (Pawn occupant in Bed.CurOccupants)
             yield return (occupant, occupant.Position);
         foreach (TemporarySleepingSlot assignment in temporarySleepingSlots)
         {
             if (assignment.Pawn is { } pawn)
-                yield return (pawn, bed.GetSleepingSlotPos(assignment.Slot));
+                yield return (pawn, Bed.GetSleepingSlotPos(assignment.Slot));
         }
 
         // Vanilla reservations retain an arriving owner's place without duplicating that booking.
         // A temporary assignment replaces the owner's permanent sleeping position for this stay.
-        foreach (ReservationManager.Reservation reservation in bed.Map.reservationManager.ReservationsReadOnly)
+        foreach (ReservationManager.Reservation reservation in Bed.Map.reservationManager.ReservationsReadOnly)
         {
             Pawn owner = reservation.Claimant;
-            if (reservation.Target.Thing == bed && reservation.Job.targetA.Thing == bed
+            if (reservation.Target.Thing == Bed && reservation.Job.targetA.Thing == Bed
                                                 && typeof(JobDriver_LayDown).IsAssignableFrom(reservation.Job.def.driverClass)
-                                                && bed.IsOwner(owner, out int? slot) && slot is int assignedSlot
+                                                && Bed.IsOwner(owner, out int? slot) && slot is int assignedSlot
                                                 && !temporarySleepingSlots.Any(assignment => assignment.Pawn == owner))
-                yield return (owner, bed.GetSleepingSlotPos(assignedSlot));
+                yield return (owner, Bed.GetSleepingSlotPos(assignedSlot));
         }
     }
 
     internal bool CanAssignSleepingSlot(Pawn pawn, int slot)
     {
         RemoveDepartedSleepers();
-        Building_Bed bed = (Building_Bed)parent;
-        if (slot < 0 || slot >= bed.SleepingSlotsCount)
+        if (slot < 0 || slot >= Bed.SleepingSlotsCount)
             return false;
 
         if (temporarySleepingSlots.Any(assignment => assignment.Pawn == pawn)
-            || !IsSleepingPlaceAvailable(pawn, bed.GetSleepingSlotPos(slot)))
+            || !IsSleepingPlaceAvailable(pawn, slot))
             return false;
 
-        return BedSharingHelpers.AllBedmatesWillingToShareBed(pawn, bed);
+        return BedSharingHelpers.AllBedmatesWillingToShareBed(pawn, Bed);
     }
 
     internal TemporarySleepingSlot? TryAssignSleepingSlot(Pawn pawn, int slot)
@@ -107,10 +109,9 @@ public sealed class CompBedSharing : ThingComp
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        Building_Bed bed = (Building_Bed)parent;
-        if (!BedSharingHelpers.IsBedEligibleForNightVisits(bed)
-            || !bed.OwnersForReading.Any(owner => PolyculeHelpers.GetLovePartnersWillingToShareBed(owner)
-                .Any(partner => partner.ownership.OwnedBed != bed)))
+        if (!BedSharingHelpers.IsBedEligibleForNightVisits(Bed)
+            || !Bed.OwnersForReading.Any(owner => PolyculeHelpers.GetLovePartnersWillingToShareBed(owner)
+                .Any(partner => partner.ownership.OwnedBed != Bed)))
             yield break;
 
         yield return new Command_Toggle

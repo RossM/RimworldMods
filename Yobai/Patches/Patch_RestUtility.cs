@@ -21,8 +21,7 @@ internal static class Patch_RestUtility
         }
 
         // Permanent and temporary sleepers must both respect occupants and booked arrivals.
-        IntVec3 sleepingPosition = RestUtility.GetBedSleepingSlotPosFor(sleeper, bed);
-        __result = comp.IsSleepingPlaceAvailable(sleeper, sleepingPosition);
+        __result = comp.IsSleepingPlaceAvailable(sleeper, RestUtility.GetBedSleepingSlotPosFor(sleeper, bed));
     }
 
     [Postfix]
