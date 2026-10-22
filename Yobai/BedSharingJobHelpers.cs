@@ -16,11 +16,6 @@ internal static class BedSharingJobHelpers
             return null;
 
         Job job = JobMaker.MakeJob(JobDefOf.Lovin, partner, place.Bed);
-        if (!pawn.Reserve(partner, job))
-        {
-            JobMaker.ReturnToPool(job);
-            return null;
-        }
 
         return TryBookSleepingPlace(pawn, place, job);
     }
