@@ -72,8 +72,8 @@ internal static class BedSharingHelpers
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
     {
         return bed != null && CanSleepInSharedBed(pawn, bed)
-                           && bed.GetComp<CompBedSharing>() is { } assignments
-                           && assignments.TryGetSleepingSlot(pawn, out int slot)
-                           && assignments.IsSleepingPlaceAvailable(pawn, bed.GetSleepingSlotPos(slot));
+                           && bed.GetComp<CompBedSharing>() is { } comp
+                           && comp.TryGetSleepingSlot(pawn, out int slot)
+                           && comp.IsSleepingPlaceAvailable(pawn, bed.GetSleepingSlotPos(slot));
     }
 }

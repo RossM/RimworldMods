@@ -37,13 +37,13 @@ internal static class BedSharingJobHelpers
 
     public static bool TryAssignSleepingSlot(Pawn pawn, SleepingPlace place)
     {
-        CompBedSharing assignments = place.Bed.GetComp<CompBedSharing>();
-        TemporarySleepingSlot? assignment = assignments.TryAssignSleepingSlot(pawn, place.Slot);
+        CompBedSharing comp = place.Bed.GetComp<CompBedSharing>();
+        TemporarySleepingSlot? assignment = comp.TryAssignSleepingSlot(pawn, place.Slot);
         if (assignment == null)
             return false;
         if (!RestUtility.IsValidBedFor(place.Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
         {
-            assignments.RemoveAssignment(assignment);
+            comp.RemoveAssignment(assignment);
             return false;
         }
 

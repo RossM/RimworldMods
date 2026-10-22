@@ -52,7 +52,7 @@ internal static class BedSelectionHelpers
         if (!BedSharingHelpers.CanChooseSharedBed(pawn)
             || !BedSharingHelpers.CanSleepInSharedBed(pawn, bed)
             || !BedSharingHelpers.IsBedInAssignedPolyculeBedroom(pawn, bed)
-            || bed.GetComp<CompBedSharing>() is not { } assignments)
+            || bed.GetComp<CompBedSharing>() is not { } comp)
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
@@ -60,7 +60,7 @@ internal static class BedSelectionHelpers
             slots = slots.Prepend(ownedSlot).Distinct();
         foreach (int slot in slots)
         {
-            if (assignments.CanAssignSleepingSlot(pawn, slot))
+            if (comp.CanAssignSleepingSlot(pawn, slot))
                 yield return slot;
         }
     }

@@ -5,12 +5,11 @@ internal static class NightVisitHelpers
     public static bool CanLeaveBed(Pawn pawn)
     {
         if (!BedSharingHelpers.CanChooseSharedBed(pawn) || pawn.Awake() || pawn.CurJob is not { playerForced: false }
-            || pawn.CurJobDef != JobDefOf.LayDown
-            || pawn.CurrentBed() is not { Medical: false } bed)
+            || pawn.CurJobDef != JobDefOf.LayDown || pawn.CurrentBed() is not { Medical: false } bed)
             return false;
 
         IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
-        return !bedmates.Any(other => other != pawn);
+        return !bedmates.Any(other => pawn != other && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
     }
 
     public static bool AreReadyForLovin(Pawn first, Pawn second)
@@ -28,17 +27,17 @@ internal static class NightVisitHelpers
         if (!BedSharingHelpers.CanChooseSharedBed(visitor)
             || !BedSharingHelpers.CanSleepInSharedBed(visitor, bed)
             || !BedSharingHelpers.IsBedEligibleForNightVisits(bed)
-            || bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true } assignments)
+            || bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true } comp)
             yield break;
 
-        if (!assignments.GetBedmates().Any(other => PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
+        if (!comp.GetBedmates().Any(other => PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(bed.OwnersForReading.Count,
             bed.SleepingSlotsCount - bed.OwnersForReading.Count);
         if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
             slots = slots.Prepend(ownedSlot);
-        int slot = slots.FirstOrDefault(slot => assignments.CanAssignSleepingSlot(visitor, slot), -1);
+        int slot = slots.FirstOrDefault(slot => comp.CanAssignSleepingSlot(visitor, slot), -1);
         if (slot < 0)
             yield break;
 

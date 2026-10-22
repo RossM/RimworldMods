@@ -9,8 +9,8 @@ internal static class Patch_RestUtility
     {
         if (!__result || bedThing is not Building_Bed bed)
             return;
-        CompBedSharing? assignments = bed.GetComp<CompBedSharing>();
-        if (assignments?.HasTemporaryAssignments != true)
+        CompBedSharing? comp = bed.GetComp<CompBedSharing>();
+        if (comp?.HasTemporaryAssignments != true)
             return;
 
         // Permanent ownership grants a place, but cannot make unrelated occupants bedmates.
@@ -22,7 +22,7 @@ internal static class Patch_RestUtility
 
         // Permanent and temporary sleepers must both respect occupants and booked arrivals.
         IntVec3 sleepingPosition = RestUtility.GetBedSleepingSlotPosFor(sleeper, bed);
-        __result = assignments.IsSleepingPlaceAvailable(sleeper, sleepingPosition);
+        __result = comp.IsSleepingPlaceAvailable(sleeper, sleepingPosition);
     }
 
     [Postfix]

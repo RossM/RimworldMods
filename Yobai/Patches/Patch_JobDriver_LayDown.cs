@@ -8,11 +8,11 @@ internal static class Patch_JobDriver_LayDown
     public static void TryMakePreToilReservations_Postfix([Instance] JobDriver_LayDown driver, ref bool __result)
     {
         if (!__result || driver.Bed is not { } bed
-                      || bed.GetComp<CompBedSharing>() is not { } assignments)
+                      || bed.GetComp<CompBedSharing>() is not { } comp)
             return;
 
-        bool hasTemporaryAssignment = assignments.TryGetSleepingSlot(driver.pawn, out _);
-        if (!hasTemporaryAssignment && !assignments.HasTemporaryAssignments)
+        bool hasTemporaryAssignment = comp.TryGetSleepingSlot(driver.pawn, out _);
+        if (!hasTemporaryAssignment && !comp.HasTemporaryAssignments)
             return;
 
         // An arriving owner must respect existing stays before its reservation can block them.
