@@ -16,7 +16,7 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
 
         List<NightVisit> visits =
         [
-            .. PolyculeHelpers.GetBedSharingPartners(pawn)
+            .. PolyculeHelpers.GetLovePartnersWillingToShareBed(pawn)
                 // ReSharper disable once RedundantEnumerableCastCall
                 .Select(partner => partner.CurrentBed()).OfType<Building_Bed>().Distinct()
                 .SelectMany(bed => NightVisitHelpers.FindVisits(pawn, bed))

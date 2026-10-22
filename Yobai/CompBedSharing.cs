@@ -69,7 +69,7 @@ public sealed class CompBedSharing : ThingComp
             || !IsSleepingPlaceAvailable(pawn, bed.GetSleepingSlotPos(slot)))
             return false;
 
-        return BedSharingHelpers.HasCompatibleBedmates(pawn, bed);
+        return BedSharingHelpers.AllBedmatesWillingToShareBed(pawn, bed);
     }
 
     internal TemporarySleepingSlot? TryAssignSleepingSlot(Pawn pawn, int slot)
@@ -109,7 +109,7 @@ public sealed class CompBedSharing : ThingComp
     {
         Building_Bed bed = (Building_Bed)parent;
         if (!BedSharingHelpers.IsBedEligibleForNightVisits(bed)
-            || !bed.OwnersForReading.Any(owner => PolyculeHelpers.GetBedSharingPartners(owner)
+            || !bed.OwnersForReading.Any(owner => PolyculeHelpers.GetLovePartnersWillingToShareBed(owner)
                 .Any(partner => partner.ownership.OwnedBed != bed)))
             yield break;
 

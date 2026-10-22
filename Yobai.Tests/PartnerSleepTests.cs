@@ -134,8 +134,8 @@ public sealed class PartnerSleepTests
     public void PolyculeIsTransitiveButBedSharingPartnersAreNot()
     {
         Expect.AreEqual(3, PolyculeHelpers.GetPolycule(first).Count);
-        Expect.IsTrue(PolyculeHelpers.AreBedSharingPartners(first, second));
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, third));
+        Expect.IsTrue(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, third));
         Expect.IsFalse(PolyculeHelpers.GetPolycule(first).Contains(outsider));
     }
 
@@ -1937,7 +1937,7 @@ public sealed class PartnerSleepTests
         Expect.IsFalse(BedUtility.WillingToShareBed(first, second));
         // Second remains the permanent owner's spouse, but First's ideology now forbids
         // sharing with Second. The owner's permission cannot override that restriction.
-        Expect.IsTrue(PolyculeHelpers.AreBedSharingPartners(second, third));
+        Expect.IsTrue(PolyculeHelpers.AreLovePartnersWillingToShareBed(second, third));
         Expect.IsFalse(RestUtility.CanUseBedNow(thirdBed, second, true));
         Expect.IsFalse(RestUtility.IsValidBedFor(thirdBed, second, second, true));
         Expect.IsFalse(secondArrival.TryMakePreToilReservations(second, false));
@@ -1951,7 +1951,7 @@ public sealed class PartnerSleepTests
         StartPolyculeBedroomSleepJob(first, thirdBed);
         yield return new WaitUntilTimeout(() => first.CurrentBed() == thirdBed, 600);
         Expect.ReferencesAreEqual(thirdBed, first.CurrentBed());
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, third));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, third));
         Expect.IsFalse(RestUtility.CanUseBedNow(thirdBed, third, true));
         Expect.IsFalse(RestUtility.IsValidBedFor(thirdBed, third, third, true));
         Job? sleep = new JobGiver_GetRest().TryIssueJobPackage(third, default).Job;
@@ -2262,7 +2262,7 @@ public sealed class PartnerSleepTests
         foreach (Pawn member in new[] { first, second, third, outsider })
             member.ideo.SetIdeo(ideo);
         Expect.IsFalse(BedUtility.WillingToShareBed(first, third));
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, third));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, third));
         Expect.AreEqual(4, PolyculeHelpers.GetPolycule(first).Count);
         second.ownership.ClaimBedIfNonMedical(firstBed);
         outsider.ownership.ClaimBedIfNonMedical(thirdBed);
@@ -2304,7 +2304,7 @@ public sealed class PartnerSleepTests
         foreach (Pawn member in new[] { first, second, third, outsider })
             member.ideo.SetIdeo(ideo);
         first.relations.AddDirectRelation(PawnRelationDefOf.Lover, third);
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, third));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, third));
         Expect.AreEqual(4, PolyculeHelpers.GetPolycule(first).Count);
         second.ownership.ClaimBedIfNonMedical(firstBed);
         outsider.ownership.ClaimBedIfNonMedical(thirdBed);
@@ -2411,7 +2411,7 @@ public sealed class PartnerSleepTests
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_Prohibited");
         first.ideo.SetIdeo(ideo);
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, second));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
         Expect.AreEqual(1, PolyculeHelpers.GetPolycule(first).Count);
         Expect.IsFalse(firstBed.GetComp<CompBedSharing>().CompGetGizmosExtra().Any());
     }
@@ -2423,12 +2423,12 @@ public sealed class PartnerSleepTests
         first.relations.AddDirectRelation(PawnRelationDefOf.Fiance, second);
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         first.ideo.SetIdeo(ideo);
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, second));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Fiance, second);
         first.relations.AddDirectRelation(PawnRelationDefOf.Lover, second);
-        Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, second));
+        Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Lover, second);
         first.relations.AddDirectRelation(PawnRelationDefOf.Spouse, second);
-        Expect.IsTrue(PolyculeHelpers.AreBedSharingPartners(first, second));
+        Expect.IsTrue(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
     }
 }

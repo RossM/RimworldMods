@@ -49,18 +49,18 @@ internal static class BedSharingHelpers
     public static bool CanSleepInSharedBed(Pawn pawn, Building_Bed bed)
     {
         return CanShareBedsNow(pawn) && IsBedEligibleForSharing(bed) && bed.Map == pawn.Map
-               && HasCompatibleBedmates(pawn, bed);
+               && AllBedmatesWillingToShareBed(pawn, bed);
     }
 
-    public static bool HasCompatibleBedmates(Pawn pawn, Building_Bed bed)
+    public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
     {
         IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
-        return bedmates.All(bedmate => CanShareBedWith(pawn, bedmate, bed));
+        return bedmates.All(bedmate => WillingToShareBed(pawn, bedmate, bed));
     }
 
-    public static bool CanShareBedWith(Pawn pawn, Pawn bedmate, Building_Bed bed)
+    public static bool WillingToShareBed(Pawn pawn, Pawn bedmate, Building_Bed bed)
     {
-        if (pawn == bedmate || PolyculeHelpers.AreBedSharingPartners(pawn, bedmate))
+        if (pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate))
             return true;
 
         // Bedroom companions need not be romantic partners, even under spouse-only precepts.

@@ -31,8 +31,7 @@ internal static class NightVisitHelpers
             || bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true } assignments)
             yield break;
 
-        if (!assignments.GetBedmates().All(other => other == visitor
-                                                    || PolyculeHelpers.AreBedSharingPartners(visitor, other)))
+        if (!assignments.GetBedmates().Any(other => PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(bed.OwnersForReading.Count,
@@ -46,7 +45,7 @@ internal static class NightVisitHelpers
         SleepingPlace place = new(bed, slot);
         foreach (Pawn partner in bed.CurOccupants)
         {
-            if (PolyculeHelpers.AreBedSharingPartners(visitor, partner) && !partner.Awake()
+            if (PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake()
                                                                         && BedSharingHelpers.CanShareBedsNow(partner))
                 yield return new NightVisit(partner, place);
         }

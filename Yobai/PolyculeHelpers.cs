@@ -2,19 +2,18 @@ namespace Yobai;
 
 internal static class PolyculeHelpers
 {
-    public static bool AreBedSharingPartners(Pawn first, Pawn second)
+    public static bool AreLovePartnersWillingToShareBed(Pawn first, Pawn second)
     {
         return first != second && !first.Dead && !second.Dead
                && LovePartnerRelationUtility.LovePartnerRelationExists(first, second)
                && BedUtility.WillingToShareBed(first, second);
     }
 
-    public static IEnumerable<Pawn> GetBedSharingPartners(Pawn pawn)
+    public static IEnumerable<Pawn> GetLovePartnersWillingToShareBed(Pawn pawn)
     {
         foreach (DirectPawnRelation relation in pawn.relations.DirectRelations)
         {
-            if (LovePartnerRelationUtility.IsLovePartnerRelation(relation.def)
-                && AreBedSharingPartners(pawn, relation.otherPawn))
+            if (AreLovePartnersWillingToShareBed(pawn, relation.otherPawn))
                 yield return relation.otherPawn;
         }
     }
@@ -26,7 +25,7 @@ internal static class PolyculeHelpers
         pending.Push(pawn);
         while (pending.Count > 0)
         {
-            foreach (Pawn partner in GetBedSharingPartners(pending.Pop()))
+            foreach (Pawn partner in GetLovePartnersWillingToShareBed(pending.Pop()))
             {
                 if (members.Add(partner))
                     pending.Push(partner);

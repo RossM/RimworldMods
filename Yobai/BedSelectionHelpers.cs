@@ -8,7 +8,7 @@ internal static class BedSelectionHelpers
             .Where(bed => GetAvailablePolyculeBedroomSlots(pawn, bed).Any()).ToList();
         beds.Shuffle();
 
-        foreach (Building_Bed bed in beds.OrderByDescending(bed => HasBedSharingPartner(pawn, bed) || FreeSlots(pawn, bed) >= 2))
+        foreach (Building_Bed bed in beds.OrderByDescending(bed => HasLovePartnerWillingToShareBed(pawn, bed) || FreeSlots(pawn, bed) >= 2))
         {
             if (TryMakePolyculeBedroomSleepJob(pawn, bed))
                 return bed;
@@ -21,9 +21,9 @@ internal static class BedSelectionHelpers
         return bed.SleepingSlotsCount - bed.GetComp<CompBedSharing>().GetBedmates().Count(p => p != pawn);
     }
 
-    private static bool HasBedSharingPartner(Pawn pawn, Building_Bed bed)
+    private static bool HasLovePartnerWillingToShareBed(Pawn pawn, Building_Bed bed)
     {
-        return bed.GetComp<CompBedSharing>().GetBedmates().Any(bedmate => bedmate != pawn && PolyculeHelpers.AreBedSharingPartners(pawn, bedmate));
+        return bed.GetComp<CompBedSharing>().GetBedmates().Any(bedmate => PolyculeHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
     }
 
     public static bool TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
