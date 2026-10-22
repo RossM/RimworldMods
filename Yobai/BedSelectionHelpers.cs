@@ -2,21 +2,13 @@ namespace Yobai;
 
 internal static class BedSelectionHelpers
 {
-    private enum BedPreference
-    {
-        DirectPartners,
-        Empty,
-        OtherPolyculeMembers,
-    }
-
     public static Job? ChooseBedtimeSleepJob(Pawn pawn)
     {
         List<Building_Bed> beds = GetPolyculeBedroomBeds(pawn)
             .Where(bed => GetAvailablePolyculeBedroomSlots(pawn, bed).Any()).ToList();
         beds.Shuffle();
 
-        // OrderBy preserves the shuffled order among beds with the same preference.
-        foreach (Building_Bed bed in beds.OrderBy(bed => GetBedPreference(pawn, bed)))
+        foreach (Building_Bed bed in beds.OrderByDescending(bed => HasBedSharingPartner(pawn, bed) || FreeSlots(pawn, bed) >= 2))
         {
             Job? job = TryMakePolyculeBedroomSleepJob(pawn, bed);
             if (job != null)
@@ -25,18 +17,14 @@ internal static class BedSelectionHelpers
         return null;
     }
 
-    private static BedPreference GetBedPreference(Pawn pawn, Building_Bed bed)
+    private static int FreeSlots(Pawn pawn, Building_Bed bed)
     {
-        bool hasPartner = false;
-        foreach (Pawn bedmate in bed.GetComp<CompBedSharing>().GetBedmates())
-        {
-            if (bedmate == pawn)
-                continue;
-            if (!PolyculeHelpers.AreBedSharingPartners(pawn, bedmate))
-                return BedPreference.OtherPolyculeMembers;
-            hasPartner = true;
-        }
-        return hasPartner ? BedPreference.DirectPartners : BedPreference.Empty;
+        return bed.SleepingSlotsCount - bed.GetComp<CompBedSharing>().GetBedmates().Count(p => p != pawn);
+    }
+
+    private static bool HasBedSharingPartner(Pawn pawn, Building_Bed bed)
+    {
+        return bed.GetComp<CompBedSharing>().GetBedmates().Any(bedmate => bedmate != pawn && PolyculeHelpers.AreBedSharingPartners(pawn, bedmate));
     }
 
     public static Job? TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
