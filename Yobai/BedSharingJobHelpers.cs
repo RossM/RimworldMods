@@ -34,31 +34,31 @@ internal static class BedSharingJobHelpers
 
     private static Job? TryBookSleepingPlace(Pawn pawn, SleepingPlace place, Job job)
     {
-        TemporarySleepingSlot? assignment = null;
-        CompBedSharing assignments = place.Bed.GetComp<CompBedSharing>();
-        bool accepted = false;
-        try
-        {
-            if (!pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0))
-                return null;
-            assignment = assignments.TryAssignSleepingSlot(pawn, place.Slot);
-            if (assignment == null
-                || !RestUtility.IsValidBedFor(place.Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
-                return null;
+        if (!pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0))
+            return null;
 
-            accepted = true;
-            return job;
-        }
-        finally
+        if (!TryAssignSleepingSlot(pawn, place))
         {
-            // The assignment must exist for vanilla validation. A rejected job leaves no booking.
-            if (!accepted)
-            {
-                if (assignment != null)
-                    assignments.RemoveAssignment(assignment);
-                pawn.ClearReservationsForJob(job);
-                JobMaker.ReturnToPool(job);
-            }
+            pawn.ClearReservationsForJob(job);
+            JobMaker.ReturnToPool(job);
+            return null;
         }
+
+        return job;
+    }
+
+    private static bool TryAssignSleepingSlot(Pawn pawn, SleepingPlace place)
+    {
+        CompBedSharing assignments = place.Bed.GetComp<CompBedSharing>();
+        TemporarySleepingSlot? assignment = assignments.TryAssignSleepingSlot(pawn, place.Slot);
+        if (assignment == null)
+            return false;
+        if (!RestUtility.IsValidBedFor(place.Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
+        {
+            assignments.RemoveAssignment(assignment);
+            return false;
+        }
+
+        return true;
     }
 }
