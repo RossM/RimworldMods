@@ -212,7 +212,7 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
-    public IEnumerator OccupiedPartnerBedIsPreferred()
+    public IEnumerator PartnerAndEmptyDoubleBedsArePreferredToIndirectPartner()
     {
         third.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(third, thirdBed)!,
             JobCondition.InterruptForced);
@@ -220,17 +220,33 @@ public sealed class PartnerSleepTests
         second.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, secondBed)!,
             JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => second.CurrentBed() == secondBed, 600);
-        Job? chosen = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
-        Expect.ReferencesAreEqual(secondBed, chosen?.targetA.Thing);
-        if (chosen != null)
+        HashSet<Building_Bed> selected = [];
+        using (new RandBlock(24680))
         {
-            first.ClearReservationsForJob(chosen);
-            JobMaker.ReturnToPool(chosen);
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                Job? chosen = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                Expect.IsNotNull(chosen);
+                try
+                {
+                    Building_Bed bed = (Building_Bed)chosen!.targetA.Thing;
+                    Expect.IsTrue(bed == firstBed || bed == secondBed);
+                    selected.Add(bed);
+                    Expect.IsFalse(first.HasReserved(thirdBed));
+                }
+                finally
+                {
+                    first.ClearReservationsForJob(chosen!);
+                    JobMaker.ReturnToPool(chosen!);
+                }
+            }
         }
+        Expect.AreEqual(2, selected.Count);
+        Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
 
     [Test]
-    public IEnumerator OccupiedPartnerBedsAllHaveAChance()
+    public IEnumerator OccupiedPartnerBedsAndEmptyDoubleBedsAllHaveAChance()
     {
         first.relations.AddDirectRelation(PawnRelationDefOf.Spouse, third);
         second.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, secondBed)!,
@@ -249,10 +265,10 @@ public sealed class PartnerSleepTests
                 try
                 {
                     Building_Bed bed = (Building_Bed)sleep!.targetA.Thing;
-                    Expect.IsTrue(bed == secondBed || bed == thirdBed);
+                    Expect.IsTrue(bed == firstBed || bed == secondBed || bed == thirdBed);
                     selected.Add(bed);
-                    Expect.IsFalse(first.HasReserved(firstBed));
-                    Expect.IsFalse(first.HasReserved(bed == secondBed ? thirdBed : secondBed));
+                    foreach (Building_Bed candidate in new[] { firstBed, secondBed, thirdBed })
+                        Expect.AreEqual(candidate == bed, first.HasReserved(candidate));
                 }
                 finally
                 {
@@ -261,7 +277,7 @@ public sealed class PartnerSleepTests
                 }
             }
         }
-        Expect.AreEqual(2, selected.Count);
+        Expect.AreEqual(3, selected.Count);
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
 
@@ -446,7 +462,7 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
-    public IEnumerator RestJobGiverChoosesAndStartsPartnerSleep()
+    public IEnumerator RestJobGiverChoosesAndStartsPolyculeBedroomSleep()
     {
         second.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, secondBed)!,
             JobCondition.InterruptForced);
@@ -454,11 +470,12 @@ public sealed class PartnerSleepTests
         Job? selected = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
         Expect.IsNotNull(selected);
         Expect.AreEqual(JobDefOf.LayDown, selected?.def);
-        Expect.ReferencesAreEqual(secondBed, selected?.targetA.Thing);
+        Building_Bed chosenBed = (Building_Bed)selected!.targetA.Thing;
+        Expect.IsTrue(chosenBed == firstBed || chosenBed == secondBed || chosenBed == thirdBed);
         first.jobs.StartJob(selected!,
             JobCondition.InterruptForced);
-        yield return new WaitUntilTimeout(() => first.CurrentBed() == secondBed, 600);
-        Expect.ReferencesAreEqual(secondBed, first.CurrentBed());
+        yield return new WaitUntilTimeout(() => first.CurrentBed() == chosenBed, 600);
+        Expect.ReferencesAreEqual(chosenBed, first.CurrentBed());
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
 
@@ -900,7 +917,8 @@ public sealed class PartnerSleepTests
         Expect.IsFalse(secondBed.AnyUnownedSleepingSlot);
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, secondBed));
         Job? chosen = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
-        Expect.ReferencesAreEqual(secondBed, chosen?.targetA.Thing);
+        Expect.IsNotNull(chosen);
+        Expect.IsTrue(chosen!.targetA.Thing == firstBed || chosen.targetA.Thing == secondBed);
         if (chosen != null)
         {
             first.ClearReservationsForJob(chosen);
@@ -1463,21 +1481,42 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
-    public void IncomingPartnerIsPreferredToEmptyBed()
+    public void IncomingPartnerAndEmptyDoubleBedsAllHaveAChance()
     {
         Job incoming = BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, secondBed)!;
         Expect.IsNotNull(incoming);
         Expect.IsNull(second.CurrentBed());
-        for (int attempt = 0; attempt < 20; attempt++)
+        HashSet<Building_Bed> selected = [];
+        try
         {
-            Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
-            Expect.IsNotNull(sleep);
-            Expect.ReferencesAreEqual(secondBed, sleep?.targetA.Thing);
-            first.ClearReservationsForJob(sleep!);
-            JobMaker.ReturnToPool(sleep!);
+            using (new RandBlock(13579))
+            {
+                for (int attempt = 0; attempt < 100; attempt++)
+                {
+                    Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                    Expect.IsNotNull(sleep);
+                    try
+                    {
+                        Building_Bed bed = (Building_Bed)sleep!.targetA.Thing;
+                        Expect.IsTrue(bed == firstBed || bed == secondBed || bed == thirdBed);
+                        selected.Add(bed);
+                        Expect.IsTrue(second.HasReserved(secondBed));
+                    }
+                    finally
+                    {
+                        first.ClearReservationsForJob(sleep!);
+                        JobMaker.ReturnToPool(sleep!);
+                    }
+                }
+            }
+            Expect.AreEqual(3, selected.Count);
+            Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
         }
-        second.ClearReservationsForJob(incoming);
-        JobMaker.ReturnToPool(incoming);
+        finally
+        {
+            second.ClearReservationsForJob(incoming);
+            JobMaker.ReturnToPool(incoming);
+        }
     }
 
     [Test]
