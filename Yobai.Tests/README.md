@@ -4,7 +4,7 @@ This project runs Yobai's tests inside RimWorld 1.7 using [SmashPhil's DevTools]
 
 ## Running the tests
 
-Use PowerShell 7 and the .NET 10 SDK. From the repository root, run:
+Use Windows PowerShell 5.1 or PowerShell 7, with the .NET 10 SDK. The command also works in Visual Studio's PowerShell console. From the repository root, run:
 
 ```powershell
 .\Yobai.Tests\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe"

@@ -1,4 +1,4 @@
-#requires -Version 7.0
+#requires -Version 5.1
 
 <#
 .SYNOPSIS
@@ -27,11 +27,18 @@ function Get-DependencyArchive([string] $Name, [string] $Uri) {
         New-Item -ItemType Directory -Path $destination -Force | Out-Null
         $archive = "$destination.zip"
         Write-Host "Downloading $Name..."
-        Invoke-WebRequest -Uri $Uri -OutFile $archive
+        Invoke-WebRequest -Uri $Uri -OutFile $archive -UseBasicParsing
         Expand-Archive -LiteralPath $archive -DestinationPath $destination -Force
         [IO.File]::WriteAllText($complete, $Uri)
     }
     return $destination
+}
+
+function ConvertTo-ProcessArgument([string] $Argument) {
+    # Windows arguments double backslashes before embedded or closing quotes.
+    $escaped = [regex]::Replace($Argument, '(\\*)"', '$1$1\"')
+    $escaped = [regex]::Replace($escaped, '(\\+)$', '$1$1')
+    return '"' + $escaped + '"'
 }
 
 function Invoke-Build([string[]] $BuildArguments) {
@@ -170,13 +177,11 @@ try {
     $startInfo.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
-    foreach ($argument in '-Headless', "-savedatafolder=$saveDataDirectory", '--pid', 'xylthixlm.yobai.tests', '--test', '--exit') {
-        $startInfo.ArgumentList.Add($argument)
-    }
+    $arguments = @('-Headless', "-savedatafolder=$saveDataDirectory", '--pid', 'xylthixlm.yobai.tests', '--test', '--exit')
     if ($Filter) {
-        $startInfo.ArgumentList.Add('--where')
-        $startInfo.ArgumentList.Add($Filter)
+        $arguments += @('--where', $Filter)
     }
+    $startInfo.Arguments = ($arguments | ForEach-Object { ConvertTo-ProcessArgument $_ }) -join ' '
     Write-Host ("Running RimWorld {0}: {1}" -f $gameVersion, $RimWorldPath)
     Write-Host "Logs: $OutputDirectory"
     $process = [Diagnostics.Process]::Start($startInfo)
@@ -185,7 +190,7 @@ try {
     $stdout = $process.StandardOutput.BaseStream.CopyToAsync($stdoutFile)
     $stderr = $process.StandardError.BaseStream.CopyToAsync($stderrFile)
     if (!$process.WaitForExit($TimeoutMinutes * 60 * 1000)) {
-        $process.Kill($true)
+        $process.Kill()
         $process.WaitForExit()
         throw "RimWorld did not finish within $TimeoutMinutes minutes. See $OutputDirectory."
     }
@@ -206,7 +211,7 @@ try {
 finally {
     try {
         if ($null -ne $process -and !$process.HasExited) {
-            $process.Kill($true)
+            $process.Kill()
             $process.WaitForExit()
         }
         if ($null -ne $stdout) { $null = $stdout.GetAwaiter().GetResult() }
