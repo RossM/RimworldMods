@@ -807,7 +807,7 @@ public sealed class PartnerSleepTests
 
     [TestCase(true)]
     [TestCase(false)]
-    public IEnumerator ThreeSlotBedVisitRejectsIncompatibleBedmate(bool bedmateArriving)
+    public IEnumerator ThreeSlotBedVisitAllowsWillingNonPartner(bool bedmateArriving)
     {
         Building_Bed bed = (Building_Bed)ThingMaker.MakeThing(
             DefDatabase<ThingDef>.GetNamed("Yobai_TestThreeSlotBed"), ThingDefOf.WoodLog);
@@ -831,8 +831,75 @@ public sealed class PartnerSleepTests
         {
             Expect.IsTrue(BedSharingHelpers.IsBedEligibleForNightVisits(bed));
             Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
-            Expect.IsTrue(PolyculeHelpers.AreBedSharingPartners(first, second));
-            Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, outsider));
+            Expect.IsTrue(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
+            Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, outsider));
+            Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
+            NightVisit[] visits = NightVisitHelpers.FindVisits(first, bed).ToArray();
+            Expect.AreEqual(1, visits.Length);
+            Expect.ReferencesAreEqual(second, visits[0].Partner);
+            Job? visit = NightVisitHelpers.TryMakeVisitJob(first, bed);
+            try
+            {
+                Expect.IsNotNull(visit);
+                Expect.AreEqual(JobDefOf.Lovin, visit!.def);
+                Expect.ReferencesAreEqual(second, visit.targetA.Thing);
+                Expect.ReferencesAreEqual(bed, visit.targetB.Thing);
+                Expect.AreEqual(bed.GetSleepingSlotPos(2), RestUtility.GetBedSleepingSlotPosFor(first, bed));
+                Expect.IsTrue(visit.TryMakePreToilReservations(first, false));
+                Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+                Expect.ReferencesAreEqual(bed, outsider.ownership.OwnedBed);
+            }
+            finally
+            {
+                if (visit != null)
+                {
+                    first.ClearReservationsForJob(visit);
+                    JobMaker.ReturnToPool(visit);
+                }
+            }
+        }
+        finally
+        {
+            if (bedmateArriving)
+            {
+                outsider.ClearReservationsForJob(bedmateSleep);
+                JobMaker.ReturnToPool(bedmateSleep);
+            }
+        }
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    [LoadIfIdeologyActive]
+    public IEnumerator ThreeSlotBedVisitRejectsUnwillingBedmate(bool bedmateArriving)
+    {
+        outsider.ideo.SetIdeo(CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict"));
+        Expect.IsFalse(BedUtility.WillingToShareBed(first, outsider));
+        Building_Bed bed = (Building_Bed)ThingMaker.MakeThing(
+            DefDatabase<ThingDef>.GetNamed("Yobai_TestThreeSlotBed"), ThingDefOf.WoodLog);
+        bed.SetFaction(Faction.OfPlayer);
+        GenSpawn.Spawn(bed, new IntVec3(52, 0, 45), Find.CurrentMap);
+        spawned.Add(bed);
+        second.relations.AddDirectRelation(PawnRelationDefOf.Spouse, outsider);
+        second.ownership.ClaimBedIfNonMedical(bed);
+        outsider.ownership.ClaimBedIfNonMedical(bed);
+        second.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, bed), JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => second.CurrentBed() == bed && !second.Awake(), 1200);
+        Job bedmateSleep = JobMaker.MakeJob(JobDefOf.LayDown, bed);
+        if (bedmateArriving)
+            Expect.IsTrue(bedmateSleep.TryMakePreToilReservations(outsider, false));
+        else
+        {
+            outsider.jobs.StartJob(bedmateSleep, JobCondition.InterruptForced);
+            yield return new WaitUntilTimeout(() => outsider.CurrentBed() == bed && !outsider.Awake(), 1200);
+        }
+        try
+        {
+            Expect.IsTrue(BedSharingHelpers.IsBedEligibleForNightVisits(bed));
+            Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+            Expect.IsTrue(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
+            Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, outsider));
+            Expect.IsFalse(BedSharingHelpers.CanSleepInSharedBed(first, bed));
             Expect.IsFalse(NightVisitHelpers.FindVisits(first, bed).Any());
             Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, bed));
         }

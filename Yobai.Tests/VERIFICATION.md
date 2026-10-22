@@ -24,6 +24,10 @@ After correcting bedmate compatibility fixtures, the full suite passed **109 DLC
 
 Six rejection cases now use explicit spouse-only ideoligions and check vanilla's willingness rule. Five additional cases cover willing non-partners, incoming owners, breakups before or after a sleeper arrives, and the bedroom-selection boundary without ideology restrictions. Night-visit partner requirements remain covered separately.
 
+The night-visit suite now checks that one eligible romantic host is sufficient when another willing bedmate is already present or on the way. Both cases verify the selected host, the remaining sleeping slot, and vanilla pre-toil reservations. Separate spouse-only ideology cases retain rejection coverage for an unwilling bedmate. Existing tests still reject visits without an eligible romantic host.
+
+All **111 DLC cases** passed in **123,571 ms**, and all **94 Core-only cases** passed in **92,551 ms**, through Windows PowerShell 5.1 against the installed Steam game. Both runs exited successfully, with no build warnings or logged game errors. Reports are in `TestResults/Yobai/One Romantic Host DLC-20261022` and `One Romantic Host Core-20261022`.
+
 ## Earlier checks
 
 | Check | Result |
