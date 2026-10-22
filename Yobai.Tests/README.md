@@ -1,76 +1,35 @@
 # Yobai in-game tests
 
-This project runs Yobai's tests inside RimWorld 1.7 using [SmashPhil's DevTools](https://github.com/SmashPhil/DevTools/tree/develop/DevTools/Testing). The project is included in the solution, but is unchecked for the default Debug and Release builds so normal mod builds do not need DevTools. Build it separately using the command below, or enable it in Visual Studio's Configuration Manager after configuring DevTools.
+This project runs Yobai's tests inside RimWorld 1.7 using [SmashPhil's DevTools](https://github.com/SmashPhil/DevTools/tree/develop/DevTools/Testing).
 
-## Configuring DevTools
+## Running the tests
 
-Build the `develop` branch of DevTools against RimWorld 1.7. Set its DLL path in `Directory.Build.local.props` at the repository root so Visual Studio and command-line builds can find it:
-
-```xml
-<Project>
-  <PropertyGroup>
-    <DevToolsAssemblyPath>C:\path\to\DevTools.dll</DevToolsAssemblyPath>
-  </PropertyGroup>
-</Project>
-```
-
-If that file already contains local Disharmony settings, add the property to its existing `PropertyGroup`. The file is ignored by Git. Reload the test project if Visual Studio does not pick up the new setting.
-
-## Running with PowerShell
-
-Use PowerShell 7. Configure DevTools and a test installation as described here, then run this command from the repository root:
+Use PowerShell 7 and the .NET 10 SDK. From the repository root, run:
 
 ```powershell
-.\Yobai.Tests\Run-Tests.ps1 -RimWorldPath "C:\path\to\test-installation\RimWorld.exe"
+.\Yobai.Tests\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe"
 ```
 
-The runner reads `DevToolsAssemblyPath` from the project settings; `-DevToolsAssemblyPath` overrides it for one run. The script builds Yobai and its test mod, runs the tests without opening a window, and prints the result and report location. It uses `temp/YobaiSaveData` for RimWorld's user data by default. Use `-SaveDataDirectory` to select another isolated directory with its own mod configuration.
+Point the command at your Steam installation, with the normal Workshop versions of [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and [Disharmony](https://steamcommunity.com/sharedfiles/filedetails/?id=3818084845) installed. Tests use those installed dependencies and the game Steam updates. No separate test installation or preconfigured test environment is needed.
 
-Add `-CoreOnly` to temporarily disable DLC. Add `-Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'` to run a particular test. `-SkipBuild` uses the existing build, and `-TimeoutMinutes` changes the default ten-minute limit.
+The command builds Yobai in Release configuration against the released Disharmony NuGet package, downloads and builds DevTools, and starts the installed game in headless mode. Yobai keeps its normal package ID and dependency declarations; Disharmony runs as a separate Workshop mod. Local build settings are ignored so a development checkout of Disharmony cannot replace the released package.
 
-Each run writes `Test.log`, `stdout.log` and `stderr.log` to a new folder under `TestResults/Yobai`. Use `-OutputDirectory` to choose a different new folder. The script fails if the build or game fails, no tests pass, or the test runner does not finish. It restores the mod list and DevTools reporting configuration when it exits.
+Each run gets a fresh user-data directory and mod configuration, leaving your normal saves and settings alone. The command temporarily installs links to Yobai, DevTools and the test mod in the game's `Mods` directory. Existing folders with those names are moved aside for the run, then restored when the command exits. Workshop dependencies are used in place, without copies or metadata changes.
 
-## Setting up the test installation
+The first run needs internet access for DevTools and NuGet restore. The command also needs permission to create junctions and temporarily move local mod folders within the game directory. DevTools is cached under `temp/Yobai.TestDependencies`; the cache can be deleted and will be recreated on the next run. No local build settings, installed test mods, prior build outputs or dependency checkouts are required.
 
-Build the test project once to create `ModBin/Yobai` and `ModBin/Yobai.Tests`:
+All installed DLC is enabled by default. Optional arguments:
 
-```powershell
-dotnet build .\Yobai.Tests\Yobai.Tests.csproj
-```
+- `-CoreOnly` runs without DLC.
+- `-Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'` runs one test. DevTools filter expressions containing spaces are supported.
+- `-OutputDirectory "C:\path\to\new-results-folder"` chooses a new output folder.
+- `-TimeoutMinutes 20` changes the default ten-minute game timeout.
 
-Link those two mod folders into the test installation's `Mods` directory so the game uses the current build and the runner's reporting configuration. Install Harmony and DevTools there too. Enable these mods in order:
+Each run keeps its `Test.log`, `stdout.log`, `stderr.log`, isolated user data and a copy of the test mod under a new folder in `TestResults/Yobai`. A failed build, game failure, timeout, empty test selection or incomplete report makes the command fail. Temporary game-directory links are cleaned up after successful and failed runs; reports remain available for diagnosis.
 
-1. Harmony for RimWorld 1.7
-2. Core and any DLC you want to test
-3. Disharmony, if Yobai was built using the NuGet package
-4. Yobai
-5. DevTools
-6. Yobai tests
+The test project is included in the solution but unchecked for default Debug and Release builds, so normal mod builds do not need DevTools. After running the command once, the project can resolve DevTools from the downloaded dependency build without additional configuration.
 
-DevTools needs the full Harmony mod for its stack-trace settings, even when Yobai already includes the Harmony DLL.
-
-Use RimWorld's `-savedatafolder` option to create the test installation's settings in an isolated directory. The runner expects its `Config/ModsConfig.xml` to exist. Include all installed DLC IDs in `knownExpansions`; otherwise RimWorld may enable newly discovered expansions automatically. The runner handles this for `-CoreOnly` and restores the original file afterwards.
-
-Run once with Ideology and Biotech enabled to cover ideology and preservation of vanilla bedroom rules, then once with `-CoreOnly`.
-
-## Running manually
-
-You can also run the tests from DevTools' Test Explorer or launch RimWorld directly:
-
-```powershell
-& "C:\path\to\RimWorld.exe" -NoWindow -savedatafolder="C:\path\to\isolated-test-data" --pid xylthixlm.yobai.tests --test --exit
-```
-
-The runner and this command use `-NoWindow` because the tested RimWorld build logs a zero-resolution UI error with `-Headless`, which DevTools treats as a test failure. See [Verification results](VERIFICATION.md) for the version and results.
-
-For manual runs, DevTools chooses its report folder separately from RimWorld's save folder. To keep the report with your test data, create `Configs/UnitTestConfig.xml` inside the installed Yobai tests mod:
-
-```xml
-<TestConfig>
-  <randSeed>1234567</randSeed>
-  <log><folder>C:\path\to\isolated-test-data</folder></log>
-</TestConfig>
-```
+See [Verification results](VERIFICATION.md) for headless results and remaining checks.
 
 ## Test coverage
 

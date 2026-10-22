@@ -2,142 +2,200 @@
 
 <#
 .SYNOPSIS
-Builds and runs Yobai's in-game tests using a configured RimWorld test installation.
+Builds and runs Yobai's tests against the installed Steam version of RimWorld.
 .EXAMPLE
-.\Run-Tests.ps1 -RimWorldPath C:\Games\RimWorld\RimWorld.exe -DevToolsAssemblyPath C:\Mods\DevTools\1.7\Assemblies\DevTools.dll
+.\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe"
 .EXAMPLE
-.\Run-Tests.ps1 -RimWorldPath C:\Games\RimWorld\RimWorld.exe -DevToolsAssemblyPath C:\Mods\DevTools\1.7\Assemblies\DevTools.dll -CoreOnly -Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'
+.\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe" -CoreOnly -Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)] [string] $RimWorldPath,
-    [string] $DevToolsAssemblyPath,
-    [string] $SaveDataDirectory = (Join-Path $PSScriptRoot '../temp/YobaiSaveData'),
     [string] $OutputDirectory = (Join-Path $PSScriptRoot "../TestResults/Yobai/$(Get-Date -Format 'yyyyMMdd-HHmmss')-$([guid]::NewGuid().ToString('N').Substring(0, 8))"),
     [string] $Filter,
     [switch] $CoreOnly,
-    [switch] $SkipBuild,
     [ValidateRange(1, 120)] [int] $TimeoutMinutes = 10
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function Get-DependencyArchive([string] $Name, [string] $Uri) {
+    $destination = Join-Path $dependencyDirectory $Name
+    $complete = Join-Path $destination '.complete'
+    if (!(Test-Path -LiteralPath $complete)) {
+        New-Item -ItemType Directory -Path $destination -Force | Out-Null
+        $archive = "$destination.zip"
+        Write-Host "Downloading $Name..."
+        Invoke-WebRequest -Uri $Uri -OutFile $archive
+        Expand-Archive -LiteralPath $archive -DestinationPath $destination -Force
+        [IO.File]::WriteAllText($complete, $Uri)
+    }
+    return $destination
+}
+
+function Invoke-Build([string[]] $BuildArguments) {
+    & dotnet build @BuildArguments --verbosity quiet | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+        throw "Build failed: $($BuildArguments[0])"
+    }
+}
+
 $RimWorldPath = (Resolve-Path -LiteralPath $RimWorldPath).ProviderPath
-if (!$DevToolsAssemblyPath) {
-    $configuredPath = & dotnet msbuild (Join-Path $PSScriptRoot 'Yobai.Tests.csproj') -nologo -getProperty:DevToolsAssemblyPath
-    if ($LASTEXITCODE -ne 0) {
-        throw 'Could not read DevToolsAssemblyPath from the project.'
-    }
-    $DevToolsAssemblyPath = ($configuredPath -join "`n").Trim()
-    if (!$DevToolsAssemblyPath) {
-        throw 'Set DevToolsAssemblyPath in Directory.Build.local.props, or supply -DevToolsAssemblyPath. See Yobai.Tests/README.md.'
-    }
-}
-$DevToolsAssemblyPath = (Resolve-Path -LiteralPath $DevToolsAssemblyPath).ProviderPath
-$SaveDataDirectory = (Resolve-Path -LiteralPath $SaveDataDirectory).ProviderPath
-$OutputDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
+$gameDirectory = Split-Path -Parent $RimWorldPath
+$gameVersion = (Get-Content -LiteralPath (Join-Path $gameDirectory 'Version.txt') -Raw -Encoding utf8).Trim()
 $repositoryDirectory = Split-Path -Parent $PSScriptRoot
-$modsConfigPath = Join-Path $SaveDataDirectory 'Config/ModsConfig.xml'
-if (!(Test-Path -LiteralPath $modsConfigPath -PathType Leaf)) {
-    throw "Missing $modsConfigPath. Configure the isolated test installation as described in Yobai.Tests/README.md."
-}
-
-[xml] $modsConfig = Get-Content -LiteralPath $modsConfigPath -Raw
-foreach ($packageId in 'brrainz.harmony', 'ludeon.rimworld', 'xylthixlm.yobai', 'smashphil.devtools', 'xylthixlm.yobai.tests') {
-    if ($packageId -notin @($modsConfig.ModsConfigData.activeMods.li)) {
-        throw "Enable $packageId in $modsConfigPath before running the tests."
-    }
-}
-
-if (!$SkipBuild) {
-    & dotnet build (Join-Path $PSScriptRoot 'Yobai.Tests.csproj') "-p:DevToolsAssemblyPath=$DevToolsAssemblyPath" --verbosity quiet
-    if ($LASTEXITCODE -ne 0) {
-        throw "Building Yobai.Tests failed with exit code $LASTEXITCODE."
-    }
-}
-
-$testConfigPath = Join-Path $repositoryDirectory 'ModBin/Yobai.Tests/Configs/UnitTestConfig.xml'
-[byte[]] $originalTestConfig = $null
-if (Test-Path -LiteralPath $testConfigPath) {
-    $originalTestConfig = [IO.File]::ReadAllBytes($testConfigPath)
-}
-$originalModsConfig = [IO.File]::ReadAllBytes($modsConfigPath)
-$process = $null
+$dependencyDirectory = Join-Path $repositoryDirectory 'temp/Yobai.TestDependencies'
+$OutputDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
 New-Item -ItemType Directory -Path $OutputDirectory | Out-Null
-New-Item -ItemType Directory -Path (Split-Path -Parent $testConfigPath) -Force | Out-Null
 
-try {
-    $escapedOutputDirectory = [Security.SecurityElement]::Escape($OutputDirectory)
-    [IO.File]::WriteAllText($testConfigPath, "<TestConfig><randSeed>1234567</randSeed><log><folder>$escapedOutputDirectory</folder></log></TestConfig>`r`n")
-    if ($CoreOnly) {
-        foreach ($dlc in @($modsConfig.SelectNodes('/ModsConfigData/activeMods/li[starts-with(text(), "ludeon.rimworld.")]'))) {
-            [void] $dlc.ParentNode.RemoveChild($dlc)
-        }
-        # RimWorld enables newly discovered expansions unless they are already known.
-        $knownExpansions = $modsConfig.SelectSingleNode('/ModsConfigData/knownExpansions')
-        if ($null -eq $knownExpansions) {
-            $knownExpansions = $modsConfig.CreateElement('knownExpansions')
-            [void] $modsConfig.DocumentElement.AppendChild($knownExpansions)
-        }
-        $dataDirectory = Join-Path (Split-Path -Parent $RimWorldPath) 'Data'
-        foreach ($directory in Get-ChildItem -LiteralPath $dataDirectory -Directory) {
-            $aboutPath = Join-Path $directory.FullName 'About/About.xml'
-            if (!(Test-Path -LiteralPath $aboutPath -PathType Leaf)) {
-                continue
-            }
-            [xml] $about = Get-Content -LiteralPath $aboutPath -Raw
-            $packageId = $about.ModMetaData.packageId.ToLowerInvariant()
-            if ($packageId.StartsWith('ludeon.rimworld.') -and
-                $packageId -notin @($knownExpansions.SelectNodes('li') | ForEach-Object { $_.InnerText })) {
-                $entry = $modsConfig.CreateElement('li')
-                $entry.InnerText = $packageId
-                [void] $knownExpansions.AppendChild($entry)
-            }
-        }
-        $modsConfig.Save($modsConfigPath)
+# DevTools is test infrastructure; gameplay dependencies come from Workshop.
+$devToolsRevision = '0600eb11a6781371ee84a5d9a4ce86653c92d7ff'
+$devToolsArchive = Get-DependencyArchive "DevTools-$devToolsRevision" "https://codeload.github.com/SmashPhil/DevTools/zip/$devToolsRevision"
+$devToolsSource = Join-Path $devToolsArchive "DevTools-$devToolsRevision"
+$devToolsMod = Join-Path $dependencyDirectory 'DevToolsMod'
+$devToolsAssembly = Join-Path $devToolsMod '1.7/Assemblies/DevTools.dll'
+
+Invoke-Build @(
+    (Join-Path $devToolsSource 'DevTools/DevTools.csproj'),
+    "-p:RefDir=$gameDirectory", "-p:ModDir=$devToolsMod", '-p:TreatWarningsAsErrors=false'
+)
+New-Item -ItemType Directory -Path (Join-Path $devToolsMod 'About') -Force | Out-Null
+[IO.File]::WriteAllText((Join-Path $devToolsMod 'About/About.xml'), '<ModMetaData><packageId>SmashPhil.DevTools</packageId><name>DevTools (Yobai tests)</name><author>Smash Phil</author><supportedVersions><li>1.7</li></supportedVersions></ModMetaData>')
+Invoke-Build @(
+    (Join-Path $PSScriptRoot 'Yobai.Tests.csproj'), '--configuration', 'Release',
+    "-p:DevToolsAssemblyPath=$devToolsAssembly", '-p:DisharmonySourceDirectory=',
+    '-p:ImportLocalBuildProps=false'
+)
+
+$modsDirectory = Join-Path $gameDirectory 'Mods'
+$workshopDirectory = [IO.Path]::GetFullPath((Join-Path $gameDirectory '../../workshop/content/294100'))
+$workshopPackages = @{}
+foreach ($workshopId in '2009463077', '3818084845') {
+    $aboutPath = Join-Path $workshopDirectory "$workshopId/About/About.xml"
+    if (!(Test-Path -LiteralPath $aboutPath)) {
+        throw "Missing Workshop dependency $workshopId. Install Harmony and Disharmony through Steam before testing."
     }
+    [xml] $about = Get-Content -LiteralPath $aboutPath -Raw -Encoding utf8
+    $packageId = $about.ModMetaData.packageId.ToLowerInvariant()
+    $workshopPackages[$packageId] = $packageId
+}
+# RimWorld distinguishes Workshop mods from local copies with this suffix.
+foreach ($directory in Get-ChildItem -LiteralPath $modsDirectory -Directory) {
+    $aboutPath = Join-Path $directory.FullName 'About/About.xml'
+    if (Test-Path -LiteralPath $aboutPath) {
+        [xml] $about = Get-Content -LiteralPath $aboutPath -Raw -Encoding utf8
+        $packageId = $about.ModMetaData.packageId.ToLowerInvariant()
+        if ($workshopPackages.ContainsKey($packageId)) {
+            $workshopPackages[$packageId] = "${packageId}_steam"
+        }
+    }
+}
 
+$testMod = Join-Path $OutputDirectory 'Yobai.Tests'
+New-Item -ItemType Directory -Path $testMod | Out-Null
+Get-ChildItem -LiteralPath (Join-Path $repositoryDirectory 'ModBin/Yobai.Tests') | Copy-Item -Destination $testMod -Recurse
+$mods = @(
+    @{ Name = 'Yobai'; Source = (Join-Path $repositoryDirectory 'ModBin/Yobai') },
+    @{ Name = 'DevTools'; Source = $devToolsMod },
+    @{ Name = 'Yobai.Tests'; Source = $testMod }
+)
+
+$saveDataDirectory = Join-Path $OutputDirectory 'UserData'
+$configDirectory = Join-Path $saveDataDirectory 'Config'
+New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
+$expansionMetadata = @()
+foreach ($directory in Get-ChildItem -LiteralPath (Join-Path $gameDirectory 'Data') -Directory) {
+    $aboutPath = Join-Path $directory.FullName 'About/About.xml'
+    if (Test-Path -LiteralPath $aboutPath -PathType Leaf) {
+        [xml] $about = Get-Content -LiteralPath $aboutPath -Raw -Encoding utf8
+        $package = $about.ModMetaData.packageId.ToLowerInvariant()
+        if ($package.StartsWith('ludeon.rimworld.')) {
+            $expansionMetadata += $about
+        }
+    }
+}
+# Each official expansion lists all earlier expansions in forceLoadAfter.
+$expansions = @($expansionMetadata | Sort-Object { $_.SelectNodes('/ModMetaData/forceLoadAfter/li').Count } |
+    ForEach-Object { $_.ModMetaData.packageId.ToLowerInvariant() })
+$activeMods = @($workshopPackages['brrainz.harmony'], 'ludeon.rimworld')
+if (!$CoreOnly) {
+    $activeMods += $expansions
+}
+$activeMods += @($workshopPackages['xylthixlm.disharmony'], 'xylthixlm.yobai', 'smashphil.devtools', 'xylthixlm.yobai.tests')
+$activeXml = ($activeMods | ForEach-Object { "<li>$($_)</li>" }) -join ''
+$expansionsXml = ($expansions | ForEach-Object { "<li>$($_)</li>" }) -join ''
+[IO.File]::WriteAllText((Join-Path $configDirectory 'ModsConfig.xml'), @"
+<ModsConfigData>
+  <version>$gameVersion</version>
+  <activeMods>$activeXml</activeMods>
+  <knownExpansions>$expansionsXml</knownExpansions>
+</ModsConfigData>
+"@)
+[IO.File]::WriteAllText((Join-Path $configDirectory 'Prefs.xml'), '<PrefsData><runInBackground>True</runInBackground></PrefsData>')
+$testConfigDirectory = Join-Path $testMod 'Configs'
+New-Item -ItemType Directory -Path $testConfigDirectory -Force | Out-Null
+$escapedOutputDirectory = [Security.SecurityElement]::Escape($OutputDirectory)
+[IO.File]::WriteAllText((Join-Path $testConfigDirectory 'UnitTestConfig.xml'), "<TestConfig><randSeed>1234567</randSeed><log><folder>$escapedOutputDirectory</folder></log></TestConfig>")
+
+$backupDirectory = Join-Path $gameDirectory ('YobaiTests.' + [guid]::NewGuid().ToString('N'))
+$backups = @()
+$links = @()
+$process = $null
+$stdoutFile = $null
+$stderrFile = $null
+$stdout = $null
+$stderr = $null
+try {
+    foreach ($mod in $mods) {
+        $linkPath = [IO.Path]::GetFullPath((Join-Path $modsDirectory $mod.Name))
+        $backupPath = [IO.Path]::GetFullPath((Join-Path $backupDirectory $mod.Name))
+        if ((Split-Path -Parent $linkPath) -ne $modsDirectory -or
+            (Split-Path -Parent $backupPath) -ne $backupDirectory) {
+            throw "Test mod path is outside its installation or backup directory: $($mod.Name)"
+        }
+        if (Test-Path -LiteralPath $linkPath) {
+            New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
+            [IO.Directory]::Move($linkPath, $backupPath)
+            $backups += @{ Original = $linkPath; Backup = $backupPath }
+        }
+        New-Item -ItemType Junction -Path $linkPath -Target $mod.Source | Out-Null
+        $links += @{ Path = $linkPath; Target = $mod.Source }
+    }
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = $RimWorldPath
-    $startInfo.WorkingDirectory = Split-Path -Parent $RimWorldPath
+    $startInfo.WorkingDirectory = $gameDirectory
     $startInfo.UseShellExecute = $false
     $startInfo.CreateNoWindow = $true
     $startInfo.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
-    # ArgumentList preserves paths and filter expressions containing spaces without shell quoting.
-    foreach ($argument in '-NoWindow', "-savedatafolder=$SaveDataDirectory", '--pid', 'xylthixlm.yobai.tests', '--test', '--exit') {
+    foreach ($argument in '-Headless', "-savedatafolder=$saveDataDirectory", '--pid', 'xylthixlm.yobai.tests', '--test', '--exit') {
         $startInfo.ArgumentList.Add($argument)
     }
     if ($Filter) {
         $startInfo.ArgumentList.Add('--where')
         $startInfo.ArgumentList.Add($Filter)
     }
-
-    Write-Host "Running Yobai tests. Logs: $OutputDirectory"
+    Write-Host ("Running RimWorld {0}: {1}" -f $gameVersion, $RimWorldPath)
+    Write-Host "Logs: $OutputDirectory"
     $process = [Diagnostics.Process]::Start($startInfo)
-    $stdout = $process.StandardOutput.ReadToEndAsync()
-    $stderr = $process.StandardError.ReadToEndAsync()
-    $timedOut = !$process.WaitForExit($TimeoutMinutes * 60 * 1000)
-    if ($timedOut) {
+    $stdoutFile = [IO.File]::Open((Join-Path $OutputDirectory 'stdout.log'), 'Create', 'Write', 'Read')
+    $stderrFile = [IO.File]::Open((Join-Path $OutputDirectory 'stderr.log'), 'Create', 'Write', 'Read')
+    $stdout = $process.StandardOutput.BaseStream.CopyToAsync($stdoutFile)
+    $stderr = $process.StandardError.BaseStream.CopyToAsync($stderrFile)
+    if (!$process.WaitForExit($TimeoutMinutes * 60 * 1000)) {
         $process.Kill($true)
         $process.WaitForExit()
-    }
-    [IO.File]::WriteAllText((Join-Path $OutputDirectory 'stdout.log'), $stdout.GetAwaiter().GetResult())
-    [IO.File]::WriteAllText((Join-Path $OutputDirectory 'stderr.log'), $stderr.GetAwaiter().GetResult())
-    if ($timedOut) {
         throw "RimWorld did not finish within $TimeoutMinutes minutes. See $OutputDirectory."
     }
+    $null = $stdout.GetAwaiter().GetResult()
+    $null = $stderr.GetAwaiter().GetResult()
     if ($process.ExitCode -ne 0) {
         throw "RimWorld exited with code $($process.ExitCode). See $OutputDirectory."
     }
-
     $reportPath = Join-Path $OutputDirectory 'Test.log'
-    if (!(Test-Path -LiteralPath $reportPath -PathType Leaf)) {
-        throw "DevTools did not write $reportPath. Link ModBin/Yobai.Tests into the test installation's Mods directory."
-    }
-    $report = Get-Content -LiteralPath $reportPath -Raw
+    $report = Get-Content -LiteralPath $reportPath -Raw -Encoding utf8
     $summary = [regex]::Match($report, 'Tests finished in \d+ ms with 0 Failed, [1-9]\d* Passed')
     if (!$summary.Success -or $report -notmatch 'Test runner finished\. Result: Passed') {
         throw "The run did not finish with passing tests. Check $reportPath and the test filter."
@@ -146,18 +204,30 @@ try {
     Write-Host "Report: $reportPath"
 }
 finally {
-    if ($null -ne $process) {
-        if (!$process.HasExited) {
+    try {
+        if ($null -ne $process -and !$process.HasExited) {
             $process.Kill($true)
             $process.WaitForExit()
         }
-        $process.Dispose()
+        if ($null -ne $stdout) { $null = $stdout.GetAwaiter().GetResult() }
+        if ($null -ne $stderr) { $null = $stderr.GetAwaiter().GetResult() }
     }
-    [IO.File]::WriteAllBytes($modsConfigPath, $originalModsConfig)
-    if ($null -ne $originalTestConfig) {
-        [IO.File]::WriteAllBytes($testConfigPath, $originalTestConfig)
-    }
-    elseif (Test-Path -LiteralPath $testConfigPath) {
-        Remove-Item -LiteralPath $testConfigPath
+    finally {
+        if ($null -ne $process) { $process.Dispose() }
+        if ($null -ne $stdoutFile) { $stdoutFile.Dispose() }
+        if ($null -ne $stderrFile) { $stderrFile.Dispose() }
+        foreach ($link in $links) {
+            $item = Get-Item -LiteralPath $link.Path -Force
+            if ($item.LinkType -ne 'Junction' -or $item.Target -ne $link.Target) {
+                throw "Temporary test link changed; leaving it in place: $($link.Path)"
+            }
+            [IO.Directory]::Delete($link.Path)
+        }
+        foreach ($backup in $backups) {
+            [IO.Directory]::Move($backup.Backup, $backup.Original)
+        }
+        if (Test-Path -LiteralPath $backupDirectory) {
+            [IO.Directory]::Delete($backupDirectory)
+        }
     }
 }

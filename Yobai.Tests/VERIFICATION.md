@@ -1,6 +1,22 @@
 # Yobai test results
 
-Tested on October 20, 2026, with RimWorld **1.7.4982 rev1280**.
+The current runner uses Steam's installed RimWorld **1.7.4985 rev1269** in headless mode. Older runs below used **1.7.4982 rev1280** or a copied runtime; those setups are no longer used.
+
+## Test environment
+
+The runner builds Yobai in Release configuration using the released Disharmony NuGet package. At runtime it enables the installed Workshop versions of Harmony and Disharmony, with normal package IDs and Yobai's unmodified dependency declarations. DevTools is downloaded from revision `0600eb11a6781371ee84a5d9a4ce86653c92d7ff` and built automatically against the installed game. No Disharmony source checkout is involved.
+
+Every run creates its own profile and temporarily installs the three local mods needed for testing. Existing local folders are restored on exit. The DevTools cache, build outputs and profile need not exist before running the command.
+
+On October 22, 2026, the command ran from a clean source snapshot with no local props, dependency cache, build outputs or test profile. It downloaded and built DevTools, restored the released package and passed **all 100 tests** with all installed DLC in **110,708 ms**, with exit code 0 and no build warnings. The generated Yobai metadata matched its source byte for byte, and its mod folder contained no Disharmony assemblies. The active mod list selected Workshop Harmony and Disharmony through RimWorld's normal `_steam` suffix for installations that also contain local copies. Reports are in `TestResults/Yobai/Workshop Release Full DLC-20261022`.
+
+An empty-filter Core-only run correctly failed despite the game's successful exit and zero-test report. The original local Yobai symbolic link was restored after both runs; temporary links and backup folders were removed. A hash comparison after the unsuccessful run confirmed that the normal mod configuration was unchanged. Its report is in `TestResults/Yobai/Workshop Release Empty Filter-20261022`.
+
+A filtered Core-only run also passed from the working checkout with its existing local Disharmony development settings present. The runner still produced the released-package build, confirming those overrides cannot affect test conditions. That report is in `TestResults/Yobai/Workshop Release Local Props-20261022`. The old manual DevTools path has been removed from this checkout's local props; the project now finds the DLL built by the command through its default path.
+
+An earlier bootstrap used bundled source-built Disharmony and private package IDs. It passed 100 cases in `TestResults/Yobai/Bootstrap Ordered DLC-20261022`, but those conditions did not represent the published mod and have been replaced. Its initial DLC run failed before any test because expansions were enabled in directory order. The runner now uses their declared load order. Reports from the earlier bootstrap are historical evidence only.
+
+## Earlier checks
 
 | Check | Result |
 | --- | --- |
@@ -10,14 +26,20 @@ Tested on October 20, 2026, with RimWorld **1.7.4982 rev1280**.
 | Build Yobai with the released Disharmony 1.0.0-beta.2 package | Passed with no warnings |
 | Check the package build's mod folder | Requires the separate Disharmony mod; no bundled Disharmony DLLs |
 | Check the local-source build's mod folder | Includes Disharmony; does not require the separate mod |
-| Run DevTools tests with all installed DLC | 83 passed, none failed; game exited with code 0 |
-| Run DevTools tests with Core alone | 74 passed, none failed; game exited with code 0 |
+| Run DevTools tests headlessly with all installed DLC (1.7.4985) | 100 passed, none failed; game exited with code 0 |
+| Earlier Core-only run using `-NoWindow` (1.7.4982) | 79 passed, none failed; game exited with code 0 |
 | Earlier headless run with all DLC (29 tests) | 28 passed; one failed because RimWorld logged a zero-resolution UI error; game exited with code 1 |
 | Check the XML bed patch, line endings and whitespace | Passed |
 
 Earlier runs used visits checked every 250 ticks through `Rand.MTBEventOccurs`, with a mean interval of four in-game hours. That scheduler has since been replaced by the think-tree job giver described below. Seven ideology cases require Ideology, and two child-bedroom tests require Biotech.
 
-The passing runs used `-NoWindow`. An earlier run with `-Headless` logged `Resolution too small (0x0), resetting UI scale to 1.` from `RimWorld.ResolutionUtility.Update`. DevTools failed the active test on that logged error. Its report and game output are in `temp/Yobai-review-headless-*`.
+Earlier passing runs used `-NoWindow`. An earlier run with `-Headless` logged `Resolution too small (0x0), resetting UI scale to 1.` from `RimWorld.ResolutionUtility.Update`. DevTools failed the active test on that logged error. Its report and game output are in `temp/Yobai-review-headless-*`.
+
+The October 21 headless retry passed all **100 tests** with all installed DLC in **103,659 ms**, using RimWorld **1.7.4985 rev1269**. The process exited with code 0. Its command line and startup stack traces confirm `-Headless` and `EngineApplication.RunHeadlessLoop`; the previous zero-resolution error is absent. Reports are in `TestResults/Yobai/Updated Headless DLC-20261021`. The runner now uses `-Headless` by default.
+
+That retry used a refreshed copy of the runtime. It has been superseded by a direct Steam run: all **100 tests** passed in **117,517 ms**, with exit code 0, in `TestResults/Yobai/Steam Headless Full DLC-20261021`. Tests now run only against the installed Steam executable; the command creates its own isolated profile and temporary mod links.
+
+A first attempt using the installed executable directly stopped before any tests began: DevTools could not find `HarmonyMod.Settings` in the installed local Harmony mod. This was a dependency mismatch, not a headless resolution failure. Its `StackTraceCacheDisabler` type initializer threw an assertion, which terminated the test coroutine and left the game running. Only that test process was stopped. Logs are in `TestResults/Yobai/Installed Headless DLC-20261021`. The successful retry used the isolated setup's existing Workshop Harmony build, which provides the required settings class. The installed Harmony mod was left unchanged, temporary DevTools and test-mod junctions were removed, and byte comparisons confirmed restoration of the isolated mod list and DevTools report configuration after both attempts.
 
 The lovin' tests run through completion and check that both pawns return to sleep without changing bed assignments or sleeping positions. They cover a partner's own bed, a bed both pawns borrow, and a night visit outside the shared bedroom. They now resume vanilla sleep jobs using the bed comp's temporary slot assignments. Separate tests check cancellation and slot reuse, bed access before the sleep job starts, rejection of a booked place taken by another pawn, vanilla sleep without claiming the borrowed bed, queued reservations, the game's rest job giver, and visits to a partner sleeping in someone else's bed.
 
@@ -91,19 +113,19 @@ Two added regressions check that both occupied partner beds can be chosen ahead 
 
 The serialized comp keys and assignment fields are unchanged. [Design notes](../Yobai/DESIGN.md) explain the responsibilities of selection, assignment storage, and job reservations.
 
-The game runs used Harmony for RimWorld 1.7, Yobai built with local Disharmony, DevTools and Yobai tests. No other gameplay mods were active. The build using the released Disharmony package was checked for compilation and correct output, but was not run in-game separately.
+Those earlier game runs used Harmony for RimWorld 1.7, Yobai built with local Disharmony, DevTools and Yobai tests. No other gameplay mods were active. At that stage the released-package build had only been checked for compilation and output; the current runner results above supersede that limitation.
 
-The dependency revisions used were:
+Before the self-bootstrapping runner, the dependency revisions used were:
 
 - DevTools `develop`: `3798937aadb872419ee5a9f63286af015f7c964b`.
 - Local Disharmony: `d5d22775c92b57f7d9680aa15855bb3406ab926c`.
 
-The test installation was in `temp/YobaiGame`. RimWorld's `-savedatafolder` option and the DevTools report settings both pointed to `temp/YobaiSaveData`, separate from normal saves and settings. The latest full DLC run is in `TestResults/Yobai/ThinkTree Final DLC-20261020`, with all 83 cases passing. The earlier incoming-sleeper fixes passed 73 cases in `temp/Yobai-incoming-slots-dlc-*`. The earlier cache-hook removal passed all 65 cases in `temp/Yobai-native-room-cache-dlc-*`. The latest Core-only run is in `TestResults/Yobai/ThinkTree Final Core-20261020`, with 74 passing cases. The three new bedroom cases also pass with forced role recalculation in `temp/Yobai-vanilla-bedroom-fresh-*`. The earlier bed-access postfix run is in `temp/Yobai-bed-access-postfix-*`. The Core log confirms that no DLC was active. Both runs exited with code 0. Earlier review reports are in `temp/Yobai-fallback-*` and `temp/Yobai-domain-review-complete-*`. Git ignores these temporary files.
+Older runs used a test installation in `temp/YobaiGame` and user data in `temp/YobaiSaveData`. Neither is used by the current command. Earlier reports remain under `temp` and `TestResults/Yobai`; Git ignores these generated artifacts.
 
 The passing tests produced no gameplay errors or patch errors. Mod discovery warns that the test mod's dependency entries lack download links. The game logs contain Vulkan overlay and registry warnings at startup, plus native allocation warnings at shutdown. These warnings also appeared in the game log from before Yobai was tested. Builds with local Disharmony report its existing NU1701 warning about the RimWorld 1.6 reference package. The Yobai build using the released package has no build warnings.
 
-The PowerShell runner was verified end to end with a build and all 64 Core tests, three filtered DLC cases using a filter containing spaces, and a run using the DevTools path from local project settings. An empty filter result correctly made the script fail even though RimWorld exited successfully. Byte comparisons confirmed that the mod list and DevTools reporting settings were restored after successful and unsuccessful runs. Reports are under `TestResults/Yobai/Runner Core-20261020`, `Runner Filter-20261020`, `Runner Configured-20261020`, and `Runner Empty-20261020`. Output folders containing spaces were used throughout.
+The earlier PowerShell runner was verified end to end with a build and all 64 Core tests, three filtered DLC cases using a filter containing spaces, and a run using the DevTools path from local project settings. An empty filter result correctly made the script fail even though RimWorld exited successfully. Byte comparisons confirmed that the mod list and DevTools reporting settings were restored after successful and unsuccessful runs. Reports are under `TestResults/Yobai/Runner Core-20261020`, `Runner Filter-20261020`, `Runner Configured-20261020`, and `Runner Empty-20261020`. Output folders containing spaces were used throughout.
 
-`DevToolsAssemblyPath` is now configured in the ignored `Directory.Build.local.props` for this checkout. A normal test-project build without a command-line override passed, and Visual Studio-style design-time reference resolution found the DevTools DLL through its hint path. The test README documents the same local setting; the runner reads it by default.
+The current test project defaults to the DevTools DLL produced by the bootstrap command. `Directory.Build.local.props` is optional and is ignored by the runner, so local settings cannot supply hidden prerequisites.
 
 The toggle and temporary assignment tests save and load through RimWorld's Scribe system. The assignment test restores the pawn reference and sleeping slot; it registers the existing test pawn as a loaded object rather than loading a duplicate pawn. The following checks have not been done: saving and reloading a whole colony, a longer playthrough, inspecting the UI on screen, and testing alongside other gameplay mods.
