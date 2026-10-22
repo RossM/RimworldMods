@@ -42,11 +42,6 @@ internal static class BedSelectionHelpers
         return false;
     }
 
-    public static Job? TryMakePolyculeBedroomSleepJobExt(Pawn pawn, Building_Bed bed)
-    {
-        return TryMakePolyculeBedroomSleepJob(pawn, bed) ? JobMaker.MakeJob(JobDefOf.LayDown, bed) : null;
-    }
-
     private static IEnumerable<Building_Bed> GetPolyculeBedroomBeds(Pawn pawn)
     {
         return pawn.ownership.OwnedBed?.GetRoom()?.ContainedBeds ?? [];
