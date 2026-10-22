@@ -8,7 +8,9 @@ Permanent bed ownership and temporary sleeping assignments are separate. Yobai n
 
 The chooser takes the first successful booking in that order. Vanilla validation still runs when booking, so a rejected bed does not prevent trying the remaining candidates. Only the chosen bed retains a booking. Within that bed, an owner tries their permanently assigned place first. An occupied or booked place is skipped, so the owner can still use another compatible place.
 
-The chooser honors vanilla restrictions on resting in beds, including caravan duties, roping and medical rest. It returns a regular `LayDown` job. A vanilla ground-sleep fallback still gets a chance to find a shared bedroom bed. Bedtime does not initiate night visits.
+The chooser honors vanilla restrictions on resting in beds, including caravan duties, roping and medical rest. It returns a regular `LayDown` job. Bedtime does not initiate night visits.
+
+Within `JobGiver_GetRest.TryGiveJob`, an inner postfix on `RestUtility.FindBedFor` selects and books a shared sleeping place. It returns that bed to vanilla and passes the booked job to the following `JobMaker.MakeJob` call through Disharmony's per-invocation state. An inner prefix returns that job without allocating another. A pawn already walking to a booked place keeps its current job. Other callers of `FindBedFor` are unaffected. If no shared bed can be booked, vanilla keeps its original bed or ground-sleep fallback.
 
 ## Choosing a night visit
 

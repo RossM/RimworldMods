@@ -4,31 +4,32 @@ namespace Yobai.Patches;
 internal static class Patch_JobGiver_GetRest
 {
     [Postfix]
+    [Inner(typeof(RestUtility), nameof(RestUtility.FindBedFor), typeof(Pawn))]
     [Target("TryGiveJob")]
-    public static void TryGiveJob_Postfix(Pawn pawn, ref Job? __result)
+    public static void FindBedFor_Postfix(Pawn pawn, ref Building_Bed? __result, [State] out Job? sleepJob)
     {
-        if (__result?.def != JobDefOf.LayDown || __result.targetA.Thing is Building_Bed { Medical: true }
-                                              || !BedSharingHelpers.CanChooseSharedBed(pawn))
+        sleepJob = null;
+        if (__result is { Medical: true } || !BedSharingHelpers.CanChooseSharedBed(pawn))
             return;
 
-        // Keep the chosen destination when the AI checks for another job on the way to bed.
+        // Reuse the booking while travelling; another AI check must not reshuffle it.
         if (pawn.CurJobDef == JobDefOf.LayDown
             && pawn.CurJob.targetA.Thing is Building_Bed destination
             && BedSharingHelpers.CanUseTemporarySleepingSlot(pawn, destination))
-        {
-            JobMaker.ReturnToPool(__result);
-            __result = pawn.CurJob;
-            return;
-        }
+            sleepJob = pawn.CurJob;
+        else if (pawn.CurrentBed() == null)
+            sleepJob = BedSelectionHelpers.ChooseBedtimeSleepJob(pawn);
 
-        if (pawn.CurrentBed() != null)
-            return;
+        if (sleepJob != null)
+            __result = (Building_Bed)sleepJob.targetA.Thing;
+    }
 
-        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(pawn);
-        if (sleep != null)
-        {
-            JobMaker.ReturnToPool(__result);
-            __result = sleep;
-        }
+    [Prefix]
+    [Inner(typeof(JobMaker), nameof(JobMaker.MakeJob), typeof(JobDef), typeof(LocalTargetInfo))]
+    [Target("TryGiveJob")]
+    public static bool MakeJob_Prefix([State] Job? sleepJob, out Job? __result)
+    {
+        __result = sleepJob;
+        return sleepJob == null;
     }
 }

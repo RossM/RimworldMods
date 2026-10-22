@@ -16,6 +16,10 @@ A filtered Core-only run also passed from the working checkout with its existing
 
 An earlier bootstrap used bundled source-built Disharmony and private package IDs. It passed 100 cases in `TestResults/Yobai/Bootstrap Ordered DLC-20261022`, but those conditions did not represent the published mod and have been replaced. Its initial DLC run failed before any test because expansions were enabled in directory order. The runner now uses their declared load order. Reports from the earlier bootstrap are historical evidence only.
 
+The recovered reservation checks and inner `FindBedFor` postfix passed **all 104 tests** with all installed DLC through Windows PowerShell 5.1 in **98,937 ms**, with exit code 0 and no build warnings or logged game errors. The additional cases check rejection before job creation for an unreservable bed or partner, ordinary bed searches without bookings, and vanilla ground-sleep fallback. Existing tests now exercise the real rest job giver rather than calling its patch directly. Reports are in `TestResults/Yobai/Recovered Inner Postfix Final PS51-20261022`.
+
+The first recovery run passed 103 cases. The ground-sleep fixture failed before calling the rest job giver because `SetForbidden` had no effect on beds without `CompForbiddable`. A diagnostic run confirmed vanilla found the pawn's own bed with `forbidden=False`. Restoring the missing comp setup, as used by the existing forbidden-bed cases, preserved the original assertions and produced the passing full run above.
+
 ## Earlier checks
 
 | Check | Result |

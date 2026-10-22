@@ -8,7 +8,6 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
-using Yobai.Patches;
 
 namespace Yobai.Tests;
 
@@ -184,8 +183,7 @@ public sealed class PartnerSleepTests
         IntVec3 reserved = RestUtility.GetBedSleepingSlotPosFor(first, secondBed);
         for (int attempt = 0; attempt < 20; attempt++)
         {
-            Job? next = JobMaker.MakeJob(JobDefOf.LayDown, firstBed);
-            Patch_JobGiver_GetRest.TryGiveJob_Postfix(first, ref next);
+            Job? next = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
             Expect.ReferencesAreEqual(selected, next);
             Expect.AreEqual(reserved, RestUtility.GetBedSleepingSlotPosFor(first, secondBed));
         }
@@ -480,6 +478,57 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
+    public void OtherBedSearchesDoNotBookSharedSleepingPlaces()
+    {
+        Expect.ReferencesAreEqual(firstBed, RestUtility.FindBedFor(first));
+        foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
+        {
+            Expect.IsFalse(first.HasReserved(bed));
+            Expect.IsFalse(bed.GetComp<CompBedSharing>().HasTemporaryAssignments);
+        }
+    }
+
+    [Test]
+    public void RestJobGiverUsesGroundWhenNoBedroomBedIsAvailable()
+    {
+        foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
+        {
+            CompForbiddable comp = new()
+            {
+                parent = bed,
+                props = new CompProperties { compClass = typeof(CompForbiddable) }
+            };
+            bed.AllComps.Add(comp);
+            bed.compForbiddable = comp;
+            bed.SetForbidden(true);
+            Expect.IsTrue(bed.IsForbidden(first));
+        }
+        Expect.IsNull(RestUtility.FindBedFor(first));
+        Job? sleep = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
+        Expect.IsNotNull(sleep);
+        try
+        {
+            Expect.AreEqual(JobDefOf.LayDown, sleep!.def);
+            Expect.IsFalse(sleep.targetA.HasThing);
+            Expect.IsTrue(sleep.targetA.Cell.IsValid);
+            foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
+            {
+                Expect.IsFalse(first.HasReserved(bed));
+                Expect.IsFalse(bed.GetComp<CompBedSharing>().HasTemporaryAssignments);
+            }
+            Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+        }
+        finally
+        {
+            if (sleep != null)
+            {
+                first.ClearReservationsForJob(sleep);
+                JobMaker.ReturnToPool(sleep);
+            }
+        }
+    }
+
+    [Test]
     public IEnumerator BedtimeDoesNotVisitAnotherBedroom()
     {
         visitBed.CompAssignableToPawn.TryUnassignPawn(outsider);
@@ -496,8 +545,7 @@ public sealed class PartnerSleepTests
         {
             for (int attempt = 0; attempt < 100; attempt++)
             {
-                Job? job = JobMaker.MakeJob(JobDefOf.LayDown, firstBed);
-                Patch_JobGiver_GetRest.TryGiveJob_Postfix(first, ref job);
+                Job? job = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
                 if (job?.targetA.Thing == visitBed)
                     visits++;
                 first.ClearReservationsForJob(job!);
@@ -877,8 +925,7 @@ public sealed class PartnerSleepTests
         {
             for (int attempt = 0; attempt < 100; attempt++)
             {
-                Job? bedtime = JobMaker.MakeJob(JobDefOf.LayDown, thirdBed);
-                Patch_JobGiver_GetRest.TryGiveJob_Postfix(third, ref bedtime);
+                Job? bedtime = new JobGiver_GetRest().TryIssueJobPackage(third, default).Job;
                 Expect.ReferencesAreNotEqual(visitBed, bedtime?.targetA.Thing);
                 third.ClearReservationsForJob(bedtime!);
                 JobMaker.ReturnToPool(bedtime!);
