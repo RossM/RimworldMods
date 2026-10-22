@@ -188,7 +188,7 @@ public sealed class PartnerSleepTests
         for (int attempt = 0; attempt < 20; attempt++)
         {
             Job? next = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
-            Expect.ReferencesAreEqual(selected, next);
+            Expect.AreEqual(selected.targetA.Thing, next.targetA.Thing);
             Expect.AreEqual(reserved, RestUtility.GetBedSleepingSlotPosFor(first, secondBed));
         }
     }

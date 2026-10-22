@@ -2,7 +2,7 @@ namespace Yobai;
 
 internal static class BedSelectionHelpers
 {
-    public static Job? ChooseBedtimeSleepJob(Pawn pawn)
+    public static Building_Bed? FindPolyculeBed(Pawn pawn)
     {
         List<Building_Bed> beds = GetPolyculeBedroomBeds(pawn)
             .Where(bed => GetAvailablePolyculeBedroomSlots(pawn, bed).Any()).ToList();
@@ -11,7 +11,7 @@ internal static class BedSelectionHelpers
         foreach (Building_Bed bed in beds.OrderByDescending(bed => HasBedSharingPartner(pawn, bed) || FreeSlots(pawn, bed) >= 2))
         {
             if (TryMakePolyculeBedroomSleepJob(pawn, bed))
-                return JobMaker.MakeJob(JobDefOf.LayDown, bed);
+                return bed;
         }
         return null;
     }
