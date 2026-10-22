@@ -4,7 +4,9 @@ Permanent bed ownership and temporary sleeping assignments are separate. Yobai n
 
 ## Choosing a bedroom bed
 
-[BedSelectionHelpers](BedSelectionHelpers.cs) handles sleep within the pawn's assigned polycule bedroom. It tries beds shared with direct partners first, empty beds next, and beds shared with indirect polycule members as a last resort. Incoming sleepers count as bedmates when choosing among these options. Each usable bed has an equal chance, regardless of its number of available slots. Within the chosen bed, an owner tries their permanently assigned place first. An occupied or booked place is skipped, so the owner can still use another compatible place.
+[BedSelectionHelpers](BedSelectionHelpers.cs) first collects beds in the pawn's assigned polycule bedroom with an available compatible place. It shuffles that list, then uses a stable sort to prefer beds with only direct partners, empty beds, and finally beds with other polycule members. Incoming sleepers count as bedmates. The stable sort preserves the shuffled order within each preference group, giving each bed in that group an equal chance regardless of its number of available slots.
+
+The chooser takes the first successful booking in that order. Vanilla validation still runs when booking, so a rejected bed does not prevent trying the remaining candidates. Only the chosen bed retains a booking. Within that bed, an owner tries their permanently assigned place first. An occupied or booked place is skipped, so the owner can still use another compatible place.
 
 The chooser honors vanilla restrictions on resting in beds, including caravan duties, roping and medical rest. It returns a regular `LayDown` job. A vanilla ground-sleep fallback still gets a chance to find a shared bedroom bed. Bedtime does not initiate night visits.
 

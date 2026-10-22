@@ -230,6 +230,76 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
+    public IEnumerator OccupiedPartnerBedsAllHaveAChance()
+    {
+        first.relations.AddDirectRelation(PawnRelationDefOf.Spouse, third);
+        second.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, secondBed)!,
+            JobCondition.InterruptForced);
+        third.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(third, thirdBed)!,
+            JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => second.CurrentBed() == secondBed
+            && third.CurrentBed() == thirdBed, 600);
+        HashSet<Building_Bed> selected = [];
+        using (new RandBlock(13579))
+        {
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                Expect.IsNotNull(sleep);
+                try
+                {
+                    Building_Bed bed = (Building_Bed)sleep!.targetA.Thing;
+                    Expect.IsTrue(bed == secondBed || bed == thirdBed);
+                    selected.Add(bed);
+                    Expect.IsFalse(first.HasReserved(firstBed));
+                    Expect.IsFalse(first.HasReserved(bed == secondBed ? thirdBed : secondBed));
+                }
+                finally
+                {
+                    first.ClearReservationsForJob(sleep!);
+                    JobMaker.ReturnToPool(sleep!);
+                }
+            }
+        }
+        Expect.AreEqual(2, selected.Count);
+        Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+    }
+
+    [Test]
+    public IEnumerator RejectedPartnerBedFallsBackWithoutLeavingBookings()
+    {
+        second.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, secondBed)!,
+            JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => second.CurrentBed() == secondBed, 600);
+        CompForbiddable comp = new()
+        {
+            parent = secondBed,
+            props = new CompProperties { compClass = typeof(CompForbiddable) }
+        };
+        secondBed.AllComps.Add(comp);
+        secondBed.compForbiddable = comp;
+        secondBed.SetForbidden(true, false);
+        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+        Expect.IsNotNull(sleep);
+        try
+        {
+            Building_Bed bed = (Building_Bed)sleep!.targetA.Thing;
+            Expect.IsTrue(bed == firstBed || bed == thirdBed);
+            Expect.IsTrue(first.HasReserved(bed));
+            Expect.IsFalse(first.HasReserved(secondBed));
+            Expect.IsFalse(secondBed.GetComp<CompBedSharing>().TryGetSleepingSlot(first, out _));
+            Expect.IsFalse(first.HasReserved(bed == firstBed ? thirdBed : firstBed));
+            Expect.IsTrue(second.HasReserved(secondBed));
+            Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+        }
+        finally
+        {
+            first.ClearReservationsForJob(sleep!);
+            JobMaker.ReturnToPool(sleep!);
+        }
+    }
+
+    [Test]
     public IEnumerator IndirectPartnerBedIsAvoided()
     {
         third.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(third, thirdBed)!,
