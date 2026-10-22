@@ -110,6 +110,11 @@ public sealed class PartnerSleepTests
         DevTools.DevLog.Flush();
     }
 
+    private Job? GetSleepJob(Pawn pawn)
+    {
+        return new JobGiver_GetRest().TryIssueJobPackage(pawn, default).Job;
+    }
+
     [Test]
     public void PolyculeIsTransitiveButBedSharingPartnersAreNot()
     {
@@ -161,7 +166,7 @@ public sealed class PartnerSleepTests
         {
             for (int attempt = 0; attempt < 100; attempt++)
             {
-                Job? job = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                Job? job = GetSleepJob(first);
                 if (job != null)
                 {
                     selected.Add((Building_Bed)job.targetA.Thing);
@@ -223,7 +228,7 @@ public sealed class PartnerSleepTests
         {
             for (int attempt = 0; attempt < 100; attempt++)
             {
-                Job? chosen = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                Job? chosen = GetSleepJob(first);
                 Expect.IsNotNull(chosen);
                 try
                 {
@@ -258,7 +263,7 @@ public sealed class PartnerSleepTests
         {
             for (int attempt = 0; attempt < 100; attempt++)
             {
-                Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                Job? sleep = GetSleepJob(first);
                 Expect.IsNotNull(sleep);
                 try
                 {
@@ -293,7 +298,7 @@ public sealed class PartnerSleepTests
         secondBed.AllComps.Add(comp);
         secondBed.compForbiddable = comp;
         secondBed.SetForbidden(true, false);
-        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+        Job? sleep = GetSleepJob(first);
         Expect.IsNotNull(sleep);
         try
         {
@@ -321,7 +326,7 @@ public sealed class PartnerSleepTests
         yield return new WaitUntilTimeout(() => third.CurrentBed() == thirdBed, 600);
         for (int attempt = 0; attempt < 20; attempt++)
         {
-            Job? chosen = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+            Job? chosen = GetSleepJob(first);
             Expect.ReferencesAreNotEqual(thirdBed, chosen?.targetA.Thing);
             if (chosen != null)
             {
@@ -963,7 +968,7 @@ public sealed class PartnerSleepTests
         yield return new WaitUntilTimeout(() => second.CurrentBed() == secondBed && !second.Awake(), 1200);
         Expect.IsFalse(secondBed.AnyUnownedSleepingSlot);
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, secondBed));
-        Job? chosen = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+        Job? chosen = GetSleepJob(first);
         Expect.IsNotNull(chosen);
         Expect.IsTrue(chosen!.targetA.Thing == firstBed || chosen.targetA.Thing == secondBed);
         if (chosen != null)
@@ -1246,7 +1251,7 @@ public sealed class PartnerSleepTests
         Expect.AreEqual(ownerSlot, assignedSlot);
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
         Expect.IsFalse(firstBed.CurOccupants.Any());
-        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(sleeper);
+        Job? sleep = GetSleepJob(sleeper);
         Expect.IsNotNull(sleep);
         Expect.ReferencesAreEqual(firstBed, sleep!.targetA.Thing);
         Expect.AreEqual(firstBed.GetSleepingSlotPos(ownerSlot), RestUtility.GetBedSleepingSlotPosFor(sleeper, firstBed));
@@ -1286,7 +1291,7 @@ public sealed class PartnerSleepTests
             Expect.AreEqual(2, assignedSlot);
             Expect.IsTrue(firstBed.GetComp<CompBedSharing>().TryGetSleepingSlot(first, out int occupiedSlot));
             Expect.AreEqual(2, occupiedSlot);
-            Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(third);
+            Job? sleep = GetSleepJob(third);
             Expect.IsNotNull(sleep);
             Expect.AreEqual(firstBed.GetSleepingSlotPos(0), RestUtility.GetBedSleepingSlotPosFor(third, firstBed));
             third.jobs.StartJob(sleep!, JobCondition.InterruptForced);
@@ -1540,7 +1545,7 @@ public sealed class PartnerSleepTests
             {
                 for (int attempt = 0; attempt < 100; attempt++)
                 {
-                    Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+                    Job? sleep = GetSleepJob(first);
                     Expect.IsNotNull(sleep);
                     try
                     {
@@ -2033,7 +2038,7 @@ public sealed class PartnerSleepTests
         Job? incoming = BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(third, firstBed);
         Expect.IsNotNull(incoming);
         Expect.IsNull(third.CurrentBed());
-        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+        Job? sleep = GetSleepJob(first);
         Expect.IsNotNull(sleep);
         Expect.ReferencesAreEqual(firstBed, sleep?.targetA.Thing);
         Expect.AreNotEqual(RestUtility.GetBedSleepingSlotPosFor(first, firstBed),
@@ -2053,7 +2058,7 @@ public sealed class PartnerSleepTests
         Expect.IsNotNull(incoming);
         for (int attempt = 0; attempt < 20; attempt++)
         {
-            Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+            Job? sleep = GetSleepJob(first);
             Expect.IsNotNull(sleep);
             Expect.ReferencesAreNotEqual(thirdBed, sleep?.targetA.Thing);
             first.ClearReservationsForJob(sleep!);
@@ -2180,7 +2185,7 @@ public sealed class PartnerSleepTests
         third.jobs.StartJob(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(third, thirdBed)!,
             JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => third.CurrentBed() == thirdBed, 600);
-        Job? sleep = BedSelectionHelpers.ChooseBedtimeSleepJob(first);
+        Job? sleep = GetSleepJob(first);
         Expect.IsNotNull(sleep);
         first.jobs.StartJob(sleep!, JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => first.CurrentBed() == thirdBed, 600);
@@ -2221,7 +2226,23 @@ public sealed class PartnerSleepTests
         Expect.AreEqual(1, PolyculeHelpers.GetPolycule(first).Count);
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
         Expect.IsFalse(BedSharingHelpers.IsBedInAssignedPolyculeBedroom(first, thirdBed));
-        Expect.IsNull(BedSelectionHelpers.ChooseBedtimeSleepJob(first));
+        Job? sleep = GetSleepJob(first);
+        try
+        {
+            Expect.IsNotNull(sleep);
+            Expect.AreEqual(JobDefOf.LayDown, sleep!.def);
+            Expect.ReferencesAreEqual(firstBed, sleep.targetA.Thing);
+            foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
+                Expect.IsFalse(bed.GetComp<CompBedSharing>().HasTemporaryAssignments);
+        }
+        finally
+        {
+            if (sleep != null)
+            {
+                first.ClearReservationsForJob(sleep);
+                JobMaker.ReturnToPool(sleep);
+            }
+        }
     }
 
     [TestCase("Lover"), TestCase("Fiance"), LoadIfIdeologyActive]
@@ -2241,7 +2262,23 @@ public sealed class PartnerSleepTests
         Expect.AreEqual(1, PolyculeHelpers.GetPolycule(first).Count);
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
         Expect.IsFalse(BedSharingHelpers.IsBedInAssignedPolyculeBedroom(first, thirdBed));
-        Expect.IsNull(BedSelectionHelpers.ChooseBedtimeSleepJob(first));
+        Job? sleep = GetSleepJob(first);
+        try
+        {
+            Expect.IsNotNull(sleep);
+            Expect.AreEqual(JobDefOf.LayDown, sleep!.def);
+            Expect.ReferencesAreEqual(firstBed, sleep.targetA.Thing);
+            foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
+                Expect.IsFalse(bed.GetComp<CompBedSharing>().HasTemporaryAssignments);
+        }
+        finally
+        {
+            if (sleep != null)
+            {
+                first.ClearReservationsForJob(sleep);
+                JobMaker.ReturnToPool(sleep);
+            }
+        }
     }
 
     [Test, LoadIfIdeologyActive]
