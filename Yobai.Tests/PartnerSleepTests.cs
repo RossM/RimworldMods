@@ -568,6 +568,65 @@ public sealed class PartnerSleepTests
         Expect.ReferencesAreEqual(visitBed, second.ownership.OwnedBed);
     }
 
+    [TestCase(true)]
+    [TestCase(false)]
+    public IEnumerator SleepingPawnCanVisitPartnerWhenCurrentBedmateIsNotRomantic(bool bedmateArrived)
+    {
+        outsider.ownership.ClaimBedIfNonMedical(firstBed);
+        second.ownership.ClaimBedIfNonMedical(visitBed);
+        firstBed.GetComp<CompBedSharing>().nightVisitsEnabled = false;
+        first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, firstBed), JobCondition.InterruptForced);
+        second.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
+        Job bedmateSleep = JobMaker.MakeJob(JobDefOf.LayDown, firstBed);
+        bool alwaysDoLovin = DebugSettings.alwaysDoLovin;
+        try
+        {
+            if (bedmateArrived)
+                outsider.jobs.StartJob(bedmateSleep, JobCondition.InterruptForced);
+            else
+                Expect.IsTrue(bedmateSleep.TryMakePreToilReservations(outsider, false));
+            yield return new WaitUntilTimeout(() => first.CurrentBed() == firstBed && !first.Awake()
+                && second.CurrentBed() == visitBed && !second.Awake()
+                && (!bedmateArrived || outsider.CurrentBed() == firstBed && !outsider.Awake()), 1200);
+            Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, outsider));
+            Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
+            Expect.IsTrue(firstBed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+            Expect.IsTrue(NightVisitHelpers.CanLeaveBed(first));
+            DebugSettings.alwaysDoLovin = true;
+            first.mindState.canLovinTick = 0;
+            second.mindState.canLovinTick = 0;
+            yield return new WaitUntilTimeout(() => first.CurJobDef == JobDefOf.Lovin, 5500);
+            Expect.AreEqual(JobDefOf.Lovin, first.CurJobDef);
+            Expect.ReferencesAreEqual(second, first.CurJob.targetA.Thing);
+            Expect.ReferencesAreEqual(visitBed, first.CurJob.targetB.Thing);
+            yield return new WaitUntilTimeout(() => first.CurJobDef == JobDefOf.LayDown
+                && second.CurJobDef == JobDefOf.LayDown
+                && first.needs.mood.thoughts.memories.Memories.Any(memory => memory.def == ThoughtDefOf.GotSomeLovin), 6000);
+            Expect.ReferencesAreEqual(visitBed, first.CurrentBed());
+            Expect.ReferencesAreEqual(visitBed, second.CurrentBed());
+            Expect.IsTrue(second.needs.mood.thoughts.memories.Memories.Any(memory => memory.def == ThoughtDefOf.GotSomeLovin));
+            if (bedmateArrived)
+                Expect.ReferencesAreEqual(firstBed, outsider.CurrentBed());
+            else
+            {
+                Expect.IsNull(outsider.CurrentBed());
+                Expect.IsTrue(outsider.HasReserved(firstBed));
+            }
+            Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+            Expect.ReferencesAreEqual(firstBed, outsider.ownership.OwnedBed);
+            Expect.ReferencesAreEqual(visitBed, second.ownership.OwnedBed);
+        }
+        finally
+        {
+            DebugSettings.alwaysDoLovin = alwaysDoLovin;
+            if (!bedmateArrived)
+            {
+                outsider.ClearReservationsForJob(bedmateSleep);
+                JobMaker.ReturnToPool(bedmateSleep);
+            }
+        }
+    }
+
     [Test]
     public IEnumerator ThinkTreeVisitStartsLovinAndResumesSleep()
     {

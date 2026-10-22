@@ -28,6 +28,10 @@ The night-visit suite now checks that one eligible romantic host is sufficient w
 
 All **111 DLC cases** passed in **123,571 ms**, and all **94 Core-only cases** passed in **92,551 ms**, through Windows PowerShell 5.1 against the installed Steam game. Both runs exited successfully, with no build warnings or logged game errors. Reports are in `TestResults/Yobai/One Romantic Host DLC-20261022` and `One Romantic Host Core-20261022`.
 
+The current-bed departure regression covers a non-romantic bedmate already sleeping beside the visitor and one still travelling with a reserved place. Both cases use the actual think tree, finish lovin' at the romantic partner's bed, resume sleep there, and preserve bed ownership. They explicitly check that the non-partner is counted as a bedmate and does not prevent departure.
+
+The two focused DLC cases passed in **32,457 ms**, followed by all **113 DLC tests** in **145,490 ms**. Both new cases also passed with Core only in **89,177 ms**. All three runs used Windows PowerShell 5.1 and the installed Steam game, exited successfully, and logged no game errors or build warnings. Reports are in `TestResults/Yobai/Non Romantic Source Bed Focused-20261022`, `Non Romantic Source Bed Full DLC-20261022`, and `Non Romantic Source Bed Core-20261022`.
+
 ## Earlier checks
 
 | Check | Result |

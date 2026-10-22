@@ -14,7 +14,7 @@ Within `JobGiver_GetRest.TryGiveJob`, an inner postfix on `RestUtility.FindBedFo
 
 ## Choosing a night visit
 
-An XML patch adds [JobGiver_NightVisit](JobGiver_NightVisit.cs) to the humanlike think tree's lying-down branch, after vanilla's lovin' branch. The job giver considers a pawn sleeping alone, and excludes player-forced sleep and beds with an incoming companion.
+An XML patch adds [JobGiver_NightVisit](JobGiver_NightVisit.cs) to the humanlike think tree's lying-down branch, after vanilla's lovin' branch. The job giver considers a sleeping pawn with no romantic partner already sharing its bed or on the way. Non-romantic companions do not prevent the pawn from leaving. Player-forced sleep is excluded.
 
 The job giver owns the complete decision. It considers at most one opportunity per in-game hour, stored in the pawn's normal `thinkData` under the node's save key. Eligible destinations have at least one sleeping direct partner, visits enabled, and a free place belonging to the visitor or assigned to nobody. Bed capacity is unrestricted. Other occupants and incoming sleepers may be non-partners, provided they can share the bed with the visitor. Each eligible host is considered separately, so a host on cooldown does not hide another ready host in the same bed. A returning owner tries their own place first, then unassigned places. Guests only consider unassigned places. This also allows an owner to return to a fully assigned bed. Both partners must have finished their lovin' cooldowns, be able to be awake, be mutually reservable, and pass `LovePartnerRelationUtility.GetLovinMtbHours`.
 
