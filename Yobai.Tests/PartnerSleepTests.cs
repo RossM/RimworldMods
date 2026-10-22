@@ -121,6 +121,15 @@ public sealed class PartnerSleepTests
         pawn.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, bed), JobCondition.InterruptForced);
     }
 
+    private static Ideo CreateIdeoWithLovinPrecept(string preceptName)
+    {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed(preceptName)));
+        return ideo;
+    }
+
     [Test]
     public void PolyculeIsTransitiveButBedSharingPartnersAreNot()
     {
@@ -1464,10 +1473,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public void IncomingOwnerCountsAsBedmate()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         outsider.ideo.SetIdeo(ideo);
         Expect.IsFalse(BedUtility.WillingToShareBed(outsider, second));
         Job ownerSleep = JobMaker.MakeJob(JobDefOf.LayDown, secondBed);
@@ -1546,10 +1552,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public IEnumerator RelationshipChangeRejectsIncompatibleArrivalsBeforeEitherArrives()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         first.ideo.SetIdeo(ideo);
         Expect.IsTrue(BedUtility.WillingToShareBed(first, second));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
@@ -1745,10 +1748,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public void TravellersMustBeCompatibleBedmates()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         outsider.ideo.SetIdeo(ideo);
         Expect.IsFalse(BedUtility.WillingToShareBed(outsider, first));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
@@ -1856,10 +1856,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public IEnumerator RelationshipChangeCannotAdmitIncompatibleBookedBedmates()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         first.ideo.SetIdeo(ideo);
         Expect.IsTrue(BedUtility.WillingToShareBed(first, second));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
@@ -2156,10 +2153,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public IEnumerator PolyculeFallbackDoesNotApplyOutsideBedroom()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         first.ideo.SetIdeo(ideo);
         Expect.IsFalse(BedUtility.WillingToShareBed(first, third));
         third.ownership.ClaimBedIfNonMedical(visitBed);
@@ -2174,10 +2168,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public IEnumerator IdeologyIncompatibleOccupantCannotBecomeAFallbackBedmate()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         outsider.ideo.SetIdeo(ideo);
         Expect.IsFalse(BedUtility.WillingToShareBed(first, outsider));
         outsider.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
@@ -2193,10 +2184,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public IEnumerator SpouseOnlyIdeologyAllowsLastResortPolyculeSharing()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         // Conversion removes spouses above the ideoligion's limit; preserve the test polycule.
         foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue?.defName
             is "SpouseCount_Male" or "SpouseCount_Female").ToList())
@@ -2238,10 +2226,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public IEnumerator ProhibitedLoversKeepVanillaLovinPenaltiesDuringFallbackSharing()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         // Conversion removes spouses above the ideoligion's limit; preserve the test polycule.
         foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue?.defName
             is "SpouseCount_Male" or "SpouseCount_Female").ToList())
@@ -2294,10 +2279,7 @@ public sealed class PartnerSleepTests
     public void ProhibitedLovinDoesNotChangeVanillaBedroomRole()
     {
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_Prohibited")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_Prohibited");
         first.ideo.SetIdeo(ideo);
         // Recompute the role so this checks classification rather than a cached result.
         firstBed.NotifyRoomAssignedPawnsChanged();
@@ -2330,10 +2312,7 @@ public sealed class PartnerSleepTests
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);
         first.relations.AddDirectRelation(DefDatabase<PawnRelationDef>.GetNamed(relationship), second);
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         first.ideo.SetIdeo(ideo);
         // Recompute the role so this checks classification rather than a cached result.
         firstBed.NotifyRoomAssignedPawnsChanged();
@@ -2363,10 +2342,7 @@ public sealed class PartnerSleepTests
     [Test, LoadIfIdeologyActive]
     public void ProhibitedLovinBreaksPolyculeEvenForSpouses()
     {
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_Prohibited")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_Prohibited");
         first.ideo.SetIdeo(ideo);
         Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, second));
         Expect.AreEqual(1, PolyculeHelpers.GetPolycule(first).Count);
@@ -2378,10 +2354,7 @@ public sealed class PartnerSleepTests
     {
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);
         first.relations.AddDirectRelation(PawnRelationDefOf.Fiance, second);
-        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
-        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
-            ideo.RemovePrecept(precept, true);
-        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         first.ideo.SetIdeo(ideo);
         Expect.IsFalse(PolyculeHelpers.AreBedSharingPartners(first, second));
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Fiance, second);
