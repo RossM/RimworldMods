@@ -29,9 +29,6 @@ internal static class BedSharingJobHelpers
 
     private static Job? TryBookSleepingPlace(Pawn pawn, SleepingPlace place, Job job)
     {
-        if (!pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0))
-            return null;
-
         if (!TryAssignSleepingSlot(pawn, place))
         {
             pawn.ClearReservationsForJob(job);
