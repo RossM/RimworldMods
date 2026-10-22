@@ -1439,8 +1439,37 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
+    public void IncomingOwnerAllowsWillingNonPartners()
+    {
+        Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(outsider, second));
+        Expect.IsTrue(BedUtility.WillingToShareBed(outsider, second));
+        Job ownerSleep = JobMaker.MakeJob(JobDefOf.LayDown, secondBed);
+        try
+        {
+            Expect.IsTrue(ownerSleep.TryMakePreToilReservations(second, false));
+            Expect.IsNull(second.CurrentBed());
+            CompBedSharing assignments = secondBed.GetComp<CompBedSharing>();
+            Expect.IsTrue(assignments.GetBedmates().Contains(second));
+            Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(outsider, secondBed));
+            Expect.IsTrue(assignments.CanAssignSleepingSlot(outsider, 1));
+            Expect.IsFalse(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(outsider, secondBed));
+        }
+        finally
+        {
+            second.ClearReservationsForJob(ownerSleep);
+            JobMaker.ReturnToPool(ownerSleep);
+        }
+    }
+
+    [Test, LoadIfIdeologyActive]
     public void IncomingOwnerCountsAsBedmate()
     {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        outsider.ideo.SetIdeo(ideo);
+        Expect.IsFalse(BedUtility.WillingToShareBed(outsider, second));
         Job ownerSleep = JobMaker.MakeJob(JobDefOf.LayDown, secondBed);
         Expect.IsTrue(ownerSleep.TryMakePreToilReservations(second, false));
         Expect.IsNull(second.CurrentBed());
@@ -1466,9 +1495,63 @@ public sealed class PartnerSleepTests
         JobMaker.ReturnToPool(repair);
     }
 
-    [Test]
+    [TestCase(false)]
+    [TestCase(true)]
+    public IEnumerator BreakupPreservesWillingBedmates(bool firstArrived)
+    {
+        Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
+        Job firstArrival = JobMaker.MakeJob(JobDefOf.LayDown, thirdBed);
+        Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, thirdBed));
+        Job secondArrival = JobMaker.MakeJob(JobDefOf.LayDown, thirdBed);
+        try
+        {
+            Expect.IsTrue(firstArrival.TryMakePreToilReservations(first, false));
+            Expect.IsTrue(secondArrival.TryMakePreToilReservations(second, false));
+            if (firstArrived)
+            {
+                first.jobs.StartJob(firstArrival, JobCondition.InterruptForced);
+                yield return new WaitUntilTimeout(() => first.CurrentBed() == thirdBed, 600);
+            }
+            else
+            {
+                yield return new WaitTicks(1);
+                Expect.IsNull(first.CurrentBed());
+            }
+            first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);
+            Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, second));
+            Expect.IsTrue(BedUtility.WillingToShareBed(first, second));
+            Expect.IsNull(second.CurrentBed());
+            Expect.IsTrue(RestUtility.CanUseBedNow(thirdBed, first, true));
+            Expect.IsTrue(RestUtility.CanUseBedNow(thirdBed, second, true));
+            Expect.IsTrue(RestUtility.IsValidBedFor(thirdBed, first, first, true));
+            Expect.IsTrue(RestUtility.IsValidBedFor(thirdBed, second, second, true));
+            Expect.IsTrue(BedSharingHelpers.CanUseTemporarySleepingSlot(first, thirdBed));
+            Expect.IsTrue(BedSharingHelpers.CanUseTemporarySleepingSlot(second, thirdBed));
+            Expect.IsTrue(secondArrival.TryMakePreToilReservations(second, false));
+            Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+            Expect.ReferencesAreEqual(secondBed, second.ownership.OwnedBed);
+        }
+        finally
+        {
+            if (!firstArrived)
+            {
+                first.ClearReservationsForJob(firstArrival);
+                JobMaker.ReturnToPool(firstArrival);
+            }
+            second.ClearReservationsForJob(secondArrival);
+            JobMaker.ReturnToPool(secondArrival);
+        }
+    }
+
+    [Test, LoadIfIdeologyActive]
     public IEnumerator RelationshipChangeRejectsIncompatibleArrivalsBeforeEitherArrives()
     {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        first.ideo.SetIdeo(ideo);
+        Expect.IsTrue(BedUtility.WillingToShareBed(first, second));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
         Job firstArrival = JobMaker.MakeJob(JobDefOf.LayDown, thirdBed);
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, thirdBed));
@@ -1476,6 +1559,7 @@ public sealed class PartnerSleepTests
         Expect.IsTrue(firstArrival.TryMakePreToilReservations(first, false));
         Expect.IsTrue(secondArrival.TryMakePreToilReservations(second, false));
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);
+        Expect.IsFalse(BedUtility.WillingToShareBed(first, second));
         Expect.IsNull(first.CurrentBed());
         Expect.IsNull(second.CurrentBed());
         Expect.IsFalse(RestUtility.CanUseBedNow(thirdBed, first, true));
@@ -1658,9 +1742,15 @@ public sealed class PartnerSleepTests
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
 
-    [Test]
+    [Test, LoadIfIdeologyActive]
     public void TravellersMustBeCompatibleBedmates()
     {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        outsider.ideo.SetIdeo(ideo);
+        Expect.IsFalse(BedUtility.WillingToShareBed(outsider, first));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
         Job firstArrival = JobMaker.MakeJob(JobDefOf.LayDown, thirdBed);
         Expect.IsNotNull(firstArrival);
@@ -1763,9 +1853,15 @@ public sealed class PartnerSleepTests
         JobMaker.ReturnToPool(booking);
     }
 
-    [Test]
+    [Test, LoadIfIdeologyActive]
     public IEnumerator RelationshipChangeCannotAdmitIncompatibleBookedBedmates()
     {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        first.ideo.SetIdeo(ideo);
+        Expect.IsTrue(BedUtility.WillingToShareBed(first, second));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
         Job firstArrival = JobMaker.MakeJob(JobDefOf.LayDown, thirdBed);
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(second, thirdBed));
@@ -1774,8 +1870,9 @@ public sealed class PartnerSleepTests
         yield return new WaitUntilTimeout(() => first.CurrentBed() == thirdBed, 600);
         Expect.ReferencesAreEqual(thirdBed, first.CurrentBed());
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);
-        // Second remains the permanent owner's spouse. Vanilla owner-based access must not
-        // admit them beside First after their own relationship has ended.
+        Expect.IsFalse(BedUtility.WillingToShareBed(first, second));
+        // Second remains the permanent owner's spouse, but First's ideology now forbids
+        // sharing with Second. The owner's permission cannot override that restriction.
         Expect.IsTrue(PolyculeHelpers.AreBedSharingPartners(second, third));
         Expect.IsFalse(RestUtility.CanUseBedNow(thirdBed, second, true));
         Expect.IsFalse(RestUtility.IsValidBedFor(thirdBed, second, second, true));
@@ -2026,8 +2123,45 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
+    public IEnumerator WillingNonPartnerOutsideBedroomDoesNotEnablePolyculeSelection()
+    {
+        third.ownership.ClaimBedIfNonMedical(visitBed);
+        third.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => third.CurrentBed() == visitBed && !third.Awake(), 1200);
+        Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, third));
+        Expect.IsTrue(BedUtility.WillingToShareBed(first, third));
+        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, visitBed));
+        Expect.IsFalse(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, visitBed));
+        Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, visitBed));
+    }
+
+    [Test]
+    public IEnumerator WillingUnrelatedOccupantCanSharePolyculeBedroom()
+    {
+        outsider.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
+        yield return new WaitUntilTimeout(() => outsider.CurrentBed() == visitBed, 600);
+        // Put an unexpected sleeper in the bedroom without changing its owners.
+        outsider.Position = thirdBed.GetSleepingSlotPos(0);
+        Expect.ReferencesAreEqual(thirdBed, outsider.CurrentBed());
+        Expect.IsFalse(PolyculeHelpers.GetPolycule(first).Contains(outsider));
+        Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
+        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, thirdBed));
+        Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
+        Expect.IsTrue(RestUtility.IsValidBedFor(thirdBed, first, first, true));
+        Expect.AreNotEqual(outsider.Position, RestUtility.GetBedSleepingSlotPosFor(first, thirdBed));
+        Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
+        Expect.ReferencesAreEqual(visitBed, outsider.ownership.OwnedBed);
+    }
+
+    [Test, LoadIfIdeologyActive]
     public IEnumerator PolyculeFallbackDoesNotApplyOutsideBedroom()
     {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        first.ideo.SetIdeo(ideo);
+        Expect.IsFalse(BedUtility.WillingToShareBed(first, third));
         third.ownership.ClaimBedIfNonMedical(visitBed);
         third.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => third.CurrentBed() == visitBed && !third.Awake(), 1200);
@@ -2037,9 +2171,15 @@ public sealed class PartnerSleepTests
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, visitBed));
     }
 
-    [Test]
-    public IEnumerator UnrelatedOccupantCannotBecomeAFallbackBedmate()
+    [Test, LoadIfIdeologyActive]
+    public IEnumerator IdeologyIncompatibleOccupantCannotBecomeAFallbackBedmate()
     {
+        Ideo ideo = IdeoGenerator.GenerateIdeo(new IdeoGenerationParms(FactionDefOf.PlayerColony));
+        foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue == DefDatabase<IssueDef>.GetNamed("Lovin")).ToList())
+            ideo.RemovePrecept(precept, true);
+        ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("Lovin_SpouseOnly_Strict")));
+        outsider.ideo.SetIdeo(ideo);
+        Expect.IsFalse(BedUtility.WillingToShareBed(first, outsider));
         outsider.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
         yield return new WaitUntilTimeout(() => outsider.CurrentBed() == visitBed, 600);
         // Put an unrelated sleeper in the room without changing its bed assignments.

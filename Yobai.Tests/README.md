@@ -47,6 +47,8 @@ Room-role tests explicitly request a fresh calculation after changing relationsh
 
 Arrival regressions cover permanent owners and temporary sleepers competing for the same place in either order, compatible owners using a different free place, cancellation, relationship changes before either sleeper arrives, incoming-partner preference, and a host staying put for an incoming partner. Owner-slot regressions check each of a three-place bed's owners prefers their assigned place when all places are free, and can use another place if their own is occupied or booked. Returning-owner night visits also prefer the assigned place, including when the bed is fully assigned or its unassigned place is booked. A booked owner place is unavailable to its owner, and the toggle can prevent return visits. Reservations for work on a bed do not count as sleep bookings. An unexpected-occupant case checks that a booked place remains unusable if someone moves into it after admission.
 
+Bedmate rejection tests use explicit spouse-only ideoligions and check vanilla's willingness rule before exercising Yobai. Separate cases cover willing non-partners, sharing after a breakup, and incoming owners without ideology restrictions. Polycule bed selection still requires the assigned bedroom, and night visits still require romantic partners.
+
 Each test sets up its own pawns and beds. Automatic rest and lovin' decisions are postponed so they do not interfere with the jobs the test starts.
 
 See [Verification results](VERIFICATION.md) for the game version tested, results and checks still to do.

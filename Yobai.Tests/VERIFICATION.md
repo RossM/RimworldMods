@@ -20,6 +20,10 @@ The recovered reservation checks and inner `FindBedFor` postfix passed **all 104
 
 The first recovery run passed 103 cases. The ground-sleep fixture failed before calling the rest job giver because `SetForbidden` had no effect on beds without `CompForbiddable`. A diagnostic run confirmed vanilla found the pawn's own bed with `forbidden=False`. Restoring the missing comp setup, as used by the existing forbidden-bed cases, preserved the original assertions and produced the passing full run above.
 
+After correcting bedmate compatibility fixtures, the full suite passed **109 DLC cases** in **112,319 ms** and **94 Core-only cases** in **99,128 ms**, through Windows PowerShell 5.1 against the installed Steam game. Both runs exited with code 0, with no build warnings or logged game errors. Reports are in `TestResults/Yobai/Ideology Bedmates Fixtures DLC-20261022` and `Ideology Bedmates Fixtures Core-20261022`.
+
+Six rejection cases now use explicit spouse-only ideoligions and check vanilla's willingness rule. Five additional cases cover willing non-partners, incoming owners, breakups before or after a sleeper arrives, and the bedroom-selection boundary without ideology restrictions. Night-visit partner requirements remain covered separately.
+
 ## Earlier checks
 
 | Check | Result |
