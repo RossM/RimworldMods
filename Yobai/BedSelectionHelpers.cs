@@ -10,9 +10,8 @@ internal static class BedSelectionHelpers
 
         foreach (Building_Bed bed in beds.OrderByDescending(bed => HasBedSharingPartner(pawn, bed) || FreeSlots(pawn, bed) >= 2))
         {
-            Job? job = TryMakePolyculeBedroomSleepJob(pawn, bed);
-            if (job != null)
-                return job;
+            if (TryMakePolyculeBedroomSleepJob(pawn, bed))
+                return JobMaker.MakeJob(JobDefOf.LayDown, bed);
         }
         return null;
     }
@@ -27,15 +26,25 @@ internal static class BedSelectionHelpers
         return bed.GetComp<CompBedSharing>().GetBedmates().Any(bedmate => bedmate != pawn && PolyculeHelpers.AreBedSharingPartners(pawn, bedmate));
     }
 
-    public static Job? TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
+    public static bool TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
     {
         foreach (int slot in GetAvailablePolyculeBedroomSlots(pawn, bed))
         {
-            Job? job = BedSharingJobHelpers.TryMakeSleepJob(pawn, new SleepingPlace(bed, slot));
-            if (job != null)
-                return job;
+            SleepingPlace place = new SleepingPlace(bed, slot);
+
+            if (!BedSharingJobHelpers.CanBookSleepingPlace(pawn, place))
+                continue;
+            if (!BedSharingJobHelpers.TryAssignSleepingSlot(pawn, place))
+                continue;
+
+            return true;
         }
-        return null;
+        return false;
+    }
+
+    public static Job? TryMakePolyculeBedroomSleepJobExt(Pawn pawn, Building_Bed bed)
+    {
+        return TryMakePolyculeBedroomSleepJob(pawn, bed) ? JobMaker.MakeJob(JobDefOf.LayDown, bed) : null;
     }
 
     private static IEnumerable<Building_Bed> GetPolyculeBedroomBeds(Pawn pawn)
