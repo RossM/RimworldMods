@@ -64,6 +64,8 @@ internal static class Patch_RestUtility
         if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(pawn, out int slot) != true)
             return true;
 
+        // Running the original method and then changing the result might log a “Could not find good sleeping slot position” warning,
+        // so this patch has to be a prefix.
         __result = bed.GetSleepingSlotPos(slot);
         return false;
     }
