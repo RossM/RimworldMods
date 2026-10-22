@@ -1671,6 +1671,64 @@ public sealed class PartnerSleepTests
     }
 
     [Test]
+    public void UnreservableBedDoesNotCreateASleepJob()
+    {
+        Job blocker = JobMaker.MakeJob(JobDefOf.Wait, 100);
+        first.Map.physicalInteractionReservationManager.Reserve(outsider, blocker, thirdBed);
+        try
+        {
+            Expect.IsFalse(first.CanReserve(thirdBed, thirdBed.SleepingSlotsCount, 0));
+            Expect.IsNull(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
+            Job next = JobMaker.MakeJob(JobDefOf.Wait, 100);
+            try
+            {
+                Expect.AreEqual(blocker.loadID + 1, next.loadID);
+                Expect.IsFalse(first.HasReserved(thirdBed));
+                Expect.IsFalse(thirdBed.GetComp<CompBedSharing>().HasTemporaryAssignments);
+            }
+            finally
+            {
+                JobMaker.ReturnToPool(next);
+            }
+        }
+        finally
+        {
+            first.Map.physicalInteractionReservationManager.Release(outsider, blocker, thirdBed);
+            JobMaker.ReturnToPool(blocker);
+        }
+    }
+
+    [Test]
+    public void UnreservablePartnerDoesNotCreateALovinJob()
+    {
+        Job blocker = JobMaker.MakeJob(JobDefOf.Wait, 100);
+        first.Map.physicalInteractionReservationManager.Reserve(outsider, blocker, second);
+        try
+        {
+            Expect.IsFalse(first.CanReserve(second));
+            Expect.IsTrue(first.CanReserve(secondBed, secondBed.SleepingSlotsCount, 0));
+            Expect.IsNull(BedSharingJobHelpers.TryMakeLovinJob(first, second, new SleepingPlace(secondBed, 1)));
+            Job next = JobMaker.MakeJob(JobDefOf.Wait, 100);
+            try
+            {
+                Expect.AreEqual(blocker.loadID + 1, next.loadID);
+                Expect.IsFalse(first.HasReserved(second));
+                Expect.IsFalse(first.HasReserved(secondBed));
+                Expect.IsFalse(secondBed.GetComp<CompBedSharing>().HasTemporaryAssignments);
+            }
+            finally
+            {
+                JobMaker.ReturnToPool(next);
+            }
+        }
+        finally
+        {
+            first.Map.physicalInteractionReservationManager.Release(outsider, blocker, second);
+            JobMaker.ReturnToPool(blocker);
+        }
+    }
+
+    [Test]
     public void RejectedSecondAssignmentPreservesTheExistingStay()
     {
         Job? original = BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed);

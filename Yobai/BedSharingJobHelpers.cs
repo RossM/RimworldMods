@@ -4,13 +4,19 @@ internal static class BedSharingJobHelpers
 {
     public static Job? TryMakeSleepJob(Pawn pawn, SleepingPlace place)
     {
+        if (!CanBookSleepingPlace(pawn, place))
+            return null;
+
         return TryBookSleepingPlace(pawn, place, JobMaker.MakeJob(JobDefOf.LayDown, place.Bed));
     }
 
     public static Job? TryMakeLovinJob(Pawn pawn, Pawn partner, SleepingPlace place)
     {
+        if (!pawn.CanReserve(partner) || !CanBookSleepingPlace(pawn, place))
+            return null;
+
         Job job = JobMaker.MakeJob(JobDefOf.Lovin, partner, place.Bed);
-        if (!pawn.Reserve(partner, job, errorOnFailed: false))
+        if (!pawn.Reserve(partner, job))
         {
             JobMaker.ReturnToPool(job);
             return null;
@@ -19,15 +25,21 @@ internal static class BedSharingJobHelpers
         return TryBookSleepingPlace(pawn, place, job);
     }
 
+    private static bool CanBookSleepingPlace(Pawn pawn, SleepingPlace place)
+    {
+        return BedSharingHelpers.CanSleepInSharedBed(pawn, place.Bed)
+               && place.Bed.GetComp<CompBedSharing>()?.CanAssignSleepingSlot(pawn, place.Slot) == true
+               && pawn.CanReserve(place.Bed, place.Bed.SleepingSlotsCount, 0);
+    }
+
     private static Job? TryBookSleepingPlace(Pawn pawn, SleepingPlace place, Job job)
     {
         TemporarySleepingSlot? assignment = null;
-        CompBedSharing? assignments = place.Bed.GetComp<CompBedSharing>();
+        CompBedSharing assignments = place.Bed.GetComp<CompBedSharing>();
         bool accepted = false;
         try
         {
-            if (assignments == null || !BedSharingHelpers.CanSleepInSharedBed(pawn, place.Bed)
-                                    || !pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0, errorOnFailed: false))
+            if (!pawn.Reserve(place.Bed, job, place.Bed.SleepingSlotsCount, 0))
                 return null;
             assignment = assignments.TryAssignSleepingSlot(pawn, place.Slot);
             if (assignment == null
@@ -43,7 +55,7 @@ internal static class BedSharingJobHelpers
             if (!accepted)
             {
                 if (assignment != null)
-                    assignments?.RemoveAssignment(assignment);
+                    assignments.RemoveAssignment(assignment);
                 pawn.ClearReservationsForJob(job);
                 JobMaker.ReturnToPool(job);
             }

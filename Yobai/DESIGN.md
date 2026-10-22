@@ -22,7 +22,7 @@ There is no additional four-hour visit timer or 50% bedtime roll. Vanilla's exis
 
 ## Booking a place and travelling
 
-[BedSharingJobHelpers](BedSharingJobHelpers.cs) creates normal `LayDown` or `Lovin` jobs. Both use the same booking transaction:
+[BedSharingJobHelpers](BedSharingJobHelpers.cs) checks that the sleeping place is available and the bed can be reserved before creating a normal `LayDown` or `Lovin` job. Lovin' also requires a reservable partner. Both jobs use the same booking transaction:
 
 1. Reserve capacity in the bed for the job.
 2. Add the temporary sleeping assignment.
