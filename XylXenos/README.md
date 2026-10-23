@@ -138,7 +138,7 @@ A tribe of aquatic nixies descended from people engineered for the ocean world A
 
 They use simple tools and weapons, relying on trade for machinery and manufactured goods they cannot easily make themselves. In combaat, tough scales and innate psychic abilities help compensate for their lack of advanced equipment.
 
-This particular tribe pursues a gentle way of life. They are open to trade and alliances, even with dryland peoples.
+This particular tribe pursues a gentle way of life. They are open to trade and alliances, even with dryskins.
 
 ### Trivia
 
