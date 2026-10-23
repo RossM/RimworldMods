@@ -1,4 +1,7 @@
-﻿// ReSharper disable MemberCanBeMadeStatic.Local
+﻿using System.Collections.Concurrent;
+using System.Threading;
+
+// ReSharper disable MemberCanBeMadeStatic.Local
 
 namespace Xylib;
 
@@ -44,12 +47,14 @@ public static class PawnExtraData<T> where T : IPawnData, new()
             if (thing is not Pawn)
                 return;
 
-            data.Remove(thing.thingIDNumber);
+            lock (dataLock)
+                data.TryRemove(thing.thingIDNumber, out _);
         }
 
         private void Notify_PostGameDispose()
         {
-            data.Clear();
+            lock (dataLock)
+                data.Clear();
         }
 
         void IEventListener.RegisterWith(EventManager manager)
@@ -64,7 +69,13 @@ public static class PawnExtraData<T> where T : IPawnData, new()
         void IEventListener.PreUnregister(EventManager manager) { }
     }
 
-    private static readonly Dictionary<int, T> data = [];
+    private static readonly ConcurrentDictionary<int, T> data = new();
+
+    // Cached reads use ConcurrentDictionary without this lock. Mutations share it to prevent
+    // duplicate initialization and to keep an in-flight Init from publishing after a removal,
+    // clear, or load replacement has completed.
+    // ReSharper disable once StaticMemberInGenericType
+    private static readonly Lock dataLock = new();
 
     private static readonly Listener listener = new();
 
@@ -88,34 +99,50 @@ public static class PawnExtraData<T> where T : IPawnData, new()
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T Get(Pawn pawn)
     {
-        if (!data.TryGetValue(pawn.thingIDNumber, out var result))
-        {
-            result = new T { Pawn = pawn };
-            result.Init();
-            data.Add(pawn.thingIDNumber, result);
-        }
+        // ReSharper disable once InconsistentlySynchronizedField
+        if (data.TryGetValue(pawn.thingIDNumber, out var result))
+            return result;
 
-        return result;
+        return GetOrCreate(pawn);
     }
 
+    private static T GetOrCreate(Pawn pawn)
+    {
+        // Init can have side effects, so only initialize once and publish the completed instance.
+        lock (dataLock)
+        {
+            if (data.TryGetValue(pawn.thingIDNumber, out var result))
+                return result;
+
+            result = new T { Pawn = pawn };
+            result.Init();
+            data[pawn.thingIDNumber] = result;
+            return result;
+        }
+    }
+
+    // ExposeData won't be called in a multithreaded context
     private static void ExposeData(Pawn pawn)
     {
-        T? value = data.GetValueOrDefault(pawn.thingIDNumber);
-
-        Scribe_Deep.Look(ref value, ScribeLabel);
-
-        if (Scribe.mode != LoadSaveMode.LoadingVars)
-            return;
-
-        if (value == null)
+        lock (dataLock)
         {
-            data.Remove(pawn.thingIDNumber);
-        }
-        else
-        {
-            value.Pawn = pawn;
-            value.Init();
-            data[pawn.thingIDNumber] = value;
+            data.TryGetValue(pawn.thingIDNumber, out T? value);
+
+            Scribe_Deep.Look(ref value, ScribeLabel);
+
+            if (Scribe.mode != LoadSaveMode.LoadingVars)
+                return;
+
+            if (value == null)
+            {
+                data.TryRemove(pawn.thingIDNumber, out _);
+            }
+            else
+            {
+                value.Pawn = pawn;
+                value.Init();
+                data[pawn.thingIDNumber] = value;
+            }
         }
     }
 }
