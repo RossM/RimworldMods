@@ -27,17 +27,17 @@ public sealed class CompBedSharing : ThingComp
 
     internal IEnumerable<Pawn> GetBedmates()
     {
-        return GetSleepingPlaces().Select(place => place.Pawn).Distinct();
+        return GetOccupiedAndSleepingPlaces().Select(place => place.Pawn).Distinct();
     }
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)
     {
-        return GetSleepingPlaces().All(place => place.Pawn == pawn || place.Position != position);
+        return GetOccupiedAndSleepingPlaces().All(place => place.Pawn == pawn || place.Position != position);
     }
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, int slot) => IsSleepingPlaceAvailable(pawn, Bed.GetSleepingSlotPos(slot));
 
-    private IEnumerable<(Pawn Pawn, IntVec3 Position)> GetSleepingPlaces()
+    private IEnumerable<(Pawn Pawn, IntVec3 Position)> GetOccupiedAndSleepingPlaces()
     {
         RemoveDepartedSleepers();
         foreach (Pawn occupant in Bed.CurOccupants)
