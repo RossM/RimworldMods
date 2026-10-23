@@ -60,7 +60,7 @@
   <XenotypeDef>
     <defName>XylScaleborn</defName>
     <label>scaleborn</label>
-    <description>Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.\n\nOn the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the megafauna in ritual hunts. Successful hunters will share the meat with not only their own tribe but their neighbors, hosting great feasts and displaying the skulls of their prey as trophies.</description>
+    <description>Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.\n\nOn the dino-world Tyrantis V, scaleborn are the dominant predators, pursuing the megafauna in ritual hunts. Successful hunters will share the meat with not only their own tribe but their neighbors, hosting great feasts and displaying the bones of their prey as trophies.</description>
     <descriptionShort>Scaleborn are dragonlike fighters protected by tough scales and armed with claws and horns. Each lineage has unique abilities such as fiery breath or blinding oil. They are slow runners and become even slower in the cold.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Scaleborn_small</iconPath>
     <displayPriority>-201</displayPriority>
