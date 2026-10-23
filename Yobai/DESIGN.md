@@ -1,64 +1,54 @@
-# How Yobai assigns sleeping places
+# Sleeping assignments and job integration
 
-Permanent bed ownership and temporary sleeping assignments are separate. [SleepingAssignments](SleepingAssignments.cs) is the shared API for resolving active assignments and managing temporary stays. Its doc comment defines the rules. Data remains on the bed comps, with no map component managing assignments. Yobai never turns a temporary stay into a permanent bed claim.
+[SleepingAssignments](SleepingAssignments.cs) is the shared API for resolving active sleeping assignments and managing temporary stays. It builds a collection of all active assignments on a map; pawn, slot, bedmate and availability queries use views of that collection. The API's doc comment defines the assignment rules.
 
-## Choosing a bedroom bed
+## Ownership, assignments and occupancy
 
-[BedSelectionHelpers](BedSelectionHelpers.cs) first collects beds in the pawn's assigned polycule bedroom with an available compatible place. It shuffles that list, then uses a stable sort to prefer beds containing a permitted romantic partner or having at least two free places. Other eligible beds follow. Incoming sleepers count as bedmates. The stable sort preserves the shuffled order within each preference group, giving each bed in that group an equal chance regardless of its number of available slots.
+These describe different things:
 
-The chooser takes the first successful booking in that order. Vanilla validation still runs when booking, so a rejected bed does not prevent trying the remaining candidates. Only the chosen bed retains a booking. Within that bed, an owner tries their permanently assigned place first. An occupied or booked place is skipped, so the owner can still use another compatible place.
+| Concept | Meaning |
+| --- | --- |
+| Permanent ownership | The pawn's normal bed and slot, used to determine its assigned bedroom. |
+| Active assignment | The place currently allocated to the pawn after applying temporary overrides. |
+| Physical occupancy | The slot the pawn is actually lying in, which blocks another pawn regardless of assignment. |
 
-Eligible slots belong permanently to a polycule member, whether that ownership is currently active or not, or have no permanent owner in a bed owned by at least one polycule member. An unrelated owner's empty slot is protected. A permanent owner who is not using their eligible slot does not prevent another bedroom member from borrowing it.
+Temporary-assignment rules are scoped to one map:
 
-The chooser honors vanilla restrictions on resting in beds, including caravan duties, roping and medical rest. It returns a regular `LayDown` job. Bedtime does not initiate night visits.
+- A temporary assignment stays active during its creation tick, then while the pawn lies in its slot or travels there for sleep or lovin'. The creation-tick grace lets job selection finish before travel starts. Native reservation records do not extend its lifetime.
+- A permanent assignment is active when its owner has no temporary assignment on the map and nobody temporarily holds its slot.
+- Each pawn and slot can have at most one temporary assignment. Transfers release the source assignment; failed transfers restore it.
+- Temporary stays never change permanent ownership. When a stay ends, the permanent assignment resumes unless another temporary sleeper holds its slot.
 
-Within `JobGiver_GetRest.TryGiveJob`, an inner postfix on `RestUtility.FindBedFor` selects and books a shared sleeping place. It returns that bed and lets vanilla create the sleep job. A pawn already walking to a booked place keeps that destination. Other callers of `FindBedFor` are unaffected. If no shared bed can be booked, vanilla keeps its original bed or ground-sleep fallback.
+An absent permanent owner retains an active assignment, so night visitors cannot take that place. Polycule bedroom selection can borrow it if the owner is not using it. Actual occupants, temporary assignees and travelling permanent owners count as bedmates for compatibility and preference checks.
 
-## Choosing a night visit
+[CompBedSharing](CompBedSharing.cs) stores temporary records and the night-visit toggle. Inactive records are removed on query and before saving. The creation tick is not serialized, so loaded assignments depend on the pawn's actual activity.
 
-An XML patch adds [JobGiver_NightVisit](JobGiver_NightVisit.cs) to the humanlike think tree's lying-down branch, after vanilla's lovin' branch. The job giver considers a sleeping pawn with no romantic partner already sharing its bed or on the way. Non-romantic companions do not prevent the pawn from leaving. Player-forced sleep is excluded.
+## Bedroom selection
 
-The job giver owns the complete decision. It considers at most one opportunity per in-game hour, stored in the pawn's normal `thinkData` under the node's save key. Eligible destinations have at least one sleeping direct partner, visits enabled, and a free place belonging to the visitor or assigned to nobody. Bed capacity is unrestricted. Other occupants and incoming sleepers may be non-partners, provided they can share the bed with the visitor. Each eligible host is considered separately, so a host on cooldown does not hide another ready host in the same bed. A returning owner tries their own place first, then unassigned places. Guests only consider unassigned places. This also allows an owner to return to a fully assigned bed. Both partners must have finished their lovin' cooldowns, be able to be awake, be mutually reservable, and pass `LovePartnerRelationUtility.GetLovinMtbHours`.
+[BedSelectionHelpers](BedSelectionHelpers.cs) considers beds in the pawn's permanently assigned polycule bedroom. Eligible slots are either permanently owned by a polycule member or unowned in a bed with a permanent polycule owner. An unrelated roommate's empty owned slot is protected.
 
-One eligible partner is chosen at random. The job giver then rolls `Rand.MTBEventOccurs` using that pair's vanilla lovin' MTB and the same hourly interval and pawn-specific seeding scheme as `ThinkNode_ChancePerHour`. It restores the global random state afterward. There is one roll for the chosen pair, rather than a roll for each possible partner. The partner and sleeping place travel together as an immutable [NightVisit](NightVisit.cs), so the chance calculation and issued job concern the same pair.
+The chooser collects eligible beds, shuffles them, then uses a stable sort to prefer beds containing a permitted romantic partner or having at least two free places. It takes the first successful assignment. Shuffling before sorting gives each bed in a preference group an equal chance, regardless of its number of available slots. An owner tries its permanently assigned slot first, then the remaining eligible slots.
 
-There is no additional four-hour visit timer or 50% bedtime roll. Vanilla's existing lovin' branch is unchanged.
+Compatibility follows `BedUtility.WillingToShareBed`, with an additional permission for members of the same polycule in their assigned bedroom. That permission allows last-resort sharing under restrictive ideoligions. It does not add romantic relationships or alter vanilla lovin' penalties.
 
-## Booking a place and travelling
+An inner postfix on `RestUtility.FindBedFor` inside `JobGiver_GetRest.TryGiveJob` selects the bed and lets vanilla create the `LayDown` job. A travelling pawn keeps its chosen destination. Other bed searches use vanilla behavior. Medical rest, caravan duties, roping and other vanilla eligibility restrictions apply.
 
-[BedSharingJobHelpers](BedSharingJobHelpers.cs) checks that the sleeping place is available and the bed can be reserved before creating a normal `LayDown` or `Lovin` job. Lovin' also requires a reservable partner. Both jobs use the same booking transaction:
+Bedroom classification and room-role caching belong to vanilla. Its love cluster includes relationships that do not connect Yobai's stricter polycule. Its bedroom rules also allow children to share with their parents. [PolyculeHelpers](PolyculeHelpers.cs) computes Yobai's graph from living romantic partners willing to share a bed.
 
-1. Check vanilla reservation capacity and sleeping-place availability.
-2. Replace any previous temporary stay with the new assignment.
-3. Run vanilla bed validation with that assignment present.
-4. Create the job on success, or remove the rejected assignment and restore the previous stay on failure.
+## Night-visit selection
 
-A visit also checks that its chosen partner can be reserved. Native job startup makes the reservations after job selection returns; creating a job does not reserve anything. No map-cell reservation is needed.
+An XML patch adds [JobGiver_NightVisit](JobGiver_NightVisit.cs) after vanilla's lovin' branch in the humanlike lying-down think tree. It considers sleeping pawns without a romantic bedmate present or arriving. Player-forced sleep is excluded.
 
-A visitor uses vanilla `Lovin` from the start, including its trip to the destination. During that trip, the bed toil checks that the chosen partner is still there and still ready for lovin'. It does not repeat the random roll or require the host to remain asleep or the toggle to remain enabled. Ordinary lovin' already starting at its sleeping place retains vanilla's checks.
+The job giver checks at most once per in-game hour, recording the attempt in the pawn's `thinkData`. A destination needs visits enabled, a sleeping direct partner, and an available slot that is unassigned or assigned to the visitor. Other bedmates need only be compatible. Every eligible host in a bed is considered, so one partner's cooldown does not hide another ready partner.
 
-Vanilla's `KeepLyingDown` queues sleep even when a lovin' job fails. For a travelling visitor, Yobai queues that continuation only if the visitor actually reached the bed. Otherwise a cancelled visit could send a normal sleep job to the abandoned destination and change bed ownership. Successful visits use vanilla lovin' effects, cooldowns and sleep continuation.
+Both partners must have finished their lovin' cooldowns, be able to be awake, be mutually reservable, and pass `LovePartnerRelationUtility.GetLovinMtbHours`. The job giver selects one eligible partner and rolls `Rand.MTBEventOccurs` using that pair's vanilla lovin' MTB. Pawn-specific hourly seeding follows `ThinkNode_ChancePerHour` and preserves the global random stream. [NightVisit](NightVisit.cs) keeps the chosen partner and place together through job creation.
 
-## Keeping assignments consistent
+## Admission, travel and claims
 
-[SleepingAssignments](SleepingAssignments.cs) builds a collection of all active assignments on the map. Pawn-to-place, place-to-pawn, bedmate and availability queries use LINQ views of that collection. All temporary-assignment rules are map-scoped. A temporary assignment overrides the pawn's permanent place on that map, even in another bed. A permanent assignment is active only when its owner has no temporary assignment on the map and nobody temporarily holds that permanent slot. Moving elsewhere therefore releases the home slot for night visits. When a temporary stay ends, the permanent assignment becomes active again unless another temporary sleeper holds its slot.
+[BedSharingJobHelpers](BedSharingJobHelpers.cs) checks bed capacity and slot availability before creating a job; lovin' also requires a reservable partner. The assignment API installs the temporary assignment, validates the bed through vanilla with that assignment present, and restores the previous stay if validation fails. Native job startup makes the reservations. Temporary slots do not require map-cell reservations.
 
-The API enforces these rules:
+A night visitor uses `Lovin` throughout the journey. The bed toil checks that the selected partner is present and ready while the visitor travels. The visit does not repeat its random roll or require the host to remain asleep or the toggle to remain enabled. Sleep continuation is queued only after arrival, so cancelling a journey does not send a sleep job back to the abandoned destination.
 
-- A pawn has at most one temporary sleeping place across all beds.
-- A place cannot be assigned to a second temporary sleeper or displace an occupant or booked arrival.
-- Current occupants and incoming sleepers must be compatible bedmates.
+Bed access and continuation apply compatibility and slot availability to both temporary sleepers and permanent owners. Automatic bed claims preserve ownership during a temporary stay or while another temporary assignee holds the owner's slot on the same map. Otherwise, vanilla may claim an unowned sleeping place even when the pawn owns another bed, including one on a different map. Manual assignments use vanilla behavior.
 
-Bedmates are compatible when vanilla permits them to share a bed, or when they are members of the same polycule sharing within the pawn's assigned polycule bedroom. The latter permission overrides pairwise ideoligion restrictions on sleeping together without changing the romantic graph. A night visit needs an eligible romantic host; other bedmates need only be willing to share. Non-partners cannot do lovin'; existing romantic partners sharing as a last resort retain vanilla's lovin' penalties.
-
-Physical occupancy remains separate from assignment: an occupant blocks their actual position even if their assignment points elsewhere. Bedmates include actual occupants, temporary sleepers, and permanent owners travelling to their place. Absent permanent owners keep their assignments but are not treated as companions already in the bed.
-
-Bed access and continuation apply the same compatibility and availability rules to temporary sleepers and returning permanent owners. The sleep-driver postfix validates successful reservations when a temporary stay exists in the bed. Automatic claims preserve permanent ownership while a pawn uses a temporary assignment or another temporary sleeper holds its permanent slot on the same map. Outside those cases, vanilla can claim an unowned sleeping place even when the pawn already owns a bed, including a bed on another map. Manual bed assignments retain vanilla behavior.
-
-[TemporarySleepingSlot](TemporarySleepingSlot.cs) retains an assignment for its creation tick, then while the pawn is physically lying in its chosen slot or travelling there for sleep or lovin'. Native reservation records play no part in that lifetime. Cleanup runs when the data is queried and before saving. Saved comp keys and assignment fields are unchanged. The old `NightVisits` map component remains empty so existing maps can load its saved entry; it runs no checks.
-
-## Bedroom roles
-
-Vanilla's love cluster already includes the transitive closure of living spouses, fiancés and lovers. Yobai leaves bedroom classification and room-role caching unchanged, including relationships whose ideoligions prohibit bed sharing, children sharing with parents, and empty beds making a room a barracks. The stricter physical-partner polycule is computed afresh for Yobai's bed-sharing rules.
-
-See the [in-game test instructions](../Yobai.Tests/README.md) and [verification results](../Yobai.Tests/VERIFICATION.md) for coverage and remaining checks.
+See the [in-game test instructions](../Yobai.Tests/README.md) for running tests and constructing fixtures.
