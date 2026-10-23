@@ -4,11 +4,12 @@ internal sealed class TemporarySleepingSlot : IExposable
 {
     public Pawn? Pawn => pawn;
     public int Slot => slot;
-    public int TickCreated => tickCreated;
+    
+    [field: Unsaved]
+    public int TickCreated { get; } = -1;
+
     private Pawn? pawn;
     private int slot;
-
-    [Unsaved] private readonly int tickCreated = -1;
 
     [UsedImplicitly]
     public TemporarySleepingSlot() { }
@@ -17,7 +18,7 @@ internal sealed class TemporarySleepingSlot : IExposable
     {
         this.pawn = pawn;
         this.slot = slot;
-        this.tickCreated = Find.TickManager.TicksGame;
+        this.TickCreated = Find.TickManager.TicksGame;
     }
 
     public void ExposeData()

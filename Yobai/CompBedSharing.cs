@@ -45,6 +45,7 @@ public sealed class CompBedSharing : ThingComp
             if (Bed.GetSleepingSlotPos(slot) == position)
                 return IsSleepingPlaceAvailable(pawn, slot);
         }
+
         return false;
     }
 

@@ -51,7 +51,7 @@ internal static class Patch_Toils_Bed
                 .FirstOrDefault(assignment => assignment.Pawn == claimant);
             if (assignment is { IsTemporary: true })
                 return;
-            if (claimant.ownership?.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)
+            if (claimant.ownership.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)
                 return;
 
             // Outside temporary stays or displacement, vanilla may claim an unowned sleeping place

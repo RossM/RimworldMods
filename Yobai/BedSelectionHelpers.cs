@@ -4,8 +4,10 @@ internal static class BedSelectionHelpers
 {
     public static Building_Bed? FindPolyculeBed(Pawn pawn)
     {
-        List<Building_Bed> beds = GetPolyculeBedroomBeds(pawn)
-            .Where(bed => GetAvailablePolyculeBedroomSlots(pawn, bed).Any()).ToList();
+        List<Building_Bed> beds =
+        [
+            .. GetPolyculeBedroomBeds(pawn).Where(bed => GetAvailablePolyculeBedroomSlots(pawn, bed).Any()),
+        ];
         beds.Shuffle();
 
         foreach (Building_Bed bed in beds.OrderByDescending(bed => HasLovePartnerWillingToShareBed(pawn, bed) || FreeSlots(pawn, bed) >= 2))
@@ -13,6 +15,7 @@ internal static class BedSelectionHelpers
             if (TryMakePolyculeBedroomSleepJob(pawn, bed))
                 return bed;
         }
+
         return null;
     }
 
@@ -39,6 +42,7 @@ internal static class BedSelectionHelpers
 
             return true;
         }
+
         return false;
     }
 

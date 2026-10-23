@@ -44,7 +44,7 @@ internal static class NightVisitHelpers
         foreach (Pawn partner in bed.CurOccupants)
         {
             if (PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake()
-                                                                        && BedSharingHelpers.CanShareBedsNow(partner))
+                                                                                   && BedSharingHelpers.CanShareBedsNow(partner))
                 yield return new NightVisit(partner, place);
         }
     }
