@@ -47,10 +47,16 @@ internal static class Patch_Toils_Bed
             Pawn claimant = claimantIndex == TargetIndex.None
                 ? actor
                 : (Pawn)actor.CurJob.GetTarget(claimantIndex).Thing;
-            Building_Bed bed = (Building_Bed)actor.CurJob.GetTarget(ind).Thing;
-            // Automatic claims must preserve temporary stays. Manual assignments still work normally.
-            if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(claimant, out _) != true)
-                claimBed();
+            SleepingAssignments.ActiveAssignment? assignment = SleepingAssignments.GetActiveAssignments(claimant.Map)
+                .FirstOrDefault(assignment => assignment.Pawn == claimant);
+            if (assignment is { IsTemporary: true })
+                return;
+            if (claimant.ownership?.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)
+                return;
+
+            // Outside temporary stays or displacement, vanilla may claim an unowned sleeping place
+            // even when the pawn already owns a bed. This lets pawns claim a bed on another map.
+            claimBed();
         };
     }
 }

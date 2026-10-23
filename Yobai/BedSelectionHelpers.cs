@@ -34,7 +34,7 @@ internal static class BedSelectionHelpers
 
             if (!BedSharingJobHelpers.CanBookSleepingPlace(pawn, place))
                 continue;
-            if (!BedSharingJobHelpers.TryAssignSleepingSlot(pawn, place))
+            if (!SleepingAssignments.TryAssignTemporary(pawn, place))
                 continue;
 
             return true;
@@ -56,10 +56,14 @@ internal static class BedSelectionHelpers
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
+        HashSet<Pawn> members = PolyculeHelpers.GetPolycule(pawn);
         if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot)
             slots = slots.Prepend(ownedSlot).Distinct();
         foreach (int slot in slots)
         {
+            Pawn? owner = bed.OwnersForReading.ElementAtOrDefault(slot);
+            if (owner != null && !members.Contains(owner))
+                continue;
             if (comp.CanAssignSleepingSlot(pawn, slot))
                 yield return slot;
         }

@@ -13,7 +13,7 @@ internal static class Patch_RestUtility
         if (comp?.HasTemporaryAssignments != true)
             return;
 
-        // Permanent ownership grants a place, but cannot make unrelated occupants bedmates.
+        // Owning the bed does not override compatibility with its current sleepers.
         if (!BedSharingHelpers.AllBedmatesWillingToShareBed(sleeper, bed))
         {
             __result = false;

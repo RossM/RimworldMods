@@ -33,11 +33,10 @@ internal static class NightVisitHelpers
         if (!comp.GetBedmates().Any(other => PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
             yield break;
 
-        IEnumerable<int> slots = Enumerable.Range(bed.OwnersForReading.Count,
-            bed.SleepingSlotsCount - bed.OwnersForReading.Count);
+        IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
         if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
-            slots = slots.Prepend(ownedSlot);
-        int slot = slots.FirstOrDefault(slot => comp.CanAssignSleepingSlot(visitor, slot), -1);
+            slots = slots.Prepend(ownedSlot).Distinct();
+        int slot = slots.FirstOrDefault(slot => SleepingAssignments.CanAssignForNightVisit(visitor, new SleepingPlace(bed, slot)), -1);
         if (slot < 0)
             yield break;
 
@@ -58,6 +57,8 @@ internal static class NightVisitHelpers
 
     public static Job? TryMakeVisitJob(Pawn visitor, NightVisit visit)
     {
+        if (!SleepingAssignments.CanAssignForNightVisit(visitor, visit.Place))
+            return null;
         return BedSharingJobHelpers.TryMakeLovinJob(visitor, visit.Partner, visit.Place);
     }
 }

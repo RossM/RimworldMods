@@ -2,6 +2,18 @@
 
 The current runner uses Steam's installed RimWorld **1.7.4985 rev1269** in headless mode. Older runs below used **1.7.4982 rev1280** or a copied runtime; those setups are no longer used.
 
+## Active sleeping assignments
+
+The map-scoped assignment system passed **124 DLC cases** in **158,903 ms** and **105 Core-only cases** in **144,915 ms**, using Windows PowerShell 5.1 and the installed Steam game. Both runs exited with code 0, with no build warnings or logged game errors. Reports are in `TestResults/Yobai/ActiveAssignments-MapScoped-DLC-20261022` and `ActiveAssignments-MapScoped-Core-20261022`.
+
+Eleven added cases cover the shared collection and its pawn/slot views, released home slots receiving night visits, temporary transfers and rejected transfers, ownership restoration, actual travel without native reservations, abandoned reservations, travel to a different slot, unowned sleepers, and protection of a child roommate's permanent slot. The receiving-night-visit case also transfers a visitor out of a temporary stay. Each added or revised test explains its expected behavior in terms of assignment or feature rules.
+
+The ordinary-claim exception passed **126 DLC cases** in **153,154 ms**, with exit code 0 and no build warnings or logged game errors. Its two added cases distinguish an active permanent assignment, which permits vanilla to claim another unowned bed, from a permanent slot held by a temporary assignee, which preserves the displaced owner's ownership. The report is in `TestResults/Yobai/ActiveOwnershipClaims-DLC-20261022`.
+
+Fixtures representing incoming sleepers use actual travel jobs. The creation-tick access case expects an unstarted temporary assignment to expire even when a native reservation remains. Save/load coverage keeps a pawn travelling while restoring its record, since the creation-tick grace period is not serialized. Compatibility, ownership and slot-protection expectations remain covered.
+
+An intermediate run logged a vanilla `InteractionWorker_ConvertIdeoAttempt` null-reference exception during `PolyculeFallbackDoesNotApplyOutsideBedroom`. That test was unchanged and passed in subsequent full DLC runs, including the final run above. The intermediate report is in `TestResults/Yobai/ActiveAssignments-Final-DLC-20261022`.
+
 ## Test environment
 
 The runner builds Yobai in Release configuration using the released Disharmony NuGet package. At runtime it enables the installed Workshop versions of Harmony and Disharmony, with normal package IDs and Yobai's unmodified dependency declarations. DevTools is downloaded from revision `0600eb11a6781371ee84a5d9a4ce86653c92d7ff` and built automatically against the installed game. No Disharmony source checkout is involved.

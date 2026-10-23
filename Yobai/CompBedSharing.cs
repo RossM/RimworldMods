@@ -3,10 +3,19 @@ namespace Yobai;
 [UsedImplicitly]
 public sealed class CompBedSharing : ThingComp
 {
-    private Building_Bed Bed => (Building_Bed)parent;
+    internal Building_Bed Bed => (Building_Bed)parent;
 
     public bool nightVisitsEnabled = true;
     private List<TemporarySleepingSlot> temporarySleepingSlots = [];
+
+    internal IReadOnlyList<TemporarySleepingSlot> TemporaryAssignments
+    {
+        get
+        {
+            RemoveDepartedSleepers();
+            return temporarySleepingSlots;
+        }
+    }
 
     internal bool HasTemporaryAssignments
     {
@@ -19,69 +28,38 @@ public sealed class CompBedSharing : ThingComp
 
     internal bool TryGetSleepingSlot(Pawn pawn, out int slot)
     {
-        RemoveDepartedSleepers();
-        TemporarySleepingSlot? assignment = temporarySleepingSlots.Find(assignment => assignment.Pawn == pawn);
-        slot = assignment?.Slot ?? -1;
-        return assignment != null;
+        SleepingPlace? assignment = SleepingAssignments.GetTemporaryAssignment(pawn);
+        slot = assignment?.Bed == Bed ? assignment.Slot : -1;
+        return slot >= 0;
     }
 
     internal IEnumerable<Pawn> GetBedmates()
     {
-        return GetOccupiedAndSleepingPlaces().Select(place => place.Pawn).Distinct();
+        return SleepingAssignments.GetBedmates(Bed);
     }
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)
     {
-        return GetOccupiedAndSleepingPlaces().All(place => place.Pawn == pawn || place.Position != position);
+        for (int slot = 0; slot < Bed.SleepingSlotsCount; slot++)
+        {
+            if (Bed.GetSleepingSlotPos(slot) == position)
+                return IsSleepingPlaceAvailable(pawn, slot);
+        }
+        return false;
     }
 
-    internal bool IsSleepingPlaceAvailable(Pawn pawn, int slot) => IsSleepingPlaceAvailable(pawn, Bed.GetSleepingSlotPos(slot));
-
-    private IEnumerable<(Pawn Pawn, IntVec3 Position)> GetOccupiedAndSleepingPlaces()
-    {
-        RemoveDepartedSleepers();
-        foreach (Pawn occupant in Bed.CurOccupants)
-            yield return (occupant, occupant.Position);
-        foreach (TemporarySleepingSlot assignment in temporarySleepingSlots)
-        {
-            if (assignment.Pawn is { } pawn)
-                yield return (pawn, Bed.GetSleepingSlotPos(assignment.Slot));
-        }
-
-        // Vanilla reservations retain an arriving owner's place without duplicating that booking.
-        // A temporary assignment replaces the owner's permanent sleeping position for this stay.
-        foreach (ReservationManager.Reservation reservation in Bed.Map.reservationManager.ReservationsReadOnly)
-        {
-            Pawn owner = reservation.Claimant;
-            if (reservation.Target.Thing == Bed && reservation.Job.targetA.Thing == Bed
-                                                && typeof(JobDriver_LayDown).IsAssignableFrom(reservation.Job.def.driverClass)
-                                                && Bed.IsOwner(owner, out int? slot) && slot is int assignedSlot
-                                                && !temporarySleepingSlots.Any(assignment => assignment.Pawn == owner))
-                yield return (owner, Bed.GetSleepingSlotPos(assignedSlot));
-        }
-    }
+    internal bool IsSleepingPlaceAvailable(Pawn pawn, int slot) => SleepingAssignments.IsAvailable(pawn, new SleepingPlace(Bed, slot));
 
     internal bool CanAssignSleepingSlot(Pawn pawn, int slot)
     {
-        RemoveDepartedSleepers();
         if (slot < 0 || slot >= Bed.SleepingSlotsCount)
             return false;
-
-        if (temporarySleepingSlots.Any(assignment => assignment.Pawn == pawn)
-            || !IsSleepingPlaceAvailable(pawn, slot))
-            return false;
-
-        return BedSharingHelpers.AllBedmatesWillingToShareBed(pawn, Bed);
+        return SleepingAssignments.CanAssignTemporary(pawn, new SleepingPlace(Bed, slot));
     }
 
-    internal TemporarySleepingSlot? TryAssignSleepingSlot(Pawn pawn, int slot)
+    internal void AddAssignment(TemporarySleepingSlot assignment)
     {
-        if (!CanAssignSleepingSlot(pawn, slot))
-            return null;
-
-        TemporarySleepingSlot assignment = new(pawn, slot);
         temporarySleepingSlots.Add(assignment);
-        return assignment;
     }
 
     internal void RemoveAssignment(TemporarySleepingSlot assignment)
@@ -92,7 +70,7 @@ public sealed class CompBedSharing : ThingComp
     internal void RemoveDepartedSleepers()
     {
         Building_Bed bed = (Building_Bed)parent;
-        temporarySleepingSlots.RemoveAll(assignment => !assignment.IsInUse(bed));
+        temporarySleepingSlots.RemoveAll(assignment => !SleepingAssignments.IsActive(assignment, bed));
     }
 
     public override void PostExposeData()

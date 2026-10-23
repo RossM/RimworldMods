@@ -7,7 +7,7 @@ internal static class BedSharingJobHelpers
         if (!CanBookSleepingPlace(pawn, place))
             return null;
 
-        if (!TryAssignSleepingSlot(pawn, place))
+        if (!SleepingAssignments.TryAssignTemporary(pawn, place))
             return null;
 
         Job job = JobMaker.MakeJob(JobDefOf.LayDown, place.Bed);
@@ -20,7 +20,7 @@ internal static class BedSharingJobHelpers
         if (!pawn.CanReserve(partner) || !CanBookSleepingPlace(pawn, place))
             return null;
 
-        if (!TryAssignSleepingSlot(pawn, place))
+        if (!SleepingAssignments.TryAssignTemporary(pawn, place))
             return null;
 
         Job job = JobMaker.MakeJob(JobDefOf.Lovin, partner, place.Bed);
@@ -30,23 +30,7 @@ internal static class BedSharingJobHelpers
 
     public static bool CanBookSleepingPlace(Pawn pawn, SleepingPlace place)
     {
-        return BedSharingHelpers.CanSleepInSharedBed(pawn, place.Bed)
-               && place.Bed.GetComp<CompBedSharing>()?.CanAssignSleepingSlot(pawn, place.Slot) == true
+        return SleepingAssignments.CanAssignTemporary(pawn, place)
                && pawn.CanReserve(place.Bed, place.Bed.SleepingSlotsCount, 0);
-    }
-
-    public static bool TryAssignSleepingSlot(Pawn pawn, SleepingPlace place)
-    {
-        CompBedSharing comp = place.Bed.GetComp<CompBedSharing>();
-        TemporarySleepingSlot? assignment = comp.TryAssignSleepingSlot(pawn, place.Slot);
-        if (assignment == null)
-            return false;
-        if (!RestUtility.IsValidBedFor(place.Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
-        {
-            comp.RemoveAssignment(assignment);
-            return false;
-        }
-
-        return true;
     }
 }

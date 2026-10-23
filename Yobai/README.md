@@ -12,21 +12,21 @@ Vanilla already treats connected spouses, fiancés and lovers as a bedroom group
 
 The whole polycule does not need to sleep in one room. In the example above, Anya and Cora can have a shared bedroom even if Bo sleeps elsewhere.
 
-When a pawn goes to sleep in a polycule bedroom, they choose a bed as follows:
+When a pawn goes to sleep in a polycule bedroom, they prefer beds with a partner already in them or with at least two free places. They choose randomly among those beds. If none is available, they can share another eligible bed with a member of the polycule, even if they aren't partners or their ideoligions normally forbid sharing.
 
-1. Join a partner already in bed, if there is space. If several beds are available, choose one at random.
-2. Otherwise, choose a random empty bed in that room assigned to a member of the polycule.
-3. If neither choice works, share an available bed with another member of the polycule, even if they aren't partners or their ideoligions normally forbid sharing.
+They can borrow a polycule member's permanently assigned place when it isn't being used, or take an unowned place in that member's bed. A child or other roommate's permanently assigned place is protected.
 
 Pawns already on their way to a bed count as bedmates when making these choices, including owners returning to their assigned beds. Their chosen places are kept for them during the trip. Each pair has a chance to get together, and the choice stays the same while the pawn walks to bed and sleeps. Within a chosen bed, owners use their assigned place if it is free; otherwise, they can use another available place. Their assigned beds stay the same.
 
 ## Night visits
 
-A pawn sleeping alone can wake up to visit a sleeping partner in a bed with room for another pawn. Both pawns must be ready for lovin': their cooldowns must have expired, and the usual health and reservation checks must allow it. If several partners can receive a visit, one is chosen at random.
+A pawn sleeping without a romantic partner can wake up to visit a sleeping partner in a bed with room for another pawn. Sharing with a non-romantic companion doesn't prevent a visit. Both partners must be ready for lovin': their cooldowns must have expired, and the usual health and reservation checks must allow it. If several partners can receive a visit, one is chosen at random.
 
-A visitor returning to their own bed uses their assigned place if it is free. Otherwise, a visit needs a free place that isn't assigned to anyone. A place assigned to an absent pawn is kept for that pawn. Beds with three or more places can receive visits too. Everyone already in the bed or on the way to it must be a partner the visitor is allowed to share with.
+A visitor returning to their own bed uses their assigned place if it is free. Otherwise, a visit needs a free place that isn't currently assigned to anyone. Sleeping or travelling to a temporary place on the same map releases the pawn's permanent place for visits. Simply being away from bed does not release it. Beds with three or more places can receive visits too. Other bedmates need to be willing to share with the visitor; only the chosen host needs to be a romantic partner.
 
-Visits are considered through the pawn's think tree, at most once per in-game hour. The chance uses RimWorld's normal lovin' calculation for the chosen pair, including age, health, attraction and opinion. Going to bed does not trigger a separate visit roll. Pawns already sharing a bed, or waiting for someone on the way to join them, won't leave to make a visit.
+Temporary stays keep permanent ownership unchanged. When a temporary stay ends, the pawn's permanent place becomes assigned to them again, unless another temporary sleeper is using it. A returning owner must find another available place while that stay continues.
+
+Visits are considered through the pawn's think tree, at most once per in-game hour. The chance uses RimWorld's normal lovin' calculation for the chosen pair, including age, health, attraction and opinion. Going to bed does not trigger a separate visit roll. Pawns sharing with a romantic partner, or waiting for one on the way to join them, won't leave to make a visit.
 
 Select a bed with room for more than one pawn and use the **Night visits** button to allow or prevent visits to that bed. Night visits are enabled by default, and the setting is saved with the bed. The button appears when an assigned pawn has a partner assigned to a different bed. It also controls returns to a fully assigned bed. Turning visits off prevents new visits; an already arranged visit can finish. It does not stop pawns in a polycule bedroom from sharing its beds.
 
