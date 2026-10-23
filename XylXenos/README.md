@@ -291,7 +291,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 
 Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. They are comfortable indoors and in low gravity, but on planets they are prone to bouts of debilitating nausea. They learn quickly, excel at intellectual work, and have a natural connection to machines that makes them adept at controlling mechanoids and piloting gravships. In emergency situations oxygen and protective proteins stored in their bone marrow can briefly protect them against vacuum, toxins, and temperature extremes. Enhanced vision, adapted for the low light and vast distances of space, makes them excellent marksmen.
 
-Even the most colossal spaceborn habitat can eventually break down due to years of accidents, neglect, or conflict. The former inhabitants of those lost paradises are now scattered across the galaxy. Many find their homes in spacer guilds and salvager gangs, but even more have settled on planets where they put their unique biological traits to use despite the gravity.
+Even the most colossal spaceborn habitat can eventually break down due to centuries of accidents, neglect, or conflict. The former inhabitants of those lost paradises are now scattered across the galaxy. Many find their homes in spacer guilds and salvager gangs, but even more have settled on planets where they put their unique biological traits to use despite the gravity.
 
 ### Trivia
 
