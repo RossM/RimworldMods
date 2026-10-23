@@ -38,8 +38,7 @@ internal static class BedSharingHelpers
     {
         Building_Bed? ownedBed = pawn.ownership.OwnedBed;
         Room? room = ownedBed?.GetRoom();
-        if (room == null || room.PsychologicallyOutdoors || bed.GetRoom() != room
-            || room.Role != RoomRoleDefOf.Bedroom)
+        if (room == null || bed.GetRoom() != room)
             return false;
 
         HashSet<Pawn> members = PolyculeHelpers.GetPolycule(pawn);
