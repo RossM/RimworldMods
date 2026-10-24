@@ -4,13 +4,13 @@ namespace Xylib;
 public readonly struct ProfileBlock : IDisposable
 {
     public const bool GlobalEnabled = true;
-    private readonly bool _enabled;
+    private readonly bool enabled;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ProfileBlock(string label, bool enabled = GlobalEnabled, [CallerMemberName] string methodName = "unknown")
     {
-        _enabled = enabled;
-        if (!_enabled)
+        this.enabled = enabled;
+        if (!this.enabled)
             return;
 
         DeepProfiler.Start($"[{methodName}] {label}");
@@ -19,7 +19,7 @@ public readonly struct ProfileBlock : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IDisposable.Dispose()
     {
-        if (!_enabled)
+        if (!enabled)
             return;
         DeepProfiler.End();
     }

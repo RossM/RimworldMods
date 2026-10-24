@@ -23,6 +23,7 @@ public class PatchOperationReplaceGenes : PatchOperation
 
     public required List<Replacement> entries;
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (var error in base.ConfigErrors())

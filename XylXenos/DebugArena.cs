@@ -7,7 +7,7 @@ namespace XylXenos;
 
 public static class DebugArena
 {
-    private const int maxFights = 25;
+    private const int MaxFights = 25;
 
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
@@ -360,7 +360,7 @@ public static class DebugArena
 
         debugTools.AddPerFrameCallback(delegate
         {
-            if (currentFights >= maxFights)
+            if (currentFights >= MaxFights)
                 return false;
 
             ReadEstimatedCombatPower(ratingsPath);

@@ -322,7 +322,7 @@ public class EventManager
     /// </summary>
     private NotificationInfo?[] Notifications => field ??= new NotificationInfo[DefDatabase<EventDef>.DefCount];
 
-    private static bool doDebug = false;
+    private static bool _doDebug = false;
 
     /// <summary>
     ///     Listeners that should be registered whenever event registrations are rebuilt.
@@ -355,7 +355,7 @@ public class EventManager
     [DebugAction(allowedGameStates = 0)]
     public static void ToggleNotificationManagerLogging()
     {
-        doDebug = !doDebug;
+        _doDebug = !_doDebug;
     }
 
     /// <summary>
@@ -390,7 +390,7 @@ public class EventManager
         if (source is not IEventListener listener)
             throw new InvalidOperationException("Only an INotificationListener can register for notifications");
 
-        if (doDebug)
+        if (_doDebug)
             Debug.Log(
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
 
@@ -706,7 +706,7 @@ public class EventManager
         if (Scribe.mode != LoadSaveMode.Inactive && !eventDef.allowDuringScribe)
             return;
 
-        if (doDebug)
+        if (_doDebug)
             Debug.Log($"[EventManager] Notify eventDef={eventDef} target=[{target}] data={data}");
 
         if (Prefs.DevMode)
@@ -829,7 +829,7 @@ public class EventManager
                 return;
         }
 
-        if (doDebug)
+        if (_doDebug)
             Debug.Log($"[EventManager]   {callbackInfo} (priority {callbackInfo.priority})");
 
         try

@@ -3,6 +3,7 @@
 [UsedFromXml]
 public class CompProperties_AbilityToxicBurst : CompProperties_AbilityReleaseGas
 {
+    // ReSharper disable once InconsistentNaming
     public float AIUseRadius;
 
     public CompProperties_AbilityToxicBurst()

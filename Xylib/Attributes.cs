@@ -19,11 +19,12 @@ namespace Xylib;
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public class FeatureAttribute(string featureName) : Attribute
 {
-    // ReSharper disable once UnusedMember.Global
     /// <summary>
     ///     The name of the feature supported by the patch.
     /// </summary>
+#pragma warning disable IDE0051
     public readonly string featureName = featureName;
+#pragma warning restore IDE0051
 
     /// <summary>
     ///     Marks a patch as supporting the feature implemented by the specified type.

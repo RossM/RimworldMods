@@ -9,7 +9,7 @@ public static class Extensions
 {
     private delegate object MemberwiseCloneDelegate(object obj);
 
-    private static MemberwiseCloneDelegate? memberwiseCloneFn;
+    private static MemberwiseCloneDelegate? _memberwiseCloneFn;
     public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = new();
 
     extension(Faction faction)
@@ -626,15 +626,15 @@ public static class Extensions
     {
         public T MemberwiseClone()
         {
-            if (memberwiseCloneFn == null)
+            if (_memberwiseCloneFn == null)
             {
                 var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
                 DebugAssert.NotNull(method);
 
-                memberwiseCloneFn = method.CreateDelegate<MemberwiseCloneDelegate>();
+                _memberwiseCloneFn = method.CreateDelegate<MemberwiseCloneDelegate>();
             }
 
-            return (T)memberwiseCloneFn(obj);
+            return (T)_memberwiseCloneFn(obj);
         }
     }
 
