@@ -45,11 +45,6 @@
   </Xylib.EventDef>
   
   <Xylib.EventDef>
-    <defName>PreGeneratePawnBioAndName</defName>
-    <dataType>Xylib.PawnGenerationData</dataType>
-  </Xylib.EventDef>
-
-  <Xylib.EventDef>
     <defName>PreTryGenerateNewPawnInternal</defName>
     <dataType>Xylib.PawnGenerationData</dataType>
     <global>true</global>

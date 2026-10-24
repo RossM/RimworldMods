@@ -16,4 +16,16 @@ public static class Patch_PawnGenerator
         minorPassions--;
         return false;
     }
+
+    [Feature(typeof(GeneCompProperties_GenderRatio))]
+    [Prefix]
+    [Inner(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+    [Target("TryGenerateNewPawnInternal")]
+    public static void GiveAppropriateBioAndNameTo_Prefix(
+        Pawn pawn,
+        in PawnGenerationRequest request,
+        XenotypeDef? xenotype)
+    {
+        PatchHelpers.ModifyGenderByGenes(pawn, request, xenotype);
+    }
 }

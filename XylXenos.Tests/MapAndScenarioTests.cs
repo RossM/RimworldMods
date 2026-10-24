@@ -67,11 +67,11 @@ public sealed class MapAndScenarioTests : PawnTestFixture
     public void RandomXenotypeScenarioPreservesExplicitCustomXenotype()
     {
         var custom = new CustomXenotype { name = "Test custom", genes = [] };
-        var data = new PawnGenerationData(new PawnGenerationRequest(PawnKindDefOf.Colonist, forcedCustomXenotype: custom), XenotypeDefOf.Baseliner);
+        var data = new PawnGenerationData(new PawnGenerationRequest(PawnKindDefOf.Colonist, forcedCustomXenotype: custom));
         var part = new ScenPart_RandomXenotype();
-        part.Notify_PawnGenerationEarly(pawn, data);
+        part.Notify_PreTryGenerateNewPawnInternal(data);
         Expect.ReferencesAreEqual(custom, data.request.ForcedCustomXenotype);
-        Expect.ReferencesAreEqual(XenotypeDefOf.Baseliner, data.xenotype);
+        Expect.IsNull(data.request.ForcedXenotype);
     }
 
     [Test]

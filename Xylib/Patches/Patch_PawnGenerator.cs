@@ -41,23 +41,14 @@ internal static class Patch_PawnGenerator
             __result = withDefault.defaultXenotype;
     }
 
-    [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
+    [Feature(nameof(EventDefOf.PreTryGenerateNewPawnInternal))]
     [Prefix]
     [Target("TryGenerateNewPawnInternal")]
     public static void TryGenerateNewPawnInternal_Prefix(ref PawnGenerationRequest request)
     {
-        var data = new PawnGenerationData(request, null);
+        var data = new PawnGenerationData(request);
         EventManager.Instance.Notify(EventDefOf.PreTryGenerateNewPawnInternal, null, data);
         request = data.request;
-    }
-
-    [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
-    [Prefix]
-    [Inner(typeof(PawnGenerator), "GenerateGenes")]
-    [Target("TryGenerateNewPawnInternal")]
-    public static void GenerateGenes_Prefix(ref XenotypeDef? xenotype, [State] PawnGenerationData data)
-    {
-        xenotype = data.xenotype;
     }
 
     [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]
@@ -66,22 +57,6 @@ internal static class Patch_PawnGenerator
     public static void GenerateInitialHediffs_Postfix(Pawn pawn)
     {
         EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
-    }
-
-    [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
-    [Prefix]
-    [Inner(typeof(PawnBioAndNameGenerator), nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
-    [Target("TryGenerateNewPawnInternal")]
-    public static void GiveAppropriateBioAndNameTo_Prefix(
-        Pawn pawn,
-        PawnGenerationRequest request,
-        ref XenotypeDef? xenotype,
-        [State] out PawnGenerationData data)
-    {
-        data = new PawnGenerationData(request, xenotype);
-        EventManager.Instance.Notify(EventDefOf.PreGeneratePawnBioAndName, pawn, data);
-
-        xenotype = data.xenotype;
     }
 
     [Feature(nameof(EventDefOf.PostGenerateNewPawn))]

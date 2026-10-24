@@ -9,21 +9,13 @@ namespace Xylib;
 /// <param name="request">
 ///     The request being used to generate the pawn.
 /// </param>
-/// <param name="xenotype">
-///     The xenotype chosen for the pawn.
-/// </param>
 [PublicAPI]
-public class PawnGenerationData(PawnGenerationRequest request, XenotypeDef? xenotype)
+public class PawnGenerationData(PawnGenerationRequest request)
 {
     /// <summary>
     ///     The request being used to generate the pawn.
     /// </summary>
     public PawnGenerationRequest request = request;
-
-    /// <summary>
-    ///     The xenotype chosen for the pawn.
-    /// </summary>
-    public XenotypeDef? xenotype = xenotype;
 }
 
 /// <summary>
@@ -199,13 +191,9 @@ public static class EventDefOf
     public static EventDef PostSatisfyChemicalGenes;
 
     /// <summary>
-    ///     Called inside <c>PawnGenerator.TryGenerateNewPawnInternal</c> before the <see cref="Pawn" />'s bio and name
-    ///     are generated.
-    ///     This hook can be used to modify the pawn's <see cref="Gender" /> and <see cref="XenotypeDef" /> during generation.
+    ///     Called before <c>PawnGenerator.TryGenerateNewPawnInternal</c>.
     ///     This hook passes a <see cref="PawnGenerationData" /> as the "data" parameter.
     /// </summary>
-    public static EventDef PreGeneratePawnBioAndName;
-
     public static EventDef PreTryGenerateNewPawnInternal;
 
     /// <summary>
