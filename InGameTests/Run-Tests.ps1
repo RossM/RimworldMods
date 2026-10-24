@@ -10,7 +10,7 @@ Builds and runs the selected in-game tests against the installed Steam version o
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)] [string] $RimWorldPath,
+    [string] $RimWorldPath = 'C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe',
     [ValidateSet('Yobai', 'Xylib', 'XylXenos')] [string] $Suite = 'Yobai',
     [string] $OutputDirectory = (Join-Path $PSScriptRoot "../TestResults/$Suite/$(Get-Date -Format 'yyyyMMdd-HHmmss')-$([guid]::NewGuid().ToString('N').Substring(0, 8))"),
     [string] $Filter,
