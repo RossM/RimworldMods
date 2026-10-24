@@ -326,10 +326,12 @@ public class EventManager
         }
     }
 
+    private Lazy<NotificationInfo[]> notifications = new(() => new NotificationInfo[DefDatabase<EventDef>.DefCount]);
+
     /// <summary>
     ///     Callback registrations indexed by <c>EventDef.index</c>.
     /// </summary>
-    private NotificationInfo?[] Notifications => field ??= new NotificationInfo[DefDatabase<EventDef>.DefCount];
+    private NotificationInfo[] Notifications => notifications.Value;
 
     private static bool _doDebug = false;
 
@@ -693,17 +695,24 @@ public class EventManager
         {
             foreach (var record in registrationInfo.records)
             {
-                if (record.target == null)
-                {
-                    Notifications[record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
-                }
-                else
-                {
-                    if (!record.target.TryGetTarget(out Thing? target))
-                        continue;
+                NotificationInfo? notificationInfo = Notifications[record.eventDef.index];
+                if (notificationInfo is null)
+                    continue;
 
-                    if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
-                        callbacks.RemoveAll(callback => callback.listener == listener);
+                lock (notificationInfo.sync)
+                {
+                    if (record.target == null)
+                    {
+                        notificationInfo.globalCallbacks.RemoveAll(callback => callback.listener == listener);
+                    }
+                    else
+                    {
+                        if (!record.target.TryGetTarget(out Thing? target))
+                            continue;
+
+                        if (notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
+                            callbacks.RemoveAll(callback => callback.listener == listener);
+                    }
                 }
             }
         }
@@ -747,40 +756,26 @@ public class EventManager
         if (notificationInfo == null)
             return;
 
-        lock (notificationInfo.sync)
+        _tempCallbacks ??= [];
+        var callbackList = _tempCallbacks.Count > 0 ? [] : _tempCallbacks;
+        try
         {
-            List<CallbackInfo>? localCallbacks;
-
-            if (!notificationInfo.usesPriority)
+            lock (notificationInfo.sync)
             {
-                foreach (CallbackInfo callbackInfo in notificationInfo.globalCallbacks)
-                    DoNotify(eventDef, callbackInfo, target, data);
-
-                if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
-                    return;
-
-                foreach (CallbackInfo callbackInfo in localCallbacks)
-                    DoNotify(eventDef, callbackInfo, target, data);
-
-                return;
+                callbackList.AddRange(notificationInfo.globalCallbacks);
+                if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo>? localCallbacks))
+                    callbackList.AddRange(localCallbacks);
             }
 
-            _tempCallbacks ??= [];
-            try
-            {
-                _tempCallbacks.AddRange(notificationInfo.globalCallbacks);
-                if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
-                    _tempCallbacks.AddRange(localCallbacks);
+            if (notificationInfo.usesPriority)
+                callbackList.SortByDescending(callback => callback.priority);
 
-                _tempCallbacks.SortByDescending(callback => callback.priority);
-
-                foreach (CallbackInfo callbackInfo in _tempCallbacks)
-                    DoNotify(eventDef, callbackInfo, target, data);
-            }
-            finally
-            {
-                _tempCallbacks.Clear();
-            }
+            foreach (CallbackInfo callbackInfo in callbackList)
+                DoNotify(eventDef, callbackInfo, target, data);
+        }
+        finally
+        {
+            callbackList.Clear();
         }
     }
 
