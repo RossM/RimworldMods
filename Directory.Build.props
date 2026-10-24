@@ -3,7 +3,7 @@
           Condition="'$(ImportLocalBuildProps)' != 'false' and Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
 
   <PropertyGroup>
-    <DisharmonyVersion>1.0.0-beta.2</DisharmonyVersion>
+    <DisharmonyVersion>1.0.0-beta.3</DisharmonyVersion>
     <DisharmonyProjectDirectory Condition="'$(DisharmonySourceDirectory)' != ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '$(DisharmonySourceDirectory)'))</DisharmonyProjectDirectory>
   </PropertyGroup>
 

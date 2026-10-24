@@ -6,7 +6,7 @@ Run from the repository root with PowerShell 5.1 or 7 and the .NET 10 SDK:
 .\XylXenos.Tests\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe" -DisharmonySourceDirectory ..\Disharmony
 ```
 
-See [the shared runner documentation](../InGameTests/README.md) for dependencies, filters, results, and isolation. Biotech is required. Royalty-specific cases skip when Royalty is unavailable. The current source needs a newer Disharmony API than the pinned NuGet package supplies; the example explicitly uses a local checkout for both compilation and runtime.
+See [the shared runner documentation](../InGameTests/README.md) for dependencies, filters, results, and isolation. Biotech is required. Royalty-specific cases skip when Royalty is unavailable. The example uses a local Disharmony checkout for both compilation and runtime. Omit `-DisharmonySourceDirectory` to test the released package.
 
 Coverage includes every gene comp and hediff comp, specialized hediffs and givers, wetness/lovin' needs, thought workers, gene tracker aggregation, ability effects, blindness damage, gene/entropy conditionals, ability targeting, wetness/diet job selection, milking eligibility, mental-state targeting, hostility cooldowns, psylink and xenotype scenario helpers, petrification surgery, name generation, skin-shader selection, gene templates, stock delegation, and spectrum interpolation.
 

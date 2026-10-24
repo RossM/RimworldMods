@@ -10,7 +10,7 @@ The launcher builds the selected suite, creates a new profile under `TestResults
 
 `-RimWorldPath` defaults to `C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe`. Omit it for a standard Steam installation, or pass a different path to override it.
 
-The launcher defaults to the released Disharmony package, ignoring `Directory.Build.local.props` for reproducibility. Pass `-DisharmonySourceDirectory <checkout>` to Xylib/XylXenos when testing a local Disharmony version. Relative paths are resolved from the shell's working directory. This builds the source reference and stages matching runtime assemblies in the isolated run directory, without editing Workshop files. Current Xylib uses `Patcher.PatchesFromMethod`, which is unavailable in the pinned package, so these suites currently require the explicit local-source option.
+The launcher defaults to the released Disharmony package, ignoring `Directory.Build.local.props` for reproducibility. Pass `-DisharmonySourceDirectory <checkout>` to Xylib/XylXenos when testing a local Disharmony version. Relative paths are resolved from the shell's working directory. This builds the source reference and stages matching runtime assemblies in the isolated run directory, without editing Workshop files.
 
 All installed expansions are enabled by default. Xylib and XylXenos need Biotech; `-CoreOnly` remains available for Yobai. The new tests mostly invoke one callback or one interval directly instead of simulating long periods. Full suites initially took about 3–5 seconds each after map creation; game startup, dependency restore, and compilation are additional.
 
