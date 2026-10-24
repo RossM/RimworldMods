@@ -16,7 +16,7 @@ public static class PatchLactation
         DebugAssert.NotNull(__instance.pawn);
 
         if (def == HediffDefOf.Lactating)
-            __result ??= __instance.pawn.health.hediffSet.GetFirstHediffOfDef(DefOf.XylHyperlactating, mustBeVisible);
+            __result ??= __instance.pawn.FirstHediffWithComp<HediffComp_Lactating>(comp => !mustBeVisible || comp.parent.Visible);
     }
 
     [Feature(typeof(GeneComp_Hyperlactation))]
@@ -28,6 +28,6 @@ public static class PatchLactation
         DebugAssert.NotNull(__instance.pawn);
 
         if (def == HediffDefOf.Lactating)
-            __result |= __instance.pawn.health.hediffSet.HasHediff(DefOf.XylHyperlactating, mustBeVisible);
+            __result |= __instance.pawn.HasHediffWithComp<HediffComp_Lactating>(comp => !mustBeVisible || comp.parent.Visible);
     }
 }

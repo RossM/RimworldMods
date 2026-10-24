@@ -17,8 +17,6 @@ public static class DefOf
 
     public static GeneDef XylEcholocation;
 
-    public static HediffDef XylHyperlactating;
-
     public static JobDef XylTakeShower;
 
     public static PawnKindDef XylSelkie;
