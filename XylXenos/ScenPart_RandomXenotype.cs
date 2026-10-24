@@ -28,27 +28,30 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
         EventManager.Instance.AddListener(this);
     }
 
-    public void Notify_PawnGenerationEarly(Thing? thing, PawnGenerationData data)
+    public void Notify_PreTryGenerateNewPawnInternal(PawnGenerationData data)
     {
-        if (thing is not Pawn pawn)
+        if (!data.request.KindDef.RaceProps.Humanlike)
             return;
-
+        
         if (data.request.ForcedCustomXenotype != null)
             return;
 
-        if (data.xenotype != null && data.xenotype.AllGenes.Any(gene => gene.biostatArc > 0))
+        if (data.request.ForcedXenotype is { Archite: true })
             return;
 
-        if (context.Includes(data.request.Context) && Rand.Chance(chance) && pawn.RaceProps.Humanlike)
-        {
-            var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
-            data.xenotype = xenotype;
-        }
+        if (!context.Includes(data.request.Context))
+            return;
+
+        if (!Rand.Chance(chance))
+            return;
+        
+        var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
+        data.request.ForcedXenotype = xenotype;
     }
 
     public void RegisterWith(EventManager manager)
     {
-        manager.Register<PawnGenerationData>(EventDefOf.PreGeneratePawnBioAndName, null, Notify_PawnGenerationEarly);
+        manager.Register<PawnGenerationData>(EventDefOf.PreTryGenerateNewPawnInternal, null, Notify_PreTryGenerateNewPawnInternal);
     }
 
     public void PreUnregister(EventManager manager) { }

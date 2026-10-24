@@ -43,6 +43,16 @@ internal static class Patch_PawnGenerator
 
     [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
     [Prefix]
+    [Target("TryGenerateNewPawnInternal")]
+    public static void TryGenerateNewPawnInternal_Prefix(ref PawnGenerationRequest request)
+    {
+        var data = new PawnGenerationData(request, null);
+        EventManager.Instance.Notify(EventDefOf.PreTryGenerateNewPawnInternal, null, data);
+        request = data.request;
+    }
+
+    [Feature(nameof(EventDefOf.PreGeneratePawnBioAndName))]
+    [Prefix]
     [Inner(typeof(PawnGenerator), "GenerateGenes")]
     [Target("TryGenerateNewPawnInternal")]
     public static void GenerateGenes_Prefix(ref XenotypeDef? xenotype, [State] PawnGenerationData data)

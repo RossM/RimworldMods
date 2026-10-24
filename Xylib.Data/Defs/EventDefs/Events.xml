@@ -50,6 +50,12 @@
   </Xylib.EventDef>
 
   <Xylib.EventDef>
+    <defName>PreTryGenerateNewPawnInternal</defName>
+    <dataType>Xylib.PawnGenerationData</dataType>
+    <global>true</global>
+  </Xylib.EventDef>
+
+  <Xylib.EventDef>
     <defName>PostDowned</defName>
   </Xylib.EventDef>
 

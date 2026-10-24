@@ -206,6 +206,8 @@ public static class EventDefOf
     /// </summary>
     public static EventDef PreGeneratePawnBioAndName;
 
+    public static EventDef PreTryGenerateNewPawnInternal;
+
     /// <summary>
     ///     Called before <see cref="Thing.TakeDamage" />.
     ///     This hook passes a <see cref="DamageInfo" /> as its "data" parameter.
