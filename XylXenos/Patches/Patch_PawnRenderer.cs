@@ -3,7 +3,7 @@
 [Patch(typeof(PawnRenderer))]
 public static class Patch_PawnRenderer
 {
-    [Feature(nameof(DefOf.XylTakeShower))]
+    [Feature(typeof(JobDriver_TakeShower))]
     [Prefix]
     [Inner(typeof(PawnRenderer), "GetDrawParms")]
     [Target("ParallelGetPreRenderResults")]

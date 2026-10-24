@@ -160,7 +160,7 @@ public static class PatchHelpers
         if (pawn.pather is null)
             return flags;
 
-        if (pawn.CurJobDef == DefOf.XylTakeShower && !pawn.pather.Moving)
+        if (pawn.CurJob.GetCachedDriverDirect is JobDriver_TakeShower && !pawn.pather.Moving)
             flags &= ~(PawnRenderFlags.Clothes | PawnRenderFlags.Headgear);
 
         return flags;
