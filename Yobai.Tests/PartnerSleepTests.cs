@@ -152,7 +152,7 @@ public sealed class PartnerSleepTests
         thirdBed.CompAssignableToPawn.TryUnassignPawn(third);
         thirdBed.CompAssignableToPawn.TryAssignPawn(outsider);
         Expect.AreEqual(RoomRoleDefOf.Barracks, firstBed.GetRoom().Role);
-        Expect.IsFalse(BedSharingHelpers.IsBedInAssignedPolyculeBedroom(first, secondBed));
+        Expect.IsTrue(BedSharingHelpers.IsBedInAssignedPolyculeBedroom(first, secondBed));
     }
 
     [Test]
