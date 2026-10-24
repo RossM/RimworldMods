@@ -396,9 +396,6 @@ public class EventManager
 
         var records = registrations.GetOrCreateValue(listener);
 
-        // Resharper seems to not have correct annotations for ConditionalWeakTable
-        DebugAssert.NotNull(records);
-
         records.Add(new(eventDef, target));
 
         NotificationInfo notificationInfo = Notifications[eventDef.index] ??= new();
@@ -653,9 +650,6 @@ public class EventManager
         if (!registrations.TryGetValue(listener, out List<RegistrationInfo>? records))
             return;
 
-        // Resharper seems to not have correct annotations for ConditionalWeakTable
-        DebugAssert.NotNull(records);
-
         foreach (var record in records)
         {
             if (record.target == null)
@@ -668,12 +662,7 @@ public class EventManager
                     continue;
 
                 if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
-                {
-                    // Resharper seems to not have correct annotations for ConditionalWeakTable
-                    DebugAssert.NotNull(callbacks);
-
                     callbacks.RemoveAll(callback => callback.listener == listener);
-                }
             }
         }
 
@@ -723,9 +712,6 @@ public class EventManager
             if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
                 return;
 
-            // Resharper seems to not have correct annotations for ConditionalWeakTable
-            DebugAssert.NotNull(localCallbacks);
-
             foreach (CallbackInfo callbackInfo in localCallbacks)
                 DoNotify(eventDef, callbackInfo, target, data);
 
@@ -735,12 +721,7 @@ public class EventManager
         tempCallbacks.Clear();
         tempCallbacks.AddRange(notificationInfo.globalCallbacks);
         if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
-        {
-            // Resharper seems to not have correct annotations for ConditionalWeakTable
-            DebugAssert.NotNull(localCallbacks);
-
             tempCallbacks.AddRange(localCallbacks);
-        }
 
         tempCallbacks.SortByDescending(callback => callback.priority);
 
