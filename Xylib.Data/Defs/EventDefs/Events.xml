@@ -45,7 +45,7 @@
   </Xylib.EventDef>
   
   <Xylib.EventDef>
-    <defName>PreTryGenerateNewPawnInternal</defName>
+    <defName>PreGenerateNewPawn</defName>
     <dataType>Xylib.PawnGenerationData</dataType>
     <global>true</global>
   </Xylib.EventDef>

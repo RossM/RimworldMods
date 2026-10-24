@@ -41,13 +41,13 @@ internal static class Patch_PawnGenerator
             __result = withDefault.defaultXenotype;
     }
 
-    [Feature(nameof(EventDefOf.PreTryGenerateNewPawnInternal))]
+    [Feature(nameof(EventDefOf.PreGenerateNewPawn))]
     [Prefix]
     [Target("TryGenerateNewPawnInternal")]
     public static void TryGenerateNewPawnInternal_Prefix(ref PawnGenerationRequest request)
     {
         var data = new PawnGenerationData(request);
-        EventManager.Instance.Notify(EventDefOf.PreTryGenerateNewPawnInternal, null, data);
+        EventManager.Instance.Notify(EventDefOf.PreGenerateNewPawn, null, data);
         request = data.request;
     }
 

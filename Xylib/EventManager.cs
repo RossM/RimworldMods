@@ -194,7 +194,7 @@ public static class EventDefOf
     ///     Called before <c>PawnGenerator.TryGenerateNewPawnInternal</c>.
     ///     This hook passes a <see cref="PawnGenerationData" /> as the "data" parameter.
     /// </summary>
-    public static EventDef PreTryGenerateNewPawnInternal;
+    public static EventDef PreGenerateNewPawn;
 
     /// <summary>
     ///     Called before <see cref="Thing.TakeDamage" />.
