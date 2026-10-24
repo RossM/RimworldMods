@@ -204,6 +204,11 @@
     <letterText>A [PAWN_title] named [PAWN_nameDef] has heard the song and is joining the colony.</letterText>
     <baseChance>0</baseChance>
     <pawnKind>Drifter</pawnKind>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_IncidentWorker_CultistJoin">
+        <hediff>XylCultistSong</hediff>
+       </li>
+    </modExtensions>
   </IncidentDef>
 
   <HediffDef>

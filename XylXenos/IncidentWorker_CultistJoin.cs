@@ -1,9 +1,17 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
+public class DefModExtension_IncidentWorker_CultistJoin : DefModExtension
+{
+    public required HediffDef hediff;
+}
+
+[UsedFromXml]
 public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 {
-    public override Pawn? GeneratePawn(Map? map)
+    public DefModExtension_IncidentWorker_CultistJoin DefExt => def.GetModExtension<DefModExtension_IncidentWorker_CultistJoin>()!;
+
+    public override Pawn GeneratePawn(Map? map)
     {
         Gender? gender = null;
         if (def.pawnFixedGender != Gender.None)
@@ -27,11 +35,9 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
             fixedIdeo: ideo,
             forcedXenotype: xenotype);
 
-        Pawn? pawn = PawnGenerator.GeneratePawn(pawnGenerationRequest);
-        if (pawn is null)
-            return null;
+        Pawn pawn = PawnGenerator.GeneratePawn(pawnGenerationRequest);
 
-        var hediff = HediffMaker.MakeHediff(DefOf.XylCultistSong, pawn);
+        var hediff = HediffMaker.MakeHediff(DefExt.hediff, pawn);
         pawn.health.AddHediff(hediff);
 
         return pawn;

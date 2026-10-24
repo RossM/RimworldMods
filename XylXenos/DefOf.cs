@@ -19,8 +19,6 @@ public static class DefOf
 
     public static GeneDef XylLineageInheritance;
 
-    public static HediffDef XylCultistSong;
-
     public static HediffDef XylHyperlactating;
 
     public static JobDef XylTakeShower;
