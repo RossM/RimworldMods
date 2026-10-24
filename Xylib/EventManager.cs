@@ -422,9 +422,6 @@ public class EventManager
         {
             List<CallbackInfo> localCallbacks = notificationInfo.localCallbacks.GetOrCreateValue(target);
 
-            // Resharper seems to not have correct annotations for ConditionalWeakTable
-            DebugAssert.NotNull(localCallbacks);
-
             if (localCallbacks.Any(c => c.listener == listener && c.name == name))
             {
                 Log.Warning(
