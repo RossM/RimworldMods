@@ -710,7 +710,7 @@ public class EventManager
                         if (!record.target.TryGetTarget(out Thing? target))
                             continue;
 
-                        if (notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
+                        if (notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks))
                             callbacks.RemoveAll(callback => callback.listener == listener);
                     }
                 }

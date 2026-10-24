@@ -55,6 +55,8 @@ public class GeneComp_StartingItems : GeneComp, IEventListener
 
             var itemDef = startingItem.item ?? DefDatabase<ThingDef>.AllDefsListForReading
                 .Where(thingDef => Validate(thingDef, startingItem)).RandomElement();
+            if (itemDef is null)
+                continue;
 
             var itemNutrition = itemDef.GetStatValueAbstract(StatDefOf.Nutrition);
             int count;

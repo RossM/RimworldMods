@@ -77,7 +77,7 @@ public abstract class GeneSetMaker
 
         // Aptitude-giving genes must not apply to only disabled skills
         if (gene.aptitudes is { Count: > 0 } &&
-            gene.aptitudes.All(aptitude => pawn.skills?.GetSkill(aptitude.skill)?.TotallyDisabled is not false))
+            gene.aptitudes.All(aptitude => pawn.skills?.GetSkill(aptitude.skill).TotallyDisabled is not false))
             return false;
 
         return true;
@@ -115,7 +115,7 @@ public class GeneSetMaker_Option : GeneSetMaker
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
         for (int i = 0; i < countValue; i++)
-            options.RandomElementByWeight(o => o.weight).maker.AddGenes(geneSet, geneType, pawn);
+            options.RandomElementByWeight(o => o.weight)?.maker.AddGenes(geneSet, geneType, pawn);
     }
 
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
