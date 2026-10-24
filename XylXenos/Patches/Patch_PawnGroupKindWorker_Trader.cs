@@ -47,7 +47,7 @@ public static class Patch_PawnGroupKindWorker_Trader
             });
         }
 
-        PawnKindDef? kind = carrierOptions.RandomElementByWeight(genOption => genOption.selectionWeight).kind;
+        PawnKindDef? kind = carrierOptions.RandomElementByWeight(genOption => genOption.selectionWeight)?.kind;
         DebugAssert.NotNull(kind);
         DebugAssert.NotNull(kind.race);
         DebugAssert.NotNull(kind.race.race);
@@ -57,12 +57,8 @@ public static class Patch_PawnGroupKindWorker_Trader
         List<Pawn> carrierPawns = [];
         for (int i = 0; i < numAnimals; i++)
         {
-            Pawn? pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer,
-                parms.tile, forceGenerateNewPawn: false, allowDead: false, allowDowned: false, canGeneratePawnRelations: true,
-                mustBeCapableOfViolence: false, forceAddFreeWarmLayerIfNeeded: false, allowGay: true, allowPregnant: false,
-                allowFood: true, allowAddictions: true, fixedIdeo: parms.ideo, inhabitant: parms.inhabitants));
-            if (pawn == null)
-                continue;
+            Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(kind, parms.faction, PawnGenerationContext.NonPlayer,
+                parms.tile, fixedIdeo: parms.ideo, inhabitant: parms.inhabitants));
 
             if (itemIndex < waresItems.Count)
             {
@@ -75,7 +71,7 @@ public static class Patch_PawnGroupKindWorker_Trader
         }
 
         for (; itemIndex < waresItems.Count; itemIndex++)
-            carrierPawns.RandomElement().inventory.innerContainer.TryAdd(waresItems[itemIndex]);
+            carrierPawns.RandomElement()?.inventory.innerContainer.TryAdd(waresItems[itemIndex]);
 
         return false;
     }
