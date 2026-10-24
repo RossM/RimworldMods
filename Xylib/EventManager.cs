@@ -326,12 +326,12 @@ public class EventManager
         }
     }
 
-    private Lazy<NotificationInfo[]> notifications = new(() => new NotificationInfo[DefDatabase<EventDef>.DefCount]);
+    private Lazy<NotificationInfo?[]> notifications = new(() => new NotificationInfo?[DefDatabase<EventDef>.DefCount]);
 
     /// <summary>
     ///     Callback registrations indexed by <c>EventDef.index</c>.
     /// </summary>
-    private NotificationInfo[] Notifications => notifications.Value;
+    private NotificationInfo?[] Notifications => notifications.Value;
 
     private static bool _doDebug = false;
 
