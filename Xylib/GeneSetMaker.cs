@@ -282,7 +282,7 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
 
         for (int iteration = 0; iteration < TryCount; iteration++)
         {
-            genes.RemoveRange(initialGeneCount, genes.Count);
+            genes.RemoveRange(initialGeneCount, genes.Count - initialGeneCount);
             if (shuffle)
                 subMakersTemp.Shuffle();
 

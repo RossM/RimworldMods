@@ -11,7 +11,7 @@ public class ColorGenerator_Spectrum : ColorGenerator
         if (colors.Count == 1)
             return colors[0];
 
-        int index = Rand.Range(0, colors.Count - 2);
+        int index = Rand.Range(0, colors.Count - 1);
         float fraction = Rand.Value;
         return Color.Lerp(colors[index], colors[index + 1], fraction);
     }
