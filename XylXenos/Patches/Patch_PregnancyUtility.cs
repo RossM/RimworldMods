@@ -7,7 +7,7 @@
 [Category("PostLoadDefs")]
 public static class Patch_PregnancyUtility
 {
-    [Feature(typeof(GeneCompProperties_XenotypeStrength))]
+    [Feature(typeof(GeneCompProperties_Inheritance))]
     [Postfix]
     [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
@@ -41,7 +41,7 @@ public static class Patch_PregnancyUtility
             gene => gene is { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) })];
     }
 
-    [Feature(typeof(GeneCompProperties_XenotypeStrength))]
+    [Feature(typeof(GeneCompProperties_Inheritance))]
     [Postfix]
     [Target(nameof(PregnancyUtility.GetInheritedGenes), typeof(Pawn), typeof(Pawn), typeof(Out<bool>))]
     public static void GetInheritedGenes_Postfix(Pawn mother, Pawn father, ref List<GeneDef> __result)
@@ -57,7 +57,7 @@ public static class Patch_PregnancyUtility
         static List<GeneDef> InheritableGenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
     }
 
-    [Feature(typeof(GeneCompProperties_XenotypeStrength))]
+    [Feature(typeof(GeneCompProperties_Inheritance))]
     [Postfix]
     [Inner(typeof(PregnancyUtility), "ShouldByHybrid")]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]

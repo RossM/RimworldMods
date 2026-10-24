@@ -177,11 +177,13 @@ public static class PatchHelpers
             return DominantParent.Mother;
 
         // Special handling for scaleborn lineages
-        if (mother?.HasActiveGene(DefOf.XylLineageInheritance) is true &&
-            father?.HasActiveGene(DefOf.XylLineageInheritance) is true)
+        if (BreaksTiesRandomly(mother) && BreaksTiesRandomly(father))
             return Rand.Bool ? DominantParent.Father : DominantParent.Mother;
 
         return DominantParent.None;
+
+        static bool BreaksTiesRandomly(Pawn? pawn) =>
+            pawn?.ActiveGenesOfType<GeneWithComps>().Any(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.tiesChooseRandomParent is true) is true;
     }
 
     public static void CopyXenotype(Pawn destination, Pawn source)
@@ -200,7 +202,7 @@ public static class PatchHelpers
             return int.MinValue;
 
         return pawn.ActiveGenesOfType<GeneWithComps>()
-            .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_XenotypeStrength>()?.strength ?? 0);
+            .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.strength ?? 0);
     }
 
     public static bool MilkablePrisonerInRoomCanProduce(Room? r, ThingDef thingDef)

@@ -133,7 +133,7 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
-          <li Class="XylXenos.GeneCompProperties_XenotypeStrength">
+          <li Class="XylXenos.GeneCompProperties_Inheritance">
             <strength>1</strength>
           </li>
         </comps>
@@ -157,7 +157,7 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
-          <li Class="XylXenos.GeneCompProperties_XenotypeStrength">
+          <li Class="XylXenos.GeneCompProperties_Inheritance">
             <strength>-1</strength>
           </li>
         </comps>
@@ -345,7 +345,13 @@
     <displayOrderInCategory>410</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_LineageInheritance</iconPath>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps"/>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Inheritance">
+            <tiesChooseRandomParent>true</tiesChooseRandomParent>
+          </li>
+        </comps>
+      </li>
     </modExtensions>
   </GeneDef>
 
