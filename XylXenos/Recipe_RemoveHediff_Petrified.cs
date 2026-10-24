@@ -33,7 +33,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             return pawn.health.hediffSet.hediffs.Any(hediff => ValidHediff(pawn, recipe, hediff));
     }
 
-    public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn? billDoer, List<Thing> ingredients, Bill bill)
+    public override void ApplyOnPawn(Pawn pawn, BodyPartRecord? part, Pawn? billDoer, List<Thing> ingredients, Bill bill)
     {
         DebugAssert.NotNull(recipe.removesHediff);
 

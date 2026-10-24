@@ -19,8 +19,7 @@ public class Rule_NamePersonExt : Rule
 
     public override string Generate()
     {
-        NameBank? nameBank = PawnNameDatabaseShuffled.BankOf(PawnNameCategory.HumanStandard);
-        DebugAssert.NotNull(nameBank);
+        NameBank nameBank = PawnNameDatabaseShuffled.BankOf(PawnNameCategory.HumanStandard);
 
         return nameBank.GetName(slot, gender, checkIfAlreadyUsed: false);
     }

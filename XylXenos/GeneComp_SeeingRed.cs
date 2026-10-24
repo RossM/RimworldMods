@@ -70,8 +70,6 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
             return;
 
         hediff ??= Pawn.health.AddHediff(Props.hediffDef);
-        if (hediff == null)
-            return;
 
         (extraEnemies ??= []).Add(damageInfo.Instigator);
 

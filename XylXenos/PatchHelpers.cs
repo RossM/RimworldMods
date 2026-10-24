@@ -338,7 +338,7 @@ public static class PatchHelpers
 
         foreach (var hediff in pawn.HediffsWithComp<HediffComp_Lactating>())
         {
-            var hediffComp_Lactating = hediff.GetComp<HediffComp_Lactating>();
+            var hediffComp_Lactating = hediff.GetComp<HediffComp_Lactating>()!;
             stringBuilder.AppendLine(
                 $"{hediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
             stringBuilder.AppendLine();

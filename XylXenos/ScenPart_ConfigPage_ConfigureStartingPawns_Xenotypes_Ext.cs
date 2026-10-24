@@ -20,7 +20,7 @@ public class ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext : ScenPart
             // Make sure that the extra reserve pawns are appropriate xenotypes
             int index = Find.GameInitData.startingAndOptionalPawns.Count;
             var request = StartingPawnUtility.GetGenerationRequest(index);
-            request.ForcedXenotype = xenotypeCounts.RandomElementByWeight(x => x.count).xenotype;
+            request.ForcedXenotype = xenotypeCounts.RandomElementByWeight(x => x.count)?.xenotype;
             StartingPawnUtility.SetGenerationRequest(index, request);
 
             StartingPawnUtility.AddNewPawn(index);

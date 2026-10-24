@@ -2775,6 +2775,9 @@
     <!-- No existing map or map parent, with no suggested parent definition, returns null. -->
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
+      <argument>suggestedMapParentDef:notnull =&gt; notnull</argument>
+    </attribute>
     <parameter name="suggestedMapParentDef">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>

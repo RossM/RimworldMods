@@ -104,14 +104,12 @@ public class IncidentWorker_WildTribe : IncidentWorker
                 ? DevelopmentalStage.Child | DevelopmentalStage.Adult
                 : DevelopmentalStage.Adult;
             List<TraitDef>? traits = DefExt.forcedTraits?.Where(t => Rand.Chance(t.chance)).Select(t => t.trait).ToList();
-            Pawn? pawn = PawnGenerator.GeneratePawn(new(
+            Pawn pawn = PawnGenerator.GeneratePawn(new(
                 kind: PawnKindDefOf.WildMan,
                 faction: faction,
                 context: PawnGenerationContext.NonPlayer,
                 forcedTraits: traits,
                 developmentalStages: stage));
-            if (pawn is null)
-                continue;
             pawn.SetFaction(null);
             pawns.Add(pawn);
         }

@@ -380,6 +380,9 @@ public static class DebugArena
             // Use RandomElement rather than RandomElementByWeight to avoid bias
             PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElement();
 
+            if (lhsDef == null || rhsDef == null)
+                return false;
+
             if (Rand.Chance(0.5f))
                 (lhsDef, rhsDef) = (rhsDef, lhsDef);
 
@@ -528,11 +531,7 @@ public static class DebugArena
                 forceGenerateNewPawn: true,
                 mustBeCapableOfViolence: true);
 
-            Pawn? pawn = PawnGenerator.GeneratePawn(request);
-
-            // Check if pawn is null
-            if (pawn == null)
-                continue;
+            Pawn pawn = PawnGenerator.GeneratePawn(request);
 
             IntVec3 loc = CellFinder.RandomClosewalkCellNear(spot, map, 12);
             if (GenSpawn.Spawn(pawn, loc, map, Rot4.Random) != null)

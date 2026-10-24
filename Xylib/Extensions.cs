@@ -466,7 +466,13 @@ public static class Extensions
         ///     Matching hediffs with <see cref="HediffComp" /> instances.
         /// </returns>
         public IEnumerable<HediffWithComps> HediffsWithComp<T>(Func<T, bool> predicate) where T : HediffComp =>
-            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Where(hediff => predicate(hediff.GetComp<T>()));
+            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Where(hediff => predicate(hediff.GetComp<T>()!));
+
+        public IEnumerable<T> HediffCompsOfType<T>() where T : HediffComp =>
+            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Select(hediff => hediff.GetComp<T>()!);
+
+        public IEnumerable<T> HediffCompsOfType<T>(Func<T, bool> predicate) where T : HediffComp =>
+            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Select(hediff => hediff.GetComp<T>()!).Where(predicate);
 
         /// <summary>
         ///     Gets the first hediff on the pawn that has a <see cref="HediffComp" /> of the specified type.

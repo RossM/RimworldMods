@@ -20,13 +20,13 @@ public class QuestNode_RefugeePodCrash_Space : QuestNode_Root_RefugeePodCrash
         return map is not null && map.IsPlayerHome && kindDef.GetValue(slate) is not null;
     }
 
-    public override Pawn GeneratePawn_NewTemp(Map map)
+    public override Pawn GeneratePawn_NewTemp(Map? map)
     {
         var request = new PawnGenerationRequest(
             kind: kindDef.GetValue(QuestGen.slate),
             faction: null,
             context: PawnGenerationContext.NonPlayer,
-            tile: map.Tile,
+            tile: map?.Tile,
             forceGenerateNewPawn: true,
             forceNoGear: forceNoGear,
             colonistRelationChanceFactor: 20f);

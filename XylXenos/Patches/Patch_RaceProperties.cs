@@ -34,8 +34,7 @@ public static class Patch_RaceProperties
         // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
         // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
         // directly consumes food per tick. This correctly displays that effect.
-        foreach (var hediff in p.HediffsWithComp<HediffComp_Lactating>())
-            nutrition += hediff.TryGetComp<HediffComp_Lactating>().AddedNutritionPerDay();
+        nutrition += p.HediffCompsOfType<HediffComp_Lactating>().Sum(comp => comp.AddedNutritionPerDay());
 
         __result = nutrition.ToString("0.##");
 
