@@ -1,4 +1,6 @@
-﻿#pragma warning disable CA2211
+﻿using System.Threading;
+
+#pragma warning disable CA2211
 namespace Xylib;
 
 /// <summary>
@@ -284,6 +286,13 @@ public class EventManager
         public bool usesPriority = false;
         public readonly List<CallbackInfo> globalCallbacks = [];
         public readonly ConditionalWeakTable<Thing, List<CallbackInfo>> localCallbacks = [];
+        public readonly Lock sync = new();
+    }
+
+    private class RegistrationInfo
+    {
+        public readonly List<RegistrationRecord> records = [];
+        public readonly Lock sync = new();
     }
 
     /// <summary>
@@ -295,7 +304,7 @@ public class EventManager
     /// <param name="target">
     ///     The target the listener registered for, or null for a global registration.
     /// </param>
-    private class RegistrationInfo(EventDef eventDef, Thing? target)
+    private class RegistrationRecord(EventDef eventDef, Thing? target)
     {
         public readonly EventDef eventDef = eventDef;
         public readonly System.WeakReference<Thing>? target = target == null ? null : new(target);
@@ -330,6 +339,11 @@ public class EventManager
     private static readonly List<IEventListener> staticListeners = [];
 
     /// <summary>
+    ///     Temporary callback list used when a notification needs priority ordering.
+    /// </summary>
+    [ThreadStatic] private static List<CallbackInfo>? _tempCallbacks;
+
+    /// <summary>
     ///     Static listeners that have been registered since the last reset.
     /// </summary>
     [Unsaved] private readonly HashSet<IEventListener> alreadyRegisteredStaticListeners = [];
@@ -337,12 +351,7 @@ public class EventManager
     /// <summary>
     ///     Registrations owned by each listener, used by <see cref="RemoveListener" />.
     /// </summary>
-    private ConditionalWeakTable<IEventListener, List<RegistrationInfo>> registrations = [];
-
-    /// <summary>
-    ///     Temporary callback list used when a notification needs priority ordering.
-    /// </summary>
-    private readonly List<CallbackInfo> tempCallbacks = [];
+    private ConditionalWeakTable<IEventListener, RegistrationInfo> registrations = [];
 
     /// <summary>
     ///     Gets the shared event manager instance.
@@ -394,39 +403,51 @@ public class EventManager
             Debug.Log(
                 $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
 
-        var records = registrations.GetOrCreateValue(listener);
+        var registrationInfo = registrations.GetOrCreateValue(listener);
 
-        records.Add(new(eventDef, target));
+        lock (registrationInfo.sync)
+        {
+            registrationInfo.records.Add(new(eventDef, target));
+        }
 
-        NotificationInfo notificationInfo = Notifications[eventDef.index] ??= new();
+        NotificationInfo? notificationInfo = Notifications[eventDef.index];
+        if (notificationInfo == null)
+        {
+            Interlocked.CompareExchange(ref Notifications[eventDef.index], new(), null);
+            notificationInfo = Notifications[eventDef.index]!;
+        }
+
         if (priority != 0)
             notificationInfo.usesPriority = true;
 
         CallbackInfo callbackInfo = new() { wrappedCallback = callback, listener = listener, name = name, priority = priority };
 
-        if (target == null)
+        lock (notificationInfo.sync)
         {
-            if (notificationInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
+            if (target == null)
             {
-                Log.Warning(
-                    $"[EventManager] Adding a duplicate callback: eventDef={eventDef} global listener={listener} name={name}");
-                return;
+                if (notificationInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
+                {
+                    Log.Warning(
+                        $"[EventManager] Adding a duplicate callback: eventDef={eventDef} global listener={listener} name={name}");
+                    return;
+                }
+
+                notificationInfo.globalCallbacks.Add(callbackInfo);
             }
-
-            notificationInfo.globalCallbacks.Add(callbackInfo);
-        }
-        else
-        {
-            List<CallbackInfo> localCallbacks = notificationInfo.localCallbacks.GetOrCreateValue(target);
-
-            if (localCallbacks.Any(c => c.listener == listener && c.name == name))
+            else
             {
-                Log.Warning(
-                    $"[EventManager] Adding a duplicate callback: eventDef={eventDef} target=[{target}] listener={listener} name={name}");
-                return;
-            }
+                List<CallbackInfo> localCallbacks = notificationInfo.localCallbacks.GetOrCreateValue(target);
 
-            localCallbacks.Add(callbackInfo);
+                if (localCallbacks.Any(c => c.listener == listener && c.name == name))
+                {
+                    Log.Warning(
+                        $"[EventManager] Adding a duplicate callback: eventDef={eventDef} target=[{target}] listener={listener} name={name}");
+                    return;
+                }
+
+                localCallbacks.Add(callbackInfo);
+            }
         }
     }
 
@@ -449,6 +470,9 @@ public class EventManager
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
+    /// <remarks>
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    /// </remarks>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0)
     {
         ArgumentNullException.ThrowIfNull(callback);
@@ -491,6 +515,9 @@ public class EventManager
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
+    /// <remarks>
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    /// </remarks>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0)
     {
         ArgumentNullException.ThrowIfNull(callback);
@@ -530,6 +557,9 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
+    /// <remarks>
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    /// </remarks>
     public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0)
     {
         ArgumentNullException.ThrowIfNull(callback);
@@ -560,6 +590,9 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
+    /// <remarks>
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    /// </remarks>
     public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0)
     {
         ArgumentNullException.ThrowIfNull(callback);
@@ -608,6 +641,9 @@ public class EventManager
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
+    /// <remarks>
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    /// </remarks>
     public void Register<T>(
         IEventListener listener,
         EventDef? eventDef,
@@ -643,26 +679,32 @@ public class EventManager
     /// <param name="listener">
     ///     The listener to remove.
     /// </param>
+    /// <remarks>
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    /// </remarks>
     public void RemoveListener(IEventListener listener)
     {
         listener.PreUnregister(this);
 
-        if (!registrations.TryGetValue(listener, out List<RegistrationInfo>? records))
+        if (!registrations.TryGetValue(listener, out RegistrationInfo? registrationInfo))
             return;
 
-        foreach (var record in records)
+        lock (registrationInfo.sync)
         {
-            if (record.target == null)
+            foreach (var record in registrationInfo.records)
             {
-                Notifications[record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
-            }
-            else
-            {
-                if (!record.target.TryGetTarget(out Thing? target))
-                    continue;
+                if (record.target == null)
+                {
+                    Notifications[record.eventDef.index]?.globalCallbacks.RemoveAll(callback => callback.listener == listener);
+                }
+                else
+                {
+                    if (!record.target.TryGetTarget(out Thing? target))
+                        continue;
 
-                if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
-                    callbacks.RemoveAll(callback => callback.listener == listener);
+                    if (Notifications[record.eventDef.index]?.localCallbacks.TryGetValue(target, out List<CallbackInfo>? callbacks) is true)
+                        callbacks.RemoveAll(callback => callback.listener == listener);
+                }
             }
         }
 
@@ -681,6 +723,9 @@ public class EventManager
     /// <param name="data">
     ///     Optional event data. When supplied, its type should match <see cref="EventDef.dataType" />.
     /// </param>
+    /// <remarks>
+    ///     This method is thread safe.
+    /// </remarks>
     public void Notify(EventDef? eventDef, Thing? target, object? data = null)
     {
         if (eventDef == null)
@@ -702,33 +747,41 @@ public class EventManager
         if (notificationInfo == null)
             return;
 
-        List<CallbackInfo>? localCallbacks;
-
-        if (!notificationInfo.usesPriority)
+        lock (notificationInfo.sync)
         {
-            foreach (CallbackInfo callbackInfo in notificationInfo.globalCallbacks)
-                DoNotify(eventDef, callbackInfo, target, data);
+            List<CallbackInfo>? localCallbacks;
 
-            if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
+            if (!notificationInfo.usesPriority)
+            {
+                foreach (CallbackInfo callbackInfo in notificationInfo.globalCallbacks)
+                    DoNotify(eventDef, callbackInfo, target, data);
+
+                if (target == null || !notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
+                    return;
+
+                foreach (CallbackInfo callbackInfo in localCallbacks)
+                    DoNotify(eventDef, callbackInfo, target, data);
+
                 return;
+            }
 
-            foreach (CallbackInfo callbackInfo in localCallbacks)
-                DoNotify(eventDef, callbackInfo, target, data);
+            _tempCallbacks ??= [];
+            try
+            {
+                _tempCallbacks.AddRange(notificationInfo.globalCallbacks);
+                if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
+                    _tempCallbacks.AddRange(localCallbacks);
 
-            return;
+                _tempCallbacks.SortByDescending(callback => callback.priority);
+
+                foreach (CallbackInfo callbackInfo in _tempCallbacks)
+                    DoNotify(eventDef, callbackInfo, target, data);
+            }
+            finally
+            {
+                _tempCallbacks.Clear();
+            }
         }
-
-        tempCallbacks.Clear();
-        tempCallbacks.AddRange(notificationInfo.globalCallbacks);
-        if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out localCallbacks))
-            tempCallbacks.AddRange(localCallbacks);
-
-        tempCallbacks.SortByDescending(callback => callback.priority);
-
-        foreach (CallbackInfo callbackInfo in tempCallbacks)
-            DoNotify(eventDef, callbackInfo, target, data);
-
-        tempCallbacks.Clear();
     }
 
     /// <summary>
@@ -859,12 +912,15 @@ public class EventManager
     /// <summary>
     ///     Called after a saved game is loaded.
     /// </summary>
+    /// <remarks>
+    ///     This method is not thread safe.
+    /// </remarks>
     public void LoadedGame()
     {
         using var _ = new ProfileBlock();
 
         // PawnsFinder.All_AliveOrDead can return the same pawn multiple times if there is a caravan on the world map
-        List<Pawn> allPawns = [ .. PawnsFinder.All_AliveOrDead.Distinct() ];
+        List<Pawn> allPawns = [.. PawnsFinder.All_AliveOrDead.Distinct()];
 
         foreach (Pawn pawn in allPawns)
             CallRegistrationHandlers(pawn);
@@ -879,6 +935,9 @@ public class EventManager
     /// <param name="listener">
     ///     The listener to add.
     /// </param>
+    /// <remarks>
+    ///     This method is not thread safe.
+    /// </remarks>
     public static void AddStaticListener(IEventListener listener)
     {
         staticListeners.Add(listener);
@@ -888,6 +947,9 @@ public class EventManager
     /// <summary>
     ///     Registers static listeners that have not already been registered since the last reset.
     /// </summary>
+    /// <remarks>
+    ///     This method is not thread safe.
+    /// </remarks>
     private void RegisterStaticListeners()
     {
         foreach (var listener in staticListeners)
@@ -902,6 +964,9 @@ public class EventManager
     /// <summary>
     ///     Clears all current registrations and re-registers static listeners.
     /// </summary>
+    /// <remarks>
+    ///     This method is not thread safe.
+    /// </remarks>
     public void Reset()
     {
         registrations = [];
@@ -917,6 +982,9 @@ public class EventManager
     /// <param name="listener">
     ///     The listener to register.
     /// </param>
+    /// <remarks>
+    ///     This method is thread safe.
+    /// </remarks>
     public void AddListener(IEventListener listener)
     {
         listener.RegisterWith(this);
