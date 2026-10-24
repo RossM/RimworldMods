@@ -573,7 +573,7 @@
           <li Class="XylXenos.HediffGiver_RandomNotInSpace">
             <hediff>XylPlanetSickness</hediff>
             <mtbDays>30</mtbDays>
-            <message>{PAWN_labelShort} has developed planet sickness</message>
+            <message>{PAWN_labelShort} has developed planet sickness.</message>
           </li>
         </hediffGivers>
       </li>      
