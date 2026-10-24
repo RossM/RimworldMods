@@ -12,4 +12,15 @@ public static class Patch_PawnBioAndNameGenerator
         __result = false;
         return Settings.instance.AllowBackerBackstoriesFor(xenotype);
     }
+
+    [Feature(typeof(GeneCompProperties_GenderRatio))]
+    [Prefix]
+    [Target(nameof(PawnBioAndNameGenerator.GiveAppropriateBioAndNameTo))]
+    public static void GiveAppropriateBioAndNameTo_Prefix(
+        Pawn pawn,
+        in PawnGenerationRequest request,
+        XenotypeDef? xenotype)
+    {
+        PatchHelpers.ModifyGenderByGenes(pawn, request, xenotype);
+    }
 }
