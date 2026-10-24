@@ -194,7 +194,13 @@ $expansionsXml = ($installedExpansions | ForEach-Object { "<li>$($_)</li>" }) -j
 $testConfigDirectory = Join-Path $testMod 'Configs'
 New-Item -ItemType Directory -Path $testConfigDirectory -Force | Out-Null
 $escapedOutputDirectory = [Security.SecurityElement]::Escape($OutputDirectory)
-[IO.File]::WriteAllText((Join-Path $testConfigDirectory 'UnitTestConfig.xml'), "<TestConfig><randSeed>1234567</randSeed><log><folder>$escapedOutputDirectory</folder></log></TestConfig>")
+$allowedErrorsXml = ''
+if ($Suite -in 'Xylib', 'XylXenos') {
+    # DevTools' 5% test world can lack the pollution needed to place a Trog settlement.
+    # Faction names are generated, so match the complete error rather than a specific name.
+    $allowedErrorsXml = '<errorsAllowed><li>\AFailed to find faction base tile for [^\r\n]+\z</li></errorsAllowed>'
+}
+[IO.File]::WriteAllText((Join-Path $testConfigDirectory 'UnitTestConfig.xml'), "<TestConfig><randSeed>1234567</randSeed>$allowedErrorsXml<log><folder>$escapedOutputDirectory</folder></log></TestConfig>")
 
 $backupDirectory = Join-Path $gameDirectory ("$Suite.Tests." + [guid]::NewGuid().ToString('N'))
 $backups = @()

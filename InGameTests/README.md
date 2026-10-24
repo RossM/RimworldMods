@@ -28,7 +28,9 @@ The new tests mostly invoke one callback or one interval directly instead of sim
 .\Xylib.Tests\Run-Tests.ps1 -RimWorldPath "C:\path\to\RimWorld.exe" -DisharmonySourceDirectory ..\Disharmony -Filter 'method == TypedCallbacksReceiveTargetAndData'
 ```
 
-`-OutputDirectory` selects a new results folder and `-TimeoutMinutes` changes the ten-minute game timeout. Each run produces `Test.log`, `stdout.log`, `stderr.log`, and its isolated `UserData` profile. Start with `Test.log`; failed assertions and unexpected warnings/errors fail the run. Build failures, empty selections, timeouts, process failures, and incomplete reports also fail the command. The two new suites retain known product regressions, documented in their READMEs, so their full runs currently return failure.
+`-OutputDirectory` selects a new results folder and `-TimeoutMinutes` changes the ten-minute game timeout. Each run produces `Test.log`, `stdout.log`, `stderr.log`, and its isolated `UserData` profile. Start with `Test.log`; failed assertions and unexpected warnings/errors fail the run. Build failures, empty selections, timeouts, process failures, and incomplete reports also fail the command.
+
+Xylib and XylXenos allow the exact `Failed to find faction base tile for <generated faction name>` error through DevTools' `errorsAllowed` filter. Its default 5% test world can lack the pollution required for a Trog settlement. The error remains in game logs; other errors and warnings still fail tests. This exception does not apply to Yobai.
 
 During launcher extraction, Yobai's unchanged Core-only suite had 106 passes and one failure in `UnrelatedAdultMakesRoomBarracks`. That case also failed with the original launcher: `IsBedInAssignedPolyculeBedroom` checks room membership and partner ownership without checking the room's barracks classification. Its test and product code were left unchanged.
 
