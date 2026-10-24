@@ -6,17 +6,18 @@
 
 Use PowerShell 5.1 or 7 and .NET SDK 10.0.400 or later. Install the Workshop [Harmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077). Runs using the published Disharmony package also need the Workshop [Disharmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3818084845). The first run downloads a pinned DevTools revision and restores NuGet packages. DevTools remains cached in `temp/Yobai.TestDependencies` so existing Yobai builds keep working.
 
-The launcher builds the selected suite, creates a new profile under `TestResults/<suite>`, and launches RimWorld headlessly. It temporarily junctions the required mods into the game's `Mods` folder and restores existing local folders in `finally`. Normal saves and settings are untouched. Run suites sequentially because they share game mod paths and build outputs.
+The launcher builds the selected suite, creates a new profile under `TestResults/<suite>`, and launches RimWorld headlessly. It temporarily junctions the required mods into the game's `Mods` folder and restores existing local folders in `finally`. Xylib.Tests contains its own copy of Xylib and the shared definitions, so it loads without either gameplay mod. Normal saves and settings are untouched. Run suites sequentially because they share game mod paths and build outputs.
 
 `-RimWorldPath` defaults to `C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe`. Omit it for a standard Steam installation, or pass a different path to override it.
 
 The launcher defaults to the released Disharmony package, ignoring `Directory.Build.local.props` for reproducibility. Pass `-DisharmonySourceDirectory <checkout>` to Xylib/XylXenos when testing a local Disharmony version. Relative paths are resolved from the shell's working directory. This builds the source reference and stages matching runtime assemblies in the isolated run directory, without editing Workshop files.
 
-All installed expansions are enabled by default. Use `-Expansions` with a comma-separated list of case-insensitive names to select expansions, or `-Expansions None` to enable Core without expansions. Core is always enabled. Unknown or uninstalled expansions are rejected before building or launching the game; Xylib and XylXenos selections must include Biotech. Duplicate names are loaded once, in the game's normal expansion order. PowerShell arrays and quoted comma-separated strings are both accepted.
+All installed expansions are enabled by default. Use `-Expansions` with a comma-separated list of case-insensitive names to select expansions, or `-Expansions None` to enable Core without expansions. Core is always enabled. Unknown or uninstalled expansions are rejected before building or launching the game. Only XylXenos requires Biotech; Xylib and Yobai support Core-only runs. Duplicate names are loaded once, in the game's normal expansion order. PowerShell arrays and quoted comma-separated strings are both accepted.
 
 ```powershell
 .\XylXenos.Tests\Run-Tests.ps1 -Expansions Biotech
 .\XylXenos.Tests\Run-Tests.ps1 -Expansions Royalty,Biotech
+.\Xylib.Tests\Run-Tests.ps1 -Expansions None
 .\Yobai.Tests\Run-Tests.ps1 -Expansions None
 ```
 
@@ -30,12 +31,12 @@ The new tests mostly invoke one callback or one interval directly instead of sim
 
 `-OutputDirectory` selects a new results folder and `-TimeoutMinutes` changes the ten-minute game timeout. Each run produces `Test.log`, `stdout.log`, `stderr.log`, and its isolated `UserData` profile. Start with `Test.log`; failed assertions and unexpected warnings/errors fail the run. Build failures, empty selections, timeouts, process failures, and incomplete reports also fail the command.
 
-Xylib and XylXenos allow the exact `Failed to find faction base tile for <generated faction name>` error through DevTools' `errorsAllowed` filter. Its default 5% test world can lack the pollution required for a Trog settlement. The error remains in game logs; other errors and warnings still fail tests. This exception does not apply to Yobai.
+XylXenos allows the exact `Failed to find faction base tile for <generated faction name>` error through DevTools' `errorsAllowed` filter. Its default 5% test world can lack the pollution required for a Trog settlement. The error remains in game logs; other errors and warnings still fail tests. This exception does not apply to standalone Xylib or Yobai runs.
 
 During launcher extraction, Yobai's unchanged Core-only suite had 106 passes and one failure in `UnrelatedAdultMakesRoomBarracks`. That case also failed with the original launcher: `IsBedInAssignedPolyculeBedroom` checks room membership and partner ownership without checking the room's barracks classification. Its test and product code were left unchanged.
 
 ## Adding cases
 
-Create input definitions in C#, specifying values relevant to the behavior under test. `PawnTestFixture` registers synthetic gene and hediff defs, initializes a healthy adult baseliner, and removes test objects, listeners, and definitions afterward. Its shared builders are used by many tests. Keep individual cases self-contained and restore any map/global state they change in `finally`.
+Create input definitions in C#, specifying values relevant to the behavior under test. `PawnTestFixture` registers synthetic gene and hediff defs, initializes a healthy adult pawn (a baseliner when Biotech is active), and removes test objects, listeners, and definitions afterward. Its shared builders are used by many tests. Keep individual cases self-contained and restore any map/global state they change in `finally`. Use DevTools' `[LoadIfBiotechActive]`, `[LoadIfRoyaltyActive]`, and similar attributes only for cases that actually require the DLC.
 
 Use real public game operations for integration checks, such as adding/removing genes or hediffs. Reflection is limited to inaccessible game setup/cleanup, protected entry points, and isolated generator logic. Save tests should use `Scribe_Deep` when reference resolution is required, register reused live objects, and always stop Scribe and delete their temporary files. Keep `RandBlock` inside a single frame. Do not weaken a valid test to accommodate a product bug.

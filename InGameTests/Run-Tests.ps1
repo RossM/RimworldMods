@@ -91,8 +91,8 @@ if ($PSBoundParameters.ContainsKey('Expansions')) {
         $selectedExpansions = @($installedExpansions | Where-Object { $requestedPackages -contains $_ })
     }
 }
-if ($Suite -ne 'Yobai' -and $selectedExpansions -notcontains 'ludeon.rimworld.biotech') {
-    throw 'Xylib and XylXenos tests require Biotech; include it in -Expansions.'
+if ($Suite -eq 'XylXenos' -and $selectedExpansions -notcontains 'ludeon.rimworld.biotech') {
+    throw 'XylXenos tests require Biotech; include it in -Expansions.'
 }
 
 $repositoryDirectory = Split-Path -Parent $PSScriptRoot
@@ -155,11 +155,14 @@ foreach ($directory in Get-ChildItem -LiteralPath $modsDirectory -Directory) {
 $testMod = Join-Path $OutputDirectory "$Suite.Tests"
 New-Item -ItemType Directory -Path $testMod | Out-Null
 Get-ChildItem -LiteralPath (Join-Path $repositoryDirectory "ModBin/$Suite.Tests") | Copy-Item -Destination $testMod -Recurse
-$gameplayMod = if ($Suite -eq 'Yobai') { 'Yobai' } else { 'XylXenos' }
-$gameplayPackage = if ($Suite -eq 'Yobai') { 'xylthixlm.yobai' } else { 'xylthixlm.races.core' }
 $testPackage = ('xylthixlm.' + $Suite + '.tests').ToLowerInvariant()
-$mods = @(
-    @{ Name = $gameplayMod; Source = (Join-Path $repositoryDirectory "ModBin/$gameplayMod") },
+$mods = @()
+if ($Suite -ne 'Xylib') {
+    $gameplayMod = if ($Suite -eq 'Yobai') { 'Yobai' } else { 'XylXenos' }
+    $gameplayPackage = if ($Suite -eq 'Yobai') { 'xylthixlm.yobai' } else { 'xylthixlm.races.core' }
+    $mods += @{ Name = $gameplayMod; Source = (Join-Path $repositoryDirectory "ModBin/$gameplayMod") }
+}
+$mods += @(
     @{ Name = 'DevTools'; Source = $devToolsMod },
     @{ Name = "$Suite.Tests"; Source = $testMod }
 )
@@ -169,7 +172,7 @@ if ($DisharmonySourceDirectory) {
     New-Item -ItemType Directory -Path (Join-Path $localDisharmony 'Assemblies') -Force | Out-Null
     Copy-Item -LiteralPath (Join-Path $DisharmonySourceDirectory 'Disharmony.RimWorld/About') -Destination $localDisharmony -Recurse
     foreach ($assembly in 'Disharmony.dll', 'Disharmony.RimWorld.dll', '0Harmony.dll') {
-        Copy-Item -LiteralPath (Join-Path $repositoryDirectory "XylXenos/bin/Release/net10.0/$assembly") -Destination (Join-Path $localDisharmony 'Assemblies')
+        Copy-Item -LiteralPath (Join-Path $testProjectDirectory "bin/Release/net10.0/$assembly") -Destination (Join-Path $localDisharmony 'Assemblies')
     }
     $mods = @(@{ Name = 'Disharmony'; Source = $localDisharmony }) + $mods
     $workshopPackages['xylthixlm.disharmony'] = 'xylthixlm.disharmony'
@@ -180,7 +183,9 @@ $configDirectory = Join-Path $saveDataDirectory 'Config'
 New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
 $activeMods = @($workshopPackages['brrainz.harmony'], 'ludeon.rimworld')
 $activeMods += $selectedExpansions
-$activeMods += @($workshopPackages['xylthixlm.disharmony'], $gameplayPackage, 'smashphil.devtools', $testPackage)
+$activeMods += $workshopPackages['xylthixlm.disharmony']
+if ($Suite -ne 'Xylib') { $activeMods += $gameplayPackage }
+$activeMods += @('smashphil.devtools', $testPackage)
 $activeXml = ($activeMods | ForEach-Object { "<li>$($_)</li>" }) -join ''
 $expansionsXml = ($installedExpansions | ForEach-Object { "<li>$($_)</li>" }) -join ''
 [IO.File]::WriteAllText((Join-Path $configDirectory 'ModsConfig.xml'), @"
@@ -195,7 +200,7 @@ $testConfigDirectory = Join-Path $testMod 'Configs'
 New-Item -ItemType Directory -Path $testConfigDirectory -Force | Out-Null
 $escapedOutputDirectory = [Security.SecurityElement]::Escape($OutputDirectory)
 $allowedErrorsXml = ''
-if ($Suite -in 'Xylib', 'XylXenos') {
+if ($Suite -eq 'XylXenos') {
     # DevTools' 5% test world can lack the pollution needed to place a Trog settlement.
     # Faction names are generated, so match the complete error rather than a specific name.
     $allowedErrorsXml = '<errorsAllowed><li>\AFailed to find faction base tile for [^\r\n]+\z</li></errorsAllowed>'

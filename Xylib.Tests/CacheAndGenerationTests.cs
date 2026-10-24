@@ -79,7 +79,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsEmpty(tracker.unlockedBuildables!);
     }
 
-    [Test]
+    [Test, LoadIfBiotechActive]
     public void ListMakerReturnsOnlyNewGenesAndHonorsCount()
     {
         GeneDef existing = GeneDef(), first = GeneDef(), second = GeneDef();
@@ -93,7 +93,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == second));
     }
 
-    [Test]
+    [Test, LoadIfBiotechActive]
     public void OptionMakerSelectsItsWeightedSubtree()
     {
         GeneDef expected = GeneDef();
@@ -104,7 +104,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.ReferencesAreEqual(expected, maker.Generate(pawn).GenesListForReading.Single());
     }
 
-    [Test]
+    [Test, LoadIfBiotechActive]
     public void SubtreeMakerDelegatesToReferencedMaker()
     {
         GeneDef expected = GeneDef();
@@ -112,7 +112,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.ReferencesAreEqual(expected, maker.Generate(pawn).GenesListForReading.Single());
     }
 
-    [Test]
+    [Test, LoadIfBiotechActive]
     public void BiostatMakerRejectsOutOfRangeAndProhibitedGenes()
     {
         GeneDef def = GeneDef();
@@ -126,7 +126,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsFalse(maker.Validate(def, new GeneSet(), GeneType.Xenogene, pawn));
     }
 
-    [Test]
+    [Test, LoadIfBiotechActive]
     public void BiostatTotalMakerRetainsExistingGenesWhileAddingValidSet()
     {
         GeneDef existing = GeneDef(), added = GeneDef();

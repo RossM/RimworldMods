@@ -4,6 +4,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DevToolsAssemblyPath Condition="'$(DevToolsAssemblyPath)' == ''">$(MSBuildThisFileDirectory)..\temp\Yobai.TestDependencies\DevToolsMod\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
   </PropertyGroup>
   <ItemGroup>

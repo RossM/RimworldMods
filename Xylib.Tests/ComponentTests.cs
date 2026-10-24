@@ -3,7 +3,7 @@ namespace Xylib.Tests;
 [TestFixture(TestType.Playing)]
 public sealed class ComponentTests : PawnTestFixture
 {
-    [Test]
+    [Test, LoadIfBiotechActive]
     public void BonusGenesAddsAndRemovesOnlyItsOwnGenes()
     {
         GeneDef existing = GeneDef();

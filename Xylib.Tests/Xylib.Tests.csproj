@@ -1,6 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\InGameTests\Tests.props" />
   <ItemGroup>
-    <ProjectReference Include="..\XylXenos\XylXenos.csproj" />
+    <ProjectReference Include="..\Xylib\Xylib.csproj" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" Condition="'$(DisharmonySourceDirectory)' != ''" />
+    <XylibTestData Include="..\Xylib.Data\Defs\**\*" ModRelativePath="Defs\%(RecursiveDir)%(Filename)%(Extension)" />
+    <XylibTestData Include="..\Xylib.Data\Languages\**\*" ModRelativePath="Languages\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+  <Target Name="DeployXylibTestHost" AfterTargets="DeployTests">
+    <Copy SourceFiles="$(TargetDir)Xylib.dll" DestinationFolder="..\ModBin\Xylib.Tests\Assemblies" />
+    <Copy SourceFiles="@(XylibTestData)" DestinationFiles="@(XylibTestData->'..\ModBin\Xylib.Tests\%(ModRelativePath)')" />
+  </Target>
 </Project>
