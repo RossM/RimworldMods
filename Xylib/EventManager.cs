@@ -885,10 +885,13 @@ public class EventManager
     {
         using var _ = new ProfileBlock();
 
-        foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
+        // PawnsFinder.All_AliveOrDead can return the same pawn multiple times if there is a caravan on the world map
+        List<Pawn> allPawns = [ .. PawnsFinder.All_AliveOrDead.Distinct() ];
+
+        foreach (Pawn pawn in allPawns)
             CallRegistrationHandlers(pawn);
 
-        foreach (Pawn pawn in PawnsFinder.All_AliveOrDead)
+        foreach (Pawn pawn in allPawns)
             Notify(EventDefOf.PostLoadedGame, pawn);
     }
 
