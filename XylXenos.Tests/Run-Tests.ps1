@@ -5,7 +5,7 @@ param(
     [string] $OutputDirectory,
     [string] $Filter,
     [string] $DisharmonySourceDirectory,
-    [switch] $CoreOnly,
+    [ValidateNotNullOrEmpty()] [string[]] $Expansions,
     [ValidateRange(1, 120)] [int] $TimeoutMinutes = 10
 )
 

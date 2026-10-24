@@ -20,7 +20,8 @@ All installed DLC is enabled by default. Options:
 
 | Argument | Purpose |
 | --- | --- |
-| `-CoreOnly` | Run without DLC. |
+| `-Expansions None` | Run without DLC. |
+| `-Expansions Royalty,Biotech` | Run with only the listed installed DLC (case-insensitive). |
 | `-Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'` | Run a selected test using a DevTools filter expression. |
 | `-OutputDirectory "C:\path\to\new-results-folder"` | Choose a new output folder. |
 | `-TimeoutMinutes 20` | Change the default ten-minute game timeout. |

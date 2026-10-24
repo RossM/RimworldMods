@@ -12,7 +12,15 @@ The launcher builds the selected suite, creates a new profile under `TestResults
 
 The launcher defaults to the released Disharmony package, ignoring `Directory.Build.local.props` for reproducibility. Pass `-DisharmonySourceDirectory <checkout>` to Xylib/XylXenos when testing a local Disharmony version. Relative paths are resolved from the shell's working directory. This builds the source reference and stages matching runtime assemblies in the isolated run directory, without editing Workshop files.
 
-All installed expansions are enabled by default. Xylib and XylXenos need Biotech; `-CoreOnly` remains available for Yobai. The new tests mostly invoke one callback or one interval directly instead of simulating long periods. Full suites initially took about 3–5 seconds each after map creation; game startup, dependency restore, and compilation are additional.
+All installed expansions are enabled by default. Use `-Expansions` with a comma-separated list of case-insensitive names to select expansions, or `-Expansions None` to enable Core without expansions. Core is always enabled. Unknown or uninstalled expansions are rejected before building or launching the game; Xylib and XylXenos selections must include Biotech. Duplicate names are loaded once, in the game's normal expansion order. PowerShell arrays and quoted comma-separated strings are both accepted.
+
+```powershell
+.\XylXenos.Tests\Run-Tests.ps1 -Expansions Biotech
+.\XylXenos.Tests\Run-Tests.ps1 -Expansions Royalty,Biotech
+.\Yobai.Tests\Run-Tests.ps1 -Expansions None
+```
+
+The new tests mostly invoke one callback or one interval directly instead of simulating long periods. Full suites initially took about 3–5 seconds each after map creation; game startup, dependency restore, and compilation are additional.
 
 ## Filtering and results
 

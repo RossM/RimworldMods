@@ -6,7 +6,9 @@ Builds and runs the selected in-game tests against the installed Steam version o
 .EXAMPLE
 .\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe"
 .EXAMPLE
-.\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe" -CoreOnly -Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'
+.\Run-Tests.ps1 -Expansions None -Filter 'method == IncomingOwnerKeepsAssignedSleepingSlot'
+.EXAMPLE
+.\Run-Tests.ps1 -Suite XylXenos -Expansions Royalty,Biotech
 #>
 [CmdletBinding()]
 param(
@@ -15,7 +17,7 @@ param(
     [string] $OutputDirectory = (Join-Path $PSScriptRoot "../TestResults/$Suite/$(Get-Date -Format 'yyyyMMdd-HHmmss')-$([guid]::NewGuid().ToString('N').Substring(0, 8))"),
     [string] $Filter,
     [string] $DisharmonySourceDirectory,
-    [switch] $CoreOnly,
+    [ValidateNotNullOrEmpty()] [string[]] $Expansions,
     [ValidateRange(1, 120)] [int] $TimeoutMinutes = 10
 )
 
@@ -53,13 +55,51 @@ function Invoke-Build([string[]] $BuildArguments) {
 $RimWorldPath = (Resolve-Path -LiteralPath $RimWorldPath).ProviderPath
 $gameDirectory = Split-Path -Parent $RimWorldPath
 $gameVersion = (Get-Content -LiteralPath (Join-Path $gameDirectory 'Version.txt') -Raw -Encoding utf8).Trim()
+$expansionMetadata = @()
+foreach ($directory in Get-ChildItem -LiteralPath (Join-Path $gameDirectory 'Data') -Directory) {
+    $aboutPath = Join-Path $directory.FullName 'About/About.xml'
+    if (Test-Path -LiteralPath $aboutPath -PathType Leaf) {
+        [xml] $about = Get-Content -LiteralPath $aboutPath -Raw -Encoding utf8
+        $package = $about.ModMetaData.packageId.ToLowerInvariant()
+        if ($package.StartsWith('ludeon.rimworld.')) {
+            $expansionMetadata += $about
+        }
+    }
+}
+# Each official expansion lists all earlier expansions in forceLoadAfter.
+$installedExpansions = @($expansionMetadata | Sort-Object { $_.SelectNodes('/ModMetaData/forceLoadAfter/li').Count } |
+    ForEach-Object { $_.ModMetaData.packageId.ToLowerInvariant() })
+$selectedExpansions = $installedExpansions
+if ($PSBoundParameters.ContainsKey('Expansions')) {
+    # Accept both PowerShell arrays and a comma-separated argument passed through -File.
+    $requestedNames = @($Expansions | ForEach-Object { $_.Split(',') } | ForEach-Object { $_.Trim().ToLowerInvariant() })
+    if ($requestedNames -contains '') { throw '-Expansions contains an empty name; use None to run without expansions.' }
+    if ($requestedNames -contains 'none') {
+        if ($requestedNames.Count -ne 1) { throw '-Expansions None cannot be combined with other names.' }
+        $selectedExpansions = @()
+    }
+    else {
+        $requestedPackages = @(foreach ($name in $requestedNames) {
+            $package = "ludeon.rimworld.$name"
+            if ($installedExpansions -notcontains $package) {
+                $installedNames = ($installedExpansions | ForEach-Object { $_.Substring('ludeon.rimworld.'.Length) }) -join ', '
+                throw "Unknown or uninstalled expansion '$name'. Installed expansions: $installedNames."
+            }
+            $package
+        })
+        # Keep the game's load order and include each requested expansion only once.
+        $selectedExpansions = @($installedExpansions | Where-Object { $requestedPackages -contains $_ })
+    }
+}
+if ($Suite -ne 'Yobai' -and $selectedExpansions -notcontains 'ludeon.rimworld.biotech') {
+    throw 'Xylib and XylXenos tests require Biotech; include it in -Expansions.'
+}
+
 $repositoryDirectory = Split-Path -Parent $PSScriptRoot
 $testProjectDirectory = Join-Path $repositoryDirectory "$Suite.Tests"
 $dependencyDirectory = Join-Path $repositoryDirectory 'temp/Yobai.TestDependencies'
 $OutputDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
 New-Item -ItemType Directory -Path $OutputDirectory | Out-Null
-
-if ($CoreOnly -and $Suite -ne 'Yobai') { throw 'Xylib and XylXenos tests require Biotech; omit -CoreOnly.' }
 
 # DevTools is pinned test infrastructure; Disharmony can optionally come from source.
 $devToolsRevision = '0600eb11a6781371ee84a5d9a4ce86653c92d7ff'
@@ -138,27 +178,11 @@ if ($DisharmonySourceDirectory) {
 $saveDataDirectory = Join-Path $OutputDirectory 'UserData'
 $configDirectory = Join-Path $saveDataDirectory 'Config'
 New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
-$expansionMetadata = @()
-foreach ($directory in Get-ChildItem -LiteralPath (Join-Path $gameDirectory 'Data') -Directory) {
-    $aboutPath = Join-Path $directory.FullName 'About/About.xml'
-    if (Test-Path -LiteralPath $aboutPath -PathType Leaf) {
-        [xml] $about = Get-Content -LiteralPath $aboutPath -Raw -Encoding utf8
-        $package = $about.ModMetaData.packageId.ToLowerInvariant()
-        if ($package.StartsWith('ludeon.rimworld.')) {
-            $expansionMetadata += $about
-        }
-    }
-}
-# Each official expansion lists all earlier expansions in forceLoadAfter.
-$expansions = @($expansionMetadata | Sort-Object { $_.SelectNodes('/ModMetaData/forceLoadAfter/li').Count } |
-    ForEach-Object { $_.ModMetaData.packageId.ToLowerInvariant() })
 $activeMods = @($workshopPackages['brrainz.harmony'], 'ludeon.rimworld')
-if (!$CoreOnly) {
-    $activeMods += $expansions
-}
+$activeMods += $selectedExpansions
 $activeMods += @($workshopPackages['xylthixlm.disharmony'], $gameplayPackage, 'smashphil.devtools', $testPackage)
 $activeXml = ($activeMods | ForEach-Object { "<li>$($_)</li>" }) -join ''
-$expansionsXml = ($expansions | ForEach-Object { "<li>$($_)</li>" }) -join ''
+$expansionsXml = ($installedExpansions | ForEach-Object { "<li>$($_)</li>" }) -join ''
 [IO.File]::WriteAllText((Join-Path $configDirectory 'ModsConfig.xml'), @"
 <ModsConfigData>
   <version>$gameVersion</version>
