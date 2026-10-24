@@ -118,10 +118,9 @@ public sealed class GeneCompTests : PawnTestFixture
         Expect.AreEqual(-1, comp.FullnessStage);
     }
 
-    [Test]
+    [Test, LoadIfRoyaltyActive]
     public void PsycastCompInitializesPsyfocus()
     {
-        if (!ModsConfig.RoyaltyActive) { Test.Skip("Requires Royalty."); return; }
         pawn.psychicEntropy.OffsetPsyfocusDirectly(-1);
         pawn.genes.AddGene(GeneDef(new GeneCompProperties_Psycast()), false);
         Expect.GreaterThan(pawn.psychicEntropy.CurrentPsyfocus, 0f);

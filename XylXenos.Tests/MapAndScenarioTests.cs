@@ -51,10 +51,9 @@ public sealed class MapAndScenarioTests : PawnTestFixture
         Expect.IsTrue(pawn.Inspired);
     }
 
-    [Test]
+    [Test, LoadIfRoyaltyActive]
     public void PsylinkScenarioHelperAddsLevelsWithoutGrantingAbilities()
     {
-        if (!ModsConfig.RoyaltyActive) { Test.Skip("Requires Royalty."); return; }
         int before = pawn.abilities.AllAbilitiesForReading.Count;
         ScenPart_PsylinkLevels.ChangePsylinkLevelWithoutAbility(pawn, 1, sendLetter: false);
         Expect.AreEqual(1, pawn.GetPsylinkLevel());

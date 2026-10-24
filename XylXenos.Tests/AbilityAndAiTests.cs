@@ -83,10 +83,9 @@ public sealed class AbilityAndAiTests : PawnTestFixture
         Expect.ReferencesAreEqual(gene, ((ThinkNode_ConditionalHasGene)node.DeepCopy(false)).gene);
     }
 
-    [Test]
+    [Test, LoadIfRoyaltyActive]
     public void EntropyConditionalChecksThresholdAndCopiesIt()
     {
-        if (!ModsConfig.RoyaltyActive) { Test.Skip("Requires Royalty."); return; }
         var node = new ThinkNode_ConditionalPsychicEntropy { maximum = -1 };
         MethodInfo satisfied = typeof(ThinkNode_ConditionalPsychicEntropy).GetMethod("Satisfied", BindingFlags.Instance | BindingFlags.NonPublic)!;
         Expect.IsFalse((bool)satisfied.Invoke(node, [pawn])!);
