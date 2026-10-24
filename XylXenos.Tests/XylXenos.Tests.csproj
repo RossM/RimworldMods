@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\InGameTests\Tests.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\XylXenos\XylXenos.csproj" />
+  </ItemGroup>
+</Project>

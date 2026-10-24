@@ -22,3 +22,5 @@ dotnet build .\XylRimworldMods.sln
 ```
 
 See [Building the mods](BUILDING.md) for build output, required runtime dependencies, and local Disharmony development.
+
+See [In-game tests](InGameTests/README.md) for the Xylib, XylXenos, and Yobai suites.

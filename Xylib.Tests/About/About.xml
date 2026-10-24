@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <packageId>Xylthixlm.Xylib.Tests</packageId>
+  <name>Xylib tests</name>
+  <author>Xylthixlm</author>
+  <description>In-game code tests for Xylib, run through SmashPhil's DevTools. Enable only for testing.</description>
+  <supportedVersions><li>1.7</li></supportedVersions>
+  <modDependencies>
+    <li><packageId>Xylthixlm.Races.Core</packageId><displayName>Xyl's Xenotypes (includes Xylib)</displayName></li>
+    <li><packageId>SmashPhil.DevTools</packageId><displayName>DevTools</displayName></li>
+  </modDependencies>
+  <loadAfter><li>Xylthixlm.Races.Core</li><li>SmashPhil.DevTools</li></loadAfter>
+</ModMetaData>

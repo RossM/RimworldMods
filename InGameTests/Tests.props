@@ -1,0 +1,26 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>preview</LangVersion>
+    <DevToolsAssemblyPath Condition="'$(DevToolsAssemblyPath)' == ''">$(MSBuildThisFileDirectory)..\temp\Yobai.TestDependencies\DevToolsMod\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
+    <Reference Include="DevTools" HintPath="$(DevToolsAssemblyPath)" Private="false" />
+    <Compile Include="..\InGameTests\PawnTestFixture.cs" Link="PawnTestFixture.cs" />
+    <Using Include="DevTools.Testing" />
+    <Using Include="RimWorld" />
+    <Using Include="Verse" />
+    <Using Include="Xylib" />
+    <Using Include="InGameTests" />
+  </ItemGroup>
+  <Target Name="CheckDevTools" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(DevToolsAssemblyPath)')" Text="DevTools.dll was not found. Run $(MSBuildProjectName)/Run-Tests.ps1 first." />
+  </Target>
+  <Target Name="DeployTests" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\ModBin\$(MSBuildProjectName)\Assemblies" />
+    <Copy SourceFiles="About\About.xml" DestinationFolder="..\ModBin\$(MSBuildProjectName)\About" />
+  </Target>
+</Project>

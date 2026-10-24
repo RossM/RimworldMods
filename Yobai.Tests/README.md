@@ -1,6 +1,6 @@
 # Yobai in-game tests
 
-The tests run inside RimWorld using [SmashPhil's DevTools](https://github.com/SmashPhil/DevTools/tree/develop/DevTools/Testing). They exercise the game's jobs, think trees, reservations and save system alongside Yobai.
+The tests run inside RimWorld using [SmashPhil's DevTools](https://github.com/SmashPhil/DevTools/tree/develop/DevTools/Testing). They exercise the game's jobs, think trees, reservations and save system alongside Yobai. The launcher is shared with Xylib and XylXenos in [InGameTests](../InGameTests/README.md).
 
 ## Running the tests
 
@@ -12,7 +12,7 @@ Use Windows PowerShell 5.1 or PowerShell 7 with the .NET 10 SDK. Install the nor
 
 Point the command at your Steam installation. The script builds Yobai and DevTools, creates an isolated user-data directory, and runs the installed game headlessly. It temporarily links the test mods into the game's `Mods` directory and restores existing local mod folders on exit. Your normal saves and settings are kept separate.
 
-The first run needs internet access for DevTools and NuGet restore, plus permission to create junctions and move local mod folders in the game directory. The script creates its own build outputs, dependency cache and test profile. DevTools is pinned to the revision specified in [Run-Tests.ps1](Run-Tests.ps1) and cached under `temp/Yobai.TestDependencies`; deleting the cache causes it to be downloaded and built again.
+The first run needs internet access for DevTools and NuGet restore, plus permission to create junctions and move local mod folders in the game directory. The script creates its own build outputs, dependency cache and test profile. DevTools is pinned to the revision specified in [the shared runner](../InGameTests/Run-Tests.ps1) and cached under `temp/Yobai.TestDependencies`; deleting the cache causes it to be downloaded and built again.
 
 Tests use the released Disharmony NuGet package and the installed Workshop mods. Local Disharmony build overrides are ignored. The test project is included in the solution but excluded from its default builds. After running the script, Visual Studio can resolve DevTools from the dependency cache.
 
