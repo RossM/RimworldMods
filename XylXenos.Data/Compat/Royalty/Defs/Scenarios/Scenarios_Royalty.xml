@@ -5,7 +5,7 @@
   <ScenarioDef ParentName="ScenarioBase" MayRequire="Ludeon.RimWorld.Royalty">
     <defName>XylTheSiren</defName>
     <label>The Siren</label>
-    <description>No one was ever quite sure what the cult believed. Their words were a little too smooth, their smiles a little too still. They spoke of voices from beyond the void, of unity, of dissolving into something greater. When the authorities came, they came hard: dropships, psychic dampeners, orbital jammers. In the aftermath, the cult was gone. Scattered. Burned. Forgotten. But you survived. You've come to this rimworld not to hide, exactly, but to begin again. To wait. To gather. The song is louder here, if you know how to listen.</description>
+    <description>The outsiders never appreciated the unity of the circle. To be part of it was to be able to hear the voices from beyond the veil, to know the bliss of true unity, and to become part of something unimagineably greater. When the jealousy of the authorities overcame their apprehension they came down hard, with machines that silenced the song and ships full of armored soldiers. The circle was broken, but its fragments remain: you survived and you've traveled to this rimworld. Not to hide, but to gather others and begin again, for the song is louder here than ever...</description>
     <scenario>
       <summary>One nixie with powerful non-combat psychic abilities. Very difficult.</summary>
       <parts>
