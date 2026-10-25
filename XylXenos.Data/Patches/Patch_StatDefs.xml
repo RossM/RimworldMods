@@ -15,4 +15,13 @@
     </value>
   </Operation>
 
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/StatDef[starts-with(defName, "ShootingAccuracyFactor_")]</xpath>
+    <value>
+      <parts>
+        <li Class="XylXenos.StatPart_Echolocation"/>
+      </parts>
+    </value>
+  </Operation>
+
 </Patch>
