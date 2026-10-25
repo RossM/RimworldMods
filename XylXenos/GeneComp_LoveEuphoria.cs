@@ -31,10 +31,15 @@ public class GeneCompProperties_LoveEuphoria : GeneCompProperties
 
         if (addictionHediff is not null)
         {
-            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "Addictiveness".Translate(), addictionChance.ToStringPercent(), "Stat_Thing_Drug_Addictiveness_Desc".Translate(), 2428);
-            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedOffset".Translate(), needOffset.ToStringPercent(), "Stat_Thing_Drug_AddictionNeedOffset_Desc".Translate(), 2420);
-            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedFallRate".Translate(), "PerDay".Translate(need.fallPerDay.ToStringPercent()), "Stat_Thing_Drug_AddictionNeedFallRate_Desc".Translate(), 2410);
-            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedDoseInterval".Translate(), "PeriodDays".Translate((needOffset / need.fallPerDay).ToString("F1")), "Stat_Thing_Drug_AddictionNeedDoseInterval_Desc".Translate(), 2400);
+            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "Addictiveness".Translate(), addictionChance.ToStringPercent(),
+                "Stat_Thing_Drug_Addictiveness_Desc".Translate(), 2428);
+            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedOffset".Translate(), needOffset.ToStringPercent(),
+                "Stat_Thing_Drug_AddictionNeedOffset_Desc".Translate(), 2420);
+            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedFallRate".Translate(),
+                "PerDay".Translate(need.fallPerDay.ToStringPercent()), "Stat_Thing_Drug_AddictionNeedFallRate_Desc".Translate(), 2410);
+            yield return new StatDrawEntry(StatCategoryDefOf.DrugAddiction, "AddictionNeedDoseInterval".Translate(),
+                "PeriodDays".Translate((needOffset / need.fallPerDay).ToString("F1")),
+                "Stat_Thing_Drug_AddictionNeedDoseInterval_Desc".Translate(), 2400);
         }
 
         if (addictionHediff?.CompProps<HediffCompProperties_SeverityPerDay>() is { } addictionSeverityPerDay)
@@ -51,6 +56,17 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
 {
     public GeneCompProperties_LoveEuphoria Props => (GeneCompProperties_LoveEuphoria)props;
 
+    private void AddHediff(Pawn partner, HediffDef? hediffDef)
+    {
+        if (hediffDef is null)
+            return;
+
+        var hediff = partner.health.GetOrAddHediff(hediffDef);
+        hediff.Severity = hediff.def.initialSeverity;
+        if (hediff.TryGetComp<HediffComp_Source>() is { } source)
+            source.other = Pawn;
+    }
+
     public void Notify_PostLovin(Pawn partner)
     {
         if (!Active)
@@ -62,17 +78,6 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
         AddHediff(partner, Props.highHediff);
 
         partner.needs.TryGetNeed(Props.need)?.CurLevel += Props.needOffset;
-    }
-
-    private void AddHediff(Pawn partner, HediffDef? hediffDef)
-    {
-        if (hediffDef is null)
-            return;
-
-        var hediff = partner.health.GetOrAddHediff(hediffDef);
-        hediff.Severity = hediff.def.initialSeverity;
-        if (hediff.TryGetComp<HediffComp_Source>() is { } source)
-            source.other = Pawn;
     }
 
     public void RegisterWith(EventManager manager)

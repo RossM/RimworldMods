@@ -36,9 +36,7 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
             if (parms.facing == Rot4.East)
                 result.x -= node.Props.narrowCrownHorizontalOffset;
             else if (parms.facing == Rot4.West)
-            {
                 result.x += node.Props.narrowCrownHorizontalOffset;
-            }
             result.z -= node.Props.narrowCrownHorizontalOffset;
         }
 

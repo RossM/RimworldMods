@@ -12,8 +12,7 @@ public class QuestNode_AddPawnAndItemsReward : QuestNode
     public SlateRef<IEnumerable<Thing>> items;
     public SlateRef<bool> rewardDetailsHidden;
 
-    [NoTranslate]
-    public SlateRef<string> inSignalChoiceUsed;
+    [NoTranslate] public SlateRef<string> inSignalChoiceUsed;
 
     protected override bool TestRunInt(Slate slate) => true;
 
@@ -24,13 +23,11 @@ public class QuestNode_AddPawnAndItemsReward : QuestNode
 
         Pawn? rewardPawn = pawn.GetValue(slate);
         if (rewardPawn is not null)
-        {
             choice.rewards.Add(new Reward_Pawn
             {
                 pawn = rewardPawn,
                 detailsHidden = rewardDetailsHidden.GetValue(slate),
             });
-        }
 
         IEnumerable<Thing>? rewardItems = items.GetValue(slate);
         if (rewardItems is not null)

@@ -12,7 +12,7 @@ public static class Patch_PregnancyUtility
     [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
     [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
     public static void GeneratePawn_Postfix(Pawn? geneticMother, Pawn? father, ref Pawn __result)
-    { 
+    {
         List<GeneDef> childGenes = InheritableGenesFrom(__result);
 
         switch (PatchHelpers.GetDominantParent(geneticMother, father))
@@ -20,7 +20,8 @@ public static class Patch_PregnancyUtility
             case PatchHelpers.DominantParent.Father:
             {
                 DebugAssert.NotNull(father);
-                if (geneticMother != null && childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) && !childGenes.SetsEqual(InheritableGenesFrom(father)))
+                if (geneticMother != null && childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) &&
+                    !childGenes.SetsEqual(InheritableGenesFrom(father)))
                     PatchHelpers.CopyXenotype(__result, geneticMother);
                 else
                     PatchHelpers.CopyXenotype(__result, father);
@@ -29,7 +30,8 @@ public static class Patch_PregnancyUtility
             case PatchHelpers.DominantParent.Mother:
             {
                 DebugAssert.NotNull(geneticMother);
-                if (father != null && childGenes.SetsEqual(InheritableGenesFrom(father)) && !childGenes.SetsEqual(InheritableGenesFrom(geneticMother)))
+                if (father != null && childGenes.SetsEqual(InheritableGenesFrom(father)) &&
+                    !childGenes.SetsEqual(InheritableGenesFrom(geneticMother)))
                     PatchHelpers.CopyXenotype(__result, father);
                 else
                     PatchHelpers.CopyXenotype(__result, geneticMother);
@@ -37,8 +39,11 @@ public static class Patch_PregnancyUtility
             }
         }
 
-        static List<GeneDef> InheritableGenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(
-            gene => gene is { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) })];
+        static List<GeneDef> InheritableGenesFrom(Pawn pawn) =>
+        [
+            .. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene is
+                { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) }),
+        ];
     }
 
     [Feature(typeof(GeneCompProperties_Inheritance))]
@@ -54,7 +59,8 @@ public static class Patch_PregnancyUtility
         };
         return;
 
-        static List<GeneDef> InheritableGenesFrom(Pawn pawn) => [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
+        static List<GeneDef> InheritableGenesFrom(Pawn pawn) =>
+            [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
     }
 
     [Feature(typeof(GeneCompProperties_Inheritance))]

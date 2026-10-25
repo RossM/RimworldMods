@@ -37,7 +37,7 @@ public class GeneTracker_XylXenos : GeneTracker
                 item => item.joyGiver, item => item.factor);
             Append(ref disableHostilityFromFactions, def.CompProps<GeneCompProperties_DisableHostility>()?.factions);
             Append(ref ingestionThoughtOverrides, def.CompProps<GeneCompProperties_IngestionThoughtOverrides>()?.overrides);
-            Multiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors, 
+            Multiply(ref meleeDamageFactors, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors,
                 item => item.damageDef, item => item.factor);
             Add(ref meleeChanceBonuses, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors,
                 item => item.damageDef, item => item.chanceBonus);

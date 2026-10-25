@@ -3,8 +3,7 @@
 [UsedFromXml]
 public class HediffGiver_RandomNotInSpace : HediffGiver_Random
 {
-    [MustTranslate]
-    public string? message;
+    [MustTranslate] public string? message;
 
     public override float ChanceFactor(Pawn pawn)
     {
@@ -19,6 +18,7 @@ public class HediffGiver_RandomNotInSpace : HediffGiver_Random
         float factor = ChanceFactor(pawn);
         if (factor != 0f && Rand.MTBEventOccurs(mtb / factor, 60000f, 60f) && TryApply(pawn))
             if (message != null)
-                Messages.Message(message.Formatted(pawn.LabelShortCap, hediff.LabelCap, pawn.Named("PAWN")).CapitalizeFirst(), MessageTypeDefOf.NegativeEvent);
+                Messages.Message(message.Formatted(pawn.LabelShortCap, hediff.LabelCap, pawn.Named("PAWN")).CapitalizeFirst(),
+                    MessageTypeDefOf.NegativeEvent);
     }
 }

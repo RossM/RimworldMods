@@ -5,17 +5,15 @@ public class GeneCompProperties_MeditationFocus : GeneCompProperties
 {
     public List<MeditationFocusDef>? allowedMeditationFocusTypes;
 
-    public override IEnumerable<string> CustomEffectDescriptions()
-    {
-        foreach (var type in allowedMeditationFocusTypes ?? Enumerable.Empty<MeditationFocusDef>())
-        {
-            yield return $"{"MeditationFocusesUnlocked".Translate()}: {type.LabelCap}";
-        }
-    }
-
     public GeneCompProperties_MeditationFocus()
     {
         compClass = typeof(GeneComp_MeditationFocus);
+    }
+
+    public override IEnumerable<string> CustomEffectDescriptions()
+    {
+        foreach (var type in allowedMeditationFocusTypes ?? Enumerable.Empty<MeditationFocusDef>())
+            yield return $"{"MeditationFocusesUnlocked".Translate()}: {type.LabelCap}";
     }
 }
 

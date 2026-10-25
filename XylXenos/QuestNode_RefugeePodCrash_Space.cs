@@ -6,11 +6,10 @@ namespace XylXenos;
 [UsedFromXml]
 public class QuestNode_RefugeePodCrash_Space : QuestNode_Root_RefugeePodCrash
 {
+    protected override bool CanBeSpace => true;
     public SlateRef<PawnKindDef> kindDef;
 
     public bool forceNoGear = false;
-
-    protected override bool CanBeSpace => true;
 
     protected override bool TestRunInt(Slate slate)
     {

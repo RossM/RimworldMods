@@ -32,7 +32,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
     {
         if (!data.request.KindDef.RaceProps.Humanlike)
             return;
-        
+
         if (data.request.ForcedCustomXenotype != null)
             return;
 
@@ -44,7 +44,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
 
         if (!Rand.Chance(chance))
             return;
-        
+
         var xenotype = DefDatabase<XenotypeDef>.AllDefs.Where(ValidateXenotype).RandomElement();
         data.request.ForcedXenotype = xenotype;
     }

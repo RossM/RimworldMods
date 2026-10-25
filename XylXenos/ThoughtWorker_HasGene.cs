@@ -14,7 +14,7 @@ public class ThoughtWorker_HasGene : ThoughtWorker
         if (!RelationsUtility.PawnsKnowEachOther(p, other))
             return false;
         if (extension.requiresSight && PawnUtility.IsBiologicallyOrArtificiallyBlind(p))
-            return false; 
+            return false;
         if (!other.HasActiveGene(geneDef))
             return false;
         return true;

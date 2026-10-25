@@ -3,7 +3,6 @@
 [Patch(typeof(LovePartnerRelationUtility))]
 public static class Patch_LovePartnerRelationUtility
 {
-
     [Feature(FeatureNameOf.Bugfix_Misc)]
     [Postfix]
     [Target("LovinMtbSinglePawnFactor")]

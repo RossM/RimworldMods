@@ -32,11 +32,11 @@ public class GeneComp_Milkable : GeneComp
         Find.TickManager.TicksGame > lastMilkedTick + milkingCooldownDays * GenDate.TicksPerDay &&
         ItemCount >= 1;
 
-    private const int CheckInterval = 60;
-
     public int FullnessStage => fullSinceTick is { } value
         ? Mathf.FloorToInt((float)(Find.TickManager.TicksGame - value) / Props.ticksPerFullnessStage)
         : -1;
+
+    private const int CheckInterval = 60;
 
     [Unsaved] private int lastChargeableUpdateTick = -1;
     public bool allowMilking = true;

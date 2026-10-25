@@ -5,14 +5,14 @@ namespace XylXenos;
 
 public static class PatchHelpers
 {
-    private const float DocileHappyThreshold = 0.5f;
-
     public enum DominantParent
     {
         None,
         Mother,
         Father,
     }
+
+    private const float DocileHappyThreshold = 0.5f;
 
     public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
     {
@@ -183,7 +183,8 @@ public static class PatchHelpers
         return DominantParent.None;
 
         static bool BreaksTiesRandomly(Pawn? pawn) =>
-            pawn?.ActiveGenesOfType<GeneWithComps>().Any(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.tiesChooseRandomParent is true) is true;
+            pawn?.ActiveGenesOfType<GeneWithComps>()
+                .Any(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.tiesChooseRandomParent is true) is true;
     }
 
     public static void CopyXenotype(Pawn destination, Pawn source)
@@ -382,7 +383,8 @@ public static class PatchHelpers
 
         GeneDef? gene = request.ForcedXenogenes?.FirstOrDefault(def => HasGenderRatio(def, GeneType.Xenogene)) ??
                         request.ForcedEndogenes?.FirstOrDefault(def => HasGenderRatio(def, GeneType.Endogene)) ??
-                        request.ForcedCustomXenotype?.genes.FirstOrDefault(def => HasGenderRatio(def, request.ForcedCustomXenotype.GeneType)) ??
+                        request.ForcedCustomXenotype?.genes.FirstOrDefault(def =>
+                            HasGenderRatio(def, request.ForcedCustomXenotype.GeneType)) ??
                         xenotype?.AllGenes.FirstOrDefault(def => HasGenderRatio(def, xenotype.GeneType));
         var comp = gene?.CompProps<GeneCompProperties_GenderRatio>();
         if (comp == null)
@@ -393,7 +395,7 @@ public static class PatchHelpers
 
         static bool HasGenderRatio(GeneDef geneDef, GeneType geneType) =>
             geneDef.Extension_GeneWithComps is { } extension &&
-            geneDef.CompProps<GeneCompProperties_GenderRatio>() != null && 
+            geneDef.CompProps<GeneCompProperties_GenderRatio>() != null &&
             !(extension.geneType is { } type && type != geneType);
     }
 }

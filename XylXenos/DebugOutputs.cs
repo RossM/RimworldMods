@@ -304,7 +304,7 @@ public static class DebugOutputs
             new("techHediffsTags", def => string.Join(", ", def.techHediffsTags?.Distinct() ?? [])),
         ];
 
-        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(k => k.race == ThingDefOf.Human).OrderBy(k => k.combatPower), 
+        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(k => k.race == ThingDefOf.Human).OrderBy(k => k.combatPower),
             [.. columns]);
     }
 

@@ -12,7 +12,7 @@ public class DefModExtension_Xenotype : DefModExtension
     ///     Memes which this xenotype prefers. Affects ideoligeon conversion.
     /// </summary>
     public List<MemeDef>? agreeingMemes;
-    
+
     /// <summary>
     ///     Memes which this xenotype dislikes. Affects ideoligeon conversion.
     /// </summary>

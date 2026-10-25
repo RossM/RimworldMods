@@ -24,7 +24,8 @@ internal static class Patch_Pawn_PsychicEntropyTracker
     {
         if (__result)
             return;
-        if (__instance.Pawn is { HasActivePsycastGene: true, Suspended: false } && (__instance.Pawn.Spawned || __instance.Pawn.IsCaravanMember()))
+        if (__instance.Pawn is { HasActivePsycastGene: true, Suspended: false } &&
+            (__instance.Pawn.Spawned || __instance.Pawn.IsCaravanMember()))
             __result = true;
     }
 }
