@@ -8,10 +8,6 @@ public static class PawnExtensions
     {
         public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast is true;
 
-        public bool NeedsPsyfocus =>
-            // HasPsylink is patched to respect psycast genes
-            pawn is { HasPsylink: true, Suspended: false } && (pawn.Spawned || pawn.IsCaravanMember());
-
         public GeneTracker_XylXenos? GeneTracker_XylXenos
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
