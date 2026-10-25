@@ -3,7 +3,7 @@
 [Patch(typeof(SlaveRebellionUtility))]
 public static class Patch_SlaveRebellionUtility
 {
-    [Feature(nameof(DefOf.XylDocile))]
+    [Feature(nameof(MyDefOf.XylDocile))]
     [Postfix]
     [Target(nameof(SlaveRebellionUtility.CanParticipateInSlaveRebellion))]
     public static void CanParticipateInSlaveRebellion_Postfix(Pawn pawn, ref bool __result)

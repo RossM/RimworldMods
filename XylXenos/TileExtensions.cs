@@ -10,7 +10,7 @@ public static class TileExtensions
 
         public bool IsWetlandBiome =>
             tile.PrimaryBiome == BiomeDefOf.TropicalSwamp ||
-            tile.PrimaryBiome == DefOf.TemperateSwamp ||
+            tile.PrimaryBiome == VanillaDefOf.TemperateSwamp ||
             tile.PrimaryBiome == BiomeDefOf.ColdBog;
     }
 }

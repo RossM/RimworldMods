@@ -3,7 +3,7 @@
 [Patch(typeof(CompUsableImplant))]
 public static class Patch_CompUsableImplant
 {
-    [Feature(nameof(DefOf.XylBioRejection))]
+    [Feature(nameof(MyDefOf.XylBioRejection))]
     [Postfix]
     [Target("FloatMenuOptionLabel")]
     public static void FloatMenuOptionLabel_Postfix(CompUsableImplant __instance, Pawn pawn, ref string __result)
@@ -11,7 +11,7 @@ public static class Patch_CompUsableImplant
         if (__instance.parent.def.GetCompProperties<CompProperties_UseEffectInstallImplant>()?.hediffDef
                 ?.countsAsAddedPartOrImplant is not true)
             return;
-        if (!pawn.HasActiveGene(DefOf.XylBioRejection))
+        if (!pawn.HasActiveGene(MyDefOf.XylBioRejection))
             return;
         __result += $" ({"XylCausesBioRejection".Translate()})";
     }

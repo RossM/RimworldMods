@@ -220,7 +220,7 @@ public static class PatchHelpers
 
     public static bool IsUsingEcholocation(Thing caster)
     {
-        return caster is Pawn pawn && pawn.HasActiveGene(DefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
+        return caster is Pawn pawn && pawn.HasActiveGene(MyDefOf.XylEcholocation) && PawnUtility.IsBiologicallyOrArtificiallyBlind(pawn)
                && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Hearing) >= 0.2f;
     }
 
@@ -302,7 +302,7 @@ public static class PatchHelpers
 
     public static void SortColorGenes(List<GeneDef> list)
     {
-        static bool IsSkinColor(GeneDef g) => g.displayCategory == DefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
+        static bool IsSkinColor(GeneDef g) => g.displayCategory == VanillaDefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
 
         var colorGenes = list.Where(IsSkinColor).ToList();
         SortByColor(colorGenes, g => g.skinColorOverride!.Value);
@@ -367,7 +367,7 @@ public static class PatchHelpers
     }
 
     public static bool DocileAndHappy(Pawn pawn) =>
-        pawn.genes?.HasActiveGene(DefOf.XylDocile) is true && pawn.mindState.mentalBreaker is { CurMood: >= DocileHappyThreshold };
+        pawn.genes?.HasActiveGene(MyDefOf.XylDocile) is true && pawn.mindState.mentalBreaker is { CurMood: >= DocileHappyThreshold };
 
     public static bool GenesEnableMeditationDef(Pawn p, MeditationFocusDef type, [NotNullWhen(true)] out GeneWithComps? gene)
     {

@@ -3,7 +3,7 @@
 [Patch(typeof(ShotReport))]
 public static class Patch_ShotReport
 {
-    [Feature(nameof(DefOf.XylEcholocation))]
+    [Feature(nameof(MyDefOf.XylEcholocation))]
     [Prefix]
     [Target(nameof(ShotReport.HitFactorFromShooter))]
     public static bool HitFactorFromShooter_Prefix(Thing caster, float distance, out float __result)
@@ -26,7 +26,7 @@ public static class Patch_ShotReport
         return true;
     }
 
-    [Feature(nameof(DefOf.XylEcholocation))]
+    [Feature(nameof(MyDefOf.XylEcholocation))]
     [Postfix]
     [Target(nameof(ShotReport.HitReportFor))]
     public static void HitReportFor_Postfix(Thing caster, ref ShotReport __result)

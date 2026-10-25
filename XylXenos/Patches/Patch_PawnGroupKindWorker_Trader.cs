@@ -5,7 +5,7 @@ namespace XylXenos.Patches;
 [Patch(typeof(PawnGroupKindWorker_Trader))]
 public static class Patch_PawnGroupKindWorker_Trader
 {
-    [Feature(nameof(DefOf.XylTribeGentleNixie))]
+    [Feature(nameof(MyDefOf.XylTribeGentleNixie))]
     [Prefix]
     [Target("GenerateCarriers")]
     public static bool GenerateCarriers_Prefix(
@@ -18,7 +18,7 @@ public static class Patch_PawnGroupKindWorker_Trader
         DebugAssert.NotNull(Find.WorldGrid);
         DebugAssert.True(groupMaker.carriers is { Count: > 0 });
 
-        if (parms.faction?.def != DefOf.XylTribeGentleNixie)
+        if (parms.faction?.def != MyDefOf.XylTribeGentleNixie)
             return true;
 
         // This has two differences from the normal version:
@@ -37,7 +37,7 @@ public static class Patch_PawnGroupKindWorker_Trader
             DebugAssert.NotNull(tile.PrimaryBiome);
 
             if (!tile.IsCoastalOrRiverTile)
-                carrierOptions = carrierOptions.Where(option => option.kind != DefOf.XylSelkie);
+                carrierOptions = carrierOptions.Where(option => option.kind != MyDefOf.XylSelkie);
             carrierOptions = carrierOptions.Where(option =>
             {
                 DebugAssert.NotNull(option.kind);
