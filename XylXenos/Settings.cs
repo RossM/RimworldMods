@@ -18,6 +18,7 @@ public class Settings : ModSettings
     public bool fixGeneticPassions = true;
 
     public bool useDistinctiveFactionColors;
+    public HashSet<string> disabledXenotypes = [];
 
     public override void ExposeData()
     {
@@ -27,6 +28,9 @@ public class Settings : ModSettings
         Scribe_Values.Look(ref useDistinctiveFactionColors, nameof(useDistinctiveFactionColors), true);
         Scribe_Values.Look(ref fixGeneticPassions, nameof(fixGeneticPassions), defaultValue: true);
         // ReSharper restore RedundantArgumentDefaultValue
+
+        Scribe_Collections.Look(ref disabledXenotypes, nameof(disabledXenotypes), LookMode.Value);
+        disabledXenotypes ??= [];
     }
 
     public void DoSettingsWindowContents(Rect inRect)
@@ -40,6 +44,10 @@ public class Settings : ModSettings
             EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
         BoolSetting(listing, nameof(useDistinctiveFactionColors));
         BoolSetting(listing, nameof(fixGeneticPassions));
+
+        listing.Gap();
+        if (listing.ButtonText("XylEnableDisableXenotypes".Translate()))
+            Find.WindowStack.Add(new Dialog_EnableDisableXenotypes(this));
 
         listing.End();
     }
