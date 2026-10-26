@@ -185,6 +185,15 @@ public static class PatchHelpers
         static bool BreaksTiesRandomly(Pawn? pawn) =>
             pawn?.ActiveGenesOfType<GeneWithComps>()
                 .Any(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.tiesChooseRandomParent is true) is true;
+
+        static int XenotypeStrength(Pawn? pawn)
+        {
+            if (pawn?.genes == null)
+                return int.MinValue;
+
+            return pawn.ActiveGenesOfType<GeneWithComps>()
+                .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.strength ?? 0);
+        }
     }
 
     public static void CopyXenotype(Pawn destination, Pawn source)
@@ -197,26 +206,9 @@ public static class PatchHelpers
         destination.genes.iconDef = source.genes.iconDef;
     }
 
-    private static int XenotypeStrength(Pawn? pawn)
-    {
-        if (pawn?.genes == null)
-            return int.MinValue;
-
-        return pawn.ActiveGenesOfType<GeneWithComps>()
-            .Sum(gene => gene.DefExt.CompProps<GeneCompProperties_Inheritance>()?.strength ?? 0);
-    }
-
     public static bool MilkablePrisonerInRoomCanProduce(Room? r, ThingDef thingDef)
     {
-        if (r is not { IsPrisonCell: true })
-            return false;
-        foreach (Pawn owner in r.Owners)
-        {
-            if (owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef))
-                return true;
-        }
-
-        return false;
+        return r is { IsPrisonCell: true } && r.Owners.Any(owner => owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef));
     }
 
     public static bool IsUsingEcholocation(Thing caster)
@@ -228,14 +220,8 @@ public static class PatchHelpers
     public static float FoodOptimalityBonus(Pawn eater, Thing foodSource)
     {
         // Check if this food satisfies a diet dependency
-        float extra = 0f;
-        foreach (var hediff in eater.HediffsOfType<Hediff_DietDependency>())
-        {
-            if (hediff.ValidateFood(foodSource) && hediff.ShouldSatisfy)
-                extra += 100f;
-        }
 
-        return extra;
+        return eater.HediffsOfType<Hediff_DietDependency>().Count(hediff => hediff.ValidateFood(foodSource) && hediff.ShouldSatisfy) * 100f;
     }
 
     public static void FixupChemicalGenes()
@@ -290,13 +276,15 @@ public static class PatchHelpers
         if (minorPassions <= 0)
             return false;
 
-        if (ModsConfig.BiotechActive && pawn.genes != null)
-            foreach (Gene item2 in pawn.genes.GenesListForReading)
-            {
-                if (item2.Active && item2.def.passionMod is { modType: PassionMod.PassionModType.AddOneLevel } &&
-                    item2.def.passionMod.skill == record.def)
-                    return true;
-            }
+        if (!ModsConfig.BiotechActive || pawn.genes == null)
+            return false;
+
+        foreach (Gene item2 in pawn.genes.GenesListForReading)
+        {
+            if (item2.Active && item2.def.passionMod is { modType: PassionMod.PassionModType.AddOneLevel } &&
+                item2.def.passionMod.skill == record.def)
+                return true;
+        }
 
         return false;
     }
