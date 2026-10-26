@@ -19,8 +19,7 @@ public static class DebugAssert
         if (value != null)
             return;
 
-        Log.ErrorOnce($"[{filePath}:{lineNumber}] {valueExpression} is null",
-            Gen.HashCombineInt(0x59071F35, valueExpression.GetHashCode(), filePath.GetHashCode(), lineNumber));
+        Log.ErrorOnce($"[{filePath}:{lineNumber}] {valueExpression} is null");
     }
 #pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 
@@ -36,7 +35,6 @@ public static class DebugAssert
         if (value)
             return;
 
-        Log.ErrorOnce($"[{filePath}:{lineNumber}] {value} is not true",
-            Gen.HashCombineInt(0x2168836A, valueExpression.GetHashCode(), filePath.GetHashCode(), lineNumber));
+        Log.ErrorOnce($"[{filePath}:{lineNumber}] {value} is not true");
     }
 }

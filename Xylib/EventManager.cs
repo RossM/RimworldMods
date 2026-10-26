@@ -459,31 +459,32 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
+    /// <param name="eventDefExpression">
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    /// </param>
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
     /// <remarks>
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
-    public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0)
+    public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0, 
+        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
-            Log.WarningOnce("[EventManager] eventType is null - are you missing a NotificationDef in XML?",
-                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
         if (eventDef.dataType is null)
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
-                Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null");
         else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
-                Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}");
 
         RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data!), callback.Target, MethodName(callback), priority);
     }
@@ -504,31 +505,32 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
+    /// <param name="eventDefExpression">
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    /// </param>
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
     /// <remarks>
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
-    public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0)
+    public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0,
+        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
-            Log.WarningOnce("[EventManager] eventType is null - are you missing a NotificationDef in XML?",
-                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
         if (eventDef.dataType is null)
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
-                Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null");
         else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
-                Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}");
 
         RegisterInternal(eventDef, target, (_, data) => callback((T)data!), callback.Target, MethodName(callback), priority);
     }
@@ -549,17 +551,20 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
+    /// <param name="eventDefExpression">
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    /// </param>
     /// <remarks>
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
-    public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0)
+    public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0,
+        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
-            Log.WarningOnce("[EventManager] eventType is null - are you missing a NotificationDef in XML?",
-                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -582,17 +587,20 @@ public class EventManager
     /// <param name="priority">
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
+    /// <param name="eventDefExpression">
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    /// </param>
     /// <remarks>
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
-    public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0)
+    public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0,
+        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
-            Log.WarningOnce("[EventManager] eventType is null - are you missing a NotificationDef in XML?",
-                Gen.HashCombineInt(0x7AEC159, callback.Target?.GetHashCode() ?? 0));
+            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -630,6 +638,9 @@ public class EventManager
     /// <param name="callback">
     ///     The callback to invoke.
     /// </param>
+    /// <param name="eventDefExpression">
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    /// </param>
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
@@ -640,26 +651,24 @@ public class EventManager
         IEventListener listener,
         EventDef? eventDef,
         Thing? target,
-        Action<Thing?, T?> callback)
+        Action<Thing?, T?> callback,
+        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(listener);
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef == null)
         {
-            Log.WarningOnce("[EventManager] eventType is null - are you missing a NotificationDef in XML?",
-                Gen.HashCombineInt(0x7AEC159, listener.GetHashCode()));
+            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
         if (eventDef.dataType is null)
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null",
-                Gen.HashCombineInt(0x514F7482, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass null");
         else if (!typeof(T).IsAssignableFrom(eventDef.dataType))
             Log.ErrorOnce(
-                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}",
-                Gen.HashCombineInt(0x467A56FF, eventDef.index, callback.Target?.GetType().GetHashCode() ?? 0, 0));
+                $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}");
 
         RegisterInternal(eventDef, target, (t, data) => callback(t, (T?)data), listener,
             $"{listener.GetType().FullName}.<{eventDef.defName}>", 0);
@@ -722,14 +731,18 @@ public class EventManager
     /// <param name="data">
     ///     Optional event data. When supplied, its type should match <see cref="EventDef.dataType" />.
     /// </param>
+    /// <param name="eventDefExpression">
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    /// </param>
     /// <remarks>
     ///     This method is thread safe.
     /// </remarks>
-    public void Notify(EventDef? eventDef, Thing? target, object? data = null)
+    public void Notify(EventDef? eventDef, Thing? target, object? data = null,
+        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
     {
         if (eventDef == null)
         {
-            Log.ErrorOnce($"[EventManager] Null event with target {target}", 0x2FBB5694);
+            Log.ErrorOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -792,27 +805,23 @@ public class EventManager
         else
         {
             if (target == null)
-                Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is not global but was called with null target",
-                    Gen.HashCombineInt(0x140A0CA2, eventDef.index));
+                Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is not global but was called with null target");
         }
 
         if (eventDef.dataType != null)
         {
             if (data == null)
                 Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null",
-                    Gen.HashCombineInt(0xEEB8AC2, eventDef.index));
+                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null");
             else if (!eventDef.dataType.IsInstanceOfType(data))
                 Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}",
-                    Gen.HashCombineInt(0x4D53041B, eventDef.index));
+                    $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given {data.GetType()}");
         }
         else
         {
             if (data != null)
                 Log.ErrorOnce(
-                    $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}",
-                    Gen.HashCombineInt(0x7A213146, eventDef.index));
+                    $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}");
         }
     }
 

@@ -303,6 +303,6 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
                 return;
         }
 
-        Log.WarningOnce($"GeneSetMaker_BiostatTotal failed to generate a valid gene set within {TryCount} attempts, using last result", 0x2AE4C1BA);
+        Log.WarningOnce($"GeneSetMaker_BiostatTotal failed to generate a valid gene set within {TryCount} attempts, using last result");
     }
 }

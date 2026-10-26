@@ -264,7 +264,7 @@ internal static class PatchHelpers
             }
             default:
             {
-                Log.WarningOnce("Unhandled case in GetChemicalBlockedByGenesReason", "Unexpected state in GetChemicalBlockedByGenesReason".GetHashCode());
+                Log.WarningOnce("Unhandled case in GetChemicalBlockedByGenesReason");
                 return "";
             }
         }

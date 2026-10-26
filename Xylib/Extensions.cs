@@ -659,4 +659,10 @@ public static class Extensions
     {
         public GeneType GeneType => xenotype.inheritable ? GeneType.Endogene : GeneType.Xenogene;
     }
+
+    extension(Log)
+    {
+        public static void WarningOnce(string s) => Log.WarningOnce(s, s.GetHashCode());
+        public static void ErrorOnce(string s) => Log.ErrorOnce(s, s.GetHashCode());
+    }
 }
