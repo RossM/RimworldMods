@@ -3,8 +3,6 @@
 [Patch(typeof(RecipeDef))]
 internal static class Patch_RecipeDef
 {
-    private static readonly List<MemeDef> impossibleMemes = [new()];
-
     [Feature(typeof(GeneCompProperties_UnlockRecipes))]
     [Postfix]
     [Inner(typeof(RecipeDef), nameof(RecipeDef.memePrerequisitesAny))]
@@ -15,10 +13,10 @@ internal static class Patch_RecipeDef
             return;
 
         // If a gene unlocks the recipe, skip the meme prerequisite check and make it available; otherwise,
-        // require the original meme prerequisite (if any) or an impossible meme to make it unavailable.
+        // require the original meme prerequisite (if any) or an empty list to make it unavailable.
         if (PatchHelpers.IsRecipeUnlockedByGenes(__instance))
             __result = null;
         else if (__result == null)
-            __result = impossibleMemes;
+            __result = [];
     }
 }
