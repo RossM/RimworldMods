@@ -11,6 +11,15 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 {
     public DefModExtension_IncidentWorker_CultistJoin? DefExt => def.GetModExtension<DefModExtension_IncidentWorker_CultistJoin>();
 
+    protected override bool CanFireNowSub(IncidentParms parms)
+    {
+        // There must be at least one cultist for more cultists to join
+        if (DefExt?.hediff != null && !Faction.OfPlayer.AllAlivePawns.Any(pawn => pawn.health.hediffSet.HasHediff(DefExt.hediff)))
+            return false;
+
+        return base.CanFireNowSub(parms);
+    }
+
     public override Pawn GeneratePawn(Map? map)
     {
         Gender? gender = null;
