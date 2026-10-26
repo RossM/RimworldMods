@@ -10,7 +10,7 @@ public static class IncidentHelpers
                 .Select(pawn => pawn.genes!.Xenotype),
         ];
         Dictionary<XenotypeDef, float> weights = new();
-        foreach (var faction in Find.FactionManager.AllFactionsListForReading)
+        foreach (var faction in Find.FactionManager.AllFactionsVisible)
         {
             var xenotypeSet = faction.def.xenotypeSet;
             if (xenotypeSet == null)
