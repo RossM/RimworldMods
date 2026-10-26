@@ -28,9 +28,9 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 
         Ideo? ideo = null;
         if (ModsConfig.IdeologyActive)
-            ideo = GetRandomIdeo();
+            ideo = IncidentHelpers.GetRandomIdeoNotInColony();
 
-        XenotypeDef? xenotype = XenotypeHelpers.GetRandomXenotypeNotInColony();
+        XenotypeDef? xenotype = IncidentHelpers.GetRandomXenotypeNotInColony();
 
         var pawnGenerationRequest = new PawnGenerationRequest(
             kind: def.pawnKind ?? PawnKindDefOf.Colonist,
@@ -53,20 +53,5 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
         }
 
         return pawn;
-    }
-
-    private static Ideo? GetRandomIdeo()
-    {
-        DebugAssert.NotNull(Find.IdeoManager);
-
-        var playerIdeos = Faction.OfPlayer.ideos;
-        DebugAssert.NotNull(playerIdeos);
-
-        if (!Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.Has(i))
-                .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo? ideo))
-            Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.IsPrimary(i))
-                .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out ideo);
-
-        return ideo;
     }
 }

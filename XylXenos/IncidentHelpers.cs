@@ -1,11 +1,9 @@
 namespace XylXenos;
 
-public static class XenotypeHelpers
+public static class IncidentHelpers
 {
     public static XenotypeDef? GetRandomXenotypeNotInColony()
     {
-        DebugAssert.NotNull(Find.FactionManager);
-
         HashSet<XenotypeDef> playerXenotypes =
         [
             .. Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes is { CustomXenotype: null })
@@ -31,5 +29,20 @@ public static class XenotypeHelpers
             weights.Keys.TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out xenotype);
 
         return xenotype;
+    }
+
+    public static Ideo? GetRandomIdeoNotInColony()
+    {
+        DebugAssert.NotNull(Find.IdeoManager);
+
+        var playerIdeos = Faction.OfPlayer.ideos;
+        DebugAssert.NotNull(playerIdeos);
+
+        if (!Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.Has(i))
+                .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out Ideo? ideo))
+            Find.IdeoManager.IdeosListForReading.Where(i => !playerIdeos.IsPrimary(i))
+                .TryRandomElementByWeight(x => IdeoUtility.IdeoChangeToWeight(null, x), out ideo);
+
+        return ideo;
     }
 }
