@@ -62,11 +62,15 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
         if (Pawn.Map is null)
             return;
 
+        if (Pawn.Downed)
+            return;
+
+        if (!damageInfo.Def.harmsHealth)
+            return;
+
         Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
 
         if (hediff == null && !Rand.Chance(Props.chance))
-            return;
-        if (Pawn.Downed)
             return;
 
         hediff ??= Pawn.health.AddHediff(Props.hediffDef);
