@@ -25,7 +25,14 @@ public class Dialog_EnableDisableXenotypes : Window
     public override void DoWindowContents(Rect inRect)
     {
         Text.Font = GameFont.Small;
-        string warning = "XylXenotypeSelectionWarningPlaceholder".Translate();
+        string warning = "";
+        List<FactionDef> disabledFactions =
+        [
+            .. settings.DisabledFactions().Where(f => f is { hidden: false })
+                .OrderByDescending(f => f.listOrderPriority)
+        ];
+        if (disabledFactions.Count > 0)
+            warning = "XylXenotypeSelectionFactionsDisabledWarning".Translate(disabledFactions.Select(f => f.label).ToCommaList());
         float warningHeight = Text.CalcHeight(warning, inRect.width);
         Rect warningRect = new(inRect.x, inRect.yMax - FooterRowHeight - warningHeight, inRect.width, warningHeight);
         Rect listRect = new(inRect.x, inRect.y, inRect.width, warningRect.yMin - inRect.y - Gap);

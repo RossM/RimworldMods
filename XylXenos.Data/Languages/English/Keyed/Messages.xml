@@ -43,7 +43,7 @@
 
   <!-- Settings -->
   <XylEnableDisableXenotypes>Enable/Disable Xenotypes</XylEnableDisableXenotypes>
-  <XylXenotypeSelectionWarningPlaceholder>Placeholder warning: xenotype selection warnings and information will appear here.</XylXenotypeSelectionWarningPlaceholder>
+  <XylXenotypeSelectionFactionsDisabledWarning>Factions disabled: {0}</XylXenotypeSelectionFactionsDisabledWarning>
   <XylSettingDescription_allowBackerBackstories>Allow backer backstories</XylSettingDescription_allowBackerBackstories>
   <XylSettingTooltip_allowBackerBackstories>Backer backstories can have fixed names that clash with the naming schemes of some of the new xenotypes added by this mod. This setting controls which xenotypes can get randomly assigned backer backstories.</XylSettingTooltip_allowBackerBackstories>
   <XylSettingOption_allowBackerBackstories_Always>All xenotypes</XylSettingOption_allowBackerBackstories_Always>

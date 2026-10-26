@@ -19,5 +19,52 @@
       </doubleXenotypeChances>
     </value>
   </Operation>
-  
+
+  <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
+    <patches>
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/FactionDef[xenotypeSet/xenotypeChances/{0} &gt;= 1 or xenotypeSet/defaultXenotype="{0}"]</xpath>
+        <value>
+          <displayInFactionSelection>false</displayInFactionSelection>
+        </value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/FactionDef/xenotypeSet/xenotypeChances/{0}/text()</xpath>
+        <value>0</value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/{0}/text()</xpath>
+        <value>0</value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/MemeDef/xenotypeSet/xenotypeChances/{0}/text()</xpath>
+        <value>0</value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/XenotypeDef/doubleXenotypeChances/{0}/text()</xpath>
+        <value>0</value>
+      </li>
+    </patches>
+  </Operation>
+
+  <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
+    <xenotype>XylBossaps</xenotype>
+    <patches>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/IncidentDef/XylWildBossapsHerd/baseChance/text()</xpath>
+        <value>0</value>
+      </li>
+    </patches>
+  </Operation>
+
+  <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
+    <xenotype>XylTitan</xenotype>
+    <patches>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/QuestScriptDef/QuestScriptDef/rootSelectionWeight/text()</xpath>
+        <value>0</value>
+      </li>
+    </patches>
+  </Operation>
+
 </Patch>
