@@ -61,6 +61,7 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
 
 public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompExt
 {
+    // ReSharper disable once InconsistentNaming
     public HediffCompProperties_GrowthModeExt TProps => (HediffCompProperties_GrowthModeExt)props;
 
     public override string? CompLabelInBracketsExtra => GrowthMode.label;

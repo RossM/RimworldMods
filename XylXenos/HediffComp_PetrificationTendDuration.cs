@@ -13,6 +13,7 @@ public class HediffCompProperties_PetrificationTendDuration : HediffCompProperti
 
 public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
 {
+    // ReSharper disable once InconsistentNaming
     public new HediffCompProperties_PetrificationTendDuration TProps => (HediffCompProperties_PetrificationTendDuration)props;
 
     public override TextureAndColor CompStateIcon =>
