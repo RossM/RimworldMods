@@ -87,7 +87,7 @@ public class PatchOperationReplaceGenes : PatchOperation
 
     private static XmlNode GetOrCreateModExtension(XmlNode parent, string name)
     {
-        // Get or create <modExtensions><li Class="Xylib.DefModExtension_GeneWithComps">.
+        // Get or create <modExtensions><li Class="{name}">.
         var modExtensions = GetOrCreateChild(parent, "modExtensions");
         var extension = modExtensions.SelectSingleNode($"li[@Class='{name}']");
         if (extension is null)
