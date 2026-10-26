@@ -71,16 +71,7 @@ public class PatchOperationReplaceGenes : PatchOperation
         {
             GetOrCreateChild(gene, nameof(GeneDef.canGenerateInGeneSet)).InnerText = "false";
 
-            // Get or create <modExtensions><li Class="Xylib.DefModExtension_GeneWithComps">.
-            var modExtensions = GetOrCreateChild(gene, "modExtensions");
-            var extensionClass = typeof(DefModExtension_GeneWithComps).FullName!;
-            var extension = modExtensions.SelectSingleNode($"li[@Class='{extensionClass}']");
-            if (extension is null)
-            {
-                var element = xml.CreateElement("li");
-                element.SetAttribute("Class", extensionClass);
-                extension = modExtensions.AppendChild(element)!;
-            }
+            XmlNode extension = GetOrCreateModExtension(gene, typeof(DefModExtension_GeneWithComps).FullName!);
 
             GetOrCreateChild(extension, nameof(DefModExtension_GeneWithComps.showInXenotypeCreation)).InnerText = "false";
         }
@@ -92,6 +83,21 @@ public class PatchOperationReplaceGenes : PatchOperation
         }
 
         return true;
+    }
+
+    private static XmlNode GetOrCreateModExtension(XmlNode parent, string name)
+    {
+        // Get or create <modExtensions><li Class="Xylib.DefModExtension_GeneWithComps">.
+        var modExtensions = GetOrCreateChild(parent, "modExtensions");
+        var extension = modExtensions.SelectSingleNode($"li[@Class='{name}']");
+        if (extension is null)
+        {
+            var element = parent.OwnerDocument!.CreateElement("li");
+            element.SetAttribute("Class", name);
+            extension = modExtensions.AppendChild(element)!;
+        }
+
+        return extension;
     }
 
     private static XmlElement GetOrCreateChild(XmlNode parent, string name)
