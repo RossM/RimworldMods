@@ -51,7 +51,7 @@
     <xenotype>XylBossaps</xenotype>
     <patches>
       <li Class="PatchOperationReplace">
-        <xpath>Defs/IncidentDef/XylWildBossapsHerd/baseChance/text()</xpath>
+        <xpath>Defs/IncidentDef[defName="XylWildBossapsHerd"]/baseChance/text()</xpath>
         <value>0</value>
       </li>
     </patches>
@@ -60,9 +60,12 @@
   <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
     <xenotype>XylTitan</xenotype>
     <patches>
-      <li Class="PatchOperationReplace">
-        <xpath>Defs/QuestScriptDef/QuestScriptDef/rootSelectionWeight/text()</xpath>
-        <value>0</value>
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/QuestScriptDef[defName="XylTitanIntro"]</xpath>
+        <value>
+          <randomlySelectable>false</randomlySelectable>
+          <defaultChallengeRating>0</defaultChallengeRating>
+        </value>
       </li>
     </patches>
   </Operation>

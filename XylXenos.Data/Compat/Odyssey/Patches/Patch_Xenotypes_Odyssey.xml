@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+  <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
+    <xenotype>XylZeegee</xenotype>
+    <patches>
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/QuestScriptDef[defName="XylZeegeePodCrash"]</xpath>
+        <value>
+          <randomlySelectable>false</randomlySelectable>
+          <defaultChallengeRating>0</defaultChallengeRating>
+        </value>
+      </li>
+    </patches>
+  </Operation>
+
+</Patch>
