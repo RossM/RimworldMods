@@ -8,7 +8,7 @@ public static class XenotypeHelpers
 
         HashSet<XenotypeDef> playerXenotypes =
         [
-            .. Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes != null)
+            .. Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes is { CustomXenotype: null })
                 .Select(pawn => pawn.genes!.Xenotype),
         ];
         Dictionary<XenotypeDef, float> weights = new();
