@@ -115,7 +115,7 @@ internal static class PatchHelpers
         return false;
     }
 
-    public static HashSet<RecipeDef> GetRecipesUnlockedByGenes()
+    private static HashSet<RecipeDef> GetRecipesUnlockedByGenes()
     {
         HashSet<RecipeDef> result = [];
         foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
