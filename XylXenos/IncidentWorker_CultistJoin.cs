@@ -3,13 +3,13 @@
 [UsedFromXml]
 public class DefModExtension_IncidentWorker_CultistJoin : DefModExtension
 {
-    public required HediffDef hediff;
+    public HediffDef? hediff;
 }
 
 [UsedFromXml]
 public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 {
-    public DefModExtension_IncidentWorker_CultistJoin DefExt => def.GetModExtension<DefModExtension_IncidentWorker_CultistJoin>()!;
+    public DefModExtension_IncidentWorker_CultistJoin? DefExt => def.GetModExtension<DefModExtension_IncidentWorker_CultistJoin>();
 
     public override Pawn GeneratePawn(Map? map)
     {
@@ -37,8 +37,11 @@ public class IncidentWorker_CultistJoin : IncidentWorker_WandererJoin
 
         Pawn pawn = PawnGenerator.GeneratePawn(pawnGenerationRequest);
 
-        var hediff = HediffMaker.MakeHediff(DefExt.hediff, pawn);
-        pawn.health.AddHediff(hediff);
+        if (DefExt?.hediff != null)
+        {
+            var hediff = HediffMaker.MakeHediff(DefExt.hediff, pawn);
+            pawn.health.AddHediff(hediff);
+        }
 
         return pawn;
     }
