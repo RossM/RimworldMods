@@ -215,7 +215,7 @@
     <defName>XylCultistSong</defName>
     <hediffClass>HediffWithComps</hediffClass>
     <label>the song</label>
-    <description>This character has heard the song and opened their mind to the cosmos. They know the truths that will never reach the ears of those who do not listen.</description>
+    <description>This character has heard the song and opened their mind to the cosmos.</description>
     <isBad>false</isBad>
     <defaultLabelColor>(0.6, 0.6, 1.0)</defaultLabelColor>
     <initialSeverity>1</initialSeverity>
