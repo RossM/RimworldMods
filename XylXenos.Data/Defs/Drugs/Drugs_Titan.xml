@@ -24,6 +24,11 @@
         <li>subject_gerund->synthesizing lithoid drugs</li>
       </rulesStrings>
     </generalRules>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_XenotypeDependent">
+        <xenotype>XylTitan</xenotype>
+      </li>
+    </modExtensions>
   </ResearchProjectDef>
 
   <ThingDef ParentName="MakeableDrugPillBase">
@@ -73,6 +78,11 @@
         <overdoseSeverityOffset>0.08~0.14</overdoseSeverityOffset>
       </li>
     </comps>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_XenotypeDependent">
+        <xenotype>XylTitan</xenotype>
+      </li>
+    </modExtensions>
   </ThingDef>
 
   <ChemicalDef>
@@ -166,6 +176,11 @@
       <li>RewardStandardCore</li>
     </thingSetMakerTags>
     <allowedArchonexusCount>50</allowedArchonexusCount>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_XenotypeDependent">
+        <xenotype>XylTitan</xenotype>
+      </li>
+    </modExtensions>
   </ThingDef>
 
   <ChemicalDef>
@@ -391,6 +406,11 @@
         <overdoseSeverityOffset>0.08~0.14</overdoseSeverityOffset>
       </li>
     </comps>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_XenotypeDependent">
+        <xenotype>XylTitan</xenotype>
+      </li>
+    </modExtensions>
   </ThingDef>
   
   <RecipeDef>

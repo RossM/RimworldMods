@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <!-- This file must run after all other patches, so it's alphabetically last. It must be in the first LoadFolder -->
+
+  <!-- This runs for each xenotype disabled in settings, with {0} substituted for the xenotype's defName -->
+  <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
+    <patches>
+      <!-- Disable factions -->
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/FactionDef[xenotypeSet/xenotypeChances/{0} &gt;= 1 or xenotypeSet/defaultXenotype="{0}"]</xpath>
+        <value>
+          <displayInFactionSelection>false</displayInFactionSelection>
+        </value>
+      </li>
+
+      <!-- Prevent the xenotype from appearing -->
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/FactionDef/xenotypeSet/xenotypeChances/{0}[text() &lt; 1]/text()</xpath>
+        <value>0</value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/{0}[text() &lt; 1]/text()</xpath>
+        <value>0</value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/MemeDef/xenotypeSet/xenotypeChances/{0}[text() &lt; 1]/text()</xpath>
+        <value>0</value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/XenotypeDef/doubleXenotypeChances/{0}/text()</xpath>
+        <value>0</value>
+      </li>
+
+      <!-- Disable incidents -->
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/IncidentDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]</xpath>
+        <value>
+          <baseChance>0</baseChance>
+        </value>
+      </li>
+
+      <!-- Disable quests -->
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/QuestScriptDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]</xpath>
+        <value>
+          <randomlySelectable>false</randomlySelectable>
+          <defaultChallengeRating>0</defaultChallengeRating>
+        </value>
+      </li>
+
+      <!-- Disable things -->
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]</xpath>
+        <value>
+          <generateCommonality>0</generateCommonality>
+        </value>
+      </li>
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]/stuffProps</xpath>
+        <value>
+          <commonality>0</commonality>
+        </value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]/tradeTags</xpath>
+        <value>
+          <tradeTags IsNull="True"/>
+        </value>
+      </li>
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]/thingSetMakerTags</xpath>
+        <value>
+          <thingSetMakerTags IsNull="True"/>
+        </value>
+      </li>
+      
+      <!-- TODO: Figure out how to hide a ResearchProjectDef -->
+    </patches>
+  </Operation>
+
+</Patch>

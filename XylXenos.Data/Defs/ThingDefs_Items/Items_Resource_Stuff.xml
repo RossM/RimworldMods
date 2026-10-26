@@ -50,6 +50,11 @@
     </stuffProps>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <allowedArchonexusCount>80</allowedArchonexusCount>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_XenotypeDependent">
+        <xenotype>XylNixie</xenotype>
+      </li>
+    </modExtensions>
   </ThingDef>
 
   <ThingDef ParentName="ResourceBase">
@@ -91,6 +96,11 @@
       <li>Textiles</li>
     </thingCategories>
     <allowedArchonexusCount>80</allowedArchonexusCount>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_XenotypeDependent">
+        <xenotype>XylNixie</xenotype>
+      </li>
+    </modExtensions>
   </ThingDef>
 
 </Defs>
