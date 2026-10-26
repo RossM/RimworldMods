@@ -20,6 +20,7 @@
     </value>
   </Operation>
 
+  <!-- This runs for each xenotype disabled in settings, with {0} substituted for the xenotype's defName -->
   <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
     <patches>
       <li Class="Xylib.PatchOperationMerge">
