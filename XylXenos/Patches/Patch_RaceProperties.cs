@@ -20,25 +20,17 @@ public static class Patch_RaceProperties
 
     [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Prefix]
+    [Inner(typeof(float), nameof(float.ToString), typeof(string))]
     [Target(nameof(RaceProperties.NutritionEatenPerDay))]
-    private static bool NutritionEatenPerDay_Prefix(Pawn p, out string? __result)
+    private static void float_ToString_Prefix(Pawn p, [Instance] ref float value)
     {
-        __result = null;
         if (!Settings.instance.ShouldFixLactationBugsFor(p))
-            return true;
-
-        DebugAssert.NotNull(p.needs.food);
-
-        float nutrition = p.needs.food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * GenDate.TicksPerDay;
+            return;
 
         // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
         // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
         // directly consumes food per tick. This correctly displays that effect.
-        nutrition += p.HediffCompsOfType<HediffComp_Lactating>().Sum(comp => comp.AddedNutritionPerDay());
-
-        __result = nutrition.ToString("0.##");
-
-        return false;
+        value += p.HediffCompsOfType<HediffComp_Lactating>().Sum(comp => comp.AddedNutritionPerDay());
     }
 
     [Feature(FeatureNameOf.Bugfix_Lactation)]
