@@ -240,4 +240,33 @@ internal static class PatchHelpers
         sb.Append(StatUtility.GetOffsetsAndFactorsFor(stat, pawn));
         sb.AppendLine();
     }
+
+    public static string GetChemicalBlockedByGenesReason(FloatMenuContext context, ChemicalDef chemical)
+    {
+        var defExtension = chemical.GetModExtension<DefModExtension_Chemical>();
+
+        switch (defExtension)
+        {
+            case { prohibitedGenes.Count: > 0 } when defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene1:
+            {
+                return "XylBlockedByGene".Translate(gene1.label);
+            }
+            case { requiredGenesAll.Count: > 0 } when defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene2:
+            {
+                return "XylRequiresGene".Translate(gene2.label);
+            }
+            case { requiredGenesAny.Count: > 0 }:
+            {
+                GeneDef firstRequiredGene = defExtension.requiredGenesAny[0];
+                DebugAssert.NotNull(firstRequiredGene);
+
+                return "XylRequiresGene".Translate(firstRequiredGene.label);
+            }
+            default:
+            {
+                Log.WarningOnce("Unhandled case in GetChemicalBlockedByGenesReason", "Unexpected state in GetChemicalBlockedByGenesReason".GetHashCode());
+                return "";
+            }
+        }
+    }
 }
