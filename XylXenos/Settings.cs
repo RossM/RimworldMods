@@ -111,20 +111,4 @@ public class Settings : ModSettings
             _ => throw new ArgumentOutOfRangeException(),
         };
     }
-
-    public List<FactionDef> DisabledFactions()
-    {
-        List<FactionDef> result = [];
-
-        foreach (var faction in DefDatabase<FactionDef>.AllDefs)
-        {
-            if (faction.xenotypeSet == null)
-                continue;
-            if ((faction.xenotypeSet.Count == 1 && faction.xenotypeSet[0].chance >= 1f && disabledXenotypes.Contains(faction.xenotypeSet[0].xenotype.defName)) ||
-                (faction.xenotypeSet is XenotypeSetWithDefault { defaultXenotype: { } defaultXenotype } && disabledXenotypes.Contains(defaultXenotype.defName)))
-                result.Add(faction);
-        }
-
-        return result;
-    }
 }

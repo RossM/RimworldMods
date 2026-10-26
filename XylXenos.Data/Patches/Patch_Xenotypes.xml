@@ -29,15 +29,15 @@
         </value>
       </li>
       <li Class="PatchOperationReplace">
-        <xpath>Defs/FactionDef/xenotypeSet/xenotypeChances/{0}/text()</xpath>
+        <xpath>Defs/FactionDef/xenotypeSet/xenotypeChances/{0}[text() &lt; 1]/text()</xpath>
         <value>0</value>
       </li>
       <li Class="PatchOperationReplace">
-        <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/{0}/text()</xpath>
+        <xpath>Defs/PawnKindDef/xenotypeSet/xenotypeChances/{0}[text() &lt; 1]/text()</xpath>
         <value>0</value>
       </li>
       <li Class="PatchOperationReplace">
-        <xpath>Defs/MemeDef/xenotypeSet/xenotypeChances/{0}/text()</xpath>
+        <xpath>Defs/MemeDef/xenotypeSet/xenotypeChances/{0}[text() &lt; 1]/text()</xpath>
         <value>0</value>
       </li>
       <li Class="PatchOperationReplace">

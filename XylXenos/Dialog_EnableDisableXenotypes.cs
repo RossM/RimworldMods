@@ -10,6 +10,8 @@ public class Dialog_EnableDisableXenotypes : Window
     private readonly Settings settings;
     private readonly List<XenotypeDef> xenotypes;
     private Vector2 scrollPosition;
+    private readonly HashSet<string> newDisabledXenotypes;
+
 
     public Dialog_EnableDisableXenotypes(Settings settings)
     {
@@ -20,17 +22,14 @@ public class Dialog_EnableDisableXenotypes : Window
         doCloseX = true;
         forcePause = true;
         absorbInputAroundWindow = true;
+        newDisabledXenotypes = [.. settings.disabledXenotypes];
     }
 
     public override void DoWindowContents(Rect inRect)
     {
         Text.Font = GameFont.Small;
         string warning = "";
-        List<FactionDef> disabledFactions =
-        [
-            .. settings.DisabledFactions().Where(f => f is { hidden: false })
-                .OrderByDescending(f => f.listOrderPriority)
-        ];
+        List<FactionDef> disabledFactions = [.. DisabledFactions().OrderByDescending(f => f.listOrderPriority)];
         if (disabledFactions.Count > 0)
             warning = "XylXenotypeSelectionFactionsDisabledWarning".Translate(disabledFactions.Select(f => f.label).ToCommaList());
         float warningHeight = Text.CalcHeight(warning, inRect.width);
@@ -44,7 +43,7 @@ public class Dialog_EnableDisableXenotypes : Window
         foreach (XenotypeDef xenotype in xenotypes)
         {
             bool alwaysEnabled = xenotype == XenotypeDefOf.Baseliner || xenotype == XenotypeDefOf.Sanguophage;
-            bool enabled = alwaysEnabled || !settings.disabledXenotypes.Contains(xenotype.defName);
+            bool enabled = alwaysEnabled || !newDisabledXenotypes.Contains(xenotype.defName);
             bool wasEnabled = enabled;
             Rect rowRect = listing.GetRect(RowHeight);
             Rect entryRect = rowRect;
@@ -61,9 +60,9 @@ public class Dialog_EnableDisableXenotypes : Window
                 continue;
 
             if (enabled)
-                settings.disabledXenotypes.Remove(xenotype.defName);
+                newDisabledXenotypes.Remove(xenotype.defName);
             else
-                settings.disabledXenotypes.Add(xenotype.defName);
+                newDisabledXenotypes.Add(xenotype.defName);
         }
 
         listing.End();
@@ -74,7 +73,34 @@ public class Dialog_EnableDisableXenotypes : Window
 
     public override void PostClose()
     {
+        if (!newDisabledXenotypes.SetEquals(settings.disabledXenotypes))
+            Find.WindowStack.Add(new Dialog_MessageBox(
+                "XylXenotypeSelectionRestartWarning".Translate(),
+                "Yes".Translate(),
+                () =>
+                {
+                    settings.disabledXenotypes = newDisabledXenotypes;
+                    settings.Write();
+                    GenCommandLine.Restart();
+                },
+                "No".Translate(),
+                () => { },
+                buttonADestructive: true));
+
         base.PostClose();
-        settings.Write();
+    }
+
+    private IEnumerable<FactionDef> DisabledFactions()
+    {
+        foreach (var faction in DefDatabase<FactionDef>.AllDefs)
+        {
+            if (faction.xenotypeSet == null || faction.hidden)
+                continue;
+            if ((faction.xenotypeSet.Count == 1 && faction.xenotypeSet[0].chance >= 1f &&
+                 newDisabledXenotypes.Contains(faction.xenotypeSet[0].xenotype.defName)) ||
+                (faction.xenotypeSet is XenotypeSetWithDefault { defaultXenotype: { } defaultXenotype } &&
+                 newDisabledXenotypes.Contains(defaultXenotype.defName)))
+                yield return faction;
+        }
     }
 }
