@@ -6,7 +6,7 @@ namespace Xylib;
 
 internal static class PatchHelpers
 {
-    public static HashSet<RecipeDef> RecipesUnlockedByGenes => field ??= GetRecipesUnlockedByGenes();
+    public static HashSet<RecipeDef> RecipesUnlockableByGenes => field ??= GetRecipesUnlockedByGenes();
 
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
