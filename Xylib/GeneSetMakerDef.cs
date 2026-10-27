@@ -4,6 +4,12 @@
 public class GeneSetMakerDef : Def
 {
     public required GeneSetMaker root;
+    public bool overrideExistingGenes = false;
+
+    public GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
+    {
+        return root.Generate(pawn, geneType, overrideExistingGenes);
+    }
 
     public override void ResolveReferences()
     {

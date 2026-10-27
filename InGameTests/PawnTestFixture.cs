@@ -28,6 +28,7 @@ public abstract class PawnTestFixture
         {
             defName = "TestGene_" + Guid.NewGuid().ToString("N"), label = "test gene",
             geneClass = typeof(GeneWithComps), modExtensions = [extension],
+            displayCategory = new GeneCategoryDef { defName = "TestGenes", label = "test genes" },
         };
         DefDatabase<GeneDef>.Add(def);
         geneDefs.Add(def);

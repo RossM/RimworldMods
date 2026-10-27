@@ -12,22 +12,30 @@ public abstract class GeneSetMaker
 
     public GeneSet Generate(Pawn pawn, GeneType geneType = GeneType.Xenogene)
     {
+        return Generate(pawn, geneType, false);
+    }
+
+    public GeneSet Generate(Pawn pawn, GeneType geneType, bool overrideExistingGenes)
+    {
         if (pawn.genes == null)
             throw new ArgumentException("genes is null", nameof(pawn));
 
         var geneSet = new GeneSet();
         List<GeneDef> genes = geneSet.GenesListForReading;
 
-        if (pawn.genes.Xenotype != null)
-            foreach (var gene in pawn.genes.Xenotype.genes)
-                geneSet.AddGene(gene);
+        if (!overrideExistingGenes)
+        {
+            if (pawn.genes.Xenotype != null)
+                foreach (var gene in pawn.genes.Xenotype.genes)
+                    geneSet.AddGene(gene);
 
-        if (pawn.genes.CustomXenotype != null)
-            foreach (var gene in pawn.genes.CustomXenotype.genes)
-                geneSet.AddGene(gene);
+            if (pawn.genes.CustomXenotype != null)
+                foreach (var gene in pawn.genes.CustomXenotype.genes)
+                    geneSet.AddGene(gene);
 
-        foreach (var gene in pawn.genes.GenesListForReading.Where(g => g.Active))
-            geneSet.AddGene(gene.def);
+            foreach (var gene in pawn.genes.GenesListForReading.Where(g => g.Active))
+                geneSet.AddGene(gene.def);
+        }
 
         int existingGeneCount = genes.Count;
 

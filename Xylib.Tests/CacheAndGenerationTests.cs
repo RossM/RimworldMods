@@ -94,6 +94,41 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     }
 
     [Test, LoadIfBiotechActive]
+    public void MakerDefRespectsPawnAndXenotypeGenesByDefault()
+    {
+        GeneDef existing = GeneDef(), inherited = GeneDef(), first = GeneDef(), second = GeneDef();
+        existing.exclusionTags = first.exclusionTags = ["TestExisting"];
+        inherited.exclusionTags = second.exclusionTags = ["TestInherited"];
+        pawn.genes.AddGene(existing, false);
+        pawn.genes.SetXenotypeDirect(new XenotypeDef { genes = [inherited] });
+        var maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [first, second] } };
+
+        Expect.IsFalse(maker.overrideExistingGenes);
+        Expect.IsEmpty(maker.Generate(pawn).GenesListForReading);
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void MakerDefCanIgnorePawnAndXenotypeGenesDuringGeneration()
+    {
+        GeneDef existing = GeneDef(), inherited = GeneDef(), first = GeneDef(), second = GeneDef();
+        existing.exclusionTags = first.exclusionTags = ["TestExisting"];
+        inherited.exclusionTags = second.exclusionTags = ["TestInherited"];
+        pawn.genes.AddGene(existing, false);
+        pawn.genes.SetXenotypeDirect(new XenotypeDef { genes = [inherited] });
+        var maker = new GeneSetMakerDef
+        {
+            overrideExistingGenes = true,
+            root = new GeneSetMaker_List { genes = [first, second] },
+        };
+
+        GeneSet generated = maker.Generate(pawn);
+        Expect.AreEqual(2, generated.GenesListForReading.Count);
+        Expect.IsTrue(generated.GenesListForReading.Contains(first));
+        Expect.IsTrue(generated.GenesListForReading.Contains(second));
+        Expect.ReferencesAreEqual(existing, pawn.genes.GenesListForReading.Single().def);
+    }
+
+    [Test, LoadIfBiotechActive]
     public void OptionMakerSelectsItsWeightedSubtree()
     {
         GeneDef expected = GeneDef();

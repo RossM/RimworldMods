@@ -21,6 +21,60 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.GenesListForReading.Any(g => g.def == existing));
     }
 
+    [Test, LoadIfBiotechActive]
+    public void BonusXenogeneReplacesAllConflictingXenogenesAndPreservesEndogenes()
+    {
+        GeneDef first = GeneDef(), second = GeneDef(), endogene = GeneDef(), bonus = GeneDef(), unrelated = GeneDef();
+        first.exclusionTags = second.exclusionTags = endogene.exclusionTags = bonus.exclusionTags = ["TestConflict"];
+        pawn.genes.AddGene(first, true);
+        pawn.genes.AddGene(second, true);
+        Gene preserved = pawn.genes.AddGene(endogene, false);
+        Gene other = pawn.genes.AddGene(unrelated, true);
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [bonus] },
+            },
+        });
+
+        Gene gene = pawn.genes.AddGene(owner, true);
+        Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == first || g.def == second));
+        Expect.IsTrue(pawn.genes.Xenogenes.Any(g => g.def == bonus));
+        Expect.IsTrue(pawn.genes.Endogenes.Contains(preserved));
+        Expect.IsTrue(pawn.genes.Xenogenes.Contains(other));
+        pawn.genes.RemoveGene(gene);
+        Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == bonus));
+        Expect.IsTrue(pawn.genes.Endogenes.Contains(preserved));
+        Expect.IsTrue(pawn.genes.Xenogenes.Contains(other));
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void BonusEndogeneReplacesConflictingEndogenesUsingConfiguredGeneType()
+    {
+        GeneDef existing = GeneDef(), xenogene = GeneDef(), bonus = GeneDef(), unrelated = GeneDef();
+        existing.exclusionTags = xenogene.exclusionTags = bonus.exclusionTags = ["TestConflict"];
+        pawn.genes.AddGene(existing, false);
+        Gene preserved = pawn.genes.AddGene(xenogene, true);
+        Gene other = pawn.genes.AddGene(unrelated, false);
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            addedGeneType = GeneType.Endogene,
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [bonus] },
+            },
+        });
+
+        pawn.genes.AddGene(owner, true);
+        Expect.IsFalse(pawn.genes.Endogenes.Any(g => g.def == existing));
+        Expect.IsTrue(pawn.genes.Endogenes.Any(g => g.def == bonus));
+        Expect.IsTrue(pawn.genes.Xenogenes.Contains(preserved));
+        Expect.IsTrue(pawn.genes.Endogenes.Contains(other));
+    }
+
     [Test]
     public void CongenitalHediffsRespondToGenerationEvent()
     {

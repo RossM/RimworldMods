@@ -32,7 +32,7 @@ public class GeneComp_BonusGenes : GeneComp
     {
         DebugAssert.NotNull(Pawn.genes);
 
-        var geneSet = Props.maker.root.Generate(Pawn, AddedGeneType);
+        var geneSet = Props.maker.Generate(Pawn, AddedGeneType);
 
         foreach (var gene in geneSet.GenesListForReading)
             AddGene(gene);
@@ -50,8 +50,13 @@ public class GeneComp_BonusGenes : GeneComp
         if (Pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
             return;
 
+        bool xenogene = AddedGeneType == GeneType.Xenogene;
+        var genes = xenogene ? Pawn.genes.Xenogenes : Pawn.genes.Endogenes;
+        foreach (var gene in genes.Where(g => geneDef.ConflictsWith(g.def)).ToArray())
+            Pawn.genes.RemoveGene(gene);
+
         addedGenes ??= [];
-        addedGenes.Add(Pawn.genes.AddGene(geneDef, AddedGeneType == GeneType.Xenogene));
+        addedGenes.Add(Pawn.genes.AddGene(geneDef, xenogene));
     }
 
     public override void CompPostPostRemove()
