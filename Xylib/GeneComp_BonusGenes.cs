@@ -17,8 +17,6 @@ public class GeneCompProperties_BonusGenes : GeneCompProperties
 [PublicAPI]
 public class GeneComp_BonusGenes : GeneComp, IEventListener
 {
-    [Unsaved] private bool awaitingGeneGeneration;
-
     public GeneCompProperties_BonusGenes Props => (GeneCompProperties_BonusGenes)props;
 
     private GeneType AddedGeneType => Props.addedGeneType ?? parent.GeneType;
@@ -32,32 +30,13 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
 
     public override void CompPostPostAdd()
     {
-        if (PawnExtraData<GeneGenerationData>.Get(Pawn).InProgress)
+        if (!PawnExtraData<GeneGenerationData>.Get(Pawn).GenesGenerated)
         {
-            awaitingGeneGeneration = true;
+            EventManager.Instance.Register(EventDefOf.PostGenerateGenes, Pawn, AddBonusGenes);
             return;
         }
 
         AddBonusGenes();
-    }
-
-    public void Notify_PostGenerateGenes()
-    {
-        if (!awaitingGeneGeneration)
-            return;
-
-        awaitingGeneGeneration = false;
-        AddBonusGenes();
-    }
-
-    void IEventListener.RegisterWith(EventManager manager)
-    {
-        manager.Register(EventDefOf.PostGenerateGenes, Pawn, Notify_PostGenerateGenes);
-    }
-
-    void IEventListener.PreUnregister(EventManager manager)
-    {
-        awaitingGeneGeneration = false;
     }
 
     private void AddBonusGenes()
@@ -104,4 +83,8 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
         foreach (var gene in addedGenes)
             Pawn.genes.RemoveGene(gene);
     }
+
+    public void RegisterWith(EventManager manager) { }
+
+    public void PreUnregister(EventManager manager) { }
 }

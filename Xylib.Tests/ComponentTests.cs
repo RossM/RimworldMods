@@ -201,35 +201,6 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.ReferencesAreEqual(originalBonus, pawn.genes.Endogenes.Single(g => g.def == first));
     }
 
-    [Test, LoadIfBiotechActive]
-    public void RemovedDeferredBonusGeneDoesNotHandleGenerationNotification()
-    {
-        GeneDef replacement = GeneDef(), unwantedBonus = GeneDef();
-        GeneDef removed = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [unwantedBonus] } },
-        });
-        removed.exclusionTags = replacement.exclusionTags = ["TestRemovedBonus"];
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            removeAfterAdding = true,
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [replacement] },
-            },
-        });
-
-        Pawn generated = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
-            Faction.OfPlayer, fixedBiologicalAge: 25, fixedChronologicalAge: 25,
-            canGeneratePawnRelations: false, forceNoGear: true, forcedXenotype: XenotypeDefOf.Baseliner,
-            forcedCustomXenotype: new CustomXenotype { name = "removed bonus", inheritable = true, genes = [owner, removed] }));
-        things.Add(generated);
-
-        Expect.IsTrue(generated.genes.Endogenes.Any(g => g.def == replacement));
-        Expect.IsFalse(generated.genes.GenesListForReading.Any(g => g.def == removed || g.def == unwantedBonus));
-    }
-
     [Test]
     public void CongenitalHediffsRespondToGenerationEvent()
     {

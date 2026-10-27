@@ -202,8 +202,6 @@ public class GeneSetMaker_List : GeneSetMaker
 {
     public static readonly List<GeneDef> genesTemp = [];
 
-    private int? biostatMetInternal;
-
     public required List<GeneDef> genes;
 
     public GeneSetMaker_List()

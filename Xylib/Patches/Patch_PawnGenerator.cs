@@ -52,30 +52,13 @@ internal static class Patch_PawnGenerator
     }
 
     [Feature(nameof(EventDefOf.PostGenerateGenes))]
-    [Prefix]
-    [Target("GenerateGenes")]
-    public static void GenerateGenes_Prefix(Pawn pawn)
-    {
-        PawnExtraData<GeneGenerationData>.Get(pawn).InProgress = true;
-    }
-
-    [Feature(nameof(EventDefOf.PostGenerateGenes))]
     [Postfix]
     [Target("GenerateGenes")]
     public static void GenerateGenes_Postfix(Pawn pawn)
     {
         // Nested bonus genes added by listeners should resolve immediately.
-        PawnExtraData<GeneGenerationData>.Get(pawn).InProgress = false;
+        PawnExtraData<GeneGenerationData>.Get(pawn).GenesGenerated = true;
         EventManager.Instance.Notify(EventDefOf.PostGenerateGenes, pawn);
-    }
-
-    [Feature(nameof(EventDefOf.PostGenerateGenes))]
-    [Postfix]
-    [PatchOptions(PatchOptions.AlwaysRun)]
-    [Target("GenerateGenes")]
-    public static void GenerateGenes_Cleanup_Postfix(Pawn pawn)
-    {
-        PawnExtraData<GeneGenerationData>.Get(pawn).InProgress = false;
     }
 
     [Feature(nameof(EventDefOf.PostGenerateInitialHediffs))]

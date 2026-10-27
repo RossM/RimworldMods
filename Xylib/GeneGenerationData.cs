@@ -8,7 +8,7 @@ public class GeneGenerationData : IPawnData
 {
     public Pawn Pawn { get; set; } = null!;
 
-    public bool InProgress { get; internal set; }
+    public bool GenesGenerated { get; internal set; }
 
     public void Init() { }
 }
