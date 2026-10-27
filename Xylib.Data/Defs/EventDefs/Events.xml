@@ -74,6 +74,10 @@
   </Xylib.EventDef>
 
   <Xylib.EventDef>
+    <defName>PostGenerateGenes</defName>
+  </Xylib.EventDef>
+
+  <Xylib.EventDef>
     <defName>PostGenerateInitialHediffs</defName>
   </Xylib.EventDef>
 

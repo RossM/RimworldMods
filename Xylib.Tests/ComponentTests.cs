@@ -75,6 +75,161 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.Endogenes.Contains(other));
     }
 
+    [Test, LoadIfBiotechActive]
+    public void BonusXenogeneReplacesExistingGeneDespiteLowerVanillaOverridePriority()
+    {
+        GeneDef existing = DefDatabase<GeneDef>.GetNamed("Beauty_Ugly");
+        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("Beauty_Beautiful");
+        Expect.IsTrue(GeneUtility.Overrides(existing, bonus, true, true));
+        Expect.IsFalse(GeneUtility.Overrides(bonus, existing, true, true));
+        Gene oldGene = pawn.genes.AddGene(existing, true);
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [bonus] },
+            },
+        });
+
+        pawn.genes.AddGene(owner, true);
+
+        Expect.IsFalse(pawn.genes.GenesListForReading.Contains(oldGene));
+        Expect.IsTrue(pawn.genes.Xenogenes.Single(g => g.def == bonus).Active);
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void BonusEndogeneReplacesExistingGeneDespiteLowerVanillaOverridePriority()
+    {
+        GeneDef existing = DefDatabase<GeneDef>.GetNamed("Beauty_Ugly");
+        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("Beauty_Beautiful");
+        Expect.IsTrue(GeneUtility.Overrides(existing, bonus, false, false));
+        Expect.IsFalse(GeneUtility.Overrides(bonus, existing, false, false));
+        Gene oldGene = pawn.genes.AddGene(existing, false);
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [bonus] },
+            },
+        });
+
+        pawn.genes.AddGene(owner, false);
+
+        Expect.IsFalse(pawn.genes.GenesListForReading.Contains(oldGene));
+        Expect.IsTrue(pawn.genes.Endogenes.Single(g => g.def == bonus).Active);
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void BonusCookingAptitudeReplacesTerribleAptitudeDuringXenotypeApplication()
+    {
+        GeneDef existing = DefDatabase<GeneDef>.GetNamed("AptitudeTerrible_Cooking");
+        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("AptitudePoor_Cooking");
+        Expect.IsTrue(bonus.ConflictsWith(existing));
+        Expect.IsFalse(pawn.skills.GetSkill(SkillDefOf.Cooking).TotallyDisabled);
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            removeAfterAdding = true,
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List
+                {
+                    genes = [DefDatabase<GeneDef>.GetNamed("FireSpew"),
+                        DefDatabase<GeneDef>.GetNamed("FireResistant"), bonus,
+                        DefDatabase<GeneDef>.GetNamed("Skin_DeepRed")],
+                },
+            },
+        });
+
+        pawn.genes.SetXenotype(new XenotypeDef { inheritable = true, genes = [existing, owner] });
+
+        Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == existing));
+        Expect.IsTrue(pawn.genes.Endogenes.Single(g => g.def == bonus).Active);
+        Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == owner));
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void DeferredBonusGenesResolveNestedBonusesAfterBaseGenes()
+    {
+        GeneDef existing = GeneDef(), bonus = GeneDef();
+        existing.exclusionTags = bonus.exclusionTags = ["TestNestedBonus"];
+        GeneDef nested = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            removeAfterAdding = true,
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [bonus] },
+            },
+        });
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            removeAfterAdding = true,
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [nested] },
+            },
+        });
+
+        Pawn generated = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
+            Faction.OfPlayer, fixedBiologicalAge: 25, fixedChronologicalAge: 25,
+            canGeneratePawnRelations: false, forceNoGear: true, forcedXenotype: XenotypeDefOf.Baseliner,
+            forcedCustomXenotype: new CustomXenotype { name = "nested bonuses", inheritable = true, genes = [owner, existing] }));
+        things.Add(generated);
+
+        Expect.IsTrue(generated.genes.Endogenes.Single(g => g.def == bonus).Active);
+        Expect.IsFalse(generated.genes.GenesListForReading.Any(g => g.def == existing || g.def == nested || g.def == owner));
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void PostGenerateGenesDoesNotRepeatAlreadyAppliedBonuses()
+    {
+        GeneDef first = GeneDef(), second = GeneDef();
+        var maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [first] } };
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes { maker = maker });
+        pawn.genes.AddGene(owner, false);
+        Gene originalBonus = pawn.genes.Endogenes.Single(g => g.def == first);
+
+        maker.root = new GeneSetMaker_List { genes = [second] };
+        EventManager.Instance.Notify(EventDefOf.PostGenerateGenes, pawn);
+        EventManager.Instance.Notify(EventDefOf.PostGenerateGenes, pawn);
+
+        Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == second));
+        Expect.ReferencesAreEqual(originalBonus, pawn.genes.Endogenes.Single(g => g.def == first));
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void RemovedDeferredBonusGeneDoesNotHandleGenerationNotification()
+    {
+        GeneDef replacement = GeneDef(), unwantedBonus = GeneDef();
+        GeneDef removed = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [unwantedBonus] } },
+        });
+        removed.exclusionTags = replacement.exclusionTags = ["TestRemovedBonus"];
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            removeAfterAdding = true,
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [replacement] },
+            },
+        });
+
+        Pawn generated = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
+            Faction.OfPlayer, fixedBiologicalAge: 25, fixedChronologicalAge: 25,
+            canGeneratePawnRelations: false, forceNoGear: true, forcedXenotype: XenotypeDefOf.Baseliner,
+            forcedCustomXenotype: new CustomXenotype { name = "removed bonus", inheritable = true, genes = [owner, removed] }));
+        things.Add(generated);
+
+        Expect.IsTrue(generated.genes.Endogenes.Any(g => g.def == replacement));
+        Expect.IsFalse(generated.genes.GenesListForReading.Any(g => g.def == removed || g.def == unwantedBonus));
+    }
+
     [Test]
     public void CongenitalHediffsRespondToGenerationEvent()
     {

@@ -4,6 +4,35 @@ namespace XylXenos.Tests;
 public sealed class GeneCompTests : PawnTestFixture
 {
     [Test]
+    public void BonusGenesReplaceLaterCookingGeneDuringPawnGeneration()
+    {
+        GeneDef existing = DefDatabase<GeneDef>.GetNamed("AptitudeTerrible_Cooking");
+        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("AptitudePoor_Cooking");
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            removeAfterAdding = true,
+            maker = new GeneSetMakerDef
+            {
+                overrideExistingGenes = true,
+                root = new GeneSetMaker_List { genes = [bonus] },
+            },
+        });
+        // Template-generated genes can be appended after the bonus source when XML references resolve.
+        var xenotype = new CustomXenotype { name = "bonus cooking", inheritable = true, genes = [owner, existing] };
+
+        Pawn generated = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
+            Faction.OfPlayer, fixedBiologicalAge: 25, fixedChronologicalAge: 25,
+            canGeneratePawnRelations: false, forceNoGear: true, forcedXenotype: XenotypeDefOf.Baseliner,
+            forcedCustomXenotype: xenotype));
+        things.Add(generated);
+
+        Expect.IsFalse(generated.skills.GetSkill(SkillDefOf.Cooking).TotallyDisabled);
+        Expect.IsFalse(generated.genes.GenesListForReading.Any(g => g.def == existing));
+        Expect.IsTrue(generated.genes.Endogenes.Single(g => g.def == bonus).Active);
+        Expect.IsFalse(generated.genes.GenesListForReading.Any(g => g.def == owner));
+    }
+
+    [Test]
     public void EmergencyReservesTriggersAtThresholdAndEntersCooldown()
     {
         HediffDef trigger = HediffDef(), reserves = HediffDef();

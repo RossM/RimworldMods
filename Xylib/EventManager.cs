@@ -121,6 +121,11 @@ public static class EventDefOf
     public static EventDef PostDowned;
 
     /// <summary>
+    ///     Called after <c>PawnGenerator.GenerateGenes</c>, before skills are generated.
+    /// </summary>
+    public static EventDef PostGenerateGenes;
+
+    /// <summary>
     ///     Called after <c>PawnGenerator.GenerateInitialHediffs</c>.
     /// </summary>
     public static EventDef PostGenerateInitialHediffs;

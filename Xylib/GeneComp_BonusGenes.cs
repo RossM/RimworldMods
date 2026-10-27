@@ -15,8 +15,10 @@ public class GeneCompProperties_BonusGenes : GeneCompProperties
 }
 
 [PublicAPI]
-public class GeneComp_BonusGenes : GeneComp
+public class GeneComp_BonusGenes : GeneComp, IEventListener
 {
+    [Unsaved] private bool awaitingGeneGeneration;
+
     public GeneCompProperties_BonusGenes Props => (GeneCompProperties_BonusGenes)props;
 
     private GeneType AddedGeneType => Props.addedGeneType ?? parent.GeneType;
@@ -29,6 +31,36 @@ public class GeneComp_BonusGenes : GeneComp
     }
 
     public override void CompPostPostAdd()
+    {
+        if (PawnExtraData<GeneGenerationData>.Get(Pawn).InProgress)
+        {
+            awaitingGeneGeneration = true;
+            return;
+        }
+
+        AddBonusGenes();
+    }
+
+    public void Notify_PostGenerateGenes()
+    {
+        if (!awaitingGeneGeneration)
+            return;
+
+        awaitingGeneGeneration = false;
+        AddBonusGenes();
+    }
+
+    void IEventListener.RegisterWith(EventManager manager)
+    {
+        manager.Register(EventDefOf.PostGenerateGenes, Pawn, Notify_PostGenerateGenes);
+    }
+
+    void IEventListener.PreUnregister(EventManager manager)
+    {
+        awaitingGeneGeneration = false;
+    }
+
+    private void AddBonusGenes()
     {
         DebugAssert.NotNull(Pawn.genes);
 
@@ -52,6 +84,7 @@ public class GeneComp_BonusGenes : GeneComp
 
         bool xenogene = AddedGeneType == GeneType.Xenogene;
         var genes = xenogene ? Pawn.genes.Xenogenes : Pawn.genes.Endogenes;
+        // Remove conflicts before adding so the new gene wins regardless of vanilla override priority.
         foreach (var gene in genes.Where(g => geneDef.ConflictsWith(g.def)).ToArray())
             Pawn.genes.RemoveGene(gene);
 
