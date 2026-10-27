@@ -10,11 +10,13 @@
       <!-- Disable factions -->
       <!-- We look at the faction itself rather than just using DefModExtension_SettingsData so that we handle vanilla xenotypes correctly -->
       <li Class="Xylib.PatchOperationMerge">
-        <xpath>Defs/FactionDef[
+        <xpath>
+          Defs/FactionDef[
             xenotypeSet/xenotypeChances/{0} &gt;= 1 or
             xenotypeSet/defaultXenotype="{0}" or
             modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]
-          ]</xpath>
+          ]
+        </xpath>
         <value>
           <displayInFactionSelection>false</displayInFactionSelection>
         </value>
