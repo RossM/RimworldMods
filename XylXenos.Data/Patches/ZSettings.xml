@@ -38,6 +38,18 @@
         <value>0</value>
       </li>
 
+      <!-- Generic disabled flag -->
+      <li Class="Xylib.PatchOperationMerge">
+        <xpath>Defs/*[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]</xpath>
+        <value>
+          <modExtensions>
+            <li Class="XylXenos.DefModExtension_SettingsData">
+              <disabled>true</disabled>
+            </li>
+          </modExtensions>
+        </value>
+      </li>
+
       <!-- Disable incidents -->
       <li Class="Xylib.PatchOperationMerge">
         <xpath>Defs/IncidentDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]</xpath>
