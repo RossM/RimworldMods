@@ -537,7 +537,8 @@
     <description>Carriers of this gene are inclined to dabble in many subjects. They learn faster at skills they don't have passion in.</description>
     <displayCategory>Miscellaneous</displayCategory>
     <displayOrderInCategory>37</displayOrderInCategory>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_Generalist</iconPath>
+    <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <statOffsets>
       <XylLearnFactorPassionNone>0.15</XylLearnFactorPassionNone>
     </statOffsets>
