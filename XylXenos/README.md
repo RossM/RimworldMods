@@ -17,7 +17,7 @@ Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown
 - [Succuboid](#--succuboid)
 - [Currently unused genes](#currently-unused-genes)
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylBossaps.png" alt="Bossaps" width="48" height="48"> <br> Bossaps
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylBossaps.png" alt="Bossaps" width="48" height="48" align="absmiddle"> Bossaps
 
 Bossaps were created as sentient livestock by the gene-engineers of a glitterworld best forgotten. They gain extra nourishment from raw plants, and their mostly female herds produce abundant milk. Naturally gregarious, they become unhappy in small colonies but tolerate shared barracks. While usually docile, injury can send a bossaps charging horns-first in an uncontrollable rage - even at the friend whose shot went astray.
 
@@ -52,7 +52,7 @@ The glitterworld that created bossaps had a strict vegan philosophy that it was 
 - **Skills:** poor cooking, strong plants.
 - **Appearance:** long-haired, standard body, fat body, hulk body.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylChyrr.png" alt="Chyrr" width="48" height="48"> <br> Chyrr
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylChyrr.png" alt="Chyrr" width="48" height="48" align="absmiddle"> Chyrr
 
 Chyrr are batlike xenohumans who trace their origin to a legendary blind healer. They have a strong aptitude for medicine, and their echolocation and keen hearing let them “see” using sound as well as vision. Their bodies are easily injured, but they can stun living enemies with a cry of ultrasound and psychic energy, then take flight on membranous wings for a short escape. In colder weather, they naturally enter a state of hibernation, leaving them protected from hypothermia and frostbite but otherwise helpless.
 
@@ -85,7 +85,7 @@ According to chyrr myth, a blind woman named Marah came across an injured strang
 - **Skills:** poor mining, strong medical.
 - **Appearance:** standard body, thin body, beardless.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylDvergr.png" alt="Dvergr" width="48" height="48"> <br> Dvergr
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylDvergr.png" alt="Dvergr" width="48" height="48" align="absmiddle"> Dvergr
 
 Dvergr hail from the vast underground cities beneath the inhospitable surface of the mineral world Svartalfheim. They see in darkness, tolerate great heat, and never need to go outdoors. They are fast workers and skilled miners, builders, and craftspeople. Their stomachs extract extra nourishment from raw fungus, although they hate the taste. They are both culturally and metabolically dependent on regular alcohol consumption, and going without it leads to illness and eventually death.
 
@@ -126,7 +126,7 @@ This particular union is unfriendly to outsiders, but can be persuaded to trade 
 - **Skills:** strong construction, strong mining, strong crafting, poor medical, poor social.
 - **Appearance:** short-haired, only bushy beards, light gray skin, slate gray skin, ink black skin.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylNixie.png" alt="Nixie" width="48" height="48"> <br> Nixie
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylNixie.png" alt="Nixie" width="48" height="48" align="absmiddle"> Nixie
 
 Originally engineered for the water world of Atlantis, nixies have spread across inhabited space. Their scaled skin provides protection and webbed hands let them move quickly in water, but long periods outside it will leave them miserable with cracked, bleeding skin. Beyond their physical adaptations, they possess otherworldly beauty and innate psychic powers that draw others towards them. They are skilled negotiators but poor miners and builders, trading with “dryskins” for manufactured goods.
 
@@ -166,7 +166,7 @@ This particular tribe pursues a gentle way of life. They are open to trade and a
 - **Skills:** poor mining, poor construction, strong social.
 - **Appearance:** no hair, snow-white hair, grayless hair, blue skin.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylTitan.png" alt="Titan" width="48" height="48"> <br> Titan
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylTitan.png" alt="Titan" width="48" height="48" align="absmiddle"> Titan
 
 Titans are mass-produced workers originally designed for reclaiming deathworlds. Specialized carbon-silicate lithoid biochemistry makes them immune to toxins and highly resistant to injury and disease, letting them work in conditions that would be lethal for other xenotypes. Each is engineered with exceptional aptitude and passion for one random skill, but they have great difficulty learning skills that they aren’t passionate about. Their unusual biochemistry also leaves them susceptible to petrification, an incurable genetic disease that gradually turns their tissues to solid stone.
 
@@ -203,7 +203,7 @@ Today, titans can be found on more than just the deathworlds they were engineere
 
 **Lithoid drugs:** [Softener](../XylXenos.Data/Defs/Drugs/Drugs_Titan.xml) prevents petrification. Atlasite builds protective resistance with regular doses. Crystal improves performance and dulls pain, but is highly addictive.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylTrog.png" alt="Trog" width="48" height="48"> <br> Trog
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylTrog.png" alt="Trog" width="48" height="48" align="absmiddle"> Trog
 
 Trogs emerged from generations of interbreeding among wasters, dirtmoles, and neanderthals on the worst rimworlds known to mankind. They are ugly, slow, and poor learners, but skilled miners and animal handlers. They emit special pheromones that let them move freely among giant insects, and even tame them and employ them as war animals. Like wasters, pollution invigorates them, but they are only partially resistant to its effects. Roughly half inherit additional random genes from who-knows-where.
 
@@ -245,7 +245,7 @@ This particular tribe refuses peaceful relations with outsiders. You will not be
 - **Skills:** strong mining, strong animals, awful intellectual.
 - **Appearance:** no hair, human headbone, mini-horns, green skin.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylWarcat.png" alt="Warcat" width="48" height="48"> <br> Warcat
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylWarcat.png" alt="Warcat" width="48" height="48" align="absmiddle"> Warcat
 
 Warcats were created in military gene-vats as experimental supersoldiers - part human, part great cat, all fast-twitch muscle. But something in the splice broke, leaving them dependent on a diet of raw meat to survive. Their descendants roam the rimworlds in packs, hunting with retractable claws, powerful melee attacks, and catlike reflexes.
 
@@ -287,7 +287,7 @@ Real cats are unable to produce adequate amounts of certain essential nutrients 
 - **Skills:** great melee, poor plants, poor crafting.
 - **Appearance:** long-haired, beardless, cat ears, standard body, thin body.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylZeegee.png" alt="Zeegee" width="48" height="48"> <br> Zeegee
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylZeegee.png" alt="Zeegee" width="48" height="48" align="absmiddle"> Zeegee
 
 Zeegees descend from the inhabitants of deep-space habitats and ancient generation ships. They are comfortable indoors and in low gravity, but on planets they are prone to bouts of debilitating nausea. They learn quickly, excel at intellectual work, and have a natural connection to machines that makes them adept at controlling mechanoids and piloting gravships. In emergency situations oxygen and protective proteins stored in their bone marrow can briefly protect them against vacuum, toxins, and temperature extremes. Enhanced vision, adapted for the low light and vast distances of space, makes them excellent marksmen.
 
@@ -320,7 +320,7 @@ Even the most colossal spaceborn habitat can eventually break down due to centur
 - **Skills:** strong shooting, poor melee, poor animals, strong intellectual.
 - **Appearance:** short-haired.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylOmegabeaver.png" alt="Omegabeaver" width="48" height="48"> <br> Omegabeaver
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylOmegabeaver.png" alt="Omegabeaver" width="48" height="48" align="absmiddle"> Omegabeaver
 
 Omegabeavers evolved from alphabeavers left behind on a planet abandoned by humans due to rampant pollution. These small, industrious builders excel at construction and logging, using strong, chisel-shaped teeth to cut trees quickly. Their webbed fingers let them move effortlessly in water. Naturally kind and optimistic, they are poor fighters despite their powerful bites, and learn new skills slowly.
 
@@ -341,7 +341,7 @@ On their home planet, omegabeavers build enormous reservoirs to store clean wate
 - **Skills:** great construction, strong cooking, strong plants, poor animals, poor intellectual.
 - **Appearance:** no hair, beardless.
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylScaleborn.png" alt="Scaleborn" width="48" height="48"> <br> Scaleborn
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylScaleborn.png" alt="Scaleborn" width="48" height="48" align="absmiddle"> Scaleborn
 
 Scaleborn were fashioned after the mythical dragons of ancient Earth. Their tough scales, claws, and sharp horns make them ferocious fighters, and each lineage has unique abilities such as fiery breath or blinding oil. Despite their strength, however, their reptilian metabolism makes them slow runners, and they become even slower in the cold.
 
@@ -389,7 +389,7 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](../XylXenos.Data/Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="80" height="80"> | [Dark blue skin](../XylXenos.Data/Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
-## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylSuccuboid.png" alt="Succuboid" width="48" height="48"> <br> Succuboid
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylSuccuboid.png" alt="Succuboid" width="48" height="48" align="absmiddle"> Succuboid
 
 Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.
 
