@@ -14,12 +14,6 @@ public static class PatchHelpers
 
     private const float DocileHappyThreshold = 0.5f;
 
-    public static int BiostatMetForDisplayBonus(this GeneDef geneDef)
-    {
-        var bonusGenes = geneDef.CompProps<GeneCompProperties_BonusGenes>();
-        return bonusGenes?.maker.root.BiostatMetForDisplay ?? 0;
-    }
-
     public static float ConversionPowerFactor_OffsetFromXenotype(Pawn pawn, bool invert, StringBuilder? sb, Pawn recipient)
     {
         float result = 0f;

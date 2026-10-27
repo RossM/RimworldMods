@@ -64,7 +64,7 @@
     <label>specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <biostatMet>-1</biostatMet>
     <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Specialist</iconPath>
     <modExtensions>
@@ -106,7 +106,7 @@
     <label>super-specialist</label>
     <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
     <biostatCpx>2</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <biostatMet>-3</biostatMet>
     <displayOrderInCategory>202</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SuperSpecialist</iconPath>
     <modExtensions>
@@ -148,7 +148,7 @@
     <label>scaleborn lineage</label>
     <description>Replaces itself with one of five randomly selected gene packages representing five different lineages.</description>
     <biostatCpx>5</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <biostatMet>-3</biostatMet>
     <displayCategory>XylRandom</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_ScalebornLineage</iconPath>

@@ -7,8 +7,6 @@
 [PublicAPI]
 public abstract class GeneSetMaker
 {
-    public virtual int BiostatMetForDisplay => 0;
-
     public float chance = 1f;
     public IntRange count = IntRange.One;
 
@@ -105,11 +103,6 @@ public class GeneSetMakerWeight
 [PublicAPI]
 public class GeneSetMaker_Option : GeneSetMaker
 {
-    public override int BiostatMetForDisplay =>
-        count.min * Mathf.Clamp(0,
-            options.Min(o => o.maker.BiostatMetForDisplay),
-            options.Max(o => o.maker.BiostatMetForDisplay));
-
     public required List<GeneSetMakerWeight> options;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
@@ -152,8 +145,6 @@ public class GeneSetMaker_Option : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_Subtree : GeneSetMaker
 {
-    public override int BiostatMetForDisplay => def.root.BiostatMetForDisplay;
-
     public required GeneSetMakerDef def;
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
@@ -169,8 +160,6 @@ public class GeneSetMaker_Subtree : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_Biostats : GeneSetMaker
 {
-    public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max) * count.min;
-
     public IntRange biostatArc = IntRange.Zero;
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
     public IntRange biostatMet = new(int.MinValue, int.MaxValue);
@@ -203,8 +192,6 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_List : GeneSetMaker
 {
-    public override int BiostatMetForDisplay => biostatMetInternal ??= CalculateBiostatMet();
-
     public static readonly List<GeneDef> genesTemp = [];
 
     private int? biostatMetInternal;
@@ -214,20 +201,6 @@ public class GeneSetMaker_List : GeneSetMaker
     public GeneSetMaker_List()
     {
         count = new IntRange(int.MaxValue);
-    }
-
-    private int CalculateBiostatMet()
-    {
-        if (count.min <= 0)
-            return 0;
-
-        if (genes == null)
-            throw new InvalidOperationException();
-
-        List<int> metList = [.. genes.Select(g => g.biostatMet)];
-        int minTotal = metList.OrderBy(m => m).Take(count.min).Sum();
-        int maxTotal = metList.OrderByDescending(m => m).Take(count.min).Sum();
-        return Mathf.Clamp(0, minTotal, maxTotal);
     }
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
@@ -260,8 +233,6 @@ public class GeneSetMaker_List : GeneSetMaker
 public class GeneSetMaker_BiostatTotal : GeneSetMaker
 {
     private const int TryCount = 100;
-
-    public override int BiostatMetForDisplay => Mathf.Clamp(0, biostatMet.min, biostatMet.max);
 
     public IntRange biostatArc = IntRange.Zero;
     public IntRange biostatCpx = new(int.MinValue, int.MaxValue);
