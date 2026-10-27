@@ -28,8 +28,8 @@ public class GeneCompProperties_RaceModifiers : GeneCompProperties
     public override IEnumerable<string> CustomEffectDescriptions()
     {
         if (bodySizeFactor != 1.0f)
-            yield return $"{"BodySize".Translate().CapitalizeFirst()}: {bodySizeFactor.ToStringPercent()}";
+            yield return $"{"BodySize".Translate().CapitalizeFirst()} x{bodySizeFactor.ToStringPercent()}";
         if (healthScaleFactor != 1.0f)
-            yield return $"{"HitPointsBasic".Translate().CapitalizeFirst()}: {healthScaleFactor.ToStringPercent()}";
+            yield return $"{"HitPointsBasic".Translate().CapitalizeFirst()} x{healthScaleFactor.ToStringPercent()}";
     }
 }
