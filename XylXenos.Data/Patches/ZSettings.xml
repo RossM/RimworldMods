@@ -8,6 +8,7 @@
   <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
     <patches>
       <!-- Disable factions -->
+      <!-- We look at the faction itself rather than using DefModExtension_XenotypeDependent so that we handle vanilla xenotypes correctly -->
       <li Class="Xylib.PatchOperationMerge">
         <xpath>Defs/FactionDef[xenotypeSet/xenotypeChances/{0} &gt;= 1 or xenotypeSet/defaultXenotype="{0}"]</xpath>
         <value>
