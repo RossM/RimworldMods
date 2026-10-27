@@ -8,12 +8,12 @@
   <Operation Class="XylXenos.PatchOperation_DisableXenotypes">
     <patches>
       <!-- Disable factions -->
-      <!-- We look at the faction itself rather than just using DefModExtension_XenotypeDependent so that we handle vanilla xenotypes correctly -->
+      <!-- We look at the faction itself rather than just using DefModExtension_SettingsData so that we handle vanilla xenotypes correctly -->
       <li Class="Xylib.PatchOperationMerge">
         <xpath>Defs/FactionDef[
             xenotypeSet/xenotypeChances/{0} &gt;= 1 or
-            xenotypeSet/defaultXenotype="{0}" or
-            modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]
+          xenotypeSet/defaultXenotype="{0}" or
+          modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]
           ]</xpath>
         <value>
           <displayInFactionSelection>false</displayInFactionSelection>
@@ -40,7 +40,7 @@
 
       <!-- Disable incidents -->
       <li Class="Xylib.PatchOperationMerge">
-        <xpath>Defs/IncidentDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]</xpath>
+        <xpath>Defs/IncidentDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]</xpath>
         <value>
           <baseChance>0</baseChance>
         </value>
@@ -48,7 +48,7 @@
 
       <!-- Disable quests -->
       <li Class="Xylib.PatchOperationMerge">
-        <xpath>Defs/QuestScriptDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]</xpath>
+        <xpath>Defs/QuestScriptDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]</xpath>
         <value>
           <randomlySelectable>false</randomlySelectable>
           <defaultChallengeRating>0</defaultChallengeRating>
@@ -57,25 +57,25 @@
 
       <!-- Disable things -->
       <li Class="Xylib.PatchOperationMerge">
-        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]</xpath>
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]</xpath>
         <value>
           <generateCommonality>0</generateCommonality>
         </value>
       </li>
       <li Class="Xylib.PatchOperationMerge">
-        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]/stuffProps</xpath>
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]/stuffProps</xpath>
         <value>
           <commonality>0</commonality>
         </value>
       </li>
       <li Class="PatchOperationReplace">
-        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]/tradeTags</xpath>
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]/tradeTags</xpath>
         <value>
           <tradeTags IsNull="True"/>
         </value>
       </li>
       <li Class="PatchOperationReplace">
-        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_XenotypeDependent' and xenotype="{0}"]]/thingSetMakerTags</xpath>
+        <xpath>Defs/ThingDef[modExtensions/li[@Class='XylXenos.DefModExtension_SettingsData' and requiredXenotype="{0}"]]/thingSetMakerTags</xpath>
         <value>
           <thingSetMakerTags IsNull="True"/>
         </value>

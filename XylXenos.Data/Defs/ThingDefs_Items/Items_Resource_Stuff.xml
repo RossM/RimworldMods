@@ -51,8 +51,8 @@
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <allowedArchonexusCount>80</allowedArchonexusCount>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_XenotypeDependent">
-        <xenotype>XylNixie</xenotype>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylNixie</requiredXenotype>
       </li>
     </modExtensions>
   </ThingDef>
@@ -97,8 +97,8 @@
     </thingCategories>
     <allowedArchonexusCount>80</allowedArchonexusCount>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_XenotypeDependent">
-        <xenotype>XylNixie</xenotype>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylNixie</requiredXenotype>
       </li>
     </modExtensions>
   </ThingDef>

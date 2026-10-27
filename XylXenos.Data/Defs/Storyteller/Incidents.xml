@@ -25,6 +25,9 @@
           <Ascetic>0.3</Ascetic>
         </forcedTraits>
       </li>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylBossaps</requiredXenotype>
+      </li>
     </modExtensions>
   </IncidentDef>
 

@@ -96,7 +96,7 @@ public class Dialog_EnableDisableXenotypes : Window
         {
             if (faction.xenotypeSet == null || faction.hidden)
                 continue;
-            if ((faction.GetModExtension<DefModExtension_XenotypeDependent>()?.xenotype is { } xenotype && 
+            if ((faction.GetModExtension<DefModExtension_SettingsData>()?.requiredXenotype is { } xenotype && 
                  newDisabledXenotypes.Contains(xenotype.defName)) ||
                 (faction.xenotypeSet.Count == 1 && faction.xenotypeSet[0].chance >= 1f &&
                  newDisabledXenotypes.Contains(faction.xenotypeSet[0].xenotype.defName)) ||

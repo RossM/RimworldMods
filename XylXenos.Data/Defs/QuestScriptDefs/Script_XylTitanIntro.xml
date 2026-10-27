@@ -135,6 +135,11 @@
         </li>
       </nodes>
     </root>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylTitan</requiredXenotype>
+      </li>
+    </modExtensions>
   </QuestScriptDef>
 
 </Defs>

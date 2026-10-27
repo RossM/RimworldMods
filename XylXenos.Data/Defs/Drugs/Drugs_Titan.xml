@@ -25,8 +25,8 @@
       </rulesStrings>
     </generalRules>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_XenotypeDependent">
-        <xenotype>XylTitan</xenotype>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylTitan</requiredXenotype>
       </li>
     </modExtensions>
   </ResearchProjectDef>
@@ -79,8 +79,8 @@
       </li>
     </comps>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_XenotypeDependent">
-        <xenotype>XylTitan</xenotype>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylTitan</requiredXenotype>
       </li>
     </modExtensions>
   </ThingDef>
@@ -177,8 +177,8 @@
     </thingSetMakerTags>
     <allowedArchonexusCount>50</allowedArchonexusCount>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_XenotypeDependent">
-        <xenotype>XylTitan</xenotype>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylTitan</requiredXenotype>
       </li>
     </modExtensions>
   </ThingDef>
@@ -407,8 +407,8 @@
       </li>
     </comps>
     <modExtensions>
-      <li Class="XylXenos.DefModExtension_XenotypeDependent">
-        <xenotype>XylTitan</xenotype>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylTitan</requiredXenotype>
       </li>
     </modExtensions>
   </ThingDef>

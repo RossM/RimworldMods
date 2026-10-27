@@ -32,6 +32,11 @@
     <layerWhitelist>
       <li>Orbit</li>
     </layerWhitelist>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_SettingsData">
+        <requiredXenotype>XylZeegee</requiredXenotype>
+      </li>
+    </modExtensions>
   </IncidentDef>
 
   <QuestScriptDef>
