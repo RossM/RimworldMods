@@ -20,7 +20,7 @@ public class GeneCompProperties_SeeingRed : GeneCompProperties
     public override string? ExtraGeneEffectDescription()
     {
         StringBuilder sb = new();
-        sb.AppendLineTagged($"{"Active".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));
+        sb.AppendLineTagged($"{"Active".Translate().CapitalizeFirst()}:".Colorize(ColoredText.TipSectionTitleColor));
         foreach (var stat in hediffDef.SpecialDisplayStats(StatRequest.ForEmpty()))
             sb.AppendLine($"- {stat.LabelCap}: {stat.ValueString}");
         return sb.ToString();
