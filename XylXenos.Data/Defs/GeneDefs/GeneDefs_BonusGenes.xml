@@ -148,7 +148,7 @@
     <label>scaleborn lineage</label>
     <description>Replaces itself with one of five randomly selected gene packages representing five different lineages.</description>
     <biostatCpx>5</biostatCpx>
-    <biostatMet>-3</biostatMet>
+    <biostatMet>-5</biostatMet>
     <displayCategory>XylRandom</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_ScalebornLineage</iconPath>
@@ -167,6 +167,7 @@
   
   <Xylib.GeneSetMakerDef>
     <defName>XylScalebornLineage</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
     <root Class="Xylib.GeneSetMaker_Option">
       <options>
         <li>
@@ -185,7 +186,6 @@
               <li>AcidSpray</li>
               <li>ToxResist_Partial</li>
               <li>AptitudeStrong_Shooting</li>
-              <li>AptitudeTerrible_Cooking</li>
               <li>XylSkin_DarkGreen</li>                      
             </genes>
           </maker>
@@ -196,7 +196,6 @@
               <li>FoamSpray</li>
               <li>WoundHealing_Fast</li>
               <li>AptitudeStrong_Medicine</li>
-              <li>AptitudeTerrible_Cooking</li>
               <li>Skin_SheerWhite</li>                      
             </genes>
           </maker>
@@ -207,7 +206,6 @@
               <li>XylEMPBurst</li>
               <li>Unstoppable</li>
               <li>AptitudeStrong_Intellectual</li>
-              <li>AptitudeTerrible_Cooking</li>
               <li>XylSkin_DarkBlue</li>                      
             </genes>
           </maker>
@@ -218,7 +216,6 @@
               <li>XylOilSpray</li>
               <li>Robust</li>
               <li>AptitudeStrong_Melee</li>
-              <li>AptitudeTerrible_Cooking</li>
               <li>Skin_SlateGray</li>
             </genes>
           </maker>
