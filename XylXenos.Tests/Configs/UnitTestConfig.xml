@@ -1,0 +1,4 @@
+<TestConfig>
+  <randSeed>1234567</randSeed>
+  <errorsAllowed><li>\AFailed to find faction base tile for [^\r\n]+\z</li></errorsAllowed>
+</TestConfig>

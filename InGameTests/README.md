@@ -1,16 +1,26 @@
 # Shared in-game test infrastructure
 
-[Xylib.Tests](../Xylib.Tests/README.md), [XylXenos.Tests](../XylXenos.Tests/README.md), and [Yobai.Tests](../Yobai.Tests/README.md) use SmashPhil's DevTools inside the installed Steam game. Each suite has a small `Run-Tests.ps1` entry point forwarding to [Run-Tests.ps1](Run-Tests.ps1). The new suites share MSBuild configuration and a linked pawn fixture; no test infrastructure ships in gameplay assemblies.
+[Xylib.Tests](../Xylib.Tests/README.md), [XylXenos.Tests](../XylXenos.Tests/README.md), and [Yobai.Tests](../Yobai.Tests/README.md) use SmashPhil's DevTools inside the installed Steam game. Each suite has a small `Run-Tests.ps1` entry point forwarding to [Run-Tests.ps1](Run-Tests.ps1). All suites share MSBuild configuration; Xylib and XylXenos also share a linked pawn fixture; no test infrastructure ships in gameplay assemblies.
 
 ## Dependencies and execution
 
-Use PowerShell 5.1 or 7 and .NET SDK 10.0.400 or later. Install the Workshop [Harmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077). Runs using the published Disharmony package also need the Workshop [Disharmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3818084845). The first run downloads a pinned DevTools revision and restores NuGet packages. DevTools remains cached in `temp/Yobai.TestDependencies` so existing Yobai builds keep working.
+Use PowerShell 5.1 or 7 and .NET SDK 10.0.400 or later. Install the Workshop [Harmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077). Runs using the published Disharmony package also need the Workshop [Disharmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3818084845). The first build downloads a pinned DevTools revision and restores NuGet packages. DevTools source remains cached in `temp/Yobai.TestDependencies`; its mod is built to `ModBin/DevTools`.
 
-The launcher builds the selected suite, creates a new profile under `TestResults/<suite>`, and launches RimWorld headlessly. It temporarily junctions the required mods into the game's `Mods` folder and restores existing local folders in `finally`. Xylib.Tests contains its own copy of Xylib and the shared definitions, so it loads without either gameplay mod. Normal saves and settings are untouched. Run suites sequentially because they share game mod paths and build outputs.
+Build the solution normally in Visual Studio or with `dotnet build .\XylRimworldMods.sln`. All three test projects are enabled in Debug and Release. Their DevTools project dependency downloads and builds the pinned source automatically, so the launcher is not needed to prepare a Visual Studio build. For a nonstandard game installation, set `RimWorldDirectory` in `Directory.Build.local.props` (or pass `-p:RimWorldDirectory=...` to MSBuild).
 
-`-RimWorldPath` defaults to `C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe`. Omit it for a standard Steam installation, or pass a different path to override it.
+Each test mod is written to `ModBin/<suite>.Tests`, including its definitions, default test configuration, DLL, and PDB. Xylib.Tests contains its own copy of Xylib and the shared definitions, so it loads without either gameplay mod. Local Disharmony builds bundle the matching runtime assemblies, just like the gameplay mods.
 
-The launcher defaults to the released Disharmony package, ignoring `Directory.Build.local.props` for reproducibility. Pass `-DisharmonySourceDirectory <checkout>` to Xylib/XylXenos when testing a local Disharmony version. Relative paths are resolved from the shell's working directory. This builds the source reference and stages matching runtime assemblies in the isolated run directory, without editing Workshop files.
+The launcher builds the selected suite in Debug by default, creates a new profile under `TestResults/<suite>`, and launches RimWorld headlessly. It creates persistent directory junctions from the game's `Mods` folder to the required ModBin outputs and reuses existing junctions or symbolic links with the same targets. Links stay installed after success or failure, so the mods remain available for debugging and manual runs through DevTools. Conflicting folders or links cause an error; update them manually. Normal saves and settings are untouched. Run suites sequentially because they share game mod paths, configurations, and build outputs.
+
+`-RimWorldPath` defaults to `C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe`. Omit it for a standard Steam installation, or pass a different path to override it. Creating links requires write access to the game's `Mods` folder.
+
+The launcher uses the same `Directory.Build.local.props` as Visual Studio. Pass `-DisharmonySourceDirectory <checkout>` to override the local source path (relative paths are resolved from the shell's working directory), or `-DisharmonySourceDirectory ''` to use the released package. Local builds load the bundled runtime without enabling a separate Disharmony mod or changing Workshop files.
+
+Use `-Configuration Release` for a Release build. Use `-SkipBuild` to run the existing ModBin output after building in Visual Studio. The launcher selects bundled or Workshop Disharmony based on that output. The launcher writes the report destination into the built mod's `Configs/UnitTestConfig.xml` and leaves it there for debugging. A normal build restores the default test configuration, which writes reports to the game's user-data folder.
+
+```powershell
+.\Xylib.Tests\Run-Tests.ps1 -SkipBuild -Expansions None
+```
 
 All installed expansions are enabled by default. Use `-Expansions` with a comma-separated list of case-insensitive names to select expansions, or `-Expansions None` to enable Core without expansions. Core is always enabled. Unknown or uninstalled expansions are rejected before building or launching the game. Only XylXenos requires Biotech; Xylib and Yobai support Core-only runs. Duplicate names are loaded once, in the game's normal expansion order. PowerShell arrays and quoted comma-separated strings are both accepted.
 

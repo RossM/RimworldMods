@@ -16,6 +16,8 @@ param(
     [ValidateSet('Yobai', 'Xylib', 'XylXenos')] [string] $Suite = 'Yobai',
     [string] $OutputDirectory = (Join-Path $PSScriptRoot "../TestResults/$Suite/$(Get-Date -Format 'yyyyMMdd-HHmmss')-$([guid]::NewGuid().ToString('N').Substring(0, 8))"),
     [string] $Filter,
+    [ValidateSet('Debug', 'Release')] [string] $Configuration = 'Debug',
+    [switch] $SkipBuild,
     [string] $DisharmonySourceDirectory,
     [ValidateNotNullOrEmpty()] [string[]] $Expansions,
     [ValidateRange(1, 120)] [int] $TimeoutMinutes = 10
@@ -24,18 +26,19 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Get-DependencyArchive([string] $Name, [string] $Uri) {
-    $destination = Join-Path $dependencyDirectory $Name
-    $complete = Join-Path $destination '.complete'
-    if (!(Test-Path -LiteralPath $complete)) {
-        New-Item -ItemType Directory -Path $destination -Force | Out-Null
-        $archive = "$destination.zip"
-        Write-Host "Downloading $Name..."
-        Invoke-WebRequest -Uri $Uri -OutFile $archive -UseBasicParsing
-        Expand-Archive -LiteralPath $archive -DestinationPath $destination -Force
-        [IO.File]::WriteAllText($complete, $Uri)
+function Ensure-ModLink([string] $Name, [string] $Source) {
+    $linkPath = Join-Path $modsDirectory $Name
+    $sourcePath = (Resolve-Path -LiteralPath $Source).ProviderPath
+    $existing = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
+    if ($null -ne $existing) {
+        if ($existing.LinkType -in @('Junction', 'SymbolicLink')) {
+            $target = @($existing.Target)[0]
+            if (![IO.Path]::IsPathRooted($target)) { $target = Join-Path $modsDirectory $target }
+            if ([IO.Path]::GetFullPath($target).TrimEnd('\') -eq $sourcePath.TrimEnd('\')) { return }
+        }
+        throw "Mod path already exists and does not link to ${sourcePath}: $linkPath. Update it manually before running tests."
     }
-    return $destination
+    New-Item -ItemType Junction -Path $linkPath -Target $sourcePath | Out-Null
 }
 
 function ConvertTo-ProcessArgument([string] $Argument) {
@@ -97,40 +100,27 @@ if ($Suite -eq 'XylXenos' -and $selectedExpansions -notcontains 'ludeon.rimworld
 
 $repositoryDirectory = Split-Path -Parent $PSScriptRoot
 $testProjectDirectory = Join-Path $repositoryDirectory "$Suite.Tests"
-$dependencyDirectory = Join-Path $repositoryDirectory 'temp/Yobai.TestDependencies'
 $OutputDirectory = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)
 New-Item -ItemType Directory -Path $OutputDirectory | Out-Null
 
-# DevTools is pinned test infrastructure; Disharmony can optionally come from source.
-$devToolsRevision = '0600eb11a6781371ee84a5d9a4ce86653c92d7ff'
-$devToolsArchive = Get-DependencyArchive "DevTools-$devToolsRevision" "https://codeload.github.com/SmashPhil/DevTools/zip/$devToolsRevision"
-$devToolsSource = Join-Path $devToolsArchive "DevTools-$devToolsRevision"
-$devToolsMod = Join-Path $dependencyDirectory 'DevToolsMod'
-$devToolsAssembly = Join-Path $devToolsMod '1.7/Assemblies/DevTools.dll'
-
-Invoke-Build @(
-    (Join-Path $devToolsSource 'DevTools/DevTools.csproj'),
-    "-p:RefDir=$gameDirectory", "-p:ModDir=$devToolsMod", '-p:TreatWarningsAsErrors=false'
-)
-New-Item -ItemType Directory -Path (Join-Path $devToolsMod 'About') -Force | Out-Null
-[IO.File]::WriteAllText((Join-Path $devToolsMod 'About/About.xml'), '<ModMetaData><packageId>SmashPhil.DevTools</packageId><name>DevTools (in-game tests)</name><author>Smash Phil</author><supportedVersions><li>1.7</li></supportedVersions></ModMetaData>')
-$testBuildArguments = @(
-    (Join-Path $testProjectDirectory "$Suite.Tests.csproj"), '--configuration', 'Release',
-    "-p:DevToolsAssemblyPath=$devToolsAssembly",
-    '-p:ImportLocalBuildProps=false'
-)
-if ($DisharmonySourceDirectory) {
-    if ($Suite -eq 'Yobai') { throw 'The local Disharmony option currently supports the Xylib and XylXenos suites.' }
-    $DisharmonySourceDirectory = (Resolve-Path -LiteralPath $DisharmonySourceDirectory).ProviderPath
+$testProject = Join-Path $testProjectDirectory "$Suite.Tests.csproj"
+$testBuildArguments = @($testProject, '--configuration', $Configuration, "-p:RimWorldDirectory=$gameDirectory")
+if ($PSBoundParameters.ContainsKey('DisharmonySourceDirectory')) {
+    if ($DisharmonySourceDirectory) {
+        $DisharmonySourceDirectory = (Resolve-Path -LiteralPath $DisharmonySourceDirectory).ProviderPath
+    }
+    $testBuildArguments += "-p:DisharmonySourceDirectory=$DisharmonySourceDirectory"
 }
-$testBuildArguments += "-p:DisharmonySourceDirectory=$DisharmonySourceDirectory"
-Invoke-Build $testBuildArguments
+if (!$SkipBuild) { Invoke-Build $testBuildArguments }
+# Select the runtime from the deployed output, including when reusing a Visual Studio build.
+$runtimeMod = if ($Suite -eq 'Xylib') { 'Xylib.Tests' } else { $Suite }
+$usesBundledDisharmony = Test-Path -LiteralPath (Join-Path $repositoryDirectory "ModBin/$runtimeMod/Assemblies/Disharmony.RimWorld.dll")
 
 $modsDirectory = Join-Path $gameDirectory 'Mods'
 $workshopDirectory = [IO.Path]::GetFullPath((Join-Path $gameDirectory '../../workshop/content/294100'))
 $workshopPackages = @{}
 $workshopIds = @('2009463077')
-if (!$DisharmonySourceDirectory) { $workshopIds += '3818084845' }
+if (!$usesBundledDisharmony) { $workshopIds += '3818084845' }
 foreach ($workshopId in $workshopIds) {
     $aboutPath = Join-Path $workshopDirectory "$workshopId/About/About.xml"
     if (!(Test-Path -LiteralPath $aboutPath)) {
@@ -152,30 +142,14 @@ foreach ($directory in Get-ChildItem -LiteralPath $modsDirectory -Directory) {
     }
 }
 
-$testMod = Join-Path $OutputDirectory "$Suite.Tests"
-New-Item -ItemType Directory -Path $testMod | Out-Null
-Get-ChildItem -LiteralPath (Join-Path $repositoryDirectory "ModBin/$Suite.Tests") | Copy-Item -Destination $testMod -Recurse
+$testMod = Join-Path $repositoryDirectory "ModBin/$Suite.Tests"
 $testPackage = ('xylthixlm.' + $Suite + '.tests').ToLowerInvariant()
-$mods = @()
+Ensure-ModLink 'DevTools' (Join-Path $repositoryDirectory 'ModBin/DevTools')
+Ensure-ModLink "$Suite.Tests" $testMod
 if ($Suite -ne 'Xylib') {
     $gameplayMod = if ($Suite -eq 'Yobai') { 'Yobai' } else { 'XylXenos' }
     $gameplayPackage = if ($Suite -eq 'Yobai') { 'xylthixlm.yobai' } else { 'xylthixlm.races.core' }
-    $mods += @{ Name = $gameplayMod; Source = (Join-Path $repositoryDirectory "ModBin/$gameplayMod") }
-}
-$mods += @(
-    @{ Name = 'DevTools'; Source = $devToolsMod },
-    @{ Name = "$Suite.Tests"; Source = $testMod }
-)
-if ($DisharmonySourceDirectory) {
-    # Match the runtime to the source used for the build, without changing Workshop files.
-    $localDisharmony = Join-Path $OutputDirectory 'Disharmony'
-    New-Item -ItemType Directory -Path (Join-Path $localDisharmony 'Assemblies') -Force | Out-Null
-    Copy-Item -LiteralPath (Join-Path $DisharmonySourceDirectory 'Disharmony.RimWorld/About') -Destination $localDisharmony -Recurse
-    foreach ($assembly in 'Disharmony.dll', 'Disharmony.RimWorld.dll', '0Harmony.dll') {
-        Copy-Item -LiteralPath (Join-Path $testProjectDirectory "bin/Release/net10.0/$assembly") -Destination (Join-Path $localDisharmony 'Assemblies')
-    }
-    $mods = @(@{ Name = 'Disharmony'; Source = $localDisharmony }) + $mods
-    $workshopPackages['xylthixlm.disharmony'] = 'xylthixlm.disharmony'
+    Ensure-ModLink $gameplayMod (Join-Path $repositoryDirectory "ModBin/$gameplayMod")
 }
 
 $saveDataDirectory = Join-Path $OutputDirectory 'UserData'
@@ -183,7 +157,7 @@ $configDirectory = Join-Path $saveDataDirectory 'Config'
 New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
 $activeMods = @($workshopPackages['brrainz.harmony'], 'ludeon.rimworld')
 $activeMods += $selectedExpansions
-$activeMods += $workshopPackages['xylthixlm.disharmony']
+if (!$usesBundledDisharmony) { $activeMods += $workshopPackages['xylthixlm.disharmony'] }
 if ($Suite -ne 'Xylib') { $activeMods += $gameplayPackage }
 $activeMods += @('smashphil.devtools', $testPackage)
 $activeXml = ($activeMods | ForEach-Object { "<li>$($_)</li>" }) -join ''
@@ -198,39 +172,21 @@ $expansionsXml = ($installedExpansions | ForEach-Object { "<li>$($_)</li>" }) -j
 [IO.File]::WriteAllText((Join-Path $configDirectory 'Prefs.xml'), '<PrefsData><runInBackground>True</runInBackground></PrefsData>')
 $testConfigDirectory = Join-Path $testMod 'Configs'
 New-Item -ItemType Directory -Path $testConfigDirectory -Force | Out-Null
-$escapedOutputDirectory = [Security.SecurityElement]::Escape($OutputDirectory)
-$allowedErrorsXml = ''
-if ($Suite -eq 'XylXenos') {
-    # DevTools' 5% test world can lack the pollution needed to place a Trog settlement.
-    # Faction names are generated, so match the complete error rather than a specific name.
-    $allowedErrorsXml = '<errorsAllowed><li>\AFailed to find faction base tile for [^\r\n]+\z</li></errorsAllowed>'
-}
-[IO.File]::WriteAllText((Join-Path $testConfigDirectory 'UnitTestConfig.xml'), "<TestConfig><randSeed>1234567</randSeed>$allowedErrorsXml<log><folder>$escapedOutputDirectory</folder></log></TestConfig>")
+# Keep the built mod's test settings and only redirect this run's report.
+[xml] $testConfig = Get-Content -LiteralPath (Join-Path $testConfigDirectory 'UnitTestConfig.xml') -Raw -Encoding utf8
+$log = $testConfig.TestConfig.SelectSingleNode('log')
+if ($null -eq $log) { $log = $testConfig.TestConfig.AppendChild($testConfig.CreateElement('log')) }
+$folder = $log.SelectSingleNode('folder')
+if ($null -eq $folder) { $folder = $log.AppendChild($testConfig.CreateElement('folder')) }
+$folder.InnerText = $OutputDirectory
+$testConfig.Save((Join-Path $testConfigDirectory 'UnitTestConfig.xml'))
 
-$backupDirectory = Join-Path $gameDirectory ("$Suite.Tests." + [guid]::NewGuid().ToString('N'))
-$backups = @()
-$links = @()
 $process = $null
 $stdoutFile = $null
 $stderrFile = $null
 $stdout = $null
 $stderr = $null
 try {
-    foreach ($mod in $mods) {
-        $linkPath = [IO.Path]::GetFullPath((Join-Path $modsDirectory $mod.Name))
-        $backupPath = [IO.Path]::GetFullPath((Join-Path $backupDirectory $mod.Name))
-        if ((Split-Path -Parent $linkPath) -ne $modsDirectory -or
-            (Split-Path -Parent $backupPath) -ne $backupDirectory) {
-            throw "Test mod path is outside its installation or backup directory: $($mod.Name)"
-        }
-        if (Test-Path -LiteralPath $linkPath) {
-            New-Item -ItemType Directory -Path $backupDirectory -Force | Out-Null
-            [IO.Directory]::Move($linkPath, $backupPath)
-            $backups += @{ Original = $linkPath; Backup = $backupPath }
-        }
-        New-Item -ItemType Junction -Path $linkPath -Target $mod.Source | Out-Null
-        $links += @{ Path = $linkPath; Target = $mod.Source }
-    }
     $startInfo = [Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = $RimWorldPath
     $startInfo.WorkingDirectory = $gameDirectory
@@ -283,18 +239,5 @@ finally {
         if ($null -ne $process) { $process.Dispose() }
         if ($null -ne $stdoutFile) { $stdoutFile.Dispose() }
         if ($null -ne $stderrFile) { $stderrFile.Dispose() }
-        foreach ($link in $links) {
-            $item = Get-Item -LiteralPath $link.Path -Force
-            if ($item.LinkType -ne 'Junction' -or $item.Target -ne $link.Target) {
-                throw "Temporary test link changed; leaving it in place: $($link.Path)"
-            }
-            [IO.Directory]::Delete($link.Path)
-        }
-        foreach ($backup in $backups) {
-            [IO.Directory]::Move($backup.Backup, $backup.Original)
-        }
-        if (Test-Path -LiteralPath $backupDirectory) {
-            [IO.Directory]::Delete($backupDirectory)
-        }
     }
 }

@@ -1,21 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-    <DevToolsAssemblyPath Condition="'$(DevToolsAssemblyPath)' == ''">$(MSBuildThisFileDirectory)..\temp\Yobai.TestDependencies\DevToolsMod\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
-  </PropertyGroup>
+  <Import Project="..\InGameTests\Tests.props" />
   <ItemGroup>
     <ProjectReference Include="..\Yobai\Yobai.csproj" />
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
-    <Reference Include="DevTools" HintPath="$(DevToolsAssemblyPath)" Private="false" />
   </ItemGroup>
-  <Target Name="CheckDevTools" BeforeTargets="ResolveReferences">
-    <Error Condition="!Exists('$(DevToolsAssemblyPath)')" Text="DevTools.dll was not found. Run Yobai.Tests/Run-Tests.ps1 to download and build the test dependencies. See Yobai.Tests/README.md." />
-  </Target>
-  <Target Name="DeployTests" AfterTargets="Build">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\ModBin\Yobai.Tests\Assemblies" />
-    <Copy SourceFiles="About\About.xml" DestinationFolder="..\ModBin\Yobai.Tests\About" />
-    <Copy SourceFiles="Defs\TestBeds.xml" DestinationFolder="..\ModBin\Yobai.Tests\Defs" />
-  </Target>
 </Project>

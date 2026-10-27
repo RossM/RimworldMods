@@ -10,11 +10,11 @@ Use Windows PowerShell 5.1 or PowerShell 7 with the .NET 10 SDK. Install the nor
 .\Yobai.Tests\Run-Tests.ps1 -RimWorldPath "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorld.exe"
 ```
 
-Point the command at your Steam installation. The script builds Yobai and DevTools, creates an isolated user-data directory, and runs the installed game headlessly. It temporarily links the test mods into the game's `Mods` directory and restores existing local mod folders on exit. Your normal saves and settings are kept separate.
+Point the command at your Steam installation. The script builds Yobai and DevTools, creates an isolated user-data directory, and runs the installed game headlessly. It links `ModBin/Yobai.Tests` and `ModBin/DevTools` into the game's `Mods` directory, alongside `ModBin/Yobai`. These links remain installed for debugging and manual runs. Your normal saves and settings are kept separate.
 
-The first run needs internet access for DevTools and NuGet restore, plus permission to create junctions and move local mod folders in the game directory. The script creates its own build outputs, dependency cache and test profile. DevTools is pinned to the revision specified in [the shared runner](../InGameTests/Run-Tests.ps1) and cached under `temp/Yobai.TestDependencies`; deleting the cache causes it to be downloaded and built again.
+The first build needs internet access for DevTools and NuGet restore. Running the script requires write access to create persistent junctions in the game directory; existing folders and conflicting links are left untouched. The script creates its own build outputs, dependency cache and test profile. DevTools is pinned to the revision specified in [its build script](../InGameTests/Build-DevTools.ps1) and cached under `temp/Yobai.TestDependencies`; deleting the cache causes it to be downloaded and built again.
 
-Tests use the released Disharmony NuGet package and the installed Workshop mods. Local Disharmony build overrides are ignored. The test project is included in the solution but excluded from its default builds. After running the script, Visual Studio can resolve DevTools from the dependency cache.
+Build the solution normally in Visual Studio: the test project is enabled in Debug and Release, and its DevTools dependency is prepared automatically. Builds use the same local Disharmony settings as the gameplay mods; source builds bundle the runtime and do not require the Workshop Disharmony mod. Use `-DisharmonySourceDirectory` to override the source path or pass an empty string to use the released package. Use `-SkipBuild` to run your existing Visual Studio output. The runner defaults to Debug; `-Configuration Release` selects Release.
 
 All installed DLC is enabled by default. Options:
 
@@ -30,7 +30,7 @@ All installed DLC is enabled by default. Options:
 
 Each run writes `Test.log`, `stdout.log`, `stderr.log` and its isolated profile to a new directory under `TestResults/Yobai`. Start with `Test.log` for failed assertions and use the game logs for startup failures or logged errors. Reports are local build artifacts and are ignored by Git.
 
-The command fails for build errors, game failures, timeouts, an empty test selection, or an incomplete or failing report. Temporary mod links are cleaned up when the script exits, including after a failed run.
+The command fails for build errors, game failures, timeouts, an empty test selection, or an incomplete or failing report. Mod links and the test configuration remain available after the script exits, including after a failed run.
 
 ## Coverage
 

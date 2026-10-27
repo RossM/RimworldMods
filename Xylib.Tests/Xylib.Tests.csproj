@@ -7,7 +7,10 @@
     <XylibTestData Include="..\Xylib.Data\Languages\**\*" ModRelativePath="Languages\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <Target Name="DeployXylibTestHost" AfterTargets="DeployTests">
-    <Copy SourceFiles="$(TargetDir)Xylib.dll" DestinationFolder="..\ModBin\Xylib.Tests\Assemblies" />
+    <Copy SourceFiles="$(TargetDir)Xylib.dll;$(TargetDir)Xylib.pdb" DestinationFolder="..\ModBin\Xylib.Tests\Assemblies" />
+    <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="..\ModBin\Xylib.Tests\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />
+    <Delete Files="..\ModBin\Xylib.Tests\Assemblies\Disharmony.dll;..\ModBin\Xylib.Tests\Assemblies\Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' == ''" />
+    <XmlPoke XmlInputPath="..\ModBin\Xylib.Tests\About\About.xml" Query="/ModMetaData/modDependencies" Value="&lt;li&gt;&lt;packageId&gt;SmashPhil.DevTools&lt;/packageId&gt;&lt;displayName&gt;DevTools&lt;/displayName&gt;&lt;/li&gt;" Condition="'$(DisharmonySourceDirectory)' != ''" />
     <Copy SourceFiles="@(XylibTestData)" DestinationFiles="@(XylibTestData->'..\ModBin\Xylib.Tests\%(ModRelativePath)')" />
   </Target>
 </Project>

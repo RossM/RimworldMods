@@ -12,6 +12,8 @@ Builds use the released Disharmony NuGet package by default. A Disharmony source
 
 The mods are written to `ModBin/XylXenos`, `ModBin/XylIdeos` and `ModBin/Yobai`. Enable the official [Disharmony mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3818084845) when running a build made with the NuGet package: these builds include Harmony, but do not bundle the Disharmony assemblies.
 
+The solution also builds `ModBin/Xylib.Tests`, `ModBin/XylXenos.Tests`, `ModBin/Yobai.Tests`, and their pinned `ModBin/DevTools` dependency. These test mods can be built directly in Visual Studio. The [in-game test runner](InGameTests/README.md) creates persistent links to them in RimWorld's `Mods` folder; use `-SkipBuild` to run the build you made in Visual Studio.
+
 Yobai adds polycule bedrooms and night visits. See the [Yobai README](Yobai/README.md) for how it works and the [test instructions](Yobai.Tests/README.md) for its optional DevTools tests.
 
 Shared mod data belongs in `Xylib.Data`. Building XylXenos or XylIdeos includes this data alongside its own data project; building `Xylib.Data` directly copies its files to both mod outputs. Shared XML files use distinct filenames to avoid collisions with mod-specific data. Yobai's data is independent.

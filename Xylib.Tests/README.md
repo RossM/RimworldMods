@@ -6,7 +6,7 @@ Run from the repository root with PowerShell 5.1 or 7 and the .NET 10 SDK:
 .\Xylib.Tests\Run-Tests.ps1 -Expansions None -DisharmonySourceDirectory ..\Disharmony
 ```
 
-See [the shared runner documentation](../InGameTests/README.md) for dependencies, filters, results, and isolation. This suite is a standalone test mod containing Xylib and its shared definitions. It loads neither XylXenos nor XylIdeos and has no DLC requirement. The example uses a local Disharmony checkout for both compilation and runtime. Omit `-DisharmonySourceDirectory` to test the released package.
+See [the shared runner documentation](../InGameTests/README.md) for dependencies, filters, results, and isolation. This suite is a standalone test mod containing Xylib and its shared definitions. It loads neither XylXenos nor XylIdeos and has no DLC requirement. The example uses a local Disharmony checkout for both compilation and runtime. Omit `-DisharmonySourceDirectory` to use your normal build settings, or pass an empty string to test the released package. The test project builds normally in Visual Studio and writes its mod to `ModBin`; use `-SkipBuild` to run that output. Mod links remain installed for debugging.
 
 General gene/component tests remain available without Biotech: human pawns have a gene tracker even when the DLC is disabled. Six gene-generation cases use `[LoadIfBiotechActive]` because they exercise vanilla `GeneSet.CanAddGeneDuringGeneration`, which rejects generation unless Biotech is active. Run with `-Expansions Biotech` to include those cases, or omit `-Expansions` to enable all installed expansions.
 

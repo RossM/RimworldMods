@@ -5,11 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <DevToolsAssemblyPath Condition="'$(DevToolsAssemblyPath)' == ''">$(MSBuildThisFileDirectory)..\temp\Yobai.TestDependencies\DevToolsMod\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <DevToolsAssemblyPath>$(MSBuildThisFileDirectory)..\ModBin\DevTools\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
     <Reference Include="DevTools" HintPath="$(DevToolsAssemblyPath)" Private="false" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)DevTools\DevTools.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Yobai.Tests'">
     <Compile Include="..\InGameTests\PawnTestFixture.cs" Link="PawnTestFixture.cs" />
     <Using Include="DevTools.Testing" />
     <Using Include="RimWorld" />
@@ -17,11 +21,12 @@
     <Using Include="Xylib" />
     <Using Include="InGameTests" />
   </ItemGroup>
-  <Target Name="CheckDevTools" BeforeTargets="ResolveReferences">
-    <Error Condition="!Exists('$(DevToolsAssemblyPath)')" Text="DevTools.dll was not found. Run $(MSBuildProjectName)/Run-Tests.ps1 first." />
-  </Target>
   <Target Name="DeployTests" AfterTargets="Build">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="..\ModBin\$(MSBuildProjectName)\Assemblies" />
-    <Copy SourceFiles="About\About.xml" DestinationFolder="..\ModBin\$(MSBuildProjectName)\About" />
+    <ItemGroup>
+      <TestModData Include="About\**\*;Defs\**\*;Configs\**\*" />
+      <TestModAssembly Include="$(TargetPath);$(TargetDir)$(TargetName).pdb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(TestModAssembly)" DestinationFolder="..\ModBin\$(MSBuildProjectName)\Assemblies" />
+    <Copy SourceFiles="@(TestModData)" DestinationFiles="@(TestModData->'..\ModBin\$(MSBuildProjectName)\%(Identity)')" SkipUnchangedFiles="true" />
   </Target>
 </Project>

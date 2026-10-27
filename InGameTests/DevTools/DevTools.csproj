@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.134">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <RimWorldDirectory Condition="'$(RimWorldDirectory)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDirectory>
+    <ModDirectory>$(MSBuildThisFileDirectory)..\..\ModBin\DevTools</ModDirectory>
+  </PropertyGroup>
+  <Target Name="BuildDevTools" BeforeTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)..\Build-DevTools.ps1&quot; -RimWorldDirectory &quot;$(RimWorldDirectory)&quot; -ModDirectory &quot;$(ModDirectory)&quot; -Configuration &quot;$(Configuration)&quot;" />
+  </Target>
+</Project>
