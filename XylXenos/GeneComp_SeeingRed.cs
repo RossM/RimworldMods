@@ -16,6 +16,15 @@ public class GeneCompProperties_SeeingRed : GeneCompProperties
         yield return new StatDrawEntry(StatCategoryDefOf.PawnCombat, "XylRageChanceLabel".TranslateSimple(),
             chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
     }
+
+    public override string? ExtraGeneEffectDescription()
+    {
+        StringBuilder sb = new();
+        sb.AppendLineTagged($"{"Active".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));
+        foreach (var stat in hediffDef.SpecialDisplayStats(StatRequest.ForEmpty()))
+            sb.AppendLine($"- {stat.LabelCap}: {stat.ValueString}");
+        return sb.ToString();
+    }
 }
 
 public class GeneComp_SeeingRed : GeneComp, IEventListener

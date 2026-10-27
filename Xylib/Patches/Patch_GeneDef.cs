@@ -37,4 +37,22 @@ internal static class Patch_GeneDef
 
         __result = __result is not { Count: > 0 } ? extraDescriptions : [.. __result, .. extraDescriptions];
     }
+
+    [Feature(typeof(DefModExtension_GeneWithComps))]
+    [Postfix]
+    [Target("GetDescriptionFull")]
+    public static void GetDescriptionFull_Postfix(GeneDef __instance, ref string __result)
+    {
+        var extraDescription = __instance.GetExtraGeneEffectDescription();
+        if (string.IsNullOrEmpty(extraDescription))
+            return;
+
+        StringBuilder sb = new(__result);
+
+        if (sb.Length > 0)
+            sb.Append("\n\n");
+
+        sb.Append(extraDescription);
+        __result = sb.ToString().TrimEndNewlines();
+    }
 }

@@ -6,8 +6,6 @@ namespace Xylib;
 [PublicAPI]
 public abstract class GeneCompProperties
 {
-    public Type? compClass;
-
     /// <summary>
     ///     Whether it is valid for a <see cref="DefModExtension_GeneWithComps" /> to have multiple comps of this type.
     /// </summary>
@@ -16,6 +14,8 @@ public abstract class GeneCompProperties
     ///     gene has multiple comps with the same type with this flag set to <see langword="false" />.
     /// </remarks>
     public virtual bool AllowDuplicates => false;
+
+    public Type? compClass;
 
     /// <summary>
     ///     Reports errors in the configuration of this comp. Override in a derived class to report additional errors.
@@ -58,6 +58,8 @@ public abstract class GeneCompProperties
         foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
             yield return $"{entry.LabelCap}: {entry.ValueString}";
     }
+
+    public virtual string? ExtraGeneEffectDescription() => null;
 }
 
 [NoReorder]
@@ -65,8 +67,6 @@ public abstract class GeneCompProperties
 [PublicAPI]
 public class DefModExtension_GeneWithComps : DefModExtension
 {
-    public IEnumerable<string> CustomEffectDescriptions => field ??= [.. GetCustomEffectDescriptions()];
-
     public Texture2D ExtraIcon
     {
         get
@@ -150,7 +150,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         }
     }
 
-    protected virtual IEnumerable<string> GetCustomEffectDescriptions()
+    public virtual IEnumerable<string> GetCustomEffectDescriptions()
     {
         if (comps is null)
             yield break;
@@ -161,6 +161,27 @@ public class DefModExtension_GeneWithComps : DefModExtension
                 yield return result;
         }
     }
+
+    public string? GetExtraGeneEffectDescription()
+    {
+        if (comps is null)
+            return null;
+
+        StringBuilder sb = new();
+
+        foreach (var comp in comps)
+        {
+            var description = comp.ExtraGeneEffectDescription();
+            if (string.IsNullOrEmpty(description))
+                continue;
+            if (sb.Length > 0)
+                sb.AppendLine();
+            sb.AppendLine(description);
+        }
+
+        return sb.ToString();
+    }
+
 
     [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()

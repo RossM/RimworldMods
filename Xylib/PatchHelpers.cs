@@ -77,8 +77,15 @@ internal static class PatchHelpers
     public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
     {
         if (geneDef.Extension_GeneWithComps is { } defExt)
-            foreach (var customEffectDescription in defExt.CustomEffectDescriptions)
+            foreach (var customEffectDescription in defExt.GetCustomEffectDescriptions())
                 yield return customEffectDescription;
+    }
+
+    public static string? GetExtraGeneEffectDescription(this GeneDef geneDef)
+    {
+        if (geneDef.Extension_GeneWithComps is { } defExt)
+            return defExt.GetExtraGeneEffectDescription();
+        return null;
     }
 
     public static float GetRangedDodgeChance(Pawn target)
@@ -247,11 +254,13 @@ internal static class PatchHelpers
 
         switch (defExtension)
         {
-            case { prohibitedGenes.Count: > 0 } when defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene1:
+            case { prohibitedGenes.Count: > 0 }
+                when defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene1:
             {
                 return "XylBlockedByGene".Translate(gene1.label);
             }
-            case { requiredGenesAll.Count: > 0 } when defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene2:
+            case { requiredGenesAll.Count: > 0 }
+                when defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene2:
             {
                 return "XylRequiresGene".Translate(gene2.label);
             }

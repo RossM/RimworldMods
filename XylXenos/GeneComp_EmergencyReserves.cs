@@ -30,6 +30,18 @@ public class GeneCompProperties_EmergencyReserves : GeneCompProperties
     {
         compClass = typeof(GeneComp_EmergencyReserves);
     }
+
+    public override string? ExtraGeneEffectDescription()
+    {
+        if (hediff.stages?[^1] is null)
+            return null;
+
+        StringBuilder sb = new();
+        sb.AppendLineTagged($"{"Active".Translate()}:".Colorize(ColoredText.TipSectionTitleColor));
+        foreach (var stat in hediff.stages[^1].SpecialDisplayStats())
+            sb.AppendLine($"- {stat.LabelCap}: {stat.ValueString}");
+        return sb.ToString();
+    }
 }
 
 public class GeneComp_EmergencyReserves : GeneComp
