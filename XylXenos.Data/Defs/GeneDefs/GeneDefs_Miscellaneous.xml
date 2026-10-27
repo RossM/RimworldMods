@@ -527,8 +527,28 @@
       <li>BS_Passioned_Learning_Gene</li>
     </exclusionTags>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps">
-      </li>
+      <li Class="Xylib.DefModExtension_GeneWithComps"/>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef>
+    <defName>XylLearning_Generalist</defName>
+    <label>generalist</label>
+    <description>Carriers of this gene are inclined to dabble in many subjects. They learn faster at skills they don't have passion in.</description>
+    <displayCategory>Miscellaneous</displayCategory>
+    <displayOrderInCategory>37</displayOrderInCategory>
+    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <statOffsets>
+      <XylLearnFactorPassionNone>0.15</XylLearnFactorPassionNone>
+    </statOffsets>
+    <biostatCpx>1</biostatCpx>
+    <biostatMet>-1</biostatMet>
+    <exclusionTags>
+      <!-- Matches Big and Small. -->
+      <li>BS_Passioned_Learning_Gene</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps"/>
     </modExtensions>
   </GeneDef>
 
