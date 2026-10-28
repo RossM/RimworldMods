@@ -14,6 +14,7 @@
       <XylTitan>0.025</XylTitan>
       <XylOmegabeaver>0.005</XylOmegabeaver>
       <XylScaleborn>0.005</XylScaleborn>
+      <XylSteadling>0.005</XylSteadling>
       <XylZeegee>0.005</XylZeegee>
     </value>
   </Operation>
@@ -86,6 +87,7 @@
       <XylOmegabeaver>0.01</XylOmegabeaver>
       <XylSuccuboid>0.01</XylSuccuboid>
       <XylScaleborn>0.01</XylScaleborn>
+      <XylSteadling>0.01</XylSteadling>
       <XylZeegee>0.01</XylZeegee>
     </value>
   </Operation>
