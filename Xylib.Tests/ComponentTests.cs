@@ -185,6 +185,61 @@ public sealed class ComponentTests : PawnTestFixture
     }
 
     [Test, LoadIfBiotechActive]
+    public void BonusGenesApplyToPawnLoadedFromScribe()
+    {
+        GeneDef bonus = GeneDef();
+        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
+        {
+            maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [bonus] } },
+        });
+        string path = Path.Combine(GenFilePaths.SaveDataFolderPath, "bonus-genes-pawn-test.xml");
+        ProgramState previousState = Current.ProgramState;
+        Pawn saved = pawn;
+        Ideo? ideology = saved.Ideo;
+        try
+        {
+            Scribe.saver.InitSaving(path, "BonusGenesPawnTest");
+            Scribe_Deep.Look(ref saved, "pawn");
+            Scribe.saver.FinalizeSaving();
+
+            // Remove the original pawn and its transient data, as ending its game would.
+            pawn.Destroy();
+            if (Find.WorldPawns.Contains(pawn))
+                Find.WorldPawns.RemovePawn(pawn);
+            pawn.Discard(silentlyRemoveReferences: true);
+            things.Remove(pawn);
+
+            // Game.LoadGame uses this state to suppress live life-stage transitions while loading.
+            Current.ProgramState = ProgramState.MapInitializing;
+            Pawn restored = null!;
+            Scribe.loader.InitLoading(path);
+            Scribe_Deep.Look(ref restored, "pawn");
+            things.Add(restored);
+            var directory = (LoadedObjectDirectory)typeof(CrossRefHandler)
+                .GetField("loadedObjectDirectory", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .GetValue(Scribe.loader.crossRefs)!;
+            directory.RegisterLoaded(Faction.OfPlayer);
+            if (ideology != null)
+                directory.RegisterLoaded(ideology);
+            Scribe.loader.FinalizeLoading();
+            Current.ProgramState = previousState;
+
+            Find.WorldPawns.PassToWorld(restored, RimWorld.Planet.PawnDiscardDecideMode.KeepForever);
+            EventManager.Instance.LoadedGame();
+            restored.genes.AddGene(owner, false);
+
+            Expect.IsTrue(restored.genes.Endogenes.Any(g => g.def == bonus),
+                "A loaded pawn has completed base gene generation, so newly added bonus genes must apply immediately.");
+        }
+        finally
+        {
+            Scribe.ForceStop();
+            Current.ProgramState = previousState;
+            if (File.Exists(path)) File.Delete(path);
+        }
+    }
+
+    [Test, LoadIfBiotechActive]
     public void PostGenerateGenesDoesNotRepeatAlreadyAppliedBonuses()
     {
         GeneDef first = GeneDef(), second = GeneDef();

@@ -94,6 +94,16 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     }
 
     [Test, LoadIfBiotechActive]
+    public void ListMakerWithZeroCountReturnsNoGenes()
+    {
+        GeneDef candidate = GeneDef();
+        var maker = new GeneSetMaker_List { genes = [candidate], count = IntRange.Zero };
+
+        Expect.IsEmpty(maker.Generate(pawn).GenesListForReading);
+        Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == candidate));
+    }
+
+    [Test, LoadIfBiotechActive]
     public void MakerDefRespectsPawnAndXenotypeGenesByDefault()
     {
         GeneDef existing = GeneDef(), inherited = GeneDef(), first = GeneDef(), second = GeneDef();
@@ -159,6 +169,67 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         maker.biostatMet = new IntRange(1, 3);
         maker.prohibitedGenes = [def];
         Expect.IsFalse(maker.Validate(def, new GeneSet(), GeneType.Xenogene, pawn));
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void BiostatTotalMakerWithoutShuffleUsesDeclaredOrder()
+    {
+        GeneDef first = GeneDef(), second = GeneDef();
+        first.exclusionTags = second.exclusionTags = ["TestOrderedSubmakers"];
+        var maker = new GeneSetMaker_BiostatTotal
+        {
+            count = new IntRange(2), shuffle = false,
+            subMakers = [new GeneSetMaker_List { genes = [first] }, new GeneSetMaker_List { genes = [second] }],
+        };
+
+        using (new RandBlock(72491))
+        {
+            for (int i = 0; i < 32; i++)
+                Expect.ReferencesAreEqual(first, maker.Generate(pawn).GenesListForReading.Single());
+        }
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void BiostatTotalMakerShufflesBeforeSelectingLimitedSubmakers()
+    {
+        GeneDef first = GeneDef(), second = GeneDef();
+        var maker = new GeneSetMaker_BiostatTotal
+        {
+            count = IntRange.One, shuffle = true,
+            subMakers = [new GeneSetMaker_List { genes = [first] }, new GeneSetMaker_List { genes = [second] }],
+        };
+        HashSet<GeneDef> selected = [];
+
+        using (new RandBlock(72491))
+        {
+            for (int i = 0; i < 32; i++)
+                selected.Add(maker.Generate(pawn).GenesListForReading.Single());
+        }
+
+        Expect.IsTrue(selected.Contains(first));
+        Expect.IsTrue(selected.Contains(second), "Shuffling must allow either submaker to fill the single available slot.");
+    }
+
+    [Test, LoadIfBiotechActive]
+    public void BiostatTotalMakerShufflesExecutionOrderOfConflictingSubmakers()
+    {
+        GeneDef first = GeneDef(), second = GeneDef();
+        first.exclusionTags = second.exclusionTags = ["TestShuffledSubmakers"];
+        var maker = new GeneSetMaker_BiostatTotal
+        {
+            count = new IntRange(2), shuffle = true,
+            subMakers = [new GeneSetMaker_List { genes = [first] }, new GeneSetMaker_List { genes = [second] }],
+        };
+        HashSet<GeneDef> selected = [];
+
+        using (new RandBlock(72491))
+        {
+            for (int i = 0; i < 32; i++)
+                selected.Add(maker.Generate(pawn).GenesListForReading.Single());
+        }
+
+        Expect.IsTrue(selected.Contains(first));
+        Expect.IsTrue(selected.Contains(second), "Either conflicting gene must be able to win by executing its submaker first.");
     }
 
     [Test, LoadIfBiotechActive]
