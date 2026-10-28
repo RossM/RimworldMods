@@ -1,6 +1,6 @@
 # Xyl's Xenotypes
 
-Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown stone giants, aquatic traders, and descendants of generation-ship crews. Each brings its own needs, strengths, and complications to colony life.
+Twelve xenotypes for RimWorld, from fungus-fed underground builders to vat-grown stone giants, aquatic traders, and descendants of generation-ship crews. Each brings its own needs, strengths, and complications to colony life.
 
 **Requires RimWorld 1.7 and Biotech.** Some features require Royalty, Ideology, and Odyssey.
 
@@ -14,6 +14,7 @@ Eleven xenotypes for RimWorld, from fungus-fed underground builders to vat-grown
 - [Zeegee](#-zeegee)
 - [Omegabeaver](#-omegabeaver)
 - [Scaleborn](#-scaleborn)
+- [Steadling](#-steadling)
 - [Succuboid](#-succuboid)
 - [Currently unused genes](#currently-unused-genes)
 
@@ -389,6 +390,33 @@ Each scaleborn receives one additional gene package from the list below. Scalebo
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylSkin_DarkGreen.png" alt="Dark green skin" width="80" height="80"> | [Dark green skin](../XylXenos.Data/Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylSkin_DarkBlue.png" alt="Dark blue skin" width="80" height="80"> | [Dark blue skin](../XylXenos.Data/Defs/GeneDefs/GeneDefs_SkinColors.xml) |
 
+## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylSteadling.png" alt="Steadling" width="48" height="48" align="absmiddle"> Steadling
+
+Steadlings are engineered to be trailblazers, homesteaders, and settlers. They thrive despite harsh temperatures, poor diets, and bleak conditions that would send other xenotypes running for the hills. Designed for self-sufficiency, they tend to be jacks of all trades and masters of none.
+
+Steadlings come from all walks of life, united by a desire to escape the path that others have set out for them and make their own place in the world. More than one urbworld wage slave has sunk their life's savings into a steadling gene package and a one-way ticket to the rim.
+
+### Genes
+
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Biostats | Gene | Effect |
+| --- | --- | --- | --- |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Xeno/XylStoic.png" alt="Stoic" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** <br> <img src="../XylXenos.Data/Docs/Images/Metabolism.png" alt="Metabolism" width="24" height="24" align="absmiddle"> **-1** | [Stoic](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are mentally tough and won't break down under stresses that would crack most people. <br><sub>**Forced traits:** Steadfast</sub> |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Xeno/XylDrugSensitive.png" alt="Drug sensitive" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** <br> <img src="../XylXenos.Data/Docs/Images/Metabolism.png" alt="Metabolism" width="24" height="24" align="absmiddle"> **2** | [Drug sensitive](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Drugs.xml) | Carriers of this gene are easily affected by drugs. Effects from a single dose last longer, they gain tolerance faster, and they are more likely to become addicted. <br><sub>**Addiction chance** x200% &middot; **Drug sensitivity** +40%</sub> |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Xeno/XylIndustrious.png" alt="Industrious" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **2** <br> <img src="../XylXenos.Data/Docs/Images/Metabolism.png" alt="Metabolism" width="24" height="24" align="absmiddle"> **-2** | [Industrious](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene are exceptionally fast workers. <br><sub>**Forced traits:** Hard worker</sub> |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Xeno/XylLearning_Generalist.png" alt="Generalist" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** <br> <img src="../XylXenos.Data/Docs/Images/Metabolism.png" alt="Metabolism" width="24" height="24" align="absmiddle"> **-1** | [Generalist](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are inclined to dabble in many subjects. They learn faster at skills they don't have passion in. <br><sub>**Learning rate (no passion)** +15%</sub> |
+
+**Appearance genes**
+
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Gene |
+| --- | --- |
+| <img src="../XylXenos.Data/Docs/Images/Genes/Xeno/XylEars_Cow.png" alt="Cow ears" width="80" height="80"> | [Cow ears](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Cosmetic.xml) |
+
+**Other genes and appearance**
+
+- **Traits:** strong stomach, strong immunity, psychically dull, cold tolerant, heat tolerant, smokeleaf dependency.
+- **Skills:** strong plants, strong animals, awful artistic, awful intellectual.
+- **Appearance:** cat ears, floppy ears, pig ears.
+
 ## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylSuccuboid.png" alt="Succuboid" width="48" height="48" align="absmiddle"> Succuboid
 
 Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.
@@ -436,7 +464,6 @@ These genes are available for custom xenotypes but are not part of the mod's xen
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Icon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Biostats | Gene | Effect |
 | --- | --- | --- | --- |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylEvenTemper.png" alt="Even temper" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** | [Even temper](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene have very stable neurochemistry, with less variation between individuals. |
-| <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylLearning_Generalist.png" alt="Generalist" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** <br> <img src="../XylXenos.Data/Docs/Images/Metabolism.png" alt="Metabolism" width="24" height="24" align="absmiddle"> **-1** | [Generalist](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Miscellaneous.xml) | Carriers of this gene are inclined to dabble in many subjects. They learn faster at skills they don't have passion in. <br><sub>**Learning rate (no passion)** +15%</sub> |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylGender_AlwaysMale.png" alt="Always male" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** | [Always male](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are always male.<br><br>This gene has no effect unless it is a germline gene. |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylGender_UsuallyMale.png" alt="Usually male" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** | [Usually male](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Reproduction.xml) | Carriers of this gene are mostly male.<br><br>This gene has no effect unless it is a germline gene. |
 | <img src="../XylXenos.Data/Docs/Images/Genes/Endo/XylNoEmpathy.png" alt="No empathy" width="80" height="80"> | <img src="../XylXenos.Data/Docs/Images/Complexity.png" alt="Complexity" width="24" height="24" align="absmiddle"> **1** <br> <img src="../XylXenos.Data/Docs/Images/Metabolism.png" alt="Metabolism" width="24" height="24" align="absmiddle"> **-1** | [No empathy](../XylXenos.Data/Defs/GeneDefs/GeneDefs_Traits.xml) | Carriers of this gene lack empathy. They aren't affected by the suffering of others. <br><sub>**Forced traits:** Psychopath</sub> |

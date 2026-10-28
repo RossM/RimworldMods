@@ -107,7 +107,7 @@
     <defName>XylSteadling</defName>
     <label>steadling</label>
     <description>Steadlings are engineered to be trailblazers, homesteaders, and settlers. They thrive despite harsh temperatures, poor diets, and bleak conditions that would send other xenotypes running for the hills. Designed for self-sufficiency, they tend to be jacks of all trades and masters of none.\n\nSteadlings come from all walks of life, united by a desire to escape the path that others have set out for them and make their own place in the world. More than one urbworld wage slave has sunk their life's savings into a steadling gene package and a one-way ticket to the rim.</description>
-    <descriptionShort>TODO.</descriptionShort>
+    <descriptionShort>Steadlings are engineered trailblazers, homesteaders, and settlers who thrive despite harsh temperatures, poor diets, and bleak conditions. Designed for self-sufficiency, they are jacks of all trades and masters of none.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Steadling_small</iconPath>
     <displayPriority>-202</displayPriority>
     <combatPowerFactor>1</combatPowerFactor>
