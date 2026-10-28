@@ -39,7 +39,7 @@ public class GeneCompProperties_EmergencyReserves : GeneCompProperties
         StringBuilder sb = new();
         sb.AppendLineTagged($"{"Active".Translate().CapitalizeFirst()}:".Colorize(ColoredText.TipSectionTitleColor));
         foreach (var stat in hediff.stages[^1].SpecialDisplayStats())
-            sb.AppendLine($"- {stat.LabelCap}: {stat.ValueString}");
+            sb.AppendLine($"  - {stat.LabelCap}: {stat.ValueString}");
         return sb.ToString();
     }
 }
