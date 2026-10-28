@@ -147,7 +147,7 @@
     <defName>XylScalebornLineage</defName>
     <label>scaleborn lineage</label>
     <description>Replaces itself with one of five randomly selected gene packages representing five different lineages.</description>
-    <biostatCpx>5</biostatCpx>
+    <biostatCpx>4</biostatCpx>
     <biostatMet>-5</biostatMet>
     <displayCategory>XylRandom</displayCategory>
     <displayOrderInCategory>300</displayOrderInCategory>

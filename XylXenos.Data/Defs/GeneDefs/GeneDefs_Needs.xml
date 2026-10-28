@@ -86,7 +86,7 @@
     <defName>XylJoyless</defName>
     <label>joyless</label>
     <description>Carriers of this gene are genetically incapable of feeling joy. They have no need for recreation, and get no mood bonuses or penalties from it.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>1100</displayOrderInCategory>

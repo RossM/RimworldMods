@@ -71,7 +71,7 @@
     <defName>XylStoic</defName>
     <label>stoic</label>
     <description>Carriers of this gene are mentally tough and won't break down under stresses that would crack most people.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-1</biostatMet>
     <displayCategory>Mood</displayCategory>
     <displayOrderInCategory>100</displayOrderInCategory>

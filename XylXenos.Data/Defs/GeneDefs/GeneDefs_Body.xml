@@ -77,7 +77,7 @@
     <label>scaleskin</label>
     <labelShortAdj>scaly</labelShortAdj>
     <description>Carriers of this gene grow tough but flexible scales all over their body that can deflect or absorb attacks.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-3</biostatMet>
     <displayCategory>XylBody</displayCategory>
     <displayOrderInCategory>450</displayOrderInCategory>
@@ -127,7 +127,7 @@
     <label>rockskin</label>
     <labelShortAdj>rock</labelShortAdj>
     <description>Carriers of this gene have extremely tough skin studded with rock-like plates that can deflect or absorb attacks. The inflexible skin reduces movement speed.</description>
-    <biostatCpx>1</biostatCpx>
+    <biostatCpx>2</biostatCpx>
     <biostatMet>-4</biostatMet>
     <displayCategory>XylBody</displayCategory>
     <displayOrderInCategory>460</displayOrderInCategory>
