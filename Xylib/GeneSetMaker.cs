@@ -214,6 +214,9 @@ public class GeneSetMaker_List : GeneSetMaker
         if (genes == null)
             throw new InvalidOperationException();
 
+        if (countValue <= 0)
+            return;
+
         genesTemp.Clear();
         genesTemp.AddRange(genes);
         genesTemp.Shuffle();
@@ -263,8 +266,8 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
             if (shuffle)
                 subMakersTemp.Shuffle();
 
-            for (int i = 0; i < countValue && i < subMakers.Count; i++)
-                subMakers[i].AddGenes(geneSet, geneType, pawn);
+            for (int i = 0; i < countValue && i < subMakersTemp.Count; i++)
+                subMakersTemp[i].AddGenes(geneSet, geneType, pawn);
 
             int totalBiostatArc = 0;
             int totalBiostatCpx = 0;
