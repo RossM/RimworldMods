@@ -47,6 +47,14 @@ The three-slot bed is defined in [Defs/TestBeds.xml](Defs/TestBeds.xml), so thos
 
 Fixtures create their own pawns and beds and postpone autonomous sleep and lovin' decisions so tests can control job startup. Use the real rest job giver when testing bed selection, and start jobs when a fixture needs an ongoing incoming sleeper.
 
+Every test is synchronous and simulates at most two world ticks, enforced in teardown. Most use none. Use `Find.TickManager.DoSingleTick()` only when elapsed time is part of the assertion, such as creation-tick grace expiring. Coroutine waits can overshoot their requested tick count between frames.
+
+`ArriveAtBed` places a pawn at its selected sleeping slot and delivers the real job driver's arrival notification. It preserves reservations, admission checks, claim/lay-down toils and ownership behavior while skipping path traversal, then sets the sleeping precondition for LayDown jobs. Leave incoming pawns travelling when that distinction matters.
+
+Lovin' completion cases set the private vanilla `ticksLeft` timer to its final interval, invoke one driver interval, and let the partner's driver observe completion. They retain vanilla finish actions, memories, Ideology penalties and queued sleep. Think-tree cases request `CheckForJobOverride()` directly instead of waiting for its periodic check. These tests cover those decision boundaries, not pathfinding duration, periodic scheduling or lovin' duration.
+
+Repeated random bed selections explicitly remove only the selecting pawn's temporary booking between samples. Keep the other pawns' travelling/occupied assignments intact; reservation-only expiry has separate tests.
+
 - A native reservation alone does not retain a temporary assignment. After its creation tick, the pawn must occupy the slot or travel to it. Advance a tick when testing expiry.
 - Use explicit ideoligions when testing restrictions. Vanilla can allow non-partners to share a bed. Set spouse-count precepts before converting a pawn, since conversion can remove relationships.
 - Keep `RandBlock` scopes within a single frame; do not yield inside them.
