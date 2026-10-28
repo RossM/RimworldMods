@@ -104,12 +104,56 @@
   </XenotypeDef>
 
   <XenotypeDef>
+    <defName>XylSteadling</defName>
+    <label>steadling</label>
+    <description>Steadlings are engineered to be trailblazers, homesteaders, and settlers. They thrive despite harsh temperatures, poor diets, and bleak conditions that would send other xenotypes running for the hills. Designed for self-sufficiency, they tend to be jacks of all trades and masters of none.\n\nSteadlings come from all walks of life, united by a desire to escape the path that others have set out for them and make their own place in the world. More than one urbworld wage slave has sunk their life's savings into a steadling gene package and a one-way ticket to the rim.</description>
+    <descriptionShort>TODO.</descriptionShort>
+    <iconPath>Xyl/UI/Icons/Xenotypes/Steadling_small</iconPath>
+    <displayPriority>-202</displayPriority>
+    <combatPowerFactor>1</combatPowerFactor>
+    <inheritable>false</inheritable>
+    <genes>
+      <li>StrongStomach</li>
+      <li>Immunity_Strong</li>
+      <li>PsychicAbility_Dull</li>
+      <li>XylStoic</li>
+      <li>MinTemp_SmallDecrease</li>
+      <li>MaxTemp_SmallIncrease</li>
+      <li>XylDrugSensitive</li>
+      <li>Ears_Cat</li>
+      <li>Ears_Floppy</li>
+      <li>Ears_Pig</li>
+      <li>XylEars_Cow</li>
+      <li>XylIndustrious</li>
+      <li>XylLearning_Generalist</li>
+      <li>AptitudeStrong_Plants</li>
+      <li>AptitudeStrong_Animals</li>
+      <li>AptitudeTerrible_Artistic</li>
+      <li>AptitudeTerrible_Intellectual</li>
+      <li>ChemicalDependency_Smokeleaf</li>
+    </genes>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Xenotype">
+        <allowSolidBackstories>true</allowSolidBackstories>
+        <agreeingMemes>
+          <!-- Includes rough living: welcomed -->
+          <li MayRequire="Ludeon.RimWorld.Ideology">PainIsVirtue</li>
+        </agreeingMemes>
+        <disagreeingMemes>
+          <!-- Steadlings prefer low-tech -->
+          <li MayRequire="Ludeon.RimWorld.Ideology">Transhumanist</li>
+        </disagreeingMemes>
+      </li>
+    </modExtensions>
+  </XenotypeDef>
+
+  <XenotypeDef>
     <defName>XylSuccuboid</defName>
     <label>succuboid</label>
     <description>Succuboids were created as fashionable companions for glitterworld elite, with distinctive pink skin, horns, wings, and tails. They are beautiful and charming, and intimacy gives their partners a lasting, addictive euphoria. Manual labor was never a consideration of their design, and their inherent laziness and increased need for sleep make them poor workers.\n\nWhile their origin is very similar to that of highmates, succuboids have one important difference: at some point, they took control of their own reproduction, engineering themselves with the ability to reproduce with other xenotypes and invariably produce succuboid daughters. On some worlds they are considered prestigious status symbols, on others they are valuable merchandise, and on yet others they are treated as dangerous social parasites.</description>
     <descriptionShort>Succuboids are beautiful, charming companions with pink skin, horns, wings, and tails. Intimacy gives their partners a lasting, addictive euphoria. Their inherent laziness and increased need for sleep make them poor workers.</descriptionShort>
     <iconPath>Xyl/UI/Icons/Xenotypes/Succuboid_small</iconPath>
-    <displayPriority>-202</displayPriority>
+    <displayPriority>-203</displayPriority>
     <combatPowerFactor>0.75</combatPowerFactor>
     <inheritable>true</inheritable>
     <genes>
