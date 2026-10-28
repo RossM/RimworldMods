@@ -1,7 +1,7 @@
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class EventManagerTests : IEventListener
+public sealed class EventManagerTests : SeededTestFixture, IEventListener
 {
     private EventManager manager = null!;
     private readonly EventDef signal = new() { defName = "TestSignal" };

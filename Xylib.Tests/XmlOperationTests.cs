@@ -3,7 +3,7 @@ using System.Xml;
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class XmlOperationTests
+public sealed class XmlOperationTests : SeededTestFixture
 {
     [Test]
     public void MergeCombinesContainersAndSameClassExtensions()

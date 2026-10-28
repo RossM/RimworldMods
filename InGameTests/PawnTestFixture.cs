@@ -2,7 +2,7 @@ namespace InGameTests;
 
 // Linked into both suites. Only the frequently used pawn/def construction lives here;
 // each test supplies its own behavior and values.
-public abstract class PawnTestFixture
+public abstract class PawnTestFixture : SeededTestFixture
 {
     protected Pawn pawn = null!;
     protected readonly List<Thing> things = [];

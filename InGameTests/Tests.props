@@ -9,6 +9,7 @@
     <DevToolsAssemblyPath>$(MSBuildThisFileDirectory)..\ModBin\DevTools\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)SeededTestFixture.cs" Link="SeededTestFixture.cs" />
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
     <Reference Include="DevTools" HintPath="$(DevToolsAssemblyPath)" Private="false" />
     <ProjectReference Include="$(MSBuildThisFileDirectory)DevTools\DevTools.csproj" ReferenceOutputAssembly="false" />

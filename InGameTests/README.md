@@ -45,6 +45,8 @@ XylXenos allows the exact `Failed to find faction base tile for <generated facti
 
 During launcher extraction, Yobai's unchanged Core-only suite had 106 passes and one failure in `UnrelatedAdultMakesRoomBarracks`. That case also failed with the original launcher: `IsBedInAssignedPolyculeBedroom` checks room membership and partner ownership without checking the room's barracks classification. Its test and product code were left unchanged.
 
+Every in-game fixture inherits `SeededTestFixture`, which resets the RNG to seed `1234567` before each test, ahead of pawn generation and other setup. Tests therefore start from the same random sequence whether run alone or in a suite. The configured `randSeed` still controls the surrounding game/world setup. Tests that need a different random sequence can use a short-lived `RandBlock` inside the test.
+
 ## Adding cases
 
 Create input definitions in C#, specifying values relevant to the behavior under test. `PawnTestFixture` registers synthetic gene and hediff defs, initializes a healthy adult pawn (a baseliner when Biotech is active), and removes test objects, listeners, and definitions afterward. Its shared builders are used by many tests. Keep individual cases self-contained and restore any map/global state they change in `finally`. Use DevTools' `[LoadIfBiotechActive]`, `[LoadIfRoyaltyActive]`, and similar attributes only for cases that actually require the DLC.

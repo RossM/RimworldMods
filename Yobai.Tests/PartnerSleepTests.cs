@@ -12,7 +12,7 @@ using Verse.AI.Group;
 namespace Yobai.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class PartnerSleepTests
+public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
 {
     private Pawn first = null!;
     private Pawn second = null!;

@@ -4,7 +4,7 @@ using RimWorld.Planet;
 namespace XylXenos.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class GenerationTests
+public sealed class GenerationTests : SeededTestFixture
 {
     [Test]
     public void GeneTemplateCopiesAbilityBiostatsAndClonesExtensions()
