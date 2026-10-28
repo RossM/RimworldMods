@@ -21,6 +21,9 @@ internal static class Patch_Pawn
         Scribe.EnterNode("Xylib_PawnData");
         EventManager.Instance.Notify(EventDefOf.InPawnExposeData, __instance);
         Scribe.ExitNode();
+
+        if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            PawnExtraData<GeneGenerationData>.Get(__instance).GenesGenerated = true;
     }
 
     // Note: This patch is performance-sensitive
