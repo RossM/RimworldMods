@@ -19,7 +19,7 @@
       <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
         <debugLabel>LargeHorns</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
-        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <flipWhenCrawling>true</flipWhenCrawling>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns</texPath>
         <color>(255, 255, 255)</color>
         <parentTagDef>Head</parentTagDef>
@@ -38,7 +38,7 @@
       <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
         <debugLabel>LargeHorns_Scaleskin</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
-        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <flipWhenCrawling>true</flipWhenCrawling>
         <texPath>Xyl/Things/Pawn/Humanlike/HeadAttachments/LargeHorns/LargeHorns_Dragon</texPath>
         <colorType>Skin</colorType>
         <parentTagDef>Head</parentTagDef>
