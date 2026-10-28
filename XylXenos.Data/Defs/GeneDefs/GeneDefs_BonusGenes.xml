@@ -44,11 +44,12 @@
 
   <Xylib.GeneSetMakerDef ParentName="GeneSetBiostatBase">
     <defName>XylGeneticAtavism</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
     <root Class="Xylib.GeneSetMaker_Biostats">
       <chance>0.5</chance>
-      <biostatArc>0~0</biostatArc>
+      <biostatArc>0</biostatArc>
       <biostatCpx>1~</biostatCpx>
-      <biostatMet>-2~2</biostatMet>
+      <biostatMet>-3~3</biostatMet>
     </root>    
   </Xylib.GeneSetMakerDef>
 
