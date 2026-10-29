@@ -207,6 +207,7 @@
         <debugLabel>ForeheadMark</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
         <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <shaderTypeDef>XylCutoutTransparent</shaderTypeDef>
         <parentTagDef>Head</parentTagDef>
         <drawSize>0.25</drawSize>
         <useRottenColor>true</useRottenColor>

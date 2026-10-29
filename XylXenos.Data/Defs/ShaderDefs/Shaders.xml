@@ -5,7 +5,7 @@
   <ShaderDef>
     <defName>XylCutoutComplexSkin</defName>
     <shaderProgram>
-      <fragmentShaderFileName>CutoutComplexSkin.frag.glsl</fragmentShaderFileName>
+      <fragmentShaderFileName>XylCutoutComplexSkin.frag.glsl</fragmentShaderFileName>
       <transparent>true</transparent>
       <depthWrite>true</depthWrite>
       <renderQueue>2900</renderQueue>
@@ -13,7 +13,21 @@
   </ShaderDef>
   <ShaderTypeDef>
     <defName>XylCutoutComplexSkin</defName>
-    <shaderPath>Xyl/CutoutComplexSkin</shaderPath>
+    <shaderPath>CutoutComplexSkin</shaderPath>
+  </ShaderTypeDef>
+
+  <ShaderDef>
+    <defName>XylCutoutTransparent</defName>
+    <shaderProgram>
+      <fragmentShaderFileName>XylCutoutTransparent.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <depthWrite>true</depthWrite>
+      <renderQueue>2900</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+  <ShaderTypeDef>
+    <defName>XylCutoutTransparent</defName>
+    <shaderPath>XylCutoutTransparent</shaderPath>
   </ShaderTypeDef>
 
 </Defs>
