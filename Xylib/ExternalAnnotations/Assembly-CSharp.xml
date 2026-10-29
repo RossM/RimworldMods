@@ -25,10 +25,16 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:LudeonTK.DebugActionNode.action">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="M:LudeonTK.DebugActionNode.AddChild(LudeonTK.DebugActionNode)">
     <parameter name="child">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:LudeonTK.DebugActionNode.category">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="T:LudeonTK.DebugOutputAttribute">
     <attribute ctor="M:JetBrains.Annotations.MeansImplicitUseAttribute.#ctor"/>
@@ -77,6 +83,12 @@
   <member name="M:RimWorld.Ability.CanApplyOn(Verse.LocalTargetInfo)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Ability.CanCast">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Ability.Casting">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Ability.CompOfType``1">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -93,7 +105,7 @@
   </member>
   <member name="P:RimWorld.Ability.verb">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.AbilityComp.parent">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -102,6 +114,12 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.AbilityDef.abilityClass">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.AbilityDef.iconPath">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.AbilityDef.verbProperties">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.Apparel.PawnCanWear(Verse.Pawn,System.Boolean)">
@@ -116,11 +134,48 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.ApparelProperties.tags">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Aptitude.skill">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Bill_Medical.consumedMedicine">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.BiomeDef.IsPackAnimalAllowed(Verse.ThingDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.BiomeDefOf.ColdBog">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.BiomeDefOf.TropicalSwamp">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.BodyPartTagDefOf.SightSource">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.BodyTypeDef.bodyNakedGraphicPath">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.BodyTypeGraphicData.bodyType">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.BodyTypeGraphicData.texturePath">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.BuildingProperties.IsTurret">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.ChemicalDef.addictionHediff">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.ChemicalDef.toleranceHediff">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.Command_Ability.Ability">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -131,6 +186,14 @@
   </member>
   <member name="M:RimWorld.CompAbilityEffect.Valid(Verse.LocalTargetInfo,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.CompAbilityEffect_ForceJob.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.CompAbilityEffect_GiveHediff.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.CompAbilityEffect_WithDest.CanHitTarget(Verse.LocalTargetInfo)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -143,6 +206,26 @@
     </parameter>
   </member>
   <member name="F:RimWorld.CompIngredients.ingredients">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.CompProperties_AbilityForceJob.jobDef">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.CompProperties_AbilityGiveHediff.hediffDef">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.CompProperties_Drug.chemical">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.CompProperties_UseEffectInstallImplant.hediffDef">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.CompThingContainer.ContainedThing">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.CompThingContainer.innerContainer">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -171,6 +254,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.Difficulty.ChildrenAllowed">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.DrugStatsUtility.GetChemical(Verse.ThingDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -178,8 +264,14 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.Faction.Color">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.Faction.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Faction.ideos">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.Faction.OfAncients">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -196,6 +288,37 @@
   <member name="P:RimWorld.Faction.OfPlayerSilentFail">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.allowedMemes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.colorSpectrum">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.FactionDef.Description">
+    <!-- Can leave cachedDescription null when the description is absent; also normalizes the public description field. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.disallowedMemes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.layerBlacklist">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.layerWhitelist">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.pawnsPlural">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.FactionDef.requiredMemes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.FactionDef.xenotypeSet">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -246,6 +369,11 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.FactionManager.AllFactionsVisible">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.FactionUtility.IsPoliticallyProper(Verse.Thing,Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="thing">
@@ -254,6 +382,10 @@
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.FloatMenuContext.FirstSelectedPawn">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member
     name="M:RimWorld.FloatMenuUtility.MakeMenu``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.String},System.Func{``0,System.Action})">
@@ -333,6 +465,10 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.GenConstruct.tmpIdeoMemberNames">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member
     name="M:RimWorld.GenDate.ToStringTicksToPeriod(System.Int32,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -353,8 +489,14 @@
     </parameter>
   </member>
   <member name="P:RimWorld.GeneSet.GenesListForReading">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.GeneUtility.GenesInOrder">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.GenHostility.HostileTo(Verse.Thing,Verse.Thing)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -379,11 +521,19 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.HediffDefOf.Heatstroke">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.HediffDefOf.Lactating">
+    <!-- Not populated when Biotech is inactive. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.HediffDefOf.Malnutrition">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.HediffDefOf.PsychicAmplifier">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Not populated when Royalty is inactive. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.HediffDefOf.SurgicalCut">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -399,6 +549,7 @@
     </parameter>
   </member>
   <member name="F:RimWorld.Ideo.memes">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.IdeoManager.IdeosListForReading">
@@ -414,6 +565,31 @@
     <parameter name="ideo">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.IncidentDef.diseaseIncident">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentDef.diseaseLethalLetterText">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentDef.letterDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentDef.letterLabel">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentDef.letterText">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentDef.pawnKind">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentParms.raidArrivalMode">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IncidentParms.target">
+    <!-- QuestPart_Incident clears the target between executions and resolves it when the quest fires. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.IncidentWorker.CanFireNowSub(RimWorld.IncidentParms)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -490,6 +666,12 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.IngestibleProperties.ingestCommandString">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.IngestibleProperties.sourceDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.InspirationHandler.GetRandomAvailableInspirationDef">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -520,6 +702,9 @@
   <member name="F:RimWorld.JobDefOf.TakeFromOtherInventory">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.JobDefOf.Wait_MaintainPosture">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.JobGiver_AICastAbility.DeepCopy(System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -533,10 +718,16 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.JoyGiver.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.LetterDefOf.NegativeEvent">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.LetterDefOf.NeutralEvent">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.LifeStageDefOf.HumanlikeBaby">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.MeditationFocusTypeAvailabilityCache.ClearFor(Verse.Pawn)">
@@ -586,6 +777,9 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.MessageTypeDefOf.NegativeEvent">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.MessageTypeDefOf.NegativeHealthEvent">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -613,6 +807,16 @@
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Need.CurInstantLevel">
+    <!-- Need_Beauty rebuilds the public BeautyUtility.beautyRelevantCells list. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Need.CurLevel">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Need.CurLevelPercentage">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.Need.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -620,10 +824,26 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Need.IsFrozen">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Need.LabelCap">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.Need.pawn">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.Need.threshPercents">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.NeedDef.needClass">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Need_Food.FoodFallPerTickAssumingCategory(RimWorld.HungerCategory,System.Boolean)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Need_Food.NutritionWanted">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.Need_Mood.observer">
@@ -664,8 +884,33 @@
   <member name="M:RimWorld.PawnGenerationContextUtility.Includes(RimWorld.PawnGenerationContext,RimWorld.PawnGenerationContext)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.PawnGenOption.kind">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnGroupMaker.carriers">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnGroupMakerParms.faction">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnGroupMakerParms.ideo">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnKindDefOf.Beggar">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.PawnKindDefOf.Colonist">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnKindDefOf.FleshmassNucleus">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnKindDefOf.Nociosphere">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.PawnKindDefOf.Revenant">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.PawnKindDefOf.WildMan">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -675,17 +920,17 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.PawnsFinder.AllMapsAndWorld_Alive">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.PawnsFinder.All_AliveOrDead">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -759,7 +1004,8 @@
     </parameter>
   </member>
   <member name="P:RimWorld.Pawn_AbilityTracker.AllAbilitiesForReading">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <!-- Rebuilds a shared ability list and can initialize granted abilities. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -780,10 +1026,27 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.Pawn_ApparelTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Pawn_ApparelTracker.Wear(RimWorld.Apparel,System.Boolean,System.Boolean)">
     <parameter name="newApparel">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.Pawn_ApparelTracker.WornApparel">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_FlightTracker.CanFlyNow">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_FlightTracker.Flying">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Pawn_FlightTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.Pawn_GeneTracker.AddGene(Verse.GeneDef,System.Boolean)">
     <!-- Returns null for an existing endogene, or a xenogene without Biotech installed. -->
@@ -791,6 +1054,10 @@
     <parameter name="geneDef">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.Pawn_GeneTracker.CustomXenotype">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.Pawn_GeneTracker.Endogenes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -830,6 +1097,9 @@
   <member name="F:RimWorld.Pawn_GeneTracker.iconDef">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.Pawn_GeneTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Pawn_GeneTracker.RemoveGene(Verse.Gene)">
     <parameter name="gene">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -845,19 +1115,53 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Pawn_GeneTracker.Xenotype">
+    <!-- Falls back to XenotypeDefOf.Baseliner, which is absent without Biotech. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.Pawn_GeneTracker.xenotypeName">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_GuestTracker.HostFaction">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_GuestTracker.IsPrisoner">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_GuestTracker.Recruitable">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.Pawn_GuestTracker.SetGuestStatus(RimWorld.Faction,RimWorld.GuestStatus)">
     <parameter name="newHost">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.Pawn_MutantTracker.Def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_MutantTracker.HasTurned">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Pawn_MutantTracker.HediffGiversCanGive(Verse.HediffDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="hediffDef">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.Pawn_MutantTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Pawn_NeedsTracker.food">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Pawn_NeedsTracker.joy">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Pawn_NeedsTracker.mood">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.Pawn_NeedsTracker.TryGetNeed(RimWorld.NeedDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -872,6 +1176,16 @@
   <member name="M:RimWorld.Pawn_NeedsTracker.TryGetNeed``1">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_PsychicEntropyTracker.EntropyValue">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_PsychicEntropyTracker.NeedsPsyfocus">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_PsychicEntropyTracker.Pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.Pawn_RoyaltyTracker.abilities">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -904,13 +1218,25 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="skillDef">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
   <member name="M:RimWorld.Pawn_SkillTracker.Learn(RimWorld.SkillDef,System.Single,System.Boolean,System.Boolean)">
     <parameter name="sDef">
-      <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.Pawn_StoryTracker.bodyType">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_StoryTracker.HairColor">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Pawn_StoryTracker.headType">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Pawn_StoryTracker.SkinColorOverriden">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.Planet.Caravan.PlayerPawnsForStoryteller">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -930,15 +1256,52 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.Planet.DebugArena.callback">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Planet.DebugArena.lhs">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Planet.DebugArena.rhs">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Planet.MultipleCaravansCellFinder.FindStartingCellsFor2Groups(Verse.Map,Verse.IntVec3@,Verse.IntVec3@)">
     <parameter name="map">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.Planet.PlanetLayer.Def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.PlanetTile.LayerDef">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.PlanetTile.Tile">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.PlanetTile.Valid">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.SurfaceTile.Rivers">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.Planet.Tile.Biomes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.Tile.IsCoastal">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.Tile.PrimaryBiome">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member
     name="M:RimWorld.Planet.TileFinder.RandomSettlementTileFor(RimWorld.Faction,System.Boolean,System.Predicate{RimWorld.Planet.PlanetTile})">
@@ -958,6 +1321,13 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.Planet.World.tileTemperatures">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.Planet.WorldGrid.Item(RimWorld.Planet.PlanetTile)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.Planet.WorldGrid.Surface">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -970,6 +1340,9 @@
     <parameter name="newFaction">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.Planet.WorldObject.Tile">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.Planet.WorldPawns.GetSituation(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -988,8 +1361,15 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.PlantProperties.IsTree">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.PreceptDefOf.PreferredXenotype">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Not populated when Biotech is inactive. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Precept_Xenotype.xenotype">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.PregnancyUtility.GetInheritedGeneSet(Verse.Pawn,Verse.Pawn,System.Boolean@)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -1005,6 +1385,13 @@
     <parameter name="part">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.QuestGen.QuestGen.quest">
+    <!-- Only populated while QuestGen is generating a quest; ClearQuestGenState resets it to null. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.QuestGen.QuestGen.slate">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.QuestGen.QuestGenUtility.HardcodedSignalWithQuestID(System.String)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -1030,6 +1417,9 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.QuestGen.QuestNode_Root_WandererJoin.CanBeSpace">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.QuestGen.QuestNode_Root_WandererJoin.TestRunInt(RimWorld.QuestGen.Slate)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <parameter name="slate">
@@ -1054,6 +1444,17 @@
     <parameter name="slate">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.QuestPart_Choice.Choice.rewards">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.QuestPart_Choice.choices">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.QuestPart_Choice.inSignalChoiceUsed">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.QuestUtility.IsQuestLodger(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -1154,6 +1555,13 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.Reward_Items.items">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Reward_Pawn.pawn">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="P:RimWorld.Scenario.AllParts">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -1172,12 +1580,19 @@
   <member name="M:RimWorld.ScenPart.HasNullDefs">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.ScenPart.RowHeight">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.ScenPart.Summary(RimWorld.Scenario)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <parameter name="scen">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:RimWorld.ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes.xenotypeCounts">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.ScenPart_PawnModifier.ModifyHideOffMapStartingPawnPostMapGenerate(Verse.Pawn)">
     <parameter name="p">
@@ -1225,6 +1640,16 @@
   <member name="F:RimWorld.SkillDefOf.Social">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.SkillRecord.def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.SkillRecord.Pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.SkillRecord.TotallyDisabled">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.SocialProperness.IsSociallyProper(Verse.Thing,Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="t">
@@ -1246,6 +1671,9 @@
   <member name="F:RimWorld.StatCategoryDefOf.Drug">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.StatCategoryDefOf.DrugAddiction">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.StatCategoryDefOf.Genetics">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -1265,6 +1693,7 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.StatDef.Worker">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.StatDefOf.AnimalGatherSpeed">
@@ -1278,6 +1707,9 @@
   </member>
   <member name="F:RimWorld.StatDefOf.ComfyTemperatureMin">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.StatDefOf.Fertility">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.StatDefOf.FlightCooldown">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -1323,6 +1755,12 @@
   </member>
   <member name="F:RimWorld.StatDefOf.PawnBeauty">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.StatDefOf.PsychicEntropyMax">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.StatDefOf.PsychicEntropyRecoveryRate">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.StatDefOf.PsychicSensitivity">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -1376,11 +1814,19 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.StatDrawEntry.LabelCap">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.StatDrawEntry.SetReportText(System.String)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="reportText">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.StatDrawEntry.ValueString">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.StatExtension.GetStatValue(Verse.Thing,RimWorld.StatDef,System.Boolean,System.Int32)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -1403,6 +1849,9 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.StatModifier.stat">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.StatPart.ExplanationPart(RimWorld.StatRequest)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <!-- Stat parts return null when they have no explanation for this request. -->
@@ -1415,6 +1864,17 @@
     </parameter>
   </member>
   <member name="M:RimWorld.StatRequest.ForEmpty">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.StatRequest.HasThing">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.StatRequest.Pawn">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.StatRequest.Thing">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.StatUtility.GetOffsetsAndFactorsFor(RimWorld.StatDef,Verse.Thing)">
@@ -1451,6 +1911,9 @@
   <member name="M:RimWorld.StatWorker.ShouldShowFor(RimWorld.StatRequest)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.StatWorker.stat">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.StockGenerator.GenerateThings(RimWorld.Planet.PlanetTile,RimWorld.Faction)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
@@ -1471,6 +1934,9 @@
     <parameter name="instigator">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.StunHandler.Stunned">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.TaleDefOf.DidSurgery">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -1503,6 +1969,12 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.ThingCategoryDefOf.StoneChunks">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.ThingDefOf.Filth_Water">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.ThingDefOf.Human">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -1512,10 +1984,25 @@
   <member name="F:RimWorld.Thought.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.Thought.Description">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.Thought.MoodOffset">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="F:RimWorld.Thought.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.ThoughtDef.hediff">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.ThoughtDef.requiredGenes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.ThoughtDef.stages">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.ThoughtHandler.memories">
@@ -1532,6 +2019,9 @@
     </parameter>
   </member>
   <member name="M:RimWorld.ThoughtState.ActiveAtStage(System.Int32)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.ThoughtState.Inactive">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.ThoughtState.op_Implicit(System.Boolean)~RimWorld.ThoughtState">
@@ -1591,6 +2081,28 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:RimWorld.Thought_Memory.CurStageIndex">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.TraderKindDef.stockGenerators">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.TraitDef.degreeDatas">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.TraitDegreeData.statFactors">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.TraitDegreeData.statOffsets">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.Verb_CastAbility.ability">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.WardenFeedUtility.ShouldBeFed(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="p">
@@ -1638,27 +2150,63 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.WorldObjectDefOf.Debug_Arena">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:RimWorld.XenotypeChance.#ctor(RimWorld.XenotypeDef,System.Single)">
     <parameter name="xenotype">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:RimWorld.XenotypeChance.xenotype">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.XenotypeCount.xenotype">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.XenotypeDef.AllGenes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="P:RimWorld.XenotypeDef.Archite">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.XenotypeDef.descriptionShort">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:RimWorld.XenotypeDef.genes">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.XenotypeDefOf.Baseliner">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.XenotypeDefOf.Sanguophage">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.XenotypeSet.BaselinerChance">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:RimWorld.XenotypeSet.Contains(RimWorld.XenotypeDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="xenotype">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:RimWorld.XenotypeSet.Count">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:RimWorld.XenotypeSet.Item(System.Int32)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:RimWorld.XenotypeSet.xenotypeChances">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AbilityCompProperties.compClass">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.AbilityCompProperties.ConfigErrors(RimWorld.AbilityDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -1706,11 +2254,7 @@
   </member>
   <member
     name="M:Verse.AI.Group.LordMaker.MakeNewLord(RimWorld.Faction,Verse.AI.Group.LordJob,Verse.Map,System.Collections.Generic.IEnumerable{Verse.Pawn})">
-    <!-- A missing map is rejected with a warning and a null result. -->
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>map:notnull =&gt; notnull</argument>
-    </attribute>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="faction">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
@@ -1725,11 +2269,25 @@
       <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.AI.IAttackTarget.Thing">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Job.ability">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.AI.Job.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.AI.Job.GetCachedDriverDirect">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.AI.Job.GetTarget(Verse.AI.TargetIndex)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Job.verbToUse">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.AI.JobDriver.job">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -1744,10 +2302,20 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.AI.JobDriver.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.AI.JobDriver.TargetPawnA">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.AI.JobDriver_CastAbility.MakeNewToils">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.AI.MentalBreaker.CurMood">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.AI.MentalState.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -1765,6 +2333,14 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.AI.MentalState.SocialModeMax">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.AI.MentalStateHandler.CurState">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.AI.MentalStateHandler.CurStateDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member
@@ -1785,6 +2361,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.AI.Pawn_JobTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.AI.Pawn_MindState.inspirationHandler">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -1802,6 +2381,12 @@
   </member>
   <member name="F:Verse.AI.Pawn_MindState.priorityWork">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.AI.Pawn_PathFollower.Destination">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.AI.Pawn_PathFollower.Moving">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.AI.ReservationUtility.CanReserve(Verse.Pawn,Verse.LocalTargetInfo,System.Int32,System.Int32,Verse.ReservationLayerDef,System.Boolean)">
@@ -1862,6 +2447,12 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.AI.Toil.activeSkill">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Toil.actor">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.AI.Toil.AddEndCondition(System.Func{Verse.AI.JobCondition})">
     <!-- Stored and evaluated during the job; this callback is not handled immediately. -->
     <parameter name="newEndCondition">
@@ -1877,6 +2468,16 @@
     <parameter name="newAct">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.AI.Toil.endConditions">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Toil.initAction">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.AI.Toil.tickIntervalAction">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.AI.ToilEffects.WithEffect(Verse.AI.Toil,Verse.EffecterDef,Verse.AI.TargetIndex,System.Nullable{UnityEngine.Color})">
@@ -2003,6 +2604,13 @@
   <member name="F:Verse.BodyPartRecord.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.BodyPartRecord.Label">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.BuildableDef.designationCategory">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.CellFinder.RandomClosewalkCellNear(Verse.IntVec3,Verse.Map,System.Int32,System.Predicate{Verse.IntVec3})">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <parameter name="map">
@@ -2046,6 +2654,9 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.ColorGenerator.ExemplaryColor">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.ColorGenerator.NewRandomizedColor">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
@@ -2054,6 +2665,34 @@
     <parameter name="spectrum">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.Command.defaultDesc">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command.defaultDescPostfix">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command.defaultLabel">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command.icon">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command_Action.action">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command_ActionWithCooldown.cooldownPercentGetter">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command_Toggle.isActive">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Command_Toggle.toggleAction">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.CompEquippable.PrimaryVerb">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member name="M:Verse.ContentFinder`1.Get(System.String,System.Boolean)">
     <!-- Missing content returns null even when reportFailure is true; reporting only logs an error. -->
@@ -2069,11 +2708,33 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.Current.Game">
+    <!-- No game is active on the main menu. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.DamageDef.hediff">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.DamageInfo.Amount">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.DamageInfo.Def">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.DamageInfo.Instigator">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.DamageWorker.Apply(Verse.DamageInfo,Verse.Thing)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="victim">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.DebugSettings.ShowDevGizmos">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.DebugToolsSpawning.GetCategoryForPawnKind(Verse.PawnKindDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2095,12 +2756,29 @@
   <member name="F:Verse.Def.defName">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.Def.description">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Def.descriptionHyperlinks">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.Def.GetModExtension``1">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.Def.label">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Def.LabelCap">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Def.modContentPack">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Def.modExtensions">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.DefDatabase`1.AllDefs">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2111,6 +2789,9 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.DefDatabase`1.DefCount">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.DefDatabase`1.GetNamed(System.String,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2137,6 +2818,11 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.DesignationCategoryDef.AllResolvedAndIdeoDesignators">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.DesignationCategoryDef.BuildablePreceptBuilding.#ctor(Verse.BuildableDef,RimWorld.Precept_Building)">
     <parameter name="buildable">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -2144,6 +2830,14 @@
     <parameter name="precept">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.DesignationCategoryDef.ideoBuildingDesignatorsCached">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.DesignationCategoryDef.ResolvedAllowedDesignators">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member name="M:Verse.DevelopmentalStageExtensions.Newborn(Verse.DevelopmentalStage)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2169,6 +2863,27 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.Entity.LabelShortCap">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.FactionManager">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.GameInitData">
+    <!-- InitData is absent outside new-game initialization. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.IdeoManager">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.Scenario">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.Find.Storyteller">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -2176,6 +2891,19 @@
   <member name="P:Verse.Find.TickManager">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.WindowStack">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.World">
+    <!-- Both Current.Game.World and Current.CreatingWorld can be absent. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Find.WorldGrid">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:Verse.Find.WorldPawns">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2211,6 +2939,16 @@
   <member name="M:Verse.FloatRange.Includes(System.Single)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.FloatRange.One">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.FloatRange.RandomInRange">
+    <!-- Consumes the shared random state. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.FloatRange.Zero">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.Game.DeinitAndRemoveMap(Verse.Map,System.Boolean)">
     <parameter name="map">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -2218,12 +2956,19 @@
   </member>
   <member name="M:Verse.Game.GetComponent``1">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.GameComponent_DebugTools.AddPerFrameCallback(System.Func{System.Boolean})">
     <parameter name="callback">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.GameInitData.startingAndOptionalPawns">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GameInitData.startingPossessions">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.GasUtility.IsAffectedByExposure(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2518,6 +3263,9 @@
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.Gene.Active">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Gene.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -2525,6 +3273,14 @@
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Gene.Label">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Gene.LabelCap">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Gene.pawn">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -2534,18 +3290,63 @@
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.GeneDef.abilities">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.aptitudes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.chemical">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.customEffectDescriptions">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.GeneDef.displayCategory">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.exclusionTags">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.forcedTraits">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.geneClass">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.GeneDef.Icon">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.GeneDef.iconPath">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.passionMod">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.GeneDef.prerequisite">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.GeneDef.statFactors">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.GeneDef.statOffsets">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.GeneticTraitData.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.GenFilePaths.SaveDataFolderPath">
+    <!-- Creates the save-data directory if it does not exist. -->
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member name="M:Verse.GenGrid.Impassable(Verse.IntVec3,Verse.Map)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2622,7 +3423,7 @@
     </parameter>
   </member>
   <member name="M:Verse.GenSpawn.Spawn(Verse.Thing,Verse.IntVec3,Verse.Map,Verse.Rot4,Verse.WipeMode,System.Boolean,System.Boolean)">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="newThing">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -2631,7 +3432,7 @@
     </parameter>
   </member>
   <member name="M:Verse.GenSpawn.Spawn(Verse.ThingDef,Verse.IntVec3,Verse.Map,Verse.WipeMode)">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="def">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -2765,7 +3566,7 @@
   </member>
   <member name="M:Verse.GenWorker`1.Get(System.Type)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="type">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -2785,6 +3586,17 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.Gizmo.Disabled">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Gizmo.RightClickFloatMenuOptions">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Grammar.Rule.BaseSelectionWeight">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.Grammar.Rule.DeepCopy">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -2793,6 +3605,9 @@
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <!-- Rule_String.Generate returns its output, which can be null. -->
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Grammar.Rule.keyword">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.GrammarResolverSimpleStringExtensions.Formatted(System.String,Verse.NamedArgument)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2839,8 +3654,7 @@
   </member>
   <member name="M:Verse.GraphicDatabase.Get``1(System.String)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
-    <!-- GetInner returns null if an uncached graphic is requested off the main thread. -->
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="path">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -2848,7 +3662,7 @@
   <member
     name="M:Verse.GraphicDatabase.Get``1(System.String,UnityEngine.Shader,UnityEngine.Vector2,UnityEngine.Color,UnityEngine.Color)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="path">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -2859,7 +3673,7 @@
   <member
     name="M:Verse.GraphicDatabase.Get``1(System.String,UnityEngine.Shader,UnityEngine.Vector2,UnityEngine.Color,UnityEngine.Color,Verse.GraphicData,System.String)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="path">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -2911,6 +3725,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.HeadTypeDef.graphicPath">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.HealthUtility.AdjustSeverity(Verse.Pawn,Verse.HediffDef,System.Single)">
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -2934,6 +3751,13 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.Hediff.CurStage">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Hediff.CurStageIndex">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Hediff.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -2947,10 +3771,35 @@
   <member name="M:Verse.Hediff.IsAnyStageLifeThreatening">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Hediff.Label">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Hediff.LabelBaseCap">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Hediff.LabelCap">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Hediff.LabelColor">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.Hediff.Notify_IngestedThing(Verse.Thing,System.Int32)">
     <parameter name="thing">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.Hediff.Part">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Hediff.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Hediff.Severity">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:Verse.Hediff.SeverityLabel">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -2964,15 +3813,36 @@
   <member name="M:Verse.Hediff.TendableNow(System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Hediff.Visible">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.HediffComp.CompGetGizmos">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.HediffComp.CompLabelInBracketsExtra">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp.CompShouldRemove">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp.CompTipStringExtra">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.HediffComp.parent">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.HediffComp.Pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.HediffComp.props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffCompProperties.compClass">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffCompProperties.ConfigErrors(Verse.HediffDef)">
@@ -2988,14 +3858,52 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.HediffCompProperties_TendDuration.labelSolidTendedWell">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffCompProperties_TendDuration.labelTendedWell">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffCompProperties_TendDuration.labelTendedWellInner">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffCompProperties_TendDuration.TendIsPermanent">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffCompProperties_TendDuration.TendTicksOverlap">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffCompProperties_VerbGiver.tools">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffCompProperties_VerbGiver.verbs">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_Chargeable.Charge">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.HediffComp_Chargeable.Props">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_GiveLovinMTBFactor.Props">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffComp_Lactating.AddedNutritionPerDay">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffComp_SeverityModifierBase.SeverityChangePerDay">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_SeverityPerDay.CompLabelInBracketsExtra">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_SeverityPerDay.CompTipStringExtra">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffComp_SeverityPerDay.SeverityChangePerDay">
@@ -3005,6 +3913,16 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.HediffComp_TendDuration.CompStateIcon">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_TendDuration.CompTipStringExtra">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffComp_TendDuration.IsTended">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.HediffComp_TendDuration.SeverityChangePerDay">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
@@ -3012,13 +3930,30 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.HediffDef.comps">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffDef.extraTooltip">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.HediffDef.hediffClass">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffDef.overrideTooltip">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffDef.skinShader">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffDef.spawnThingOnRemoved">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffDef.StageAtSeverity(System.Single)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.HediffDef.stages">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffGiver.ChanceFactor(Verse.Pawn)">
@@ -3038,6 +3973,10 @@
     <parameter name="cause">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.HediffGiver.partsToAffect">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffGiver.SendLetter(Verse.Pawn,Verse.Hediff)">
     <parameter name="pawn">
@@ -3070,12 +4009,8 @@
     </parameter>
   </member>
   <member name="M:Verse.HediffMaker.MakeHediff(Verse.HediffDef,Verse.Pawn,Verse.BodyPartRecord)">
-    <!-- A null pawn is invalid; MakeHediff logs an error and returns null in that case. -->
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>pawn:notnull =&gt; notnull</argument>
-    </attribute>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="def">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -3139,6 +4074,9 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.HediffSet.HasHead">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.HediffSet.HasHediff(Verse.HediffDef,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="def">
@@ -3176,6 +4114,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.HediffSet.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.HediffSet.TryGetHediff(Verse.HediffDef,Verse.Hediff@)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
@@ -3187,6 +4128,16 @@
     <parameter name="hediff">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.HediffStage.extraTooltip">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffStage.hediffGivers">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.HediffStage.overrideTooltip">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffUtility.CanHealNaturally(Verse.Hediff_Injury)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -3216,6 +4167,10 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.HediffWithComps.comps">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.HediffWithComps.DebugString">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3228,13 +4183,31 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.HediffWithComps.LabelBase">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.HediffWithComps.LabelInBrackets">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffWithComps.ShouldRemove">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:Verse.HediffWithComps.TipStringExtra">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffWithComps.Visible">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffWithParents.Father">
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.HediffWithParents.Mother">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.HediffWithParents.SetParents(Verse.Pawn,Verse.Pawn,RimWorld.GeneSet)">
     <!-- Missing parents are ignored by WorldPawns.AddPreservedPawnHediff; geneSet is also optional. -->
@@ -3248,6 +4221,26 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.IntRange.Invalid">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.IntRange.IsInvalid">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.IntRange.One">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.IntRange.RandomInRange">
+    <!-- Consumes the shared random state. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.IntRange.Zero">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.IntVec3.AngleFlat">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+
   <member name="M:Verse.IntVec3.ClampInsideMap(Verse.Map)">
     <!-- Mutates this IntVec3 before returning it. -->
     <parameter name="map">
@@ -3262,6 +4255,9 @@
   </member>
   <member name="M:Verse.IntVec3Utility.DistanceToSquared(Verse.IntVec3,Verse.IntVec3)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.JobDef.driverClass">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.JobMaker.MakeJob(Verse.JobDef,Verse.LocalTargetInfo)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -3321,6 +4317,15 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.LocalTargetInfo.Cell">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.LocalTargetInfo.Invalid">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.LocalTargetInfo.IsValid">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.LocalTargetInfo.op_Implicit(Verse.IntVec3)~Verse.LocalTargetInfo">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
@@ -3329,6 +4334,14 @@
     <parameter name="t">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.LocalTargetInfo.Pawn">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.LocalTargetInfo.Thing">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Log.Error(System.String)">
     <parameter name="text">
@@ -3370,6 +4383,7 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+
   <member name="F:Verse.Map.animalPenManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -3394,11 +4408,11 @@
   <member name="F:Verse.Map.blueprintGrid">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
-  <member name="F:Verse.Map.cellIndices">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
-  </member>
   <member name="F:Verse.Map.cellsInRandomOrder">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Map.Center">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Map.coverGrid">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3420,6 +4434,9 @@
   </member>
   <member name="F:Verse.Map.designationManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Map.Disposed">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Map.dynamicDrawManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3469,6 +4486,9 @@
   </member>
   <member name="F:Verse.Map.haulDestinationManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Map.IsPlayerHome">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Map.itemAvailability">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3529,6 +4549,7 @@
   </member>
   <member name="P:Verse.Map.Parent">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Map.passingShipManager">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3641,6 +4662,9 @@
   <member name="F:Verse.Map.thingGrid">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Map.Tile">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Map.tooltipGiverList">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
@@ -3672,17 +4696,17 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllHumanlike">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllHumanlikeSpawned">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllPawns">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -3692,42 +4716,45 @@
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.AllPawnsUnspawned">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.MapPawns.ColonistsSpawnedCount">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.MapPawns.ColonyAnimals">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.ColonySubhumansControllable">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeAdultColonistsSpawned">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonists">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonistsAndPrisoners">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonistsAndPrisonersSpawned">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.FreeColonistsSpawned">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -3741,7 +4768,7 @@
     </parameter>
   </member>
   <member name="P:Verse.MapPawns.PrisonersOfColony">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -3751,7 +4778,7 @@
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SlavesAndPrisonersOfColonySpawned">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -3766,17 +4793,17 @@
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedColonyAnimals">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedColonyMechs">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.MapPawns.SpawnedColonySubhumansPlayerControlled">
-    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
@@ -3820,6 +4847,9 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.MentalStateDef.beginLetter">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.Messages.Message(System.String,Verse.LookTargets,Verse.MessageTypeDef,System.Boolean)">
     <parameter name="text">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3849,9 +4879,8 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Mod.GetSettings``1">
-    <!-- Requesting a second settings type logs an error and returns null. -->
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Mod.SettingsCategory">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -3861,12 +4890,22 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.ModContentPack.PackageId">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.ModLister.GetActiveModWithIdentifier(System.String,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <parameter name="identifier">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.ModsConfig.BiotechActive">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.ModsConfig.IdeologyActive">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.NamedArgument.op_Implicit(System.Int32)~Verse.NamedArgument">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -3905,6 +4944,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.PassionMod.skill">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.PatchOperation.ApplyWorker(System.Xml.XmlDocument)">
     <parameter name="xml">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -3915,36 +4957,219 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.PatchOperation.sourceFile">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PatchOperationPathed.xpath">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.abilities">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Pawn.ageTracker">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="F:Verse.Pawn.apparel">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.BodySize">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Pawn.carryTracker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Removed by PawnComponentsUtility.RemoveComponentsOnKilled. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Corpse">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.CurJob">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.CurJobDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Dead">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <!-- Initial components exist on living pawns; death removes these trackers. -->
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>carryTracker</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>jobs</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>mindState</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>needs</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>stances</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>thinker</argument>
+    </attribute>
+  </member>
+  <member name="P:Verse.Pawn.DeadOrDowned">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <!-- Initial components exist on living pawns; death removes these trackers. -->
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>carryTracker</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>jobs</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>mindState</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>needs</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>stances</argument>
+    </attribute>
+    <attribute ctor="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+      <argument>false</argument>
+      <argument>thinker</argument>
+    </attribute>
+  </member>
+  <member name="P:Verse.Pawn.Downed">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Drafted">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:Verse.Pawn.Drawer">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Pawn.DrawPos">
+    <!-- DrawPos updates the pawn tweener before calculating the position. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.equipment">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.flight">
+    <!-- Added for spawning and removed on despawn. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Flying">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.genes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.guest">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.HasPsylink">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Pawn.health">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.HealthScale">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Ideo">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Inspired">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.inventory">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Pawn.IsAnimal">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsColonist">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsColonistPlayerControlled">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsColonyAnimal">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsFreeman">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsMutant">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsPlayerControlled">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsPrisoner">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsPrisonerOfColony">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.IsSlave">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Pawn.jobs">
+    <!-- Removed by PawnComponentsUtility.RemoveComponentsOnKilled. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.kindDef">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.LabelNoCountColored">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.LabelShort">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.meleeVerbs">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Pawn.MentalState">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Pawn.mindState">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Removed by PawnComponentsUtility.RemoveComponentsOnKilled. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.mutant">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.NameShortColored">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.needs">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Removed by PawnComponentsUtility.RemoveComponentsOnKilled. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.ownership">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.pather">
+    <!-- Added for spawning and removed on despawn. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.psychicEntropy">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.Pawn.RaceProps">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -3952,6 +5177,10 @@
   </member>
   <member name="F:Verse.Pawn.records">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.rotationTracker">
+    <!-- Added for spawning and removed on despawn. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Pawn.SetFaction(RimWorld.Faction,Verse.Pawn)">
     <parameter name="newFaction">
@@ -3961,11 +5190,22 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.Pawn.skills">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Pawn.stances">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Removed by PawnComponentsUtility.RemoveComponentsOnKilled. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn.story">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn.Suspended">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn.thinker">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <!-- Removed by PawnComponentsUtility.RemoveComponentsOnKilled. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Pawn.TryGetAttackVerb(Verse.Thing,System.Boolean,System.Boolean)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -3983,6 +5223,9 @@
     <parameter name="capacity">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.PawnDrawParms.pawn">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.PawnGenerationRequest.#ctor(Verse.PawnKindDef,RimWorld.Faction,RimWorld.PawnGenerationContext,System.Nullable{RimWorld.Planet.PlanetTile},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Single,Verse.Pawn,System.Single,System.Predicate{Verse.Pawn},System.Predicate{Verse.Pawn},System.Collections.Generic.IEnumerable{RimWorld.TraitDef},System.Collections.Generic.IEnumerable{RimWorld.TraitDef},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{Verse.Gender},System.String,System.String,RimWorld.RoyalTitleDef,RimWorld.Ideo,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Collections.Generic.List{Verse.GeneDef},System.Collections.Generic.List{Verse.GeneDef},RimWorld.XenotypeDef,RimWorld.CustomXenotype,System.Collections.Generic.List{RimWorld.XenotypeDef},System.Single,Verse.DevelopmentalStage,System.Func{RimWorld.XenotypeDef,Verse.PawnKindDef},System.Nullable{Verse.FloatRange},System.Nullable{Verse.FloatRange},System.Boolean,System.Boolean,System.Boolean,System.Int32,System.Int32,System.Boolean)">
@@ -4044,9 +5287,39 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.PawnGenerationRequest.AllowedDevelopmentalStages">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.Context">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.FixedGender">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.ForcedCustomXenotype">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.ForcedEndogenes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.ForcedXenogenes">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="P:Verse.PawnGenerationRequest.ForcedXenotype">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.ForceNoGear">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnGenerationRequest.KindDef">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member name="M:Verse.PawnGenerator.GeneratePawn(Verse.PawnGenerationRequest)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -4061,6 +5334,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.PawnGenerator.tmpXenotypeChances">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.PawnGenerator.XenotypesAvailableFor(Verse.PawnKindDef,RimWorld.FactionDef,RimWorld.Faction)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -4074,8 +5350,49 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
-  <member name="P:Verse.PawnKindDef.RaceProps">
+  <member name="F:Verse.PawnKindDef.apparelDisallowTags">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.apparelTags">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.defaultFactionDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.race">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnKindDef.RaceProps">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.skills">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.techHediffsTags">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.weaponTags">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnKindDef.xenotypeSet">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnRenderer.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.PawnRenderer.StatueColor">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnRenderNode.children">
+    <!-- Leaf nodes have no children array. -->
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.PawnRenderNode.ColorFor(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -4083,6 +5400,10 @@
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.PawnRenderNode.DefaultShader">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.PawnRenderNode.GraphicFor(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -4095,6 +5416,7 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:Verse.PawnRenderNode.Props">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.PawnRenderNode.TexPathFor(Verse.Pawn)">
@@ -4103,6 +5425,19 @@
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.PawnRenderNode.tree">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnRenderNodeProperties.shaderTypeDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnRenderNodeProperties.texPaths">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.PawnRenderNodeProperties.workerClass">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.PawnRenderNodeWorker.CanDrawNow(Verse.PawnRenderNode,Verse.PawnDrawParms)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -4179,6 +5514,20 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.PawnRenderTree.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn_AgeTracker.CurLifeStage">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_AgeTracker.pawn">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn_CarryTracker.CarriedThing">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member
     name="M:Verse.Pawn_CarryTracker.TryDropCarriedThing(Verse.IntVec3,Verse.ThingPlaceMode,Verse.Thing@,System.Action{Verse.Thing,System.Int32})">
     <!-- A successful drop can merge or destroy the carried thing and leave resultingThing null. -->
@@ -4207,6 +5556,10 @@
   </member>
   <member name="F:Verse.Pawn_DrawTracker.ui">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Pawn_EquipmentTracker.PrimaryEq">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.Pawn_HealthTracker.AddHediff(Verse.Hediff,Verse.BodyPartRecord,System.Nullable{Verse.DamageInfo},Verse.DamageWorker.DamageResult)">
@@ -4274,6 +5627,10 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn_InventoryTracker.innerContainer">
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Pawn_InventoryTracker.pawn">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.Pawn_StanceTracker.stagger">
@@ -4281,6 +5638,9 @@
   </member>
   <member name="F:Verse.Pawn_StanceTracker.stunner">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Prefs.DevMode">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.Projectile.Launch(Verse.Thing,UnityEngine.Vector3,Verse.LocalTargetInfo,Verse.LocalTargetInfo,Verse.ProjectileHitFlags,System.Boolean,Verse.Thing,Verse.ThingDef)">
@@ -4294,11 +5654,28 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.RaceProperties.body">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.RaceProperties.CanEverEat(Verse.ThingDef)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="t">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.RaceProperties.FleshType">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.RaceProperties.Humanlike">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.RaceProperties.IsFlesh">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Rand.Bool">
+    <!-- Consumes the shared random state. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Rand.Chance(System.Single)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -4312,12 +5689,32 @@
   <member name="M:Verse.Rand.Range(System.Single,System.Single)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.Rand.Value">
+    <!-- Increments the shared random-state iteration counter. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
   <member
     name="M:Verse.ReachabilityUtility.CanReach(Verse.Pawn,Verse.LocalTargetInfo,Verse.AI.PathEndMode,Verse.Danger,System.Boolean,System.Boolean,Verse.TraverseMode)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.RecipeDef.addsHediff">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.RecipeDef.AvailableNow">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.RecipeDef.memePrerequisitesAny">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.RecipeDef.removesHediff">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.RecipeDef.successfullyRemovedHediffMessage">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="F:Verse.RecipeWorker.recipe">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -4329,13 +5726,26 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
-  <member name="P:Verse.Room.Owners">
+  <member name="P:Verse.Room.IsPrisonCell">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Room.Owners">
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Rot4.FromAngleFlat(System.Single)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Rot4.IsHorizontal">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Rot4.Opposite">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Rot4.Random">
+    <!-- Consumes the shared random state. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Scribe.EnterNode(System.String)">
     <parameter name="nodeName">
@@ -4418,6 +5828,12 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.ShaderDatabase.CutoutComplex">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ShaderDatabase.CutoutSkinOverlay">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.ShaderDatabase.LoadShader(System.String)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
@@ -4425,7 +5841,18 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.ShaderTypeDef.Shader">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.SimpleCurve.Evaluate(System.Single)">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.SkillRange.Range">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.SkillRange.Skill">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.StartingPawnUtility.GetGenerationRequest(System.Int32)">
@@ -4475,18 +5902,70 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.TargetInfo.Thing">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.TerrainDef.HasTag(System.String)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <parameter name="tag">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.TerrainDef.IsWater">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Text.Font">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.TextureAndColor.None">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.AmbientTemperature">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="F:Verse.Thing.def">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.Destroyed">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.Faction">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:Verse.Thing.Graphic">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.IngestibleNow">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.Label">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.LabelShort">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.Map">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.MapHeld">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.ParentHolder">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.Position">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Thing.Rotation">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="P:Verse.Thing.Spawned">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -4495,6 +5974,13 @@
       rotationTracker, pather, natives, filth, roping, flight
     Unfortunately there does not seem to be a way to tell Resharper this.
     -->
+  </member>
+  <member name="P:Verse.Thing.SpawnedParentOrMe">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingComp.parent">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.ThingCompUtility.TryGetComp``1(Verse.Thing)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -4506,14 +5992,58 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="F:Verse.ThingDef.apparel">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.ThingDef.BaseMarketValue">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.building">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.entityDefToBuild">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.ThingDef.GetCompProperties``1">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.ingestible">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.ThingDef.IsApparel">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.ThingDef.IsCorpse">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.ThingDef.IsDrug">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.ThingDef.IsIngestible">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.plant">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.projectile">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.race">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.ThingDef.thingCategories">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.ThingDefCount.#ctor(Verse.ThingDef,System.Int32)">
     <parameter name="thingDef">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.ThingDefCount.ThingDef">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.ThingMaker.MakeThing(Verse.ThingDef,Verse.ThingDef)">
     <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
@@ -4543,12 +6073,19 @@
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
+  <member name="P:Verse.TickManager.TicksGame">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.ToilMaker.MakeToil(System.String)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="debugName">
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.Tool.LabelCap">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
   <member name="M:Verse.Translator.CanTranslate(System.String)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -4609,6 +6146,16 @@
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="P:Verse.Verb.HediffCompSource">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.Verb.IsMeleeAttack">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Verb.verbProps">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="M:Verse.VerbProperties.AdjustedArmorPenetration(Verse.Tool,Verse.Pawn,Verse.Thing,Verse.HediffComp_VerbGiver)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -4671,6 +6218,18 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.VerbProperties.IsMeleeAttack">
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.VerbProperties.meleeDamageDef">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.VerbProperties.targetParams">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.VerbProperties.verbClass">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.VerbUtility.CalculateAdjustedForcedMiss(System.Single,Verse.IntVec3)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
   </member>
@@ -4686,6 +6245,17 @@
       <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
       <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     </parameter>
+  </member>
+  <member name="F:Verse.VerbUtility.VerbPropertiesWithSource.tool">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
+  <member name="P:Verse.VerbUtility.VerbPropertiesWithSource.ToolCapacity">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+
+  <member name="F:Verse.VerbUtility.VerbPropertiesWithSource.verbProps">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.Widgets.ButtonText(UnityEngine.Rect,System.String,System.Boolean,System.Boolean,System.Boolean,System.Nullable{UnityEngine.TextAnchor})">
@@ -4717,6 +6287,13 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
   </member>
+  <member name="P:Verse.Window.InitialSize">
+    <!-- Some overrides, such as Dialog_NodeTree.InitialSize, change Text.Font. -->
+    <attribute ctor="M:JetBrains.Annotations.MustUseReturnValueAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.Window.optionalTitle">
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+  </member>
   <member name="M:Verse.WindowStack.Add(Verse.Window)">
     <parameter name="window">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
@@ -4724,6 +6301,12 @@
   </member>
   <member name="M:Verse.WorldPollutionUtility.CalculateNearbyPollutionScore(RimWorld.Planet.PlanetTile)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.XmlContainer.node">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+  </member>
+  <member name="F:Verse.XmlToObjectUtils.customDataLoadMethodCache">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
 
 </assembly>
