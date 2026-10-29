@@ -84,9 +84,7 @@ public class Need_Wetness : Need_Seeker
         if (caravan != null)
         {
             var tile = Find.WorldGrid[caravan.Tile];
-            if (tile.IsCoastalOrRiverTile)
-                return 1.0f;
-            if (tile.IsWetlandBiome)
+            if (tile.IsCoastalOrRiverTile || tile.IsWetlandBiome)
                 return 1.0f;
             return RainfallToWetnessCurve.Evaluate(tile.rainfall);
         }
