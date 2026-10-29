@@ -319,7 +319,7 @@ Even the most colossal spaceborn habitat can eventually break down due to centur
 
 - **Traits:** weak immunity, weak melee damage, delicate, low gravity adapted (Odyssey), quick study, dark vision, indoor dweller.
 - **Skills:** strong shooting, poor melee, poor animals, strong intellectual.
-- **Appearance:** short-haired.
+- **Appearance:** short-haired, snow-white hair, gray hair, dark-black hair.
 
 ## <img src="../XylXenos.Data/Docs/Images/Xenotypes/XylOmegabeaver.png" alt="Omegabeaver" width="48" height="48" align="absmiddle"> Omegabeaver
 
