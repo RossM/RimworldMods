@@ -223,7 +223,7 @@
           <li>South</li>
           <li>West</li>
         </visibleFacing>
-        <narrowCrownHorizontalOffset>0.08</narrowCrownHorizontalOffset>
+        <narrowCrownHorizontalOffset>0.07</narrowCrownHorizontalOffset>
         <!-- Layer 53 would draw over the tattoo but under the hair. However, it looks better over the hair. -->
         <baseLayer>63</baseLayer>
         <drawData>
