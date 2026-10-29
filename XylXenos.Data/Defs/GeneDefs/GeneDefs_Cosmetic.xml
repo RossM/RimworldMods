@@ -206,7 +206,7 @@
       <li>
         <debugLabel>ForeheadMark</debugLabel>
         <nodeClass>PawnRenderNode_AttachmentHead</nodeClass>
-        <workerClass>PawnRenderNodeWorker_FlipWhenCrawling</workerClass>
+        <workerClass>XylXenos.PawnRenderNodeWorker_ForeheadMark</workerClass>
         <shaderTypeDef>XylCutoutTransparent</shaderTypeDef>
         <parentTagDef>Head</parentTagDef>
         <drawSize>0.25</drawSize>
@@ -219,13 +219,21 @@
           <li>Xyl/Things/Pawn/Humanlike/HeadAttachments/ForeheadMark/ForeheadMark_D</li>
         </texPaths>
         <visibleFacing>
-          <!--<li>East</li>-->
+          <li>East</li>
           <li>South</li>
-          <!--<li>West</li>-->
+          <li>West</li>
         </visibleFacing>
-        <narrowCrownHorizontalOffset>0.03</narrowCrownHorizontalOffset>
+        <narrowCrownHorizontalOffset>0.08</narrowCrownHorizontalOffset>
         <!-- Layer 53 would draw over the tattoo but under the hair. However, it looks better over the hair. -->
         <baseLayer>63</baseLayer>
+        <drawData>
+          <dataEast>
+            <offset>(0.25, 0, 0)</offset>
+          </dataEast>
+          <dataWest>
+            <offset>(-0.25, 0, 0)</offset>
+          </dataWest>
+        </drawData>
       </li>
     </renderNodeProperties>
     <randomBrightnessFactor>0.18</randomBrightnessFactor>
