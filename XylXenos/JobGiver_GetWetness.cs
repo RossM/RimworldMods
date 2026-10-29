@@ -61,6 +61,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     public static bool IsValidWaterTileFor(Pawn pawn, IntVec3 x)
     {
         DebugAssert.NotNull(pawn.Map);
+        DebugAssert.False(pawn.Dead);
 
         if (!x.InAllowedArea(pawn))
             return false;
@@ -128,6 +129,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
 
     public override float GetPriority(Pawn pawn)
     {
+        DebugAssert.False(pawn.Dead);
+
         var need = pawn.needs.TryGetNeed<Need_Wetness>();
         if (need == null)
             return 0.0f;

@@ -11,6 +11,7 @@ public class JobDriver_Soak : JobDriver
     protected override IEnumerable<Toil> MakeNewToils()
     {
         DebugAssert.NotNull(pawn);
+        DebugAssert.False(pawn.Dead);
 
         var need = pawn.needs.TryGetNeed<Need_Wetness>();
 

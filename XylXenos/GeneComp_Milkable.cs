@@ -141,6 +141,8 @@ public class GeneComp_Milkable : GeneComp
 
     public void Notify_Milked(Pawn doer)
     {
+        DebugAssert.False(Pawn.Dead);
+
         lastMilkedTick = Find.TickManager.TicksGame;
 
         if (Props.milkedThoughts is not { Count: > 0 })

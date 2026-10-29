@@ -350,7 +350,7 @@ public static class PatchHelpers
     }
 
     public static bool DocileAndHappy(Pawn pawn) =>
-        pawn.genes?.HasActiveGene(MyDefOf.XylDocile) is true && pawn.mindState.mentalBreaker is { CurMood: >= DocileHappyThreshold };
+        pawn.genes?.HasActiveGene(MyDefOf.XylDocile) is true && pawn.mindState?.mentalBreaker is { CurMood: >= DocileHappyThreshold };
 
     public static bool GenesEnableMeditationDef(Pawn p, MeditationFocusDef type, [NotNullWhen(true)] out GeneWithComps? gene)
     {

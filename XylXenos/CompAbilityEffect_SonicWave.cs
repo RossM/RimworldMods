@@ -31,6 +31,8 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
             var thingList = item.GetThingList(map);
             foreach (var targetPawn in thingList.OfType<Pawn>())
             {
+                DebugAssert.NotNull(targetPawn.stances);
+
                 if (!targetPawn.RaceProps.IsFlesh)
                     continue;
                 targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), parent.pawn, addBattleLog: false);
@@ -67,6 +69,8 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
                 List<Thing> thingList = item.GetThingList(parent.pawn.Map);
                 foreach (var targetPawn in thingList.OfType<Pawn>())
                 {
+                    DebugAssert.NotNull(targetPawn.stances);
+
                     if (targetPawn.RaceProps.IsFlesh && !targetPawn.stances.stunner.Stunned)
                     {
                         if (targetPawn != parent.pawn && targetPawn.Faction == parent.pawn.Faction)

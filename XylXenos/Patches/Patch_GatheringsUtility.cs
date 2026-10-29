@@ -8,6 +8,8 @@ public static class Patch_GatheringsUtility
     [Target(nameof(GatheringsUtility.ShouldPawnKeepGathering))]
     public static void ShouldPawnKeepGathering_Postfix(Pawn p, GatheringDef gatheringDef, ref bool __result)
     {
+        DebugAssert.False(p.Dead);
+
         if (gatheringDef.respectTimetable && p.needs.joy == null)
             __result = false;
     }

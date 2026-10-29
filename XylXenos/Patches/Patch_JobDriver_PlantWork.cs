@@ -8,7 +8,7 @@ public static class Patch_JobDriver_PlantWork
     [Target(nameof(JobDriver_PlantWork.WorkDonePerTick))]
     public static void WorkDonePerTick_Postfix(Pawn actor, Plant plant, ref float __result)
     {
-        if (plant.def.plant.IsTree)
+        if (plant.def.plant is { IsTree: true })
             __result *= actor.GetStatValue(MyDefOf.XylTreeCuttingSpeed);
     }
 }

@@ -25,7 +25,7 @@ public class HediffComp_SetNeed : HediffComp
     {
         get
         {
-            DebugAssert.NotNull(Pawn);
+            DebugAssert.NotNull(Pawn?.needs);
 
             return field ??= Pawn.needs.TryGetNeed(Props.need);
         }

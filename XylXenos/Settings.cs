@@ -47,7 +47,7 @@ public class Settings : ModSettings
 
         listing.Gap();
         if (listing.ButtonText("XylEnableDisableXenotypes".Translate()))
-            Find.WindowStack.Add(new Dialog_EnableDisableXenotypes(this));
+            Find.WindowStack!.Add(new Dialog_EnableDisableXenotypes(this));
 
         listing.End();
     }

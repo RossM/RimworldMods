@@ -36,7 +36,7 @@ public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
 
         DebugAssert.NotNull(DefExt.job.driverClass);
 
-        var worker = GenWorker<JobDriver_InteractWithPawn>.Get(DefExt.job.driverClass)!;
+        var worker = GenWorker<JobDriver_InteractWithPawn>.Get(DefExt.job.driverClass);
         worker.pawn = pawn;
         if (!worker.ValidateTarget(target))
             return false;

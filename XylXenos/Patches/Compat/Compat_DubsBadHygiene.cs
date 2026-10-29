@@ -14,6 +14,7 @@ public static class Compat_DubsBadHygiene
     public static void AddFinishAction_Postfix(Toil __instance, [Field("job", Scope.Outer)] Job job, [Field("pawn", Scope.Outer)] Pawn pawn)
     {
         Pawn washedPawn = job.def.defName == "washPatient" ? (Pawn)job.targetA.Thing : pawn;
+        DebugAssert.False(washedPawn.Dead);
 
         if (__instance.endConditions is not { Count: >= 1 })
             return;

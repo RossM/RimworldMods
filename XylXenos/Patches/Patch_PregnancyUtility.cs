@@ -41,7 +41,7 @@ public static class Patch_PregnancyUtility
 
         static List<GeneDef> InheritableGenesFrom(Pawn pawn) =>
         [
-            .. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene is
+            .. pawn.genes!.Endogenes.Select(gene => gene.def).Where(gene => gene is
                 { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) }),
         ];
     }
@@ -60,7 +60,7 @@ public static class Patch_PregnancyUtility
         return;
 
         static List<GeneDef> InheritableGenesFrom(Pawn pawn) =>
-            [.. pawn.genes.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
+            [.. pawn.genes!.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
     }
 
     [Feature(typeof(GeneCompProperties_Inheritance))]

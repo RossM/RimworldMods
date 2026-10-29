@@ -57,14 +57,14 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
     public const int StageCount = (int)Stages.Coma + 1;
 
-    public override string? TipStringExtra
+    public override string TipStringExtra
     {
         get
         {
             DebugAssert.NotNull(def.stages);
             DebugAssert.True(def.stages.Count >= StageCount);
 
-            string? text = base.TipStringExtra;
+            string text = base.TipStringExtra;
 
             HediffComp_SeverityPerDay? comp = GetComp<HediffComp_SeverityPerDay>();
             if (comp is null)
@@ -191,6 +191,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
     public override void Notify_IngestedThing(Thing food, int numTaken)
     {
         DebugAssert.NotNull(pawn);
+        DebugAssert.False(pawn.Dead);
 
         float nutrition = FoodUtility.NutritionForEater(pawn, food);
 

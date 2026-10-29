@@ -93,7 +93,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
         if (pawn.health.hediffSet.PartIsMissing(part))
             return;
 
-        var medicine = (bill as Bill_Medical)?.consumedMedicine?.Keys
+        var medicine = (bill as Bill_Medical)?.consumedMedicine.Keys
             .OrderByDescending(medicine => medicine.GetStatValueAbstract(StatDefOf.MedicalPotency)).FirstOrDefault();
 
         var quality = TendUtility.CalculateBaseTendQuality(billDoer, pawn, medicine);

@@ -16,7 +16,7 @@ public class Dialog_EnableDisableXenotypes : Window
     public Dialog_EnableDisableXenotypes(Settings settings)
     {
         this.settings = settings;
-        xenotypes = DefDatabase<XenotypeDef>.AllDefs.OrderByDescending(xenotype => xenotype.displayPriority).ToList();
+        xenotypes = [.. DefDatabase<XenotypeDef>.AllDefs.OrderByDescending(xenotype => xenotype.displayPriority)];
         optionalTitle = "XylEnableDisableXenotypes".Translate();
         doCloseButton = true;
         doCloseX = true;
@@ -74,7 +74,7 @@ public class Dialog_EnableDisableXenotypes : Window
     public override void PostClose()
     {
         if (!newDisabledXenotypes.SetEquals(settings.disabledXenotypes))
-            Find.WindowStack.Add(new Dialog_MessageBox(
+            Find.WindowStack!.Add(new Dialog_MessageBox(
                 "XylXenotypeSelectionRestartWarning".Translate(),
                 "Yes".Translate(),
                 () =>

@@ -9,6 +9,8 @@ public static class Patch_JoyUtility
     [Target(nameof(JoyUtility.EnjoyableOutsideNow), typeof(Pawn), typeof(StringBuilder))]
     public static bool EnjoyableOutsideNow_Prefix(Pawn pawn, Map map, StringBuilder? outFailReason, out bool __result)
     {
+        DebugAssert.False(pawn.Dead);
+
         __result = false;
 
         if (pawn.needs.TryGetNeed<Need_Wetness>() != null)

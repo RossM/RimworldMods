@@ -42,7 +42,7 @@ public abstract class JobDriver_InteractWithPawn : JobDriver
         toil.tickIntervalAction = delta => { InteractionTickInterval(toil, delta); };
         toil.AddFinishAction(() =>
         {
-            if (Target != null && Target.CurJobDef == JobDefOf.Wait_MaintainPosture)
+            if (Target != null && Target.jobs?.curJob?.def == JobDefOf.Wait_MaintainPosture)
                 Target.jobs.EndCurrentJob(JobCondition.InterruptForced);
         });
         toil.FailOnDespawnedOrNull(TargetIndex.A);

@@ -44,7 +44,7 @@ public class QuestNode_RefugeePodCrash_Space : QuestNode_Root_RefugeePodCrash
         }
 
         DebugAssert.NotNull(pawn);
-        pawn.guest.Recruitable = true;
+        pawn.guest?.Recruitable = true;
 
         return pawn;
     }

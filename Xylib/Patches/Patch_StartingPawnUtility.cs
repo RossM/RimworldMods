@@ -23,7 +23,7 @@ internal static class Patch_StartingPawnUtility
             return;
         sentEvent = true;
 
-        var items = Find.GameInitData?.startingPossessions?[pawn];
+        var items = Find.GameInitData?.startingPossessions[pawn];
         EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, items);
     }
 }

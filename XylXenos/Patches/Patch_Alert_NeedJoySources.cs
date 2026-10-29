@@ -8,7 +8,7 @@ public static class Patch_Alert_NeedJoySources
     [Target("NeedJoySource")]
     public static void NeedJoySource_Postfix(Map map, ref bool __result)
     {
-        if (!map.mapPawns.FreeColonists.Any(pawn => pawn.needs.joy != null))
+        if (!map.mapPawns.FreeColonists.Any(pawn => pawn.needs?.joy != null))
             __result = false;
     }
 }

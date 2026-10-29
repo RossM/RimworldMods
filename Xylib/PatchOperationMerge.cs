@@ -42,6 +42,7 @@ public class PatchOperationMerge : PatchOperationPathed
 
     public readonly bool debug = false;
 
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (var error in base.ConfigErrors())

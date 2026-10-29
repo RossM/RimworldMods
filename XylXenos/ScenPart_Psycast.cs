@@ -15,7 +15,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
         return
         [
             .. DefDatabase<AbilityDef>.AllDefsListForReading.Where(abilityDef =>
-                    abilityDef.verbProperties?.verbClass == typeof(Verb_CastPsycast))
+                    abilityDef.verbProperties.verbClass == typeof(Verb_CastPsycast))
                 .OrderBy(abilityDef => abilityDef.level)
                 .ThenBy(AbilityDef => AbilityDef.label),
         ];

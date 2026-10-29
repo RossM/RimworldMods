@@ -32,6 +32,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     public override void Apply(LocalTargetInfo target, LocalTargetInfo dest)
     {
+        DebugAssert.NotNull(parent.pawn.carryTracker);
+
         // During targeting, there are two targets. However, when we actually get activated by
         // JobDriver_CastWithHeldThing, the destination (target B) becomes the primary target. Otherwise
         // the targeter would abort because target A is in our inventory and no longer spawned.
@@ -44,6 +46,8 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
     {
         Pawn pawn = parent.pawn;
         DebugAssert.NotNull(pawn.Map);
+        DebugAssert.NotNull(pawn.carryTracker);
+
 
         var projectile = (Projectile?)GenSpawn.Spawn(Props.projectileDef, pawn.Position, pawn.Map);
         DebugAssert.NotNull(projectile);
@@ -51,7 +55,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         Thing? thing = pawn.carryTracker.CarriedThing;
         DebugAssert.NotNull(thing);
 
-        if (projectile.GetComp<CompThingContainer>()?.innerContainer?.TryAddOrTransfer(thing) is not true)
+        if (projectile.GetComp<CompThingContainer>()?.innerContainer.TryAddOrTransfer(thing) is not true)
         {
             Log.Warning($"Failed to add thing to projectile: projectile={projectile} thing={thing}");
             return;
@@ -71,14 +75,14 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
                 if (forcedMissTarget != target.Cell)
                 {
                     projectile.Launch(pawn, pawn.DrawPos, forcedMissTarget, target, ProjectileHitFlags.NonTargetWorld,
-                        parent.verb?.preventFriendlyFire ?? false);
+                        parent.verb.preventFriendlyFire);
                     return;
                 }
             }
         }
 
         projectile.Launch(pawn, pawn.DrawPos, target, target, ProjectileHitFlags.IntendedTarget | ProjectileHitFlags.NonTargetWorld,
-            parent.verb?.preventFriendlyFire ?? false);
+            parent.verb.preventFriendlyFire);
     }
 
     public override bool Valid(LocalTargetInfo target, bool showMessages = false)

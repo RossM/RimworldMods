@@ -40,7 +40,7 @@ public class ThoughtWorker_Need : ThoughtWorker
         if (ThoughtUtility.ThoughtNullified(p, def))
             return ThoughtState.Inactive;
 
-        var need = p.needs.TryGetNeed(DefExt.need);
+        var need = p.needs?.TryGetNeed(DefExt.need);
         if (need == null)
             return ThoughtState.Inactive;
 

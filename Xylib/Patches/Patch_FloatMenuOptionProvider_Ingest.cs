@@ -24,7 +24,7 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
         if (context.FirstSelectedPawn.ChemicalIsAllowedByGenes(chemical))
             return;
 
-        string text = !clickedThing.def.ingestible.ingestCommandString.NullOrEmpty()
+        string text = !clickedThing.def.ingestible!.ingestCommandString.NullOrEmpty()
             ? clickedThing.def.ingestible.ingestCommandString.Formatted(clickedThing.LabelShort)
             : "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
 

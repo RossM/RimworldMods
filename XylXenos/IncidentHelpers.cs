@@ -19,8 +19,7 @@ public static class IncidentHelpers
             for (int i = 0; i < xenotypeSet.Count; i++)
             {
                 var entry = xenotypeSet[i];
-                if (entry != null)
-                    weights[entry.xenotype] = weights.GetWithFallback(entry.xenotype) + entry.chance;
+                weights[entry.xenotype] = weights.GetWithFallback(entry.xenotype) + entry.chance;
             }
         }
 

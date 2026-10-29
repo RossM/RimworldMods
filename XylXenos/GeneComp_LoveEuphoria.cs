@@ -77,6 +77,8 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
 
         AddHediff(partner, Props.highHediff);
 
+        DebugAssert.False(partner.Dead);
+
         partner.needs.TryGetNeed(Props.need)?.CurLevel += Props.needOffset;
     }
 

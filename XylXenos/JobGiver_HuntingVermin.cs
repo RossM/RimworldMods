@@ -5,6 +5,8 @@ public class JobGiver_HuntingVermin : ThinkNode_JobGiver
 {
     protected override Job? TryGiveJob(Pawn pawn)
     {
+        DebugAssert.False(pawn.Dead);
+
         Job job;
 
         if (pawn.MentalState is not MentalState_HuntingVermin mentalState)

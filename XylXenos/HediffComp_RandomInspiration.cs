@@ -37,6 +37,7 @@ public class HediffComp_RandomInspiration : HediffComp
     private void GiveInspiration()
     {
         DebugAssert.NotNull(Pawn);
+        DebugAssert.False(Pawn.Dead);
 
         var inspiration = Pawn.mindState.inspirationHandler.GetRandomAvailableInspirationDef();
         if (inspiration == null)

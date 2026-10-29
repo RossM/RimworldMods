@@ -43,6 +43,8 @@ public class GeneTracker_Xylib : GeneTracker
 
         if (Pawn.genes == null)
             return;
+        if (Pawn.Dead)
+            return;
 
         foreach (var gene in Pawn.ActiveGenesOfType<GeneWithComps>())
         {
@@ -56,6 +58,8 @@ public class GeneTracker_Xylib : GeneTracker
 
             if (def.CompProps<GeneCompProperties_RenderNodeModifiers>() is { } renderNodeModifiers)
             {
+                DebugAssert.NotNull(Pawn.story);
+
                 if (renderNodeModifiers.bodyTypeGraphics?.TryGetValue(Pawn.story.bodyType, out var graphic) is true)
                     bodyGraphicOverride = graphic;
                 bodyOffset += renderNodeModifiers.bodyOffset;

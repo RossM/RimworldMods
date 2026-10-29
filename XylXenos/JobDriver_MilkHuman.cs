@@ -62,10 +62,10 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
     protected override void InteractionTickInterval(Toil toil, int delta)
     {
-        Pawn? actor = toil.actor;
+        Pawn actor = toil.actor;
 
-        DebugAssert.NotNull(actor);
         DebugAssert.NotNull(actor.skills);
+        DebugAssert.False(actor.Dead);
 
         actor.skills.Learn(SkillDefOf.Animals, 0.13f * delta);
         gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * delta;

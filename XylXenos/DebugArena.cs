@@ -355,8 +355,7 @@ public static class DebugArena
             sb.AppendLine($"{def.defName}: {def.combatPower} combat power, {wins[def]} wins / {total[def]} total");
         Debug.Log(sb.ToString());
 
-        GameComponent_DebugTools? debugTools = Current.Game.GetComponent<GameComponent_DebugTools>();
-        DebugAssert.NotNull(debugTools);
+        GameComponent_DebugTools debugTools = Current.Game.GetComponent<GameComponent_DebugTools>();
 
         debugTools.AddPerFrameCallback(delegate
         {
@@ -476,7 +475,7 @@ public static class DebugArena
         DebugAssert.NotNull(Current.Game);
 
         var tile = TileFinder.RandomSettlementTileFor(Faction.OfPlayer, mustBeAutoChoosable: true,
-            tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race!)));
+            tile => lhs.Concat(rhs).Any(def => Find.World.tileTemperatures.SeasonAndOutdoorTemperatureAcceptableFor(tile, def.race)));
         Map map = GetOrGenerateMapUtility.GetOrGenerateMap(tile, new IntVec3(50, 1, 50), WorldObjectDefOf.Debug_Arena);
 
         try

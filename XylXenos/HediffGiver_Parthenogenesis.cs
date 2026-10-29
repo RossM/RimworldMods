@@ -7,6 +7,8 @@ public class HediffGiver_Parthenogenesis : HediffGiver_Random
     {
         if (!pawn.ageTracker.CurLifeStage.reproductive)
             return 0f;
+        if (!ModsConfig.BiotechActive)
+            return 0f;
 
         // Pawns which are pregnant, sterilized, etc. can't get parthenogenetic pregnancy
         if (pawn.health.hediffSet.HasHediffPreventsPregnancy())
@@ -15,7 +17,7 @@ public class HediffGiver_Parthenogenesis : HediffGiver_Random
         // Only apply the stat parts from Fertility, which cover age and hediffs. We deliberately ignore fertility
         // modifications from genes.
         float fertility = 1.0f;
-        StatDefOf.Fertility.Worker.FinalizeValue(StatRequest.For(pawn), ref fertility, true);
+        StatDefOf.Fertility!.Worker.FinalizeValue(StatRequest.For(pawn), ref fertility, true);
 
         return fertility;
     }

@@ -12,7 +12,7 @@ public static class Patch_RecipeWorker
             return;
         if (!pawn.HasActiveGene(MyDefOf.XylBioRejection))
             return;
-        if (!__instance.recipe.addsHediff.countsAsAddedPartOrImplant)
+        if (__instance.recipe.addsHediff?.countsAsAddedPartOrImplant is not true)
             return;
         __result += $" ({"XylCausesBioRejection".Translate()})";
     }

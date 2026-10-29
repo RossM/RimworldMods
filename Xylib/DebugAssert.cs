@@ -37,4 +37,19 @@ public static class DebugAssert
 
         Log.ErrorOnce($"[{filePath}:{lineNumber}] {value} is not true");
     }
+
+    [Conditional("DEBUG")]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void False(
+        [DoesNotReturnIf(true)] bool value,
+        [CallerArgumentExpression(nameof(value))]
+        string valueExpression = "value",
+        [CallerFilePath] string filePath = "??",
+        [CallerLineNumber] int lineNumber = 0)
+    {
+        if (!value)
+            return;
+
+        Log.ErrorOnce($"[{filePath}:{lineNumber}] {value} is not false");
+    }
 }

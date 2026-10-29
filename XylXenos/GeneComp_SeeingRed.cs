@@ -17,7 +17,7 @@ public class GeneCompProperties_SeeingRed : GeneCompProperties
             chance.ToStringPercent(), "XylRageChanceDesc".TranslateSimple(), 1);
     }
 
-    public override string? ExtraGeneEffectDescription()
+    public override string ExtraGeneEffectDescription()
     {
         StringBuilder sb = new();
         sb.AppendLineTagged($"{"Active".Translate().CapitalizeFirst()}:".Colorize(ColoredText.TipSectionTitleColor));

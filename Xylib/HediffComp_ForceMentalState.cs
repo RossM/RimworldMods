@@ -23,6 +23,7 @@ public class HediffComp_ForceMentalState : HediffComp
         get
         {
             DebugAssert.NotNull(Pawn);
+            DebugAssert.False(Pawn.Dead);
 
             return Pawn.mindState.mentalStateHandler.CurStateDef != Props.mentalState;
         }
@@ -31,6 +32,7 @@ public class HediffComp_ForceMentalState : HediffComp
     public override void CompPostPostAdd(DamageInfo? dinfo)
     {
         DebugAssert.NotNull(Pawn);
+        DebugAssert.False(Pawn.Dead);
 
         Pawn.mindState.mentalStateHandler.TryStartMentalState(Props.mentalState, forced: true, forceWake: true, causedByDamage: true);
     }
@@ -38,6 +40,7 @@ public class HediffComp_ForceMentalState : HediffComp
     public override void CompPostPostRemoved()
     {
         DebugAssert.NotNull(Pawn);
+        DebugAssert.False(Pawn.Dead);
 
         if (Props.endMentalStateOnCure && Pawn.mindState.mentalStateHandler.CurStateDef == Props.mentalState &&
             !Pawn.mindState.mentalStateHandler.CurState!.causedByMood)

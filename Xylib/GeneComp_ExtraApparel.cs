@@ -72,13 +72,13 @@ public class GeneComp_ExtraApparel : GeneComp, IEventListener
         if (ignoreRestrictions)
             return true;
 
-        List<string> apparelTags = thing.apparel.tags ?? [];
+        List<string> apparelTags = thing.apparel.tags;
 
-        if (pawn.kindDef?.apparelTags is { Count: > 0 } &&
+        if (pawn.kindDef.apparelTags is { Count: > 0 } &&
             !pawn.kindDef.apparelTags.Any(apparelTags.Contains))
             return false;
 
-        if (pawn.kindDef?.apparelDisallowTags is { Count: > 0 } &&
+        if (pawn.kindDef.apparelDisallowTags is { Count: > 0 } &&
             pawn.kindDef.apparelDisallowTags.Any(apparelTags.Contains))
             return false;
 

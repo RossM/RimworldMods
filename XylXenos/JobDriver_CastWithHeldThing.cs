@@ -16,6 +16,8 @@ public class JobDriver_CastWithHeldThing : JobDriver_CastAbility
         yield return Toils_General.DoAtomic(delegate
         {
             DebugAssert.NotNull(pawn);
+            DebugAssert.False(pawn.Dead);
+
             if (pawn.IsCarrying())
                 pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
         });

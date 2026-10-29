@@ -893,7 +893,7 @@ public class EventManager
         {
             case HediffWithComps hediffWithComps:
             {
-                foreach (HediffComp comp in hediffWithComps.comps ?? Enumerable.Empty<HediffComp>())
+                foreach (HediffComp comp in hediffWithComps.comps)
                     CallRegistrationHandlers(comp);
                 break;
             }

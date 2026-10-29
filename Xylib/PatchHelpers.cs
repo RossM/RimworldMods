@@ -74,18 +74,22 @@ internal static class PatchHelpers
         return true;
     }
 
-    public static IEnumerable<string> GetGeneEffectDescriptions(this GeneDef geneDef)
+    extension(GeneDef geneDef)
     {
-        if (geneDef.Extension_GeneWithComps is { } defExt)
+        public IEnumerable<string> GetGeneEffectDescriptions()
+        {
+            if (geneDef.Extension_GeneWithComps is not { } defExt)
+                yield break;
             foreach (var customEffectDescription in defExt.GetCustomEffectDescriptions())
                 yield return customEffectDescription;
-    }
+        }
 
-    public static string? GetExtraGeneEffectDescription(this GeneDef geneDef)
-    {
-        if (geneDef.Extension_GeneWithComps is { } defExt)
-            return defExt.GetExtraGeneEffectDescription();
-        return null;
+        public string? GetExtraGeneEffectDescription()
+        {
+            if (geneDef.Extension_GeneWithComps is { } defExt)
+                return defExt.GetExtraGeneEffectDescription();
+            return null;
+        }
     }
 
     public static float GetRangedDodgeChance(Pawn target)

@@ -9,7 +9,7 @@ public static class Patch_CompUsableImplant
     public static void FloatMenuOptionLabel_Postfix(CompUsableImplant __instance, Pawn pawn, ref string __result)
     {
         if (__instance.parent.def.GetCompProperties<CompProperties_UseEffectInstallImplant>()?.hediffDef
-                ?.countsAsAddedPartOrImplant is not true)
+                .countsAsAddedPartOrImplant is not true)
             return;
         if (!pawn.HasActiveGene(MyDefOf.XylBioRejection))
             return;

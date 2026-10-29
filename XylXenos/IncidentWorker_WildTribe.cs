@@ -62,7 +62,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
         {
             IntVec3 loc = CellFinder.RandomClosewalkCellNear(start, map, 10);
             GenSpawn.Spawn(pawn, loc, map, rot);
-            pawn.mindState.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
+            pawn.mindState!.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
         }
 
         string pawnsPlural = DefExt.faction?.pawnsPlural ?? "XylWildPeople".TranslateSimple();

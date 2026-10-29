@@ -43,6 +43,6 @@ public class QuestNode_AddPawnAndItemsReward : QuestNode
             inSignalChoiceUsed = QuestGenUtility.HardcodedSignalWithQuestID(inSignalChoiceUsed.GetValue(slate)),
         };
         choicePart.choices.Add(choice);
-        QuestGen.quest.AddPart(choicePart);
+        QuestGen.quest!.AddPart(choicePart);
     }
 }

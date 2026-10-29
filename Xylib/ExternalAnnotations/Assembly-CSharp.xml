@@ -2162,7 +2162,7 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.XenotypeCount.xenotype">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.XenotypeDef.AllGenes">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -3423,7 +3423,7 @@
     </parameter>
   </member>
   <member name="M:Verse.GenSpawn.Spawn(Verse.Thing,Verse.IntVec3,Verse.Map,Verse.Rot4,Verse.WipeMode,System.Boolean,System.Boolean)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <parameter name="newThing">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -3432,7 +3432,7 @@
     </parameter>
   </member>
   <member name="M:Verse.GenSpawn.Spawn(Verse.ThingDef,Verse.IntVec3,Verse.Map,Verse.WipeMode)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
     <parameter name="def">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>
@@ -5225,7 +5225,7 @@
     </parameter>
   </member>
   <member name="F:Verse.PawnDrawParms.pawn">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member
     name="M:Verse.PawnGenerationRequest.#ctor(Verse.PawnKindDef,RimWorld.Faction,RimWorld.PawnGenerationContext,System.Nullable{RimWorld.Planet.PlanetTile},System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Single,System.Single,Verse.Pawn,System.Single,System.Predicate{Verse.Pawn},System.Predicate{Verse.Pawn},System.Collections.Generic.IEnumerable{RimWorld.TraitDef},System.Collections.Generic.IEnumerable{RimWorld.TraitDef},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{Verse.Gender},System.String,System.String,RimWorld.RoyalTitleDef,RimWorld.Ideo,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Collections.Generic.List{Verse.GeneDef},System.Collections.Generic.List{Verse.GeneDef},RimWorld.XenotypeDef,RimWorld.CustomXenotype,System.Collections.Generic.List{RimWorld.XenotypeDef},System.Single,Verse.DevelopmentalStage,System.Func{RimWorld.XenotypeDef,Verse.PawnKindDef},System.Nullable{Verse.FloatRange},System.Nullable{Verse.FloatRange},System.Boolean,System.Boolean,System.Boolean,System.Int32,System.Int32,System.Boolean)">

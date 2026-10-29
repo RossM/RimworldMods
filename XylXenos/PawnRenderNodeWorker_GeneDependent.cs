@@ -16,7 +16,7 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
 
     private static bool EnabledByGenes(PawnRenderNode node, PawnDrawParms parms)
     {
-        if (parms.pawn.genes is not { } genes || node.Props is not PawnRenderNodeProperties_GeneDependent props)
+        if (parms.pawn?.genes is not { } genes || node.Props is not PawnRenderNodeProperties_GeneDependent props)
             return true;
 
         if (props.requiredGenes is { Count: > 0 } && props.requiredGenes.Any(gene => !genes.HasActiveGene(gene)))
@@ -31,7 +31,7 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
     {
         var result = base.OffsetFor(node, parms, out pivot);
 
-        if (node.Props.narrowCrownHorizontalOffset != 0f && parms.pawn.story.headType.narrow && parms.facing.IsHorizontal)
+        if (node.Props.narrowCrownHorizontalOffset != 0f && parms.pawn.story!.headType.narrow && parms.facing.IsHorizontal)
         {
             if (parms.facing == Rot4.East)
                 result.x -= node.Props.narrowCrownHorizontalOffset;
@@ -50,7 +50,7 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
         if (node.Props is PawnRenderNodeProperties_GeneDependent { useBodyGraphicScale: true })
         {
             Vector3 vector = base.ScaleFor(node, parms);
-            Vector2 bodyScale = parms.pawn.story.bodyType.bodyGraphicScale;
+            Vector2 bodyScale = parms.pawn.story!.bodyType.bodyGraphicScale;
             return vector * ((bodyScale.x + bodyScale.y) / 2f);
         }
 

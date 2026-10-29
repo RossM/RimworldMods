@@ -33,7 +33,7 @@ public class PawnRenderNode_AttachmentComplex(Pawn pawn, PawnRenderNodePropertie
                 return hd.def.skinShader.Shader;
         }
 
-        bool dead = pawn.Dead || (pawn.IsMutant && pawn.mutant.HasTurned && pawn.mutant.Def.useCorpseGraphics);
+        bool dead = pawn.Dead || pawn.mutant is { HasTurned: true, Def.useCorpseGraphics: true };
         return GetSkinShaderAbstract(pawn.story is { SkinColorOverriden: true }, dead);
     }
 

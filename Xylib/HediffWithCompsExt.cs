@@ -39,9 +39,6 @@ public class HediffWithCompsExt : HediffWithComps
 
     protected virtual void UpdateCurStage(HediffStage stage)
     {
-        if (comps is null)
-            return;
-
         foreach (var comp in comps)
         {
             if (comp is IHediffCompExt compExt)
@@ -53,9 +50,6 @@ public class HediffWithCompsExt : HediffWithComps
     {
         if (!base.TendableNow(ignoreTimer))
             return false;
-
-        if (comps is null)
-            return true;
 
         foreach (var comp in comps)
         {
@@ -99,7 +93,7 @@ public class HediffWithCompsExt : HediffWithComps
             tipSb.AppendLine().AppendLineTagged(def.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         if (curStage != null && !curStage.extraTooltip.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(curStage.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
-        string? tipStringExtra = TipStringExtra;
+        string tipStringExtra = TipStringExtra;
         if (!tipStringExtra.NullOrEmpty())
             tipSb.AppendLine().AppendLine(tipStringExtra.TrimEndNewlines());
         if (HealthCardUtility.GetCombatLogInfo(Gen.YieldSingle(this), out var taggedString, out _) && !taggedString.NullOrEmpty())
