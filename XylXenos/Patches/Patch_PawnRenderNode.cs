@@ -1,17 +1,16 @@
 ﻿namespace XylXenos.Patches;
 
-[Patch(typeof(PawnRenderNode))]
-public static class Patch_PawnRenderNode
+[Patch(typeof(PawnRenderTree))]
+public static class Patch_PawnRenderTree
 {
     // This allows tattoos to draw properly on top of scaleskin
     [Feature("TODO")]
     [Postfix]
-    [Target(nameof(PawnRenderNode.AddChildren))]
-    public static void AddChildren_Postfix(PawnRenderNode __instance)
+    [Target(nameof(PawnRenderTree.ParallelPreDraw))]
+    public static void ParallelPreDraw_Postfix(PawnDrawParms parms, List<PawnGraphicDrawRequest> ___drawRequests)
     {
-        if (__instance.children == null)
+        if ((parms.flags & PawnRenderFlags.Portrait) == 0)
             return;
-
-        Array.Sort(__instance.children, (a, b) => (int)Mathf.Sign(a.Props.baseLayer - b.Props.baseLayer));
+        ___drawRequests.SortBy(req => req.preDrawnComputedMatrix.m13);
     }
 }
