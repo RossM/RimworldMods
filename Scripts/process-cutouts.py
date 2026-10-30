@@ -1,4 +1,4 @@
-"""Repair and smooth the 384px xenotype cutouts into transparent 768px PNGs.
+"""Upscale the 384px xenotype cutouts into transparent 768px PNGs.
 
 Requires Python 3.10+. Install dependencies and run from the repository root:
     python -m pip install -r Scripts/requirements-cutouts.txt
@@ -12,20 +12,15 @@ Requires the portable Real-ESRGAN executable and anime illustration model;
 see Scripts/process-cutouts.md for setup. All inference runs LOCALLY on a
 Vulkan-capable GPU. The script makes no network requests or model downloads.
 
-Morphological closing/dilation create a thin black underlay over narrow alpha
-seams. Real-ESRGAN reconstructs both the premultiplied color and the alpha mask
+Real-ESRGAN reconstructs both the premultiplied color and the alpha mask
 at 4x; area downsampling produces the final 2x PNG. Processing alpha separately
 avoids leaving a pixelated silhouette around the reconstructed interior lines.
 No Gaussian blur, median filter, or bilateral filter is applied to the output.
-
-Tuning example (radii are SOURCE pixels):
-    python Scripts/process-cutouts.py --gap-radius 3 --outline-radius 1
 
 Verified dependencies and documentation:
     https://github.com/xinntao/Real-ESRGAN
     https://pypi.org/project/opencv-python-headless/
     https://numpy.org/about/
-    https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html
     https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html
 """
 
@@ -51,27 +46,14 @@ MODEL_NAME = "realesrgan-x4plus-anime"
 DEFAULT_UPSCALER = ROOT / "Scripts/Tools/realesrgan/realesrgan-ncnn-vulkan.exe"
 
 
-def ellipse(radius):
-    return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * radius + 1, 2 * radius + 1))
-
-
-def repair_cutout(bgra, outline_radius=1, gap_radius=2):
+def prepare_cutout(bgra):
     """Return premultiplied BGR and alpha as separate 8-bit images."""
     alpha = bgra[:, :, 3]
-    underlay = alpha.copy()
-    if gap_radius:
-        # Closing bridges narrow seams without filling every enclosed opening.
-        underlay = cv2.morphologyEx(underlay, cv2.MORPH_CLOSE, ellipse(gap_radius))
-    if outline_radius:
-        underlay = cv2.dilate(underlay, ellipse(outline_radius))
-
-    alpha = alpha.astype(np.float32) / 255
-    underlay = underlay.astype(np.float32) / 255
-    repaired_alpha = alpha + underlay * (1 - alpha)
-    # Black contributes opacity but no color. Ignore hidden RGB in clear pixels
-    # so resizing cannot pull arbitrary source colors into the visible fringe.
-    colors = np.rint(bgra[:, :, :3].astype(np.float32) * alpha[:, :, None]).astype(np.uint8)
-    return colors, np.rint(repaired_alpha * 255).astype(np.uint8)
+    # Ignore hidden RGB in clear pixels so resizing cannot pull arbitrary source
+    # colors into the visible fringe.
+    coverage = alpha.astype(np.float32) / 255
+    colors = np.rint(bgra[:, :, :3].astype(np.float32) * coverage[:, :, None]).astype(np.uint8)
+    return colors, alpha
 
 
 def reconstruct_cutout(color_path, alpha_path, original_alpha):
@@ -89,7 +71,8 @@ def reconstruct_cutout(color_path, alpha_path, original_alpha):
     alpha = cv2.resize(alpha.astype(np.float32), (OUTPUT_SIZE, OUTPUT_SIZE), interpolation=cv2.INTER_AREA)
     # Restrict any reconstructed fringe to the neighborhood of the source art;
     # this also keeps distant background residuals completely transparent.
-    support = cv2.dilate((original_alpha > 0).astype(np.uint8), ellipse(2))
+    support = cv2.dilate((original_alpha > 0).astype(np.uint8),
+                         cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
     support = cv2.resize(support, (OUTPUT_SIZE, OUTPUT_SIZE), interpolation=cv2.INTER_NEAREST)
     alpha[support == 0] = 0
     straight = np.zeros_like(colors)
@@ -121,15 +104,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", type=Path, default=ROOT / "Art/Cutouts", help="Source PNG directory")
     parser.add_argument("--output", type=Path, help="Destination directory (default: INPUT/Processed)")
-    parser.add_argument("--outline-radius", type=int, default=1,
-                        help="Black underlay expansion in source pixels; 0 disables (default: %(default)s)")
-    parser.add_argument("--gap-radius", type=int, default=2,
-                        help="Closing radius in source pixels; 0 disables (default: %(default)s)")
     parser.add_argument("--upscaler", type=Path, default=DEFAULT_UPSCALER,
                         help="Local realesrgan-ncnn-vulkan executable (see process-cutouts.md)")
     args = parser.parse_args()
-    if args.outline_radius < 0 or args.gap_radius < 0:
-        parser.error("--outline-radius and --gap-radius must be nonnegative")
     if not args.input.is_dir():
         parser.error(f"Input directory does not exist: {args.input}")
     output = args.output or args.input / "Processed"
@@ -155,7 +132,7 @@ def main():
             enlarged.mkdir()
             masks = []
             for index, (_, cutout) in enumerate(cutouts):
-                colors, alpha = repair_cutout(cutout, args.outline_radius, args.gap_radius)
+                colors, alpha = prepare_cutout(cutout)
                 write_png(prepared / f"{index}-color.png", colors)
                 # The executable normally resizes RGBA alpha with bicubic. Give
                 # the mask its own RGB input so the network reconstructs it too.

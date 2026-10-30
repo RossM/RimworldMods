@@ -1,3 +1,3 @@
-# Image I/O and gap repair. Real-ESRGAN is installed separately; see process-cutouts.md.
+# Image I/O and alpha handling. Real-ESRGAN is installed separately; see process-cutouts.md.
 numpy>=1.25,<3
 opencv-python-headless>=4.10,<5

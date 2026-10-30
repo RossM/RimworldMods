@@ -51,12 +51,8 @@ Options:
 
 - `--input PATH`: source directory; only its immediate PNG files are read.
 - `--output PATH`: destination directory; defaults to `INPUT/Processed`.
-- `--gap-radius 2`: morphological closing radius in source pixels.
-- `--outline-radius 1`: black underlay expansion radius in source pixels.
 - `--upscaler PATH`: another local `realesrgan-ncnn-vulkan` executable;
   its `models` directory must be beside it.
-
-Set either radius to zero to disable that repair operation.
 
 ## Why this pipeline
 
@@ -65,16 +61,14 @@ while leaving their staircase geometry visible. Stronger classical shock-filter
 trials introduced artifacts or lost detail. Local waifu2x was smoother, but
 Real-ESRGAN's anime illustration model gave sharper lines on these samples.
 
-1. Close narrow transparency seams and expand a black underlay by one source
-   pixel, preserving large openings rather than flood-filling the silhouette.
-2. Composite the original colors over that underlay in premultiplied form.
-   Hidden RGB in fully transparent pixels contributes nothing.
-3. Run both color and a separate grayscale coverage image through the local
+1. Premultiply the original colors by their alpha coverage, preserving the
+   source alpha mask. Hidden RGB in fully transparent pixels contributes nothing.
+2. Run both color and a separate grayscale coverage image through the local
    `realesrgan-x4plus-anime` model at its native 4x scale. Processing coverage as
    RGB avoids ordinary interpolation of the alpha channel.
-4. Remove near-black/near-white residuals in the coverage image, reduce both
+3. Remove near-black/near-white residuals in the coverage image, reduce both
    reconstructed images to 2x with area sampling, and restore straight alpha.
-   Limit coverage to within two source pixels of the repaired silhouette so
+   Limit coverage to within two source pixels of the source silhouette so
    distant background residuals stay fully transparent.
 
 There is no final blur filter. Like other learned restoration models, this
