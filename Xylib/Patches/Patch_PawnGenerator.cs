@@ -57,7 +57,7 @@ internal static class Patch_PawnGenerator
     public static void GenerateGenes_Postfix(Pawn pawn)
     {
         // Nested bonus genes added by listeners should resolve immediately.
-        PawnExtraData<GeneGenerationData>.Get(pawn).GenesGenerated = true;
+        pawn.GenesGenerated = true;
         EventManager.Instance.Notify(EventDefOf.PostGenerateGenes, pawn);
     }
 

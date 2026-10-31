@@ -30,7 +30,7 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
 
     public override void CompPostPostAdd()
     {
-        if (!PawnExtraData<GeneGenerationData>.Get(Pawn).GenesGenerated)
+        if (!Pawn.GenesGenerated)
         {
             EventManager.Instance.Register(EventDefOf.PostGenerateGenes, Pawn, AddBonusGenes);
             return;
