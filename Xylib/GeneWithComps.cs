@@ -192,14 +192,7 @@ public class GeneWithComps : Gene, IEventListener
         if (!DefExt.ValidFor(pawn, GeneType))
             return false;
 
-        if (comps != null)
-            foreach (var comp in comps)
-            {
-                if (!comp.CompAllowActive)
-                    return false;
-            }
-
-        return true;
+        return comps == null || comps.All(comp => comp.CompAllowActive);
     }
 
     public virtual bool ImmuneToVacuumBurns
@@ -209,14 +202,7 @@ public class GeneWithComps : Gene, IEventListener
             if (def.immuneToVacuumBurns)
                 return true;
 
-            if (comps == null)
-                return false;
-
-            foreach (var comp in comps)
-                if (comp.CompImmuneToVacuumBurns)
-                    return true;
-
-            return false;
+            return comps != null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
         }
     }
 
@@ -228,9 +214,11 @@ public class GeneWithComps : Gene, IEventListener
         base.ExposeData();
         if (Scribe.mode == LoadSaveMode.LoadingVars)
             InitializeComps();
-        if (comps != null)
-            foreach (GeneComp comp in comps)
-                comp.CompExposeData();
+
+        if (comps == null)
+            return;
+        foreach (GeneComp comp in comps)
+            comp.CompExposeData();
     }
 
     /// <summary>
@@ -319,10 +307,9 @@ public class GeneWithComps : Gene, IEventListener
         }
 
         var hediffs = new List<Hediff>(pawn.health.hediffSet.hediffs);
-        foreach (var hediff in hediffs)
+        foreach (Hediff hediff in hediffs.Where(hediff => hediffDefsToRemove.Contains(hediff.def)))
         {
-            if (hediffDefsToRemove.Contains(hediff.def))
-                pawn.health.RemoveHediff(hediff);
+            pawn.health.RemoveHediff(hediff);
         }
     }
 
@@ -375,14 +362,7 @@ public class GeneWithComps : Gene, IEventListener
     ///     Gets stats which are displayed on the pawn's description screen.
     /// </summary>
     /// <returns></returns>
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
-    {
-        if (comps == null)
-            yield break;
-        foreach (var comp in comps)
-        foreach (var result in comp.SpecialDisplayStats())
-            yield return result;
-    }
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() => comps == null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
 
     /// <summary>
     ///     Called periodically on gameplay tick.
@@ -425,8 +405,7 @@ public class GeneWithComps : Gene, IEventListener
     {
         if (comps != null)
         {
-            foreach (var comp in comps)
-            foreach (var gizmo in comp.CompGetGizmos())
+            foreach (Gizmo gizmo in comps.SelectMany(comp => comp.CompGetGizmos()))
                 yield return gizmo;
         }
 
