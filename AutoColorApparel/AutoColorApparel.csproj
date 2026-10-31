@@ -30,11 +30,9 @@
 
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <AboutFiles Include="About\**\*" />
-      <LanguageFiles Include="Languages\**\*" />
+      <DataFiles Include="Data\**\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\About\%(RecursiveDir)" />
-    <Copy SourceFiles="@(LanguageFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\Languages\%(RecursiveDir)" />
+    <Copy SourceFiles="@(DataFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\%(RecursiveDir)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\Assemblies" />
   </Target>
 
