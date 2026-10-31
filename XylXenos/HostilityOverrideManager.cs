@@ -115,6 +115,4 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
     {
         manager.Register<DamageInfo>(EventDefOf.PreTakeDamage, null, Notify_DamageTaken);
     }
-
-    public void PreUnregister(EventManager manager) { }
 }

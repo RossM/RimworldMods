@@ -53,6 +53,4 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
     {
         manager.Register<PawnGenerationData>(EventDefOf.PreGenerateNewPawn, null, Notify_PreTryGenerateNewPawnInternal);
     }
-
-    public void PreUnregister(EventManager manager) { }
 }

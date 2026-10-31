@@ -190,6 +190,4 @@ public class GeneComp_PermanentHediffs : GeneComp, IEventListener
     {
         manager.Register(EventDefOf.PostCheckForStateChange, Pawn, Notify_HediffStateChange);
     }
-
-    void IEventListener.PreUnregister(EventManager manager) { }
 }

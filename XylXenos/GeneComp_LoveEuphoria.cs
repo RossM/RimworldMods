@@ -86,6 +86,4 @@ public class GeneComp_LoveEuphoria : GeneComp, IEventListener
     {
         manager.Register<Pawn>(EventDefOf.PostLovin, Pawn, Notify_PostLovin);
     }
-
-    public void PreUnregister(EventManager manager) { }
 }

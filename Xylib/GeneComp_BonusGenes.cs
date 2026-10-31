@@ -84,7 +84,5 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
             Pawn.genes.RemoveGene(gene);
     }
 
-    public void RegisterWith(EventManager manager) { }
-
-    public void PreUnregister(EventManager manager) { }
+    void IEventListener.RegisterWith(EventManager manager) { }
 }

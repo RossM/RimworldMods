@@ -45,7 +45,7 @@ public interface IEventListener
     ///     The <see cref="EventManager" /> that should be unregistered with. This is always
     ///     <see cref="EventManager.Instance" />.
     /// </param>
-    public void PreUnregister(EventManager manager);
+    public void PreUnregister(EventManager manager) { }
 }
 
 /// <summary>

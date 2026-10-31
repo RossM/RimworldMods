@@ -65,6 +65,4 @@ public abstract class GeneTracker(Pawn pawn) : IEventListener
         manager.Register(EventDefOf.PostMutated, Pawn, Update);
         manager.Register(EventDefOf.PostBirthday, Pawn, Update);
     }
-
-    void IEventListener.PreUnregister(EventManager manager) { }
 }
