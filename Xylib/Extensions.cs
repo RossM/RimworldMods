@@ -112,7 +112,6 @@ public static class Extensions
         /// <returns>
         ///     The matching genes.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Gene> AllGenesOfDef(GeneDef def) =>
             pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
 
@@ -140,7 +139,6 @@ public static class Extensions
         /// <returns>
         ///     The matching genes.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<T> AllGenesOfType<T>() where T : Gene => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
 
         /// <summary>
@@ -233,7 +231,6 @@ public static class Extensions
         /// <returns>
         ///     Matching genes with <see cref="GeneComp" /> instances.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<GeneWithComps> AllGenesWithComp<T>() where T : GeneComp =>
             pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
 
@@ -454,7 +451,6 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<T> HediffsOfType<T>() where T : Hediff => pawn.GeneAndHediffCache.GetHediffsOfType<T>();
 
         /// <summary>
@@ -481,7 +477,6 @@ public static class Extensions
         /// <returns>
         ///     Matching hediffs with <see cref="HediffComp" /> instances.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<HediffWithComps> HediffsWithComp<T>() where T : HediffComp => pawn.GeneAndHediffCache.GetHediffsWithComp<T>();
 
         /// <summary>
@@ -569,7 +564,6 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Hediff> HediffsWithDef(HediffDef def) => pawn.GeneAndHediffCache.GetHediffsWithDef(def);
 
         /// <summary>
@@ -596,7 +590,6 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<Hediff> HediffsWithModExtension<T>() where T : DefModExtension =>
             pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>();
 
