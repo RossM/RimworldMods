@@ -1,17 +1,7 @@
-using UnityEngine;
-
 namespace XylIdeos;
 
 public static class PatchHelpers
 {
-    public static Color? AutoColorColor(Pawn pawn) =>
-        PawnData.Get(pawn).autoColorMode switch
-        {
-            AutoColorMode.UseFavoriteColor => pawn.story?.favoriteColor.color,
-            AutoColorMode.UseIdeoligeonColor => pawn.Ideo?.ApparelColor,
-            _ => null,
-        };
-
     public static bool HasUnnecessaryApparel(Pawn p, IReadOnlyCollection<BodyPartGroupDef> excludedParts = null)
     {
         // Change: Required apparel doesn't count as unnecessary

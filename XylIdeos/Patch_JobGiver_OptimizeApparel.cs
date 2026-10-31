@@ -22,22 +22,4 @@ public static class Patch_JobGiver_OptimizeApparel
 
         __result = !pawn.story.traits.HasTrait(MyTraitDefOf.Masochist) && !PatchHelpers.ApparelRequired(pawn, ap.def);
     }
-
-    [Feature(Features.AutoColorApparel)]
-    [Prefix]
-    [Target(nameof(JobGiver_OptimizeApparel.TryCreateRecolorJob))]
-    public static void TryCreateRecolorJob_Prefix(Pawn pawn)
-    {
-        if (PatchHelpers.AutoColorColor(pawn) is not { } color)
-            return;
-
-        foreach (var item in pawn.apparel.WornApparel)
-        {
-            if (item.TryGetComp<CompColorable>() != null)
-            {
-                Color oldColor = item.GetColorIgnoringTainted();
-                item.DesiredColor = color.IndistinguishableFrom(oldColor) ? null : color;
-            }
-        }
-    }
 }

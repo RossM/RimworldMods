@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>AutoColorApparel</AssemblyName>
+    <RootNamespace>AutoColorApparel</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DisharmonySourceDirectory)' == ''">
+    <PackageReference Include="Disharmony" Version="$(DisharmonyVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DisharmonySourceDirectory)' != ''">
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony\Disharmony.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Waylith.Injection">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Waylith.Injection.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <AboutFiles Include="About\**\*" />
+      <LanguageFiles Include="Languages\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(AboutFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\About\%(RecursiveDir)" />
+    <Copy SourceFiles="@(LanguageFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\Languages\%(RecursiveDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\Assemblies" />
+  </Target>
+
+</Project>

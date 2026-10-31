@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+
+  <packageId>Xylthixlm.AutoColorApparel</packageId>
+  <name>Auto-color apparel</name>
+  <author>Xylthixlm</author>
+  <description>
+    This mod adds a button to the styling station that lets you have the pawn automatically recolor their apparel as
+    either their favorite color or their ideoligeon color.
+  </description>
+  <supportedVersions>
+    <li>1.7</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>Xylthixlm.Disharmony</packageId>
+      <displayName>Disharmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/3818084845</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>Xylthixlm.Disharmony</li>
+  </loadAfter>
+
+</ModMetaData>

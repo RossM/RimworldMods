@@ -4,7 +4,6 @@ public static class Features
 {
     public const string ApparelRequirementsOverrideNudity = nameof(ApparelRequirementsOverrideNudity);
 
-    public const string AutoColorApparel = nameof(AutoColorApparel);
 
     public const string NudityIsGenderSpecific = nameof(NudityIsGenderSpecific);
 
