@@ -19,7 +19,7 @@ internal static class Helpers
     extension(Pawn pawn)
     {
         [InjectedField(Default = AutoColorMode.NoAutoColor)]
-        public ref AutoColorMode AutoColorMode => throw new NotImplementedException("no injection");
+        public extern ref AutoColorMode AutoColorMode { get; }
 
         public Color? AutoColorColor =>
             pawn.AutoColorMode switch

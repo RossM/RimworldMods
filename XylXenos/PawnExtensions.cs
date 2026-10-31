@@ -11,8 +11,8 @@ public static class PawnExtensions
     {
         public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast is true;
 
-        [InjectedField(Default = null)]
-        private ref GeneTracker_XylXenos? GeneTracker_XylXenos_Internal => throw new InvalidOperationException("not injected");
+        [InjectedField]
+        private extern ref GeneTracker_XylXenos? GeneTracker_XylXenos_Internal { get; }
 
         public GeneTracker_XylXenos? GeneTracker_XylXenos
         {

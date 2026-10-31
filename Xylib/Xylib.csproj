@@ -8,6 +8,7 @@
     <AssemblyName>Xylib</AssemblyName>
     <RootNamespace>Xylib</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS0626</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

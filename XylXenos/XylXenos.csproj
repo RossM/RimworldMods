@@ -8,6 +8,7 @@
     <LangVersion>preview</LangVersion>
     <AssemblyName>XylXenos</AssemblyName>
     <RootNamespace>XylXenos</RootNamespace>
+    <NoWarn>$(NoWarn);CS0626</NoWarn>
 
     <Version>1.0.0.0</Version>
     <AssemblyInformationalVersion>1.0.0-alpha</AssemblyInformationalVersion>

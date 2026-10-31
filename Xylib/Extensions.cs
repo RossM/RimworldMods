@@ -29,10 +29,10 @@ public static class Extensions
     extension(GeneDef gene)
     {
         [InjectedField]
-        private ref DefModExtension_GeneWithComps? DefModExtension_GeneWithComps_Cached => throw new NotImplementedException("not injected");
+        private extern ref DefModExtension_GeneWithComps? DefModExtension_GeneWithComps_Cached { get; }
 
         [InjectedField]
-        private ref bool DefModExtension_GeneWithComps_Checked => throw new NotImplementedException("not injected");
+        private extern ref bool DefModExtension_GeneWithComps_Checked { get; }
 
         /// <summary>
         ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for the gene def, if it exists.
@@ -60,14 +60,14 @@ public static class Extensions
 
     extension(Pawn pawn)
     {
-        [InjectedField(Default = false)]
-        public ref bool GenesGenerated => throw new InvalidOperationException("not injected");
+        [InjectedField]
+        public extern ref bool GenesGenerated { get; }
 
-        [InjectedField(Default = null)]
-        private ref GeneTracker_Xylib? GeneTracker_Xylib_Internal => throw new InvalidOperationException("not injected");
+        [InjectedField]
+        private extern ref GeneTracker_Xylib? GeneTracker_Xylib_Internal { get; }
 
-        [InjectedField(Default = null)]
-        private ref GeneAndHediffCache? GeneAndHediffCache_Internal => throw new InvalidOperationException("not injected");
+        [InjectedField]
+        private extern ref GeneAndHediffCache? GeneAndHediffCache_Internal { get; }
 
         /// <summary>
         ///     Gets the <see cref="GeneAndHediffCache" /> for the pawn.
