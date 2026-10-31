@@ -34,8 +34,8 @@ public static class PawnExtensions
             if (pawn.GeneTracker_XylXenos?.hasPsycast is not true)
                 return 0;
 
-            if (pawn.AllGenesOfType<GeneWithComps>().Any(gene =>
-                    gene.Active && gene.GetComp<GeneComp_Psycast>() != null && gene.def.abilities?.Contains(ability) is true))
+            if (pawn.ActiveGenesOfType<GeneWithComps>().Any(gene =>
+                    gene.GetComp<GeneComp_Psycast>() != null && gene.def.abilities?.Contains(ability) is true))
                 return ability.level;
 
             return 0;
