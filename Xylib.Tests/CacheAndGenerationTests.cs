@@ -64,7 +64,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
             new GeneCompProperties_UnlockRecipes { recipes = [recipe] },
             new GeneCompProperties_UnlockBuildables { buildables = [building] }), false);
         Gene second = pawn.genes.AddGene(GeneDef(new GeneCompProperties_RaceModifiers { bodySizeFactor = 0.75f }), false);
-        var tracker = PawnExtraData<GeneTracker_Xylib>.Get(pawn);
+        var tracker = pawn.GeneTracker_Xylib!;
         Expect.AreApproximatelyEqual(1.5f, tracker.bodySizeFactor);
         Expect.AreApproximatelyEqual(3, tracker.healthScaleFactor);
         Expect.AreApproximatelyEqual(2, tracker.bodyScale);

@@ -68,7 +68,16 @@ public static class Extensions
         public GeneTracker_Xylib? GeneTracker_Xylib
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : PawnExtraData<GeneTracker_Xylib>.Get(pawn);
+            get
+            {
+                if (pawn.genes == null)
+                    return null;
+                if (pawn.GeneTracker_Xylib_Internal != null)
+                    return pawn.GeneTracker_Xylib_Internal;
+                var tracker = pawn.GeneTracker_Xylib_Internal = new GeneTracker_Xylib(pawn);
+                tracker.Init();
+                return tracker;
+            }
         }
 
         /// <summary>

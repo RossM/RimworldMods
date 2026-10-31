@@ -1,7 +1,7 @@
 ﻿namespace Xylib;
 
 [PublicAPI]
-public class GeneTracker_Xylib : GeneTracker
+public class GeneTracker_Xylib(Pawn pawn) : GeneTracker(pawn)
 {
     /// <summary>
     ///     Aggregates <see cref="GeneCompProperties_RaceModifiers.bodySizeFactor" /> from all genes.<br /><br />

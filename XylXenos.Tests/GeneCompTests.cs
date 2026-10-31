@@ -153,7 +153,7 @@ public sealed class GeneCompTests : PawnTestFixture
         pawn.psychicEntropy.OffsetPsyfocusDirectly(-1);
         pawn.genes.AddGene(GeneDef(new GeneCompProperties_Psycast()), false);
         Expect.GreaterThan(pawn.psychicEntropy.CurrentPsyfocus, 0f);
-        Expect.IsTrue(PawnExtraData<GeneTracker_XylXenos>.Get(pawn).hasPsycast);
+        Expect.IsTrue(pawn.GeneTracker_XylXenos!.hasPsycast);
     }
 
     [Test]

@@ -54,6 +54,12 @@
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Waylith.Injection">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Waylith.Injection.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <Target Name="Postbuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetPath);$(TargetDir)0Harmony.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies" />
     <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />

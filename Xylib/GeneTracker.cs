@@ -1,18 +1,14 @@
 ﻿namespace Xylib;
 
 [PublicAPI]
-public abstract class GeneTracker : IEventListener, IPawnData
+public abstract class GeneTracker(Pawn pawn) : IEventListener
 {
     /// <summary>
     ///     The <see cref="Verse.Pawn" /> this object applies to.
     /// </summary>
-    public Pawn Pawn
-    {
-        get => field ?? throw new InvalidOperationException();
-        set;
-    }
+    public Pawn Pawn { get; } = pawn;
 
-    void IPawnData.Init()
+    public void Init()
     {
         EventManager.Instance.AddListener(this);
 

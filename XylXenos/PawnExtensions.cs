@@ -9,7 +9,16 @@ public static class PawnExtensions
         public GeneTracker_XylXenos? GeneTracker_XylXenos
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => pawn.genes == null ? null : PawnExtraData<GeneTracker_XylXenos>.Get(pawn);
+            get
+            {
+                if (pawn.genes == null)
+                    return null;
+                if (pawn.GeneTracker_XylXenos_Internal != null)
+                    return pawn.GeneTracker_XylXenos_Internal;
+                var tracker = pawn.GeneTracker_XylXenos_Internal = new GeneTracker_XylXenos(pawn);
+                tracker.Init();
+                return tracker;
+            }
         }
 
         public int GetGeneticPsylinkLevelFor(AbilityDef ability)

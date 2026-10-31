@@ -1,6 +1,6 @@
 ﻿namespace XylXenos;
 
-public class GeneTracker_XylXenos : GeneTracker
+public class GeneTracker_XylXenos(Pawn pawn) : GeneTracker(pawn)
 {
     /// <summary>
     ///     Aggregates <see cref="GeneCompProperties_JoyGiverChances.factors" /> from all genes.<br /><br />

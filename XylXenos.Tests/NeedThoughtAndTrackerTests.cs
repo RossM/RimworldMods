@@ -144,7 +144,7 @@ public sealed class NeedThoughtAndTrackerTests : PawnTestFixture
         Gene second = pawn.genes.AddGene(GeneDef(
             new GeneCompProperties_MeleeDamageFactors { factors = [new DamageFactor { damageDef = damage, factor = 3, chanceBonus = 0.2f }] },
             new GeneCompProperties_JoyGiverChances { factors = [new JoyGiverFactor { joyGiver = joy, factor = 0.5f }] }), false);
-        var tracker = PawnExtraData<GeneTracker_XylXenos>.Get(pawn);
+        var tracker = pawn.GeneTracker_XylXenos!;
         Expect.AreApproximatelyEqual(6, tracker.meleeDamageFactors![damage]);
         Expect.AreApproximatelyEqual(0.3f, tracker.meleeChanceBonuses![damage]);
         Expect.AreApproximatelyEqual(0.25f, tracker.joyGiverChanceFactors![joy]);

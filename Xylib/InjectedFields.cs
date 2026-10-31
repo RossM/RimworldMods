@@ -11,6 +11,9 @@ public static class InjectedFields
     {
         [InjectedField(Default = false)]
         public ref bool GenesGenerated => throw new InvalidOperationException("not injected");
+
+        [InjectedField(Default = null)]
+        internal ref GeneTracker_Xylib? GeneTracker_Xylib_Internal => throw new InvalidOperationException("not injected");
     }
 }
     
