@@ -11,7 +11,7 @@ namespace Xylib;
 ///     change.
 /// </remarks>
 [PublicAPI]
-public class GeneAndHediffCache : IEventListener, IPawnData
+public class GeneAndHediffCache(Pawn pawn) : IEventListener
 {
     private readonly Dictionary<Type, IList> genesByType = [];
     private readonly Dictionary<GeneDef, List<Gene>> genesByDef = [];
@@ -25,14 +25,10 @@ public class GeneAndHediffCache : IEventListener, IPawnData
     /// <summary>
     ///     Gets the pawn whose genes and hediffs are cached.
     /// </summary>
-    public Pawn Pawn
-    {
-        get => field ?? throw new InvalidOperationException();
-        set;
-    }
+    public Pawn Pawn { get; } = pawn;
 
     // ReSharper disable once ParameterHidesMember
-    void IPawnData.Init()
+    public void Init()
     {
         EventManager.Instance.AddListener(this);
     }

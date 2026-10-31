@@ -7,7 +7,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     public void GeneCacheInvalidatesAfterRealGeneAddAndRemoval()
     {
         GeneDef def = GeneDef(new ProbeProperties());
-        var cache = PawnExtraData<GeneAndHediffCache>.Get(pawn);
+        var cache = pawn.GeneAndHediffCache;
         Expect.IsEmpty(cache.GetGenesWithDef(def));
         Expect.IsEmpty(cache.GetGenesOfType<GeneWithComps>());
         Expect.IsEmpty(cache.GetGenesWithComp<ProbeComp>());
@@ -26,7 +26,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     {
         HediffDef def = HediffDef(new HediffCompProperties_Source());
         def.modExtensions = [new TestExtension()];
-        var cache = PawnExtraData<GeneAndHediffCache>.Get(pawn);
+        var cache = pawn.GeneAndHediffCache;
         Expect.IsEmpty(cache.GetHediffsWithDef(def));
         Expect.IsEmpty(cache.GetHediffsOfType<HediffWithComps>());
         Expect.IsEmpty(cache.GetHediffsWithComp<HediffComp_Source>());

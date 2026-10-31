@@ -59,7 +59,14 @@ public static class Extensions
         public GeneAndHediffCache GeneAndHediffCache
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => PawnExtraData<GeneAndHediffCache>.Get(pawn);
+            get
+            {
+                if (pawn.GeneAndHediffCache_Internal != null)
+                    return pawn.GeneAndHediffCache_Internal;
+                var tracker = pawn.GeneAndHediffCache_Internal = new GeneAndHediffCache(pawn);
+                tracker.Init();
+                return tracker;
+            }
         }
 
         /// <summary>
