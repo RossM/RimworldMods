@@ -6,8 +6,8 @@
   <description>In-game code tests for XylXenos, run through SmashPhil's DevTools. Enable only for testing.</description>
   <supportedVersions><li>1.7</li></supportedVersions>
   <modDependencies>
-    <li><packageId>Xylthixlm.Races.Core</packageId><displayName>Xyl's Xenotypes (includes Xylib)</displayName></li>
-    <li><packageId>SmashPhil.DevTools</packageId><displayName>DevTools</displayName></li>
+    <li><packageId>Xylthixlm.Races.Core</packageId><displayName>Xyl's Xenotypes (includes Xylib)</displayName><downloadUrl>https://github.com/RossM/RimworldMods</downloadUrl></li>
+    <li><packageId>SmashPhil.DevTools</packageId><displayName>DevTools</displayName><downloadUrl>https://github.com/SmashPhil/DevTools</downloadUrl></li>
   </modDependencies>
   <loadAfter><li>Xylthixlm.Races.Core</li><li>SmashPhil.DevTools</li></loadAfter>
 </ModMetaData>
