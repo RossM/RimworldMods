@@ -1,0 +1,67 @@
+<Project>
+  <PropertyGroup>
+    <!-- Always assemble the mod when Visual Studio builds before launching the game. -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+
+  <Target Name="CollectModData">
+    <PropertyGroup>
+      <!-- SDK exclusion patterns are relative to a source root, including the shared one. -->
+      <_SharedModDataExcludes>$(SharedModDataDirectory)\$([System.String]::Copy('$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)').Replace('/', '\').Replace(';', ';$(SharedModDataDirectory)\'))</_SharedModDataExcludes>
+      <!-- Property functions escape wildcard characters; restore them for glob matching. -->
+      <_SharedModDataExcludes>$([MSBuild]::Unescape('$(_SharedModDataExcludes)'))</_SharedModDataExcludes>
+    </PropertyGroup>
+    <ItemGroup>
+      <SharedModData Include="$(SharedModDataDirectory)\**\*"
+                     Exclude="$(_SharedModDataExcludes);$(SharedModDataDirectory)\bin\**;$(SharedModDataDirectory)\obj\**"
+                     Condition="'$(SharedModDataDirectory)' != ''" />
+      <ModData Include="@(SharedModData)" ModRelativePath="%(RecursiveDir)%(Filename)%(Extension)" />
+      <ModData Include="@(None)" ModRelativePath="%(Identity)" Condition="'$(UsingMicrosoftNoTargetsSdk)' == 'true'" />
+      <DirectoryModData Include="$(ModDataDirectory)\**\*" Condition="'$(ModDataDirectory)' != ''" />
+      <ModData Include="@(DirectoryModData)" ModRelativePath="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Batch by destination so the shared-data project can copy to both mods. -->
+  <Target Name="SyncModData" AfterTargets="PostBuildEvent" DependsOnTargets="CollectModData"
+          Condition="'$(UsingMicrosoftNoTargetsSdk)' == 'true' or '$(ModDataDirectory)' != ''"
+          Outputs="%(ModDestination.Identity)">
+    <PropertyGroup>
+      <_ModDestination>%(ModDestination.FullPath)</_ModDestination>
+      <_OwnsModDataOutput>%(ModDestination.OwnsOutput)</_OwnsModDataOutput>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(_OwnsModDataOutput)' == 'true'">
+      <!-- Shared-only builds cannot delete files belonging to the consuming mod. -->
+      <StaleModData Include="$(_ModDestination)\**\*"
+                    Exclude="$(_ModDestination)\Assemblies\**\*;@(ModData->'$(_ModDestination)\%(ModRelativePath)')" />
+    </ItemGroup>
+    <Delete Files="@(StaleModData)" />
+    <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(_ModDestination)\%(ModRelativePath)')"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- The project's own assembly is automatic; entries name additional DLLs in its build output. -->
+  <Target Name="CollectModAssemblies">
+    <ItemGroup>
+      <_ModAssembly Include="$(TargetPath);@(ModAssembly->'$(TargetDir)%(Identity)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SyncModAssemblies" AfterTargets="PostBuildEvent" DependsOnTargets="CollectModAssemblies"
+          Condition="'$(UsingMicrosoftNoTargetsSdk)' != 'true'" Outputs="%(ModDestination.Identity)">
+    <PropertyGroup>
+      <_ModAssemblyDestination>%(ModDestination.FullPath)\Assemblies</_ModAssemblyDestination>
+    </PropertyGroup>
+    <ItemGroup>
+      <StaleModAssembly Include="$(_ModAssemblyDestination)\*.dll"
+                        Exclude="@(_ModAssembly->'$(_ModAssemblyDestination)\%(Filename)%(Extension)')" />
+    </ItemGroup>
+    <Delete Files="@(StaleModAssembly)" />
+    <Copy SourceFiles="@(_ModAssembly)"
+          DestinationFolder="$(_ModAssemblyDestination)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CleanModOutput" AfterTargets="Clean">
+    <RemoveDir Directories="@(ModDestination)" Condition="'%(ModDestination.OwnsOutput)' == 'true'" />
+  </Target>
+</Project>

@@ -34,9 +34,4 @@
     </Reference>
   </ItemGroup>
 
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylXenos\Assemblies" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" />
-  </Target>
-
 </Project>

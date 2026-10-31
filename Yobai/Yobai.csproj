@@ -19,9 +19,9 @@
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetPath);$(TargetDir)0Harmony.dll" DestinationFolder="..\ModBin\Yobai\Assemblies" />
-    <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="..\ModBin\Yobai\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />
-    <Delete Files="..\ModBin\Yobai\Assemblies\Disharmony.dll;..\ModBin\Yobai\Assemblies\Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' == ''" />
-  </Target>
+  <ItemGroup>
+    <ModDestination Include="..\ModBin\Yobai" />
+    <ModAssembly Include="0Harmony.dll;Disharmony.dll;Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' != ''" />
+  </ItemGroup>
+  <Import Project="..\ModBuild.targets" />
 </Project>

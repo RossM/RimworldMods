@@ -1,8 +1,13 @@
 <Project Sdk="Microsoft.Build.NoTargets/3.7.134">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <BaseOutputPath>..\Build\bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <IntermediateOutputPath>..\Build\obj\$(MSBuildProjectName)\</IntermediateOutputPath>
+  </PropertyGroup>
   <ItemGroup>
-    <ModDataDestination Include="..\ModBin\Yobai" OwnsOutput="true" />
+    <ModDestination Include="..\ModBin\Yobai" OwnsOutput="true" />
   </ItemGroup>
-  <Import Project="..\ModData.targets" />
+  <Import Project="..\ModBuild.targets" />
   <Target Name="ConfigureBundledDisharmony" AfterTargets="SyncModData" Condition="'$(DisharmonySourceDirectory)' != ''">
     <XmlPoke XmlInputPath="..\ModBin\Yobai\About\About.xml" Query="/ModMetaData/modDependencies" Value="" />
   </Target>

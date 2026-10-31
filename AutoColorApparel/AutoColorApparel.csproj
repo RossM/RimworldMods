@@ -28,12 +28,12 @@
     </Reference>
   </ItemGroup>
 
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <ItemGroup>
-      <DataFiles Include="Data\**\*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(DataFiles)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\%(RecursiveDir)" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\AutoColorApparel\Assemblies" />
-  </Target>
+  <ItemGroup>
+    <ModDestination Include="..\ModBin\AutoColorApparel" OwnsOutput="true" />
+  </ItemGroup>
+  <PropertyGroup>
+    <ModDataDirectory>Data</ModDataDirectory>
+  </PropertyGroup>
+  <Import Project="..\ModBuild.targets" />
 
 </Project>

@@ -34,11 +34,11 @@
     <ProjectReference Include="..\Xylib.Analyzer\Xylib.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
-  <Target Name="Postbuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetPath);$(TargetDir)0Harmony.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" />
-    <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />
-    <!-- Remove previously bundled copies when switching back to the published package. -->
-    <Delete Files="$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\Disharmony.dll;$(MSBuildProjectDirectory)\..\ModBin\XylIdeos\Assemblies\Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' == ''" />
-  </Target>
+  <ItemGroup>
+    <ModDestination Include="..\ModBin\XylIdeos" />
+    <ModAssembly Include="Xylib.dll" />
+    <ModAssembly Include="0Harmony.dll;Disharmony.dll;Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' != ''" />
+  </ItemGroup>
+  <Import Project="..\ModBuild.targets" />
 
 </Project>
