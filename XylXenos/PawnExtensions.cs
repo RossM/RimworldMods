@@ -13,9 +13,9 @@ public static class PawnExtensions
             {
                 if (pawn.genes == null)
                     return null;
-                if (pawn.GeneTracker_XylXenos_Internal != null)
-                    return pawn.GeneTracker_XylXenos_Internal;
-                var tracker = pawn.GeneTracker_XylXenos_Internal = new GeneTracker_XylXenos(pawn);
+                if (pawn.GeneTracker_XylXenos_Internal is { } tracker)
+                    return tracker;
+                tracker = pawn.GeneTracker_XylXenos_Internal = new GeneTracker_XylXenos(pawn);
                 tracker.Init();
                 return tracker;
             }

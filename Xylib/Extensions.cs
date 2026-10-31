@@ -61,11 +61,11 @@ public static class Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (pawn.GeneAndHediffCache_Internal != null)
-                    return pawn.GeneAndHediffCache_Internal;
-                var tracker = pawn.GeneAndHediffCache_Internal = new GeneAndHediffCache(pawn);
-                tracker.Init();
-                return tracker;
+                if (pawn.GeneAndHediffCache_Internal is { } cache)
+                    return cache;
+                cache = pawn.GeneAndHediffCache_Internal = new GeneAndHediffCache(pawn);
+                cache.Init();
+                return cache;
             }
         }
 
@@ -79,9 +79,9 @@ public static class Extensions
             {
                 if (pawn.genes == null)
                     return null;
-                if (pawn.GeneTracker_Xylib_Internal != null)
-                    return pawn.GeneTracker_Xylib_Internal;
-                var tracker = pawn.GeneTracker_Xylib_Internal = new GeneTracker_Xylib(pawn);
+                if (pawn.GeneTracker_Xylib_Internal is { } tracker)
+                    return tracker;
+                tracker = pawn.GeneTracker_Xylib_Internal = new GeneTracker_Xylib(pawn);
                 tracker.Init();
                 return tracker;
             }
