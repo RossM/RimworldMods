@@ -238,8 +238,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
         // We need to avoid clobbering an already-set parent.
         parent = geneDef;
 
-        Extensions.defExtCache.Clear();
-
         if (geneDef.geneClass == typeof(Gene))
             geneDef.geneClass = typeof(GeneWithComps);
 

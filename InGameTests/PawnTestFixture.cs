@@ -77,7 +77,6 @@ public abstract class PawnTestFixture : SeededTestFixture
             typeof(DefDatabase<GeneDef>).GetMethod("Remove", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!.Invoke(null, [def]);
         foreach (HediffDef def in hediffDefs)
             typeof(DefDatabase<HediffDef>).GetMethod("Remove", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!.Invoke(null, [def]);
-        Xylib.Extensions.defExtCache.Clear();
         geneDefs.Clear();
         hediffDefs.Clear();
     }

@@ -1,6 +1,10 @@
 using System.Reflection;
+using Waylith.Injection;
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBeMadeStatic.Local
+#pragma warning disable CA1822
+
 
 namespace Xylib;
 
@@ -10,7 +14,6 @@ public static class Extensions
     private delegate object MemberwiseCloneDelegate(object obj);
 
     private static MemberwiseCloneDelegate? _memberwiseCloneFn;
-    public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = [];
 
     extension(Faction faction)
     {
@@ -25,6 +28,12 @@ public static class Extensions
 
     extension(GeneDef gene)
     {
+        [InjectedField]
+        private ref DefModExtension_GeneWithComps? DefModExtension_GeneWithComps_Cached => throw new NotImplementedException("not injected");
+
+        [InjectedField]
+        private ref bool DefModExtension_GeneWithComps_Checked => throw new NotImplementedException("not injected");
+
         /// <summary>
         ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for the gene def, if it exists.
         /// </summary>
@@ -33,13 +42,11 @@ public static class Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (!defExtCache.TryGetValue(gene.index, out DefModExtension_GeneWithComps? defExt))
-                {
-                    defExt = gene.GetModExtension<DefModExtension_GeneWithComps>();
-                    defExtCache.Add(gene.index, defExt);
-                }
+                if (gene.DefModExtension_GeneWithComps_Checked)
+                    return gene.DefModExtension_GeneWithComps_Cached;
 
-                return defExt;
+                gene.DefModExtension_GeneWithComps_Checked = true;
+                return gene.DefModExtension_GeneWithComps_Cached = gene.GetModExtension<DefModExtension_GeneWithComps>();
             }
         }
 
@@ -53,6 +60,15 @@ public static class Extensions
 
     extension(Pawn pawn)
     {
+        [InjectedField(Default = false)]
+        public ref bool GenesGenerated => throw new InvalidOperationException("not injected");
+
+        [InjectedField(Default = null)]
+        private ref GeneTracker_Xylib? GeneTracker_Xylib_Internal => throw new InvalidOperationException("not injected");
+
+        [InjectedField(Default = null)]
+        private ref GeneAndHediffCache? GeneAndHediffCache_Internal => throw new InvalidOperationException("not injected");
+
         /// <summary>
         ///     Gets the <see cref="GeneAndHediffCache" /> for the pawn.
         /// </summary>

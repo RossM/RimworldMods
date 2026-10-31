@@ -1,10 +1,18 @@
+using Waylith.Injection;
+
 namespace XylXenos;
+
+// ReSharper disable MemberCanBeMadeStatic.Local
+#pragma warning disable CA1822
 
 public static class PawnExtensions
 {
     extension(Pawn pawn)
     {
         public bool HasActivePsycastGene => pawn.GeneTracker_XylXenos?.hasPsycast is true;
+
+        [InjectedField(Default = null)]
+        private ref GeneTracker_XylXenos? GeneTracker_XylXenos_Internal => throw new InvalidOperationException("not injected");
 
         public GeneTracker_XylXenos? GeneTracker_XylXenos
         {
