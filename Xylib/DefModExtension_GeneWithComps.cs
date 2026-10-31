@@ -234,8 +234,6 @@ public class DefModExtension_GeneWithComps : DefModExtension
             return;
         }
 
-        // If this is a child of a GeneTemplateDef, we'll be called again with each GeneDef created from it.
-        // We need to avoid clobbering an already-set parent.
         parent = geneDef;
 
         if (geneDef.geneClass == typeof(Gene))
