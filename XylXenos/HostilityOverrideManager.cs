@@ -11,7 +11,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
 
     public bool anyOverrides = false;
     public HashSet<(Faction, Faction)> activeOverrides = [];
-    public Dictionary<Faction, int> lastHostileActionTick = new();
+    public Dictionary<Faction, int> lastHostileActionTick = [];
 
     public override void ExposeData()
     {

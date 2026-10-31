@@ -321,7 +321,7 @@ public class EventManager
         }
     }
 
-    private Lazy<NotificationInfo?[]> notifications = new(() => new NotificationInfo?[DefDatabase<EventDef>.DefCount]);
+    private readonly Lazy<NotificationInfo?[]> notifications = new(() => new NotificationInfo?[DefDatabase<EventDef>.DefCount]);
 
     /// <summary>
     ///     Callback registrations indexed by <c>EventDef.index</c>.
@@ -474,7 +474,7 @@ public class EventManager
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0, 
-        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
@@ -520,7 +520,7 @@ public class EventManager
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
     public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0,
-        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
@@ -563,7 +563,7 @@ public class EventManager
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
     public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0,
-        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
@@ -599,7 +599,7 @@ public class EventManager
     ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
     /// </remarks>
     public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0,
-        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
@@ -657,7 +657,7 @@ public class EventManager
         EventDef? eventDef,
         Thing? target,
         Action<Thing?, T?> callback,
-        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(listener);
         ArgumentNullException.ThrowIfNull(callback);
@@ -743,7 +743,7 @@ public class EventManager
     ///     This method is thread safe.
     /// </remarks>
     public void Notify(EventDef? eventDef, Thing? target, object? data = null,
-        [CallerArgumentExpression("eventDef")] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
         if (eventDef == null)
         {

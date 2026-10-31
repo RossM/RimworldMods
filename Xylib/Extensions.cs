@@ -10,7 +10,7 @@ public static class Extensions
     private delegate object MemberwiseCloneDelegate(object obj);
 
     private static MemberwiseCloneDelegate? _memberwiseCloneFn;
-    public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = new();
+    public static readonly Dictionary<int, DefModExtension_GeneWithComps?> defExtCache = [];
 
     extension(Faction faction)
     {
@@ -622,17 +622,6 @@ public static class Extensions
                 return true;
 
             return pawn.ChemicalIsAllowedByGenes(chemical);
-        }
-    }
-
-    extension(MethodInfo method)
-    {
-        public T CreateDelegate<T>() where T : Delegate
-        {
-            var result = (T?)method.CreateDelegate(typeof(T));
-            DebugAssert.NotNull(result);
-
-            return result;
         }
     }
 
