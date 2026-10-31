@@ -93,23 +93,6 @@ public class DefGeneratorAttribute(Type defType) : Attribute
 }
 
 /// <summary>
-///     Provides a custom XML tag to use when saving/loading this class in <see cref="PawnExtraData{T}" />.
-/// </summary>
-/// <remarks>
-///     Without this attribute, the XML tag is the class name including namespace.
-/// </remarks>
-/// <param name="label">The tag to use.</param>
-[AttributeUsage(AttributeTargets.Class)]
-[BaseTypeRequired(typeof(IPawnData))]
-public class ScribeLabelAttribute(string label) : Attribute
-{
-    /// <summary>
-    ///     The XML tag to use when saving/loading this class in <see cref="PawnExtraData{T}" />.
-    /// </summary>
-    public readonly string label = label;
-}
-
-/// <summary>
 ///     Marks a field as being required to be set in XML when the class is parsed as part of
 ///     loading game data.
 /// </summary>

@@ -44,16 +44,6 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     }
 
     [Test]
-    public void PawnExtraDataCreatesOneInitializedInstancePerPawn()
-    {
-        var first = PawnExtraData<TestPawnData>.Get(pawn);
-        var again = PawnExtraData<TestPawnData>.Get(pawn);
-        Expect.ReferencesAreEqual(first, again);
-        Expect.ReferencesAreEqual(pawn, first.Pawn);
-        Expect.AreEqual(1, first.initializations);
-    }
-
-    [Test]
     public void TrackerAggregatesRaceRenderAndUnlockPropertiesThenResets()
     {
         var recipe = new RecipeDef();
@@ -249,9 +239,3 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
 }
 
 public sealed class TestExtension : DefModExtension;
-public sealed class TestPawnData : IPawnData
-{
-    public Pawn Pawn { get; set; } = null!;
-    public int initializations;
-    public void Init() => initializations++;
-}
