@@ -27,19 +27,10 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
 
         // Like vanilla's lovin' chance node, use a pawn-specific hourly roll without consuming
         // the global random stream. Choose the partner once, before rolling that pair's MTB.
-        Rand.PushState(pawn.RandSeedForHour(Gen.HashCombineInt(UniqueSaveKey, LovinChanceSeedSalt)));
-        NightVisit visit;
-        bool willing;
-        try
-        {
-            visit = visits.RandomElement();
-            willing = Rand.MTBEventOccurs(LovePartnerRelationUtility.GetLovinMtbHours(pawn, visit.Partner),
-                GenDate.TicksPerHour, GenDate.TicksPerHour);
-        }
-        finally
-        {
-            Rand.PopState();
-        }
+        using var _ = new RandBlock(pawn.RandSeedForHour(Gen.HashCombineInt(UniqueSaveKey, LovinChanceSeedSalt)));
+        NightVisit visit = visits.RandomElement()!;
+        bool willing = Rand.MTBEventOccurs(LovePartnerRelationUtility.GetLovinMtbHours(pawn, visit.Partner),
+            GenDate.TicksPerHour, GenDate.TicksPerHour);
 
         return willing ? NightVisitHelpers.TryMakeVisitJob(pawn, visit) : null;
     }
