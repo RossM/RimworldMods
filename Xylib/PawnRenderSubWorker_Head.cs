@@ -5,11 +5,11 @@ public class PawnRenderSubWorker_Head : PawnRenderSubWorker
 {
     public override void TransformOffset(PawnRenderNode node, PawnDrawParms parms, ref Vector3 offset, ref Vector3 pivot)
     {
-        if (node.tree.pawn.GeneTracker_Xylib is { } geneTracker)
-        {
-            offset *= geneTracker.bodyScale;
-            offset += geneTracker.headOffset;
-        }
+        if (node.tree.pawn.GeneTracker_Xylib is not { } geneTracker)
+            return;
+
+        offset *= geneTracker.bodyScale;
+        offset += geneTracker.headOffset;
     }
 
     public override void TransformScale(PawnRenderNode node, PawnDrawParms parms, ref Vector3 scale)

@@ -22,7 +22,7 @@ public class QuestNode_RefugeePodCrash_Space : QuestNode_Root_RefugeePodCrash
     public override Pawn GeneratePawn_NewTemp(Map? map)
     {
         var request = new PawnGenerationRequest(
-            kind: kindDef.GetValue(QuestGen.slate),
+            kind: kindDef.GetValue(QuestGen.slate) ?? PawnKindDefOf.Drifter,
             faction: null,
             context: PawnGenerationContext.NonPlayer,
             tile: map?.Tile,

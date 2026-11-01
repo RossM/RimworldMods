@@ -117,18 +117,11 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         if (!pawnGettingFood.IsColonist || pawnGettingFood.Map == null)
             return null;
 
-        foreach (Pawn spawnedColonyAnimal in pawnGettingFood.Map.mapPawns.SpawnedColonyAnimals)
-        {
-            foreach (Thing item in spawnedColonyAnimal.inventory.innerContainer)
-            {
-                if (FoodValidator(pawnGettingFood, this, item) && !spawnedColonyAnimal.IsForbidden(pawnGettingFood)
-                                                               && pawnGettingFood.CanReach(spawnedColonyAnimal, PathEndMode.OnCell,
-                                                                   Danger.Some))
-                    return item;
-            }
-        }
-
-        return null;
+        return (from spawnedColonyAnimal in pawnGettingFood.Map.mapPawns.SpawnedColonyAnimals
+            from item in spawnedColonyAnimal.inventory.innerContainer
+            where FoodValidator(pawnGettingFood, this, item) && !spawnedColonyAnimal.IsForbidden(pawnGettingFood) &&
+                  pawnGettingFood.CanReach(spawnedColonyAnimal, PathEndMode.OnCell, Danger.Some)
+            select item).FirstOrDefault();
     }
 
     private static bool FoodValidator(Pawn pawn, Hediff_DietDependency hediff, Thing food)

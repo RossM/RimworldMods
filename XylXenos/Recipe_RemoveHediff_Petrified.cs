@@ -63,10 +63,9 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             return;
         }
 
-        foreach (var hediff in pawn.health.hediffSet.hediffs.ToList())
+        foreach (Hediff hediff in pawn.health.hediffSet.hediffs.Where(hediff => hediff.def == recipe.removesHediff && hediff.Visible).ToList())
         {
-            if (hediff.def == recipe.removesHediff && hediff.Visible)
-                RemoveHediff(pawn, billDoer, hediff, bill);
+            RemoveHediff(pawn, billDoer, hediff, bill);
         }
     }
 

@@ -68,7 +68,8 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
             Pawn.genes.RemoveGene(gene);
 
         addedGenes ??= [];
-        addedGenes.Add(Pawn.genes.AddGene(geneDef, xenogene));
+        if (Pawn.genes.AddGene(geneDef, xenogene) is { } addedGene)
+            addedGenes.Add(addedGene);
     }
 
     public override void CompPostPostRemove()

@@ -33,10 +33,9 @@ public class GeneCompProperties_JoyGiverChances : GeneCompProperties
         if (factors is null)
             yield break;
 
-        foreach (var factor in factors)
+        if (factors.Any(factor => factor.joyGiver is null))
         {
-            if (factor.joyGiver is null)
-                yield return $"null {nameof(factor.joyGiver)} in {nameof(factors)}";
+            yield return $"null {nameof(JoyGiverFactor.joyGiver)} in {nameof(factors)}";
         }
     }
 }

@@ -51,10 +51,9 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
             yield break;
         }
 
-        foreach (var mode in modes)
+        if (modes.Any(mode => mode is null))
         {
-            if (mode is null)
-                yield return "mode is null";
+            yield return "mode is null";
         }
     }
 }
@@ -128,7 +127,10 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
     {
         DebugAssert.NotNull(Pawn);
 
-        SetGrowthMode(TProps.modes.Where(mode => mode != GrowthMode).RandomElementByWeight(mode => mode.weight));
+        if (TProps.modes.Where(mode => mode != GrowthMode).RandomElementByWeight(mode => mode.weight) is not { } growthMode)
+            return;
+
+        SetGrowthMode(growthMode);
 
         if (!GrowthMode.message.NullOrEmpty() && PawnUtility.ShouldSendNotificationAbout(Pawn))
             Messages.Message(

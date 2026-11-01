@@ -50,13 +50,11 @@ public class GeneComp_Milkable : GeneComp
         get
         {
             int curTick = Find.TickManager.TicksGame;
-            if (lastChargeableUpdateTick != curTick)
-            {
-                lastChargeableUpdateTick = curTick;
-                field = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediff).TryGetComp<HediffComp_Chargeable>();
-            }
+            if (lastChargeableUpdateTick == curTick)
+                return field;
 
-            return field;
+            lastChargeableUpdateTick = curTick;
+            return field = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediff).TryGetComp<HediffComp_Chargeable>();
         }
     }
 

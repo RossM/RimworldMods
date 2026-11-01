@@ -30,11 +30,8 @@ public class GeneCompProperties_StartingItems : GeneCompProperties
         if (items is null)
             yield break;
 
-        foreach (var item in items)
-        {
-            if (item.count.IsInvalid)
-                yield return $"invalid {nameof(item.count)} in {nameof(items)}";
-        }
+        if (items.Any(item => item.count.IsInvalid))
+            yield return $"invalid {nameof(StartingItemOption.count)} in {nameof(items)}";
     }
 }
 

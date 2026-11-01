@@ -261,10 +261,7 @@ public static class Extensions
         /// </returns>
         public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            if (pawn.genes == null)
-                return [];
-
-            return Iterator();
+            return pawn.genes == null ? [] : Iterator();
 
             IEnumerable<GeneWithComps> Iterator()
             {
@@ -344,10 +341,7 @@ public static class Extensions
         /// </returns>
         public IEnumerable<T> ActiveGeneCompsOfType<T>() where T : GeneComp
         {
-            if (pawn.genes == null)
-                return [];
-
-            return Iterator();
+            return pawn.genes == null ? [] : Iterator();
 
             IEnumerable<T> Iterator()
             {
@@ -374,10 +368,7 @@ public static class Extensions
         /// </returns>
         public IEnumerable<T> ActiveGeneCompsOfType<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            if (pawn.genes == null)
-                return [];
-
-            return Iterator();
+            return pawn.genes == null ? [] : Iterator();
 
             IEnumerable<T> Iterator()
             {
@@ -526,7 +517,7 @@ public static class Extensions
         ///     The first matching hediff, or <see langword="null" /> if no match is found.
         /// </returns>
         public HediffWithComps? FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp => 
-            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().FirstOrDefault(hediff => predicate(hediff.GetComp<T>()));
+            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().FirstOrDefault(hediff => predicate(hediff.GetComp<T>()!));
 
         /// <summary>
         ///     Determines whether the pawn has a hediff with a <see cref="HediffComp" /> of the specified type.
@@ -553,7 +544,7 @@ public static class Extensions
         ///     <see langword="true" /> if a matching hediff exists; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp =>
-            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Any(hediff => predicate(hediff.GetComp<T>()));
+            pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Any(hediff => predicate(hediff.GetComp<T>()!));
 
         /// <summary>
         ///     Gets all hediffs on the pawn with the specified def.
@@ -606,7 +597,7 @@ public static class Extensions
         ///     The matching hediffs.
         /// </returns>
         public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension => 
-            pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>().Where(hediff => predicate(hediff.def.GetModExtension<T>()));
+            pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>().Where(hediff => predicate(hediff.def.GetModExtension<T>()!));
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef? chemicalDef)
         {
@@ -627,10 +618,7 @@ public static class Extensions
         public bool ChemicalIsAllowedByGenes(ThingDef drug)
         {
             ChemicalDef? chemical = DrugStatsUtility.GetChemical(drug);
-            if (chemical == null)
-                return true;
-
-            return pawn.ChemicalIsAllowedByGenes(chemical);
+            return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
         }
     }
 

@@ -87,10 +87,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
 
     public override bool Valid(LocalTargetInfo target, bool showMessages = false)
     {
-        if (target.Thing?.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) is not true)
-            return false;
-
-        return base.Valid(target, showMessages);
+        return target.Thing?.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) is true && base.Valid(target, showMessages);
     }
 
     public override void DrawEffectPreview(LocalTargetInfo target)
@@ -125,12 +122,12 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
                 c => c.DistanceTo(selectedTarget.Cell) >= Props.minRange
                      && GenSight.LineOfSight(selectedTarget.Cell, c, parent.pawn.Map));
 
-        if (target.IsValid)
-        {
-            GenDraw.DrawTargetHighlight(target);
-            DebugAssert.NotNull(Props.projectileDef.projectile);
-            if (Props.projectileDef.projectile.explosionRadius > 0f)
-                GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
-        }
+        if (!target.IsValid)
+            return;
+
+        GenDraw.DrawTargetHighlight(target);
+        DebugAssert.NotNull(Props.projectileDef.projectile);
+        if (Props.projectileDef.projectile.explosionRadius > 0f)
+            GenDraw.DrawRadiusRing(target.Cell, Props.projectileDef.projectile.explosionRadius, Color.white);
     }
 }

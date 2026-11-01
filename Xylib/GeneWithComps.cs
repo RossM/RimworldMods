@@ -297,13 +297,13 @@ public class GeneWithComps : Gene, IEventListener
 
         foreach (var chemicalDef in DefDatabase<ChemicalDef>.AllDefs)
         {
-            if (!pawn.ChemicalIsAllowedByGenes(chemicalDef))
-            {
-                if (chemicalDef.toleranceHediff != null)
-                    hediffDefsToRemove.Add(chemicalDef.toleranceHediff);
-                if (chemicalDef.addictionHediff != null)
-                    hediffDefsToRemove.Add(chemicalDef.addictionHediff);
-            }
+            if (pawn.ChemicalIsAllowedByGenes(chemicalDef))
+                continue;
+
+            if (chemicalDef.toleranceHediff != null)
+                hediffDefsToRemove.Add(chemicalDef.toleranceHediff);
+            if (chemicalDef.addictionHediff != null)
+                hediffDefsToRemove.Add(chemicalDef.addictionHediff);
         }
 
         var hediffs = new List<Hediff>(pawn.health.hediffSet.hediffs);

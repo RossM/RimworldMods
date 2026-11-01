@@ -10,6 +10,9 @@ public static class Patch_IdeoUtility
     {
         __result = false;
 
+        if (PreceptDefOf.PreferredXenotype is null)
+            return true;
+
         XenotypeSet? xenotypeSet = factionDef.xenotypeSet;
         if (xenotypeSet == null)
             return true;

@@ -32,7 +32,9 @@ public static class Patch_WorkGiver_Warden_Feed
             Thing? foodSource = hediff.FindFoodFor(pawn);
             if (foodSource == null)
                 continue;
-            ThingDef foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
+            ThingDef? foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
+            if (foodDef == null)
+                continue;
 
             Job job = JobMaker.MakeJob(JobDefOf.FeedPatient, foodSource, prisoner);
             job.count = hediff.ItemsWantedToSatisfy(foodSource, foodDef);

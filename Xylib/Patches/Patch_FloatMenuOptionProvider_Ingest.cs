@@ -28,7 +28,7 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
             ? clickedThing.def.ingestible.ingestCommandString.Formatted(clickedThing.LabelShort)
             : "ConsumeThing".Translate(clickedThing.LabelShort, clickedThing);
 
-        string reason = PatchHelpers.GetChemicalBlockedByGenesReason(context, chemical);
+        string reason = PatchHelpers.GetChemicalBlockedByGenesReason(context.FirstSelectedPawn, chemical);
 
         __result = new FloatMenuOption($"{text}: {reason}", null);
     }

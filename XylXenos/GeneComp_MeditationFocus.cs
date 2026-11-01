@@ -12,8 +12,7 @@ public class GeneCompProperties_MeditationFocus : GeneCompProperties
 
     public override IEnumerable<string> CustomEffectDescriptions()
     {
-        foreach (var type in allowedMeditationFocusTypes ?? Enumerable.Empty<MeditationFocusDef>())
-            yield return $"{"MeditationFocusesUnlocked".Translate()}: {type.LabelCap}";
+        return allowedMeditationFocusTypes?.Select(type => $"{"MeditationFocusesUnlocked".Translate()}: {type.LabelCap}") ?? [];
     }
 }
 

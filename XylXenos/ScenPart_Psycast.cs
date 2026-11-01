@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace XylXenos;
+﻿namespace XylXenos;
 
 [UsedFromXml]
 public class ScenPart_Psycast : ScenPart_PawnModifier
@@ -8,7 +6,9 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
     private static IEnumerable<AbilityDef> PossiblePsycasts => field ??=
         GetPossiblePsycasts();
 
-    public required AbilityDef psycast;
+    public required AbilityDef? psycast;
+
+    public override bool Valid() => ModsConfig.RoyaltyActive;
 
     private static List<AbilityDef> GetPossiblePsycasts()
     {
@@ -29,6 +29,9 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
 
     public override void DoEditInterface(Listing_ScenEdit listing)
     {
+        if (psycast is null)
+            return;
+
         Rect scenPartRect = listing.GetScenPartRect(this, RowHeight * 4f);
 
         if (Widgets.ButtonText(scenPartRect.TopPartPixels(RowHeight), GetLabel(psycast)))
@@ -47,7 +50,6 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
         psycast = PossiblePsycasts.RandomElement();
     }
 
-    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
     public override bool HasNullDefs()
     {
         if (base.HasNullDefs())
@@ -67,12 +69,12 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
 
     private void LearnPsycast(Pawn pawn)
     {
-        if (CanLearnPsycast(pawn, psycast))
-        {
-            DebugAssert.NotNull(pawn.abilities);
+        if (psycast == null || !CanLearnPsycast(pawn, psycast))
+            return;
 
-            pawn.abilities.GainAbility(psycast);
-        }
+        DebugAssert.NotNull(pawn.abilities);
+
+        pawn.abilities.GainAbility(psycast);
     }
 
     private static bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)

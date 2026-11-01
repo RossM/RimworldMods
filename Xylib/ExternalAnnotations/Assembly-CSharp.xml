@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <assembly name="Assembly-CSharp">
 
@@ -166,7 +166,7 @@
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="F:RimWorld.BodyTypeGraphicData.texturePath">
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
   </member>
   <member name="P:RimWorld.BuildingProperties.IsTurret">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
@@ -3201,13 +3201,13 @@
   </member>
   <member
     name="M:Verse.GenCollection.TryRandomElementByWeight``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Single},``0@)">
-    <!-- Failure produces default(T). Success may select a null element, so it does not imply notnull. -->
     <attribute ctor="M:JetBrains.Annotations.ContractAnnotationAttribute.#ctor(System.String)">
-      <argument>=&gt; false, result:null</argument>
+      <argument>=&gt; false, result:null; =&gt; true, result:notnull</argument>
     </attribute>
     <parameter name="source">
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor"/>
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
+      <attribute ctor="M:JetBrains.Annotations.ItemNotNullAttribute.#ctor"/>
     </parameter>
     <parameter name="weightSelector">
       <attribute ctor="M:JetBrains.Annotations.InstantHandleAttribute.#ctor"/>
@@ -5421,7 +5421,7 @@
   </member>
   <member name="M:Verse.PawnRenderNode.TexPathFor(Verse.Pawn)">
     <attribute ctor="M:JetBrains.Annotations.PureAttribute.#ctor"/>
-    <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor"/>
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     <parameter name="pawn">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor"/>
     </parameter>

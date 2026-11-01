@@ -90,14 +90,12 @@ public class PatchOperationReplaceGenes : PatchOperation
         // Get or create <modExtensions><li Class="{name}">.
         var modExtensions = GetOrCreateChild(parent, "modExtensions");
         var extension = modExtensions.SelectSingleNode($"li[@Class='{name}']");
-        if (extension is null)
-        {
-            var element = parent.OwnerDocument!.CreateElement("li");
-            element.SetAttribute("Class", name);
-            extension = modExtensions.AppendChild(element)!;
-        }
+        if (extension is not null)
+            return extension;
 
-        return extension;
+        var element = parent.OwnerDocument!.CreateElement("li");
+        element.SetAttribute("Class", name);
+        return modExtensions.AppendChild(element)!;
     }
 
     private static XmlElement GetOrCreateChild(XmlNode parent, string name)

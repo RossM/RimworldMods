@@ -55,8 +55,7 @@ public abstract class GeneCompProperties
     /// <returns></returns>
     public virtual IEnumerable<string> CustomEffectDescriptions()
     {
-        foreach (var entry in SpecialDisplayStats(StatRequest.ForEmpty()))
-            yield return $"{entry.LabelCap}: {entry.ValueString}";
+        return SpecialDisplayStats(StatRequest.ForEmpty()).Select(entry => $"{entry.LabelCap}: {entry.ValueString}");
     }
 
     public virtual string? ExtraGeneEffectDescription() => null;
@@ -138,29 +137,9 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     #endregion
 
-    public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
-    {
-        if (comps is null)
-            yield break;
+    public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req) => comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats(req));
 
-        foreach (var comp in comps)
-        {
-            foreach (var result in comp.SpecialDisplayStats(req))
-                yield return result;
-        }
-    }
-
-    public virtual IEnumerable<string> GetCustomEffectDescriptions()
-    {
-        if (comps is null)
-            yield break;
-
-        foreach (var comp in comps)
-        {
-            foreach (var result in comp.CustomEffectDescriptions())
-                yield return result;
-        }
-    }
+    public virtual IEnumerable<string> GetCustomEffectDescriptions() => comps is null ? [] : comps.SelectMany(comp => comp.CustomEffectDescriptions());
 
     public string? GetExtraGeneEffectDescription()
     {

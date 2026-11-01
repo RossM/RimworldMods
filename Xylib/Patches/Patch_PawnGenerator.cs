@@ -20,13 +20,11 @@ internal static class Patch_PawnGenerator
         if (xenotypeSet is not XenotypeSetWithDefault withDefault)
             return true;
 
-        if (xenotypeChance.xenotype != withDefault.defaultXenotype)
-        {
-            if (___tmpXenotypeChances.ContainsKey(xenotypeChance.xenotype))
-                ___tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
-            else
-                ___tmpXenotypeChances.Add(xenotypeChance.xenotype, xenotypeChance.chance);
-        }
+        if (xenotypeChance.xenotype == withDefault.defaultXenotype)
+            return false;
+
+        if (!___tmpXenotypeChances.TryAdd(xenotypeChance.xenotype, xenotypeChance.chance))
+            ___tmpXenotypeChances[xenotypeChance.xenotype] += xenotypeChance.chance;
 
         return false;
     }

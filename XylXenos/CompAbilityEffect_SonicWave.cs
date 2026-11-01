@@ -26,17 +26,13 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
         DebugAssert.NotNull(parent.pawn.Map);
 
         Map map = parent.pawn.Map;
-        foreach (IntVec3 item in AffectedCells(target))
+        foreach (Pawn? targetPawn in AffectedCells(target).Select(item => item.GetThingList(map)).SelectMany(thingList => thingList.OfType<Pawn>()))
         {
-            var thingList = item.GetThingList(map);
-            foreach (var targetPawn in thingList.OfType<Pawn>())
-            {
-                DebugAssert.NotNull(targetPawn.stances);
+            DebugAssert.NotNull(targetPawn.stances);
 
-                if (!targetPawn.RaceProps.IsFlesh)
-                    continue;
-                targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), parent.pawn, addBattleLog: false);
-            }
+            if (!targetPawn.RaceProps.IsFlesh)
+                continue;
+            targetPawn.stances.stunner.StunFor(GetDurationSeconds(targetPawn).SecondsToTicks(), parent.pawn, addBattleLog: false);
         }
     }
 
@@ -60,26 +56,24 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
     {
         DebugAssert.NotNull(parent.pawn.Map);
 
+        if (parent.pawn.Faction == null)
+            return false;
+
         bool affectsAlly = false;
         bool affectsEnemy = false;
 
-        if (parent.pawn.Faction != null)
-            foreach (IntVec3 item in AffectedCells(target))
-            {
-                List<Thing> thingList = item.GetThingList(parent.pawn.Map);
-                foreach (var targetPawn in thingList.OfType<Pawn>())
-                {
-                    DebugAssert.NotNull(targetPawn.stances);
+        foreach (Pawn? targetPawn in AffectedCells(target).Select(item => item.GetThingList(parent.pawn.Map)).SelectMany(thingList => thingList.OfType<Pawn>()))
+        {
+            DebugAssert.NotNull(targetPawn.stances);
 
-                    if (targetPawn.RaceProps.IsFlesh && !targetPawn.stances.stunner.Stunned)
-                    {
-                        if (targetPawn != parent.pawn && targetPawn.Faction == parent.pawn.Faction)
-                            affectsAlly = true;
-                        else if (targetPawn.HostileTo(parent.pawn))
-                            affectsEnemy = true;
-                    }
-                }
-            }
+            if (!targetPawn.RaceProps.IsFlesh || targetPawn.stances.stunner.Stunned)
+                continue;
+
+            if (targetPawn != parent.pawn && targetPawn.Faction == parent.pawn.Faction)
+                affectsAlly = true;
+            else if (targetPawn.HostileTo(parent.pawn))
+                affectsEnemy = true;
+        }
 
         return affectsEnemy && !affectsAlly;
     }

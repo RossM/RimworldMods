@@ -11,8 +11,7 @@ public static class DebugArena
 
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
-    private static readonly HashSet<PawnKindDef> badKinds =
-    [
+    private static readonly HashSet<PawnKindDef> badKinds = [.. ((IEnumerable<PawnKindDef?>)[
         PawnKindDefOf.Nociosphere,
         PawnKindDefOf.Revenant,
         PawnKindDefOf.FleshmassNucleus,
@@ -24,13 +23,11 @@ public static class DebugArena
         DefDatabase<PawnKindDef>.GetNamed("Dryad_Medicinemaker"),
         DefDatabase<PawnKindDef>.GetNamed("Dryad_Berrymaker"),
         DefDatabase<PawnKindDef>.GetNamed("Dryad_Gaumaker"),
-    ];
+    ]).OfType<PawnKindDef>()];
 
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
     {
-        var pawnKindsForBattleRoyale = new List<PawnKindDef>();
-
         List<string> humanoidPawnKinds =
         [
             // Tribal
@@ -131,27 +128,14 @@ public static class DebugArena
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
-        foreach (var pawnKind in humanoidPawnKinds)
-        {
-            var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pawnKind);
-            if (pawnKindDef == null)
-                continue;
+        List<PawnKindDef> pawnKindsForBattleRoyale
+            =
+            [
+                .. humanoidPawnKinds.Select(pawnKind => DefDatabase<PawnKindDef>.GetNamed(pawnKind))
+                    .OfType<PawnKindDef>().SelectMany(pawnKindDef => xenotypes, PawnKindWithXenotype),
 
-            foreach (var xenotype in xenotypes)
-            {
-                PawnKindDef newPawnKindDef = PawnKindWithXenotype(pawnKindDef, xenotype);
-                pawnKindsForBattleRoyale.Add(newPawnKindDef);
-            }
-        }
-
-        foreach (var pawnKind in otherPawnKinds)
-        {
-            var pawnKindDef = DefDatabase<PawnKindDef>.GetNamed(pawnKind);
-            if (pawnKindDef == null)
-                continue;
-
-            pawnKindsForBattleRoyale.Add(pawnKindDef);
-        }
+                .. otherPawnKinds.Select(pawnKind => DefDatabase<PawnKindDef>.GetNamed(pawnKind)).OfType<PawnKindDef>(),
+            ];
 
         PerformBattleRoyale(pawnKindsForBattleRoyale);
     }
@@ -171,18 +155,11 @@ public static class DebugArena
 
         var xenotypes = DefDatabase<XenotypeDef>.AllDefs.Where(ValidXenotype).ToList();
 
-        List<PawnKindDef> pawnKindsForBattleRoyale = [];
-        foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
-        {
-            if (badKinds.Contains(pawnKindDef))
-                continue;
-
-            if (pawnKindDef.RaceProps.Humanlike)
-                foreach (var xenotypeDef in xenotypes)
-                    pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, xenotypeDef));
-            else
-                pawnKindsForBattleRoyale.Add(pawnKindDef);
-        }
+        List<PawnKindDef> pawnKindsForBattleRoyale =
+        [
+            .. DefDatabase<PawnKindDef>.AllDefsListForReading.Where(pawnKindDef => !badKinds.Contains(pawnKindDef))
+                .SelectMany(pawnKindDef => pawnKindDef.RaceProps.Humanlike ? xenotypes.Select(xenotypeDef => PawnKindWithXenotype(pawnKindDef, xenotypeDef)) : [pawnKindDef]),
+        ];
 
         List<DebugActionNode> actions = [];
         for (int n = 25; n <= 1000; n += 25)
@@ -252,18 +229,11 @@ public static class DebugArena
 
     private static List<PawnKindDef> PawnKindsWithDefaultXenotype()
     {
-        List<PawnKindDef> pawnKindsForBattleRoyale = [];
-
-        foreach (var pawnKindDef in DefDatabase<PawnKindDef>.AllDefsListForReading)
-        {
-            if (badKinds.Contains(pawnKindDef))
-                continue;
-
-            if (pawnKindDef.RaceProps.Humanlike)
-                pawnKindsForBattleRoyale.Add(PawnKindWithXenotype(pawnKindDef, GetDefaultXenotype(pawnKindDef)));
-            else
-                pawnKindsForBattleRoyale.Add(pawnKindDef);
-        }
+        List<PawnKindDef> pawnKindsForBattleRoyale =
+        [
+            .. DefDatabase<PawnKindDef>.AllDefsListForReading.Where(pawnKindDef => !badKinds.Contains(pawnKindDef)).Select(pawnKindDef =>
+                pawnKindDef.RaceProps.Humanlike ? PawnKindWithXenotype(pawnKindDef, GetDefaultXenotype(pawnKindDef)) : pawnKindDef),
+        ];
 
         return pawnKindsForBattleRoyale;
     }
@@ -298,7 +268,7 @@ public static class DebugArena
         return newPawnKindDef;
     }
 
-    public static void PerformBattleRoyale(
+    private static void PerformBattleRoyale(
         IEnumerable<PawnKindDef> kindsEnumerable,
         int scoreRankLimit = -1,
         PawnKindDef? forcedPawnKind = null)
@@ -374,10 +344,10 @@ public static class DebugArena
             if (scoreRankLimit > 0)
                 filteredKinds = [.. kinds.Where(def => total[def] > 0).OrderByDescending(CombatPower).Take(scoreRankLimit)];
 
-            PawnKindDef lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
+            PawnKindDef? lhsDef = forcedPawnKind ?? filteredKinds.RandomElementByWeight(PawnKindWeight);
             // ReSharper disable once AccessToModifiedClosure
             // Use RandomElement rather than RandomElementByWeight to avoid bias
-            PawnKindDef rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElement();
+            PawnKindDef? rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElement();
 
             if (lhsDef == null || rhsDef == null)
                 return false;
@@ -469,7 +439,7 @@ public static class DebugArena
         return GenMath.RoundRandom(Mathf.Exp(Rand.Range(Mathf.Log(min), Mathf.Log(max))));
     }
 
-    public static bool BeginArenaFight(List<PawnKindDef> lhs, List<PawnKindDef> rhs, Action<ArenaResult> callback)
+    private static bool BeginArenaFight(List<PawnKindDef> lhs, List<PawnKindDef> rhs, Action<ArenaResult> callback)
     {
         DebugAssert.NotNull(Find.World?.tileTemperatures);
         DebugAssert.NotNull(Current.Game);
@@ -518,7 +488,7 @@ public static class DebugArena
         }
     }
 
-    public static List<Pawn> SpawnPawnSet(Map map, List<PawnKindDef> kinds, IntVec3 spot, Faction faction)
+    private static List<Pawn> SpawnPawnSet(Map map, List<PawnKindDef> kinds, IntVec3 spot, Faction faction)
     {
         List<Pawn> list = [];
         foreach (PawnKindDef pawnKind in kinds)

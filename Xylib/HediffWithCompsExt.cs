@@ -13,15 +13,15 @@ public class HediffWithCompsExt : HediffWithComps
     {
         get
         {
-            if (curStageInternal == null)
-            {
-                var stage = def.stages?[CurStageIndex];
-                if (stage is null)
-                    return null;
+            if (curStageInternal != null)
+                return curStageInternal;
 
-                curStageInternal = stage.MemberwiseClone();
-                UpdateCurStage(curStageInternal);
-            }
+            var stage = def.stages?[CurStageIndex];
+            if (stage is null)
+                return null;
+
+            curStageInternal = stage.MemberwiseClone();
+            UpdateCurStage(curStageInternal);
 
             return curStageInternal;
         }

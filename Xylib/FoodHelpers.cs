@@ -47,9 +47,10 @@ public static class FoodHelpers
             if (compIngredients is null)
                 return eater.GetCookedNutritionFactor(foodDef.FoodGroups);
 
-            List<float> multipliers = [];
-            foreach (var ingredient in compIngredients.ingredients)
-                multipliers.Add(eater.GetCookedNutritionFactor(ingredient.FoodGroups));
+            List<float> multipliers =
+            [
+                .. compIngredients.ingredients.Select(ingredient => eater.GetCookedNutritionFactor(ingredient.FoodGroups)),
+            ];
 
             return multipliers.Count > 0 ? (multipliers.Min() + multipliers.Max()) / 2 : 1.0f;
         }

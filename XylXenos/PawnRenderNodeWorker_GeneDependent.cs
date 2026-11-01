@@ -61,7 +61,7 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
 
     #region PawnRenderNodeWorker_FlipWhenCrawling
 
-    protected override Material GetMaterial(PawnRenderNode node, PawnDrawParms parms)
+    protected override Material? GetMaterial(PawnRenderNode node, PawnDrawParms parms)
     {
         if (parms.flipHead && node.Props is PawnRenderNodeProperties_GeneDependent { flipWhenCrawling: true })
             parms.facing = parms.facing.Opposite;

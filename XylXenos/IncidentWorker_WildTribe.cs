@@ -31,7 +31,8 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_WildTribe : IncidentWorker
 {
-    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>()!;
+    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>() ?? 
+                                                        throw new InvalidOperationException($"Missing {nameof(DefModExtension_Incident_WildTribe)}");
 
     protected override bool CanFireNowSub(IncidentParms parms)
     {

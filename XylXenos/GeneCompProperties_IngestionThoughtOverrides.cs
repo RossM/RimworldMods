@@ -25,10 +25,9 @@ public class GeneCompProperties_IngestionThoughtOverrides : GeneCompProperties
         if (overrides is null)
             yield break;
 
-        foreach (var o in overrides)
+        if (overrides.Any(o => o.thoughts is null))
         {
-            if (o.thoughts is null)
-                yield return $"null {nameof(o.thoughts)} in {nameof(overrides)}";
+            yield return $"null {nameof(GeneIngestionThoughtOverride.thoughts)} in {nameof(overrides)}";
         }
     }
 }

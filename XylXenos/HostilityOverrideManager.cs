@@ -86,15 +86,11 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
             if (factions is not { Count: > 0 })
                 continue;
 
-            foreach (var factionDef in factions)
-            {
-                foreach (var targetFaction in mapFactions.Where(faction => faction.def == factionDef))
-                {
-                    anyOverrides = true;
-                    activeOverrides.Add((pawn.Faction, targetFaction));
-                }
-            }
+            foreach (Faction? targetFaction in factions.SelectMany(factionDef => mapFactions.Where(faction => faction.def == factionDef)))
+                activeOverrides.Add((pawn.Faction, targetFaction));
         }
+
+        anyOverrides = activeOverrides.Count > 0;
     }
 
     public void Notify_DamageTaken(Thing? target, DamageInfo info)

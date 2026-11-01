@@ -69,10 +69,10 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
 
         actor.skills.Learn(SkillDefOf.Animals, 0.13f * delta);
         gatherProgress += actor.GetStatValue(StatDefOf.AnimalGatherSpeed) * delta;
-        if (gatherProgress >= WorkTotal)
-        {
-            Gather(actor);
-            actor.jobs.EndCurrentJob(JobCondition.Succeeded);
-        }
+        if (gatherProgress < WorkTotal)
+            return;
+
+        Gather(actor);
+        actor.jobs.EndCurrentJob(JobCondition.Succeeded);
     }
 }

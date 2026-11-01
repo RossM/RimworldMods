@@ -8,7 +8,7 @@ public class PawnRenderNode_AttachmentComplex(Pawn pawn, PawnRenderNodePropertie
 
     public override Graphic? GraphicFor(Pawn pawn)
     {
-        string? texPath = TexPathFor(pawn);
+        string texPath = TexPathFor(pawn);
         if (texPath.NullOrEmpty())
             return null;
         Shader shader = ShaderFor(pawn);
@@ -29,8 +29,8 @@ public class PawnRenderNode_AttachmentComplex(Pawn pawn, PawnRenderNodePropertie
     {
         foreach (Hediff hd in pawn.health.hediffSet.hediffs)
         {
-            if (hd.def.skinShader != null)
-                return hd.def.skinShader.Shader;
+            if (hd.def.skinShader?.Shader is { } shader)
+                return shader;
         }
 
         bool dead = pawn.Dead || pawn.mutant is { HasTurned: true, Def.useCorpseGraphics: true };

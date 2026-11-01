@@ -21,12 +21,12 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
         get
         {
             string text = base.TipStringExtra;
-            if (Need != null)
-            {
-                if (!text.NullOrEmpty())
-                    text += "\n";
-                text += $"{"CreatesNeed".Translate()}: {Need.LabelCap} ({Need.CurLevelPercentage.ToStringPercent("F0")})";
-            }
+            if (Need == null)
+                return text;
+
+            if (!text.NullOrEmpty())
+                text += "\n";
+            text += $"{"CreatesNeed".Translate()}: {Need.LabelCap} ({Need.CurLevelPercentage.ToStringPercent("F0")})";
 
             return text;
         }

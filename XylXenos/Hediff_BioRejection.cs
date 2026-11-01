@@ -22,20 +22,13 @@ public class Hediff_BioRejection : HediffWithComps
         {
             DebugAssert.NotNull(pawn);
 
-            List<string> causes = [];
-
             List<Hediff> hediffs = pawn.health.hediffSet.hediffs;
-            foreach (Hediff hediff in hediffs)
-            {
-                if (hediff.def.countsAsAddedPartOrImplant)
-                    causes.Add(hediff.Label);
-            }
+            List<string> causes =
+            [
+                .. hediffs.Where(hediff => hediff.def.countsAsAddedPartOrImplant).Select(hediff => hediff.Label),
+            ];
 
-            return $"""
-                    {base.Description}
-                    
-                    {"CausedBy".Translate()}: {causes.ToCommaList().CapitalizeFirst()}
-                    """;
+            return $"{base.Description}\n\n{"CausedBy".Translate()}: {causes.ToCommaList().CapitalizeFirst()}";
         }
     }
 }

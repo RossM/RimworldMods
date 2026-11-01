@@ -65,12 +65,10 @@ public class GeneComp_Flight : GeneComp, IEventListener
         {
             DebugAssert.NotNull(Pawn.apparel?.WornApparel);
 
-            List<string> items = [];
-            foreach (var item in Pawn.apparel.WornApparel)
-            {
-                if (!ApparelAllowsFlight(item.def))
-                    items.Add(item.Label);
-            }
+            List<string> items =
+            [
+                .. Pawn.apparel.WornApparel.Where(item => !ApparelAllowsFlight(item.def)).Select(item => item.Label),
+            ];
 
             flyingDisabledBy
                 = $"{"ApparelRequirementDisabledLabel".Translate()}: {items.ToCommaList(useAnd: true).CapitalizeFirst()}\n\n";
@@ -90,27 +88,27 @@ public class GeneComp_Flight : GeneComp, IEventListener
                     """,
         };
 
-        if (flightAllowedByApparel)
-        {
-            if (Pawn.Drafted)
-                yield return new Command_Toggle
-                {
-                    defaultLabel = "XylCommandAutoFlyDraftedLabel".TranslateSimple(),
-                    defaultDesc = "XylCommandAutoFlyDraftedDesc".TranslateSimple(),
-                    isActive = () => autoFlyDrafted,
-                    toggleAction = () => { autoFlyDrafted = !autoFlyDrafted; },
-                    icon = ExtraIcon,
-                };
-            else
-                yield return new Command_Toggle
-                {
-                    defaultLabel = "XylCommandAutoFlyLabel".TranslateSimple(),
-                    defaultDesc = "XylCommandAutoFlyDesc".TranslateSimple(),
-                    isActive = () => autoFly,
-                    toggleAction = () => { autoFly = !autoFly; },
-                    icon = ExtraIcon,
-                };
-        }
+        if (!flightAllowedByApparel)
+            yield break;
+
+        if (Pawn.Drafted)
+            yield return new Command_Toggle
+            {
+                defaultLabel = "XylCommandAutoFlyDraftedLabel".TranslateSimple(),
+                defaultDesc = "XylCommandAutoFlyDraftedDesc".TranslateSimple(),
+                isActive = () => autoFlyDrafted,
+                toggleAction = () => { autoFlyDrafted = !autoFlyDrafted; },
+                icon = ExtraIcon,
+            };
+        else
+            yield return new Command_Toggle
+            {
+                defaultLabel = "XylCommandAutoFlyLabel".TranslateSimple(),
+                defaultDesc = "XylCommandAutoFlyDesc".TranslateSimple(),
+                isActive = () => autoFly,
+                toggleAction = () => { autoFly = !autoFly; },
+                icon = ExtraIcon,
+            };
     }
 
     public override void CompTick()

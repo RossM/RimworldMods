@@ -12,17 +12,10 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
         get
         {
-            if (field == null)
-            {
-                field = [];
-                foreach (var def in DefDatabase<ThingDef>.AllDefs)
-                {
-                    if (def.GetModExtension<DefModExtension_Thing_WetnessSource>() != null)
-                        field.Add(def);
-                }
-            }
+            if (field != null)
+                return field;
 
-            return field;
+            return field = [.. DefDatabase<ThingDef>.AllDefs.Where(def => def.GetModExtension<DefModExtension_Thing_WetnessSource>() != null)];
         }
     }
 

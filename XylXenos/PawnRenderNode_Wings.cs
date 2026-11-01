@@ -4,7 +4,7 @@
 public class PawnRenderNode_Wings(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree)
     : PawnRenderNode(pawn, props, tree)
 {
-    protected override string? TexPathFor(Pawn pawn)
+    protected override string TexPathFor(Pawn pawn)
     {
         DebugAssert.NotNull(pawn);
 

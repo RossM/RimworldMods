@@ -55,12 +55,12 @@ internal static class PatchHelpers
 
     public static bool TryGetChemicalDependencyGene(Pawn pawn, [NotNullWhen(true)] out Gene? outGene)
     {
-        outGene = (pawn.genes?.GenesListForReading).FirstOrDefault(gene =>
+        outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
             gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
         return outGene != null;
     }
 
-    public static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
+    private static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
         var defExt = geneDef.Extension_GeneWithComps;
         if (defExt == null)
@@ -117,13 +117,7 @@ internal static class PatchHelpers
 
     public static bool IsRecipeUnlockedByGenes(RecipeDef recipe)
     {
-        foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
-        {
-            if (pawn.GeneTracker_Xylib?.unlockedRecipes?.Contains(recipe) is true)
-                return true;
-        }
-
-        return false;
+        return Faction.OfPlayer.AllAlivePawns.Any(pawn => pawn.GeneTracker_Xylib?.unlockedRecipes?.Contains(recipe) is true);
     }
 
     private static HashSet<RecipeDef> GetRecipesUnlockedByGenes()
@@ -161,13 +155,10 @@ internal static class PatchHelpers
         Designator GetCachedDesignator(BuildableDef def)
         {
             DesignationCategoryDef.BuildablePreceptBuilding key = new(def, null);
-            if (!ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
-            {
-                value = new Designator_Build(def);
-                ideoBuildingDesignatorsCached[key] = value;
-            }
+            if (ideoBuildingDesignatorsCached.TryGetValue(key, out var value))
+                return value;
 
-            return value;
+            return ideoBuildingDesignatorsCached[key] = new Designator_Build(def);
         }
     }
 
@@ -178,9 +169,7 @@ internal static class PatchHelpers
 
     public static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
     {
-        if (ignoreRestrictions)
-            return genes;
-        return [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
+        return ignoreRestrictions ? genes : [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
     }
 
     private static Action<object, List<string>>? GetRequiredMemberCheckerFunc(Type defType)
@@ -252,19 +241,19 @@ internal static class PatchHelpers
         sb.AppendLine();
     }
 
-    public static string GetChemicalBlockedByGenesReason(FloatMenuContext context, ChemicalDef chemical)
+    public static string GetChemicalBlockedByGenesReason(Pawn pawn, ChemicalDef chemical)
     {
         var defExtension = chemical.GetModExtension<DefModExtension_Chemical>();
 
         switch (defExtension)
         {
             case { prohibitedGenes.Count: > 0 }
-                when defExtension.prohibitedGenes.FirstOrDefault(gene => context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene1:
+                when defExtension.prohibitedGenes.FirstOrDefault(pawn.HasActiveGene) is { } gene1:
             {
                 return "XylBlockedByGene".Translate(gene1.label);
             }
             case { requiredGenesAll.Count: > 0 }
-                when defExtension.requiredGenesAll.FirstOrDefault(gene => !context.FirstSelectedPawn.HasActiveGene(gene)) is { } gene2:
+                when defExtension.requiredGenesAll.FirstOrDefault(gene => !pawn.HasActiveGene(gene)) is { } gene2:
             {
                 return "XylRequiresGene".Translate(gene2.label);
             }

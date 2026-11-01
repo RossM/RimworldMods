@@ -30,25 +30,19 @@ public static class PatchHelpers
         string text = "";
 
         if (xenotypeDefExtension.agreeingMemes is { Count: > 0 })
-            foreach (MemeDef meme in ideo.memes)
+            foreach (MemeDef meme in ideo.memes.Intersect(xenotypeDefExtension.agreeingMemes))
             {
-                if (xenotypeDefExtension.agreeingMemes.Contains(meme))
-                {
-                    float offset = invert ? -0.2f : 0.2f;
-                    result += offset;
-                    text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
-                }
+                float offset = invert ? -0.2f : 0.2f;
+                result += offset;
+                text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
             }
 
         if (xenotypeDefExtension.disagreeingMemes is { Count: > 0 })
-            foreach (MemeDef meme in ideo.memes)
+            foreach (MemeDef meme in ideo.memes.Intersect(xenotypeDefExtension.disagreeingMemes))
             {
-                if (xenotypeDefExtension.disagreeingMemes.Contains(meme))
-                {
-                    float offset = invert ? 0.2f : -0.2f;
-                    result += offset;
-                    text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
-                }
+                float offset = invert ? 0.2f : -0.2f;
+                result += offset;
+                text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
             }
 
         if (sb != null && !text.NullOrEmpty())
@@ -89,11 +83,11 @@ public static class PatchHelpers
             foreach (Color otherColor in factionColors)
                 distanceMin = Mathf.Min(distanceMin, ColorDistance(color, otherColor));
 
-            if (distanceMin > bestDistanceMin)
-            {
-                bestColorFromSpectrum = colorFromSpectrum;
-                bestDistanceMin = distanceMin;
-            }
+            if (distanceMin <= bestDistanceMin)
+                continue;
+
+            bestColorFromSpectrum = colorFromSpectrum;
+            bestDistanceMin = distanceMin;
         }
 
         return bestColorFromSpectrum;

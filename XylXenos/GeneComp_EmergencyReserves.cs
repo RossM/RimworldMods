@@ -60,15 +60,8 @@ public class GeneComp_EmergencyReserves : GeneComp
         if (Pawn.health.hediffSet.HasHediff(Props.hediff))
             return;
 
-        bool shouldTrigger = false;
-        foreach (var hediffSeverity in Props.triggers)
-        {
-            if (Pawn.health.hediffSet.TryGetHediff(hediffSeverity.hediff, out var result) && result.Severity >= hediffSeverity.minSeverity)
-            {
-                shouldTrigger = true;
-                break;
-            }
-        }
+        bool shouldTrigger = Props.triggers.Any(trigger =>
+            Pawn.health.hediffSet.TryGetHediff(trigger.hediff, out var result) && result.Severity >= trigger.minSeverity);
 
         if (!shouldTrigger)
             return;

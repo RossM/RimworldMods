@@ -43,17 +43,12 @@ public static class DebugOutputs
         [
             new("defName", factionDef => factionDef.defName),
             new("label", factionDef => factionDef.LabelCap),
-        ];
-        foreach (var xenotypeDef in DefDatabase<XenotypeDef>.AllDefs)
-        {
-            var defCaptured = xenotypeDef;
-
-            columns.Add(new(defCaptured.defName, factionDef =>
+            .. DefDatabase<XenotypeDef>.AllDefs.Select(xenotypeDef => new TableDataGetter<FactionDef>(xenotypeDef.defName, factionDef =>
             {
-                float xenotypeChance = GetXenotypeChance(factionDef, defCaptured);
+                float xenotypeChance = GetXenotypeChance(factionDef, xenotypeDef);
                 return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
-            }));
-        }
+            })),
+        ];
 
         DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs, [.. columns]);
         return;
@@ -75,17 +70,12 @@ public static class DebugOutputs
         [
             new("defName", pawnKindDef => pawnKindDef.defName),
             new("label", pawnKindDef => pawnKindDef.LabelCap),
-        ];
-        foreach (var def in DefDatabase<XenotypeDef>.AllDefs)
-        {
-            var xenotypeDef = def;
-
-            columns.Add(new(xenotypeDef.defName, pawnKindDef =>
+            .. DefDatabase<XenotypeDef>.AllDefs.Select(xenotypeDef => new TableDataGetter<PawnKindDef>(xenotypeDef.defName, pawnKindDef =>
             {
                 float xenotypeChance = GetXenotypeChance(pawnKindDef, xenotypeDef);
                 return xenotypeChance > 0 ? xenotypeChance.ToStringPercent() : "";
-            }));
-        }
+            })),
+        ];
 
         DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null),
             [.. columns]);
@@ -108,18 +98,13 @@ public static class DebugOutputs
         [
             new("defName", xenotypeDef => xenotypeDef.defName),
             new("label", xenotypeDef => xenotypeDef.LabelCap),
-        ];
-        foreach (var def in DefDatabase<SkillDef>.AllDefs)
-        {
-            var skillDef = def;
-
-            columns.Add(new(skillDef.LabelCap, xenotypeDef =>
+            .. DefDatabase<SkillDef>.AllDefs.Select(skillDef => new TableDataGetter<XenotypeDef>(skillDef.LabelCap, xenotypeDef =>
             {
                 int skillModifier = GetSkillModifier(xenotypeDef, skillDef);
 
                 return skillModifier != 0 ? skillModifier.ToStringWithSign() : "";
-            }));
-        }
+            })),
+        ];
 
         DebugTables.MakeTablesDialog(DefDatabase<XenotypeDef>.AllDefs, [.. columns]);
         return;
@@ -127,11 +112,9 @@ public static class DebugOutputs
         static int GetSkillModifier(XenotypeDef xenotypeDef, SkillDef skillDef)
         {
             return xenotypeDef.genes
-                .Where(gene => gene.aptitudes != null)
-                .SelectMany(gene => gene.aptitudes)
+                .SelectMany(gene => gene.aptitudes ?? [])
                 .Where(aptitude => aptitude.skill == skillDef)
-                .Select(aptitude => aptitude.level)
-                .Sum();
+                .Sum(aptitude => aptitude.level);
         }
     }
 
@@ -142,23 +125,19 @@ public static class DebugOutputs
         [
             new("defName", factionDef => factionDef.defName),
             new("label", factionDef => factionDef.LabelCap),
+            .. DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal)
+                .OrderBy(memeDef => memeDef.label)
+                .Select(memeDef => new TableDataGetter<FactionDef>(Abbreviate(memeDef.label!).CapitalizeFirst(), factionDef =>
+                {
+                    if (factionDef.requiredMemes?.Contains(memeDef) is true)
+                        return "Req";
+                    if (factionDef.allowedMemes is { Count: > 0 })
+                        return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
+                    if (factionDef.disallowedMemes is { Count: > 0 })
+                        return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
+                    return "";
+                })),
         ];
-        foreach (var def in DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal)
-                     .OrderBy(memeDef => memeDef.label))
-        {
-            var memeDef = def;
-
-            columns.Add(new(Abbreviate(memeDef.label).CapitalizeFirst(), factionDef =>
-            {
-                if (factionDef.requiredMemes?.Contains(memeDef) is true)
-                    return "Req";
-                if (factionDef.allowedMemes is { Count: > 0 })
-                    return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
-                if (factionDef.disallowedMemes is { Count: > 0 })
-                    return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
-                return "";
-            }));
-        }
 
         DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), [.. columns]);
         return;

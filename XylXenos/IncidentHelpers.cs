@@ -4,11 +4,8 @@ public static class IncidentHelpers
 {
     public static XenotypeDef? GetRandomXenotypeNotInColony()
     {
-        HashSet<XenotypeDef> playerXenotypes =
-        [
-            .. Faction.OfPlayer.AllAlivePawns.Where(pawn => pawn.genes is { CustomXenotype: null })
-                .Select(pawn => pawn.genes!.Xenotype),
-        ];
+        HashSet<XenotypeDef> playerXenotypes = [.. GetPlayerXenotypes()];
+
         Dictionary<XenotypeDef, float> weights = new();
         foreach (var faction in Find.FactionManager.AllFactionsVisible)
         {
@@ -19,7 +16,8 @@ public static class IncidentHelpers
             for (int i = 0; i < xenotypeSet.Count; i++)
             {
                 var entry = xenotypeSet[i];
-                weights[entry.xenotype] = weights.GetWithFallback(entry.xenotype) + entry.chance;
+                if (!weights.TryAdd(entry.xenotype, entry.chance))
+                    weights[entry.xenotype] += entry.chance;
             }
         }
 
@@ -28,6 +26,13 @@ public static class IncidentHelpers
             weights.Keys.TryRandomElementByWeight(xenotypeDef => weights[xenotypeDef], out xenotype);
 
         return xenotype;
+
+        static IEnumerable<XenotypeDef> GetPlayerXenotypes()
+        {
+            foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
+                if (pawn.genes is { Xenotype: { } xenotypeDef, CustomXenotype: null })
+                    yield return xenotypeDef;
+        }
     }
 
     public static Ideo? GetRandomIdeoNotInColony()

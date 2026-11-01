@@ -3,5 +3,5 @@
 [StaticConstructorOnStartup]
 public class XShaderDatabase
 {
-    public static readonly Shader CutoutComplexSkin = ShaderDatabase.LoadShader("XylCutoutComplexSkin");
+    public static readonly Shader CutoutComplexSkin = ShaderDatabase.LoadShader("XylCutoutComplexSkin") ?? ShaderDatabase.CutoutComplex;
 }

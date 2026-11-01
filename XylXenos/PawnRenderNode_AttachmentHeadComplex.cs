@@ -29,8 +29,8 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
     {
         foreach (Hediff hd in pawn.health.hediffSet.hediffs)
         {
-            if (hd.def.skinShader != null)
-                return hd.def.skinShader.Shader;
+            if (hd.def.skinShader?.Shader is { } shader)
+                return shader;
         }
 
         bool dead = pawn.Dead || pawn.mutant is { HasTurned: true, Def.useCorpseGraphics: true };
