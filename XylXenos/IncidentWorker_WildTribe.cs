@@ -66,7 +66,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
             pawn.mindState!.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
         }
 
-        string pawnsPlural = DefExt.faction?.pawnsPlural ?? "XylWildPeople".TranslateSimple();
+        string pawnsPlural = DefExt.faction?.pawnsPlural ?? "XylWildPeople".Translate();
         TaggedString baseLetterText = def.letterText.Formatted(pawnsPlural).CapitalizeFirst();
         string text = string.Format(def.letterLabel, pawnsPlural.CapitalizeFirst());
         SendStandardLetter(text, baseLetterText, def.letterDef ?? LetterDefOf.NeutralEvent, parms, pawns[0]);

@@ -13,6 +13,8 @@ public static class Compat_DubsBadHygiene
     [Target("DubsBadHygiene.JobDriver_washPatient.MakeNewToils")]
     public static void AddFinishAction_Postfix(Toil __instance, [Field("job", Scope.Outer)] Job job, [Field("pawn", Scope.Outer)] Pawn pawn)
     {
+        DebugAssert.NotNull(job.targetA.Thing);
+
         Pawn washedPawn = job.def.defName == "washPatient" ? (Pawn)job.targetA.Thing : pawn;
         DebugAssert.False(washedPawn.Dead);
 

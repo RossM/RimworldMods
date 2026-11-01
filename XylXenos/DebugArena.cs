@@ -132,7 +132,7 @@ public static class DebugArena
             =
             [
                 .. humanoidPawnKinds.Select(pawnKind => DefDatabase<PawnKindDef>.GetNamed(pawnKind))
-                    .OfType<PawnKindDef>().SelectMany(pawnKindDef => xenotypes, PawnKindWithXenotype),
+                    .OfType<PawnKindDef>().SelectMany(_ => xenotypes, PawnKindWithXenotype),
 
                 .. otherPawnKinds.Select(pawnKind => DefDatabase<PawnKindDef>.GetNamed(pawnKind)).OfType<PawnKindDef>(),
             ];

@@ -8,7 +8,7 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
 
     public override Graphic? GraphicFor(Pawn pawn)
     {
-        string? texPath = TexPathFor(pawn);
+        string texPath = TexPathFor(pawn);
         if (texPath.NullOrEmpty())
             return null;
         Shader shader = ShaderFor(pawn);
