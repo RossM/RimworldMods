@@ -1,0 +1,33 @@
+<Solution>
+  <Folder Name="/InGameTests/">
+    <File Path="InGameTests/Build-DevTools.ps1" />
+    <File Path="InGameTests/PawnTestFixture.cs" />
+    <File Path="InGameTests/README.md" />
+    <File Path="InGameTests/Run-Tests.ps1" />
+    <File Path="InGameTests/Tests.props" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="AGENTS.md" />
+    <File Path="DataAnalysis/calculate_elo.py" />
+    <File Path="Directory.Build.props" />
+    <File Path="ModBuild.targets" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="AutoColorApparel/AutoColorApparel.csproj" />
+  <Project Path="InGameTests/DevTools/DevTools.csproj" />
+  <Project Path="Scripts/Scripts.csproj" />
+  <Project Path="Xylib.Analyzer.Tests/Xylib.Analyzer.Tests.csproj" />
+  <Project Path="Xylib.Analyzer/Xylib.Analyzer.csproj" />
+  <Project Path="Xylib.Data/Xylib.Data.csproj" />
+  <Project Path="Xylib.Tests/Xylib.Tests.csproj" />
+  <Project Path="Xylib/Xylib.csproj" />
+  <Project Path="XylIdeos.Data/XylIdeos.Data.csproj" />
+  <Project Path="XylIdeos/XylIdeos.csproj" />
+  <Project Path="XylXenos.Data/XylXenos.Data.csproj" />
+  <Project Path="XylXenos.Tests/XylXenos.Tests.csproj" />
+  <Project Path="XylXenos/XylXenos.csproj" />
+  <Project Path="Yobai.Data/Yobai.Data.csproj" />
+  <Project Path="Yobai.Tests/Yobai.Tests.csproj" />
+  <Project Path="Yobai/Yobai.csproj" />
+</Solution>
