@@ -69,9 +69,9 @@ def _draw(node, facing):
 class DefinitionLibrary:
     def __init__(self, root=ROOT, game_data=GAME_DATA):
         self.root = Path(root)
-        self.textures = self.root / "XylXenos.Data/Textures"
+        self.textures = self.root / "XylXenos/Data/Textures"
         self.art = self.root / "Art/Rimworld art"
-        defs = self.root / "XylXenos.Data/Defs"
+        defs = self.root / "XylXenos/Data/Defs"
         gene_xml = read_definitions(defs / "GeneDefs", "GeneDef")
         mod_heads = read_definitions(defs / "HeadTypeDefs", "HeadTypeDef")
         core_heads, core_bodies = [], []

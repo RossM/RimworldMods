@@ -20,7 +20,7 @@ class CatalogTests(unittest.TestCase):
     def test_grouped_variants_keep_names_colors_and_dependencies_with_shared_or_distinct_art(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             for dragon_texture in ("horns", "dragon_horns"):
                 with self.subTest(dragon_texture=dragon_texture):
@@ -54,7 +54,7 @@ class CatalogTests(unittest.TestCase):
     def test_prerequisite_head_overlays_preserve_primary_body_comparisons(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs>
                 <GeneDef><defName>Tail</defName><label>tail</label><renderNodeProperties>
@@ -83,7 +83,7 @@ class CatalogTests(unittest.TestCase):
     def test_sex_specific_eyes_include_each_sex_and_head_shape(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs><GeneDef><defName>Eyes</defName>
                 <renderNodeProperties><li Class="PawnRenderNodeProperties_Eye">
@@ -100,7 +100,7 @@ class CatalogTests(unittest.TestCase):
     def test_shared_head_art_stays_female_and_skin_colors_are_last(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs>
                 <GeneDef><defName>Ears</defName><label>zebra ears</label><renderNodeProperties>
@@ -127,7 +127,7 @@ class DefinitionTests(unittest.TestCase):
     def test_narrow_head_offsets_follow_the_worker(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             for worker, properties, expected in (
                     ("XylXenos.PawnRenderNodeWorker_ForeheadMark", "", (0.07, 0, 0)),
@@ -146,7 +146,7 @@ class DefinitionTests(unittest.TestCase):
     def test_draw_overrides_preserve_defaults_in_other_directions(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs><GeneDef><defName>Test</defName>
                 <renderNodeProperties><li><parentTagDef>Head</parentTagDef><texPath>test</texPath>
@@ -182,7 +182,7 @@ class DefinitionTests(unittest.TestCase):
     def test_head_inheritance_cycles_are_reported(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/HeadTypeDefs"
+            defs = root / "XylXenos/Data/Defs/HeadTypeDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs>
                 <HeadTypeDef Name="A" ParentName="B" />
@@ -197,7 +197,7 @@ class RenderingTests(unittest.TestCase):
     def test_narrow_head_corrections_shift_only_the_expected_axes_in_side_views(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs>
                 <GeneDef><defName>Mark</defName><renderNodeProperties><li>
@@ -249,7 +249,7 @@ class RenderingTests(unittest.TestCase):
     def test_directional_rotation_changes_only_south_on_both_body_types(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs><GeneDef><defName>Tail</defName>
                 <renderNodeProperties><li><workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
@@ -297,7 +297,7 @@ class RenderingTests(unittest.TestCase):
     def test_patterns_change_skin_without_painting_outside_the_pawn(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
-            defs = root / "XylXenos.Data/Defs/GeneDefs"
+            defs = root / "XylXenos/Data/Defs/GeneDefs"
             defs.mkdir(parents=True)
             (defs / "test.xml").write_text("""<Defs><GeneDef><defName>Pattern</defName>
                 <renderNodeProperties>

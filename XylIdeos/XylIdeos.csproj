@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XylIdeos.Data\XylIdeos.Data.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Xylib\Xylib.csproj" />
     <ProjectReference Include="..\Xylib.Analyzer\Xylib.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
@@ -39,6 +38,9 @@
     <ModAssembly Include="Xylib.dll" />
     <ModAssembly Include="0Harmony.dll;Disharmony.dll;Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' != ''" />
   </ItemGroup>
+  <PropertyGroup>
+    <SharedModDataDirectory>$(MSBuildProjectDirectory)\..\Xylib\Data</SharedModDataDirectory>
+  </PropertyGroup>
   <Import Project="..\ModBuild.targets" />
 
 </Project>

@@ -122,7 +122,7 @@ These distinctions matter when choosing a control: a change that seems numerical
 
 ### A.1 Systemic disease
 
-Values are from `XylPetrification` in [GeneDefs_Petrification.xml](XylXenos.Data/Defs/GeneDefs/GeneDefs_Petrification.xml).
+Values are from `XylPetrification` in [GeneDefs_Petrification.xml](XylXenos/Data/Defs/GeneDefs/GeneDefs_Petrification.xml).
 
 | Parameter | Current value | Interpretation |
 |---|---:|---|
@@ -453,17 +453,17 @@ Additional nonlinearities:
 
 Repository sources:
 
-- [Disease, flesh, and excision definitions](XylXenos.Data/Defs/GeneDefs/GeneDefs_Petrification.xml)
-- [Growth-mode transitions and per-episode progression roll](XylXenos/HediffComp_GrowthModeExt.cs)
-- [Cumulative treatment quality and remission reset](XylXenos/HediffComp_PetrificationTendDuration.cs)
-- [Flesh severity cap and efficiency scaling](XylXenos/Hediff_PetrifiedFlesh.cs)
-- [Excision eligibility, wound creation, and automatic tending](XylXenos/Recipe_RemoveHediff_Petrified.cs)
-- [Growth selection, stacking eligibility, and replacement exclusion](Xylib/HediffGiver_RandomExt.cs)
-- [Dynamic hediff stages and tending permissions](Xylib/HediffWithCompsExt.cs)
-- [Giant health scale](XylXenos.Data/Defs/GeneDefs/GeneDefs_Body.xml)
-- [Titan gene set](XylXenos.Data/Defs/GeneDefs/XenotypeDefs_Titan.xml)
-- [Softener prevention](XylXenos.Data/Defs/Drugs/Drugs_Titan.xml)
-- [Disease incident](XylXenos.Data/Defs/Storyteller/Incidents.xml)
+- [Disease, flesh, and excision definitions](XylXenos/Data/Defs/GeneDefs/GeneDefs_Petrification.xml)
+- [Growth-mode transitions and per-episode progression roll](XylXenos/Source/HediffComp_GrowthModeExt.cs)
+- [Cumulative treatment quality and remission reset](XylXenos/Source/HediffComp_PetrificationTendDuration.cs)
+- [Flesh severity cap and efficiency scaling](XylXenos/Source/Hediff_PetrifiedFlesh.cs)
+- [Excision eligibility, wound creation, and automatic tending](XylXenos/Source/Recipe_RemoveHediff_Petrified.cs)
+- [Growth selection, stacking eligibility, and replacement exclusion](Xylib/Source/HediffGiver_RandomExt.cs)
+- [Dynamic hediff stages and tending permissions](Xylib/Source/HediffWithCompsExt.cs)
+- [Giant health scale](XylXenos/Data/Defs/GeneDefs/GeneDefs_Body.xml)
+- [Titan gene set](XylXenos/Data/Defs/GeneDefs/XenotypeDefs_Titan.xml)
+- [Softener prevention](XylXenos/Data/Defs/Drugs/Drugs_Titan.xml)
+- [Disease incident](XylXenos/Data/Defs/Storyteller/Incidents.xml)
 
 Installed-game behavior was inspected in the actual `Assembly-CSharp.dll`, rather than inferred from the reference assembly. Relevant methods include `HediffComp_TendDuration.CompTended`, `SeverityChangePerDay`, and `AllowTend`; `TendUtility.CalculateBaseTendQuality`; `JobDriver_TendPatient`; `BodyDef.CacheDataRecursive`; `BodyPartDef.GetMaxHealth`; `HediffSet.GetPartHealth`; artificial-part installation and recursive restoration; the surgery outcome pipeline; and ingredient-count rounding. The project currently compiles against `Krafs.Rimworld.Ref` 1.7.4977-alpha.1, while the inspected installed game is 1.7.4980 rev60.
 

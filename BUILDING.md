@@ -3,7 +3,7 @@
 Use the .NET 10 SDK (10.0.400 or later) and run this command from the repository root:
 
 ```powershell
-dotnet build .\XylRimworldMods.sln
+dotnet build .\XylRimworldMods.slnx
 ```
 
 Builds use the released Disharmony NuGet package by default. That package omits `Disharmony.RimWorld.dll`, whose RimWorld entry point starts patching, so NuGet builds require the separately installed Disharmony mod. A local Disharmony source checkout lets builds bundle the integration DLL instead.
@@ -16,13 +16,13 @@ The solution also builds `ModBin/Xylib.Tests`, `ModBin/XylXenos.Tests`, `ModBin/
 
 Yobai adds polycule bedrooms and night visits. See the [Yobai README](Yobai/README.md) for how it works and the [test instructions](Yobai.Tests/README.md) for its optional DevTools tests.
 
-Shared mod data belongs in `Xylib.Data`. Building XylXenos or XylIdeos includes this data alongside its own data project; building `Xylib.Data` directly copies its files to both mod outputs. Shared XML files use distinct filenames to avoid collisions with mod-specific data. Yobai's data is independent.
+Each mod keeps its C# code under `Source/` and its assets under `Data/`, with one project file in the mod directory. Shared mod data belongs in `Xylib/Data`. Building XylXenos or XylIdeos includes that shared data alongside its own `Data/` contents. Shared XML files use distinct filenames to avoid collisions with mod-specific data. Yobai's data is independent.
 
-`ModBuild.targets` handles copying for both source and data projects. Each project declares its inputs and imports that file:
+`ModBuild.targets` handles copying for the mod projects. Each project declares its inputs and imports that file:
 
-- `ModDestination` lists the mod output directories. Data projects set `OwnsOutput="true"` so builds remove stale data while preserving `Assemblies`, and clean removes the mod output. Shared data destinations leave it false.
+- `ModDestination` lists the mod output directories. Builds remove stale data while preserving `Assemblies`, and clean removes the mod output.
 - Code projects automatically copy their own `TargetPath` assembly to each destination's `Assemblies` directory. `ModAssembly` lists only additional DLL filenames to copy from the project's build output. DLLs outside this combined set are removed from that directory.
-- Data projects copy their SDK `None` items to the mod root, plus `SharedModDataDirectory` when specified. AutoColorApparel uses `ModDataDirectory` to copy its `Data` contents to the root instead.
+- `ModDataDirectory` defaults to `Data`. Its contents are copied to the mod root, plus `SharedModDataDirectory` when specified.
 
 Dependencies, analyzers and framework settings stay in the individual project files. Xylib itself does not deploy an assembly; XylXenos and XylIdeos copy their built Xylib dependency.
 
@@ -49,5 +49,5 @@ Remove `Directory.Build.local.props` and rebuild, then enable the official Disha
 For a single NuGet build without removing your settings file, use:
 
 ```powershell
-dotnet build .\XylRimworldMods.sln -p:DisharmonySourceDirectory=
+dotnet build .\XylRimworldMods.slnx -p:DisharmonySourceDirectory=
 ```

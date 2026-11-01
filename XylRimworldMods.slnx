@@ -19,15 +19,11 @@
   <Project Path="Scripts/Scripts.csproj" />
   <Project Path="Xylib.Analyzer.Tests/Xylib.Analyzer.Tests.csproj" />
   <Project Path="Xylib.Analyzer/Xylib.Analyzer.csproj" />
-  <Project Path="Xylib.Data/Xylib.Data.csproj" />
   <Project Path="Xylib.Tests/Xylib.Tests.csproj" />
   <Project Path="Xylib/Xylib.csproj" />
-  <Project Path="XylIdeos.Data/XylIdeos.Data.csproj" />
   <Project Path="XylIdeos/XylIdeos.csproj" />
-  <Project Path="XylXenos.Data/XylXenos.Data.csproj" />
   <Project Path="XylXenos.Tests/XylXenos.Tests.csproj" />
   <Project Path="XylXenos/XylXenos.csproj" />
-  <Project Path="Yobai.Data/Yobai.Data.csproj" />
   <Project Path="Yobai.Tests/Yobai.Tests.csproj" />
   <Project Path="Yobai/Yobai.csproj" />
 </Solution>

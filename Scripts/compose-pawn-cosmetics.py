@@ -1,4 +1,4 @@
-"""Render a labeled pawn cosmetic sheet from XylXenos.Data (Python 3.10+ / Pillow).
+"""Render a labeled pawn cosmetic sheet from XylXenos/Data (Python 3.10+ / Pillow).
 
 Run from any directory: python path/to/Scripts/compose-pawn-cosmetics.py
 Each triplet shows south, north, east. Complete cosmetic groups wrap at --width.

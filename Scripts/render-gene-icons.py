@@ -2,9 +2,9 @@
 
 Run from any directory: python path/to/Scripts/render-gene-icons.py
 Use --rimworld-data PATH if RimWorld/Data is outside the default Steam location.
-Outputs 80px PNGs named by defName in XylXenos.Data/Docs/Images/Genes/{Endo,Xeno},
+Outputs 80px PNGs named by defName in XylXenos/Data/Docs/Images/Genes/{Endo,Xeno},
 plus contact-sheet.png with labeled 128px endogene icons in the Genes directory.
-Also outputs 48px xenotype PNGs named by defName in XylXenos.Data/Docs/Images/Xenotypes,
+Also outputs 48px xenotype PNGs named by defName in XylXenos/Data/Docs/Images/Xenotypes,
 with transparent backgrounds.
 
 Based on Art/Codex/render-genes-contact-sheet.py. Renders concrete mod genes
@@ -23,10 +23,10 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEF_DIR = ROOT / "XylXenos.Data/Defs/GeneDefs"
+DEF_DIR = ROOT / "XylXenos/Data/Defs/GeneDefs"
 ART_DIR = ROOT / "Art/Rimworld art"
-OUTPUT = ROOT / "XylXenos.Data/Docs/Images/Genes"
-XENOTYPE_OUTPUT = ROOT / "XylXenos.Data/Docs/Images/Xenotypes"
+OUTPUT = ROOT / "XylXenos/Data/Docs/Images/Genes"
+XENOTYPE_OUTPUT = ROOT / "XylXenos/Data/Docs/Images/Xenotypes"
 CONTACT_SHEET_OUTPUT = ROOT / "Art/Generated"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 WHITE = (1.0, 1.0, 1.0, 1.0)
@@ -82,7 +82,7 @@ def parse_color(text):
 
 def texture_path(icon_path):
     if icon_path.startswith("Xyl/"):
-        path = ROOT / "XylXenos.Data/Textures" / (icon_path + ".png")
+        path = ROOT / "XylXenos/Data/Textures" / (icon_path + ".png")
     elif icon_path.startswith("UI/Icons/Genes/"):
         path = ART_DIR / "Genes" / (Path(icon_path).name + ".png")
     elif icon_path.startswith("UI/Abilities/"):

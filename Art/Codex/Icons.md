@@ -2,9 +2,9 @@
 
 Plain-text descriptions of the visible artwork, grouped by source folder and filename. These describe the icons themselves rather than the genes' gameplay effects. Most use simple flat shapes, thick black outlines, and transparent backgrounds.
 
-Includes all 83 gene icons in XylXenos.Data/Textures/Xyl/UI/Icons/Genes/ and all 77 gene icons in Art/Rimworld art/Genes/. The NoArt placeholder and three gene backgrounds are listed separately as supporting assets. Descriptions refer to the source artwork before in-game tinting or badge backgrounds. Contact-sheet entries without source art in these folders, unrelated xenotype icons, character textures, apparel, animals, items, and settlement artwork are excluded.
+Includes all 83 gene icons in XylXenos/Data/Textures/Xyl/UI/Icons/Genes/ and all 77 gene icons in Art/Rimworld art/Genes/. The NoArt placeholder and three gene backgrounds are listed separately as supporting assets. Descriptions refer to the source artwork before in-game tinting or badge backgrounds. Contact-sheet entries without source art in these folders, unrelated xenotype icons, character textures, apparel, animals, items, and settlement artwork are excluded.
 
-## XylXenos.Data/Textures/Xyl/UI/Icons/Genes/
+## XylXenos/Data/Textures/Xyl/UI/Icons/Genes/
 
 - Gene_AlwaysFemale.png: A pink female symbol: a circular ring with a short stem and cross beneath it.
 - Gene_AlwaysMale.png: A light-blue male symbol: a circular ring with an arrow pointing diagonally up and right.

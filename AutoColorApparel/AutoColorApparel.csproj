@@ -30,11 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ModDestination Include="..\ModBin\AutoColorApparel" OwnsOutput="true" />
+    <ModDestination Include="..\ModBin\AutoColorApparel" />
   </ItemGroup>
-  <PropertyGroup>
-    <ModDataDirectory>Data</ModDataDirectory>
-  </PropertyGroup>
   <Import Project="..\ModBuild.targets" />
 
 </Project>

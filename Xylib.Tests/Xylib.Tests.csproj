@@ -3,8 +3,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Xylib\Xylib.csproj" />
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" Condition="'$(DisharmonySourceDirectory)' != ''" />
-    <XylibTestData Include="..\Xylib.Data\Defs\**\*" ModRelativePath="Defs\%(RecursiveDir)%(Filename)%(Extension)" />
-    <XylibTestData Include="..\Xylib.Data\Languages\**\*" ModRelativePath="Languages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <XylibTestData Include="..\Xylib\Data\Defs\**\*" ModRelativePath="Defs\%(RecursiveDir)%(Filename)%(Extension)" />
+    <XylibTestData Include="..\Xylib\Data\Languages\**\*" ModRelativePath="Languages\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Krafs.Rimworld.Ref" Version="1.7.4995-unstable" />
