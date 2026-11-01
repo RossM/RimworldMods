@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Xylib.Analyzer\Xylib.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4995-unstable" />
     <PackageReference Include="PolySharp" Version="1.16.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -27,12 +27,6 @@
   <ItemGroup Condition="'$(DisharmonySourceDirectory)' != ''">
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony\Disharmony.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Waylith.Injection">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Waylith.Injection.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

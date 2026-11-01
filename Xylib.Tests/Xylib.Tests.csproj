@@ -6,6 +6,9 @@
     <XylibTestData Include="..\Xylib.Data\Defs\**\*" ModRelativePath="Defs\%(RecursiveDir)%(Filename)%(Extension)" />
     <XylibTestData Include="..\Xylib.Data\Languages\**\*" ModRelativePath="Languages\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Krafs.Rimworld.Ref" Version="1.7.4995-unstable" />
+  </ItemGroup>
   <Target Name="DeployXylibTestHost" AfterTargets="DeployTests">
     <Copy SourceFiles="$(TargetDir)Xylib.dll;$(TargetDir)Xylib.pdb" DestinationFolder="..\ModBin\Xylib.Tests\Assemblies" />
     <Copy SourceFiles="$(TargetDir)Disharmony.dll;$(TargetDir)Disharmony.RimWorld.dll" DestinationFolder="..\ModBin\Xylib.Tests\Assemblies" Condition="'$(DisharmonySourceDirectory)' != ''" />
