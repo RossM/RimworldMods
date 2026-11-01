@@ -167,8 +167,13 @@ class DefinitionLibrary:
         dependent = properties_class == "XylXenos.PawnRenderNodeProperties_GeneDependent"
         body_attachment = parent == Part.BODY and (worker_class == "PawnRenderNodeWorker_AttachmentBody"
                           or (dependent and node.findtext("useBodyGraphicScale", "false").lower() == "true"))
-        adjusts_narrow = dependent or worker_class == "PawnRenderNodeWorker_Head"
-        narrow_offset = float(node.findtext("narrowCrownHorizontalOffset", "0")) if adjusts_narrow else 0
+        narrow_amount = float(node.findtext("narrowCrownHorizontalOffset", "0"))
+        if worker_class == "XylXenos.PawnRenderNodeWorker_ForeheadMark":
+            narrow_offset = (narrow_amount, 0, 0)
+        elif dependent or worker_class == "PawnRenderNodeWorker_Head":
+            narrow_offset = (narrow_amount, 0, narrow_amount)
+        else:
+            narrow_offset = (0, 0, 0)
         mesh = (MeshSource.HAIR if kind in (GraphicKind.EYE, GraphicKind.HEAD_ATTACHMENT)
                 else size(node.findtext("overrideMeshSize", "(1.5,1.5)")))
         return RenderNode(

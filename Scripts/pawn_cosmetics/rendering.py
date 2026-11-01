@@ -73,7 +73,7 @@ class Renderer:
         origin = head_offset if node.parent == Part.HEAD else (0, 0, 0)
         offset = tuple(a + b for a, b in zip(offset, origin))
         if head.narrow and facing == Facing.EAST:
-            offset = (offset[0] - node.narrow_offset, offset[1], offset[2] - node.narrow_offset)
+            offset = tuple(value - correction for value, correction in zip(offset, node.narrow_offset))
         mesh = head.hair_mesh if node.mesh == MeshSource.HAIR else node.mesh
         mesh = tuple(a * b for a, b in zip(mesh, node.draw_size))
         if node.scale_mesh_to_body:

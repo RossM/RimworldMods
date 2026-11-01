@@ -31,9 +31,11 @@ and geometry defaults make the script usable without it.
 
 New XML cosmetics normally require no script edits. `GROUPED_VARIANTS` keeps
 selected variants under one gene caption and names their subitems by render-node
-debug label, so shared textures can have distinct names (cow/dragon horns).
+debug label, so shared textures can have distinct names.
 Coverage validation rejects omitted
-humanlike attachment/head art before saving.
+humanlike attachment/head art before saving. Behavior tests use self-contained
+XML and image fixtures; the coverage test checks the current mod art without
+freezing its texture choices or draw settings.
 
 Definitions are parsed once. The catalog first selects the primary cosmetic's
 comparison bodies/heads, then includes prerequisite graphics. This keeps the
@@ -45,6 +47,10 @@ each group intact, and preserves catalog order.
 Draw data supports `rotationOffset` in degrees, inherited from `defaultData`
 unless overridden for a facing. Rotation is clockwise around the scaled mesh's
 center before placement at its draw offset; it does not rotate the offset itself.
+
+Narrow-head corrections follow the render worker: forehead marks shift only
+horizontally in the side view; head and gene-dependent workers also lower the
+attachment. Workers without this correction leave the XML offset unchanged.
 
 This is a focused static art preview, not a complete RimWorld renderer. It
 approximates adult geometry and cutout/pattern shaders without lighting,

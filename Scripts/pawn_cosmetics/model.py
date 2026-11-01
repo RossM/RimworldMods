@@ -102,7 +102,7 @@ class RenderNode:
     draw_size: Vec2
     scale_mesh_to_body: bool
     scale_offset_to_body: bool
-    narrow_offset: float
+    narrow_offset: Vec3
     side: Side
     eye_anchor: str | None
     requires: tuple[str, ...]
