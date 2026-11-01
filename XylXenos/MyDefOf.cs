@@ -5,7 +5,6 @@
 [DefOf]
 public static class MyDefOf
 {
-    public static FactionDef XylTribeGentleNixie;
     public static GeneDef XylBioRejection;
     public static GeneDef XylDocile;
     public static GeneDef XylEcholocation;
