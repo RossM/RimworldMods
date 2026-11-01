@@ -44,10 +44,14 @@ public sealed class XylibAnalyzer : DiagnosticAnalyzer
         "XYLIB0009", "Save method should preserve base data", "Method '{0}' is missing a call to '{1}', whose type has fields to save",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor UseRandBlock = new(
+        "XYLIB0010", "Use RandBlock for seeded random state", "Use RandBlock instead of calling Rand.PushState(int) directly",
+        "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
     [
         StaticPatchClass, MissingFeature, FeatureWithoutPatch, PrefixName, PostfixName, MissingUsedFromXml,
-        MissingConfigErrorsBaseCall, UnsavedField, MissingExposeDataBaseCall,
+        MissingConfigErrorsBaseCall, UnsavedField, MissingExposeDataBaseCall, UseRandBlock,
     ];
 
     public override void Initialize(AnalysisContext context)
@@ -60,11 +64,13 @@ public sealed class XylibAnalyzer : DiagnosticAnalyzer
             var xml = new XmlChecks(start.Compilation);
             var persistence = new PersistenceChecks(start.Compilation);
             var configErrors = new ConfigErrorsChecks(start.Compilation);
+            var rand = new RandChecks(start.Compilation);
             start.RegisterSymbolAction(patches.AnalyzeType, SymbolKind.NamedType);
             start.RegisterSymbolAction(patches.AnalyzeMethod, SymbolKind.Method);
             start.RegisterSymbolAction(xml.AnalyzeType, SymbolKind.NamedType);
             start.RegisterSymbolAction(persistence.AnalyzeType, SymbolKind.NamedType);
             start.RegisterSymbolAction(configErrors.AnalyzeMethod, SymbolKind.Method);
+            start.RegisterOperationAction(rand.AnalyzeInvocation, OperationKind.Invocation);
         });
     }
 }

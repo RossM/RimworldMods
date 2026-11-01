@@ -24,11 +24,14 @@ All diagnostics default to warnings. Use standard `.editorconfig` settings to co
 | XYLIB0007 | Correctness | `ConfigErrors` implementations should call the matching, non-abstract base method. |
 | XYLIB0008 | Correctness | Mutable instance fields appear unsaved. |
 | XYLIB0009 | Correctness | Save methods should call the base implementation when its type has fields to save. |
+| XYLIB0010 | Correctness | Use `RandBlock` instead of calling `Verse.Rand.PushState(int)` directly. |
 
 Patch conventions apply within Disharmony `[Patch]` classes. Harmony patch attributes are not checked. XML types include the RimWorld/Verse bases listed by the runtime checker and subclasses of abstract classes marked `[UsedFromXml]`, including bases from referenced assemblies. Abstract classes need no annotation; concrete subclasses must declare it directly.
 
 Persistence checks recognize `IExposable.ExposeData`, `ThingComp.PostExposeData`, and `CompExposeData` on types whose ancestry includes a name ending in `Comp`. They inspect declared public and private instance fields, excluding constants, static fields, readonly fields, compiler-generated fields, and fields marked `[Unsaved]`.
 
 The persistence checks are heuristics. A reference to an instance field in the save method counts as possible saving; `nameof` does not. They do not prove that a Scribe call saves a field, follow calls into helper methods, or verify that a base call executes on every path. Iterator bodies, expression bodies, and explicit interface implementations are supported. Generated code is excluded. Test the mod in game as well.
+
+The random state check uses the resolved method symbol, including aliases and static imports. The parameterless `Rand.PushState()` overload is allowed.
 
 Run the tests with `dotnet test Xylib.Analyzer.Tests/Xylib.Analyzer.Tests.csproj`.

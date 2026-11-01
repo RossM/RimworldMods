@@ -34,6 +34,16 @@ internal static class AnalyzerTestHelper
         }
         namespace Verse
         {
+            public static class Rand
+            {
+                public static void PushState() { }
+                public static void PushState(int seed) { }
+            }
+            public struct RandBlock : System.IDisposable
+            {
+                public RandBlock(int seed) { }
+                public void Dispose() { }
+            }
             public class AbilityCompProperties { }
             public interface IExposable { void ExposeData(); }
             public class ThingComp { public virtual void PostExposeData() { } }

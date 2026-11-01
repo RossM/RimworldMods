@@ -13,3 +13,4 @@ XYLIB0006 | Style       | Warning  | Concrete XML types should declare UsedFromX
 XYLIB0007 | Correctness | Warning  | ConfigErrors implementations should call their base method
 XYLIB0008 | Correctness | Warning  | Mutable instance fields appear unsaved
 XYLIB0009 | Correctness | Warning  | Save methods should preserve base data
+XYLIB0010 | Correctness | Warning  | Use RandBlock instead of calling Rand.PushState(int) directly
