@@ -6,7 +6,7 @@ Major xenotypes are the main content of XylXenos. They have dedicated factions a
 
 * Bossaps: Sentient livestock. They're hardy and do well in large colonies, but have a chance of going into an uncontrollable rage if damaged in combat.
 * Chyrr: Nocturnal flyers. Their wings and innate stun ability make them excellent skirmishers, but they go into hibernation in lower temperatures.
-* Dvergr: Industrious alcoholics. Great workers and craftspeople, but they have a genetic dependence on alcohol and tend to have fights and tantrums.
+* Dvergr: Industrious alcoholics. Great workers and craftspeople, but they have a genetic dependence on alcohol and tend to get into fights and throw tantrums.
 * Nixie: Psychic fish people. They're unmatched in water, but unless they periodically soak to keep their skin moist they'll become very unhappy.
 * Titan: Engineered rock giants. They're super tough and each is specialized in one random skill, but they move slowly and have difficulty learning other skills. They can't use most normal drugs and require special drugs designed for lithoids.
 * Trog: Adaptable mutants. They can live almost anywhere and wild insects won't attack them, but they're slow learners and sensitive to sunlight.
