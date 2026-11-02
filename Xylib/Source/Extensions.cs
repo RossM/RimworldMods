@@ -46,7 +46,9 @@ public static class Extensions
                     return gene.DefModExtension_GeneWithComps_Cached;
 
                 gene.DefModExtension_GeneWithComps_Checked = true;
+#pragma warning disable XYLIB0011 // The cached helper must perform the underlying lookup.
                 return gene.DefModExtension_GeneWithComps_Cached = gene.GetModExtension<DefModExtension_GeneWithComps>();
+#pragma warning restore XYLIB0011
             }
         }
 

@@ -48,10 +48,21 @@ public sealed class XylibAnalyzer : DiagnosticAnalyzer
         "XYLIB0010", "Use RandBlock for seeded random state", "Use RandBlock instead of calling Rand.PushState(int) directly",
         "Correctness", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor UseGeneWithCompsExtension = new(
+        "XYLIB0011", "Use the GeneWithComps extension property",
+        "Use GeneDef.Extension_GeneWithComps instead of calling GetModExtension<DefModExtension_GeneWithComps>() directly",
+        "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public static readonly DiagnosticDescriptor UsePawnHasActiveGene = new(
+        "XYLIB0012", "Use the pawn's HasActiveGene extension",
+        "Use Pawn.HasActiveGene(GeneDef) instead of calling Pawn.genes.HasActiveGene(GeneDef) directly",
+        "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
     [
         StaticPatchClass, MissingFeature, FeatureWithoutPatch, PrefixName, PostfixName, MissingUsedFromXml,
         MissingConfigErrorsBaseCall, UnsavedField, MissingExposeDataBaseCall, UseRandBlock,
+        UseGeneWithCompsExtension, UsePawnHasActiveGene,
     ];
 
     public override void Initialize(AnalysisContext context)
@@ -64,13 +75,13 @@ public sealed class XylibAnalyzer : DiagnosticAnalyzer
             var xml = new XmlChecks(start.Compilation);
             var persistence = new PersistenceChecks(start.Compilation);
             var configErrors = new ConfigErrorsChecks(start.Compilation);
-            var rand = new RandChecks(start.Compilation);
+            var apiUsage = new ApiUsageChecks(start.Compilation);
             start.RegisterSymbolAction(patches.AnalyzeType, SymbolKind.NamedType);
             start.RegisterSymbolAction(patches.AnalyzeMethod, SymbolKind.Method);
             start.RegisterSymbolAction(xml.AnalyzeType, SymbolKind.NamedType);
             start.RegisterSymbolAction(persistence.AnalyzeType, SymbolKind.NamedType);
             start.RegisterSymbolAction(configErrors.AnalyzeMethod, SymbolKind.Method);
-            start.RegisterOperationAction(rand.AnalyzeInvocation, OperationKind.Invocation);
+            start.RegisterOperationAction(apiUsage.AnalyzeInvocation, OperationKind.Invocation);
         });
     }
 }

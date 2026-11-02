@@ -31,6 +31,18 @@ internal static class AnalyzerTestHelper
             public class FeatureAttribute : System.Attribute { }
             [System.AttributeUsage(System.AttributeTargets.Class)]
             public class UsedFromXmlAttribute : System.Attribute { }
+            public class DefModExtension_GeneWithComps : Verse.DefModExtension { }
+            public static class Extensions
+            {
+                extension(Verse.GeneDef gene)
+                {
+                    public DefModExtension_GeneWithComps Extension_GeneWithComps => null;
+                }
+                extension(Verse.Pawn pawn)
+                {
+                    public bool HasActiveGene(Verse.GeneDef def) => false;
+                }
+            }
         }
         namespace Verse
         {
@@ -49,7 +61,13 @@ internal static class AnalyzerTestHelper
             public class ThingComp { public virtual void PostExposeData() { } }
             [System.AttributeUsage(System.AttributeTargets.Field)]
             public class UnsavedAttribute : System.Attribute { }
-            public class Def { public virtual System.Collections.Generic.IEnumerable<string> ConfigErrors() { yield break; } }
+            public class Def
+            {
+                public virtual System.Collections.Generic.IEnumerable<string> ConfigErrors() { yield break; }
+                public T GetModExtension<T>() where T : DefModExtension => null;
+            }
+            public class GeneDef : Def { }
+            public class Pawn { public RimWorld.Pawn_GeneTracker genes; }
             public class ColorGenerator { }
             public class CompProperties { }
             public class DefModExtension { }
@@ -60,6 +78,10 @@ internal static class AnalyzerTestHelper
         }
         namespace RimWorld
         {
+            public class Pawn_GeneTracker
+            {
+                public bool HasActiveGene(Verse.GeneDef def) => false;
+            }
             public class IngestionOutcomeDoer { }
             public class ScenPart { }
         }
