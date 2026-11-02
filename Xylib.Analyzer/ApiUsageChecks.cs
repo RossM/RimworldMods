@@ -26,6 +26,10 @@ internal sealed class ApiUsageChecks(Compilation compilation)
             m.Parameters[0].RefKind == RefKind.None &&
             SymbolEqualityComparer.Default.Equals(m.Parameters[0].Type, compilation.GetTypeByMetadataName("Verse.GeneDef")));
 
+    private readonly IMethodSymbol? getFirstGeneOfType = compilation.GetTypeByMetadataName("RimWorld.Pawn_GeneTracker")?
+        .GetMembers("GetFirstGeneOfType").OfType<IMethodSymbol>()
+        .FirstOrDefault(m => !m.IsStatic && m.Arity == 1 && m.Parameters.Length == 0);
+
     internal void AnalyzeInvocation(OperationAnalysisContext context)
     {
         var invocation = (IInvocationOperation)context.Operation;
@@ -38,9 +42,13 @@ internal sealed class ApiUsageChecks(Compilation compilation)
                  SymbolEqualityComparer.Default.Equals(method.TypeArguments[0], geneWithComps) &&
                  invocation.Instance?.Type is INamedTypeSymbol receiver && SymbolHelpers.DerivesFrom(receiver, geneDef))
             rule = XylibAnalyzer.UseGeneWithCompsExtension;
-        else if (hasActiveGene is not null && SymbolEqualityComparer.Default.Equals(method, hasActiveGene) &&
-                 IsPawnGenes(invocation.Instance))
-            rule = XylibAnalyzer.UsePawnHasActiveGene;
+        else if (IsPawnGenes(invocation.Instance))
+        {
+            if (hasActiveGene is not null && SymbolEqualityComparer.Default.Equals(method, hasActiveGene))
+                rule = XylibAnalyzer.UsePawnHasActiveGene;
+            else if (getFirstGeneOfType is not null && SymbolEqualityComparer.Default.Equals(method.OriginalDefinition, getFirstGeneOfType))
+                rule = XylibAnalyzer.UsePawnFirstActiveGeneOfType;
+        }
 
         if (rule is not null)
             context.ReportDiagnostic(Diagnostic.Create(rule, invocation.Syntax.GetLocation()));

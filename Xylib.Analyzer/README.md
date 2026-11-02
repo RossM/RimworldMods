@@ -27,6 +27,7 @@ All diagnostics default to warnings. Use standard `.editorconfig` settings to co
 | XYLIB0010 | Correctness | Use `RandBlock` instead of calling `Verse.Rand.PushState(int)` directly. |
 | XYLIB0011 | Style | Use `GeneDef.Extension_GeneWithComps` instead of `GetModExtension<DefModExtension_GeneWithComps>()` on a gene def. |
 | XYLIB0012 | Style | Use `Pawn.HasActiveGene(GeneDef)` instead of calling `HasActiveGene(GeneDef)` directly on `Pawn.genes`. |
+| XYLIB0013 | Style | Use `Pawn.FirstActiveGeneOfType<T>()` instead of calling `GetFirstGeneOfType<T>()` directly on `Pawn.genes`. |
 
 Patch conventions apply within Disharmony `[Patch]` classes. Harmony patch attributes are not checked. XML types include the RimWorld/Verse bases listed by the runtime checker and subclasses of abstract classes marked `[UsedFromXml]`, including bases from referenced assemblies. Abstract classes need no annotation; concrete subclasses must declare it directly.
 
@@ -34,6 +35,6 @@ Persistence checks recognize `IExposable.ExposeData`, `ThingComp.PostExposeData`
 
 The persistence checks are heuristics. A reference to an instance field in the save method counts as possible saving; `nameof` does not. They do not prove that a Scribe call saves a field, follow calls into helper methods, or verify that a base call executes on every path. Iterator bodies, expression bodies, and explicit interface implementations are supported. Generated code is excluded. Test the mod in game as well.
 
-API usage checks use resolved method symbols, including aliases and static imports. The parameterless `Rand.PushState()` overload is allowed. The mod-extension check applies only to `GeneDef` receivers (including subclasses) and the exact `DefModExtension_GeneWithComps` type argument. The active-gene check applies only when the receiver is the pawn's `genes` field, including null-conditional access. Calls through a separate gene tracker variable, field, property, or method result are allowed. Helper implementations can suppress their underlying API call locally with `#pragma warning disable` and `#pragma warning restore`.
+API usage checks use resolved method symbols, including aliases and static imports. The parameterless `Rand.PushState()` overload is allowed. The mod-extension check applies only to `GeneDef` receivers (including subclasses) and the exact `DefModExtension_GeneWithComps` type argument. The active-gene checks apply only when the receiver is the pawn's `genes` field, including null-conditional access. Despite its name, the vanilla `GetFirstGeneOfType<T>()` filters out inactive genes. Calls through a separate gene tracker variable, field, property, or method result are allowed. Helper implementations can suppress their underlying API call locally with `#pragma warning disable` and `#pragma warning restore`.
 
 Run the tests with `dotnet test Xylib.Analyzer.Tests/Xylib.Analyzer.Tests.csproj`.

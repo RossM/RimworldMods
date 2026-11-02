@@ -41,6 +41,7 @@ internal static class AnalyzerTestHelper
                 extension(Verse.Pawn pawn)
                 {
                     public bool HasActiveGene(Verse.GeneDef def) => false;
+                    public T FirstActiveGeneOfType<T>() where T : Verse.Gene => null;
                 }
             }
         }
@@ -67,6 +68,7 @@ internal static class AnalyzerTestHelper
                 public T GetModExtension<T>() where T : DefModExtension => null;
             }
             public class GeneDef : Def { }
+            public class Gene { }
             public class Pawn { public RimWorld.Pawn_GeneTracker genes; }
             public class ColorGenerator { }
             public class CompProperties { }
@@ -81,6 +83,7 @@ internal static class AnalyzerTestHelper
             public class Pawn_GeneTracker
             {
                 public bool HasActiveGene(Verse.GeneDef def) => false;
+                public T GetFirstGeneOfType<T>() where T : Verse.Gene => null;
             }
             public class IngestionOutcomeDoer { }
             public class ScenPart { }

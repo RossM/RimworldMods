@@ -58,11 +58,16 @@ public sealed class XylibAnalyzer : DiagnosticAnalyzer
         "Use Pawn.HasActiveGene(GeneDef) instead of calling Pawn.genes.HasActiveGene(GeneDef) directly",
         "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor UsePawnFirstActiveGeneOfType = new(
+        "XYLIB0013", "Use the pawn's FirstActiveGeneOfType extension",
+        "Use Pawn.FirstActiveGeneOfType<T>() instead of calling Pawn.genes.GetFirstGeneOfType<T>() directly",
+        "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
     [
         StaticPatchClass, MissingFeature, FeatureWithoutPatch, PrefixName, PostfixName, MissingUsedFromXml,
         MissingConfigErrorsBaseCall, UnsavedField, MissingExposeDataBaseCall, UseRandBlock,
-        UseGeneWithCompsExtension, UsePawnHasActiveGene,
+        UseGeneWithCompsExtension, UsePawnHasActiveGene, UsePawnFirstActiveGeneOfType,
     ];
 
     public override void Initialize(AnalysisContext context)

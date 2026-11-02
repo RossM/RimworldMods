@@ -459,4 +459,184 @@ public sealed class ApiUsageChecksTests
             """, contracts);
         Assert.That(diagnostics, Is.Empty);
     }
+
+    [TestCase("pawn.genes.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("pawn.genes?.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("pawn?.genes?.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("pawn?.genes.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("(pawn.genes).GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("(pawn?.genes)?.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("pawn!.genes!.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("pawn.genes.GetFirstGeneOfType<GeneAlias>()")]
+    public async Task ReportsFirstGeneOfTypeOnPawnGenes(string call)
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze($$"""
+            using GeneAlias = Verse.Gene;
+            class Example
+            {
+                public object Run(Verse.Pawn pawn) => {{call}};
+            }
+            """);
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "XYLIB0013" }));
+        var diagnostic = diagnostics.Single();
+        Assert.That(diagnostic.Severity, Is.EqualTo(DiagnosticSeverity.Warning));
+        Assert.That(diagnostic.GetMessage(), Does.Contain("Pawn.FirstActiveGeneOfType<T>()"));
+        Assert.That(diagnostic.Location.SourceTree!.GetText().ToString(diagnostic.Location.SourceSpan),
+            Does.Contain("GetFirstGeneOfType<"));
+    }
+
+    [Test]
+    public async Task ReportsFirstGeneOfGenericTypeParameter()
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            class Example
+            {
+                public T Run<T>(Verse.Pawn pawn) where T : Verse.Gene => pawn.genes.GetFirstGeneOfType<T>();
+            }
+            """);
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "XYLIB0013" }));
+    }
+
+    [Test]
+    public async Task ReportsFirstGeneOnInheritedPawnGenesField()
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            class CustomPawn : Verse.Pawn
+            {
+                public Verse.Gene Run() => genes.GetFirstGeneOfType<Verse.Gene>();
+            }
+            """);
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "XYLIB0013" }));
+    }
+
+    [TestCase("tracker.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("tracker?.GetFirstGeneOfType<Verse.Gene>()")]
+    public async Task AllowsFirstGeneOnTrackerParameter(string call)
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze($$"""
+            class Example
+            {
+                public object Run(RimWorld.Pawn_GeneTracker tracker) => {{call}};
+            }
+            """);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [Test]
+    public async Task AllowsFirstGeneThroughLocalTracker()
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            class Example
+            {
+                public Verse.Gene Run(Verse.Pawn pawn)
+                {
+                    var genes = pawn.genes;
+                    return genes.GetFirstGeneOfType<Verse.Gene>();
+                }
+            }
+            """);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [TestCase("holder.genes.GetFirstGeneOfType<Verse.Gene>()")]
+    [TestCase("holder?.genes?.GetFirstGeneOfType<Verse.Gene>()")]
+    public async Task IgnoresFirstGeneOnUnrelatedGenesField(string call)
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze($$"""
+            class Holder { public RimWorld.Pawn_GeneTracker genes; }
+            class Example
+            {
+                public object Run(Holder holder) => {{call}};
+            }
+            """);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [TestCase("public new RimWorld.Pawn_GeneTracker genes;")]
+    [TestCase("public new RimWorld.Pawn_GeneTracker genes => null;")]
+    public async Task IgnoresFirstGeneOnHiddenGenesMember(string member)
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze($$"""
+            class CustomPawn : Verse.Pawn { {{member}} }
+            class Example
+            {
+                public object Run(CustomPawn pawn) => pawn?.genes?.GetFirstGeneOfType<Verse.Gene>();
+            }
+            """);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [Test]
+    public async Task IgnoresUnrelatedFirstGeneMethodOnPawnGenes()
+    {
+        var contracts = AnalyzerTestHelper.Contracts.Replace(
+            "public class Pawn { public RimWorld.Pawn_GeneTracker genes; }",
+            "public class Pawn { public OtherTracker genes; } public class OtherTracker { public T GetFirstGeneOfType<T>() where T : Gene => null; }");
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            class Example
+            {
+                public object Run(Verse.Pawn pawn) => pawn.genes.GetFirstGeneOfType<Verse.Gene>();
+            }
+            """, contracts);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [Test]
+    public async Task IgnoresFirstGeneOverloadWithArguments()
+    {
+        var contracts = AnalyzerTestHelper.Contracts.Replace(
+            "public T GetFirstGeneOfType<T>() where T : Verse.Gene => null;",
+            "public T GetFirstGeneOfType<T>() where T : Verse.Gene => null; public T GetFirstGeneOfType<T>(bool includeInactive) where T : Verse.Gene => null;");
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            class Example
+            {
+                public object Run(Verse.Pawn pawn) => pawn.genes.GetFirstGeneOfType<Verse.Gene>(true);
+            }
+            """, contracts);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [Test]
+    public async Task AllowsPreferredFirstActiveGeneHelper()
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            using Xylib;
+            class Example
+            {
+                public object Run(Verse.Pawn pawn) => pawn.FirstActiveGeneOfType<Verse.Gene>();
+            }
+            """);
+        Assert.That(diagnostics, Is.Empty);
+    }
+
+    [Test]
+    public async Task AllowsLocalFirstGeneSuppressionAndRestoresWarning()
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            class Example
+            {
+                public void Run(Verse.Pawn pawn)
+                {
+            #pragma warning disable XYLIB0013
+                    pawn.genes.GetFirstGeneOfType<Verse.Gene>();
+            #pragma warning restore XYLIB0013
+                    pawn.genes.GetFirstGeneOfType<Verse.Gene>();
+                }
+            }
+            """);
+        Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { "XYLIB0013" }));
+    }
+
+    [Test]
+    public async Task IgnoresFirstGeneInGeneratedCode()
+    {
+        var diagnostics = await AnalyzerTestHelper.Analyze("""
+            // <auto-generated/>
+            class Example
+            {
+                public object Run(Verse.Pawn pawn) => pawn.genes.GetFirstGeneOfType<Verse.Gene>();
+            }
+            """);
+        Assert.That(diagnostics, Is.Empty);
+    }
 }
