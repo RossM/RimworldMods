@@ -59,9 +59,10 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
-            <bodyScale>1.2</bodyScale>
+            <bodyScale>1.2</bodyScale>           
             <headScale>1.05</headScale>
-            <headOffset>(0,0,-0.05)</headOffset>
+            <bodyOffset>(0,0,0.1)</bodyOffset>
+            <headOffset>(0,0,0.05)</headOffset>
           </li>
           <li Class="Xylib.GeneCompProperties_RaceModifiers">
             <bodySizeFactor>1.5</bodySizeFactor>
