@@ -8,13 +8,13 @@ public class StatPart_Genetic : StatPart
 
     public override void TransformValue(StatRequest req, ref float val)
     {
-        if (req is { HasThing: true, Thing: Pawn pawn } && pawn.genes?.HasActiveGene(gene) is true)
+        if (req is { HasThing: true, Thing: Pawn pawn } && pawn.HasActiveGene(gene))
             val *= factor;
     }
 
     public override string? ExplanationPart(StatRequest req)
     {
-        if (req is { HasThing: true, Thing: Pawn pawn } && pawn.genes?.HasActiveGene(gene) is true)
+        if (req is { HasThing: true, Thing: Pawn pawn } && pawn.HasActiveGene(gene))
             return $"{gene.LabelCap}: x{factor}";
         return null;
     }
