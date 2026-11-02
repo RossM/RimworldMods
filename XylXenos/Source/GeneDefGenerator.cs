@@ -2,27 +2,32 @@
 
 namespace XylXenos;
 
-[DefGenerator(typeof(GeneDef))]
-public static class GeneDefGenerator
+[UsedFromReflection]
+public class GeneDefGenerator : IDefGenerator<GeneDef>
 {
-    [UsedFromReflection]
     public static IEnumerable<GeneDef> ImpliedDefs(bool hotReload = false)
     {
         foreach (GeneTemplateDef template in DefDatabase<GeneTemplateDef>.AllDefs)
         {
-            if (template.geneTemplateType == GeneTemplateDef.GeneTemplateType.PsychicAbility)
+            switch (template.geneTemplateType)
             {
-                int displayOrderBase = 0;
-                foreach (AbilityDef def in DefDatabase<AbilityDef>.AllDefs.OrderBy(def => def.level).ThenBy(def => def.label))
+                case GeneTemplateDef.GeneTemplateType.PsychicAbility:
                 {
-                    if (!typeof(Psycast).IsAssignableFrom(def.abilityClass))
-                        continue;
-                    if (!template.biostats.Any(biostatInfo => biostatInfo.levels.Includes(def.level)))
-                        continue;
+                    int displayOrderBase = 0;
+                    foreach (AbilityDef def in DefDatabase<AbilityDef>.AllDefs.OrderBy(def => def.level).ThenBy(def => def.label))
+                    {
+                        if (!typeof(Psycast).IsAssignableFrom(def.abilityClass))
+                            continue;
+                        if (!template.biostats.Any(biostatInfo => biostatInfo.levels.Includes(def.level)))
+                            continue;
 
-                    yield return GetFromTemplate(template, def, displayOrderBase, hotReload);
-                    displayOrderBase += 1000;
+                        yield return GetFromTemplate(template, def, displayOrderBase, hotReload);
+                        displayOrderBase += 1000;
+                    }
+
+                    break;
                 }
+                default: throw new NotSupportedException($"Unsupported gene template type: {template.geneTemplateType}");
             }
         }
     }

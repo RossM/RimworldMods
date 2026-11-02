@@ -10,22 +10,28 @@ internal static class PatchHelpers
 
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
-    private static readonly MethodInfo addDefsMethodInfo = typeof(PatchHelpers).GetMethod(nameof(AddDefs))!;
+    private static readonly MethodInfo methodInfo_RunDefGenerator = typeof(PatchHelpers).GetMethod(nameof(RunDefGenerator), BindingFlags.NonPublic | BindingFlags.Static)!;
 
     private static readonly ConcurrentDictionary<Type, Action<object, List<string>>?> requiredMemberCheckerCache = new();
     private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)])!;
 
+    private static void RunDefGenerator<T, TDef>(bool hotReload) where TDef : Def, new() where T : IDefGenerator<TDef>
+    {
+        foreach (var def in T.ImpliedDefs(hotReload))
+            DefGenerator.AddImpliedDef(def, hotReload);
+    }
+
     public static void RunDefGenerators(bool hotReload)
     {
-        foreach (var type in GenTypes.AllTypesWithAttribute<DefGeneratorAttribute>())
+        foreach ((Type type, Type defType) in 
+                 GenTypes.AllTypes.SelectMany(
+                     type => type.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDefGenerator<>)),
+                     (type, i) => (type, i.GetGenericArguments()[0])))
         {
             using var _ = new ProfileBlock(type.FullName!);
 
             try
             {
-                Type? defType = type.TryGetAttribute<DefGeneratorAttribute>()?.defType;
-                DebugAssert.NotNull(defType);
-
                 var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
                 if (impliedDefsMethodInfo == null)
                 {
@@ -33,11 +39,8 @@ internal static class PatchHelpers
                     continue;
                 }
 
-                var addDefsFn = addDefsMethodInfo.MakeGenericMethod(defType)
-                    .CreateDelegate<Action<IEnumerable<Def>, bool>>();
-                var impliedDefsFn = impliedDefsMethodInfo.CreateDelegate<Func<bool, IEnumerable<Def>>>();
-
-                addDefsFn(impliedDefsFn(hotReload), hotReload);
+                var runDefGenerator = methodInfo_RunDefGenerator.MakeGenericMethod(type, defType).CreateDelegate<Action<bool>>();
+                runDefGenerator(hotReload);
             }
             catch (Exception e)
             {
