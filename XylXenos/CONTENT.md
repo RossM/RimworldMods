@@ -59,6 +59,10 @@ Minor xenotypes are found as rare members of other factions or in random events.
 
 * Shower: Allows nixies to meet their wetness need without access to water. Only buildable by nixies.
 
+## Traits
+
+* Flirt/Don Juan: Characters with this trait are much more likely to attempt to romance other characters. Also unlocks the romantic meditation type, which allows using a double bed as a meditation focus.
+
 ## Unique mechanics
 
 * Genetic recipe and building unlocks: Genes can unlock unique recipes and buildings or ones which otherwise require a specific meme. Some unlocks require Ideology.
