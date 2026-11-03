@@ -1,7 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Defs>
-
+  
+  <StuffCategoryDef>
+    <defName>XylPreciousStone</defName>
+    <label>precious stone</label>
+    <noun>precious stone</noun>
+    <destroySoundSmall>BuildingDestroyed_Stone_Small</destroySoundSmall>
+    <destroySoundMedium>BuildingDestroyed_Stone_Medium</destroySoundMedium>
+    <destroySoundLarge>BuildingDestroyed_Stone_Big</destroySoundLarge>
+  </StuffCategoryDef>
+  
   <ThingDef ParentName="ResourceBase">
     <defName>XylCoral</defName>
     <label>coral</label>
@@ -29,6 +38,7 @@
     <stuffProps>
       <categories>
         <li>Stony</li>
+        <li>XylPreciousStone</li>
       </categories>
       <commonality>0.01</commonality>
       <color>(160,93,171)</color>

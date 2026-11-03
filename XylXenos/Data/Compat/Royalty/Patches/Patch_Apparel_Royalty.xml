@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/ThingDef[defName="Apparel_Coronet" or defName="Apparel_Crown"]</xpath>
+    <value>
+      <stuffCategories>
+        <li>XylPreciousStone</li>
+      </stuffCategories>
+    </value>
+  </Operation>
+
+</Patch>
