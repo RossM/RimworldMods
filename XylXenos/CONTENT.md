@@ -26,10 +26,10 @@ Minor xenotypes are found as rare members of other factions or in random events.
 
 Includes 120 total genes:
 
-* 79 non-cosmetic genes with a wide range of effects, from wings that allow actual flight to pheromones that stop wild insects from attacking. Many of these have cosmetic effects, too.
+* 78 non-cosmetic genes with a wide range of effects, from wings that allow actual flight to pheromones that stop wild insects from attacking. Many of these have cosmetic effects, too.
 * 29 psycast genes that grant the ability to use a specific psycast without a psylink. Requires Royalty.
 * 6 unique cosmetic genes.
-* 6 new skin color genes.
+* 7 new skin color genes.
 
 ## Factions
 
