@@ -4,16 +4,16 @@
   "descriptor": "Adaptable mutants",
   "complexity": 13,
   "metabolism": 2,
-  "width": 1700,
-  "height": 1000,
+  "width": 630,
+  "height": 340,
   "character": "Art\\Cutouts\\Processed\\Trog_South.png",
   "character_layout": {
-    "x": -82.39999999999998,
-    "y": 250,
-    "scale": 0.85,
+    "x": -28.640000000000015,
+    "y": 68,
+    "scale": 0.335,
     "source_width": 768,
     "source_height": 768,
-    "scale_per_original_pixel": 1.7,
+    "scale_per_original_pixel": 0.67,
     "visible_bounds": [
       267,
       140,
@@ -75,60 +75,6 @@
       "priority": 300.0,
       "complexity": 1,
       "metabolism": 2,
-      "archites": 0
-    },
-    {
-      "defName": "XylHead_Warped",
-      "label": "warped head",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Head_Warped.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Cosmetic",
-      "category_priority": 300.0,
-      "priority": 98.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "XylSkin_DarkGreen",
-      "label": "dark green skin",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
-      "color": [
-        0.3176470588235294,
-        0.5176470588235295,
-        0.12549019607843137,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Cosmetic_Skin",
-      "category_priority": 280.0,
-      "priority": 0.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "XylSkin_Olive",
-      "label": "olive skin",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
-      "color": [
-        0.4117647058823529,
-        0.39215686274509803,
-        0.23137254901960785,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Cosmetic_Skin",
-      "category_priority": 280.0,
-      "priority": 0.0,
-      "complexity": 0,
-      "metabolism": 0,
       "archites": 0
     },
     {
@@ -330,6 +276,24 @@
       "archites": 0
     },
     {
+      "defName": "XylHead_Warped",
+      "label": "warped head",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Head_Warped.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 98.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
       "defName": "Headbone_Human",
       "label": "human headbone",
       "path": "Art\\Rimworld art\\Genes\\Gene_HeadboneHuman.png",
@@ -366,6 +330,24 @@
       "archites": 0
     },
     {
+      "defName": "XylSkin_DarkGreen",
+      "label": "dark green skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.3176470588235294,
+        0.5176470588235295,
+        0.12549019607843137,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
       "defName": "Skin_Green",
       "label": "green skin",
       "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
@@ -376,6 +358,24 @@
         1.0
       ],
       "source": "vanilla",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylSkin_Olive",
+      "label": "olive skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.4117647058823529,
+        0.39215686274509803,
+        0.23137254901960785,
+        1.0
+      ],
+      "source": "mod",
       "category": "Cosmetic_Skin",
       "category_priority": 280.0,
       "priority": 0.0,
@@ -513,219 +513,192 @@
   "layout": [
     {
       "defName": "XylToxicBurst",
-      "x": 715.2,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 241.4,
+      "y": 110.0,
+      "size": 52
     },
     {
       "defName": "XylDrugResistant",
-      "x": 950.4,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 324.2,
+      "y": 110.0,
+      "size": 52
     },
     {
       "defName": "XylBioRejection",
-      "x": 1185.6,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
-    },
-    {
-      "defName": "XylHead_Warped",
-      "x": 1420.8,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
-    },
-    {
-      "defName": "XylSkin_DarkGreen",
-      "x": 715.2,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
-    },
-    {
-      "defName": "XylSkin_Olive",
-      "x": 950.4,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 407.0,
+      "y": 110.0,
+      "size": 52
     },
     {
       "defName": "XylInsectPheromones",
-      "x": 1185.6,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 489.8,
+      "y": 110.0,
+      "size": 52
     },
     {
       "defName": "XylGeneticAtavism",
-      "x": 1420.8,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 572.6,
+      "y": 110.0,
+      "size": 52
     },
     {
       "defName": "Immunity_Strong",
-      "x": 538.8000000000001,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 262.1,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "MoveSpeed_Slow",
-      "x": 656.4000000000001,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 303.5,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "ToxicEnvironmentResistance_Partial",
-      "x": 774.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 3,
-      "label_bottom": 830
+      "group": "supporting",
+      "x": 344.9,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "UVSensitivity_Mild",
-      "x": 891.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 386.3,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "Aggression_Aggressive",
-      "x": 1009.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 427.7,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "MeleeDamage_Strong",
-      "x": 1126.8,
-      "y": 693,
-      "size": 64,
-      "label_lines": 3,
-      "label_bottom": 830
+      "group": "supporting",
+      "x": 469.1,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "Pain_Reduced",
-      "x": 1244.4,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 510.5,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "Beauty_VeryUgly",
-      "x": 1362.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 551.9,
+      "y": 214.0,
+      "size": 32
     },
     {
       "defName": "Hair_BaldOnly",
-      "x": 1479.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 282.8,
+      "y": 256.0,
+      "size": 32
+    },
+    {
+      "defName": "XylHead_Warped",
+      "group": "supporting",
+      "x": 324.2,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Headbone_Human",
-      "x": 1597.1999999999998,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 365.6,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Headbone_MiniHorns",
-      "x": 597.6,
-      "y": 852,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 407.0,
+      "y": 256.0,
+      "size": 32
+    },
+    {
+      "defName": "XylSkin_DarkGreen",
+      "group": "supporting",
+      "x": 448.4,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Skin_Green",
-      "x": 715.2,
-      "y": 852,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 489.8,
+      "y": 256.0,
+      "size": 32
+    },
+    {
+      "defName": "XylSkin_Olive",
+      "group": "supporting",
+      "x": 531.2,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Learning_Slow",
-      "x": 832.8,
-      "y": 852,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 282.8,
+      "y": 298.0,
+      "size": 32
     },
     {
       "defName": "DarkVision",
-      "x": 950.4,
-      "y": 852,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 324.2,
+      "y": 298.0,
+      "size": 32
     },
     {
       "defName": "Instability_Mild",
-      "x": 1068.0,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
+      "group": "supporting",
+      "x": 365.6,
+      "y": 298.0,
+      "size": 32
     },
     {
       "defName": "PollutionRush",
-      "x": 1185.6,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
+      "group": "supporting",
+      "x": 407.0,
+      "y": 298.0,
+      "size": 32
     },
     {
       "defName": "AptitudeStrong_Mining",
-      "x": 1303.2,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
+      "group": "supporting",
+      "x": 448.4,
+      "y": 298.0,
+      "size": 32
     },
     {
       "defName": "AptitudeStrong_Animals",
-      "x": 1420.8,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
+      "group": "supporting",
+      "x": 489.8,
+      "y": 298.0,
+      "size": 32
     },
     {
       "defName": "AptitudeTerrible_Intellectual",
-      "x": 1538.4,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
+      "group": "supporting",
+      "x": 531.2,
+      "y": 298.0,
+      "size": 32
     }
   ]
 }

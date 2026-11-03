@@ -42,16 +42,16 @@ MOD = ROOT / "XylXenos/Data"
 OUT = ROOT / "Art/Workshop/Mockups"
 FONT = "C:/Windows/Fonts/segoeui.ttf"
 BOLD_FONT = "C:/Windows/Fonts/segoeuib.ttf"
-# Keep each xenotype a compact, scannable Workshop panel. Landscape proportions
-# leave room for the character and at most two rows of the current new-gene lists.
-CARD_WIDTH = 1700
-CARD_HEIGHT = 1000
-GENES_LEFT = 480
-GENES_RIGHT = CARD_WIDTH - 44
+# Work at the Workshop description column's observed display width so legibility
+# is judged at the size readers actually see, rather than on enlarged previews.
+CARD_WIDTH = 630
+CARD_HEIGHT = 340
+GENES_LEFT = 200
+GENES_RIGHT = CARD_WIDTH - 16
 # Both cutout sets retain the same camera scale on 384px/768px canvases.
-CHARACTER_SCALE = 1.7
-CHARACTER_CENTER = 244
-CHARACTER_TOP = 250
+CHARACTER_SCALE = 0.67
+CHARACTER_CENTER = 100
+CHARACTER_TOP = 68
 
 
 @dataclass(frozen=True)
@@ -73,26 +73,28 @@ class Gene:
         # Match GeneUtility.SortGeneDefs so readers can compare cards with the gene UI.
         return (-self.category_priority, self.priority, self.label.casefold())
 
+    @property
+    def featured(self):
+        # Emphasis introduces unfamiliar mechanics, rather than every mod asset.
+        # Psycasts already have familiar icons; zero-cost cosmetics need no equal
+        # billing with mechanics. Keep functional tails, horns, and skin defenses.
+        return (self.source == "mod" and self.category != "XylPsycasts"
+                and (self.complexity != 0 or self.metabolism != 0))
+
 
 @dataclass(frozen=True)
 class GeneLayout:
-    heading: str
     max_columns: int
     icon_size: int
-    font_size: int
-    label_offset: int
-    label_leading: int
-    minimum_row_pitch: int
+    row_gap: int
+    top: int
+    bottom: int
 
 
-# New genes explain the mod's distinctive additions and deserve the visual emphasis.
-# Familiar vanilla genes remain visible as supporting context at a smaller size.
-NEW_GENE_LAYOUT = GeneLayout(
-    heading="NEW GENES", max_columns=5, icon_size=112, font_size=23,
-    label_offset=143, label_leading=28, minimum_row_pitch=170)
-VANILLA_GENE_LAYOUT = GeneLayout(
-    heading="VANILLA GENES", max_columns=10, icon_size=64, font_size=18,
-    label_offset=87, label_leading=22, minimum_row_pitch=114)
+# Reserve consistent bands so cards can be compared without groups moving around
+# with every gene count. Unlabeled 52px/32px icons remain readable at page scale.
+FEATURED_GENE_LAYOUT = GeneLayout(max_columns=5, icon_size=52, row_gap=12, top=78, bottom=194)
+SUPPORTING_GENE_LAYOUT = GeneLayout(max_columns=10, icon_size=32, row_gap=10, top=214, bottom=330)
 
 
 class GeneLibrary:
@@ -205,25 +207,17 @@ def image_uri(path):
     return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode("ascii")
 
 
-def caption(label, font_size, width):
-    label = label[:1].upper() + label[1:]
-    words = label.split()
-    while max(ImageFont.truetype(FONT, font_size).getlength(word) for word in words) > width:
-        font_size -= 1
-    font = ImageFont.truetype(FONT, font_size)
-    lines = [""]
-    for word in words:
-        candidate = (lines[-1] + " " + word).strip()
-        if lines[-1] and font.getlength(candidate) > width:
-            lines.append(word)
-        else:
-            lines[-1] = candidate
-    return lines, font_size
-
-
 def write_text(path, text):
     with path.open("w", encoding="utf-8", newline="\r\n") as output:
         output.write(text + "\n")
+
+
+def render_png(arguments, path):
+    # Direct ImageMagick output can fail when overwriting Windows previews even
+    # while Python can write the file. Let ImageMagick render and Python save.
+    rendered = subprocess.run(["magick", *arguments, "PNG:-"],
+                              check=True, stdout=subprocess.PIPE)
+    path.write_bytes(rendered.stdout)
 
 
 def balanced_rows(genes, max_columns):
@@ -246,9 +240,9 @@ def build_card(library, def_name, descriptor):
     name = library.value(xenotype, "label").capitalize()
     genes = [library.gene(g.text.strip()) for g in xenotype.findall("genes/li")]
     sorted_genes = sorted(genes, key=lambda gene: gene.sort_key)
-    new_genes = [gene for gene in sorted_genes if gene.source == "mod"]
-    vanilla_genes = [gene for gene in sorted_genes if gene.source == "vanilla"]
-    ordered = new_genes + vanilla_genes
+    featured_genes = [gene for gene in sorted_genes if gene.featured]
+    supporting_genes = [gene for gene in sorted_genes if not gene.featured]
+    ordered = featured_genes + supporting_genes
     complexity = sum(g.complexity for g in genes)
     metabolism = sum(g.metabolism for g in genes)
     portrait = ROOT / "Art/Cutouts/Processed" / (name + "_South.png")
@@ -256,27 +250,27 @@ def build_card(library, def_name, descriptor):
         portrait = ROOT / "Art/Cutouts" / (name + "_South.png")
     parts = []
 
-    def text(x, y, value, size=22, fill="#ebe7df", weight=400, anchor="start", tracking=0):
-        parts.append(f'<text x="{x}" y="{y}" fill="{fill}" font-family="Segoe UI, sans-serif" font-size="{size}" font-weight="{weight}" text-anchor="{anchor}" letter-spacing="{tracking}">{escape(str(value))}</text>')
+    def text(x, y, value, size=22, fill="#ebe7df", weight=400):
+        parts.append(f'<text x="{x}" y="{y}" fill="{fill}" font-family="Segoe UI, sans-serif" font-size="{size}" font-weight="{weight}">{escape(str(value))}</text>')
 
     def picture(path, x, y, width, height, attributes=""):
         parts.append(f'<image x="{x}" y="{y}" width="{width}" height="{height}" xlink:href="{image_uri(path)}" {attributes}/>')
 
-    text(52, 45, "XYL’S XENOTYPES", 17, "#b8afc8", 600, tracking=3)
-    picture(MOD / "Textures" / (xenotype.findtext("iconPath") + ".png"), 52, 84, 108, 108)
-    title_size = 72
-    while ImageFont.truetype(BOLD_FONT, title_size).getlength(name.upper()) + 2 * len(name) > 1040:
-        title_size -= 1
-    text(184, 150, name.upper(), title_size, weight=600, tracking=2)
-    text(187, 192, descriptor, 26, "#c9c4cf")
-    for x, label, value, symbol, color in [
-            (1290, "COMPLEXITY", complexity, "Complexity.png", "#8bc9db"),
-            (1484, "METABOLISM", f"{metabolism:+}" if metabolism else "0", "Metabolism.png", "#d39ab3")]:
-        text(x, 104, label, 17, "#bcb8c3", 600, tracking=1)
-        picture(ART / symbol, x - 3, 121, 45, 45)
-        text(x + 52, 164, value, 48, color, 600)
-    parts.append(f'<path d="M44 214H{GENES_RIGHT}" stroke="#51515a" stroke-width="1"/>')
-    parts.append('<ellipse cx="244" cy="600" rx="213" ry="310" fill="url(#portrait-glow)"/>')
+    picture(MOD / "Textures" / (xenotype.findtext("iconPath") + ".png"), 16, 14, 36, 36)
+    title_size = 24
+    descriptor_size = 14
+    descriptor_x = 64 + ImageFont.truetype(BOLD_FONT, title_size).getlength(name.upper()) + 14
+    if descriptor_x + ImageFont.truetype(FONT, descriptor_size).getlength(descriptor) > 480:
+        raise ValueError(f"{name} title and descriptor overlap the biostats")
+    text(64, 40, name.upper(), title_size, weight=700)
+    text(round(descriptor_x, 2), 40, descriptor, descriptor_size, "#c9c4cf")
+    for x, value, symbol, color in [
+            (494, complexity, "Complexity.png", "#8bc9db"),
+            (558, f"{metabolism:+}" if metabolism else "0", "Metabolism.png", "#d39ab3")]:
+        picture(ART / symbol, x, 24, 18, 18)
+        text(x + 24, 41, value, 22, color, 700)
+    parts.append(f'<path d="M16 60H{GENES_RIGHT}" stroke="#51515a" stroke-width="1"/>')
+    parts.append('<ellipse cx="100" cy="200" rx="90" ry="115" fill="url(#portrait-glow)"/>')
     with Image.open(portrait) as im:
         left, top, right, bottom = im.convert("RGBA").getchannel("A").getbbox()
         width, height = im.size
@@ -289,52 +283,42 @@ def build_card(library, def_name, descriptor):
     picture(portrait, character_x, character_y, width * character_scale, height * character_scale)
 
     positions = []
-    y = 292
     gene_index = 0
-    gene_groups = [(new_genes, NEW_GENE_LAYOUT), (vanilla_genes, VANILLA_GENE_LAYOUT)]
-    for group_index, (group, style) in enumerate(gene_groups):
+    gene_groups = [("featured", featured_genes, FEATURED_GENE_LAYOUT),
+                   ("supporting", supporting_genes, SUPPORTING_GENE_LAYOUT)]
+    if featured_genes and supporting_genes:
+        parts.append(f'<path d="M{GENES_LEFT} 204H{GENES_RIGHT}" stroke="#51515a" stroke-width="1"/>')
+    for group_name, group, style in gene_groups:
         if not group:
             continue
         spacing = (GENES_RIGHT - GENES_LEFT) / style.max_columns
         group_center = (GENES_LEFT + GENES_RIGHT) / 2
         rows = balanced_rows(group, style.max_columns)
-        if group_index == 0:
-            text(GENES_LEFT, y - 34, style.heading, 20, "#b8afc8", 600, tracking=2)
-        else:
-            parts.append(f'<path d="M{GENES_LEFT} {y-67}H{GENES_RIGHT}" stroke="#51515a" stroke-width="1"/>')
-            text(GENES_LEFT, y - 28, style.heading, 18, "#bcb8c3", 600, tracking=2)
-        for row_index, row in enumerate(rows):
-            row_bottom = y + style.icon_size
+        group_height = len(rows) * style.icon_size + (len(rows) - 1) * style.row_gap
+        if group_height > style.bottom - style.top:
+            raise ValueError(f"{name} {group_name} genes exceed their layout band")
+        y = style.top + (style.bottom - style.top - group_height) / 2
+        for row in rows:
             for col, gene in enumerate(row):
                 cx = group_center + (col - (len(row) - 1) / 2) * spacing
                 icon_left = cx - style.icon_size / 2
                 picture(ART / "Genes/GeneBackground_Endogene.png", icon_left, y, style.icon_size, style.icon_size)
                 picture(gene.path, icon_left, y, style.icon_size, style.icon_size, f'filter="url(#tint{gene_index})"')
-                lines, actual_size = caption(gene.label, style.font_size, spacing - 16)
-                for line, label in enumerate(lines):
-                    text(cx, y + style.label_offset + line * style.label_leading,
-                         label, actual_size, "#e0dce4", anchor="middle")
-                label_bottom = y + style.label_offset + (len(lines)-1) * style.label_leading + 6
-                row_bottom = max(row_bottom, label_bottom)
-                positions.append(dict(defName=gene.defName, x=cx, y=y, size=style.icon_size,
-                                      label_lines=len(lines), label_bottom=label_bottom))
+                positions.append(dict(defName=gene.defName, group=group_name,
+                                      x=cx, y=y, size=style.icon_size))
                 gene_index += 1
-            if row_index + 1 < len(rows):
-                y += max(style.minimum_row_pitch, row_bottom-y+22)
-        y = row_bottom + (81 if group_index == 0 else 24)
-    if y > CARD_HEIGHT:
-        raise ValueError(f"{name} gene layout exceeds the {CARD_WIDTH}x{CARD_HEIGHT} card: {y}")
+            y += style.icon_size + style.row_gap
     filters = []
     for i, gene in enumerate(ordered):
         r, g, b, a = gene.color
         filters.append(f'<filter id="tint{i}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{CARD_WIDTH}" height="{CARD_HEIGHT}" viewBox="0 0 {CARD_WIDTH} {CARD_HEIGHT}">',
            f'<title>{escape(name)} — {escape(descriptor)}</title>',
-           f'<desc>Complexity {complexity}; metabolism {metabolism}. Mod genes above vanilla genes, sorted by category priority descending, gene priority ascending, and label alphabetically.</desc>',
+           f'<desc>Complexity {complexity}; metabolism {metabolism}. New functional genes above vanilla, cosmetic, and psycast genes. Each group is sorted by category priority descending, gene priority ascending, and label alphabetically.</desc>',
            '<defs><radialGradient id="portrait-glow"><stop stop-color="#a99bbb" stop-opacity=".16"/><stop offset="1" stop-color="#a99bbb" stop-opacity="0"/></radialGradient>',
            '<linearGradient id="surface" x2="0" y2="1"><stop stop-color="#2b2e33"/><stop offset="1" stop-color="#202226"/></linearGradient>',
            *filters, '</defs>',
-           f'<rect x="1" y="1" width="{CARD_WIDTH-2}" height="{CARD_HEIGHT-2}" rx="22" fill="url(#surface)" stroke="#4a4c52" stroke-width="2"/>',
+           f'<rect x="0.5" y="0.5" width="{CARD_WIDTH-1}" height="{CARD_HEIGHT-1}" rx="10" fill="url(#surface)" stroke="#4a4c52" stroke-width="1"/>',
            *parts, '</svg>']
     stem = name.lower() + "-card"
     svg_path = OUT / (stem + ".svg")
@@ -350,10 +334,10 @@ def build_card(library, def_name, descriptor):
                     genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT))) for gene in ordered],
                     layout=positions)
     write_text(OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
-    subprocess.run(["magick", "-background", "none", str(svg_path), str(png_path)], check=True)
+    render_png(["-background", "none", str(svg_path)], png_path)
     with Image.open(png_path) as saved:
         saved.verify()
-    print(f"{name}: {len(new_genes)} new + {len(vanilla_genes)} vanilla; complexity {complexity}; metabolism {metabolism}; {CARD_WIDTH}x{CARD_HEIGHT}")
+    print(f"{name}: {len(featured_genes)} featured + {len(supporting_genes)} supporting; complexity {complexity}; metabolism {metabolism}; {CARD_WIDTH}x{CARD_HEIGHT}")
     return png_path
 
 
@@ -369,13 +353,37 @@ def main():
         raise ValueError("Description config must match the complete mod xenotype roster")
     OUT.mkdir(parents=True, exist_ok=True)
     paths = [build_card(library, name, descriptor) for name, descriptor in descriptions]
-    subprocess.run(["magick", "montage", *map(str, paths), "-thumbnail", "567x334", "-tile", "3x",
-                    "-geometry", "+12+12", "-gravity", "north", "-background", "#17191c",
-                    str(OUT / "all-xenotypes.png")], check=True)
+    render_png(["montage", *map(str, paths), "-thumbnail", f"{CARD_WIDTH}x{CARD_HEIGHT}", "-tile", "3x",
+                "-geometry", "+12+12", "-gravity", "north", "-background", "#17191c"],
+               OUT / "all-xenotypes.png")
     cards = [f'<figure><a href="{path.name}"><img src="{path.name}" alt="{name}: {descriptor}" loading="lazy"></a><figcaption>{name} · <a href="{path.stem}.svg">SVG</a></figcaption></figure>'
              for path, (def_name, descriptor) in zip(paths, descriptions)
              for name in [library.value(library.xenotypes[def_name], "label").capitalize()]]
-    write_text(OUT / "index.html", '<!doctype html><html lang="en"><meta charset="utf-8"><title>Xyl’s Xenotypes — card mockups</title><style>body{margin:24px;background:#17191c;color:#ebe7df;font:16px Segoe UI,sans-serif}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:24px}figure{margin:0}img{width:100%;height:auto}a{color:#b8afc8}figcaption{padding:8px}p{max-width:900px}</style><h1>Xyl’s Xenotypes</h1><p>Descriptions from CONTENT.md. Totals reflect the defined xenotype gene lists, before random or lineage additions. Royalty genes included. Select a card for the full-size PNG.</p><main>' + "\n".join(cards) + '</main></html>')
+    # A fixed-width review gallery exposes the actual Workshop reading scale;
+    # responsive thumbnail columns would conceal the very legibility being judged.
+    card_markup = "\n".join(cards)
+    write_text(OUT / "index.html", f'''<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xyl’s Xenotypes — card mockups</title>
+<style>
+body {{ margin:24px; background:#17191c; color:#ebe7df; font:16px Segoe UI,sans-serif }}
+main {{ display:grid; grid-template-columns:{CARD_WIDTH}px; gap:24px }}
+figure {{ margin:0 }}
+img {{ display:block; width:{CARD_WIDTH}px; height:{CARD_HEIGHT}px }}
+a {{ color:#b8afc8 }}
+figcaption {{ padding:8px }}
+p {{ max-width:{CARD_WIDTH}px }}
+</style>
+<h1>Xyl’s Xenotypes</h1>
+<p>Cards shown at their native {CARD_WIDTH}-pixel Workshop display width.
+Descriptions from CONTENT.md. Totals reflect the defined xenotype gene lists,
+before random or lineage additions. Royalty genes included. Select a card for the PNG.</p>
+<main>
+{card_markup}
+</main>
+</html>''')
     with zipfile.ZipFile(OUT / "xenotype-card-mockups.zip", "w", zipfile.ZIP_DEFLATED) as bundle:
         for path in paths:
             for artifact in (path, path.with_suffix(".svg"), path.with_name(path.stem + "-data.json")):

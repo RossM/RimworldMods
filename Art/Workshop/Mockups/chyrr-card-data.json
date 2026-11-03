@@ -4,16 +4,16 @@
   "descriptor": "Nocturnal flyers",
   "complexity": 11,
   "metabolism": 0,
-  "width": 1700,
-  "height": 1000,
+  "width": 630,
+  "height": 340,
   "character": "Art\\Cutouts\\Processed\\Chyrr_South.png",
   "character_layout": {
-    "x": -82.39999999999998,
-    "y": 250,
-    "scale": 0.85,
+    "x": -28.640000000000015,
+    "y": 68,
+    "scale": 0.335,
     "source_width": 768,
     "source_height": 768,
-    "scale_per_original_pixel": 1.7,
+    "scale_per_original_pixel": 0.67,
     "visible_bounds": [
       167,
       125,
@@ -132,24 +132,6 @@
       "archites": 0
     },
     {
-      "defName": "XylEars_SmallPointed",
-      "label": "small pointed ears",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_EarSmallPointed.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "AG_Cosmetic_Ears",
-      "category_priority": 313.59,
-      "priority": 71.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "Immunity_Weak",
       "label": "weak immunity",
       "path": "Art\\Rimworld art\\Genes\\Gene_WeakImmunity.png",
@@ -237,6 +219,24 @@
       "priority": 0.0,
       "complexity": 0,
       "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_SmallPointed",
+      "label": "small pointed ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_EarSmallPointed.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 71.0,
+      "complexity": 0,
+      "metabolism": 0,
       "archites": 0
     },
     {
@@ -351,147 +351,129 @@
   "layout": [
     {
       "defName": "XylSonicWave",
-      "x": 715.2,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 324.2,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylBatWings",
-      "x": 950.4,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 407.0,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylTorpor",
-      "x": 1185.6,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 489.8,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylNocturnal",
-      "x": 1420.8,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 324.2,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylEcholocation",
-      "x": 832.8,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 407.0,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylKeenEars",
-      "x": 1068.0,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
-    },
-    {
-      "defName": "XylEars_SmallPointed",
-      "x": 1303.2,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 489.8,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "Immunity_Weak",
-      "x": 774.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 303.5,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "MinTemp_SmallIncrease",
-      "x": 891.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 344.9,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "MaxTemp_SmallIncrease",
-      "x": 1009.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 386.3,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "UVSensitivity_Mild",
-      "x": 1126.8,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 427.7,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "Delicate",
-      "x": 1244.4,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 469.1,
+      "y": 235.0,
+      "size": 32
+    },
+    {
+      "defName": "XylEars_SmallPointed",
+      "group": "supporting",
+      "x": 510.5,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "Beard_NoBeardOnly",
-      "x": 1362.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 303.5,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "Body_Standard",
-      "x": 832.8,
-      "y": 830,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 344.9,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "Body_Thin",
-      "x": 950.4,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "group": "supporting",
+      "x": 386.3,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "DarkVision",
-      "x": 1068.0,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "group": "supporting",
+      "x": 427.7,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "AptitudePoor_Mining",
-      "x": 1185.6,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "group": "supporting",
+      "x": 469.1,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "AptitudeStrong_Medicine",
-      "x": 1303.2,
-      "y": 830,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 510.5,
+      "y": 277.0,
+      "size": 32
     }
   ]
 }

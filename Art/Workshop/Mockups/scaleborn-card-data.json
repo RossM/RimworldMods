@@ -4,16 +4,16 @@
   "descriptor": "Draconic warriors",
   "complexity": 12,
   "metabolism": -1,
-  "width": 1700,
-  "height": 1000,
+  "width": 630,
+  "height": 340,
   "character": "Art\\Cutouts\\Processed\\Scaleborn_South.png",
   "character_layout": {
-    "x": -82.39999999999998,
-    "y": 250,
-    "scale": 0.85,
+    "x": -28.640000000000015,
+    "y": 68,
+    "scale": 0.335,
     "source_width": 768,
     "source_height": 768,
-    "scale_per_original_pixel": 1.7,
+    "scale_per_original_pixel": 0.67,
     "visible_bounds": [
       248,
       116,
@@ -315,131 +315,115 @@
   "layout": [
     {
       "defName": "XylCarnivoreStomach",
-      "x": 715.2,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 282.8,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylGreedy",
-      "x": 950.4,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 365.6,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylLargeHorns",
-      "x": 1185.6,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 448.4,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylLineageInheritance",
-      "x": 1420.8,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 531.2,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylTail_Lizard",
-      "x": 832.8,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 324.2,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylScaleskin",
-      "x": 1068.0,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 407.0,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylScalebornLineage",
-      "x": 1303.2,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 489.8,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "MoveSpeed_Slow",
-      "x": 597.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 241.4,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "MaxTemp_SmallIncrease",
-      "x": 715.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 282.8,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Aggression_Aggressive",
-      "x": 832.8,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 324.2,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "MeleeDamage_Strong",
-      "x": 950.4,
-      "y": 693,
-      "size": 64,
-      "label_lines": 3,
-      "label_bottom": 830
+      "group": "supporting",
+      "x": 365.6,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Sleepy",
-      "x": 1068.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 407.0,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Hair_BaldOnly",
-      "x": 1185.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 448.4,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "Beard_NoBeardOnly",
-      "x": 1303.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 489.8,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "FacialRidges",
-      "x": 1420.8,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 531.2,
+      "y": 256.0,
+      "size": 32
     },
     {
       "defName": "AptitudeTerrible_Cooking",
-      "x": 1538.4,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 572.6,
+      "y": 256.0,
+      "size": 32
     }
   ]
 }

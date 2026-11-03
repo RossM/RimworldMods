@@ -4,16 +4,16 @@
   "descriptor": "Sentient livestock",
   "complexity": 11,
   "metabolism": 1,
-  "width": 1700,
-  "height": 1000,
+  "width": 630,
+  "height": 340,
   "character": "Art\\Cutouts\\Processed\\Bossaps_South.png",
   "character_layout": {
-    "x": -82.39999999999998,
-    "y": 250,
-    "scale": 0.85,
+    "x": -28.640000000000015,
+    "y": 68,
+    "scale": 0.335,
     "source_width": 768,
     "source_height": 768,
-    "scale_per_original_pixel": 1.7,
+    "scale_per_original_pixel": 0.67,
     "visible_bounds": [
       181,
       63,
@@ -168,24 +168,6 @@
       "archites": 0
     },
     {
-      "defName": "XylEars_Cow",
-      "label": "cow ears",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_CowEars.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "AG_Cosmetic_Ears",
-      "category_priority": 313.59,
-      "priority": 72.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "MinTemp_SmallDecrease",
       "label": "cold tolerant",
       "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
@@ -253,6 +235,24 @@
       "category": "Reproduction",
       "category_priority": 400.0,
       "priority": 110.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_Cow",
+      "label": "cow ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_CowEars.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 72.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -387,163 +387,143 @@
   "layout": [
     {
       "defName": "XylHerbivoreStomach",
-      "x": 597.6,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 282.8,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylHerdInstinct",
-      "x": 832.8,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 365.6,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylDocile",
-      "x": 1068.0,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 448.4,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylSeeingRed",
-      "x": 1303.2,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 531.2,
+      "y": 78.0,
+      "size": 52
     },
     {
       "defName": "XylLargeHorns",
-      "x": 1538.4,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
+      "group": "featured",
+      "x": 282.8,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylPainReversal",
-      "x": 715.2,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 365.6,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylHyperlactation",
-      "x": 950.4,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 448.4,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "XylGender_UsuallyFemale",
-      "x": 1185.6,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
-    },
-    {
-      "defName": "XylEars_Cow",
-      "x": 1420.8,
-      "y": 463,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 612
+      "group": "featured",
+      "x": 531.2,
+      "y": 142.0,
+      "size": 52
     },
     {
       "defName": "MinTemp_SmallDecrease",
-      "x": 774.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 303.5,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "MaxTemp_SmallIncrease",
-      "x": 891.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 344.9,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "Robust",
-      "x": 1009.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 386.3,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "Fertile",
-      "x": 1126.8,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 427.7,
+      "y": 235.0,
+      "size": 32
+    },
+    {
+      "defName": "XylEars_Cow",
+      "group": "supporting",
+      "x": 469.1,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "Hair_LongOnly",
-      "x": 1244.4,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "group": "supporting",
+      "x": 510.5,
+      "y": 235.0,
+      "size": 32
     },
     {
       "defName": "Body_Standard",
-      "x": 1362.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "group": "supporting",
+      "x": 303.5,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "Body_Fat",
-      "x": 832.8,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "group": "supporting",
+      "x": 344.9,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "Body_Hulk",
-      "x": 950.4,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "group": "supporting",
+      "x": 386.3,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "Nearsighted",
-      "x": 1068.0,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "group": "supporting",
+      "x": 427.7,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "AptitudePoor_Cooking",
-      "x": 1185.6,
-      "y": 830,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 469.1,
+      "y": 277.0,
+      "size": 32
     },
     {
       "defName": "AptitudeStrong_Plants",
-      "x": 1303.2,
-      "y": 830,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
+      "group": "supporting",
+      "x": 510.5,
+      "y": 277.0,
+      "size": 32
     }
   ]
 }
