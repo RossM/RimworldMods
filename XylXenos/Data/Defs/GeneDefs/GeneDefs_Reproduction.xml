@@ -2,10 +2,17 @@
 
 <Defs>
 
+  <GeneCategoryDef>
+    <defName>XylInheritance</defName>
+    <label>gender and inheritance</label>
+    <displayPriorityInXenotype>399</displayPriorityInXenotype>
+  </GeneCategoryDef>
+
+  
   <GeneDef Name="XylGenderRatioBase" Abstract="True">
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Reproduction</displayCategory>
+    <displayCategory>XylInheritance</displayCategory>
     <selectionWeight>0</selectionWeight>
     <exclusionTags>
       <!-- Matches Alpha Genes. -->
@@ -19,7 +26,7 @@
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>300</displayOrderInCategory>
+    <displayOrderInCategory>1000</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
     <symbolPack>
       <prefixSymbols>
@@ -38,6 +45,7 @@
     </symbolPack>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <geneType>Endogene</geneType>
         <comps>
           <li Class="XylXenos.GeneCompProperties_GenderRatio">
@@ -52,10 +60,11 @@
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>301</displayOrderInCategory>
+    <displayOrderInCategory>1001</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <geneType>Endogene</geneType>
         <comps>
           <li Class="XylXenos.GeneCompProperties_GenderRatio">
@@ -70,10 +79,11 @@
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>302</displayOrderInCategory>
+    <displayOrderInCategory>1002</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <geneType>Endogene</geneType>
         <comps>
           <li Class="XylXenos.GeneCompProperties_GenderRatio">
@@ -88,7 +98,7 @@
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>303</displayOrderInCategory>
+    <displayOrderInCategory>1003</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysMale</iconPath>
     <symbolPack>
       <prefixSymbols>
@@ -107,6 +117,7 @@
     </symbolPack>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <geneType>Endogene</geneType>
         <comps>
           <li Class="XylXenos.GeneCompProperties_GenderRatio">
@@ -123,8 +134,8 @@
     <description>When a carrier of this gene has a baby with a partner without this gene, the baby will inherit all of the carrier's endogenes and none of the partner's.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Reproduction</displayCategory>
-    <displayOrderInCategory>400</displayOrderInCategory>
+    <displayCategory>XylInheritance</displayCategory>
+    <displayOrderInCategory>1100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_StrongGenes</iconPath>
     <exclusionTags>
       <!-- Matches Vanilla Races Expanded - Highmate and Better Gene Inheritance. -->
@@ -132,6 +143,7 @@
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="XylXenos.GeneCompProperties_Inheritance">
             <strength>1</strength>
@@ -147,8 +159,8 @@
     <description>When a carrier of this gene has a baby with a partner without this gene, the baby will inherit all of the partner's endogenes and none of the carrier's.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Reproduction</displayCategory>
-    <displayOrderInCategory>401</displayOrderInCategory>
+    <displayCategory>XylInheritance</displayCategory>
+    <displayOrderInCategory>1101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_WeakGenes</iconPath>
     <exclusionTags>
       <!-- Matches Vanilla Races Expanded - Highmate and Better Gene Inheritance. -->
@@ -156,6 +168,7 @@
     </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="XylXenos.GeneCompProperties_Inheritance">
             <strength>-1</strength>
@@ -341,11 +354,12 @@
     <description>When a carrier of this gene has a baby with a partner who also has this gene, the baby will inherit all of one parent's endogenes and none of the other's.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>Reproduction</displayCategory>
-    <displayOrderInCategory>410</displayOrderInCategory>
+    <displayCategory>XylInheritance</displayCategory>
+    <displayOrderInCategory>1200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_LineageInheritance</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="XylXenos.GeneCompProperties_Inheritance">
             <tiesChooseRandomParent>true</tiesChooseRandomParent>
