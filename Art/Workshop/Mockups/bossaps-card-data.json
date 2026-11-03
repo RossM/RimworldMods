@@ -389,140 +389,140 @@
       "defName": "XylHerbivoreStomach",
       "group": "featured",
       "x": 282.8,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylHerdInstinct",
       "group": "featured",
       "x": 365.6,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylDocile",
       "group": "featured",
       "x": 448.4,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylSeeingRed",
       "group": "featured",
       "x": 531.2,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylLargeHorns",
       "group": "featured",
       "x": 282.8,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylPainReversal",
       "group": "featured",
       "x": 365.6,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylHyperlactation",
       "group": "featured",
       "x": 448.4,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylGender_UsuallyFemale",
       "group": "featured",
       "x": 531.2,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "MinTemp_SmallDecrease",
       "group": "supporting",
       "x": 303.5,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "MaxTemp_SmallIncrease",
       "group": "supporting",
       "x": 344.9,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "Robust",
       "group": "supporting",
       "x": 386.3,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "Fertile",
       "group": "supporting",
       "x": 427.7,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "XylEars_Cow",
       "group": "supporting",
       "x": 469.1,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "Hair_LongOnly",
       "group": "supporting",
       "x": 510.5,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "Body_Standard",
       "group": "supporting",
       "x": 303.5,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "Body_Fat",
       "group": "supporting",
       "x": 344.9,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "Body_Hulk",
       "group": "supporting",
       "x": 386.3,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "Nearsighted",
       "group": "supporting",
       "x": 427.7,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Cooking",
       "group": "supporting",
       "x": 469.1,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Plants",
       "group": "supporting",
       "x": 510.5,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     }
   ]

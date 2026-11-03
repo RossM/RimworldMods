@@ -425,154 +425,154 @@
       "defName": "XylPlanetSickness",
       "group": "featured",
       "x": 282.8,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylEmergencyReserves",
       "group": "featured",
       "x": 365.6,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylTelescopicVision",
       "group": "featured",
       "x": 448.4,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylTechAffinity",
       "group": "featured",
       "x": 531.2,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "Immunity_Weak",
       "group": "supporting",
       "x": 241.4,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "MeleeDamage_Weak",
       "group": "supporting",
       "x": 282.8,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Delicate",
       "group": "supporting",
       "x": 324.2,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Hair_ShortOnly",
       "group": "supporting",
       "x": 365.6,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "XylForeheadMark",
       "group": "supporting",
       "x": 407.0,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Hair_SnowWhite",
       "group": "supporting",
       "x": 448.4,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Hair_Gray",
       "group": "supporting",
       "x": 489.8,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Hair_DarkBlack",
       "group": "supporting",
       "x": 531.2,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "XylSkin_DarkSilver",
       "group": "supporting",
       "x": 572.6,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "XylSkin_LightSilver",
       "group": "supporting",
       "x": 241.4,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "MoveSpeed_Space",
       "group": "supporting",
       "x": 282.8,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "Learning_Fast",
       "group": "supporting",
       "x": 324.2,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "DarkVision",
       "group": "supporting",
       "x": 365.6,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "CaveDweller",
       "group": "supporting",
       "x": 407.0,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Shooting",
       "group": "supporting",
       "x": 448.4,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Melee",
       "group": "supporting",
       "x": 489.8,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Animals",
       "group": "supporting",
       "x": 531.2,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Intellectual",
       "group": "supporting",
       "x": 572.6,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     }
   ]

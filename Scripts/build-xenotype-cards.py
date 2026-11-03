@@ -42,7 +42,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "Art/Rimworld art"
 MOD = ROOT / "XylXenos/Data"
 OUT = ROOT / "Art/Workshop/Mockups"
-FONT = "C:/Windows/Fonts/segoeui.ttf"
+SEMIBOLD_FONT = "C:/Windows/Fonts/seguisb.ttf"
 BOLD_FONT = "C:/Windows/Fonts/segoeuib.ttf"
 # Work at the Workshop description column's observed display width so legibility
 # is judged at the size readers actually see, rather than on enlarged previews.
@@ -50,6 +50,10 @@ CARD_WIDTH = 630
 CARD_HEIGHT = 340
 GENES_LEFT = 200
 GENES_RIGHT = CARD_WIDTH - 16
+GENES_TOP = 76
+GENES_BOTTOM = 326
+GENE_GROUP_GAP = 32
+GENE_DIVIDER_FRACTION = 0.65
 # Both cutout sets retain the same camera scale on 384px/768px canvases.
 CHARACTER_SCALE = 0.67
 CHARACTER_CENTER = 100
@@ -89,8 +93,6 @@ class GeneLayout:
     max_columns: int
     icon_size: int
     row_gap: int
-    top: int
-    bottom: int
 
 
 @dataclass(frozen=True)
@@ -105,14 +107,14 @@ class Lineage:
         return (self.skin, *self.traits)
 
 
-# Reserve consistent bands so cards can be compared without groups moving around
-# with every gene count. Unlabeled 52px/32px icons remain readable at page scale.
-FEATURED_GENE_LAYOUT = GeneLayout(max_columns=5, icon_size=52, row_gap=12, top=78, bottom=194)
-SUPPORTING_GENE_LAYOUT = GeneLayout(max_columns=10, icon_size=32, row_gap=10, top=214, bottom=330)
+# Keep readable icon sizes across cards, but center each card's complete gene
+# stack. Fixed group bands leave uneven empty space when their row counts differ.
+FEATURED_GENE_LAYOUT = GeneLayout(max_columns=5, icon_size=52, row_gap=12)
+SUPPORTING_GENE_LAYOUT = GeneLayout(max_columns=10, icon_size=32, row_gap=10)
 # Compress only Scaleborn's shared list to leave room for the five alternatives.
 SCALEBORN_GENES_RIGHT = 410
-SCALEBORN_FEATURED_LAYOUT = GeneLayout(max_columns=3, icon_size=52, row_gap=12, top=78, bottom=194)
-SCALEBORN_SUPPORTING_LAYOUT = GeneLayout(max_columns=5, icon_size=32, row_gap=10, top=214, bottom=330)
+SCALEBORN_FEATURED_LAYOUT = GeneLayout(max_columns=3, icon_size=52, row_gap=12)
+SCALEBORN_SUPPORTING_LAYOUT = GeneLayout(max_columns=5, icon_size=32, row_gap=10)
 
 
 class GeneLibrary:
@@ -305,12 +307,19 @@ def build_card(library, def_name, descriptor):
 
     picture(MOD / "Textures" / (xenotype.findtext("iconPath") + ".png"), 16, 14, 36, 36)
     title_size = 24
-    descriptor_size = 14
-    descriptor_x = 64 + ImageFont.truetype(BOLD_FONT, title_size).getlength(name.upper()) + 14
-    if descriptor_x + ImageFont.truetype(FONT, descriptor_size).getlength(descriptor) > 480:
+    descriptor_size = 18
+    title_font = ImageFont.truetype(BOLD_FONT, title_size)
+    descriptor_font = ImageFont.truetype(SEMIBOLD_FONT, descriptor_size)
+    descriptor_x = 64 + title_font.getlength(name.upper()) + 20
+    if descriptor_x + descriptor_font.getlength(descriptor) > 480:
         raise ValueError(f"{name} title and descriptor overlap the biostats")
+    # Center ascenders through the baseline beside the capitals. Descenders hang
+    # below that span; including them would push words with g/p/y upward.
+    title_top = title_font.getbbox(name.upper(), anchor="ls")[1]
+    descriptor_top = descriptor_font.getbbox(descriptor, anchor="ls")[1]
+    descriptor_y = 40 + (title_top - descriptor_top) / 2
     text(64, 40, name.upper(), title_size, weight=700)
-    text(round(descriptor_x, 2), 40, descriptor, descriptor_size, "#c9c4cf")
+    text(round(descriptor_x, 2), descriptor_y, descriptor, descriptor_size, "#c9c4cf", weight=600)
     for x, value, symbol, color in [
             (494, complexity, "Complexity.png", "#8bc9db"),
             (558, f"{metabolism:+}" if metabolism else "0", "Metabolism.png", "#d39ab3")]:
@@ -341,30 +350,38 @@ def build_card(library, def_name, descriptor):
         positions.append(dict(defName=gene.defName, group=group, x=cx, y=y, size=size))
 
     genes_right = SCALEBORN_GENES_RIGHT if is_scaleborn else GENES_RIGHT
-    gene_groups = [
+    groups = [
         ("featured", featured_genes, SCALEBORN_FEATURED_LAYOUT if is_scaleborn else FEATURED_GENE_LAYOUT),
         ("supporting", supporting_genes, SCALEBORN_SUPPORTING_LAYOUT if is_scaleborn else SUPPORTING_GENE_LAYOUT)]
-    if featured_genes and supporting_genes:
-        parts.append(f'<path d="M{GENES_LEFT} 204H{genes_right}" stroke="#51515a" stroke-width="1"/>')
-    for group_name, group, style in gene_groups:
-        if not group:
-            continue
+    gene_groups = [(group_name, balanced_rows(group, style.max_columns), style)
+                   for group_name, group, style in groups if group]
+    stack_height = sum(len(rows) * style.icon_size + (len(rows) - 1) * style.row_gap
+                       for _, rows, style in gene_groups)
+    stack_height += max(0, len(gene_groups) - 1) * GENE_GROUP_GAP
+    if stack_height > GENES_BOTTOM - GENES_TOP:
+        raise ValueError(f"{name} gene stack exceeds the card")
+    y = GENES_TOP + (GENES_BOTTOM - GENES_TOP - stack_height) / 2
+    group_center = (GENES_LEFT + genes_right) / 2
+    divider_width = (genes_right - GENES_LEFT) * GENE_DIVIDER_FRACTION
+    for group_index, (group_name, rows, style) in enumerate(gene_groups):
+        if group_index:
+            # Equal clearance on either side makes the line a group separator;
+            # inset ends keep it from reading as a full-width section boundary.
+            divider_y = y + GENE_GROUP_GAP / 2
+            parts.append(f'<path d="M{group_center-divider_width/2:.2f} {divider_y:.2f}H{group_center+divider_width/2:.2f}" stroke="#51515a" stroke-width="1"/>')
+            y += GENE_GROUP_GAP
         spacing = (genes_right - GENES_LEFT) / style.max_columns
-        group_center = (GENES_LEFT + genes_right) / 2
-        rows = balanced_rows(group, style.max_columns)
-        group_height = len(rows) * style.icon_size + (len(rows) - 1) * style.row_gap
-        if group_height > style.bottom - style.top:
-            raise ValueError(f"{name} {group_name} genes exceed their layout band")
-        y = style.top + (style.bottom - style.top - group_height) / 2
-        for row in rows:
+        for row_index, row in enumerate(rows):
+            if row_index:
+                y += style.row_gap
             for col, gene in enumerate(row):
                 cx = group_center + (col - (len(row) - 1) / 2) * spacing
                 gene_icon(gene, cx, y, style.icon_size, group_name)
-            y += style.icon_size + style.row_gap
+            y += style.icon_size
 
     # Separate colored boxes express mutually exclusive packages. The first icon
     # identifies the skin color without needing another text label.
-    lineage_top, lineage_bottom = 76, 326
+    lineage_top, lineage_bottom = GENES_TOP, GENES_BOTTOM
     row_height, icon_size = 42, 32
     if lineages and len(lineages) * row_height > lineage_bottom - lineage_top:
         raise ValueError("Scaleborn lineage rows exceed the card")

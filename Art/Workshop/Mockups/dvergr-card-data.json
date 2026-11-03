@@ -479,175 +479,175 @@
       "defName": "XylFungusEater",
       "group": "featured",
       "x": 241.4,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylStoic",
       "group": "featured",
       "x": 324.2,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylMelancholy",
       "group": "featured",
       "x": 407.0,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylDwarf",
       "group": "featured",
       "x": 489.8,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylIndustrious",
       "group": "featured",
       "x": 572.6,
-      "y": 110.0,
+      "y": 122.0,
       "size": 52
     },
     {
       "defName": "StrongStomach",
       "group": "supporting",
       "x": 220.70000000000002,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "PsychicAbility_Dull",
       "group": "supporting",
       "x": 262.1,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "MaxTemp_LargeIncrease",
       "group": "supporting",
       "x": 303.5,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Aggression_Aggressive",
       "group": "supporting",
       "x": 344.9,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "XylEars_SmallPointed",
       "group": "supporting",
       "x": 386.3,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Hair_ShortOnly",
       "group": "supporting",
       "x": 427.7,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "XylHair_BaldOnly_Male",
       "group": "supporting",
       "x": 469.1,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Beard_BushyOnly",
       "group": "supporting",
       "x": 510.5,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Skin_LightGray",
       "group": "supporting",
       "x": 551.9,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Skin_SlateGray",
       "group": "supporting",
       "x": 593.3,
-      "y": 235.0,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Skin_InkBlack",
       "group": "supporting",
       "x": 220.70000000000002,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "DarkVision",
       "group": "supporting",
       "x": 262.1,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "CaveDweller",
       "group": "supporting",
       "x": 303.5,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "Unstoppable",
       "group": "supporting",
       "x": 344.9,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Construction",
       "group": "supporting",
       "x": 386.3,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Mining",
       "group": "supporting",
       "x": 427.7,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Crafting",
       "group": "supporting",
       "x": 469.1,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Medicine",
       "group": "supporting",
       "x": 510.5,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Social",
       "group": "supporting",
       "x": 551.9,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     },
     {
       "defName": "ChemicalDependency_Alcohol",
       "group": "supporting",
       "x": 593.3,
-      "y": 277.0,
+      "y": 248.0,
       "size": 32
     }
   ]

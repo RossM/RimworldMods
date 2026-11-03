@@ -515,189 +515,189 @@
       "defName": "XylToxicBurst",
       "group": "featured",
       "x": 241.4,
-      "y": 110.0,
+      "y": 101.0,
       "size": 52
     },
     {
       "defName": "XylDrugResistant",
       "group": "featured",
       "x": 324.2,
-      "y": 110.0,
+      "y": 101.0,
       "size": 52
     },
     {
       "defName": "XylBioRejection",
       "group": "featured",
       "x": 407.0,
-      "y": 110.0,
+      "y": 101.0,
       "size": 52
     },
     {
       "defName": "XylInsectPheromones",
       "group": "featured",
       "x": 489.8,
-      "y": 110.0,
+      "y": 101.0,
       "size": 52
     },
     {
       "defName": "XylGeneticAtavism",
       "group": "featured",
       "x": 572.6,
-      "y": 110.0,
+      "y": 101.0,
       "size": 52
     },
     {
       "defName": "Immunity_Strong",
       "group": "supporting",
       "x": 262.1,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "MoveSpeed_Slow",
       "group": "supporting",
       "x": 303.5,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "ToxicEnvironmentResistance_Partial",
       "group": "supporting",
       "x": 344.9,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "UVSensitivity_Mild",
       "group": "supporting",
       "x": 386.3,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "Aggression_Aggressive",
       "group": "supporting",
       "x": 427.7,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "MeleeDamage_Strong",
       "group": "supporting",
       "x": 469.1,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "Pain_Reduced",
       "group": "supporting",
       "x": 510.5,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "Beauty_VeryUgly",
       "group": "supporting",
       "x": 551.9,
-      "y": 214.0,
+      "y": 185.0,
       "size": 32
     },
     {
       "defName": "Hair_BaldOnly",
       "group": "supporting",
       "x": 282.8,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "XylHead_Warped",
       "group": "supporting",
       "x": 324.2,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "Headbone_Human",
       "group": "supporting",
       "x": 365.6,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "Headbone_MiniHorns",
       "group": "supporting",
       "x": 407.0,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "XylSkin_DarkGreen",
       "group": "supporting",
       "x": 448.4,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "Skin_Green",
       "group": "supporting",
       "x": 489.8,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "XylSkin_Olive",
       "group": "supporting",
       "x": 531.2,
-      "y": 256.0,
+      "y": 227.0,
       "size": 32
     },
     {
       "defName": "Learning_Slow",
       "group": "supporting",
       "x": 282.8,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     },
     {
       "defName": "DarkVision",
       "group": "supporting",
       "x": 324.2,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     },
     {
       "defName": "Instability_Mild",
       "group": "supporting",
       "x": 365.6,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     },
     {
       "defName": "PollutionRush",
       "group": "supporting",
       "x": 407.0,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Mining",
       "group": "supporting",
       "x": 448.4,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Animals",
       "group": "supporting",
       "x": 489.8,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     },
     {
       "defName": "AptitudeTerrible_Intellectual",
       "group": "supporting",
       "x": 531.2,
-      "y": 298.0,
+      "y": 269.0,
       "size": 32
     }
   ]

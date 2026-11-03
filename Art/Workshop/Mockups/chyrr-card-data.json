@@ -353,126 +353,126 @@
       "defName": "XylSonicWave",
       "group": "featured",
       "x": 324.2,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylBatWings",
       "group": "featured",
       "x": 407.0,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylTorpor",
       "group": "featured",
       "x": 489.8,
-      "y": 78.0,
+      "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylNocturnal",
       "group": "featured",
       "x": 324.2,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylEcholocation",
       "group": "featured",
       "x": 407.0,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylKeenEars",
       "group": "featured",
       "x": 489.8,
-      "y": 142.0,
+      "y": 154.0,
       "size": 52
     },
     {
       "defName": "Immunity_Weak",
       "group": "supporting",
       "x": 303.5,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "MinTemp_SmallIncrease",
       "group": "supporting",
       "x": 344.9,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "MaxTemp_SmallIncrease",
       "group": "supporting",
       "x": 386.3,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "UVSensitivity_Mild",
       "group": "supporting",
       "x": 427.7,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "Delicate",
       "group": "supporting",
       "x": 469.1,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "XylEars_SmallPointed",
       "group": "supporting",
       "x": 510.5,
-      "y": 235.0,
+      "y": 238.0,
       "size": 32
     },
     {
       "defName": "Beard_NoBeardOnly",
       "group": "supporting",
       "x": 303.5,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "Body_Standard",
       "group": "supporting",
       "x": 344.9,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "Body_Thin",
       "group": "supporting",
       "x": 386.3,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "DarkVision",
       "group": "supporting",
       "x": 427.7,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Mining",
       "group": "supporting",
       "x": 469.1,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Medicine",
       "group": "supporting",
       "x": 510.5,
-      "y": 277.0,
+      "y": 280.0,
       "size": 32
     }
   ]
