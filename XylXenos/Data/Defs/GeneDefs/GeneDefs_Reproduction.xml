@@ -26,7 +26,7 @@
     <defName>XylGender_AlwaysFemale</defName>
     <label>always female</label>
     <description>Carriers of this gene are always female.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>1000</displayOrderInCategory>
+    <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysFemale</iconPath>
     <symbolPack>
       <prefixSymbols>
@@ -60,7 +60,7 @@
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
     <description>Carriers of this gene are mostly female.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>1001</displayOrderInCategory>
+    <displayOrderInCategory>101</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyFemale</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -79,7 +79,7 @@
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
     <description>Carriers of this gene are mostly male.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>1002</displayOrderInCategory>
+    <displayOrderInCategory>102</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UsuallyMale</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -98,7 +98,7 @@
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
     <description>Carriers of this gene are always male.\n\nThis gene has no effect unless it is a germline gene.</description>
-    <displayOrderInCategory>1003</displayOrderInCategory>
+    <displayOrderInCategory>103</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_AlwaysMale</iconPath>
     <symbolPack>
       <prefixSymbols>
@@ -135,7 +135,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>XylInheritance</displayCategory>
-    <displayOrderInCategory>1100</displayOrderInCategory>
+    <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_StrongGenes</iconPath>
     <exclusionTags>
       <!-- Matches Vanilla Races Expanded - Highmate and Better Gene Inheritance. -->
@@ -160,7 +160,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>XylInheritance</displayCategory>
-    <displayOrderInCategory>1101</displayOrderInCategory>
+    <displayOrderInCategory>201</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_WeakGenes</iconPath>
     <exclusionTags>
       <!-- Matches Vanilla Races Expanded - Highmate and Better Gene Inheritance. -->
@@ -355,7 +355,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>XylInheritance</displayCategory>
-    <displayOrderInCategory>1200</displayOrderInCategory>
+    <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_LineageInheritance</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
