@@ -68,3 +68,7 @@ Minor xenotypes are found as rare members of other factions or in random events.
 * Genetic recipe and building unlocks: Genes can unlock unique recipes and buildings or ones which otherwise require a specific meme. Some unlocks require Ideology.
 * Psycast genes: Every psycast gets an associated gene, which grants the ability to use the psycast without a psylink. Requires Royalty.
 * Xenotype meme compatibility: Each xenotype has favored and disfavored memes, which affects conversion speeed. Requires Ideology.
+
+## Configuration
+
+* Xenotype selection: You can enable and disable xenotypes, even base game ones, in the mod settings. This is safe to do in a running game but won't change characters or factions already in the game.
