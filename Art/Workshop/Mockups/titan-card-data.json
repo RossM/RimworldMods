@@ -424,156 +424,401 @@
     {
       "defName": "XylRockToss",
       "group": "featured",
-      "x": 282.8,
+      "x": 233.5,
       "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylPetrification",
       "group": "featured",
-      "x": 365.6,
+      "x": 300.5,
       "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylJoyless",
       "group": "featured",
-      "x": 448.4,
+      "x": 367.5,
       "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylLithoid",
       "group": "featured",
-      "x": 531.2,
+      "x": 434.5,
       "y": 90.0,
       "size": 52
     },
     {
       "defName": "XylGiant",
       "group": "featured",
-      "x": 282.8,
+      "x": 267.0,
       "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylRockskin",
       "group": "featured",
-      "x": 365.6,
+      "x": 334.0,
       "y": 154.0,
       "size": 52
     },
     {
       "defName": "XylLearning_Focused",
       "group": "featured",
-      "x": 448.4,
-      "y": 154.0,
-      "size": 52
-    },
-    {
-      "defName": "XylSuperSpecialist",
-      "group": "featured",
-      "x": 531.2,
+      "x": 401.0,
       "y": 154.0,
       "size": 52
     },
     {
       "defName": "Immunity_SuperStrong",
       "group": "supporting",
-      "x": 282.8,
+      "x": 219.14285714285714,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "WoundHealing_Slow",
       "group": "supporting",
-      "x": 324.2,
+      "x": 257.42857142857144,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "Superclotting",
       "group": "supporting",
-      "x": 365.6,
+      "x": 295.7142857142857,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "PsychicAbility_Deaf",
       "group": "supporting",
-      "x": 407.0,
+      "x": 334.0,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "MoveSpeed_Slow",
       "group": "supporting",
-      "x": 448.4,
+      "x": 372.2857142857143,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "ToxResist_Total",
       "group": "supporting",
-      "x": 489.8,
+      "x": 410.57142857142856,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "MeleeDamage_Strong",
       "group": "supporting",
-      "x": 531.2,
+      "x": 448.8571428571429,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "Sterile",
       "group": "supporting",
-      "x": 282.8,
+      "x": 219.14285714285714,
       "y": 280.0,
       "size": 32
     },
     {
       "defName": "Beauty_Ugly",
       "group": "supporting",
-      "x": 324.2,
+      "x": 257.42857142857144,
       "y": 280.0,
       "size": 32
     },
     {
       "defName": "XylHair_BaldOnly_Male",
       "group": "supporting",
-      "x": 365.6,
+      "x": 295.7142857142857,
       "y": 280.0,
       "size": 32
     },
     {
       "defName": "Beard_NoBeardOnly",
       "group": "supporting",
-      "x": 407.0,
+      "x": 334.0,
       "y": 280.0,
       "size": 32
     },
     {
       "defName": "Body_Hulk",
       "group": "supporting",
-      "x": 448.4,
+      "x": 372.2857142857143,
       "y": 280.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Social",
       "group": "supporting",
-      "x": 489.8,
+      "x": 410.57142857142856,
       "y": 280.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Intellectual",
       "group": "supporting",
-      "x": 531.2,
+      "x": 448.8571428571429,
       "y": 280.0,
       "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Shooting",
+      "group": "specialty",
+      "x": 530.0,
+      "y": 114.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Melee",
+      "group": "specialty",
+      "x": 572.0,
+      "y": 114.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Construction",
+      "group": "specialty",
+      "x": 530.0,
+      "y": 156.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Mining",
+      "group": "specialty",
+      "x": 572.0,
+      "y": 156.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Cooking",
+      "group": "specialty",
+      "x": 530.0,
+      "y": 198.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Plants",
+      "group": "specialty",
+      "x": 572.0,
+      "y": 198.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Animals",
+      "group": "specialty",
+      "x": 530.0,
+      "y": 240.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Crafting",
+      "group": "specialty",
+      "x": 572.0,
+      "y": 240.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Artistic",
+      "group": "specialty",
+      "x": 530.0,
+      "y": 282.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeRemarkable_Medicine",
+      "group": "specialty",
+      "x": 572.0,
+      "y": 282.0,
+      "size": 32
+    }
+  ],
+  "specialties": [
+    {
+      "defName": "AptitudeRemarkable_Shooting",
+      "label": "great shooting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 30,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Melee",
+      "label": "great melee",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Melee\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 1030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Construction",
+      "label": "great construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 2030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Mining",
+      "label": "great mining",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 3030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Cooking",
+      "label": "great cooking",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Cooking\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 4030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Plants",
+      "label": "great plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 5030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Animals",
+      "label": "great animals",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 6030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Crafting",
+      "label": "great crafting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Crafting\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 7030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Artistic",
+      "label": "great artistic",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Artistic\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 8030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Medicine",
+      "label": "great medicine",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 9030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
     }
   ]
 }

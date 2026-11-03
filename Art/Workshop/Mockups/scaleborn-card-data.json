@@ -422,140 +422,140 @@
       "defName": "Skin_DeepRed",
       "group": "lineage:Skin_DeepRed",
       "x": 450,
-      "y": 81.0,
+      "y": 106.0,
       "size": 32
     },
     {
       "defName": "FireSpew",
       "group": "lineage:Skin_DeepRed",
       "x": 498,
-      "y": 81.0,
+      "y": 106.0,
       "size": 32
     },
     {
       "defName": "FireResistant",
       "group": "lineage:Skin_DeepRed",
       "x": 546,
-      "y": 81.0,
+      "y": 106.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Cooking",
       "group": "lineage:Skin_DeepRed",
       "x": 594,
-      "y": 81.0,
+      "y": 106.0,
       "size": 32
     },
     {
       "defName": "XylSkin_DarkGreen",
       "group": "lineage:XylSkin_DarkGreen",
       "x": 450,
-      "y": 133.0,
+      "y": 152.0,
       "size": 32
     },
     {
       "defName": "AcidSpray",
       "group": "lineage:XylSkin_DarkGreen",
       "x": 498,
-      "y": 133.0,
+      "y": 152.0,
       "size": 32
     },
     {
       "defName": "ToxResist_Partial",
       "group": "lineage:XylSkin_DarkGreen",
       "x": 546,
-      "y": 133.0,
+      "y": 152.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Shooting",
       "group": "lineage:XylSkin_DarkGreen",
       "x": 594,
-      "y": 133.0,
+      "y": 152.0,
       "size": 32
     },
     {
       "defName": "Skin_SheerWhite",
       "group": "lineage:Skin_SheerWhite",
       "x": 450,
-      "y": 185.0,
+      "y": 198.0,
       "size": 32
     },
     {
       "defName": "FoamSpray",
       "group": "lineage:Skin_SheerWhite",
       "x": 498,
-      "y": 185.0,
+      "y": 198.0,
       "size": 32
     },
     {
       "defName": "WoundHealing_Fast",
       "group": "lineage:Skin_SheerWhite",
       "x": 546,
-      "y": 185.0,
+      "y": 198.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Medicine",
       "group": "lineage:Skin_SheerWhite",
       "x": 594,
-      "y": 185.0,
+      "y": 198.0,
       "size": 32
     },
     {
       "defName": "XylSkin_DarkBlue",
       "group": "lineage:XylSkin_DarkBlue",
       "x": 450,
-      "y": 237.0,
+      "y": 244.0,
       "size": 32
     },
     {
       "defName": "XylEMPBurst",
       "group": "lineage:XylSkin_DarkBlue",
       "x": 498,
-      "y": 237.0,
+      "y": 244.0,
       "size": 32
     },
     {
       "defName": "Unstoppable",
       "group": "lineage:XylSkin_DarkBlue",
       "x": 546,
-      "y": 237.0,
+      "y": 244.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Intellectual",
       "group": "lineage:XylSkin_DarkBlue",
       "x": 594,
-      "y": 237.0,
+      "y": 244.0,
       "size": 32
     },
     {
       "defName": "Skin_SlateGray",
       "group": "lineage:Skin_SlateGray",
       "x": 450,
-      "y": 289.0,
+      "y": 290.0,
       "size": 32
     },
     {
       "defName": "XylOilSpray",
       "group": "lineage:Skin_SlateGray",
       "x": 498,
-      "y": 289.0,
+      "y": 290.0,
       "size": 32
     },
     {
       "defName": "Robust",
       "group": "lineage:Skin_SlateGray",
       "x": 546,
-      "y": 289.0,
+      "y": 290.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Melee",
       "group": "lineage:Skin_SlateGray",
       "x": 594,
-      "y": 289.0,
+      "y": 290.0,
       "size": 32
     }
   ],

@@ -14,8 +14,8 @@ from CONTENT.md because Workshop positioning is an editorial choice. Shared art
 and inheritance handling in gene_art.py keeps both renderers' interpretations consistent.
 Definitions represent this mod's standalone configuration, including Royalty,
 without loading other installed mods. Totals precede random or lineage additions.
-Scaleborn's alternative lineage packages are shown separately so they cannot be
-mistaken for traits every scaleborn receives; the package trigger icon is omitted.
+Scaleborn lineages and Titan specialties are shown separately so alternatives
+cannot be mistaken for traits every pawn receives; their trigger icons are omitted.
 
 PNG/SVG cards, diagnostic JSON snapshots, a review gallery, and a ZIP bundle go to
 Art/Workshop/Mockups/. Cutouts retain their original in-game canvas alignment.
@@ -54,6 +54,8 @@ GENES_TOP = 76
 GENES_BOTTOM = 326
 GENE_GROUP_GAP = 32
 GENE_DIVIDER_FRACTION = 0.65
+CHOICE_LABEL_Y = 89
+CHOICE_PANEL_TOP = 102
 # Both cutout sets retain the same camera scale on 384px/768px canvases.
 CHARACTER_SCALE = 0.67
 CHARACTER_CENTER = 100
@@ -111,10 +113,13 @@ class Lineage:
 # stack. Fixed group bands leave uneven empty space when their row counts differ.
 FEATURED_GENE_LAYOUT = GeneLayout(max_columns=5, icon_size=52, row_gap=12)
 SUPPORTING_GENE_LAYOUT = GeneLayout(max_columns=10, icon_size=32, row_gap=10)
-# Compress only Scaleborn's shared list to leave room for the five alternatives.
+# Narrow shared lists only where a separate panel explains mutually exclusive options.
 SCALEBORN_GENES_RIGHT = 410
 SCALEBORN_FEATURED_LAYOUT = GeneLayout(max_columns=3, icon_size=52, row_gap=12)
 SCALEBORN_SUPPORTING_LAYOUT = GeneLayout(max_columns=5, icon_size=32, row_gap=10)
+TITAN_GENES_RIGHT = 468
+TITAN_FEATURED_LAYOUT = GeneLayout(max_columns=4, icon_size=52, row_gap=12)
+TITAN_SUPPORTING_LAYOUT = GeneLayout(max_columns=7, icon_size=32, row_gap=10)
 
 
 class GeneLibrary:
@@ -164,13 +169,16 @@ class GeneLibrary:
     def value(self, definition, field):
         return inherited_text(definition, field, self.parents.get(definition.tag, {}))
 
-    def scaleborn_lineages(self):
-        # Follow the trigger's maker reference rather than copying package lists
-        # or colors into presentation config: edits to the mod must appear here.
-        trigger = self.genes["XylScalebornLineage"]
+    def bonus_gene_maker(self, trigger_name):
+        # Follow the trigger's maker reference rather than copying its options
+        # into presentation config: edits to the mod must appear on the cards.
+        trigger = self.genes[trigger_name]
         maker_name = trigger.findtext("modExtensions/li/comps/li/maker")
-        maker = next(d for d in self.definitions
-                     if d.tag == "Xylib.GeneSetMakerDef" and d.findtext("defName") == maker_name)
+        return next(d for d in self.definitions
+                    if d.tag == "Xylib.GeneSetMakerDef" and d.findtext("defName") == maker_name)
+
+    def scaleborn_lineages(self):
+        maker = self.bonus_gene_maker("XylScalebornLineage")
         lineages = []
         for option in maker.findall("root/options/li/maker"):
             if option.get("Class") != "Xylib.GeneSetMaker_List":
@@ -186,6 +194,33 @@ class GeneLibrary:
         if not lineages:
             raise ValueError("No Scaleborn lineage packages found")
         return lineages
+
+    def titan_specialties(self, xenotype):
+        maker = self.bonus_gene_maker("XylSuperSpecialist")
+        root = maker.find("root")
+        if root.get("Class") != "Xylib.GeneSetMaker_List" or root.findtext("count") != "1":
+            raise ValueError("Titan specialty cards require a single choice from an explicit gene list")
+
+        # GeneSetMaker seeds the current xenotype when overrideExistingGenes is
+        # false. Generated aptitude genes share an exclusion tag per skill, so
+        # existing aptitudes rule out that skill even at a different tier.
+        existing_skills = set()
+        if maker.findtext("overrideExistingGenes", "false").lower() != "true":
+            for item in xenotype.findall("genes/li"):
+                template, _, skill = item.text.strip().rpartition("_")
+                if template in self.templates and self.value(self.templates[template], "geneTemplateType") == "Skill":
+                    existing_skills.add(skill)
+        options = []
+        for item in root.findall("genes/li"):
+            name = item.text.strip()
+            template, _, skill = name.rpartition("_")
+            if template not in self.templates or self.value(self.templates[template], "geneTemplateType") != "Skill":
+                raise ValueError(f"Titan specialty is not a generated aptitude: {name}")
+            if skill not in existing_skills:
+                options.append(self.gene(name))
+        if not options:
+            raise ValueError("No Titan specialties remain after excluding existing skills")
+        return sorted(options, key=lambda gene: gene.sort_key)
 
     def gene(self, name):
         definition = self.genes.get(name)
@@ -293,11 +328,13 @@ def build_card(library, def_name, descriptor):
     supporting_genes = [gene for gene in sorted_genes if not gene.featured]
     base_genes = featured_genes + supporting_genes
     is_scaleborn = def_name == "XylScaleborn"
+    is_titan = def_name == "XylTitan"
     lineages = library.scaleborn_lineages() if is_scaleborn else []
-    if is_scaleborn:
-        # The actual packages now explain this gene. Hiding its proxy icon is a
-        # presentation choice; keep it in the defined genes used for the totals.
-        featured_genes = [gene for gene in featured_genes if gene.defName != "XylScalebornLineage"]
+    specialties = library.titan_specialties(xenotype) if is_titan else []
+    hidden_trigger = {"XylScaleborn": "XylScalebornLineage", "XylTitan": "XylSuperSpecialist"}.get(def_name)
+    # The option panels explain these genes. Hiding their proxies is a
+    # presentation choice; keep them in the defined genes used for the totals.
+    featured_genes = [gene for gene in featured_genes if gene.defName != hidden_trigger]
     complexity = sum(g.complexity for g in genes)
     metabolism = sum(g.metabolism for g in genes)
     portrait = ROOT / "Art/Cutouts/Processed" / (name + "_South.png")
@@ -305,8 +342,9 @@ def build_card(library, def_name, descriptor):
         portrait = ROOT / "Art/Cutouts" / (name + "_South.png")
     parts = []
 
-    def text(x, y, value, size=22, fill="#ebe7df", weight=400):
-        parts.append(f'<text x="{x}" y="{y}" fill="{fill}" font-family="Segoe UI, sans-serif" font-size="{size}" font-weight="{weight}">{escape(str(value))}</text>')
+    def text(x, y, value, size=22, fill="#ebe7df", weight=400, anchor="start"):
+        alignment = f' text-anchor="{anchor}"' if anchor != "start" else ""
+        parts.append(f'<text x="{x}" y="{y}" fill="{fill}" font-family="Segoe UI, sans-serif" font-size="{size}" font-weight="{weight}"{alignment}>{escape(str(value))}</text>')
 
     def picture(path, x, y, width, height, attributes=""):
         parts.append(f'<image x="{x}" y="{y}" width="{width}" height="{height}" xlink:href="{image_uri(path)}" {attributes}/>')
@@ -355,10 +393,15 @@ def build_card(library, def_name, descriptor):
         picture(gene.path, cx - size / 2, y, size, size, f'filter="url(#{tint})"')
         positions.append(dict(defName=gene.defName, group=group, x=cx, y=y, size=size))
 
-    genes_right = SCALEBORN_GENES_RIGHT if is_scaleborn else GENES_RIGHT
+    if is_scaleborn:
+        genes_right, featured_style, supporting_style = SCALEBORN_GENES_RIGHT, SCALEBORN_FEATURED_LAYOUT, SCALEBORN_SUPPORTING_LAYOUT
+    elif is_titan:
+        genes_right, featured_style, supporting_style = TITAN_GENES_RIGHT, TITAN_FEATURED_LAYOUT, TITAN_SUPPORTING_LAYOUT
+    else:
+        genes_right, featured_style, supporting_style = GENES_RIGHT, FEATURED_GENE_LAYOUT, SUPPORTING_GENE_LAYOUT
     groups = [
-        ("featured", featured_genes, SCALEBORN_FEATURED_LAYOUT if is_scaleborn else FEATURED_GENE_LAYOUT),
-        ("supporting", supporting_genes, SCALEBORN_SUPPORTING_LAYOUT if is_scaleborn else SUPPORTING_GENE_LAYOUT)]
+        ("featured", featured_genes, featured_style),
+        ("supporting", supporting_genes, supporting_style)]
     gene_groups = [(group_name, balanced_rows(group, style.max_columns), style)
                    for group_name, group, style in groups if group]
     stack_height = sum(len(rows) * style.icon_size + (len(rows) - 1) * style.row_gap
@@ -387,8 +430,10 @@ def build_card(library, def_name, descriptor):
 
     # Separate colored boxes express mutually exclusive packages. The first icon
     # identifies the skin color without needing another text label.
-    lineage_top, lineage_bottom = GENES_TOP, GENES_BOTTOM
-    row_height, icon_size = 42, 32
+    if lineages:
+        text(522, CHOICE_LABEL_Y, "One lineage of", 16, "#c9c4cf", 600, anchor="middle")
+    lineage_top, lineage_bottom = CHOICE_PANEL_TOP, GENES_BOTTOM
+    row_height, icon_size = 40, 32
     if lineages and len(lineages) * row_height > lineage_bottom - lineage_top:
         raise ValueError("Scaleborn lineage rows exceed the card")
     row_gap = ((lineage_bottom - lineage_top - len(lineages) * row_height)
@@ -399,13 +444,35 @@ def build_card(library, def_name, descriptor):
         border = tuple(round((channel * 0.65 + 0.35) * 255) for channel in lineage.skin.color[:3])
         parts.append(f'<rect x="430" y="{y}" width="184" height="{row_height}" rx="7" fill="rgb{rgb}" fill-opacity=".18" stroke="rgb{border}" stroke-opacity=".7"/>')
         for col, gene in enumerate(lineage.genes):
-            gene_icon(gene, 450 + col * 48, y + 5, icon_size, f"lineage:{lineage.skin.defName}")
+            gene_icon(gene, 450 + col * 48, y + 4, icon_size, f"lineage:{lineage.skin.defName}")
+
+    if specialties:
+        icon_size, gap, columns = 32, 10, 2
+        panel_center = 551
+        rows = (len(specialties) + columns - 1) // columns
+        grid_height = rows * icon_size + (rows - 1) * gap
+        panel_height = GENES_BOTTOM - CHOICE_PANEL_TOP
+        if grid_height > panel_height:
+            raise ValueError("Titan specialty options exceed the card")
+        # Match padding and gaps on both axes. An unfilled box lets the card's
+        # background gradient continue through the options without a color seam.
+        padding = (panel_height - grid_height) / 2
+        panel_width = columns * icon_size + (columns - 1) * gap + 2 * padding
+        panel_left = panel_center - panel_width / 2
+        text(panel_center, CHOICE_LABEL_Y, "One of", 16, "#c9c4cf", 600, anchor="middle")
+        parts.append(f'<rect x="{panel_left}" y="{CHOICE_PANEL_TOP}" width="{panel_width}" height="{panel_height}" rx="7" fill="none" stroke="#77717f"/>')
+        for index, gene in enumerate(specialties):
+            row, column = divmod(index, columns)
+            gene_icon(gene, panel_left + padding + icon_size / 2 + column * (icon_size + gap),
+                      CHOICE_PANEL_TOP + padding + row * (icon_size + gap), icon_size, "specialty")
 
     lineage_description = (" Shared genes on the left; five alternative lineage packages on the right, "
                            "with skin colors first inside each box." if lineages else "")
+    specialty_description = (" Shared genes on the left; one random specialty from the boxed "
+                             "aptitudes on the right, excluding skills with existing aptitudes." if specialties else "")
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{CARD_WIDTH}" height="{CARD_HEIGHT}" viewBox="0 0 {CARD_WIDTH} {CARD_HEIGHT}">',
            f'<title>{escape(name)} — {escape(descriptor)}</title>',
-           f'<desc>Complexity {complexity}; metabolism {metabolism}. New functional genes above vanilla, cosmetic, and psycast genes. Each group is sorted by category priority descending, gene priority ascending, and label alphabetically.{lineage_description}</desc>',
+           f'<desc>Complexity {complexity}; metabolism {metabolism}. New functional genes above vanilla, cosmetic, and psycast genes. Each group is sorted by category priority descending, gene priority ascending, and label alphabetically.{lineage_description}{specialty_description}</desc>',
            '<defs><radialGradient id="portrait-glow"><stop stop-color="#a99bbb" stop-opacity=".16"/><stop offset="1" stop-color="#a99bbb" stop-opacity="0"/></radialGradient>',
            '<linearGradient id="surface" x2="0" y2="1"><stop stop-color="#2b2e33"/><stop offset="1" stop-color="#202226"/></linearGradient>',
            *filters, '</defs>',
@@ -428,6 +495,9 @@ def build_card(library, def_name, descriptor):
         manifest["lineages"] = [dict(skin=lineage.skin.defName, color=lineage.skin.color,
                                     genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT)))
                                            for gene in lineage.genes]) for lineage in lineages]
+    if specialties:
+        manifest["specialties"] = [dict(asdict(gene), path=str(gene.path.relative_to(ROOT)))
+                                   for gene in specialties]
     write_text(OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
     render_png(["-background", "none", str(svg_path)], png_path)
     with Image.open(png_path) as saved:
