@@ -40,7 +40,7 @@ Includes 120 total genes:
 
 ## Scenarios
 
-* Dvergr Fortress: Seven dwarves and a lot of booze.
+* Dvergr Fortress: Seven dwarves and a lot of booze. Strike the earth!
 * Menagerie: Crashlanded, but any character can be any non-archite xenotype.
 * The Siren: One nixie with noncombat psychic abilities. Requires Royalty.
 * Warcat Tribe: Three warcats and two bossaps slaves.
