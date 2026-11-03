@@ -258,9 +258,12 @@ def write_text(path, text):
 def render_png(arguments, path):
     # Direct ImageMagick output can fail when overwriting Windows previews even
     # while Python can write the file. Let ImageMagick render and Python save.
-    rendered = subprocess.run(["magick", *arguments, "PNG:-"],
+    # Exclude volatile dates so unchanged art stays byte-identical in Git.
+    # Preserve color-space metadata rather than stripping all PNG properties.
+    rendered = subprocess.run(["magick", *arguments, "-define", "png:exclude-chunks=date,time", "PNG:-"],
                               check=True, stdout=subprocess.PIPE)
-    path.write_bytes(rendered.stdout)
+    if not path.is_file() or path.read_bytes() != rendered.stdout:
+        path.write_bytes(rendered.stdout)
 
 
 def balanced_rows(genes, max_columns):
@@ -473,12 +476,17 @@ before random or lineage additions. Royalty genes included. Select a card for th
 {card_markup}
 </main>
 </html>''')
-    with zipfile.ZipFile(OUT / "xenotype-card-mockups.zip", "w", zipfile.ZIP_DEFLATED) as bundle:
-        for path in paths:
-            for artifact in (path, path.with_suffix(".svg"), path.with_name(path.stem + "-data.json")):
-                bundle.write(artifact, artifact.name)
-        for filename in ("index.html", "all-xenotypes.png"):
-            bundle.write(OUT / filename, filename)
+    artifacts = []
+    for path in paths:
+        artifacts.extend((path, path.with_suffix(".svg"), path.with_name(path.stem + "-data.json")))
+    artifacts.extend(OUT / name for name in ("index.html", "all-xenotypes.png"))
+    with zipfile.ZipFile(OUT / "xenotype-card-mockups.zip", "w") as bundle:
+        for artifact in artifacts:
+            # Filesystem modification times reflect the build, not the content.
+            # A fixed ZIP epoch keeps the bundle stable when its files are stable.
+            entry = zipfile.ZipInfo(artifact.name, date_time=(1980, 1, 1, 0, 0, 0))
+            entry.compress_type = zipfile.ZIP_DEFLATED
+            bundle.writestr(entry, artifact.read_bytes())
 
 
 if __name__ == "__main__":
