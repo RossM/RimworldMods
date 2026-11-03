@@ -24,24 +24,6 @@
   "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
   "genes": [
     {
-      "defName": "XylPsycast_Focus",
-      "label": "focus",
-      "path": "Art\\Rimworld art\\Psycasts\\Focus.psd",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylPsycasts",
-      "category_priority": 519.0,
-      "priority": 14000,
-      "complexity": 2,
-      "metabolism": -2,
-      "archites": 0
-    },
-    {
       "defName": "XylPsycast_Beckon",
       "label": "beckon",
       "path": "Art\\Rimworld art\\Psycasts\\Beckon.psd",
@@ -55,6 +37,24 @@
       "category": "XylPsycasts",
       "category_priority": 519.0,
       "priority": 10000,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylPsycast_Focus",
+      "label": "focus",
+      "path": "Art\\Rimworld art\\Psycasts\\Focus.psd",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylPsycasts",
+      "category_priority": 519.0,
+      "priority": 14000,
       "complexity": 2,
       "metabolism": -2,
       "archites": 0
@@ -204,24 +204,6 @@
       "archites": 0
     },
     {
-      "defName": "MaxTemp_SmallDecrease",
-      "label": "heat weakness",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallDecrease.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 30.0,
-      "complexity": 0,
-      "metabolism": 1,
-      "archites": 0
-    },
-    {
       "defName": "MinTemp_LargeDecrease",
       "label": "cold super-tolerant",
       "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureLargeDecrease.png",
@@ -237,6 +219,24 @@
       "priority": 20.0,
       "complexity": 0,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallDecrease",
+      "label": "heat weakness",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallDecrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 1,
       "archites": 0
     },
     {
@@ -348,9 +348,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Social",
-      "label": "strong social",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Strong.png",
+      "defName": "AptitudePoor_Construction",
+      "label": "poor construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Poor.png",
       "color": [
         1.0,
         1.0,
@@ -360,9 +360,9 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 10020,
-      "complexity": 2,
-      "metabolism": -1,
+      "priority": 2010,
+      "complexity": 1,
+      "metabolism": 1,
       "archites": 0
     },
     {
@@ -384,9 +384,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Construction",
-      "label": "poor construction",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Poor.png",
+      "defName": "AptitudeStrong_Social",
+      "label": "strong social",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -396,15 +396,15 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 2010,
-      "complexity": 1,
-      "metabolism": 1,
+      "priority": 10020,
+      "complexity": 2,
+      "metabolism": -1,
       "archites": 0
     }
   ],
   "layout": [
     {
-      "defName": "XylPsycast_Focus",
+      "defName": "XylPsycast_Beckon",
       "x": 832.8,
       "y": 292,
       "size": 112,
@@ -412,7 +412,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylPsycast_Beckon",
+      "defName": "XylPsycast_Focus",
       "x": 1068.0,
       "y": 292,
       "size": 112,
@@ -484,7 +484,7 @@
       "label_bottom": 786
     },
     {
-      "defName": "MaxTemp_SmallDecrease",
+      "defName": "MinTemp_LargeDecrease",
       "x": 1126.8,
       "y": 693,
       "size": 64,
@@ -492,7 +492,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "MinTemp_LargeDecrease",
+      "defName": "MaxTemp_SmallDecrease",
       "x": 1244.4,
       "y": 693,
       "size": 64,
@@ -548,7 +548,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "AptitudeStrong_Social",
+      "defName": "AptitudePoor_Construction",
       "x": 1185.6,
       "y": 830,
       "size": 64,
@@ -564,7 +564,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "AptitudePoor_Construction",
+      "defName": "AptitudeStrong_Social",
       "x": 1420.8,
       "y": 830,
       "size": 64,

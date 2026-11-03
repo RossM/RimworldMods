@@ -42,24 +42,6 @@
       "archites": 0
     },
     {
-      "defName": "XylBioRejection",
-      "label": "bio-rejection",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_BioRejection.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "ResistanceAndWeakness",
-      "category_priority": 440.0,
-      "priority": 300.0,
-      "complexity": 1,
-      "metabolism": 2,
-      "archites": 0
-    },
-    {
       "defName": "XylDrugResistant",
       "label": "drug resistant",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_DrugResistant.png",
@@ -75,6 +57,24 @@
       "priority": 210.0,
       "complexity": 1,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylBioRejection",
+      "label": "bio-rejection",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_BioRejection.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 300.0,
+      "complexity": 1,
+      "metabolism": 2,
       "archites": 0
     },
     {
@@ -204,24 +204,6 @@
       "archites": 0
     },
     {
-      "defName": "UVSensitivity_Mild",
-      "label": "mild UV sensitivity",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MildUVSensitivity.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "ResistanceAndWeakness",
-      "category_priority": 440.0,
-      "priority": 40.0,
-      "complexity": 0,
-      "metabolism": 3,
-      "archites": 0
-    },
-    {
       "defName": "ToxicEnvironmentResistance_Partial",
       "label": "partial antitoxic lungs",
       "path": "Art\\Rimworld art\\Genes\\Gene_PartialPollutionResistance.png",
@@ -240,9 +222,9 @@
       "archites": 0
     },
     {
-      "defName": "MeleeDamage_Strong",
-      "label": "strong melee damage",
-      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "defName": "UVSensitivity_Mild",
+      "label": "mild UV sensitivity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MildUVSensitivity.png",
       "color": [
         1.0,
         1.0,
@@ -250,11 +232,11 @@
         1.0
       ],
       "source": "vanilla",
-      "category": "Violence",
-      "category_priority": 430.0,
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
       "priority": 40.0,
       "complexity": 0,
-      "metabolism": -2,
+      "metabolism": 3,
       "archites": 0
     },
     {
@@ -273,6 +255,24 @@
       "priority": 10.0,
       "complexity": 0,
       "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "label": "strong melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -2,
       "archites": 0
     },
     {
@@ -312,6 +312,24 @@
       "archites": 0
     },
     {
+      "defName": "Hair_BaldOnly",
+      "label": "no hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
       "defName": "Headbone_Human",
       "label": "human headbone",
       "path": "Art\\Rimworld art\\Genes\\Gene_HeadboneHuman.png",
@@ -348,24 +366,6 @@
       "archites": 0
     },
     {
-      "defName": "Hair_BaldOnly",
-      "label": "no hair",
-      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic",
-      "category_priority": 300.0,
-      "priority": 50.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "Skin_Green",
       "label": "green skin",
       "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
@@ -384,9 +384,9 @@
       "archites": 0
     },
     {
-      "defName": "PollutionRush",
-      "label": "pollution stimulus",
-      "path": "Art\\Rimworld art\\Genes\\Gene_PollutionRush.png",
+      "defName": "Learning_Slow",
+      "label": "slow study",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SlowLearning.png",
       "color": [
         1.0,
         1.0,
@@ -396,25 +396,7 @@
       "source": "vanilla",
       "category": "Miscellaneous",
       "category_priority": 270.0,
-      "priority": 500.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
-      "defName": "Instability_Mild",
-      "label": "mild cell instability",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MildCellInstability.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 130.0,
+      "priority": 30.0,
       "complexity": 0,
       "metabolism": 2,
       "archites": 0
@@ -438,9 +420,9 @@
       "archites": 0
     },
     {
-      "defName": "Learning_Slow",
-      "label": "slow study",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SlowLearning.png",
+      "defName": "Instability_Mild",
+      "label": "mild cell instability",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MildCellInstability.png",
       "color": [
         1.0,
         1.0,
@@ -450,15 +432,33 @@
       "source": "vanilla",
       "category": "Miscellaneous",
       "category_priority": 270.0,
-      "priority": 30.0,
+      "priority": 130.0,
       "complexity": 0,
       "metabolism": 2,
       "archites": 0
     },
     {
-      "defName": "AptitudeTerrible_Intellectual",
-      "label": "awful intellectual",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Terrible.png",
+      "defName": "PollutionRush",
+      "label": "pollution stimulus",
+      "path": "Art\\Rimworld art\\Genes\\Gene_PollutionRush.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 500.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Mining",
+      "label": "strong mining",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -468,9 +468,9 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 11000,
-      "complexity": 1,
-      "metabolism": 2,
+      "priority": 3020,
+      "complexity": 2,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -492,9 +492,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Mining",
-      "label": "strong mining",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Strong.png",
+      "defName": "AptitudeTerrible_Intellectual",
+      "label": "awful intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Terrible.png",
       "color": [
         1.0,
         1.0,
@@ -504,9 +504,9 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 3020,
-      "complexity": 2,
-      "metabolism": -1,
+      "priority": 11000,
+      "complexity": 1,
+      "metabolism": 2,
       "archites": 0
     }
   ],
@@ -520,7 +520,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylBioRejection",
+      "defName": "XylDrugResistant",
       "x": 950.4,
       "y": 292,
       "size": 112,
@@ -528,7 +528,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylDrugResistant",
+      "defName": "XylBioRejection",
       "x": 1185.6,
       "y": 292,
       "size": 112,
@@ -592,36 +592,36 @@
       "label_bottom": 786
     },
     {
-      "defName": "UVSensitivity_Mild",
+      "defName": "ToxicEnvironmentResistance_Partial",
       "x": 774.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 3,
+      "label_bottom": 830
+    },
+    {
+      "defName": "UVSensitivity_Mild",
+      "x": 891.6,
       "y": 693,
       "size": 64,
       "label_lines": 2,
       "label_bottom": 808
     },
     {
-      "defName": "ToxicEnvironmentResistance_Partial",
-      "x": 891.6,
-      "y": 693,
-      "size": 64,
-      "label_lines": 3,
-      "label_bottom": 830
-    },
-    {
-      "defName": "MeleeDamage_Strong",
-      "x": 1009.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 3,
-      "label_bottom": 830
-    },
-    {
       "defName": "Aggression_Aggressive",
-      "x": 1126.8,
+      "x": 1009.2,
       "y": 693,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 786
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "x": 1126.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 3,
+      "label_bottom": 830
     },
     {
       "defName": "Pain_Reduced",
@@ -640,8 +640,16 @@
       "label_bottom": 808
     },
     {
-      "defName": "Headbone_Human",
+      "defName": "Hair_BaldOnly",
       "x": 1479.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Headbone_Human",
+      "x": 1597.1999999999998,
       "y": 693,
       "size": 64,
       "label_lines": 2,
@@ -649,14 +657,6 @@
     },
     {
       "defName": "Headbone_MiniHorns",
-      "x": 1597.1999999999998,
-      "y": 693,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
-    },
-    {
-      "defName": "Hair_BaldOnly",
       "x": 597.6,
       "y": 852,
       "size": 64,
@@ -672,39 +672,39 @@
       "label_bottom": 945
     },
     {
-      "defName": "PollutionRush",
+      "defName": "Learning_Slow",
       "x": 832.8,
       "y": 852,
       "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
-    },
-    {
-      "defName": "Instability_Mild",
-      "x": 950.4,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
+      "label_lines": 1,
+      "label_bottom": 945
     },
     {
       "defName": "DarkVision",
+      "x": 950.4,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Instability_Mild",
       "x": 1068.0,
       "y": 852,
       "size": 64,
-      "label_lines": 1,
-      "label_bottom": 945
+      "label_lines": 2,
+      "label_bottom": 967
     },
     {
-      "defName": "Learning_Slow",
+      "defName": "PollutionRush",
       "x": 1185.6,
       "y": 852,
       "size": 64,
-      "label_lines": 1,
-      "label_bottom": 945
+      "label_lines": 2,
+      "label_bottom": 967
     },
     {
-      "defName": "AptitudeTerrible_Intellectual",
+      "defName": "AptitudeStrong_Mining",
       "x": 1303.2,
       "y": 852,
       "size": 64,
@@ -720,7 +720,7 @@
       "label_bottom": 967
     },
     {
-      "defName": "AptitudeStrong_Mining",
+      "defName": "AptitudeTerrible_Intellectual",
       "x": 1538.4,
       "y": 852,
       "size": 64,

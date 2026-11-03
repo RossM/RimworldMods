@@ -70,8 +70,8 @@ class Gene:
 
     @property
     def sort_key(self):
-        # A familiar in-game sequence helps readers compare the card with the gene UI.
-        return (-self.category_priority, -self.priority, self.label.casefold())
+        # Match GeneUtility.SortGeneDefs so readers can compare cards with the gene UI.
+        return (-self.category_priority, self.priority, self.label.casefold())
 
 
 @dataclass(frozen=True)
@@ -337,7 +337,7 @@ def build_card(library, def_name, descriptor):
         filters.append(f'<filter id="tint{i}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{CARD_WIDTH}" height="{CARD_HEIGHT}" viewBox="0 0 {CARD_WIDTH} {CARD_HEIGHT}">',
            f'<title>{escape(name)} — {escape(descriptor)}</title>',
-           f'<desc>Complexity {complexity}; metabolism {metabolism}. Mod genes above vanilla genes, sorted by category priority descending, gene priority descending, and label alphabetically.</desc>',
+           f'<desc>Complexity {complexity}; metabolism {metabolism}. Mod genes above vanilla genes, sorted by category priority descending, gene priority ascending, and label alphabetically.</desc>',
            '<defs><radialGradient id="portrait-glow"><stop stop-color="#a99bbb" stop-opacity=".16"/><stop offset="1" stop-color="#a99bbb" stop-opacity="0"/></radialGradient>',
            '<linearGradient id="surface" x2="0" y2="1"><stop stop-color="#2b2e33"/><stop offset="1" stop-color="#202226"/></linearGradient>',
            *filters, '</defs>',

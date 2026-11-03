@@ -78,24 +78,6 @@
       "archites": 0
     },
     {
-      "defName": "XylLearning_Generalist",
-      "label": "generalist",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Generalist.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 37.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "XylIndustrious",
       "label": "industrious",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Industrious.png",
@@ -111,6 +93,24 @@
       "priority": 25.0,
       "complexity": 2,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylLearning_Generalist",
+      "label": "generalist",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Generalist.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 37.0,
+      "complexity": 1,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -168,24 +168,6 @@
       "archites": 0
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
-      "label": "heat tolerant",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 40.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "MinTemp_SmallDecrease",
       "label": "cold tolerant",
       "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
@@ -199,6 +181,24 @@
       "category": "Temperature",
       "category_priority": 450.0,
       "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
       "complexity": 0,
       "metabolism": -1,
       "archites": 0
@@ -258,9 +258,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeTerrible_Intellectual",
-      "label": "awful intellectual",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Terrible.png",
+      "defName": "AptitudeStrong_Plants",
+      "label": "strong plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -270,27 +270,9 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 11000,
-      "complexity": 1,
-      "metabolism": 2,
-      "archites": 0
-    },
-    {
-      "defName": "AptitudeTerrible_Artistic",
-      "label": "awful artistic",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Artistic\\Terrible.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 8000,
-      "complexity": 1,
-      "metabolism": 2,
+      "priority": 5020,
+      "complexity": 2,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -312,9 +294,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Plants",
-      "label": "strong plants",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
+      "defName": "AptitudeTerrible_Artistic",
+      "label": "awful artistic",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Artistic\\Terrible.png",
       "color": [
         1.0,
         1.0,
@@ -324,9 +306,27 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 5020,
-      "complexity": 2,
-      "metabolism": -1,
+      "priority": 8000,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeTerrible_Intellectual",
+      "label": "awful intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Terrible.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11000,
+      "complexity": 1,
+      "metabolism": 2,
       "archites": 0
     },
     {
@@ -374,7 +374,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylLearning_Generalist",
+      "defName": "XylIndustrious",
       "x": 1303.2,
       "y": 292,
       "size": 112,
@@ -382,7 +382,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylIndustrious",
+      "defName": "XylLearning_Generalist",
       "x": 1538.4,
       "y": 292,
       "size": 112,
@@ -414,7 +414,7 @@
       "label_bottom": 637
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
+      "defName": "MinTemp_SmallDecrease",
       "x": 1068.0,
       "y": 522,
       "size": 64,
@@ -422,7 +422,7 @@
       "label_bottom": 637
     },
     {
-      "defName": "MinTemp_SmallDecrease",
+      "defName": "MaxTemp_SmallIncrease",
       "x": 1185.6,
       "y": 522,
       "size": 64,
@@ -454,7 +454,7 @@
       "label_bottom": 752
     },
     {
-      "defName": "AptitudeTerrible_Intellectual",
+      "defName": "AptitudeStrong_Plants",
       "x": 891.6,
       "y": 659,
       "size": 64,
@@ -462,23 +462,23 @@
       "label_bottom": 774
     },
     {
-      "defName": "AptitudeTerrible_Artistic",
-      "x": 1009.2,
-      "y": 659,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 752
-    },
-    {
       "defName": "AptitudeStrong_Animals",
-      "x": 1126.8,
+      "x": 1009.2,
       "y": 659,
       "size": 64,
       "label_lines": 2,
       "label_bottom": 774
     },
     {
-      "defName": "AptitudeStrong_Plants",
+      "defName": "AptitudeTerrible_Artistic",
+      "x": 1126.8,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "AptitudeTerrible_Intellectual",
       "x": 1244.4,
       "y": 659,
       "size": 64,

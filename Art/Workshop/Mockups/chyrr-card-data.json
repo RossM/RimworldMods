@@ -96,24 +96,6 @@
       "archites": 0
     },
     {
-      "defName": "XylKeenEars",
-      "label": "keen ears",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_KeenEars.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylSenses",
-      "category_priority": 380.0,
-      "priority": 210.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "XylEcholocation",
       "label": "echolocation",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Echolocation.png",
@@ -129,6 +111,24 @@
       "priority": 200.0,
       "complexity": 2,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylKeenEars",
+      "label": "keen ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_KeenEars.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylSenses",
+      "category_priority": 380.0,
+      "priority": 210.0,
+      "complexity": 1,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -168,24 +168,6 @@
       "archites": 0
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
-      "label": "heat tolerant",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 40.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "MinTemp_SmallIncrease",
       "label": "cold weakness",
       "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallIncrease.png",
@@ -201,6 +183,24 @@
       "priority": 0.0,
       "complexity": 0,
       "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -258,24 +258,6 @@
       "archites": 0
     },
     {
-      "defName": "Body_Thin",
-      "label": "thin body",
-      "path": "Art\\Rimworld art\\Genes\\Gene_BodyThin.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic_Body",
-      "category_priority": 290.0,
-      "priority": 10.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "Body_Standard",
       "label": "standard body",
       "path": "Art\\Rimworld art\\Genes\\Gene_BodyStandard.png",
@@ -289,6 +271,24 @@
       "category": "Cosmetic_Body",
       "category_priority": 290.0,
       "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Thin",
+      "label": "thin body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyThin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 10.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -312,24 +312,6 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Medicine",
-      "label": "strong medicine",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Strong.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 9020,
-      "complexity": 2,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "AptitudePoor_Mining",
       "label": "poor mining",
       "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Poor.png",
@@ -345,6 +327,24 @@
       "priority": 3010,
       "complexity": 1,
       "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Medicine",
+      "label": "strong medicine",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 9020,
+      "complexity": 2,
+      "metabolism": -1,
       "archites": 0
     }
   ],
@@ -382,7 +382,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylKeenEars",
+      "defName": "XylEcholocation",
       "x": 832.8,
       "y": 463,
       "size": 112,
@@ -390,7 +390,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylEcholocation",
+      "defName": "XylKeenEars",
       "x": 1068.0,
       "y": 463,
       "size": 112,
@@ -414,7 +414,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
+      "defName": "MinTemp_SmallIncrease",
       "x": 891.6,
       "y": 693,
       "size": 64,
@@ -422,7 +422,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "MinTemp_SmallIncrease",
+      "defName": "MaxTemp_SmallIncrease",
       "x": 1009.2,
       "y": 693,
       "size": 64,
@@ -454,20 +454,20 @@
       "label_bottom": 786
     },
     {
-      "defName": "Body_Thin",
-      "x": 832.8,
-      "y": 830,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
-    },
-    {
       "defName": "Body_Standard",
-      "x": 950.4,
+      "x": 832.8,
       "y": 830,
       "size": 64,
       "label_lines": 2,
       "label_bottom": 945
+    },
+    {
+      "defName": "Body_Thin",
+      "x": 950.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
     },
     {
       "defName": "DarkVision",
@@ -478,20 +478,20 @@
       "label_bottom": 923
     },
     {
-      "defName": "AptitudeStrong_Medicine",
-      "x": 1185.6,
-      "y": 830,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
-    },
-    {
       "defName": "AptitudePoor_Mining",
-      "x": 1303.2,
+      "x": 1185.6,
       "y": 830,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 923
+    },
+    {
+      "defName": "AptitudeStrong_Medicine",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
     }
   ]
 }

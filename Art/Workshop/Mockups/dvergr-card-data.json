@@ -42,24 +42,6 @@
       "archites": 0
     },
     {
-      "defName": "XylMelancholy",
-      "label": "melancholy",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Melancholy.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Mood",
-      "category_priority": 460.0,
-      "priority": 102.0,
-      "complexity": 1,
-      "metabolism": 3,
-      "archites": 0
-    },
-    {
       "defName": "XylStoic",
       "label": "stoic",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Stoic.png",
@@ -75,6 +57,24 @@
       "priority": 100.0,
       "complexity": 2,
       "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylMelancholy",
+      "label": "melancholy",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Melancholy.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 102.0,
+      "complexity": 1,
+      "metabolism": 3,
       "archites": 0
     },
     {
@@ -222,24 +222,6 @@
       "archites": 0
     },
     {
-      "defName": "Beard_BushyOnly",
-      "label": "only bushy beards",
-      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleBushyOnly.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic",
-      "category_priority": 300.0,
-      "priority": 60.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "Hair_ShortOnly",
       "label": "short-haired",
       "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleShortOnly.png",
@@ -258,37 +240,19 @@
       "archites": 0
     },
     {
-      "defName": "Skin_InkBlack",
-      "label": "ink black skin",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "defName": "Beard_BushyOnly",
+      "label": "only bushy beards",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleBushyOnly.png",
       "color": [
-        0.21568627450980393,
-        0.21568627450980393,
-        0.21568627450980393,
+        0.75,
+        0.75,
+        0.75,
         1.0
       ],
       "source": "vanilla",
-      "category": "Cosmetic_Skin",
-      "category_priority": 280.0,
-      "priority": 99.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "Skin_SlateGray",
-      "label": "slate gray skin",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
-      "color": [
-        0.35294117647058826,
-        0.35294117647058826,
-        0.35294117647058826,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic_Skin",
-      "category_priority": 280.0,
-      "priority": 97.0,
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 60.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -312,39 +276,39 @@
       "archites": 0
     },
     {
-      "defName": "Unstoppable",
-      "label": "unstoppable",
-      "path": "Art\\Rimworld art\\Genes\\Gene_Unstoppable.png",
+      "defName": "Skin_SlateGray",
+      "label": "slate gray skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
       "color": [
-        1.0,
-        1.0,
-        1.0,
+        0.35294117647058826,
+        0.35294117647058826,
+        0.35294117647058826,
         1.0
       ],
       "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 550.0,
-      "complexity": 1,
-      "metabolism": -2,
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 97.0,
+      "complexity": 0,
+      "metabolism": 0,
       "archites": 0
     },
     {
-      "defName": "CaveDweller",
-      "label": "indoor dweller",
-      "path": "Art\\Rimworld art\\Genes\\Gene_CaveDweller.png",
+      "defName": "Skin_InkBlack",
+      "label": "ink black skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
       "color": [
-        1.0,
-        1.0,
-        1.0,
+        0.21568627450980393,
+        0.21568627450980393,
+        0.21568627450980393,
         1.0
       ],
       "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 70.0,
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 99.0,
       "complexity": 0,
-      "metabolism": -1,
+      "metabolism": 0,
       "archites": 0
     },
     {
@@ -366,9 +330,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Social",
-      "label": "poor social",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Poor.png",
+      "defName": "CaveDweller",
+      "label": "indoor dweller",
+      "path": "Art\\Rimworld art\\Genes\\Gene_CaveDweller.png",
       "color": [
         1.0,
         1.0,
@@ -376,17 +340,17 @@
         1.0
       ],
       "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 10010,
-      "complexity": 1,
-      "metabolism": 1,
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": -1,
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Medicine",
-      "label": "poor medicine",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Poor.png",
+      "defName": "Unstoppable",
+      "label": "unstoppable",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Unstoppable.png",
       "color": [
         1.0,
         1.0,
@@ -394,17 +358,17 @@
         1.0
       ],
       "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 9010,
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 550.0,
       "complexity": 1,
-      "metabolism": 1,
+      "metabolism": -2,
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Crafting",
-      "label": "strong crafting",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Crafting\\Strong.png",
+      "defName": "AptitudeStrong_Construction",
+      "label": "strong construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -414,7 +378,7 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 7020,
+      "priority": 2020,
       "complexity": 2,
       "metabolism": -1,
       "archites": 0
@@ -438,9 +402,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Construction",
-      "label": "strong construction",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Strong.png",
+      "defName": "AptitudeStrong_Crafting",
+      "label": "strong crafting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Crafting\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -450,9 +414,45 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 2020,
+      "priority": 7020,
       "complexity": 2,
       "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Medicine",
+      "label": "poor medicine",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 9010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Social",
+      "label": "poor social",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 10010,
+      "complexity": 1,
+      "metabolism": 1,
       "archites": 0
     },
     {
@@ -484,7 +484,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylMelancholy",
+      "defName": "XylStoic",
       "x": 950.4,
       "y": 292,
       "size": 112,
@@ -492,7 +492,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylStoic",
+      "defName": "XylMelancholy",
       "x": 1185.6,
       "y": 292,
       "size": 112,
@@ -564,23 +564,23 @@
       "label_bottom": 786
     },
     {
-      "defName": "Beard_BushyOnly",
-      "x": 1068.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
-    },
-    {
       "defName": "Hair_ShortOnly",
-      "x": 1185.6,
+      "x": 1068.0,
       "y": 693,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 786
     },
     {
-      "defName": "Skin_InkBlack",
+      "defName": "Beard_BushyOnly",
+      "x": 1185.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Skin_LightGray",
       "x": 1303.2,
       "y": 693,
       "size": 64,
@@ -596,7 +596,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "Skin_LightGray",
+      "defName": "Skin_InkBlack",
       "x": 1538.4,
       "y": 693,
       "size": 64,
@@ -604,7 +604,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "Unstoppable",
+      "defName": "DarkVision",
       "x": 597.6,
       "y": 830,
       "size": 64,
@@ -620,7 +620,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "DarkVision",
+      "defName": "Unstoppable",
       "x": 832.8,
       "y": 830,
       "size": 64,
@@ -628,15 +628,15 @@
       "label_bottom": 923
     },
     {
-      "defName": "AptitudePoor_Social",
+      "defName": "AptitudeStrong_Construction",
       "x": 950.4,
       "y": 830,
       "size": 64,
-      "label_lines": 1,
-      "label_bottom": 923
+      "label_lines": 2,
+      "label_bottom": 945
     },
     {
-      "defName": "AptitudePoor_Medicine",
+      "defName": "AptitudeStrong_Mining",
       "x": 1068.0,
       "y": 830,
       "size": 64,
@@ -652,7 +652,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "AptitudeStrong_Mining",
+      "defName": "AptitudePoor_Medicine",
       "x": 1303.2,
       "y": 830,
       "size": 64,
@@ -660,12 +660,12 @@
       "label_bottom": 945
     },
     {
-      "defName": "AptitudeStrong_Construction",
+      "defName": "AptitudePoor_Social",
       "x": 1420.8,
       "y": 830,
       "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
+      "label_lines": 1,
+      "label_bottom": 923
     },
     {
       "defName": "ChemicalDependency_Alcohol",

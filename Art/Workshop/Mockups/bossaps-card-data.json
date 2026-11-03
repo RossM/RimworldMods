@@ -60,19 +60,19 @@
       "archites": 0
     },
     {
-      "defName": "XylLargeHorns",
-      "label": "large horns",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LargeHorns.png",
+      "defName": "XylDocile",
+      "label": "docile",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Docile.png",
       "color": [
-        0.75,
-        0.75,
-        0.75,
+        1.0,
+        1.0,
+        1.0,
         1.0
       ],
       "source": "mod",
       "category": "Violence",
       "category_priority": 430.0,
-      "priority": 110.0,
+      "priority": 5.0,
       "complexity": 1,
       "metabolism": -1,
       "archites": 0
@@ -96,19 +96,19 @@
       "archites": 0
     },
     {
-      "defName": "XylDocile",
-      "label": "docile",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Docile.png",
+      "defName": "XylLargeHorns",
+      "label": "large horns",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LargeHorns.png",
       "color": [
-        1.0,
-        1.0,
-        1.0,
+        0.75,
+        0.75,
+        0.75,
         1.0
       ],
       "source": "mod",
       "category": "Violence",
       "category_priority": 430.0,
-      "priority": 5.0,
+      "priority": 110.0,
       "complexity": 1,
       "metabolism": -1,
       "archites": 0
@@ -132,24 +132,6 @@
       "archites": 0
     },
     {
-      "defName": "XylGender_UsuallyFemale",
-      "label": "usually female",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_UsuallyFemale.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Reproduction",
-      "category_priority": 400.0,
-      "priority": 301.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "XylHyperlactation",
       "label": "hyperlactation",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Hyperlactation.png",
@@ -163,6 +145,24 @@
       "category": "Reproduction",
       "category_priority": 400.0,
       "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylGender_UsuallyFemale",
+      "label": "usually female",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_UsuallyFemale.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 301.0,
       "complexity": 1,
       "metabolism": 0,
       "archites": 0
@@ -186,24 +186,6 @@
       "archites": 0
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
-      "label": "heat tolerant",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 40.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "MinTemp_SmallDecrease",
       "label": "cold tolerant",
       "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
@@ -217,6 +199,24 @@
       "category": "Temperature",
       "category_priority": 450.0,
       "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
       "complexity": 0,
       "metabolism": -1,
       "archites": 0
@@ -276,9 +276,9 @@
       "archites": 0
     },
     {
-      "defName": "Body_Hulk",
-      "label": "hulk body",
-      "path": "Art\\Rimworld art\\Genes\\Gene_BodyHulk.png",
+      "defName": "Body_Standard",
+      "label": "standard body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyStandard.png",
       "color": [
         0.75,
         0.75,
@@ -288,7 +288,7 @@
       "source": "vanilla",
       "category": "Cosmetic_Body",
       "category_priority": 290.0,
-      "priority": 30.0,
+      "priority": 0.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -312,9 +312,9 @@
       "archites": 0
     },
     {
-      "defName": "Body_Standard",
-      "label": "standard body",
-      "path": "Art\\Rimworld art\\Genes\\Gene_BodyStandard.png",
+      "defName": "Body_Hulk",
+      "label": "hulk body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyHulk.png",
       "color": [
         0.75,
         0.75,
@@ -324,7 +324,7 @@
       "source": "vanilla",
       "category": "Cosmetic_Body",
       "category_priority": 290.0,
-      "priority": 0.0,
+      "priority": 30.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -348,24 +348,6 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Plants",
-      "label": "strong plants",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 5020,
-      "complexity": 2,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "AptitudePoor_Cooking",
       "label": "poor cooking",
       "path": "Art\\Rimworld art\\Genes\\Skills\\Cooking\\Poor.png",
@@ -381,6 +363,24 @@
       "priority": 4010,
       "complexity": 1,
       "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "label": "strong plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 5020,
+      "complexity": 2,
+      "metabolism": -1,
       "archites": 0
     }
   ],
@@ -402,7 +402,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylLargeHorns",
+      "defName": "XylDocile",
       "x": 1068.0,
       "y": 292,
       "size": 112,
@@ -418,7 +418,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylDocile",
+      "defName": "XylLargeHorns",
       "x": 1538.4,
       "y": 292,
       "size": 112,
@@ -434,7 +434,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylGender_UsuallyFemale",
+      "defName": "XylHyperlactation",
       "x": 950.4,
       "y": 463,
       "size": 112,
@@ -442,7 +442,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylHyperlactation",
+      "defName": "XylGender_UsuallyFemale",
       "x": 1185.6,
       "y": 463,
       "size": 112,
@@ -458,7 +458,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
+      "defName": "MinTemp_SmallDecrease",
       "x": 774.0,
       "y": 693,
       "size": 64,
@@ -466,7 +466,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "MinTemp_SmallDecrease",
+      "defName": "MaxTemp_SmallIncrease",
       "x": 891.6,
       "y": 693,
       "size": 64,
@@ -498,12 +498,12 @@
       "label_bottom": 786
     },
     {
-      "defName": "Body_Hulk",
+      "defName": "Body_Standard",
       "x": 1362.0,
       "y": 693,
       "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "label_lines": 2,
+      "label_bottom": 808
     },
     {
       "defName": "Body_Fat",
@@ -514,12 +514,12 @@
       "label_bottom": 923
     },
     {
-      "defName": "Body_Standard",
+      "defName": "Body_Hulk",
       "x": 950.4,
       "y": 830,
       "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
+      "label_lines": 1,
+      "label_bottom": 923
     },
     {
       "defName": "Nearsighted",
@@ -530,7 +530,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "AptitudeStrong_Plants",
+      "defName": "AptitudePoor_Cooking",
       "x": 1185.6,
       "y": 830,
       "size": 64,
@@ -538,7 +538,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "AptitudePoor_Cooking",
+      "defName": "AptitudeStrong_Plants",
       "x": 1303.2,
       "y": 830,
       "size": 64,

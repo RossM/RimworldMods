@@ -60,24 +60,6 @@
       "archites": 0
     },
     {
-      "defName": "XylNose_Beaver",
-      "label": "beaver teeth",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_BeaverTeeth.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 411.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "XylIndustrious",
       "label": "industrious",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Industrious.png",
@@ -93,6 +75,24 @@
       "priority": 25.0,
       "complexity": 2,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylNose_Beaver",
+      "label": "beaver teeth",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_BeaverTeeth.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 411.0,
+      "complexity": 1,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -168,24 +168,6 @@
       "archites": 0
     },
     {
-      "defName": "KindInstinct",
-      "label": "kind instinct",
-      "path": "Art\\Rimworld art\\Genes\\Gene_KindInstinct.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Violence",
-      "category_priority": 430.0,
-      "priority": 60.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "MeleeDamage_Weak",
       "label": "weak melee damage",
       "path": "Art\\Rimworld art\\Genes\\Gene_WeakMeleeDamage.png",
@@ -204,6 +186,24 @@
       "archites": 0
     },
     {
+      "defName": "KindInstinct",
+      "label": "kind instinct",
+      "path": "Art\\Rimworld art\\Genes\\Gene_KindInstinct.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
       "defName": "Fertile",
       "label": "fertile",
       "path": "Art\\Rimworld art\\Genes\\Gene_Fertile.png",
@@ -217,24 +217,6 @@
       "category": "Reproduction",
       "category_priority": 400.0,
       "priority": 110.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "Beard_NoBeardOnly",
-      "label": "beardless",
-      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic",
-      "category_priority": 300.0,
-      "priority": 65.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -258,37 +240,19 @@
       "archites": 0
     },
     {
-      "defName": "Hair_DarkSaturatedReddish",
-      "label": "dark-brown hair",
-      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "defName": "Beard_NoBeardOnly",
+      "label": "beardless",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
       "color": [
-        0.2196078431372549,
-        0.1411764705882353,
-        0.07058823529411765,
+        0.75,
+        0.75,
+        0.75,
         1.0
       ],
       "source": "vanilla",
-      "category": "Cosmetic_Hair",
-      "category_priority": 285.0,
-      "priority": 90.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "Hair_DarkBrown",
-      "label": "brown hair",
-      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
-      "color": [
-        0.35294117647058826,
-        0.22745098039215686,
-        0.12549019607843137,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic_Hair",
-      "category_priority": 285.0,
-      "priority": 80.0,
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 65.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -312,39 +276,39 @@
       "archites": 0
     },
     {
-      "defName": "Furskin",
-      "label": "furskin",
-      "path": "Art\\Rimworld art\\Genes\\Gene_Furskin.png",
+      "defName": "Hair_DarkBrown",
+      "label": "brown hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
       "color": [
-        0.75,
-        0.75,
-        0.75,
+        0.35294117647058826,
+        0.22745098039215686,
+        0.12549019607843137,
         1.0
       ],
       "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 400.0,
-      "complexity": 1,
-      "metabolism": -1,
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 80.0,
+      "complexity": 0,
+      "metabolism": 0,
       "archites": 0
     },
     {
-      "defName": "Nearsighted",
-      "label": "nearsighted",
-      "path": "Art\\Rimworld art\\Genes\\Gene_Nearsighted.png",
+      "defName": "Hair_DarkSaturatedReddish",
+      "label": "dark-brown hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
       "color": [
-        1.0,
-        1.0,
-        1.0,
+        0.2196078431372549,
+        0.1411764705882353,
+        0.07058823529411765,
         1.0
       ],
       "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 50.0,
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 90.0,
       "complexity": 0,
-      "metabolism": 2,
+      "metabolism": 0,
       "archites": 0
     },
     {
@@ -366,9 +330,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Intellectual",
-      "label": "poor intellectual",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Poor.png",
+      "defName": "Nearsighted",
+      "label": "nearsighted",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Nearsighted.png",
       "color": [
         1.0,
         1.0,
@@ -376,47 +340,47 @@
         1.0
       ],
       "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 11010,
-      "complexity": 1,
-      "metabolism": 1,
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 2,
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Animals",
-      "label": "poor animals",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Poor.png",
+      "defName": "Furskin",
+      "label": "furskin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Furskin.png",
       "color": [
-        1.0,
-        1.0,
-        1.0,
+        0.75,
+        0.75,
+        0.75,
         1.0
       ],
       "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 6010,
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 400.0,
       "complexity": 1,
-      "metabolism": 1,
-      "archites": 0
-    },
-    {
-      "defName": "AptitudeStrong_Plants",
-      "label": "strong plants",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 5020,
-      "complexity": 2,
       "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Construction",
+      "label": "great construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 2030,
+      "complexity": 2,
+      "metabolism": -3,
       "archites": 0
     },
     {
@@ -438,9 +402,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeRemarkable_Construction",
-      "label": "great construction",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Remarkable.png",
+      "defName": "AptitudeStrong_Plants",
+      "label": "strong plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -450,9 +414,45 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 2030,
+      "priority": 5020,
       "complexity": 2,
-      "metabolism": -3,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Animals",
+      "label": "poor animals",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 6010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "label": "poor intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11010,
+      "complexity": 1,
+      "metabolism": 1,
       "archites": 0
     }
   ],
@@ -474,7 +474,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylNose_Beaver",
+      "defName": "XylIndustrious",
       "x": 1185.6,
       "y": 292,
       "size": 112,
@@ -482,7 +482,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylIndustrious",
+      "defName": "XylNose_Beaver",
       "x": 1420.8,
       "y": 292,
       "size": 112,
@@ -522,20 +522,20 @@
       "label_bottom": 615
     },
     {
-      "defName": "KindInstinct",
-      "x": 1009.2,
-      "y": 522,
-      "size": 64,
-      "label_lines": 1,
-      "label_bottom": 615
-    },
-    {
       "defName": "MeleeDamage_Weak",
-      "x": 1126.8,
+      "x": 1009.2,
       "y": 522,
       "size": 64,
       "label_lines": 2,
       "label_bottom": 637
+    },
+    {
+      "defName": "KindInstinct",
+      "x": 1126.8,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
     },
     {
       "defName": "Fertile",
@@ -546,7 +546,7 @@
       "label_bottom": 615
     },
     {
-      "defName": "Beard_NoBeardOnly",
+      "defName": "Hair_BaldOnly",
       "x": 1362.0,
       "y": 522,
       "size": 64,
@@ -554,7 +554,7 @@
       "label_bottom": 615
     },
     {
-      "defName": "Hair_BaldOnly",
+      "defName": "Beard_NoBeardOnly",
       "x": 1479.6,
       "y": 522,
       "size": 64,
@@ -562,7 +562,7 @@
       "label_bottom": 615
     },
     {
-      "defName": "Hair_DarkSaturatedReddish",
+      "defName": "Hair_ReddishBrown",
       "x": 1597.1999999999998,
       "y": 522,
       "size": 64,
@@ -578,7 +578,7 @@
       "label_bottom": 752
     },
     {
-      "defName": "Hair_ReddishBrown",
+      "defName": "Hair_DarkSaturatedReddish",
       "x": 656.4000000000001,
       "y": 659,
       "size": 64,
@@ -586,7 +586,7 @@
       "label_bottom": 774
     },
     {
-      "defName": "Furskin",
+      "defName": "Learning_Slow",
       "x": 774.0,
       "y": 659,
       "size": 64,
@@ -602,7 +602,7 @@
       "label_bottom": 752
     },
     {
-      "defName": "Learning_Slow",
+      "defName": "Furskin",
       "x": 1009.2,
       "y": 659,
       "size": 64,
@@ -610,7 +610,7 @@
       "label_bottom": 752
     },
     {
-      "defName": "AptitudePoor_Intellectual",
+      "defName": "AptitudeRemarkable_Construction",
       "x": 1126.8,
       "y": 659,
       "size": 64,
@@ -618,7 +618,7 @@
       "label_bottom": 774
     },
     {
-      "defName": "AptitudePoor_Animals",
+      "defName": "AptitudeStrong_Cooking",
       "x": 1244.4,
       "y": 659,
       "size": 64,
@@ -634,7 +634,7 @@
       "label_bottom": 774
     },
     {
-      "defName": "AptitudeStrong_Cooking",
+      "defName": "AptitudePoor_Animals",
       "x": 1479.6,
       "y": 659,
       "size": 64,
@@ -642,7 +642,7 @@
       "label_bottom": 774
     },
     {
-      "defName": "AptitudeRemarkable_Construction",
+      "defName": "AptitudePoor_Intellectual",
       "x": 1597.1999999999998,
       "y": 659,
       "size": 64,

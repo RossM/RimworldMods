@@ -78,24 +78,6 @@
       "archites": 0
     },
     {
-      "defName": "XylRetractableClaws",
-      "label": "retractable claws",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_RetractableClaws.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Violence",
-      "category_priority": 430.0,
-      "priority": 111.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "XylLargeHorns",
       "label": "large horns",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LargeHorns.png",
@@ -109,6 +91,24 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 110.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylRetractableClaws",
+      "label": "retractable claws",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_RetractableClaws.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 111.0,
       "complexity": 1,
       "metabolism": -1,
       "archites": 0
@@ -222,24 +222,6 @@
       "archites": 0
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
-      "label": "heat tolerant",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 40.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "MinTemp_SmallDecrease",
       "label": "cold tolerant",
       "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
@@ -258,9 +240,9 @@
       "archites": 0
     },
     {
-      "defName": "MeleeDamage_Strong",
-      "label": "strong melee damage",
-      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
       "color": [
         1.0,
         1.0,
@@ -268,11 +250,11 @@
         1.0
       ],
       "source": "vanilla",
-      "category": "Violence",
-      "category_priority": 430.0,
+      "category": "Temperature",
+      "category_priority": 450.0,
       "priority": 40.0,
       "complexity": 0,
-      "metabolism": -2,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -294,6 +276,24 @@
       "archites": 0
     },
     {
+      "defName": "MeleeDamage_Strong",
+      "label": "strong melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
       "defName": "Sleepy",
       "label": "sleepy",
       "path": "Art\\Rimworld art\\Genes\\Gene_Sleepy.png",
@@ -312,9 +312,9 @@
       "archites": 0
     },
     {
-      "defName": "FacialRidges",
-      "label": "facial ridges",
-      "path": "Art\\Rimworld art\\Genes\\Gene_FacialRidges.png",
+      "defName": "Hair_BaldOnly",
+      "label": "no hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
       "color": [
         0.75,
         0.75,
@@ -324,7 +324,7 @@
       "source": "vanilla",
       "category": "Cosmetic",
       "category_priority": 300.0,
-      "priority": 500.0,
+      "priority": 50.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -348,9 +348,9 @@
       "archites": 0
     },
     {
-      "defName": "Hair_BaldOnly",
-      "label": "no hair",
-      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
+      "defName": "FacialRidges",
+      "label": "facial ridges",
+      "path": "Art\\Rimworld art\\Genes\\Gene_FacialRidges.png",
       "color": [
         0.75,
         0.75,
@@ -360,7 +360,7 @@
       "source": "vanilla",
       "category": "Cosmetic",
       "category_priority": 300.0,
-      "priority": 50.0,
+      "priority": 500.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -410,7 +410,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylRetractableClaws",
+      "defName": "XylLargeHorns",
       "x": 1303.2,
       "y": 292,
       "size": 112,
@@ -418,7 +418,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylLargeHorns",
+      "defName": "XylRetractableClaws",
       "x": 1538.4,
       "y": 292,
       "size": 112,
@@ -474,7 +474,7 @@
       "label_bottom": 786
     },
     {
-      "defName": "MaxTemp_SmallIncrease",
+      "defName": "MinTemp_SmallDecrease",
       "x": 1009.2,
       "y": 693,
       "size": 64,
@@ -482,7 +482,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "MinTemp_SmallDecrease",
+      "defName": "MaxTemp_SmallIncrease",
       "x": 1126.8,
       "y": 693,
       "size": 64,
@@ -490,20 +490,20 @@
       "label_bottom": 808
     },
     {
-      "defName": "MeleeDamage_Strong",
-      "x": 1244.4,
-      "y": 693,
-      "size": 64,
-      "label_lines": 3,
-      "label_bottom": 830
-    },
-    {
       "defName": "Aggression_Aggressive",
-      "x": 1362.0,
+      "x": 1244.4,
       "y": 693,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 786
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "x": 1362.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 3,
+      "label_bottom": 830
     },
     {
       "defName": "Sleepy",
@@ -514,7 +514,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "FacialRidges",
+      "defName": "Hair_BaldOnly",
       "x": 950.4,
       "y": 852,
       "size": 64,
@@ -530,7 +530,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "Hair_BaldOnly",
+      "defName": "FacialRidges",
       "x": 1185.6,
       "y": 852,
       "size": 64,

@@ -114,24 +114,6 @@
       "archites": 0
     },
     {
-      "defName": "XylTechAffinity",
-      "label": "tech affinity",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TechAffinity.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 1100.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
       "defName": "XylTelescopicVision",
       "label": "telescopic vision",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TelescopicVision.png",
@@ -147,6 +129,24 @@
       "priority": 51.0,
       "complexity": 1,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylTechAffinity",
+      "label": "tech affinity",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TechAffinity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 1100.0,
+      "complexity": 1,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -222,19 +222,19 @@
       "archites": 0
     },
     {
-      "defName": "Hair_DarkBlack",
-      "label": "dark-black hair",
+      "defName": "Hair_SnowWhite",
+      "label": "snow-white hair",
       "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
       "color": [
-        0.2,
-        0.2,
-        0.2,
+        0.9803921568627451,
+        0.9803921568627451,
+        0.9803921568627451,
         1.0
       ],
       "source": "vanilla",
       "category": "Cosmetic_Hair",
       "category_priority": 285.0,
-      "priority": 120.0,
+      "priority": 0.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -258,75 +258,21 @@
       "archites": 0
     },
     {
-      "defName": "Hair_SnowWhite",
-      "label": "snow-white hair",
+      "defName": "Hair_DarkBlack",
+      "label": "dark-black hair",
       "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
       "color": [
-        0.9803921568627451,
-        0.9803921568627451,
-        0.9803921568627451,
+        0.2,
+        0.2,
+        0.2,
         1.0
       ],
       "source": "vanilla",
       "category": "Cosmetic_Hair",
       "category_priority": 285.0,
-      "priority": 0.0,
+      "priority": 120.0,
       "complexity": 0,
       "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "CaveDweller",
-      "label": "indoor dweller",
-      "path": "Art\\Rimworld art\\Genes\\Gene_CaveDweller.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 70.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
-      "defName": "DarkVision",
-      "label": "dark vision",
-      "path": "Art\\Rimworld art\\Genes\\Gene_Darkvision.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 60.0,
-      "complexity": 0,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
-      "defName": "Learning_Fast",
-      "label": "quick study",
-      "path": "Art\\Rimworld art\\Genes\\Gene_FastLearning.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Miscellaneous",
-      "category_priority": 270.0,
-      "priority": 35.0,
-      "complexity": 2,
-      "metabolism": -3,
       "archites": 0
     },
     {
@@ -348,9 +294,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Intellectual",
-      "label": "strong intellectual",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Strong.png",
+      "defName": "Learning_Fast",
+      "label": "quick study",
+      "path": "Art\\Rimworld art\\Genes\\Gene_FastLearning.png",
       "color": [
         1.0,
         1.0,
@@ -358,17 +304,53 @@
         1.0
       ],
       "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 11020,
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 35.0,
       "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "DarkVision",
+      "label": "dark vision",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Darkvision.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 60.0,
+      "complexity": 0,
       "metabolism": -1,
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Animals",
-      "label": "poor animals",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Poor.png",
+      "defName": "CaveDweller",
+      "label": "indoor dweller",
+      "path": "Art\\Rimworld art\\Genes\\Gene_CaveDweller.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Shooting",
+      "label": "strong shooting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Strong.png",
       "color": [
         1.0,
         1.0,
@@ -378,9 +360,9 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 6010,
-      "complexity": 1,
-      "metabolism": 1,
+      "priority": 20,
+      "complexity": 2,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -402,9 +384,9 @@
       "archites": 0
     },
     {
-      "defName": "AptitudeStrong_Shooting",
-      "label": "strong shooting",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Strong.png",
+      "defName": "AptitudePoor_Animals",
+      "label": "poor animals",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Poor.png",
       "color": [
         1.0,
         1.0,
@@ -414,7 +396,25 @@
       "source": "vanilla",
       "category": "Aptitudes",
       "category_priority": 200.0,
-      "priority": 20,
+      "priority": 6010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Intellectual",
+      "label": "strong intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11020,
       "complexity": 2,
       "metabolism": -1,
       "archites": 0
@@ -462,7 +462,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylTechAffinity",
+      "defName": "XylTelescopicVision",
       "x": 1068.0,
       "y": 463,
       "size": 112,
@@ -470,7 +470,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylTelescopicVision",
+      "defName": "XylTechAffinity",
       "x": 1303.2,
       "y": 463,
       "size": 112,
@@ -510,7 +510,7 @@
       "label_bottom": 786
     },
     {
-      "defName": "Hair_DarkBlack",
+      "defName": "Hair_SnowWhite",
       "x": 1126.8,
       "y": 693,
       "size": 64,
@@ -526,7 +526,7 @@
       "label_bottom": 786
     },
     {
-      "defName": "Hair_SnowWhite",
+      "defName": "Hair_DarkBlack",
       "x": 1362.0,
       "y": 693,
       "size": 64,
@@ -534,7 +534,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "CaveDweller",
+      "defName": "MoveSpeed_Space",
       "x": 1479.6,
       "y": 693,
       "size": 64,
@@ -542,7 +542,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "DarkVision",
+      "defName": "Learning_Fast",
       "x": 715.2,
       "y": 830,
       "size": 64,
@@ -550,7 +550,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "Learning_Fast",
+      "defName": "DarkVision",
       "x": 832.8,
       "y": 830,
       "size": 64,
@@ -558,7 +558,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "MoveSpeed_Space",
+      "defName": "CaveDweller",
       "x": 950.4,
       "y": 830,
       "size": 64,
@@ -566,7 +566,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "AptitudeStrong_Intellectual",
+      "defName": "AptitudeStrong_Shooting",
       "x": 1068.0,
       "y": 830,
       "size": 64,
@@ -574,23 +574,23 @@
       "label_bottom": 945
     },
     {
-      "defName": "AptitudePoor_Animals",
-      "x": 1185.6,
-      "y": 830,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 945
-    },
-    {
       "defName": "AptitudePoor_Melee",
-      "x": 1303.2,
+      "x": 1185.6,
       "y": 830,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 923
     },
     {
-      "defName": "AptitudeStrong_Shooting",
+      "defName": "AptitudePoor_Animals",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeStrong_Intellectual",
       "x": 1420.8,
       "y": 830,
       "size": 64,

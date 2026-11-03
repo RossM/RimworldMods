@@ -114,24 +114,6 @@
       "archites": 0
     },
     {
-      "defName": "XylRockskin",
-      "label": "rockskin",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Rockskin.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylBody",
-      "category_priority": 271.0,
-      "priority": 460.0,
-      "complexity": 2,
-      "metabolism": -4,
-      "archites": 0
-    },
-    {
       "defName": "XylGiant",
       "label": "giant",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Giant.png",
@@ -147,6 +129,24 @@
       "priority": 1.0,
       "complexity": 1,
       "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylRockskin",
+      "label": "rockskin",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Rockskin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 460.0,
+      "complexity": 2,
+      "metabolism": -4,
       "archites": 0
     },
     {
@@ -186,9 +186,9 @@
       "archites": 0
     },
     {
-      "defName": "Superclotting",
-      "label": "superclotting",
-      "path": "Art\\Rimworld art\\Genes\\Gene_Superclotting.png",
+      "defName": "Immunity_SuperStrong",
+      "label": "super immunity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SuperStrongImmunity.png",
       "color": [
         1.0,
         1.0,
@@ -198,9 +198,9 @@
       "source": "vanilla",
       "category": "Healing",
       "category_priority": 500.0,
-      "priority": 100.0,
-      "complexity": 0,
-      "metabolism": -1,
+      "priority": 20.0,
+      "complexity": 2,
+      "metabolism": -2,
       "archites": 0
     },
     {
@@ -222,9 +222,9 @@
       "archites": 0
     },
     {
-      "defName": "Immunity_SuperStrong",
-      "label": "super immunity",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SuperStrongImmunity.png",
+      "defName": "Superclotting",
+      "label": "superclotting",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Superclotting.png",
       "color": [
         1.0,
         1.0,
@@ -234,9 +234,9 @@
       "source": "vanilla",
       "category": "Healing",
       "category_priority": 500.0,
-      "priority": 20.0,
-      "complexity": 2,
-      "metabolism": -2,
+      "priority": 100.0,
+      "complexity": 0,
+      "metabolism": -1,
       "archites": 0
     },
     {
@@ -384,24 +384,6 @@
       "archites": 0
     },
     {
-      "defName": "AptitudePoor_Intellectual",
-      "label": "poor intellectual",
-      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Poor.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Aptitudes",
-      "category_priority": 200.0,
-      "priority": 11010,
-      "complexity": 1,
-      "metabolism": 1,
-      "archites": 0
-    },
-    {
       "defName": "AptitudePoor_Social",
       "label": "poor social",
       "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Poor.png",
@@ -415,6 +397,24 @@
       "category": "Aptitudes",
       "category_priority": 200.0,
       "priority": 10010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "label": "poor intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11010,
       "complexity": 1,
       "metabolism": 1,
       "archites": 0
@@ -462,7 +462,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylRockskin",
+      "defName": "XylGiant",
       "x": 715.2,
       "y": 463,
       "size": 112,
@@ -470,7 +470,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylGiant",
+      "defName": "XylRockskin",
       "x": 950.4,
       "y": 463,
       "size": 112,
@@ -494,12 +494,12 @@
       "label_bottom": 612
     },
     {
-      "defName": "Superclotting",
+      "defName": "Immunity_SuperStrong",
       "x": 715.2,
       "y": 693,
       "size": 64,
-      "label_lines": 1,
-      "label_bottom": 786
+      "label_lines": 2,
+      "label_bottom": 808
     },
     {
       "defName": "WoundHealing_Slow",
@@ -510,12 +510,12 @@
       "label_bottom": 808
     },
     {
-      "defName": "Immunity_SuperStrong",
+      "defName": "Superclotting",
       "x": 950.4,
       "y": 693,
       "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
+      "label_lines": 1,
+      "label_bottom": 786
     },
     {
       "defName": "PsychicAbility_Deaf",
@@ -582,20 +582,20 @@
       "label_bottom": 945
     },
     {
-      "defName": "AptitudePoor_Intellectual",
-      "x": 1244.4,
-      "y": 852,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 967
-    },
-    {
       "defName": "AptitudePoor_Social",
-      "x": 1362.0,
+      "x": 1244.4,
       "y": 852,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "x": 1362.0,
+      "y": 852,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 967
     }
   ]
 }

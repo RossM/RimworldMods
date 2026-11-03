@@ -78,9 +78,9 @@
       "archites": 0
     },
     {
-      "defName": "XylFlirty",
-      "label": "flirty",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Flirty.png",
+      "defName": "XylGender_AlwaysFemale",
+      "label": "always female",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_AlwaysFemale.png",
       "color": [
         1.0,
         1.0,
@@ -90,7 +90,25 @@
       "source": "mod",
       "category": "Reproduction",
       "category_priority": 400.0,
-      "priority": 1000.0,
+      "priority": 300.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylStrongGenes",
+      "label": "strong genes",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_StrongGenes.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 400.0,
       "complexity": 1,
       "metabolism": 0,
       "archites": 0
@@ -114,9 +132,9 @@
       "archites": 0
     },
     {
-      "defName": "XylStrongGenes",
-      "label": "strong genes",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_StrongGenes.png",
+      "defName": "XylFlirty",
+      "label": "flirty",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Flirty.png",
       "color": [
         1.0,
         1.0,
@@ -126,25 +144,7 @@
       "source": "mod",
       "category": "Reproduction",
       "category_priority": 400.0,
-      "priority": 400.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "XylGender_AlwaysFemale",
-      "label": "always female",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_AlwaysFemale.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Reproduction",
-      "category_priority": 400.0,
-      "priority": 300.0,
+      "priority": 1000.0,
       "complexity": 1,
       "metabolism": 0,
       "archites": 0
@@ -330,24 +330,6 @@
       "archites": 0
     },
     {
-      "defName": "Headbone_MiniHorns",
-      "label": "mini-horns",
-      "path": "Art\\Rimworld art\\Genes\\Gene_HeadboneMinihorns.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic",
-      "category_priority": 300.0,
-      "priority": 110.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "Hair_LongOnly",
       "label": "long-haired",
       "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleLongOnly.png",
@@ -361,6 +343,24 @@
       "category": "Cosmetic",
       "category_priority": 300.0,
       "priority": 57.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Headbone_MiniHorns",
+      "label": "mini-horns",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HeadboneMinihorns.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 110.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -384,24 +384,6 @@
       "archites": 0
     },
     {
-      "defName": "Hair_LightPurple",
-      "label": "purple hair",
-      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
-      "color": [
-        0.8901960784313725,
-        0.45098039215686275,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Cosmetic_Hair",
-      "category_priority": 285.0,
-      "priority": 180.0,
-      "complexity": 0,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "Hair_Pink",
       "label": "pink hair",
       "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
@@ -415,6 +397,24 @@
       "category": "Cosmetic_Hair",
       "category_priority": 285.0,
       "priority": 170.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_LightPurple",
+      "label": "purple hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.8901960784313725,
+        0.45098039215686275,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 180.0,
       "complexity": 0,
       "metabolism": 0,
       "archites": 0
@@ -482,7 +482,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylFlirty",
+      "defName": "XylGender_AlwaysFemale",
       "x": 1303.2,
       "y": 292,
       "size": 112,
@@ -490,7 +490,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylLoveEuphoria",
+      "defName": "XylStrongGenes",
       "x": 1538.4,
       "y": 292,
       "size": 112,
@@ -498,7 +498,7 @@
       "label_bottom": 441
     },
     {
-      "defName": "XylStrongGenes",
+      "defName": "XylLoveEuphoria",
       "x": 597.6,
       "y": 463,
       "size": 112,
@@ -506,7 +506,7 @@
       "label_bottom": 612
     },
     {
-      "defName": "XylGender_AlwaysFemale",
+      "defName": "XylFlirty",
       "x": 832.8,
       "y": 463,
       "size": 112,
@@ -594,7 +594,7 @@
       "label_bottom": 808
     },
     {
-      "defName": "Headbone_MiniHorns",
+      "defName": "Hair_LongOnly",
       "x": 715.2,
       "y": 830,
       "size": 64,
@@ -602,7 +602,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "Hair_LongOnly",
+      "defName": "Headbone_MiniHorns",
       "x": 832.8,
       "y": 830,
       "size": 64,
@@ -618,7 +618,7 @@
       "label_bottom": 945
     },
     {
-      "defName": "Hair_LightPurple",
+      "defName": "Hair_Pink",
       "x": 1068.0,
       "y": 830,
       "size": 64,
@@ -626,7 +626,7 @@
       "label_bottom": 923
     },
     {
-      "defName": "Hair_Pink",
+      "defName": "Hair_LightPurple",
       "x": 1185.6,
       "y": 830,
       "size": 64,
