@@ -316,114 +316,664 @@
     {
       "defName": "XylCarnivoreStomach",
       "group": "featured",
-      "x": 282.8,
+      "x": 235.0,
       "y": 78.0,
       "size": 52
     },
     {
       "defName": "XylGreedy",
       "group": "featured",
-      "x": 365.6,
+      "x": 305.0,
       "y": 78.0,
       "size": 52
     },
     {
       "defName": "XylLargeHorns",
       "group": "featured",
-      "x": 448.4,
+      "x": 375.0,
       "y": 78.0,
       "size": 52
     },
     {
       "defName": "XylLineageInheritance",
       "group": "featured",
-      "x": 531.2,
-      "y": 78.0,
+      "x": 235.0,
+      "y": 142.0,
       "size": 52
     },
     {
       "defName": "XylTail_Lizard",
       "group": "featured",
-      "x": 324.2,
+      "x": 305.0,
       "y": 142.0,
       "size": 52
     },
     {
       "defName": "XylScaleskin",
       "group": "featured",
-      "x": 407.0,
-      "y": 142.0,
-      "size": 52
-    },
-    {
-      "defName": "XylScalebornLineage",
-      "group": "featured",
-      "x": 489.8,
+      "x": 375.0,
       "y": 142.0,
       "size": 52
     },
     {
       "defName": "MoveSpeed_Slow",
       "group": "supporting",
-      "x": 241.4,
-      "y": 256.0,
+      "x": 221.0,
+      "y": 235.0,
       "size": 32
     },
     {
       "defName": "MaxTemp_SmallIncrease",
       "group": "supporting",
-      "x": 282.8,
-      "y": 256.0,
+      "x": 263.0,
+      "y": 235.0,
       "size": 32
     },
     {
       "defName": "Aggression_Aggressive",
       "group": "supporting",
-      "x": 324.2,
-      "y": 256.0,
+      "x": 305.0,
+      "y": 235.0,
       "size": 32
     },
     {
       "defName": "MeleeDamage_Strong",
       "group": "supporting",
-      "x": 365.6,
-      "y": 256.0,
+      "x": 347.0,
+      "y": 235.0,
       "size": 32
     },
     {
       "defName": "Sleepy",
       "group": "supporting",
-      "x": 407.0,
-      "y": 256.0,
+      "x": 389.0,
+      "y": 235.0,
       "size": 32
     },
     {
       "defName": "Hair_BaldOnly",
       "group": "supporting",
-      "x": 448.4,
-      "y": 256.0,
+      "x": 242.0,
+      "y": 277.0,
       "size": 32
     },
     {
       "defName": "Beard_NoBeardOnly",
       "group": "supporting",
-      "x": 489.8,
-      "y": 256.0,
+      "x": 284.0,
+      "y": 277.0,
       "size": 32
     },
     {
       "defName": "FacialRidges",
       "group": "supporting",
-      "x": 531.2,
-      "y": 256.0,
+      "x": 326.0,
+      "y": 277.0,
       "size": 32
     },
     {
       "defName": "AptitudeTerrible_Cooking",
       "group": "supporting",
-      "x": 572.6,
-      "y": 256.0,
+      "x": 368.0,
+      "y": 277.0,
       "size": 32
+    },
+    {
+      "defName": "Skin_DeepRed",
+      "group": "lineage:Skin_DeepRed",
+      "x": 450,
+      "y": 81.0,
+      "size": 32
+    },
+    {
+      "defName": "FireSpew",
+      "group": "lineage:Skin_DeepRed",
+      "x": 498,
+      "y": 81.0,
+      "size": 32
+    },
+    {
+      "defName": "FireResistant",
+      "group": "lineage:Skin_DeepRed",
+      "x": 546,
+      "y": 81.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudePoor_Cooking",
+      "group": "lineage:Skin_DeepRed",
+      "x": 594,
+      "y": 81.0,
+      "size": 32
+    },
+    {
+      "defName": "XylSkin_DarkGreen",
+      "group": "lineage:XylSkin_DarkGreen",
+      "x": 450,
+      "y": 133.0,
+      "size": 32
+    },
+    {
+      "defName": "AcidSpray",
+      "group": "lineage:XylSkin_DarkGreen",
+      "x": 498,
+      "y": 133.0,
+      "size": 32
+    },
+    {
+      "defName": "ToxResist_Partial",
+      "group": "lineage:XylSkin_DarkGreen",
+      "x": 546,
+      "y": 133.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeStrong_Shooting",
+      "group": "lineage:XylSkin_DarkGreen",
+      "x": 594,
+      "y": 133.0,
+      "size": 32
+    },
+    {
+      "defName": "Skin_SheerWhite",
+      "group": "lineage:Skin_SheerWhite",
+      "x": 450,
+      "y": 185.0,
+      "size": 32
+    },
+    {
+      "defName": "FoamSpray",
+      "group": "lineage:Skin_SheerWhite",
+      "x": 498,
+      "y": 185.0,
+      "size": 32
+    },
+    {
+      "defName": "WoundHealing_Fast",
+      "group": "lineage:Skin_SheerWhite",
+      "x": 546,
+      "y": 185.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeStrong_Medicine",
+      "group": "lineage:Skin_SheerWhite",
+      "x": 594,
+      "y": 185.0,
+      "size": 32
+    },
+    {
+      "defName": "XylSkin_DarkBlue",
+      "group": "lineage:XylSkin_DarkBlue",
+      "x": 450,
+      "y": 237.0,
+      "size": 32
+    },
+    {
+      "defName": "XylEMPBurst",
+      "group": "lineage:XylSkin_DarkBlue",
+      "x": 498,
+      "y": 237.0,
+      "size": 32
+    },
+    {
+      "defName": "Unstoppable",
+      "group": "lineage:XylSkin_DarkBlue",
+      "x": 546,
+      "y": 237.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeStrong_Intellectual",
+      "group": "lineage:XylSkin_DarkBlue",
+      "x": 594,
+      "y": 237.0,
+      "size": 32
+    },
+    {
+      "defName": "Skin_SlateGray",
+      "group": "lineage:Skin_SlateGray",
+      "x": 450,
+      "y": 289.0,
+      "size": 32
+    },
+    {
+      "defName": "XylOilSpray",
+      "group": "lineage:Skin_SlateGray",
+      "x": 498,
+      "y": 289.0,
+      "size": 32
+    },
+    {
+      "defName": "Robust",
+      "group": "lineage:Skin_SlateGray",
+      "x": 546,
+      "y": 289.0,
+      "size": 32
+    },
+    {
+      "defName": "AptitudeStrong_Melee",
+      "group": "lineage:Skin_SlateGray",
+      "x": 594,
+      "y": 289.0,
+      "size": 32
+    }
+  ],
+  "lineages": [
+    {
+      "skin": "Skin_DeepRed",
+      "color": [
+        0.5882352941176471,
+        0.24313725490196078,
+        0.24313725490196078,
+        1.0
+      ],
+      "genes": [
+        {
+          "defName": "Skin_DeepRed",
+          "label": "deep red skin",
+          "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+          "color": [
+            0.5882352941176471,
+            0.24313725490196078,
+            0.24313725490196078,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Cosmetic_Skin",
+          "category_priority": 280.0,
+          "priority": 75.0,
+          "complexity": 0,
+          "metabolism": 0,
+          "archites": 0
+        },
+        {
+          "defName": "FireSpew",
+          "label": "fire spew",
+          "path": "Art\\Rimworld art\\Genes\\Gene_Firespew.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Ability",
+          "category_priority": 520.0,
+          "priority": 0.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "FireResistant",
+          "label": "fire resistant",
+          "path": "Art\\Rimworld art\\Genes\\Gene_FireResistant.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "ResistanceAndWeakness",
+          "category_priority": 440.0,
+          "priority": 60.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "AptitudePoor_Cooking",
+          "label": "poor cooking",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Cooking\\Poor.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Aptitudes",
+          "category_priority": 200.0,
+          "priority": 4010,
+          "complexity": 1,
+          "metabolism": 1,
+          "archites": 0
+        }
+      ]
+    },
+    {
+      "skin": "XylSkin_DarkGreen",
+      "color": [
+        0.3176470588235294,
+        0.5176470588235295,
+        0.12549019607843137,
+        1.0
+      ],
+      "genes": [
+        {
+          "defName": "XylSkin_DarkGreen",
+          "label": "dark green skin",
+          "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+          "color": [
+            0.3176470588235294,
+            0.5176470588235295,
+            0.12549019607843137,
+            1.0
+          ],
+          "source": "mod",
+          "category": "Cosmetic_Skin",
+          "category_priority": 280.0,
+          "priority": 0.0,
+          "complexity": 0,
+          "metabolism": 0,
+          "archites": 0
+        },
+        {
+          "defName": "AcidSpray",
+          "label": "acid spray",
+          "path": "Art\\Rimworld art\\Genes\\Gene_AcidSpray.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Ability",
+          "category_priority": 520.0,
+          "priority": 0.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "ToxResist_Partial",
+          "label": "tox resistance",
+          "path": "Art\\Rimworld art\\Genes\\Gene_PartialToxicityResistance.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "ResistanceAndWeakness",
+          "category_priority": 440.0,
+          "priority": 0.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "AptitudeStrong_Shooting",
+          "label": "strong shooting",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Strong.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Aptitudes",
+          "category_priority": 200.0,
+          "priority": 20,
+          "complexity": 2,
+          "metabolism": -1,
+          "archites": 0
+        }
+      ]
+    },
+    {
+      "skin": "Skin_SheerWhite",
+      "color": [
+        0.9803921568627451,
+        0.9411764705882353,
+        0.9411764705882353,
+        1.0
+      ],
+      "genes": [
+        {
+          "defName": "Skin_SheerWhite",
+          "label": "sheer white skin",
+          "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+          "color": [
+            0.9803921568627451,
+            0.9411764705882353,
+            0.9411764705882353,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Cosmetic_Skin",
+          "category_priority": 280.0,
+          "priority": 93.0,
+          "complexity": 0,
+          "metabolism": 0,
+          "archites": 0
+        },
+        {
+          "defName": "FoamSpray",
+          "label": "foam spray",
+          "path": "Art\\Rimworld art\\Genes\\Gene_FoamSpray.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Ability",
+          "category_priority": 520.0,
+          "priority": 0.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "WoundHealing_Fast",
+          "label": "fast wound healing",
+          "path": "Art\\Rimworld art\\Genes\\Gene_WoundHealingRateFast.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Healing",
+          "category_priority": 500.0,
+          "priority": 40.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "AptitudeStrong_Medicine",
+          "label": "strong medicine",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Strong.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Aptitudes",
+          "category_priority": 200.0,
+          "priority": 9020,
+          "complexity": 2,
+          "metabolism": -1,
+          "archites": 0
+        }
+      ]
+    },
+    {
+      "skin": "XylSkin_DarkBlue",
+      "color": [
+        0.25882352941176473,
+        0.4,
+        0.5764705882352941,
+        1.0
+      ],
+      "genes": [
+        {
+          "defName": "XylSkin_DarkBlue",
+          "label": "dark blue skin",
+          "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+          "color": [
+            0.25882352941176473,
+            0.4,
+            0.5764705882352941,
+            1.0
+          ],
+          "source": "mod",
+          "category": "Cosmetic_Skin",
+          "category_priority": 280.0,
+          "priority": 0.0,
+          "complexity": 0,
+          "metabolism": 0,
+          "archites": 0
+        },
+        {
+          "defName": "XylEMPBurst",
+          "label": "EMP burst",
+          "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_EMPBurst.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "mod",
+          "category": "Ability",
+          "category_priority": 520.0,
+          "priority": 202.0,
+          "complexity": 1,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "Unstoppable",
+          "label": "unstoppable",
+          "path": "Art\\Rimworld art\\Genes\\Gene_Unstoppable.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Miscellaneous",
+          "category_priority": 270.0,
+          "priority": 550.0,
+          "complexity": 1,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "AptitudeStrong_Intellectual",
+          "label": "strong intellectual",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Strong.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Aptitudes",
+          "category_priority": 200.0,
+          "priority": 11020,
+          "complexity": 2,
+          "metabolism": -1,
+          "archites": 0
+        }
+      ]
+    },
+    {
+      "skin": "Skin_SlateGray",
+      "color": [
+        0.35294117647058826,
+        0.35294117647058826,
+        0.35294117647058826,
+        1.0
+      ],
+      "genes": [
+        {
+          "defName": "Skin_SlateGray",
+          "label": "slate gray skin",
+          "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+          "color": [
+            0.35294117647058826,
+            0.35294117647058826,
+            0.35294117647058826,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Cosmetic_Skin",
+          "category_priority": 280.0,
+          "priority": 97.0,
+          "complexity": 0,
+          "metabolism": 0,
+          "archites": 0
+        },
+        {
+          "defName": "XylOilSpray",
+          "label": "oil spray",
+          "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_OilSpray.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "mod",
+          "category": "Ability",
+          "category_priority": 520.0,
+          "priority": 202.0,
+          "complexity": 1,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "Robust",
+          "label": "robust",
+          "path": "Art\\Rimworld art\\Genes\\Gene_Tough.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Pain",
+          "category_priority": 410.0,
+          "priority": 10.0,
+          "complexity": 0,
+          "metabolism": -2,
+          "archites": 0
+        },
+        {
+          "defName": "AptitudeStrong_Melee",
+          "label": "strong melee",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Melee\\Strong.png",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "source": "vanilla",
+          "category": "Aptitudes",
+          "category_priority": 200.0,
+          "priority": 1020,
+          "complexity": 2,
+          "metabolism": -1,
+          "archites": 0
+        }
+      ]
     }
   ]
 }

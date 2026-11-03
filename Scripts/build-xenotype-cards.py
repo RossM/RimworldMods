@@ -14,6 +14,8 @@ from CONTENT.md because Workshop positioning is an editorial choice. Shared art
 and inheritance handling in gene_art.py keeps both renderers' interpretations consistent.
 Definitions represent this mod's standalone configuration, including Royalty,
 without loading other installed mods. Totals precede random or lineage additions.
+Scaleborn's alternative lineage packages are shown separately so they cannot be
+mistaken for traits every scaleborn receives; the package trigger icon is omitted.
 
 PNG/SVG cards, diagnostic JSON snapshots, a review gallery, and a ZIP bundle go to
 Art/Workshop/Mockups/. Cutouts retain their original in-game canvas alignment.
@@ -91,10 +93,26 @@ class GeneLayout:
     bottom: int
 
 
+@dataclass(frozen=True)
+class Lineage:
+    skin: Gene
+    traits: tuple[Gene, ...]
+
+    @property
+    def genes(self):
+        # The color at the left identifies the whole package. The remaining
+        # icons retain game order, consistent with the shared gene lists.
+        return (self.skin, *self.traits)
+
+
 # Reserve consistent bands so cards can be compared without groups moving around
 # with every gene count. Unlabeled 52px/32px icons remain readable at page scale.
 FEATURED_GENE_LAYOUT = GeneLayout(max_columns=5, icon_size=52, row_gap=12, top=78, bottom=194)
 SUPPORTING_GENE_LAYOUT = GeneLayout(max_columns=10, icon_size=32, row_gap=10, top=214, bottom=330)
+# Compress only Scaleborn's shared list to leave room for the five alternatives.
+SCALEBORN_GENES_RIGHT = 410
+SCALEBORN_FEATURED_LAYOUT = GeneLayout(max_columns=3, icon_size=52, row_gap=12, top=78, bottom=194)
+SCALEBORN_SUPPORTING_LAYOUT = GeneLayout(max_columns=5, icon_size=32, row_gap=10, top=214, bottom=330)
 
 
 class GeneLibrary:
@@ -143,6 +161,29 @@ class GeneLibrary:
 
     def value(self, definition, field):
         return inherited_text(definition, field, self.parents.get(definition.tag, {}))
+
+    def scaleborn_lineages(self):
+        # Follow the trigger's maker reference rather than copying package lists
+        # or colors into presentation config: edits to the mod must appear here.
+        trigger = self.genes["XylScalebornLineage"]
+        maker_name = trigger.findtext("modExtensions/li/comps/li/maker")
+        maker = next(d for d in self.definitions
+                     if d.tag == "Xylib.GeneSetMakerDef" and d.findtext("defName") == maker_name)
+        lineages = []
+        for option in maker.findall("root/options/li/maker"):
+            if option.get("Class") != "Xylib.GeneSetMaker_List":
+                raise ValueError("Scaleborn lineage cards require explicit gene packages")
+            genes = [self.gene(item.text.strip()) for item in option.findall("genes/li")]
+            skins = [g for g in genes if g.defName in self.genes
+                     and self.value(self.genes[g.defName], "skinColorOverride")]
+            if len(genes) != 4 or len(skins) != 1:
+                raise ValueError("Each lineage row needs one skin color and three traits")
+            skin = skins[0]
+            lineages.append(Lineage(skin, tuple(sorted(
+                (g for g in genes if g != skin), key=lambda g: g.sort_key))))
+        if not lineages:
+            raise ValueError("No Scaleborn lineage packages found")
+        return lineages
 
     def gene(self, name):
         definition = self.genes.get(name)
@@ -242,7 +283,13 @@ def build_card(library, def_name, descriptor):
     sorted_genes = sorted(genes, key=lambda gene: gene.sort_key)
     featured_genes = [gene for gene in sorted_genes if gene.featured]
     supporting_genes = [gene for gene in sorted_genes if not gene.featured]
-    ordered = featured_genes + supporting_genes
+    base_genes = featured_genes + supporting_genes
+    is_scaleborn = def_name == "XylScaleborn"
+    lineages = library.scaleborn_lineages() if is_scaleborn else []
+    if is_scaleborn:
+        # The actual packages now explain this gene. Hiding its proxy icon is a
+        # presentation choice; keep it in the defined genes used for the totals.
+        featured_genes = [gene for gene in featured_genes if gene.defName != "XylScalebornLineage"]
     complexity = sum(g.complexity for g in genes)
     metabolism = sum(g.metabolism for g in genes)
     portrait = ROOT / "Art/Cutouts/Processed" / (name + "_South.png")
@@ -283,16 +330,27 @@ def build_card(library, def_name, descriptor):
     picture(portrait, character_x, character_y, width * character_scale, height * character_scale)
 
     positions = []
-    gene_index = 0
-    gene_groups = [("featured", featured_genes, FEATURED_GENE_LAYOUT),
-                   ("supporting", supporting_genes, SUPPORTING_GENE_LAYOUT)]
+    filters = []
+
+    def gene_icon(gene, cx, y, size, group):
+        tint = f"tint{len(filters)}"
+        r, g, b, a = gene.color
+        filters.append(f'<filter id="{tint}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
+        picture(ART / "Genes/GeneBackground_Endogene.png", cx - size / 2, y, size, size)
+        picture(gene.path, cx - size / 2, y, size, size, f'filter="url(#{tint})"')
+        positions.append(dict(defName=gene.defName, group=group, x=cx, y=y, size=size))
+
+    genes_right = SCALEBORN_GENES_RIGHT if is_scaleborn else GENES_RIGHT
+    gene_groups = [
+        ("featured", featured_genes, SCALEBORN_FEATURED_LAYOUT if is_scaleborn else FEATURED_GENE_LAYOUT),
+        ("supporting", supporting_genes, SCALEBORN_SUPPORTING_LAYOUT if is_scaleborn else SUPPORTING_GENE_LAYOUT)]
     if featured_genes and supporting_genes:
-        parts.append(f'<path d="M{GENES_LEFT} 204H{GENES_RIGHT}" stroke="#51515a" stroke-width="1"/>')
+        parts.append(f'<path d="M{GENES_LEFT} 204H{genes_right}" stroke="#51515a" stroke-width="1"/>')
     for group_name, group, style in gene_groups:
         if not group:
             continue
-        spacing = (GENES_RIGHT - GENES_LEFT) / style.max_columns
-        group_center = (GENES_LEFT + GENES_RIGHT) / 2
+        spacing = (genes_right - GENES_LEFT) / style.max_columns
+        group_center = (GENES_LEFT + genes_right) / 2
         rows = balanced_rows(group, style.max_columns)
         group_height = len(rows) * style.icon_size + (len(rows) - 1) * style.row_gap
         if group_height > style.bottom - style.top:
@@ -301,20 +359,30 @@ def build_card(library, def_name, descriptor):
         for row in rows:
             for col, gene in enumerate(row):
                 cx = group_center + (col - (len(row) - 1) / 2) * spacing
-                icon_left = cx - style.icon_size / 2
-                picture(ART / "Genes/GeneBackground_Endogene.png", icon_left, y, style.icon_size, style.icon_size)
-                picture(gene.path, icon_left, y, style.icon_size, style.icon_size, f'filter="url(#tint{gene_index})"')
-                positions.append(dict(defName=gene.defName, group=group_name,
-                                      x=cx, y=y, size=style.icon_size))
-                gene_index += 1
+                gene_icon(gene, cx, y, style.icon_size, group_name)
             y += style.icon_size + style.row_gap
-    filters = []
-    for i, gene in enumerate(ordered):
-        r, g, b, a = gene.color
-        filters.append(f'<filter id="tint{i}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
+
+    # Separate colored boxes express mutually exclusive packages. The first icon
+    # identifies the skin color without needing another text label.
+    lineage_top, lineage_bottom = 76, 326
+    row_height, icon_size = 42, 32
+    if lineages and len(lineages) * row_height > lineage_bottom - lineage_top:
+        raise ValueError("Scaleborn lineage rows exceed the card")
+    row_gap = ((lineage_bottom - lineage_top - len(lineages) * row_height)
+               / max(1, len(lineages) - 1))
+    for row_index, lineage in enumerate(lineages):
+        y = lineage_top + row_index * (row_height + row_gap)
+        rgb = tuple(round(channel * 255) for channel in lineage.skin.color[:3])
+        border = tuple(round((channel * 0.65 + 0.35) * 255) for channel in lineage.skin.color[:3])
+        parts.append(f'<rect x="430" y="{y}" width="184" height="{row_height}" rx="7" fill="rgb{rgb}" fill-opacity=".18" stroke="rgb{border}" stroke-opacity=".7"/>')
+        for col, gene in enumerate(lineage.genes):
+            gene_icon(gene, 450 + col * 48, y + 5, icon_size, f"lineage:{lineage.skin.defName}")
+
+    lineage_description = (" Shared genes on the left; five alternative lineage packages on the right, "
+                           "with skin colors first inside each box." if lineages else "")
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{CARD_WIDTH}" height="{CARD_HEIGHT}" viewBox="0 0 {CARD_WIDTH} {CARD_HEIGHT}">',
            f'<title>{escape(name)} — {escape(descriptor)}</title>',
-           f'<desc>Complexity {complexity}; metabolism {metabolism}. New functional genes above vanilla, cosmetic, and psycast genes. Each group is sorted by category priority descending, gene priority ascending, and label alphabetically.</desc>',
+           f'<desc>Complexity {complexity}; metabolism {metabolism}. New functional genes above vanilla, cosmetic, and psycast genes. Each group is sorted by category priority descending, gene priority ascending, and label alphabetically.{lineage_description}</desc>',
            '<defs><radialGradient id="portrait-glow"><stop stop-color="#a99bbb" stop-opacity=".16"/><stop offset="1" stop-color="#a99bbb" stop-opacity="0"/></radialGradient>',
            '<linearGradient id="surface" x2="0" y2="1"><stop stop-color="#2b2e33"/><stop offset="1" stop-color="#202226"/></linearGradient>',
            *filters, '</defs>',
@@ -331,8 +399,12 @@ def build_card(library, def_name, descriptor):
                                           scale_per_original_pixel=CHARACTER_SCALE,
                                           visible_bounds=[left, top, right, bottom]),
                     totals_scope="Defined xenotype genes before random or lineage additions; Royalty included.",
-                    genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT))) for gene in ordered],
+                    genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT))) for gene in base_genes],
                     layout=positions)
+    if lineages:
+        manifest["lineages"] = [dict(skin=lineage.skin.defName, color=lineage.skin.color,
+                                    genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT)))
+                                           for gene in lineage.genes]) for lineage in lineages]
     write_text(OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
     render_png(["-background", "none", str(svg_path)], png_path)
     with Image.open(png_path) as saved:
