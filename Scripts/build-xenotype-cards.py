@@ -337,6 +337,9 @@ def build_card(library, def_name, descriptor):
     featured_genes = [gene for gene in featured_genes if gene.defName != hidden_trigger]
     complexity = sum(g.complexity for g in genes)
     metabolism = sum(g.metabolism for g in genes)
+    inheritable = (library.value(xenotype, "inheritable") or "false").lower() == "true"
+    background_type = "Endogene" if inheritable else "Xenogene"
+    gene_background = ART / "Genes" / f"GeneBackground_{background_type}.png"
     portrait = ROOT / "Art/Cutouts/Processed" / (name + "_South.png")
     if not portrait.is_file():
         portrait = ROOT / "Art/Cutouts" / (name + "_South.png")
@@ -389,7 +392,7 @@ def build_card(library, def_name, descriptor):
         tint = f"tint{len(filters)}"
         r, g, b, a = gene.color
         filters.append(f'<filter id="{tint}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
-        picture(ART / "Genes/GeneBackground_Endogene.png", cx - size / 2, y, size, size)
+        picture(gene_background, cx - size / 2, y, size, size)
         picture(gene.path, cx - size / 2, y, size, size, f'filter="url(#{tint})"')
         positions.append(dict(defName=gene.defName, group=group, x=cx, y=y, size=size))
 
