@@ -71,4 +71,4 @@ Minor xenotypes are found as rare members of other factions or in random events.
 
 ## Configuration
 
-* Xenotype selection: You can enable and disable xenotypes, even base game ones, in the mod settings. This is safe to do in a running game but won't change characters or factions already in the game.
+* Xenotype selection: You can enable and disable xenotypes, even base game ones, in the mod settings. This is safe to do in an existing save but won't change characters or factions already in the game. Requires restart to take effect.
