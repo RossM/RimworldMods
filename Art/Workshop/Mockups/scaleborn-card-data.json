@@ -2,8 +2,8 @@
   "defName": "XylScaleborn",
   "xenotype": "Scaleborn",
   "descriptor": "Draconic warriors",
-  "complexity": 14,
-  "metabolism": 0,
+  "complexity": 12,
+  "metabolism": -1,
   "width": 1700,
   "height": 1000,
   "character": "Art\\Cutouts\\Processed\\Scaleborn_South.png",
@@ -60,24 +60,6 @@
       "archites": 0
     },
     {
-      "defName": "XylTorpor",
-      "label": "torpor",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Torpor.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 100.0,
-      "complexity": 1,
-      "metabolism": 2,
-      "archites": 0
-    },
-    {
       "defName": "XylLargeHorns",
       "label": "large horns",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LargeHorns.png",
@@ -91,24 +73,6 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 110.0,
-      "complexity": 1,
-      "metabolism": -1,
-      "archites": 0
-    },
-    {
-      "defName": "XylRetractableClaws",
-      "label": "retractable claws",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_RetractableClaws.png",
-      "color": [
-        0.75,
-        0.75,
-        0.75,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Violence",
-      "category_priority": 430.0,
-      "priority": 111.0,
       "complexity": 1,
       "metabolism": -1,
       "archites": 0
@@ -186,24 +150,6 @@
       "archites": 0
     },
     {
-      "defName": "PsychicAbility_Dull",
-      "label": "psychically dull",
-      "path": "Art\\Rimworld art\\Genes\\Gene_PsychicallyDull.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Psychic",
-      "category_priority": 490.0,
-      "priority": 10.0,
-      "complexity": 0,
-      "metabolism": 1,
-      "archites": 0
-    },
-    {
       "defName": "MoveSpeed_Slow",
       "label": "slow runner",
       "path": "Art\\Rimworld art\\Genes\\Gene_SlowMovespeed.png",
@@ -219,24 +165,6 @@
       "priority": 0.0,
       "complexity": 0,
       "metabolism": 3,
-      "archites": 0
-    },
-    {
-      "defName": "MinTemp_SmallDecrease",
-      "label": "cold tolerant",
-      "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Temperature",
-      "category_priority": 450.0,
-      "priority": 10.0,
-      "complexity": 0,
-      "metabolism": -1,
       "archites": 0
     },
     {
@@ -387,7 +315,7 @@
   "layout": [
     {
       "defName": "XylCarnivoreStomach",
-      "x": 597.6,
+      "x": 715.2,
       "y": 292,
       "size": 112,
       "label_lines": 1,
@@ -395,15 +323,7 @@
     },
     {
       "defName": "XylGreedy",
-      "x": 832.8,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
-    },
-    {
-      "defName": "XylTorpor",
-      "x": 1068.0,
+      "x": 950.4,
       "y": 292,
       "size": 112,
       "label_lines": 1,
@@ -411,15 +331,7 @@
     },
     {
       "defName": "XylLargeHorns",
-      "x": 1303.2,
-      "y": 292,
-      "size": 112,
-      "label_lines": 1,
-      "label_bottom": 441
-    },
-    {
-      "defName": "XylRetractableClaws",
-      "x": 1538.4,
+      "x": 1185.6,
       "y": 292,
       "size": 112,
       "label_lines": 1,
@@ -427,15 +339,15 @@
     },
     {
       "defName": "XylLineageInheritance",
-      "x": 715.2,
-      "y": 463,
+      "x": 1420.8,
+      "y": 292,
       "size": 112,
       "label_lines": 1,
-      "label_bottom": 612
+      "label_bottom": 441
     },
     {
       "defName": "XylTail_Lizard",
-      "x": 950.4,
+      "x": 832.8,
       "y": 463,
       "size": 112,
       "label_lines": 1,
@@ -443,7 +355,7 @@
     },
     {
       "defName": "XylScaleskin",
-      "x": 1185.6,
+      "x": 1068.0,
       "y": 463,
       "size": 112,
       "label_lines": 1,
@@ -451,39 +363,23 @@
     },
     {
       "defName": "XylScalebornLineage",
-      "x": 1420.8,
+      "x": 1303.2,
       "y": 463,
       "size": 112,
       "label_lines": 1,
       "label_bottom": 612
     },
     {
-      "defName": "PsychicAbility_Dull",
-      "x": 774.0,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
-    },
-    {
       "defName": "MoveSpeed_Slow",
-      "x": 891.6,
+      "x": 597.6,
       "y": 693,
       "size": 64,
       "label_lines": 1,
       "label_bottom": 786
     },
     {
-      "defName": "MinTemp_SmallDecrease",
-      "x": 1009.2,
-      "y": 693,
-      "size": 64,
-      "label_lines": 2,
-      "label_bottom": 808
-    },
-    {
       "defName": "MaxTemp_SmallIncrease",
-      "x": 1126.8,
+      "x": 715.2,
       "y": 693,
       "size": 64,
       "label_lines": 2,
@@ -491,7 +387,7 @@
     },
     {
       "defName": "Aggression_Aggressive",
-      "x": 1244.4,
+      "x": 832.8,
       "y": 693,
       "size": 64,
       "label_lines": 1,
@@ -499,7 +395,7 @@
     },
     {
       "defName": "MeleeDamage_Strong",
-      "x": 1362.0,
+      "x": 950.4,
       "y": 693,
       "size": 64,
       "label_lines": 3,
@@ -507,43 +403,43 @@
     },
     {
       "defName": "Sleepy",
-      "x": 832.8,
-      "y": 852,
+      "x": 1068.0,
+      "y": 693,
       "size": 64,
       "label_lines": 1,
-      "label_bottom": 945
+      "label_bottom": 786
     },
     {
       "defName": "Hair_BaldOnly",
-      "x": 950.4,
-      "y": 852,
+      "x": 1185.6,
+      "y": 693,
       "size": 64,
       "label_lines": 1,
-      "label_bottom": 945
+      "label_bottom": 786
     },
     {
       "defName": "Beard_NoBeardOnly",
-      "x": 1068.0,
-      "y": 852,
+      "x": 1303.2,
+      "y": 693,
       "size": 64,
       "label_lines": 1,
-      "label_bottom": 945
+      "label_bottom": 786
     },
     {
       "defName": "FacialRidges",
-      "x": 1185.6,
-      "y": 852,
+      "x": 1420.8,
+      "y": 693,
       "size": 64,
       "label_lines": 1,
-      "label_bottom": 945
+      "label_bottom": 786
     },
     {
       "defName": "AptitudeTerrible_Cooking",
-      "x": 1303.2,
-      "y": 852,
+      "x": 1538.4,
+      "y": 693,
       "size": 64,
       "label_lines": 2,
-      "label_bottom": 967
+      "label_bottom": 808
     }
   ]
 }
