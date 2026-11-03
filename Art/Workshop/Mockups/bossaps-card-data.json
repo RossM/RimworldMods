@@ -1,0 +1,549 @@
+{
+  "defName": "XylBossaps",
+  "xenotype": "Bossaps",
+  "descriptor": "Sentient livestock",
+  "complexity": 11,
+  "metabolism": 1,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Bossaps_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      181,
+      63,
+      578,
+      606
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylHerbivoreStomach",
+      "label": "herbivore stomach",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_HerbivoreStomach.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 101.0,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylHerdInstinct",
+      "label": "herd instinct",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_HerdInstinct.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 110.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylLargeHorns",
+      "label": "large horns",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LargeHorns.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 110.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylSeeingRed",
+      "label": "seeing red",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_SeeingRed.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 4,
+      "archites": 0
+    },
+    {
+      "defName": "XylDocile",
+      "label": "docile",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Docile.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 5.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylPainReversal",
+      "label": "pain reversal",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_PainReversal.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Pain",
+      "category_priority": 410.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylGender_UsuallyFemale",
+      "label": "usually female",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_UsuallyFemale.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 301.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylHyperlactation",
+      "label": "hyperlactation",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Hyperlactation.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_Cow",
+      "label": "cow ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_CowEars.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 72.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MinTemp_SmallDecrease",
+      "label": "cold tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Robust",
+      "label": "robust",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Tough.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Pain",
+      "category_priority": 410.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "Fertile",
+      "label": "fertile",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Fertile.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 110.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_LongOnly",
+      "label": "long-haired",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleLongOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 57.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Hulk",
+      "label": "hulk body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyHulk.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Fat",
+      "label": "fat body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyFat.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 20.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Standard",
+      "label": "standard body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyStandard.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Nearsighted",
+      "label": "nearsighted",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Nearsighted.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "label": "strong plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 5020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Cooking",
+      "label": "poor cooking",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Cooking\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 4010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylHerbivoreStomach",
+      "x": 597.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylHerdInstinct",
+      "x": 832.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylLargeHorns",
+      "x": 1068.0,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylSeeingRed",
+      "x": 1303.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylDocile",
+      "x": 1538.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylPainReversal",
+      "x": 715.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylGender_UsuallyFemale",
+      "x": 950.4,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylHyperlactation",
+      "x": 1185.6,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylEars_Cow",
+      "x": 1420.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "x": 774.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MinTemp_SmallDecrease",
+      "x": 891.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Robust",
+      "x": 1009.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Fertile",
+      "x": 1126.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Hair_LongOnly",
+      "x": 1244.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Body_Hulk",
+      "x": 1362.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Body_Fat",
+      "x": 832.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "Body_Standard",
+      "x": 950.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Nearsighted",
+      "x": 1068.0,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "x": 1185.6,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Cooking",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    }
+  ]
+}

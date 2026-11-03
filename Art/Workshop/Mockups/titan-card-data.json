@@ -1,0 +1,601 @@
+{
+  "defName": "XylTitan",
+  "xenotype": "Titan",
+  "descriptor": "Engineered rock giants",
+  "complexity": 19,
+  "metabolism": -2,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Titan_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      157,
+      110,
+      608,
+      692
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylRockToss",
+      "label": "rock toss",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_RockToss.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Ability",
+      "category_priority": 520.0,
+      "priority": 203.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylPetrification",
+      "label": "petrification",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Petrification.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 210.0,
+      "complexity": 1,
+      "metabolism": 4,
+      "archites": 0
+    },
+    {
+      "defName": "XylJoyless",
+      "label": "joyless",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Joyless.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 1100.0,
+      "complexity": 2,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylLithoid",
+      "label": "lithoid",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Lithoid.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 250.0,
+      "complexity": 2,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylHair_BaldOnly_Male",
+      "label": "bald males",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_HairStyleBaldOnlyMale.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 57.4,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylRockskin",
+      "label": "rockskin",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Rockskin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 460.0,
+      "complexity": 2,
+      "metabolism": -4,
+      "archites": 0
+    },
+    {
+      "defName": "XylGiant",
+      "label": "giant",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Giant.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 1.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylLearning_Focused",
+      "label": "focused",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Focused.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 36.0,
+      "complexity": 2,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylSuperSpecialist",
+      "label": "super-specialist",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_SuperSpecialist.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylRandom",
+      "category_priority": 210.0,
+      "priority": 202.0,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "Superclotting",
+      "label": "superclotting",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Superclotting.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 100.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "WoundHealing_Slow",
+      "label": "slow wound healing",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WoundHealingRateSlow.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "Immunity_SuperStrong",
+      "label": "super immunity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SuperStrongImmunity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 20.0,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "PsychicAbility_Deaf",
+      "label": "psychically deaf",
+      "path": "Art\\Rimworld art\\Genes\\Gene_PsychicallyDeaf.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Psychic",
+      "category_priority": 490.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "MoveSpeed_Slow",
+      "label": "slow runner",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SlowMovespeed.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Movement",
+      "category_priority": 470.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "ToxResist_Total",
+      "label": "tox immunity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_TotalToxicityResistance.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 10.0,
+      "complexity": 2,
+      "metabolism": -4,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "label": "strong melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "Sterile",
+      "label": "sterile",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Sterile.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 100.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "Beauty_Ugly",
+      "label": "unattractive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Ugly.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Beauty",
+      "category_priority": 310.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "label": "beardless",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 65.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Hulk",
+      "label": "hulk body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyHulk.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "label": "poor intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Social",
+      "label": "poor social",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 10010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylRockToss",
+      "x": 597.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylPetrification",
+      "x": 832.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylJoyless",
+      "x": 1068.0,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylLithoid",
+      "x": 1303.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylHair_BaldOnly_Male",
+      "x": 1538.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylRockskin",
+      "x": 715.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylGiant",
+      "x": 950.4,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylLearning_Focused",
+      "x": 1185.6,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylSuperSpecialist",
+      "x": 1420.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "Superclotting",
+      "x": 715.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "WoundHealing_Slow",
+      "x": 832.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Immunity_SuperStrong",
+      "x": 950.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "PsychicAbility_Deaf",
+      "x": 1068.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MoveSpeed_Slow",
+      "x": 1185.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "ToxResist_Total",
+      "x": 1303.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "x": 1420.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 3,
+      "label_bottom": 830
+    },
+    {
+      "defName": "Sterile",
+      "x": 774.0,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Beauty_Ugly",
+      "x": 891.6,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "x": 1009.2,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Body_Hulk",
+      "x": 1126.8,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "x": 1244.4,
+      "y": 852,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 967
+    },
+    {
+      "defName": "AptitudePoor_Social",
+      "x": 1362.0,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    }
+  ]
+}

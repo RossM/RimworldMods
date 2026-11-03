@@ -1,0 +1,601 @@
+{
+  "defName": "XylZeegee",
+  "xenotype": "Zeegee",
+  "descriptor": "High-tech spacers",
+  "complexity": 13,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Zeegee_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      261,
+      114,
+      508,
+      606
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylPlanetSickness",
+      "label": "planet sickness",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_PlanetSickness.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 220.0,
+      "complexity": 1,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "XylEmergencyReserves",
+      "label": "emergency reserves",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_EmergencyReserves.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 90.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylForeheadMark",
+      "label": "forehead mark",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_ForeheadMark.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 502.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylSkin_DarkSilver",
+      "label": "dark silver skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.4,
+        0.45098039215686275,
+        0.4980392156862745,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylSkin_LightSilver",
+      "label": "light silver skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.6274509803921569,
+        0.7058823529411765,
+        0.7843137254901961,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylTechAffinity",
+      "label": "tech affinity",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TechAffinity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 1100.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylTelescopicVision",
+      "label": "telescopic vision",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TelescopicVision.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 51.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "Immunity_Weak",
+      "label": "weak immunity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WeakImmunity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Weak",
+      "label": "weak melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WeakMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "Delicate",
+      "label": "delicate",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Delicate.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Pain",
+      "category_priority": 410.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_ShortOnly",
+      "label": "short-haired",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleShortOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 55.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_DarkBlack",
+      "label": "dark-black hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.2,
+        0.2,
+        0.2,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 120.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_Gray",
+      "label": "gray hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.65,
+        0.65,
+        0.65,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_SnowWhite",
+      "label": "snow-white hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.9803921568627451,
+        0.9803921568627451,
+        0.9803921568627451,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "CaveDweller",
+      "label": "indoor dweller",
+      "path": "Art\\Rimworld art\\Genes\\Gene_CaveDweller.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "DarkVision",
+      "label": "dark vision",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Darkvision.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Learning_Fast",
+      "label": "quick study",
+      "path": "Art\\Rimworld art\\Genes\\Gene_FastLearning.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 35.0,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "MoveSpeed_Space",
+      "label": "low gravity adapted",
+      "path": "Art\\Rimworld art\\Genes\\Gene_LowGravityAdapted.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 20.0,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Intellectual",
+      "label": "strong intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Animals",
+      "label": "poor animals",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 6010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Melee",
+      "label": "poor melee",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Melee\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 1010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Shooting",
+      "label": "strong shooting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 20,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylPlanetSickness",
+      "x": 715.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylEmergencyReserves",
+      "x": 950.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylForeheadMark",
+      "x": 1185.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylSkin_DarkSilver",
+      "x": 1420.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylSkin_LightSilver",
+      "x": 832.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylTechAffinity",
+      "x": 1068.0,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylTelescopicVision",
+      "x": 1303.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "Immunity_Weak",
+      "x": 656.4000000000001,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MeleeDamage_Weak",
+      "x": 774.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Delicate",
+      "x": 891.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Hair_ShortOnly",
+      "x": 1009.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Hair_DarkBlack",
+      "x": 1126.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Hair_Gray",
+      "x": 1244.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Hair_SnowWhite",
+      "x": 1362.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "CaveDweller",
+      "x": 1479.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "DarkVision",
+      "x": 715.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "Learning_Fast",
+      "x": 832.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "MoveSpeed_Space",
+      "x": 950.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeStrong_Intellectual",
+      "x": 1068.0,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Animals",
+      "x": 1185.6,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Melee",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudeStrong_Shooting",
+      "x": 1420.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    }
+  ]
+}

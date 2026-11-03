@@ -1,0 +1,575 @@
+{
+  "defName": "XylWarcat",
+  "xenotype": "Warcat",
+  "descriptor": "Carnivorous hunters",
+  "complexity": 10,
+  "metabolism": 1,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Warcat_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      263,
+      115,
+      506,
+      634
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylMeatDependence",
+      "label": "meat dependence",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_MeatDependence.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "XylCarnivoreStomach",
+      "label": "carnivore stomach",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_CarnivoreStomach.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylFeralRage",
+      "label": "feral rage",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_FeralRage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Ability",
+      "category_priority": 520.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylMoody",
+      "label": "moody",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Moody.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 101.0,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylFastReflexes",
+      "label": "fast reflexes",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_FastReflexes.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 120.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylRetractableClaws",
+      "label": "retractable claws",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_RetractableClaws.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 111.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylFacialStripes",
+      "label": "facial stripes",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_FacialStripes.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 501.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylEyes_Yellow",
+      "label": "yellow eyes",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_YellowEyes.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 0.1,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "label": "strong melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "Aggression_HyperAggressive",
+      "label": "hyper-aggressive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HyperAggressive.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 20.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "Sleepy",
+      "label": "sleepy",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Sleepy.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Sleep",
+      "category_priority": 420.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "Libido_High",
+      "label": "high libido",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HighLibido.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Ears_Cat",
+      "label": "cat ears",
+      "path": "Art\\Rimworld art\\Genes\\Gene_EarCat.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "label": "beardless",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 65.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_LongOnly",
+      "label": "long-haired",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleLongOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 57.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Thin",
+      "label": "thin body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyThin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Standard",
+      "label": "standard body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyStandard.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "DarkVision",
+      "label": "dark vision",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Darkvision.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Crafting",
+      "label": "poor crafting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Crafting\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 7010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Plants",
+      "label": "poor plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 5010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Melee",
+      "label": "great melee",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Melee\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 1030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylMeatDependence",
+      "x": 715.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylCarnivoreStomach",
+      "x": 950.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylFeralRage",
+      "x": 1185.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylMoody",
+      "x": 1420.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylFastReflexes",
+      "x": 715.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylRetractableClaws",
+      "x": 950.4,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylFacialStripes",
+      "x": 1185.6,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylEyes_Yellow",
+      "x": 1420.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "x": 715.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 3,
+      "label_bottom": 830
+    },
+    {
+      "defName": "Aggression_HyperAggressive",
+      "x": 832.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Sleepy",
+      "x": 950.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Libido_High",
+      "x": 1068.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Ears_Cat",
+      "x": 1185.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "x": 1303.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Hair_LongOnly",
+      "x": 1420.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Body_Thin",
+      "x": 774.0,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Body_Standard",
+      "x": 891.6,
+      "y": 852,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 967
+    },
+    {
+      "defName": "DarkVision",
+      "x": 1009.2,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Crafting",
+      "x": 1126.8,
+      "y": 852,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 967
+    },
+    {
+      "defName": "AptitudePoor_Plants",
+      "x": 1244.4,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeRemarkable_Melee",
+      "x": 1362.0,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    }
+  ]
+}

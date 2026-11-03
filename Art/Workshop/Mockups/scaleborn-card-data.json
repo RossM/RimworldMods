@@ -1,0 +1,549 @@
+{
+  "defName": "XylScaleborn",
+  "xenotype": "Scaleborn",
+  "descriptor": "Draconic warriors",
+  "complexity": 14,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Scaleborn_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      248,
+      116,
+      520,
+      581
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylCarnivoreStomach",
+      "label": "carnivore stomach",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_CarnivoreStomach.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "XylGreedy",
+      "label": "greedy",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Greedy.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 101.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylTorpor",
+      "label": "torpor",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Torpor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylRetractableClaws",
+      "label": "retractable claws",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_RetractableClaws.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 111.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylLargeHorns",
+      "label": "large horns",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LargeHorns.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 110.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylLineageInheritance",
+      "label": "lineage inheritance",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LineageInheritance.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 410.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylTail_Lizard",
+      "label": "lizard tail",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TailLizard.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Tails",
+      "category_priority": 314.59,
+      "priority": 1004.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylScaleskin",
+      "label": "scaleskin",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Scaleskin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 450.0,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "XylScalebornLineage",
+      "label": "scaleborn lineage",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_ScalebornLineage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylRandom",
+      "category_priority": 210.0,
+      "priority": 300.0,
+      "complexity": 4,
+      "metabolism": -5,
+      "archites": 0
+    },
+    {
+      "defName": "PsychicAbility_Dull",
+      "label": "psychically dull",
+      "path": "Art\\Rimworld art\\Genes\\Gene_PsychicallyDull.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Psychic",
+      "category_priority": 490.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "MoveSpeed_Slow",
+      "label": "slow runner",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SlowMovespeed.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Movement",
+      "category_priority": 470.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MinTemp_SmallDecrease",
+      "label": "cold tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "label": "strong melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "Aggression_Aggressive",
+      "label": "aggressive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Aggressive.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "Sleepy",
+      "label": "sleepy",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Sleepy.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Sleep",
+      "category_priority": 420.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "FacialRidges",
+      "label": "facial ridges",
+      "path": "Art\\Rimworld art\\Genes\\Gene_FacialRidges.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 500.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "label": "beardless",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 65.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_BaldOnly",
+      "label": "no hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeTerrible_Cooking",
+      "label": "awful cooking",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Cooking\\Terrible.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 4000,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylCarnivoreStomach",
+      "x": 597.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylGreedy",
+      "x": 832.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylTorpor",
+      "x": 1068.0,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylRetractableClaws",
+      "x": 1303.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylLargeHorns",
+      "x": 1538.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylLineageInheritance",
+      "x": 715.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylTail_Lizard",
+      "x": 950.4,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylScaleskin",
+      "x": 1185.6,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylScalebornLineage",
+      "x": 1420.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "PsychicAbility_Dull",
+      "x": 774.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MoveSpeed_Slow",
+      "x": 891.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "x": 1009.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MinTemp_SmallDecrease",
+      "x": 1126.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MeleeDamage_Strong",
+      "x": 1244.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 3,
+      "label_bottom": 830
+    },
+    {
+      "defName": "Aggression_Aggressive",
+      "x": 1362.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Sleepy",
+      "x": 832.8,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "FacialRidges",
+      "x": 950.4,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "x": 1068.0,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Hair_BaldOnly",
+      "x": 1185.6,
+      "y": 852,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeTerrible_Cooking",
+      "x": 1303.2,
+      "y": 852,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 967
+    }
+  ]
+}

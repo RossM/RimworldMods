@@ -1,0 +1,497 @@
+{
+  "defName": "XylSteadling",
+  "xenotype": "Steadling",
+  "descriptor": "Hardy generalists",
+  "complexity": 13,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Steadling_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      235,
+      91,
+      535,
+      608
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylStoic",
+      "label": "stoic",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Stoic.png",
+      "color": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 100.0,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylDrugSensitive",
+      "label": "drug sensitive",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_DrugSensitive.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_Cow",
+      "label": "cow ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_CowEars.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 72.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylLearning_Generalist",
+      "label": "generalist",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Generalist.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 37.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylIndustrious",
+      "label": "industrious",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Industrious.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 25.0,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "StrongStomach",
+      "label": "strong stomach",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongStomach.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 9.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Immunity_Strong",
+      "label": "strong immunity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongImmunity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "PsychicAbility_Dull",
+      "label": "psychically dull",
+      "path": "Art\\Rimworld art\\Genes\\Gene_PsychicallyDull.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Psychic",
+      "category_priority": 490.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MinTemp_SmallDecrease",
+      "label": "cold tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallDecrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Ears_Cat",
+      "label": "cat ears",
+      "path": "Art\\Rimworld art\\Genes\\Gene_EarCat.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Ears_Floppy",
+      "label": "floppy ears",
+      "path": "Art\\Rimworld art\\Genes\\Gene_EarFloppy.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Ears_Pig",
+      "label": "pig ears",
+      "path": "Art\\Rimworld art\\Genes\\Gene_EarPig.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeTerrible_Intellectual",
+      "label": "awful intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Terrible.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11000,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeTerrible_Artistic",
+      "label": "awful artistic",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Artistic\\Terrible.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 8000,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Animals",
+      "label": "strong animals",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 6020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "label": "strong plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 5020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "ChemicalDependency_Smokeleaf",
+      "label": "Smokeleaf dependency",
+      "path": "Art\\Rimworld art\\Genes\\Chemicals\\Smokeleaf\\ChemicalDependency.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Drugs",
+      "category_priority": 0.0,
+      "priority": 5000,
+      "complexity": 1,
+      "metabolism": 3,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylStoic",
+      "x": 597.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylDrugSensitive",
+      "x": 832.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylEars_Cow",
+      "x": 1068.0,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylLearning_Generalist",
+      "x": 1303.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylIndustrious",
+      "x": 1538.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "StrongStomach",
+      "x": 715.2,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "Immunity_Strong",
+      "x": 832.8,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "PsychicAbility_Dull",
+      "x": 950.4,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "x": 1068.0,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "MinTemp_SmallDecrease",
+      "x": 1185.6,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "Ears_Cat",
+      "x": 1303.2,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "Ears_Floppy",
+      "x": 1420.8,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "Ears_Pig",
+      "x": 774.0,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "AptitudeTerrible_Intellectual",
+      "x": 891.6,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "AptitudeTerrible_Artistic",
+      "x": 1009.2,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "AptitudeStrong_Animals",
+      "x": 1126.8,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "x": 1244.4,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "ChemicalDependency_Smokeleaf",
+      "x": 1362.0,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    }
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "defName": "XylChyrr",
+  "xenotype": "Chyrr",
+  "descriptor": "Nocturnal flyers",
+  "complexity": 11,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Chyrr_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      167,
+      125,
+      600,
+      589
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylSonicWave",
+      "label": "sonic wave",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_SonicWave.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Ability",
+      "category_priority": 520.0,
+      "priority": 201.0,
+      "complexity": 1,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "XylBatWings",
+      "label": "bat wings",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_BatWings.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Movement",
+      "category_priority": 470.0,
+      "priority": 510.0,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "XylTorpor",
+      "label": "torpor",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Torpor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylNocturnal",
+      "label": "nocturnal",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Nocturnal.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Sleep",
+      "category_priority": 420.0,
+      "priority": 71.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylKeenEars",
+      "label": "keen ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_KeenEars.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylSenses",
+      "category_priority": 380.0,
+      "priority": 210.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylEcholocation",
+      "label": "echolocation",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Echolocation.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylSenses",
+      "category_priority": 380.0,
+      "priority": 200.0,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_SmallPointed",
+      "label": "small pointed ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_EarSmallPointed.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 71.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Immunity_Weak",
+      "label": "weak immunity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WeakImmunity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "label": "heat tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MinTemp_SmallIncrease",
+      "label": "cold weakness",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureSmallIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "UVSensitivity_Mild",
+      "label": "mild UV sensitivity",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MildUVSensitivity.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 40.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "Delicate",
+      "label": "delicate",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Delicate.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Pain",
+      "category_priority": 410.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "label": "beardless",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 65.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Thin",
+      "label": "thin body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyThin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Body_Standard",
+      "label": "standard body",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BodyStandard.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Body",
+      "category_priority": 290.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "DarkVision",
+      "label": "dark vision",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Darkvision.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Medicine",
+      "label": "strong medicine",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 9020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Mining",
+      "label": "poor mining",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 3010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylSonicWave",
+      "x": 715.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylBatWings",
+      "x": 950.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylTorpor",
+      "x": 1185.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylNocturnal",
+      "x": 1420.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylKeenEars",
+      "x": 832.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylEcholocation",
+      "x": 1068.0,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylEars_SmallPointed",
+      "x": 1303.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "Immunity_Weak",
+      "x": 774.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MaxTemp_SmallIncrease",
+      "x": 891.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MinTemp_SmallIncrease",
+      "x": 1009.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "UVSensitivity_Mild",
+      "x": 1126.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Delicate",
+      "x": 1244.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "x": 1362.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Body_Thin",
+      "x": 832.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "Body_Standard",
+      "x": 950.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "DarkVision",
+      "x": 1068.0,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudeStrong_Medicine",
+      "x": 1185.6,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Mining",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    }
+  ]
+}

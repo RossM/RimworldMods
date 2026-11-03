@@ -1,0 +1,575 @@
+{
+  "defName": "XylNixie",
+  "xenotype": "Nixie",
+  "descriptor": "Psychic fish people",
+  "complexity": 14,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Nixie_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      255,
+      141,
+      513,
+      604
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylPsycast_Focus",
+      "label": "focus",
+      "path": "Art\\Rimworld art\\Psycasts\\Focus.psd",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylPsycasts",
+      "category_priority": 519.0,
+      "priority": 14000,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylPsycast_Beckon",
+      "label": "beckon",
+      "path": "Art\\Rimworld art\\Psycasts\\Beckon.psd",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylPsycasts",
+      "category_priority": 519.0,
+      "priority": 10000,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "XylDrugSensitive",
+      "label": "drug sensitive",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_DrugSensitive.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "ResistanceAndWeakness",
+      "category_priority": 440.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_Fin",
+      "label": "fin ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_FinEars.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 73.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylScaleskin",
+      "label": "scaleskin",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Scaleskin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 450.0,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    },
+    {
+      "defName": "XylAquatic",
+      "label": "aquatic",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Aquatic.png",
+      "color": [
+        0.6,
+        0.6,
+        0.9,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 10.0,
+      "complexity": 1,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "PsychicAbility_Enhanced",
+      "label": "psy-sensitive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_EnhancedPsychicAbility.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Psychic",
+      "category_priority": 490.0,
+      "priority": 20.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "NakedSpeed",
+      "label": "naked speed",
+      "path": "Art\\Rimworld art\\Genes\\Gene_NakedSpeed.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Movement",
+      "category_priority": 470.0,
+      "priority": 500.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "WebbedPhalanges",
+      "label": "webbed phalanges",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WebbedPhalanges.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Movement",
+      "category_priority": 470.0,
+      "priority": 500.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Mood_Pessimist",
+      "label": "unhappy",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Pessimist.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_SmallDecrease",
+      "label": "heat weakness",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureSmallDecrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "MinTemp_LargeDecrease",
+      "label": "cold super-tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MinTemperatureLargeDecrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 20.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Weak",
+      "label": "weak melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WeakMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "Beauty_Pretty",
+      "label": "attractive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Pretty.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Beauty",
+      "category_priority": 310.0,
+      "priority": 20.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_BaldOnly",
+      "label": "no hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_SnowWhite",
+      "label": "snow-white hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.9803921568627451,
+        0.9803921568627451,
+        0.9803921568627451,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Skin_Blue",
+      "label": "blue skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.39215686274509803,
+        0.6470588235294118,
+        0.7568627450980392,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 88.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_Grayless",
+      "label": "grayless hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_GreylessHair.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 195.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Social",
+      "label": "strong social",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 10020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Mining",
+      "label": "poor mining",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 3010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Construction",
+      "label": "poor construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 2010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylPsycast_Focus",
+      "x": 832.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylPsycast_Beckon",
+      "x": 1068.0,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylDrugSensitive",
+      "x": 1303.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylEars_Fin",
+      "x": 832.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylScaleskin",
+      "x": 1068.0,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylAquatic",
+      "x": 1303.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "PsychicAbility_Enhanced",
+      "x": 656.4000000000001,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "NakedSpeed",
+      "x": 774.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "WebbedPhalanges",
+      "x": 891.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Mood_Pessimist",
+      "x": 1009.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "MaxTemp_SmallDecrease",
+      "x": 1126.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MinTemp_LargeDecrease",
+      "x": 1244.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MeleeDamage_Weak",
+      "x": 1362.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Beauty_Pretty",
+      "x": 1479.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Hair_BaldOnly",
+      "x": 715.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "Hair_SnowWhite",
+      "x": 832.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "Skin_Blue",
+      "x": 950.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "Hair_Grayless",
+      "x": 1068.0,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudeStrong_Social",
+      "x": 1185.6,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudePoor_Mining",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudePoor_Construction",
+      "x": 1420.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    }
+  ]
+}

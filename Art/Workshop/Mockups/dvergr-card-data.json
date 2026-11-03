@@ -1,0 +1,679 @@
+{
+  "defName": "XylDvergr",
+  "xenotype": "Dvergr",
+  "descriptor": "Industrious dwarves",
+  "complexity": 17,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Dvergr_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      282,
+      166,
+      486,
+      551
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylFungusEater",
+      "label": "fungus eater",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_MushroomEater.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 102.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylMelancholy",
+      "label": "melancholy",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Melancholy.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 102.0,
+      "complexity": 1,
+      "metabolism": 3,
+      "archites": 0
+    },
+    {
+      "defName": "XylStoic",
+      "label": "stoic",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Stoic.png",
+      "color": [
+        0.5,
+        0.5,
+        0.5,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 100.0,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylEars_SmallPointed",
+      "label": "small pointed ears",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_EarSmallPointed.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Ears",
+      "category_priority": 313.59,
+      "priority": 71.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylHair_BaldOnly_Male",
+      "label": "bald males",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_HairStyleBaldOnlyMale.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 57.4,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "XylDwarf",
+      "label": "dwarf",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Dwarf.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 0.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylIndustrious",
+      "label": "industrious",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Industrious.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 25.0,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "StrongStomach",
+      "label": "strong stomach",
+      "path": "Art\\Rimworld art\\Genes\\Gene_StrongStomach.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "BS_Diet",
+      "category_priority": 707.0,
+      "priority": 9.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "PsychicAbility_Dull",
+      "label": "psychically dull",
+      "path": "Art\\Rimworld art\\Genes\\Gene_PsychicallyDull.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Psychic",
+      "category_priority": 490.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "MaxTemp_LargeIncrease",
+      "label": "heat super-tolerant",
+      "path": "Art\\Rimworld art\\Genes\\Gene_MaxTemperatureLargeIncrease.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Temperature",
+      "category_priority": 450.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "Aggression_Aggressive",
+      "label": "aggressive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Aggressive.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 10.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "Beard_BushyOnly",
+      "label": "only bushy beards",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleBushyOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_ShortOnly",
+      "label": "short-haired",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleShortOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 55.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Skin_InkBlack",
+      "label": "ink black skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.21568627450980393,
+        0.21568627450980393,
+        0.21568627450980393,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 99.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Skin_SlateGray",
+      "label": "slate gray skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.35294117647058826,
+        0.35294117647058826,
+        0.35294117647058826,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 97.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Skin_LightGray",
+      "label": "light gray skin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SkinColorOverride.png",
+      "color": [
+        0.7843137254901961,
+        0.7843137254901961,
+        0.7843137254901961,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Skin",
+      "category_priority": 280.0,
+      "priority": 95.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Unstoppable",
+      "label": "unstoppable",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Unstoppable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 550.0,
+      "complexity": 1,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "CaveDweller",
+      "label": "indoor dweller",
+      "path": "Art\\Rimworld art\\Genes\\Gene_CaveDweller.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 70.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "DarkVision",
+      "label": "dark vision",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Darkvision.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Social",
+      "label": "poor social",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Social\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 10010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Medicine",
+      "label": "poor medicine",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Medicine\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 9010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Crafting",
+      "label": "strong crafting",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Crafting\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 7020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Mining",
+      "label": "strong mining",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Mining\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 3020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Construction",
+      "label": "strong construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 2020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "ChemicalDependency_Alcohol",
+      "label": "alcohol dependency",
+      "path": "Art\\Rimworld art\\Genes\\Chemicals\\Alcohol\\ChemicalDependency.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Drugs",
+      "category_priority": 0.0,
+      "priority": 0,
+      "complexity": 1,
+      "metabolism": 3,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylFungusEater",
+      "x": 715.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylMelancholy",
+      "x": 950.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylStoic",
+      "x": 1185.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylEars_SmallPointed",
+      "x": 1420.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylHair_BaldOnly_Male",
+      "x": 832.8,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylDwarf",
+      "x": 1068.0,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "XylIndustrious",
+      "x": 1303.2,
+      "y": 463,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 612
+    },
+    {
+      "defName": "StrongStomach",
+      "x": 597.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "PsychicAbility_Dull",
+      "x": 715.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "MaxTemp_LargeIncrease",
+      "x": 832.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Aggression_Aggressive",
+      "x": 950.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Beard_BushyOnly",
+      "x": 1068.0,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Hair_ShortOnly",
+      "x": 1185.6,
+      "y": 693,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 786
+    },
+    {
+      "defName": "Skin_InkBlack",
+      "x": 1303.2,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Skin_SlateGray",
+      "x": 1420.8,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Skin_LightGray",
+      "x": 1538.4,
+      "y": 693,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 808
+    },
+    {
+      "defName": "Unstoppable",
+      "x": 597.6,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "CaveDweller",
+      "x": 715.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "DarkVision",
+      "x": 832.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudePoor_Social",
+      "x": 950.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 923
+    },
+    {
+      "defName": "AptitudePoor_Medicine",
+      "x": 1068.0,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeStrong_Crafting",
+      "x": 1185.6,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeStrong_Mining",
+      "x": 1303.2,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "AptitudeStrong_Construction",
+      "x": 1420.8,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    },
+    {
+      "defName": "ChemicalDependency_Alcohol",
+      "x": 1538.4,
+      "y": 830,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 945
+    }
+  ]
+}

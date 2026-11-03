@@ -1,0 +1,653 @@
+{
+  "defName": "XylOmegabeaver",
+  "xenotype": "Omegabeaver",
+  "descriptor": "Semi-aquatic builders",
+  "complexity": 17,
+  "metabolism": 0,
+  "width": 1700,
+  "height": 1000,
+  "character": "Art\\Cutouts\\Processed\\Omegabeaver_South.png",
+  "character_layout": {
+    "x": -82.39999999999998,
+    "y": 250,
+    "scale": 0.85,
+    "source_width": 768,
+    "source_height": 768,
+    "scale_per_original_pixel": 1.7,
+    "visible_bounds": [
+      269,
+      148,
+      495,
+      553
+    ]
+  },
+  "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
+  "genes": [
+    {
+      "defName": "XylTail_Beaver",
+      "label": "beaver tail",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TailBeaver.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "AG_Cosmetic_Tails",
+      "category_priority": 314.59,
+      "priority": 1001.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylDwarf",
+      "label": "dwarf",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Dwarf.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylBody",
+      "category_priority": 271.0,
+      "priority": 0.0,
+      "complexity": 1,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "XylNose_Beaver",
+      "label": "beaver teeth",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_BeaverTeeth.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 411.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylIndustrious",
+      "label": "industrious",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Industrious.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 25.0,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0
+    },
+    {
+      "defName": "WoundHealing_Slow",
+      "label": "slow wound healing",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WoundHealingRateSlow.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Healing",
+      "category_priority": 500.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "PsychicAbility_Deaf",
+      "label": "psychically deaf",
+      "path": "Art\\Rimworld art\\Genes\\Gene_PsychicallyDeaf.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Psychic",
+      "category_priority": 490.0,
+      "priority": 0.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "WebbedPhalanges",
+      "label": "webbed phalanges",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WebbedPhalanges.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Movement",
+      "category_priority": 470.0,
+      "priority": 500.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Mood_Optimist",
+      "label": "happy",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Optimist.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 20.0,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "KindInstinct",
+      "label": "kind instinct",
+      "path": "Art\\Rimworld art\\Genes\\Gene_KindInstinct.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 60.0,
+      "complexity": 0,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "MeleeDamage_Weak",
+      "label": "weak melee damage",
+      "path": "Art\\Rimworld art\\Genes\\Gene_WeakMeleeDamage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Violence",
+      "category_priority": 430.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "Fertile",
+      "label": "fertile",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Fertile.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Reproduction",
+      "category_priority": 400.0,
+      "priority": 110.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "label": "beardless",
+      "path": "Art\\Rimworld art\\Genes\\Gene_BeardStyleNone.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 65.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_BaldOnly",
+      "label": "no hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairStyleBaldOnly.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic",
+      "category_priority": 300.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_DarkSaturatedReddish",
+      "label": "dark-brown hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.2196078431372549,
+        0.1411764705882353,
+        0.07058823529411765,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 90.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_DarkBrown",
+      "label": "brown hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.35294117647058826,
+        0.22745098039215686,
+        0.12549019607843137,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 80.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Hair_ReddishBrown",
+      "label": "reddish-brown hair",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HairColor.png",
+      "color": [
+        0.5176470588235295,
+        0.3254901960784314,
+        0.1843137254901961,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Cosmetic_Hair",
+      "category_priority": 285.0,
+      "priority": 75.0,
+      "complexity": 0,
+      "metabolism": 0,
+      "archites": 0
+    },
+    {
+      "defName": "Furskin",
+      "label": "furskin",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Furskin.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 400.0,
+      "complexity": 1,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "Nearsighted",
+      "label": "nearsighted",
+      "path": "Art\\Rimworld art\\Genes\\Gene_Nearsighted.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 50.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "Learning_Slow",
+      "label": "slow study",
+      "path": "Art\\Rimworld art\\Genes\\Gene_SlowLearning.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Miscellaneous",
+      "category_priority": 270.0,
+      "priority": 30.0,
+      "complexity": 0,
+      "metabolism": 2,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "label": "poor intellectual",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Intellectual\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 11010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudePoor_Animals",
+      "label": "poor animals",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Animals\\Poor.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 6010,
+      "complexity": 1,
+      "metabolism": 1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "label": "strong plants",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Plants\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 5020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeStrong_Cooking",
+      "label": "strong cooking",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Cooking\\Strong.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 4020,
+      "complexity": 2,
+      "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "AptitudeRemarkable_Construction",
+      "label": "great construction",
+      "path": "Art\\Rimworld art\\Genes\\Skills\\Construction\\Remarkable.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "vanilla",
+      "category": "Aptitudes",
+      "category_priority": 200.0,
+      "priority": 2030,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0
+    }
+  ],
+  "layout": [
+    {
+      "defName": "XylTail_Beaver",
+      "x": 715.2,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylDwarf",
+      "x": 950.4,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylNose_Beaver",
+      "x": 1185.6,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "XylIndustrious",
+      "x": 1420.8,
+      "y": 292,
+      "size": 112,
+      "label_lines": 1,
+      "label_bottom": 441
+    },
+    {
+      "defName": "WoundHealing_Slow",
+      "x": 538.8000000000001,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "PsychicAbility_Deaf",
+      "x": 656.4000000000001,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "WebbedPhalanges",
+      "x": 774.0,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "Mood_Optimist",
+      "x": 891.6,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "KindInstinct",
+      "x": 1009.2,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "MeleeDamage_Weak",
+      "x": 1126.8,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "Fertile",
+      "x": 1244.4,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "Beard_NoBeardOnly",
+      "x": 1362.0,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "Hair_BaldOnly",
+      "x": 1479.6,
+      "y": 522,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 615
+    },
+    {
+      "defName": "Hair_DarkSaturatedReddish",
+      "x": 1597.1999999999998,
+      "y": 522,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 637
+    },
+    {
+      "defName": "Hair_DarkBrown",
+      "x": 538.8000000000001,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "Hair_ReddishBrown",
+      "x": 656.4000000000001,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "Furskin",
+      "x": 774.0,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "Nearsighted",
+      "x": 891.6,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "Learning_Slow",
+      "x": 1009.2,
+      "y": 659,
+      "size": 64,
+      "label_lines": 1,
+      "label_bottom": 752
+    },
+    {
+      "defName": "AptitudePoor_Intellectual",
+      "x": 1126.8,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "AptitudePoor_Animals",
+      "x": 1244.4,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "AptitudeStrong_Plants",
+      "x": 1362.0,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "AptitudeStrong_Cooking",
+      "x": 1479.6,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    },
+    {
+      "defName": "AptitudeRemarkable_Construction",
+      "x": 1597.1999999999998,
+      "y": 659,
+      "size": 64,
+      "label_lines": 2,
+      "label_bottom": 774
+    }
+  ]
+}
