@@ -10,7 +10,7 @@ Major xenotypes are the main content of XylXenos. They have dedicated factions a
 * Nixie: Psychic fish people. They're unmatched in water, but unless they periodically soak to keep their skin moist they'll become very unhappy.
 * Titan: Engineered rock giants. They're super tough and each is specialized in one random skill, but they move slowly and have difficulty learning other skills. They can't use most normal drugs and require special drugs designed for lithoids.
 * Trog: Adaptable mutants. They can live almost anywhere and wild insects won't attack them, but they're slow learners and sensitive to sunlight.
-* Warcat: Carnivorous hunters. They're ferocious melee fighters with a rage ability that lets them move and attack incredibly quickly, but they need to eat raw meat regularly to survive.
+* Warcat: Ferocious predators. They're powerful melee fighters with a rage ability that lets them move and attack incredibly quickly, but they need to eat raw meat regularly to survive.
 * Zeegee: High-tech spacers. They learn fast and are excellent shots with long-ranged weapons, but they do poorly on planetary surfaces.
 
 ### Minor xenotypes
