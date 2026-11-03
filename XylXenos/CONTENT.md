@@ -22,6 +22,15 @@ Minor xenotypes are found as rare members of other factions or in random events.
 * Steadling: Hardy generalists. They're adaptable and do well in early stage colonies, but they have a genetic dependence on smokeleaf.
 * Succuboid: Charming seducers. They can give their romantic partners a huge mood boost, but intimacy with one is neurochemically addictive. They're all but useless at work and combat.
 
+## Genes
+
+Includes 120 total genes:
+
+* 79 non-cosmetic genes with a wide range of effects, from wings that allow actual flight to pheromones that stop wild insects from attacking. Many of these have cosmetic effects, too.
+* 29 psycast genes that grant the ability to use a specific psycast without a psylink. Requires Royalty.
+* 6 unique cosmetic genes.
+* 6 new skin color genes.
+
 ## Factions
 
 * Rough dvergr union: Dvergr, *dirtmole, baseliner,* titan, *hussar,* trog, *genie, impid, neanderthal, pigskin, waster, yttakin,* omegabeaver
@@ -66,7 +75,6 @@ Minor xenotypes are found as rare members of other factions or in random events.
 ## Unique mechanics
 
 * Genetic recipe and building unlocks: Genes can unlock unique recipes and buildings or ones which otherwise require a specific meme. Some unlocks require Ideology.
-* Psycast genes: Every psycast gets an associated gene, which grants the ability to use the psycast without a psylink. Requires Royalty.
 * Xenotype meme compatibility: Each xenotype has favored and disfavored memes, which affects conversion speeed. Requires Ideology.
 
 ## Configuration
