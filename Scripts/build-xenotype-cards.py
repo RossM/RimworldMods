@@ -202,13 +202,6 @@ class GeneLibrary:
 
 @lru_cache(maxsize=None)
 def image_uri(path):
-    if path.suffix == ".psd":
-        # Keep conversions with their source art so exports do not accumulate
-        # competing copies in presentation-output directories.
-        png = path.with_suffix(".png")
-        if not png.is_file() or png.stat().st_mtime_ns < path.stat().st_mtime_ns:
-            subprocess.run(["magick", str(path) + "[0]", str(png)], check=True)
-        path = png
     return "data:image/png;base64," + base64.b64encode(path.read_bytes()).decode("ascii")
 
 

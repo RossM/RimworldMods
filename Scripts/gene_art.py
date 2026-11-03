@@ -63,7 +63,11 @@ def texture_path(icon_path):
     elif icon_path.startswith("UI/Icons/Genes/"):
         path = ART_DIR / "Genes" / (icon_path.removeprefix("UI/Icons/Genes/") + ".png")
     elif icon_path.startswith("UI/Abilities/"):
-        path = ART_DIR / "Psycasts" / (Path(icon_path).name + ".psd")
+        # Preprocessing the silhouette avoids jagged edges when gene icons are
+        # enlarged. Compositors read finished art and never invoke the GPU model.
+        path = ART_DIR / "Psycasts/Processed" / (Path(icon_path).name + ".png")
+        if not path.is_file():
+            raise FileNotFoundError(f"Missing processed psycast art: {path}; run python Scripts/process-psycasts.py")
     else:
         raise ValueError(f"Unsupported icon path: {icon_path}")
     if not path.is_file():

@@ -10,7 +10,9 @@ with transparent backgrounds.
 Based on Art/Codex/render-genes-contact-sheet.py. Renders concrete mod genes
 and psycast genes used by xenotypes. Core/Biotech definitions supply parents only.
 Uses extracted art in Art/Rimworld art and mod textures, including NoArt where
-specified by a definition. Psycast PSDs come from Game art source - Royalty.zip.
+specified by a definition. Psycasts use the pre-upscaled 256px PNGs in
+Art/Rimworld art/Psycasts/Processed. Run process-psycasts.py separately when their
+source PSDs change; compositing never invokes ESRGAN.
 """
 
 import argparse

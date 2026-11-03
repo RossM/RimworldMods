@@ -26,7 +26,7 @@
     {
       "defName": "XylPsycast_Beckon",
       "label": "beckon",
-      "path": "Art\\Rimworld art\\Psycasts\\Beckon.psd",
+      "path": "Art\\Rimworld art\\Psycasts\\Processed\\Beckon.png",
       "color": [
         1.0,
         1.0,
@@ -44,7 +44,7 @@
     {
       "defName": "XylPsycast_Focus",
       "label": "focus",
-      "path": "Art\\Rimworld art\\Psycasts\\Focus.psd",
+      "path": "Art\\Rimworld art\\Psycasts\\Processed\\Focus.png",
       "color": [
         1.0,
         1.0,
