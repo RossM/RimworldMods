@@ -96,44 +96,6 @@
       "archites": 0
     },
     {
-      "defName": "XylGender_AlwaysFemale",
-      "label": "always female",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_AlwaysFemale.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylInheritance",
-      "category_priority": 399.0,
-      "priority": 100.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0,
-      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
-    },
-    {
-      "defName": "XylStrongGenes",
-      "label": "strong genes",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_StrongGenes.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylInheritance",
-      "category_priority": 399.0,
-      "priority": 200.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0,
-      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
-    },
-    {
       "defName": "XylTail_Pointed",
       "label": "pointed tail",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TailPointed.png",
@@ -168,6 +130,44 @@
       "complexity": 1,
       "metabolism": 2,
       "archites": 0
+    },
+    {
+      "defName": "XylGender_AlwaysFemale",
+      "label": "always female",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_AlwaysFemale.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": -100.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
+    },
+    {
+      "defName": "XylStrongGenes",
+      "label": "strong genes",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_StrongGenes.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": -100.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
     },
     {
       "defName": "XylPsycast_WordOfLove",
@@ -489,28 +489,28 @@
       "size": 52
     },
     {
-      "defName": "XylGender_AlwaysFemale",
+      "defName": "XylTail_Pointed",
       "group": "featured",
       "x": 282.8,
       "y": 154.0,
       "size": 52
     },
     {
-      "defName": "XylStrongGenes",
+      "defName": "XylLazy",
       "group": "featured",
       "x": 365.6,
       "y": 154.0,
       "size": 52
     },
     {
-      "defName": "XylTail_Pointed",
+      "defName": "XylGender_AlwaysFemale",
       "group": "featured",
       "x": 448.4,
       "y": 154.0,
       "size": 52
     },
     {
-      "defName": "XylLazy",
+      "defName": "XylStrongGenes",
       "group": "featured",
       "x": 531.2,
       "y": 154.0,
