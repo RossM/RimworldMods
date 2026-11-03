@@ -78,6 +78,18 @@ public class DefModExtension_GeneWithComps : DefModExtension
         }
     }
 
+    public Texture2D? Background
+    {
+        get
+        {
+            DebugAssert.NotNull(parent);
+
+            return backgroundPath is { Length: > 0 }
+                ? field ??= ContentFinder<Texture2D>.Get(backgroundPath)
+                : null;
+        }
+    }
+
     #region Properties of the gene itself
 
     /// <summary>
@@ -102,6 +114,8 @@ public class DefModExtension_GeneWithComps : DefModExtension
     ///     This is usually used as the icon for a gizmo.
     /// </summary>
     [NoTranslate] public string? extraIconPath;
+
+    [NoTranslate] public string? backgroundPath;
 
     #endregion
 
