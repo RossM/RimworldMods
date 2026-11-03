@@ -60,42 +60,6 @@
       "archites": 0
     },
     {
-      "defName": "XylGender_AlwaysFemale",
-      "label": "always female",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_AlwaysFemale.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Reproduction",
-      "category_priority": 400.0,
-      "priority": 300.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
-      "defName": "XylStrongGenes",
-      "label": "strong genes",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_StrongGenes.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "Reproduction",
-      "category_priority": 400.0,
-      "priority": 400.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0
-    },
-    {
       "defName": "XylLoveEuphoria",
       "label": "love euphoria",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LoveEuphoria.png",
@@ -130,6 +94,44 @@
       "complexity": 1,
       "metabolism": 0,
       "archites": 0
+    },
+    {
+      "defName": "XylGender_AlwaysFemale",
+      "label": "always female",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_AlwaysFemale.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 100.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
+    },
+    {
+      "defName": "XylStrongGenes",
+      "label": "strong genes",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_StrongGenes.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 200.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
     },
     {
       "defName": "XylTail_Pointed",
@@ -183,7 +185,8 @@
       "priority": 13000,
       "complexity": 2,
       "metabolism": -2,
-      "archites": 0
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Psycast.png"
     },
     {
       "defName": "PsychicAbility_Enhanced",
@@ -472,28 +475,28 @@
       "size": 52
     },
     {
-      "defName": "XylGender_AlwaysFemale",
+      "defName": "XylLoveEuphoria",
       "group": "featured",
       "x": 448.4,
       "y": 90.0,
       "size": 52
     },
     {
-      "defName": "XylStrongGenes",
+      "defName": "XylFlirty",
       "group": "featured",
       "x": 531.2,
       "y": 90.0,
       "size": 52
     },
     {
-      "defName": "XylLoveEuphoria",
+      "defName": "XylGender_AlwaysFemale",
       "group": "featured",
       "x": 282.8,
       "y": 154.0,
       "size": 52
     },
     {
-      "defName": "XylFlirty",
+      "defName": "XylStrongGenes",
       "group": "featured",
       "x": 365.6,
       "y": 154.0,

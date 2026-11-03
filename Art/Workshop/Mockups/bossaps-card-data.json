@@ -160,12 +160,13 @@
         1.0
       ],
       "source": "mod",
-      "category": "Reproduction",
-      "category_priority": 400.0,
-      "priority": 301.0,
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 101.0,
       "complexity": 1,
       "metabolism": 0,
-      "archites": 0
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
     },
     {
       "defName": "MinTemp_SmallDecrease",

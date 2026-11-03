@@ -16,6 +16,7 @@ source PSDs change; compositing never invokes ESRGAN.
 """
 
 import argparse
+from functools import lru_cache
 from pathlib import Path
 import os
 
@@ -35,6 +36,12 @@ COLUMNS = 8
 CELL_WIDTH = 218
 CELL_HEIGHT = 220
 MARGIN = 24
+
+
+@lru_cache(maxsize=None)
+def load_background(path, size):
+    with Image.open(path) as source:
+        return source.convert("RGBA").resize((size, size), Image.Resampling.LANCZOS)
 
 
 def render_icon(texture, background, color=WHITE):
@@ -107,15 +114,14 @@ def render_contact_sheet(genes):
     row_heights = [max(CELL_HEIGHT, SHEET_ICON_SIZE + 20 + 22 * max(len(lines) for _, lines
                        in entries[start:start + COLUMNS]))
                    for start in range(0, len(entries), COLUMNS)]
-    with Image.open(ART_DIR / "Genes/GeneBackground_Endogene.png") as source:
-        background = source.convert("RGBA").resize(
-            (SHEET_ICON_SIZE, SHEET_ICON_SIZE), Image.Resampling.LANCZOS)
+    default_background = ART_DIR / "Genes/GeneBackground_Endogene.png"
     sheet = Image.new("RGBA", (COLUMNS * CELL_WIDTH + 2 * MARGIN,
                               sum(row_heights) + 2 * MARGIN), "#202428")
     draw = ImageDraw.Draw(sheet)
     for index, (gene, lines) in enumerate(entries):
         x = MARGIN + index % COLUMNS * CELL_WIDTH
         y = MARGIN + sum(row_heights[:index // COLUMNS])
+        background = load_background(gene.background or default_background, SHEET_ICON_SIZE)
         sheet.alpha_composite(render_icon(gene.texture, background, gene.color),
                               (x + (CELL_WIDTH - SHEET_ICON_SIZE) // 2, y))
         for line_index, line in enumerate(lines):
@@ -133,12 +139,11 @@ def main():
     for variant, filename in (("Endo", "GeneBackground_Endogene.png"),
                               ("Xeno", "GeneBackground_Xenogene.png"),
                               ("Arch", "GeneBackground_ArchiteGene.png")):
-        with Image.open(ART_DIR / "Genes" / filename) as source:
-            background = source.convert("RGBA").resize(
-                (ICON_SIZE, ICON_SIZE), Image.Resampling.LANCZOS)
+        default_background = ART_DIR / "Genes" / filename
         directory = OUTPUT / variant
         directory.mkdir(parents=True, exist_ok=True)
         for gene in genes:
+            background = load_background(gene.background or default_background, ICON_SIZE)
             render_icon(gene.texture, background, gene.color).save(directory / (gene.name + ".png"))
     print(f"Saved {len(genes)} genes in both Endo and Xeno variants to {OUTPUT}")
     sheet = render_contact_sheet(genes)

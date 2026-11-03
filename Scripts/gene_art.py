@@ -22,6 +22,7 @@ class GeneIcon:
     label: str
     texture: Path
     color: tuple[float, ...]
+    background: Path | None = None
 
 
 def read_defs(directory, tag):
@@ -75,6 +76,13 @@ def texture_path(icon_path):
     return path
 
 
+def gene_background(definition, parents):
+    path = inherited_text(
+        definition, "modExtensions/li[@Class='Xylib.DefModExtension_GeneWithComps']/backgroundPath",
+        parents)
+    return texture_path(path) if path else None
+
+
 def read_gene_icons(game_data):
     genes = read_defs(DEF_DIR, "GeneDef")
     game_genes = [gene for expansion in ("Core", "Biotech")
@@ -95,11 +103,14 @@ def read_gene_icons(game_data):
         if name in icons:
             raise ValueError(f"Duplicate gene: {name}")
         label = inherited_text(gene, "label", parents) or name
-        icons[name] = GeneIcon(name, label, texture_path(icon_path), color)
+        icons[name] = GeneIcon(name, label, texture_path(icon_path), color,
+                               gene_background(gene, parents))
 
     # Mirror GeneDefGenerator's template naming and ability icon substitution for
     # the psycasts referenced by the mod's xenotypes, rather than unused abilities.
     templates = read_defs(DEF_DIR, "XylXenos.GeneTemplateDef")
+    template_parents = {template.attrib["Name"]: template for template in templates
+                        if "Name" in template.attrib}
     xenotypes = read_defs(DEF_DIR, "XenotypeDef")
     referenced = {item.text.strip() for xenotype in xenotypes
                   for item in xenotype.findall("genes/li") if item.text}
@@ -110,6 +121,7 @@ def read_gene_icons(game_data):
         wanted = {name for name in referenced if name.startswith(prefix)}
         if not wanted:
             continue
+        background = gene_background(template, template_parents)
         abilities = read_defs(game_data / "Royalty/Defs/AbilityDefs", "AbilityDef")
         ability_parents = {ability.attrib["Name"]: ability for ability in abilities
                            if "Name" in ability.attrib}
@@ -121,7 +133,7 @@ def read_gene_icons(game_data):
             icon_path = template.findtext("iconPath").format(path)
             label = template.findtext("label").format(
                 inherited_text(ability, "label", ability_parents) or name)
-            icons[name] = GeneIcon(name, label, texture_path(icon_path), WHITE)
+            icons[name] = GeneIcon(name, label, texture_path(icon_path), WHITE, background)
         if missing := wanted - icons.keys():
             raise ValueError(f"Missing psycast definitions: {sorted(missing)}")
     return sorted(icons.values(), key=lambda icon: icon.name)

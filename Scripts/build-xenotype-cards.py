@@ -75,6 +75,7 @@ class Gene:
     complexity: int
     metabolism: int
     archites: int
+    background: Path | None = None
 
     @property
     def sort_key(self):
@@ -266,9 +267,11 @@ class GeneLibrary:
             # The game's generator uses the source def's load index, not skill listOrder.
             priority = 1000 * index + int(self.value(definition, "displayOrderOffset") or 0)
 
+        background = None
         if name in self.mod_icons:
             rendered = self.mod_icons[name]
             texture, color, origin = rendered.texture, rendered.color, "mod"
+            background = rendered.background
         else:
             texture = ART / "Genes" / (icon.removeprefix("UI/Icons/Genes/") + ".png")
             color = parse_color(self.value(definition, "skinColorOverride")
@@ -280,7 +283,7 @@ class GeneLibrary:
         category = self.value(definition, "displayCategory") or "Miscellaneous"
         return Gene(name, label, texture, color, origin, category,
                     float(self.value(self.categories[category], "displayPriorityInXenotype") or 0),
-                    priority, complexity, metabolism, archites)
+                    priority, complexity, metabolism, archites, background)
 
 
 @lru_cache(maxsize=None)
@@ -392,7 +395,7 @@ def build_card(library, def_name, descriptor):
         tint = f"tint{len(filters)}"
         r, g, b, a = gene.color
         filters.append(f'<filter id="{tint}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
-        picture(gene_background, cx - size / 2, y, size, size)
+        picture(gene.background or gene_background, cx - size / 2, y, size, size)
         picture(gene.path, cx - size / 2, y, size, size, f'filter="url(#{tint})"')
         positions.append(dict(defName=gene.defName, group=group, x=cx, y=y, size=size))
 
@@ -485,6 +488,15 @@ def build_card(library, def_name, descriptor):
     svg_path = OUT / (stem + ".svg")
     png_path = OUT / (stem + ".png")
     write_text(svg_path, "\n".join(svg))
+    def gene_data(gene):
+        data = asdict(gene)
+        data["path"] = str(gene.path.relative_to(ROOT))
+        if gene.background is None:
+            del data["background"]
+        else:
+            data["background"] = str(gene.background.relative_to(ROOT))
+        return data
+
     manifest = dict(defName=def_name, xenotype=name, descriptor=descriptor, complexity=complexity, metabolism=metabolism,
                     width=CARD_WIDTH, height=CARD_HEIGHT, character=str(portrait.relative_to(ROOT)),
                     character_layout=dict(x=character_x, y=character_y, scale=character_scale,
@@ -492,15 +504,13 @@ def build_card(library, def_name, descriptor):
                                           scale_per_original_pixel=CHARACTER_SCALE,
                                           visible_bounds=[left, top, right, bottom]),
                     totals_scope="Defined xenotype genes before random or lineage additions; Royalty included.",
-                    genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT))) for gene in base_genes],
+                    genes=[gene_data(gene) for gene in base_genes],
                     layout=positions)
     if lineages:
         manifest["lineages"] = [dict(skin=lineage.skin.defName, color=lineage.skin.color,
-                                    genes=[dict(asdict(gene), path=str(gene.path.relative_to(ROOT)))
-                                           for gene in lineage.genes]) for lineage in lineages]
+                                    genes=[gene_data(gene) for gene in lineage.genes]) for lineage in lineages]
     if specialties:
-        manifest["specialties"] = [dict(asdict(gene), path=str(gene.path.relative_to(ROOT)))
-                                   for gene in specialties]
+        manifest["specialties"] = [gene_data(gene) for gene in specialties]
     write_text(OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
     render_png(["-background", "none", str(svg_path)], png_path)
     with Image.open(png_path) as saved:
