@@ -2,7 +2,7 @@
   "defName": "XylScaleborn",
   "xenotype": "Scaleborn",
   "descriptor": "Draconic warriors",
-  "complexity": 12,
+  "complexity": 17,
   "metabolism": -1,
   "width": 630,
   "height": 340,
@@ -163,7 +163,7 @@
       "category": "Movement",
       "category_priority": 470.0,
       "priority": 0.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 3,
       "archites": 0
     },
@@ -181,7 +181,7 @@
       "category": "Temperature",
       "category_priority": 450.0,
       "priority": 40.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },
@@ -199,7 +199,7 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 2,
       "archites": 0
     },
@@ -217,7 +217,7 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 40.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -2,
       "archites": 0
     },
@@ -235,7 +235,7 @@
       "category": "Sleep",
       "category_priority": 420.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 2,
       "archites": 0
     },
@@ -601,7 +601,7 @@
           "category": "Ability",
           "category_priority": 520.0,
           "priority": 0.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },
@@ -619,7 +619,7 @@
           "category": "ResistanceAndWeakness",
           "category_priority": 440.0,
           "priority": 60.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },
@@ -684,7 +684,7 @@
           "category": "Ability",
           "category_priority": 520.0,
           "priority": 0.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },
@@ -702,7 +702,7 @@
           "category": "ResistanceAndWeakness",
           "category_priority": 440.0,
           "priority": 0.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },
@@ -767,7 +767,7 @@
           "category": "Ability",
           "category_priority": 520.0,
           "priority": 0.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },
@@ -785,7 +785,7 @@
           "category": "Healing",
           "category_priority": 500.0,
           "priority": 40.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },
@@ -951,7 +951,7 @@
           "category": "Pain",
           "category_priority": 410.0,
           "priority": 10.0,
-          "complexity": 0,
+          "complexity": 1,
           "metabolism": -2,
           "archites": 0
         },

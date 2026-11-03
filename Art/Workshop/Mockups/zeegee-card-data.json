@@ -2,7 +2,7 @@
   "defName": "XylZeegee",
   "xenotype": "Zeegee",
   "descriptor": "High-tech spacers",
-  "complexity": 13,
+  "complexity": 18,
   "metabolism": 0,
   "width": 630,
   "height": 340,
@@ -109,7 +109,7 @@
       "category": "Healing",
       "category_priority": 500.0,
       "priority": 0.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 2,
       "archites": 0
     },
@@ -127,7 +127,7 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 30.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 1,
       "archites": 0
     },
@@ -145,7 +145,7 @@
       "category": "Pain",
       "category_priority": 410.0,
       "priority": 0.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 3,
       "archites": 0
     },
@@ -325,7 +325,7 @@
       "category": "Miscellaneous",
       "category_priority": 270.0,
       "priority": 60.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },
@@ -343,7 +343,7 @@
       "category": "Miscellaneous",
       "category_priority": 270.0,
       "priority": 70.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },

@@ -2,7 +2,7 @@
   "defName": "XylSteadling",
   "xenotype": "Steadling",
   "descriptor": "Hardy generalists",
-  "complexity": 13,
+  "complexity": 18,
   "metabolism": 0,
   "width": 630,
   "height": 340,
@@ -109,7 +109,7 @@
       "category": "BS_Diet",
       "category_priority": 707.0,
       "priority": 9.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },
@@ -127,7 +127,7 @@
       "category": "Healing",
       "category_priority": 500.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },
@@ -145,7 +145,7 @@
       "category": "Psychic",
       "category_priority": 490.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 1,
       "archites": 0
     },
@@ -163,7 +163,7 @@
       "category": "Temperature",
       "category_priority": 450.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },
@@ -181,7 +181,7 @@
       "category": "Temperature",
       "category_priority": 450.0,
       "priority": 40.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },

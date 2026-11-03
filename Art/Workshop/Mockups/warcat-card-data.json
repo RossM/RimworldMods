@@ -2,7 +2,7 @@
   "defName": "XylWarcat",
   "xenotype": "Warcat",
   "descriptor": "Carnivorous hunters",
-  "complexity": 10,
+  "complexity": 15,
   "metabolism": 1,
   "width": 630,
   "height": 340,
@@ -145,7 +145,7 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 20.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 3,
       "archites": 0
     },
@@ -163,7 +163,7 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 40.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -2,
       "archites": 0
     },
@@ -181,7 +181,7 @@
       "category": "Sleep",
       "category_priority": 420.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 2,
       "archites": 0
     },
@@ -199,7 +199,7 @@
       "category": "Reproduction",
       "category_priority": 400.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 0,
       "archites": 0
     },
@@ -343,7 +343,7 @@
       "category": "Miscellaneous",
       "category_priority": 270.0,
       "priority": 60.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },

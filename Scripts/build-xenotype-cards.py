@@ -193,7 +193,9 @@ class GeneLibrary:
             label = self.value(definition, "label")
             icon = self.value(definition, "iconPath")
             priority = float(self.value(definition, "displayOrderInCategory") or 0)
-            complexity = int(self.value(definition, "biostatCpx") or 0)
+            # GeneDef defaults to one complexity; omitted XML does not mean zero.
+            # Explicit zeroes (including inherited cosmetic costs) stay zero.
+            complexity = int(self.value(definition, "biostatCpx") or 1)
             metabolism = int(self.value(definition, "biostatMet") or 0)
             archites = int(self.value(definition, "biostatArc") or 0)
         else:
@@ -213,6 +215,7 @@ class GeneLibrary:
             elif template_type in ("Skill", "Chemical"):
                 index, source = self.generated_sources[template_type + "Def"][source_name]
                 icon = self.value(definition, "iconPath").format(source_name)
+                # GeneTemplateDef has its own zero default, copied into generated genes.
                 complexity = int(self.value(definition, "biostatCpx") or 0)
                 metabolism = int(self.value(definition, "biostatMet") or 0)
                 archites = int(self.value(definition, "biostatArc") or 0)

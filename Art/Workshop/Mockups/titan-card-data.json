@@ -2,7 +2,7 @@
   "defName": "XylTitan",
   "xenotype": "Titan",
   "descriptor": "Engineered rock giants",
-  "complexity": 19,
+  "complexity": 26,
   "metabolism": -2,
   "width": 630,
   "height": 340,
@@ -199,7 +199,7 @@
       "category": "Healing",
       "category_priority": 500.0,
       "priority": 30.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 2,
       "archites": 0
     },
@@ -217,7 +217,7 @@
       "category": "Healing",
       "category_priority": 500.0,
       "priority": 100.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -1,
       "archites": 0
     },
@@ -235,7 +235,7 @@
       "category": "Psychic",
       "category_priority": 490.0,
       "priority": 0.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 2,
       "archites": 0
     },
@@ -253,7 +253,7 @@
       "category": "Movement",
       "category_priority": 470.0,
       "priority": 0.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 3,
       "archites": 0
     },
@@ -289,7 +289,7 @@
       "category": "Violence",
       "category_priority": 430.0,
       "priority": 40.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": -2,
       "archites": 0
     },
@@ -307,7 +307,7 @@
       "category": "Reproduction",
       "category_priority": 400.0,
       "priority": 100.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 1,
       "archites": 0
     },
@@ -325,7 +325,7 @@
       "category": "Beauty",
       "category_priority": 310.0,
       "priority": 10.0,
-      "complexity": 0,
+      "complexity": 1,
       "metabolism": 1,
       "archites": 0
     },
