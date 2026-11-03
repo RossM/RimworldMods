@@ -72,6 +72,11 @@ Includes 120 total genes:
 
 * Flirt/Don Juan: Characters with this trait are much more likely to attempt to romance other characters. Also unlocks the romantic meditation type, which allows using a double bed as a meditation focus.
 
+## Animals
+
+* Selkie: Genetically engineered seals used by nixie traders as pack animals. Requires Odyssey.
+* Shellback: A type of giant insect that can appear during raids by the savage trog tribe. They can take a lot of damage, and attack with a single powerful horn.
+
 ## Unique mechanics
 
 * Genetic recipe and building unlocks: Genes can unlock unique recipes and buildings or ones which otherwise require a specific meme. Some unlocks require Ideology.
