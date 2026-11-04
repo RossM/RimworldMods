@@ -48,7 +48,7 @@ Optional DLC unlocks additional content:
 
 ### Warcat
 
-![Warcat — Ferocious predators](../Docs/Images/XenotypeCards/warcat-card.png)
+![Warcat — Graceful predators](../Docs/Images/XenotypeCards/warcat-card.png)
 
 ### Zeegee
 
