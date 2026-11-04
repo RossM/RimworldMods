@@ -182,8 +182,8 @@
             <genes>
               <li>AcidSpray</li>
               <li>ToxResist_Partial</li>
-              <li>AptitudeStrong_Shooting</li>
-              <li>XylSkin_DarkGreen</li>                      
+              <li>AptitudeStrong_Melee</li>
+              <li>XylSkin_DarkGreen</li>
             </genes>
           </maker>
         </li>
@@ -212,7 +212,7 @@
             <genes>
               <li>XylOilSpray</li>
               <li>Robust</li>
-              <li>AptitudeStrong_Melee</li>
+              <li>AptitudeStrong_Shooting</li>
               <li>Skin_SlateGray</li>
             </genes>
           </maker>

@@ -470,7 +470,7 @@
       "size": 32
     },
     {
-      "defName": "AptitudeStrong_Shooting",
+      "defName": "AptitudeStrong_Melee",
       "group": "lineage:XylSkin_DarkGreen",
       "x": 594,
       "y": 152.0,
@@ -554,7 +554,7 @@
       "size": 32
     },
     {
-      "defName": "AptitudeStrong_Melee",
+      "defName": "AptitudeStrong_Shooting",
       "group": "lineage:Skin_SlateGray",
       "x": 594,
       "y": 290.0,
@@ -709,9 +709,9 @@
           "archites": 0
         },
         {
-          "defName": "AptitudeStrong_Shooting",
-          "label": "strong shooting",
-          "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Strong.png",
+          "defName": "AptitudeStrong_Melee",
+          "label": "strong melee",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Melee\\Strong.png",
           "color": [
             1.0,
             1.0,
@@ -721,7 +721,7 @@
           "source": "vanilla",
           "category": "Aptitudes",
           "category_priority": 200.0,
-          "priority": 20,
+          "priority": 1020,
           "complexity": 2,
           "metabolism": -1,
           "archites": 0
@@ -958,9 +958,9 @@
           "archites": 0
         },
         {
-          "defName": "AptitudeStrong_Melee",
-          "label": "strong melee",
-          "path": "Art\\Rimworld art\\Genes\\Skills\\Melee\\Strong.png",
+          "defName": "AptitudeStrong_Shooting",
+          "label": "strong shooting",
+          "path": "Art\\Rimworld art\\Genes\\Skills\\Shooting\\Strong.png",
           "color": [
             1.0,
             1.0,
@@ -970,7 +970,7 @@
           "source": "vanilla",
           "category": "Aptitudes",
           "category_priority": 200.0,
-          "priority": 1020,
+          "priority": 20,
           "complexity": 2,
           "metabolism": -1,
           "archites": 0
