@@ -6,7 +6,7 @@
     <xpath>Defs/ThingDef[defName="Apparel_Vacsuit" or defName="Apparel_VacsuitChildren"]</xpath>
     <value>
       <equippedStatOffsets>
-        <XylWetnessFallRate>-0.4</XylWetnessFallRate>
+        <XylWetnessFallRate>-0.6</XylWetnessFallRate>
       </equippedStatOffsets>
     </value>
   </Operation>
@@ -15,7 +15,7 @@
     <xpath>Defs/ThingDef[defName="Apparel_VacsuitHelmet"]</xpath>
     <value>
       <equippedStatOffsets>
-        <XylWetnessFallRate>-0.1</XylWetnessFallRate>
+        <XylWetnessFallRate>-0.2</XylWetnessFallRate>
       </equippedStatOffsets>
     </value>
   </Operation>
