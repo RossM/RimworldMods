@@ -161,7 +161,7 @@
       ],
       "source": "mod",
       "category": "XylInheritance",
-      "category_priority": -100.0,
+      "category_priority": 399.0,
       "priority": 101.0,
       "complexity": 1,
       "metabolism": 0,

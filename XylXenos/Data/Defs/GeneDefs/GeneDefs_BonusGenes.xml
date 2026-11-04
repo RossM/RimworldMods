@@ -2,12 +2,6 @@
 
 <Defs>
 
-  <GeneCategoryDef>
-    <defName>XylRandom</defName>
-    <label>random</label>
-    <displayPriorityInXenotype>210</displayPriorityInXenotype>
-  </GeneCategoryDef>
-  
   <Xylib.GeneSetMakerDef Name="GeneSetBiostatBase" Abstract="true">
     <root Class="Xylib.GeneSetMaker_Biostats">
       <prohibitedModContentPacks>
@@ -24,14 +18,15 @@
     <description>Carriers of this gene have an unstable genome that may have random extra genes.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
-    <displayCategory>XylRandom</displayCategory>
-    <displayOrderInCategory>100</displayOrderInCategory>
+    <displayCategory>XylInheritance</displayCategory>
+    <displayOrderInCategory>400</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_GeneticAtavism</iconPath>
     <customEffectDescriptions>
       <li>Extra gene chance: 50%</li>
     </customEffectDescriptions>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="Xylib.GeneCompProperties_BonusGenes">
             <addedGeneType>Xenogene</addedGeneType>
@@ -54,7 +49,7 @@
   </Xylib.GeneSetMakerDef>
 
   <GeneDef Name="XylSpecialistBase" Abstract="true">
-    <displayCategory>XylRandom</displayCategory>
+    <displayCategory>XylInheritance</displayCategory>
     <exclusionTags>
       <li>XylSpecialist</li>
     </exclusionTags>
@@ -63,14 +58,14 @@
   <GeneDef ParentName="XylSpecialistBase">
     <defName>XylSpecialist</defName>
     <label>specialist</label>
-    <description>The carrier's aptitude in one random skill is increased by 4. Aptitude acts like an offset on skill level.</description>
+    <description>Replaces itself with a random good skill gene.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>-1</biostatMet>
-    <displayOrderInCategory>201</displayOrderInCategory>
+    <displayOrderInCategory>501</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Specialist</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <geneType>Xenogene</geneType>
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="Xylib.GeneCompProperties_BonusGenes">
             <removeAfterAdding>true</removeAfterAdding>
@@ -105,14 +100,14 @@
   <GeneDef ParentName="XylSpecialistBase">
     <defName>XylSuperSpecialist</defName>
     <label>super-specialist</label>
-    <description>The carrier's aptitude in one random skill is increased by 8. Aptitude acts like an offset on skill level. Additionally, one level of passion is added to that skill.</description>
+    <description>Replaces itself with a random great skill gene.</description>
     <biostatCpx>2</biostatCpx>
     <biostatMet>-3</biostatMet>
-    <displayOrderInCategory>202</displayOrderInCategory>
+    <displayOrderInCategory>502</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_SuperSpecialist</iconPath>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
-        <geneType>Xenogene</geneType>
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="Xylib.GeneCompProperties_BonusGenes">
             <removeAfterAdding>true</removeAfterAdding>
@@ -150,12 +145,13 @@
     <description>Replaces itself with one of five randomly selected gene packages representing five different lineages.</description>
     <biostatCpx>4</biostatCpx>
     <biostatMet>-5</biostatMet>
-    <displayCategory>XylRandom</displayCategory>
-    <displayOrderInCategory>300</displayOrderInCategory>
+    <displayCategory>XylInheritance</displayCategory>
+    <displayOrderInCategory>600</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_ScalebornLineage</iconPath>
     <canGenerateInGeneSet>false</canGenerateInGeneSet>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
+        <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <comps>
           <li Class="Xylib.GeneCompProperties_BonusGenes">
             <removeAfterAdding>true</removeAfterAdding>

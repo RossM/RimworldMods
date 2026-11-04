@@ -96,6 +96,25 @@
       "archites": 0
     },
     {
+      "defName": "XylSuperSpecialist",
+      "label": "super-specialist",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_SuperSpecialist.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 502.0,
+      "complexity": 2,
+      "metabolism": -3,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
+    },
+    {
       "defName": "XylGiant",
       "label": "giant",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Giant.png",
@@ -147,24 +166,6 @@
       "priority": 36.0,
       "complexity": 2,
       "metabolism": 1,
-      "archites": 0
-    },
-    {
-      "defName": "XylSuperSpecialist",
-      "label": "super-specialist",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_SuperSpecialist.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylRandom",
-      "category_priority": 210.0,
-      "priority": 202.0,
-      "complexity": 2,
-      "metabolism": -3,
       "archites": 0
     },
     {

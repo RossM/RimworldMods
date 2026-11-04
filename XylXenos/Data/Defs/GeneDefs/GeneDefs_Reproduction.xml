@@ -5,7 +5,7 @@
   <GeneCategoryDef>
     <defName>XylInheritance</defName>
     <label>gender and inheritance</label>
-    <displayPriorityInXenotype>-100</displayPriorityInXenotype>
+    <displayPriorityInXenotype>399</displayPriorityInXenotype>
   </GeneCategoryDef>
 
   

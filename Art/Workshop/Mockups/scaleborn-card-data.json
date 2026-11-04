@@ -78,6 +78,44 @@
       "archites": 0
     },
     {
+      "defName": "XylLineageInheritance",
+      "label": "lineage inheritance",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LineageInheritance.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 300.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
+    },
+    {
+      "defName": "XylScalebornLineage",
+      "label": "scaleborn lineage",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_ScalebornLineage.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 600.0,
+      "complexity": 4,
+      "metabolism": -5,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
+    },
+    {
       "defName": "XylTail_Lizard",
       "label": "lizard tail",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_TailLizard.png",
@@ -112,43 +150,6 @@
       "complexity": 2,
       "metabolism": -3,
       "archites": 0
-    },
-    {
-      "defName": "XylScalebornLineage",
-      "label": "scaleborn lineage",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_ScalebornLineage.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylRandom",
-      "category_priority": 210.0,
-      "priority": 300.0,
-      "complexity": 4,
-      "metabolism": -5,
-      "archites": 0
-    },
-    {
-      "defName": "XylLineageInheritance",
-      "label": "lineage inheritance",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_LineageInheritance.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylInheritance",
-      "category_priority": -100.0,
-      "priority": 300.0,
-      "complexity": 1,
-      "metabolism": 0,
-      "archites": 0,
-      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
     },
     {
       "defName": "MoveSpeed_Slow",
@@ -336,21 +337,21 @@
       "size": 52
     },
     {
-      "defName": "XylTail_Lizard",
+      "defName": "XylLineageInheritance",
       "group": "featured",
       "x": 235.0,
       "y": 154.0,
       "size": 52
     },
     {
-      "defName": "XylScaleskin",
+      "defName": "XylTail_Lizard",
       "group": "featured",
       "x": 305.0,
       "y": 154.0,
       "size": 52
     },
     {
-      "defName": "XylLineageInheritance",
+      "defName": "XylScaleskin",
       "group": "featured",
       "x": 375.0,
       "y": 154.0,

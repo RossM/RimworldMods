@@ -78,6 +78,25 @@
       "archites": 0
     },
     {
+      "defName": "XylGeneticAtavism",
+      "label": "genetic atavism",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_GeneticAtavism.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylInheritance",
+      "category_priority": 399.0,
+      "priority": 400.0,
+      "complexity": 1,
+      "metabolism": 0,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Inheritance.png"
+    },
+    {
       "defName": "XylInsectPheromones",
       "label": "insect pheromones",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_InsectPheromones.png",
@@ -93,24 +112,6 @@
       "priority": 501.0,
       "complexity": 3,
       "metabolism": -3,
-      "archites": 0
-    },
-    {
-      "defName": "XylGeneticAtavism",
-      "label": "genetic atavism",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_GeneticAtavism.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylRandom",
-      "category_priority": 210.0,
-      "priority": 100.0,
-      "complexity": 1,
-      "metabolism": 0,
       "archites": 0
     },
     {
@@ -533,14 +534,14 @@
       "size": 52
     },
     {
-      "defName": "XylInsectPheromones",
+      "defName": "XylGeneticAtavism",
       "group": "featured",
       "x": 489.8,
       "y": 101.0,
       "size": 52
     },
     {
-      "defName": "XylGeneticAtavism",
+      "defName": "XylInsectPheromones",
       "group": "featured",
       "x": 572.6,
       "y": 101.0,
