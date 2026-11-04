@@ -1,4 +1,4 @@
-"""Build Workshop PNG/SVG mockups from XML, descriptor config, and cutouts.
+"""Build Workshop xenotype cards from XML, descriptor config, and cutouts.
 
 The cards help Workshop readers compare xenotypes and understand what the mod
 adds at a glance. Emphasize distinctive mechanics while retaining the familiar
@@ -17,8 +17,10 @@ without loading other installed mods. Totals precede random or lineage additions
 Scaleborn lineages and Titan specialties are shown separately so alternatives
 cannot be mistaken for traits every pawn receives; their trigger icons are omitted.
 
-PNG/SVG cards, diagnostic JSON snapshots, a review gallery, and a ZIP bundle go to
-Art/Workshop/Mockups/. Cutouts retain their original in-game canvas alignment.
+PNG cards and the overview go to XylXenos/Data/Docs/Images/XenotypeCards/ for use
+in mod documentation. Editable SVGs, diagnostic JSON snapshots, and the review
+gallery go to Art/Generated/Xenotype cards/ so build intermediates stay outside
+the distributed mod. Cutouts retain their original in-game canvas alignment.
 """
 
 import argparse
@@ -26,12 +28,12 @@ import base64
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
 from xml.sax.saxutils import escape
 import xml.etree.ElementTree as ET
-import zipfile
 
 from PIL import Image, ImageFont
 
@@ -41,7 +43,8 @@ from gene_art import GAME_DATA, inherited_text, parse_color, read_defs, read_gen
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "Art/Rimworld art"
 MOD = ROOT / "XylXenos/Data"
-OUT = ROOT / "Art/Workshop/Mockups"
+GENERATED_OUT = ROOT / "Art/Generated/Xenotype cards"
+PNG_OUT = MOD / "Docs/Images/XenotypeCards"
 SEMIBOLD_FONT = "C:/Windows/Fonts/seguisb.ttf"
 BOLD_FONT = "C:/Windows/Fonts/segoeuib.ttf"
 # Work at the Workshop description column's observed display width so legibility
@@ -485,8 +488,8 @@ def build_card(library, def_name, descriptor):
            f'<rect x="0.5" y="0.5" width="{CARD_WIDTH-1}" height="{CARD_HEIGHT-1}" rx="10" fill="url(#surface)" stroke="#4a4c52" stroke-width="1"/>',
            *parts, '</svg>']
     stem = name.lower() + "-card"
-    svg_path = OUT / (stem + ".svg")
-    png_path = OUT / (stem + ".png")
+    svg_path = GENERATED_OUT / (stem + ".svg")
+    png_path = PNG_OUT / (stem + ".png")
     write_text(svg_path, "\n".join(svg))
     def gene_data(gene):
         data = asdict(gene)
@@ -511,7 +514,7 @@ def build_card(library, def_name, descriptor):
                                     genes=[gene_data(gene) for gene in lineage.genes]) for lineage in lineages]
     if specialties:
         manifest["specialties"] = [gene_data(gene) for gene in specialties]
-    write_text(OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
+    write_text(GENERATED_OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
     render_png(["-background", "none", str(svg_path)], png_path)
     with Image.open(png_path) as saved:
         saved.verify()
@@ -529,22 +532,25 @@ def main():
     library = GeneLibrary(args.rimworld_data)
     if {name for name, _ in descriptions} != {name for name in library.xenotypes if name and name.startswith("Xyl")}:
         raise ValueError("Description config must match the complete mod xenotype roster")
-    OUT.mkdir(parents=True, exist_ok=True)
+    GENERATED_OUT.mkdir(parents=True, exist_ok=True)
+    PNG_OUT.mkdir(parents=True, exist_ok=True)
     paths = [build_card(library, name, descriptor) for name, descriptor in descriptions]
     render_png(["montage", *map(str, paths), "-thumbnail", f"{CARD_WIDTH}x{CARD_HEIGHT}", "-tile", "3x",
                 "-geometry", "+12+12", "-gravity", "north", "-background", "#17191c"],
-               OUT / "all-xenotypes.png")
-    cards = [f'<figure><a href="{path.name}"><img src="{path.name}" alt="{name}: {descriptor}" loading="lazy"></a><figcaption>{name} · <a href="{path.stem}.svg">SVG</a></figcaption></figure>'
-             for path, (def_name, descriptor) in zip(paths, descriptions)
-             for name in [library.value(library.xenotypes[def_name], "label").capitalize()]]
+               PNG_OUT / "all-xenotypes.png")
+    cards = []
+    for path, (def_name, descriptor) in zip(paths, descriptions):
+        name = library.value(library.xenotypes[def_name], "label").capitalize()
+        png_url = Path(os.path.relpath(path, GENERATED_OUT)).as_posix()
+        cards.append(f'<figure><a href="{png_url}"><img src="{png_url}" alt="{name}: {descriptor}" loading="lazy"></a><figcaption>{name} · <a href="{path.stem}.svg">SVG</a></figcaption></figure>')
     # A fixed-width review gallery exposes the actual Workshop reading scale;
     # responsive thumbnail columns would conceal the very legibility being judged.
     card_markup = "\n".join(cards)
-    write_text(OUT / "index.html", f'''<!doctype html>
+    write_text(GENERATED_OUT / "index.html", f'''<!doctype html>
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Xyl’s Xenotypes — card mockups</title>
+<title>Xyl’s Xenotypes — xenotype cards</title>
 <style>
 body {{ margin:24px; background:#17191c; color:#ebe7df; font:16px Segoe UI,sans-serif }}
 main {{ display:grid; grid-template-columns:{CARD_WIDTH}px; gap:24px }}
@@ -562,17 +568,6 @@ before random or lineage additions. Royalty genes included. Select a card for th
 {card_markup}
 </main>
 </html>''')
-    artifacts = []
-    for path in paths:
-        artifacts.extend((path, path.with_suffix(".svg"), path.with_name(path.stem + "-data.json")))
-    artifacts.extend(OUT / name for name in ("index.html", "all-xenotypes.png"))
-    with zipfile.ZipFile(OUT / "xenotype-card-mockups.zip", "w") as bundle:
-        for artifact in artifacts:
-            # Filesystem modification times reflect the build, not the content.
-            # A fixed ZIP epoch keeps the bundle stable when its files are stable.
-            entry = zipfile.ZipInfo(artifact.name, date_time=(1980, 1, 1, 0, 0, 0))
-            entry.compress_type = zipfile.ZIP_DEFLATED
-            bundle.writestr(entry, artifact.read_bytes())
 
 
 if __name__ == "__main__":
