@@ -13,25 +13,13 @@ public enum WetnessCategory : byte
 
 public class Need_Wetness : Need_Seeker
 {
-    public float TemperatureFactor => TemperatureWetnessFallFactorCurve.Evaluate(pawn.AmbientTemperature);
-
     public float RisePerHour => def.seekerRisePerHour;
-    public float FallPerHour => def.seekerFallPerHour * TemperatureFactor;
+    public float FallPerHour => def.seekerFallPerHour * pawn.GetStatValue(MyDefOf.XylWetnessFallRate);
 
     public const float ThresholdWet = 0.90f;
     public const float ThresholdNeutral = 0.50f;
     public const float ThresholdDry = 0.25f;
     public const float ThresholdVeryDry = 0.05f;
-
-    private static readonly SimpleCurve TemperatureWetnessFallFactorCurve =
-    [
-        new(-19.0f, 1.0f),
-        new(6.0f, 0.5f),
-        new(16.0f, 1.0f),
-        new(21.0f, 1.0f),
-        new(31.0f, 2.0f),
-        new(41.0f, 5.0f),
-    ];
 
     private static readonly SimpleCurve RainfallToWetnessCurve =
     [
@@ -140,12 +128,12 @@ public class Need_Wetness : Need_Seeker
     public override string GetTipString()
     {
         float ambientTemperature = pawn.AmbientTemperature;
-        float temperatureFactor = TemperatureWetnessFallFactorCurve.Evaluate(ambientTemperature);
+        float wetnessFalLRate = pawn.GetStatValue(MyDefOf.XylWetnessFallRate);
         float hoursPerDay = FallPerHour * 24.0f / (FallPerHour + RisePerHour);
         return base.GetTipString() + "\n\n" + "XylWetnessNeedModifiedByTemperature".Translate(
                 pawn.Named("PAWN"),
                 ambientTemperature.ToStringTemperature().Named("TEMPERATURE"),
-                temperatureFactor.ToStringPercent().Named("FACTOR"),
+                wetnessFalLRate.ToStringPercent().Named("FACTOR"),
                 hoursPerDay.ToStringDecimalIfSmall().Named("HOURS"))
             ;
     }

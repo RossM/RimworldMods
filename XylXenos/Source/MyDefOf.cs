@@ -10,9 +10,10 @@ public static class MyDefOf
     public static GeneDef XylEcholocation;
     public static PawnKindDef XylSelkie;
     public static StatDef XylTreeCuttingSpeed;
+    public static StatDef XylWetnessFallRate;
 
     static MyDefOf()
     {
-        DefOfHelper.EnsureInitializedInCtor(typeof(DefOf));
+        DefOfHelper.EnsureInitializedInCtor(typeof(MyDefOf));
     }
 }
