@@ -1,6 +1,6 @@
 # Xyl's Xenotypes
 
-Twelve xenotypes for RimWorld, from fungus-fed underground builders to engineered rock giants, psychic fish people, and high-tech spacers. Each brings its own needs, strengths, and complications to colony life.
+Twelve xenotypes for RimWorld, from fungus-fed underground builders to engineered stone giants, aquatic sirens, and high-tech spacers. Each brings its own needs, strengths, and complications to colony life.
 
 This mod includes the 12 xenotypes, 121 new genes, 4 factions, 4 scenarios, and a variety of new events, animals, buildings, and items.
 
@@ -36,11 +36,11 @@ Optional DLC unlocks additional content:
 
 ### Nixie
 
-![Nixie — Psychic fish people](../Docs/Images/XenotypeCards/nixie-card.png)
+![Nixie — Aquatic sirens](../Docs/Images/XenotypeCards/nixie-card.png)
 
 ### Titan
 
-![Titan — Engineered rock giants](../Docs/Images/XenotypeCards/titan-card.png)
+![Titan — Engineered stone giants](../Docs/Images/XenotypeCards/titan-card.png)
 
 ### Trog
 

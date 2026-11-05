@@ -24,13 +24,13 @@ Dvergr's gene set focuses on labor, with bonuses to global work speed and to con
 
 #### Nixie
 
-Psychic fish people. They're unmatched in water, but unless they periodically soak to keep their skin moist they'll become very unhappy.
+Aquatic sirens. They're unmatched in water, but unless they periodically soak to keep their skin moist they'll become very unhappy.
 
 Nixies do best in cold maps with lots of water. They're poor at melee, but specialize at using Beckon to lure enemies into water where they can swim circles around them. Their main drawback is they need to spend hours a day soaking in water. The amount of soaking they need climbs rapidly as temperatures go up.
 
 #### Titan
 
-Engineered rock giants. They're super tough and each is specialized in one random skill, but they move slowly and have difficulty learning other skills. They can't use most normal drugs and require special drugs designed for lithoids.
+Engineered stone giants. They're super tough and each is specialized in one random skill, but they move slowly and have difficulty learning other skills. They can't use most normal drugs and require special drugs designed for lithoids.
 
 Titans' gene package is focused on one thing: toughness. They have extra HP, their skin provides natural armor that reduces damage, bleeding wounds close automatically, and they shrug off infections and are completely immune to toxins. However, if they do get injured, they will spend a long time recovering. Labor-wise, each Titan is particularly good at one thing, but generally terrible at anything else. Their unique drugs also provide a special challenge to supply.
 
