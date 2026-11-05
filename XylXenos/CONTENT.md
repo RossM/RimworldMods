@@ -20,7 +20,7 @@ Minor xenotypes are found as rare members of other factions or in random events.
 * Omegabeaver: Semi-aquatic builders. They move fast in water and are great at logging and construction, but poor at combat.
 * Scaleborn: Draconic warriors. Each scaleborn comes from one of five lineages with a different breath ability. They're powerful at combat, but hard to keep happy.
 * Steadling: Hardy generalists. They're adaptable and do well in early stage colonies, but they have a genetic dependence on smokeleaf.
-* Succuboid: Charming seducers. They can give their romantic partners a huge mood boost, but intimacy with one is neurochemically addictive. They're all but useless at work and combat.
+* Succuboid: Charming seductresses. They can give their romantic partners a huge mood boost, but intimacy with one is neurochemically addictive. They're all but useless at work and combat.
 
 ## Genes
 

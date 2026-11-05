@@ -68,7 +68,7 @@ Optional DLC unlocks additional content:
 
 ### Succuboid
 
-![Succuboid — Charming seducers](../Docs/Images/XenotypeCards/succuboid-card.png)
+![Succuboid — Charming seductresses](../Docs/Images/XenotypeCards/succuboid-card.png)
 
 ## Genes
 
