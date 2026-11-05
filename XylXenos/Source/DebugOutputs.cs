@@ -287,6 +287,24 @@ public static class DebugOutputs
             [.. columns]);
     }
 
+    [DebugOutput("Genes")]
+    public static void GeneDescriptions()
+    {
+        List<TableDataGetter<GeneDef>> columns =
+        [
+            new("defName", def => def.defName),
+            new("label", def => def.LabelCap),
+            new("displayCategory", def => def.displayCategory.LabelCap),
+            new("modContentPack", def => def.modContentPack?.PackageId),
+            new("cpx", def => def.biostatCpx),
+            new("arc", def => def.biostatArc),
+            new("met", def => def.biostatMet),
+            new("description", def => def.DescriptionFull.ReplaceLineEndings("<br>")),
+        ];
+
+        DebugTables.MakeTablesDialog(GeneUtility.GenesInOrder, [.. columns]);
+    }
+
     private static string Abbreviate(string str, int maxLength = 8)
     {
         var words = str.Split(' ').ToList();
