@@ -38,14 +38,14 @@ Optional DLC unlocks additional content:
 
 ![Nixie — Aquatic sirens](../Docs/Images/XenotypeCards/nixie-card.png)
 
-*"Some years, if it gets cold enough in winter, you can walk right out onto the ice on the bay. That's when you can hear it. Singing from underneath the ice. I heard it once in my youth. So beautiful. I'd give anything to hear it again."
+*"Some years, if it gets cold enough in winter, you can walk right out onto the ice on the bay. That's when you can hear it. Singing from underneath the ice. I heard it once in my youth. So beautiful. I'd give anything to hear it again."*
 
 ### Titan
 
 ![Titan — Engineered stone giants](../Docs/Images/XenotypeCards/titan-card.png)
 
-*Reclamation report, day 575: Excavation uncovered a class 3 insect hive. One worker seriously wounded, one minorly injured. No interruption to schedule.
-Reclamation report, day 576: Toxic sludge flow directly through base camp. Minor damage to structure, no injuries.
+*Reclamation report, day 575: Excavation uncovered a class 3 insect hive. One worker seriously wounded, one minorly injured. No interruption to schedule.<br>
+Reclamation report, day 576: Toxic sludge flow directly through base camp. Minor damage to structure, no injuries.<br>
 Reclamation report, day 577: Cook missed a dose of atlasite. Emergency evacuation shuttle delayed by meteor shower. Requesting replacement cook from headquarters.*
 
 ### Trog
