@@ -116,6 +116,7 @@
       <li>MinTemp_SmallDecrease</li>
       <li>MaxTemp_SmallIncrease</li>
       <li>XylDrugSensitive</li>
+      <li>XylSolitary</li>
       <li>Ears_Cat</li>
       <li>Ears_Floppy</li>
       <li>Ears_Pig</li>

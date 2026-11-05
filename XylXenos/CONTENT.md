@@ -72,7 +72,7 @@ Scaleborn's main gimmick is their five lineages, each with its own unique streng
 
 Hardy generalists. They're adaptable and do well in early stage colonies, but they have a genetic dependence on smokeleaf.
 
-Steadlings are the perfect early game colonists, able to adapt to most environments and do many different jobs.
+Steadlings are the perfect early game colonists, able to adapt to most environments and do many different jobs. However, they don't do as well in large colonies.
 
 #### Succuboid
 
@@ -82,9 +82,9 @@ The succuboid gene package is laser focused on romance. Their love euphoria abil
 
 ## Genes
 
-Includes 120 total genes:
+Includes 121 total genes:
 
-* 72 non-cosmetic genes with a wide range of effects, from wings that allow actual flight to pheromones that stop wild insects from attacking. Many of these have cosmetic effects, too.
+* 73 non-cosmetic genes with a wide range of effects, from wings that allow actual flight to pheromones that stop wild insects from attacking. Many of these have cosmetic effects, too.
 * 29 psycast genes that grant the ability to use a specific psycast without a psylink. Requires Royalty.
 * 6 unique cosmetic genes.
 * 6 sex-linked hair genes.

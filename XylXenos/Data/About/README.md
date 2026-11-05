@@ -2,7 +2,7 @@
 
 Twelve xenotypes for RimWorld, from fungus-fed underground builders to engineered rock giants, psychic fish people, and high-tech spacers. Each brings its own needs, strengths, and complications to colony life.
 
-This mod includes the 12 xenotypes, 120 new genes, 4 factions, 4 scenarios, and a variety of new events, animals, buildings, and items.
+This mod includes the 12 xenotypes, 121 new genes, 4 factions, 4 scenarios, and a variety of new events, animals, buildings, and items.
 
 <!-- TODO: Add a banner or in-game overview image and refine the opening pitch. -->
 

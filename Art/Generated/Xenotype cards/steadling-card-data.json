@@ -2,8 +2,8 @@
   "defName": "XylSteadling",
   "xenotype": "Steadling",
   "descriptor": "Hardy generalists",
-  "complexity": 18,
-  "metabolism": 0,
+  "complexity": 19,
+  "metabolism": 1,
   "width": 630,
   "height": 340,
   "character": "Art\\Cutouts\\Processed\\Steadling_South.png",
@@ -39,6 +39,24 @@
       "priority": 100.0,
       "complexity": 2,
       "metabolism": -1,
+      "archites": 0
+    },
+    {
+      "defName": "XylSolitary",
+      "label": "solitary",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_Solitary.png",
+      "color": [
+        0.75,
+        0.75,
+        0.75,
+        1.0
+      ],
+      "source": "mod",
+      "category": "Mood",
+      "category_priority": 460.0,
+      "priority": 111.0,
+      "complexity": 1,
+      "metabolism": 1,
       "archites": 0
     },
     {
@@ -352,28 +370,35 @@
     {
       "defName": "XylStoic",
       "group": "featured",
-      "x": 282.8,
+      "x": 241.4,
+      "y": 122.0,
+      "size": 52
+    },
+    {
+      "defName": "XylSolitary",
+      "group": "featured",
+      "x": 324.2,
       "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylDrugSensitive",
       "group": "featured",
-      "x": 365.6,
+      "x": 407.0,
       "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylIndustrious",
       "group": "featured",
-      "x": 448.4,
+      "x": 489.8,
       "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylLearning_Generalist",
       "group": "featured",
-      "x": 531.2,
+      "x": 572.6,
       "y": 122.0,
       "size": 52
     },

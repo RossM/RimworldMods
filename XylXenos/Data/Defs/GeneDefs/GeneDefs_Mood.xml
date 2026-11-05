@@ -15,6 +15,9 @@
     <suppressedTraits>
       <Recluse />
     </suppressedTraits>
+    <exclusionTags>
+      <li>XylColonySize</li>
+    </exclusionTags>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
       </li>
