@@ -87,11 +87,9 @@ class Gene:
 
     @property
     def featured(self):
-        # Emphasis introduces unfamiliar mechanics, rather than every mod asset.
-        # Psycasts already have familiar icons; zero-cost cosmetics need no equal
-        # billing with mechanics. Keep functional tails, horns, and skin defenses.
-        return (self.source == "mod" and self.category != "XylPsycasts"
-                and (self.complexity != 0 or self.metabolism != 0))
+        # Keep functional mod additions prominent, including psycasts with their
+        # distinctive backgrounds. Zero-cost cosmetics remain supporting context.
+        return self.source == "mod" and (self.complexity != 0 or self.metabolism != 0)
 
 
 @dataclass(frozen=True)

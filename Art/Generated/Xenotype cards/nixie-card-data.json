@@ -24,6 +24,44 @@
   "totals_scope": "Defined xenotype genes before random or lineage additions; Royalty included.",
   "genes": [
     {
+      "defName": "XylPsycast_Beckon",
+      "label": "beckon",
+      "path": "Art\\Rimworld art\\Psycasts\\Processed\\Beckon.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylPsycasts",
+      "category_priority": 519.0,
+      "priority": 10000,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Psycast.png"
+    },
+    {
+      "defName": "XylPsycast_Focus",
+      "label": "focus",
+      "path": "Art\\Rimworld art\\Psycasts\\Processed\\Focus.png",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source": "mod",
+      "category": "XylPsycasts",
+      "category_priority": 519.0,
+      "priority": 14000,
+      "complexity": 2,
+      "metabolism": -2,
+      "archites": 0,
+      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Psycast.png"
+    },
+    {
       "defName": "XylDrugSensitive",
       "label": "drug sensitive",
       "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_DrugSensitive.png",
@@ -76,44 +114,6 @@
       "complexity": 1,
       "metabolism": 3,
       "archites": 0
-    },
-    {
-      "defName": "XylPsycast_Beckon",
-      "label": "beckon",
-      "path": "Art\\Rimworld art\\Psycasts\\Processed\\Beckon.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylPsycasts",
-      "category_priority": 519.0,
-      "priority": 10000,
-      "complexity": 2,
-      "metabolism": -2,
-      "archites": 0,
-      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Psycast.png"
-    },
-    {
-      "defName": "XylPsycast_Focus",
-      "label": "focus",
-      "path": "Art\\Rimworld art\\Psycasts\\Processed\\Focus.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "mod",
-      "category": "XylPsycasts",
-      "category_priority": 519.0,
-      "priority": 14000,
-      "complexity": 2,
-      "metabolism": -2,
-      "archites": 0,
-      "background": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\GeneBackground_Psycast.png"
     },
     {
       "defName": "PsychicAbility_Enhanced",
@@ -406,149 +406,149 @@
   ],
   "layout": [
     {
-      "defName": "XylDrugSensitive",
+      "defName": "XylPsycast_Beckon",
+      "group": "featured",
+      "x": 241.4,
+      "y": 122.0,
+      "size": 52
+    },
+    {
+      "defName": "XylPsycast_Focus",
       "group": "featured",
       "x": 324.2,
+      "y": 122.0,
+      "size": 52
+    },
+    {
+      "defName": "XylDrugSensitive",
+      "group": "featured",
+      "x": 407.0,
       "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylScaleskin",
       "group": "featured",
-      "x": 407.0,
+      "x": 489.8,
       "y": 122.0,
       "size": 52
     },
     {
       "defName": "XylAquatic",
       "group": "featured",
-      "x": 489.8,
+      "x": 572.6,
       "y": 122.0,
       "size": 52
     },
     {
-      "defName": "XylPsycast_Beckon",
-      "group": "supporting",
-      "x": 241.4,
-      "y": 206.0,
-      "size": 32
-    },
-    {
-      "defName": "XylPsycast_Focus",
-      "group": "supporting",
-      "x": 282.8,
-      "y": 206.0,
-      "size": 32
-    },
-    {
       "defName": "PsychicAbility_Enhanced",
       "group": "supporting",
-      "x": 324.2,
+      "x": 262.1,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "NakedSpeed",
       "group": "supporting",
-      "x": 365.6,
+      "x": 303.5,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "WebbedPhalanges",
       "group": "supporting",
-      "x": 407.0,
+      "x": 344.9,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "Mood_Pessimist",
       "group": "supporting",
-      "x": 448.4,
+      "x": 386.3,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "MinTemp_LargeDecrease",
       "group": "supporting",
-      "x": 489.8,
+      "x": 427.7,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "MaxTemp_SmallDecrease",
       "group": "supporting",
-      "x": 531.2,
+      "x": 469.1,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "MeleeDamage_Weak",
       "group": "supporting",
-      "x": 572.6,
+      "x": 510.5,
       "y": 206.0,
       "size": 32
     },
     {
       "defName": "XylEars_Fin",
       "group": "supporting",
-      "x": 241.4,
-      "y": 248.0,
+      "x": 551.9,
+      "y": 206.0,
       "size": 32
     },
     {
       "defName": "Beauty_Pretty",
       "group": "supporting",
-      "x": 282.8,
+      "x": 262.1,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "Hair_BaldOnly",
       "group": "supporting",
-      "x": 324.2,
+      "x": 303.5,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "Hair_SnowWhite",
       "group": "supporting",
-      "x": 365.6,
+      "x": 344.9,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "Skin_Blue",
       "group": "supporting",
-      "x": 407.0,
+      "x": 386.3,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "Hair_Grayless",
       "group": "supporting",
-      "x": 448.4,
+      "x": 427.7,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Construction",
       "group": "supporting",
-      "x": 489.8,
+      "x": 469.1,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudePoor_Mining",
       "group": "supporting",
-      "x": 531.2,
+      "x": 510.5,
       "y": 248.0,
       "size": 32
     },
     {
       "defName": "AptitudeStrong_Social",
       "group": "supporting",
-      "x": 572.6,
+      "x": 551.9,
       "y": 248.0,
       "size": 32
     }
