@@ -1,6 +1,6 @@
 """Keep gene icons and Workshop cards consistent in how they interpret source art.
 
-Both renderers use these inheritance, pigment-color, and texture-resolution rules
+Both renderers use these inheritance, pigment-color, sizing, and texture-resolution rules
 so a new gene or art correction appears consistently in both kinds of output.
 """
 
@@ -14,6 +14,9 @@ DEF_DIR = ROOT / "XylXenos/Data/Defs/GeneDefs"
 ART_DIR = ROOT / "Art/Rimworld art"
 GAME_DATA = Path("C:/Program Files (x86)/Steam/steamapps/common/RimWorld/Data")
 WHITE = (1.0, 1.0, 1.0, 1.0)
+# GeneUIUtility.DrawGeneBasics draws the background at full size and passes 0.9
+# to Widgets.DefIcon. Share that proportion so both compositors match the game.
+GENE_ICON_SCALE = 0.9
 
 
 @dataclass(frozen=True)

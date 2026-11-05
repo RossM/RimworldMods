@@ -37,7 +37,7 @@ import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageFont
 
-from gene_art import GAME_DATA, inherited_text, parse_color, read_defs, read_gene_icons
+from gene_art import GAME_DATA, GENE_ICON_SCALE, inherited_text, parse_color, read_defs, read_gene_icons
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -397,7 +397,9 @@ def build_card(library, def_name, descriptor):
         r, g, b, a = gene.color
         filters.append(f'<filter id="{tint}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="{r} 0 0 0 0  0 {g} 0 0 0  0 0 {b} 0 0  0 0 0 {a} 0"/></filter>')
         picture(gene.background or gene_background, cx - size / 2, y, size, size)
-        picture(gene.path, cx - size / 2, y, size, size, f'filter="url(#{tint})"')
+        foreground_size = size * GENE_ICON_SCALE
+        picture(gene.path, cx - foreground_size / 2, y + (size - foreground_size) / 2,
+                foreground_size, foreground_size, f'filter="url(#{tint})"')
         positions.append(dict(defName=gene.defName, group=group, x=cx, y=y, size=size))
 
     if is_scaleborn:

@@ -2,13 +2,13 @@
 
 Run from any directory: python path/to/Scripts/render-gene-icons.py
 Use --rimworld-data PATH if RimWorld/Data is outside the default Steam location.
-Outputs 80px PNGs named by defName in XylXenos/Data/Docs/Images/Genes/{Endo,Xeno},
-plus contact-sheet.png with labeled 128px endogene icons in the Genes directory.
+Outputs 80px PNGs named by defName in XylXenos/Data/Docs/Images/Genes/{Endo,Xeno,Arch},
+plus Art/Generated/gene-icon-sheet.png with labeled 128px endogene icons.
 Also outputs 48px xenotype PNGs named by defName in XylXenos/Data/Docs/Images/Xenotypes,
 with transparent backgrounds.
 
-Based on Art/Codex/render-genes-contact-sheet.py. Renders concrete mod genes
-and psycast genes used by xenotypes. Core/Biotech definitions supply parents only.
+Renders concrete mod genes and psycast genes used by xenotypes.
+Core/Biotech definitions supply parents only.
 Uses extracted art in Art/Rimworld art and mod textures, including NoArt where
 specified by a definition. Psycasts use the pre-upscaled 256px PNGs in
 Art/Rimworld art/Psycasts/Processed. Run process-psycasts.py separately when their
@@ -22,7 +22,7 @@ import os
 
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
-from gene_art import (ART_DIR, DEF_DIR, GAME_DATA, ROOT, WHITE, inherited_text,
+from gene_art import (ART_DIR, DEF_DIR, GAME_DATA, GENE_ICON_SCALE, ROOT, WHITE, inherited_text,
                       read_defs, read_gene_icons, texture_path)
 
 
@@ -44,7 +44,7 @@ def load_background(path, size):
         return source.convert("RGBA").resize((size, size), Image.Resampling.LANCZOS)
 
 
-def render_icon(texture, background, color=WHITE):
+def render_icon(texture, background, color=WHITE, scale=1.0):
     with Image.open(texture) as source:
         icon = source.convert("RGBA")
     # Match the contact sheet: multiply straight RGB and alpha independently,
@@ -52,7 +52,8 @@ def render_icon(texture, background, color=WHITE):
     icon = Image.merge("RGBA", tuple(
         channel.point([round(value * factor) for value in range(256)])
         for channel, factor in zip(icon.split(), color)))
-    icon = ImageOps.contain(icon, background.size, Image.Resampling.LANCZOS)
+    foreground_size = tuple(round(size * scale) for size in background.size)
+    icon = ImageOps.contain(icon, foreground_size, Image.Resampling.LANCZOS)
     tile = background.copy()
     tile.alpha_composite(icon, ((tile.width - icon.width) // 2, (tile.height - icon.height) // 2))
     return tile
@@ -122,7 +123,7 @@ def render_contact_sheet(genes):
         x = MARGIN + index % COLUMNS * CELL_WIDTH
         y = MARGIN + sum(row_heights[:index // COLUMNS])
         background = load_background(gene.background or default_background, SHEET_ICON_SIZE)
-        sheet.alpha_composite(render_icon(gene.texture, background, gene.color),
+        sheet.alpha_composite(render_icon(gene.texture, background, gene.color, GENE_ICON_SCALE),
                               (x + (CELL_WIDTH - SHEET_ICON_SIZE) // 2, y))
         for line_index, line in enumerate(lines):
             draw.text((x + CELL_WIDTH // 2, y + SHEET_ICON_SIZE + 10 + line_index * 22),
@@ -144,8 +145,8 @@ def main():
         directory.mkdir(parents=True, exist_ok=True)
         for gene in genes:
             background = load_background(gene.background or default_background, ICON_SIZE)
-            render_icon(gene.texture, background, gene.color).save(directory / (gene.name + ".png"))
-    print(f"Saved {len(genes)} genes in both Endo and Xeno variants to {OUTPUT}")
+            render_icon(gene.texture, background, gene.color, GENE_ICON_SCALE).save(directory / (gene.name + ".png"))
+    print(f"Saved {len(genes)} genes in Endo, Xeno, and Arch variants to {OUTPUT}")
     sheet = render_contact_sheet(genes)
     sheet_path = CONTACT_SHEET_OUTPUT / "gene-icon-sheet.png"
     sheet.save(sheet_path)
