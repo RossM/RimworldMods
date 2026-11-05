@@ -213,7 +213,7 @@
   <GeneDef>
     <defName>XylFlirty</defName>
     <label>flirty</label>
-    <description>Carriers of this gene are more likely to attempt romantic interactions.</description>
+    <description>Carriers of this gene are more likely to romance other characters.</description>
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
     <displayCategory>Reproduction</displayCategory>
@@ -230,7 +230,7 @@
       <li>
         <label>flirt</label>
         <labelMale>Don Juan</labelMale>
-        <description>{PAWN_nameDef} has a flirtatious personality. {PAWN_pronoun} is more likely to attempt to romance other characters.</description>
+        <description>{PAWN_nameDef} has a flirtatious personality. {PAWN_pronoun} is more likely to attempt romance and to accept romantic advances.</description>
         <statFactors>
           <XylRomanceChanceFactor>3</XylRomanceChanceFactor>
         </statFactors>

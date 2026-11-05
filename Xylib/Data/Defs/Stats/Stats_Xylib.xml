@@ -366,13 +366,12 @@
   <StatDef>
     <defName>XylRomanceChanceFactor</defName>
     <label>romance chance factor</label>
-    <description>A multiplier on the chance that this character will attempt to initiate romance.</description>
+    <description>A multiplier on the chance that this character will attempt to initiate or accept romance.</description>
     <category>PawnSocial</category>
     <toStringStyle>PercentZero</toStringStyle>
     <defaultBaseValue>1</defaultBaseValue>
     <hideAtValue>1</hideAtValue>
     <minValue>0</minValue>
-    <displayPriorityInCategory>1001</displayPriorityInCategory>
   </StatDef>
 
 </Defs>
