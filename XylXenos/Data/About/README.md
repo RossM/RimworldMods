@@ -56,7 +56,7 @@ Reclamation report, day 577: Cook missed a dose of atlasite. Emergency evacuatio
 
 ![Warcat — Graceful predators](../Docs/Images/XenotypeCards/warcat-card.png)
 
-*"I am not 'Hey, cute kitty'. I am a proud warrior of the Red Leopard Tribe. I have eaten men like you for breakfast, literally. I could slit your throat with these claws right now. I could -- ooh, that's the spot, right behind the ears. Yeah, right there. Purrrrr..."*
+*"I am not 'Hey, cute kitty'. I am a proud warrior of the Red Leopard Tribe. I have eaten men like you for breakfast, literally. I could slit your throat with these claws right now. I could -- ooh, that's the spot. Yeah, right there, right behind the ears. Purrrrr..."*
 
 ### Zeegee
 
