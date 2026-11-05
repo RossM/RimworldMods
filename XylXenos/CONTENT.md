@@ -58,7 +58,7 @@ Minor xenotypes are found as rare members of other factions or in random events.
 
 #### Omegabeaver
 
-Semi-aquatic builders. They move fast in water and are great at logging and construction, but poor at combat.
+Cheerful builders. They move fast in water and are great at logging and construction, but poor at combat.
 
 Omegabeavers are excellent workers, easy to keep happy, and cute mascots for the rest of your colony. They're also absolutely terrible at combat.
 

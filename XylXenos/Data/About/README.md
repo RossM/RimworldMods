@@ -56,7 +56,7 @@ Optional DLC unlocks additional content:
 
 ### Omegabeaver
 
-![Omegabeaver — Semi-aquatic builders](../Docs/Images/XenotypeCards/omegabeaver-card.png)
+![Omegabeaver — Cheerful builders](../Docs/Images/XenotypeCards/omegabeaver-card.png)
 
 ### Scaleborn
 
