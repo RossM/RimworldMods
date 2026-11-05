@@ -374,8 +374,7 @@ public static class PatchHelpers
 
         // It's important that we pass null as the pawn to ValidFor so that gender restrictions in the genes aren't applied.
         static bool HasGenderRatio(GeneDef geneDef, GeneType geneType) =>
-            geneDef.Extension_GeneWithComps is { } extension &&
-            geneDef.CompProps<GeneCompProperties_GenderRatio>() != null &&
-            extension.ValidFor(null, geneType);
+            geneDef.Extension_GeneWithComps?.ValidFor(null, geneType) is true &&
+            geneDef.CompProps<GeneCompProperties_GenderRatio>() != null;
     }
 }
