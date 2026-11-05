@@ -79,11 +79,24 @@ def texture_path(icon_path):
     return path
 
 
-def gene_background(definition, parents):
+def gene_background(definition, parents, archites):
     path = inherited_text(
         definition, "modExtensions/li[@Class='Xylib.DefModExtension_GeneWithComps']/backgroundPath",
         parents)
-    return texture_path(path) if path else None
+    # The game's custom-background patch overrides its normal choice, including
+    # the archite background. Without an override, archite cost takes precedence
+    # over whether a gene is an endogene or xenogene.
+    if path:
+        return texture_path(path)
+    if archites > 0:
+        return ART_DIR / "Genes/GeneBackground_ArchiteGene.png"
+    return None
+
+
+def psycast_biostats(template, level):
+    return next(stats for stats in template.findall("biostats/li")
+                if int(stats.findtext("levels").split("~")[0]) <= level
+                <= int(stats.findtext("levels").split("~")[-1]))
 
 
 def read_gene_icons(game_data):
@@ -106,8 +119,9 @@ def read_gene_icons(game_data):
         if name in icons:
             raise ValueError(f"Duplicate gene: {name}")
         label = inherited_text(gene, "label", parents) or name
+        archites = int(inherited_text(gene, "biostatArc", parents) or 0)
         icons[name] = GeneIcon(name, label, texture_path(icon_path), color,
-                               gene_background(gene, parents))
+                               gene_background(gene, parents, archites))
 
     # Mirror GeneDefGenerator's template naming and ability icon substitution for
     # the psycasts referenced by the mod's xenotypes, rather than unused abilities.
@@ -124,7 +138,6 @@ def read_gene_icons(game_data):
         wanted = {name for name in referenced if name.startswith(prefix)}
         if not wanted:
             continue
-        background = gene_background(template, template_parents)
         abilities = read_defs(game_data / "Royalty/Defs/AbilityDefs", "AbilityDef")
         ability_parents = {ability.attrib["Name"]: ability for ability in abilities
                            if "Name" in ability.attrib}
@@ -136,6 +149,9 @@ def read_gene_icons(game_data):
             icon_path = template.findtext("iconPath").format(path)
             label = template.findtext("label").format(
                 inherited_text(ability, "label", ability_parents) or name)
+            level = int(inherited_text(ability, "level", ability_parents))
+            archites = int(psycast_biostats(template, level).findtext("biostatArc", "0"))
+            background = gene_background(template, template_parents, archites)
             icons[name] = GeneIcon(name, label, texture_path(icon_path), WHITE, background)
         if missing := wanted - icons.keys():
             raise ValueError(f"Missing psycast definitions: {sorted(missing)}")

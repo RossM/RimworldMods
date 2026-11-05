@@ -2,7 +2,7 @@
 
 Run from any directory: python path/to/Scripts/render-gene-icons.py
 Use --rimworld-data PATH if RimWorld/Data is outside the default Steam location.
-Outputs 80px PNGs named by defName in XylXenos/Data/Docs/Images/Genes/{Endo,Xeno,Arch},
+Outputs 80px PNGs named by defName in XylXenos/Data/Docs/Images/Genes/{Endo,Xeno},
 plus Art/Generated/gene-icon-sheet.png with labeled 128px endogene icons.
 Also outputs 48px xenotype PNGs named by defName in XylXenos/Data/Docs/Images/Xenotypes,
 with transparent backgrounds.
@@ -138,15 +138,14 @@ def main():
     args = parser.parse_args()
     genes = read_gene_icons(args.rimworld_data)
     for variant, filename in (("Endo", "GeneBackground_Endogene.png"),
-                              ("Xeno", "GeneBackground_Xenogene.png"),
-                              ("Arch", "GeneBackground_ArchiteGene.png")):
+                              ("Xeno", "GeneBackground_Xenogene.png")):
         default_background = ART_DIR / "Genes" / filename
         directory = OUTPUT / variant
         directory.mkdir(parents=True, exist_ok=True)
         for gene in genes:
             background = load_background(gene.background or default_background, ICON_SIZE)
             render_icon(gene.texture, background, gene.color, GENE_ICON_SCALE).save(directory / (gene.name + ".png"))
-    print(f"Saved {len(genes)} genes in Endo, Xeno, and Arch variants to {OUTPUT}")
+    print(f"Saved {len(genes)} genes in Endo and Xeno variants to {OUTPUT}")
     sheet = render_contact_sheet(genes)
     sheet_path = CONTACT_SHEET_OUTPUT / "gene-icon-sheet.png"
     sheet.save(sheet_path)

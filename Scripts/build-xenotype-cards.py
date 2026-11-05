@@ -37,7 +37,8 @@ import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageFont
 
-from gene_art import GAME_DATA, GENE_ICON_SCALE, inherited_text, parse_color, read_defs, read_gene_icons
+from gene_art import (GAME_DATA, GENE_ICON_SCALE, gene_background as resolve_gene_background,
+                      inherited_text, parse_color, psycast_biostats, read_defs, read_gene_icons)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -243,9 +244,7 @@ class GeneLibrary:
                 index, source = self.psycasts[source_name]
                 icon = self.value(definition, "iconPath").format(self.value(source, "iconPath"))
                 level = int(self.value(source, "level"))
-                stats = next(s for s in definition.findall("biostats/li")
-                             if int(s.findtext("levels").split("~")[0]) <= level
-                             <= int(s.findtext("levels").split("~")[-1]))
+                stats = psycast_biostats(definition, level)
                 complexity = int(stats.findtext("biostatCpx", "0"))
                 metabolism = int(stats.findtext("biostatMet", "0"))
                 archites = int(stats.findtext("biostatArc", "0"))
@@ -275,6 +274,7 @@ class GeneLibrary:
             background = rendered.background
         else:
             texture = ART / "Genes" / (icon.removeprefix("UI/Icons/Genes/") + ".png")
+            background = resolve_gene_background(definition, self.parents.get(definition.tag, {}), archites)
             color = parse_color(self.value(definition, "skinColorOverride")
                                 or self.value(definition, "hairColorOverride")
                                 or self.value(definition, "iconColor"))
