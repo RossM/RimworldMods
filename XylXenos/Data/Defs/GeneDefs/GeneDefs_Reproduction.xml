@@ -14,6 +14,11 @@
     <biostatMet>0</biostatMet>
     <displayCategory>XylInheritance</displayCategory>
     <selectionWeight>0</selectionWeight>
+    <!-- 
+    randomChosen doesn't actually have an effect since gender modification happens outside the normal gene activation code.
+    However, it causes the pawn to appear to have had a random gender gene selected.
+    -->
+    <randomChosen>true</randomChosen>
     <exclusionTags>
       <!-- Matches Alpha Genes. -->
       <li>Gender</li>
@@ -47,6 +52,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <geneType>Endogene</geneType>
+        <gender>Female</gender>
         <comps>
           <li Class="XylXenos.GeneCompProperties_GenderRatio">
             <femaleChance>1.0</femaleChance>
@@ -119,6 +125,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Inheritance</backgroundPath>
         <geneType>Endogene</geneType>
+        <gender>Male</gender>
         <comps>
           <li Class="XylXenos.GeneCompProperties_GenderRatio">
             <femaleChance>0.0</femaleChance>

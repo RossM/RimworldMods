@@ -357,21 +357,25 @@ public static class PatchHelpers
         if (request.FixedGender != null)
             return;
 
-        GeneDef? gene = request.ForcedXenogenes?.FirstOrDefault(def => HasGenderRatio(def, GeneType.Xenogene)) ??
-                        request.ForcedEndogenes?.FirstOrDefault(def => HasGenderRatio(def, GeneType.Endogene)) ??
-                        request.ForcedCustomXenotype?.genes.FirstOrDefault(def =>
-                            HasGenderRatio(def, request.ForcedCustomXenotype.GeneType)) ??
-                        xenotype?.AllGenes.FirstOrDefault(def => HasGenderRatio(def, xenotype.GeneType));
-        var comp = gene?.CompProps<GeneCompProperties_GenderRatio>();
-        if (comp == null)
+        List<GeneDef>? genes = request.ForcedXenogenes?.Where(def => HasGenderRatio(def, GeneType.Xenogene)).ToList();
+        if (genes.NullOrEmpty())
+            genes = request.ForcedEndogenes?.Where(def => HasGenderRatio(def, GeneType.Endogene)).ToList();
+        if (genes.NullOrEmpty())
+            genes = request.ForcedCustomXenotype?.genes.Where(def => HasGenderRatio(def, request.ForcedCustomXenotype.GeneType)).ToList();
+        if (genes.NullOrEmpty())
+            genes = xenotype?.AllGenes.Where(def => HasGenderRatio(def, xenotype.GeneType)).ToList();
+
+        if (genes.NullOrEmpty())
             return;
 
+        var comp = genes.RandomElement()!.CompProps<GeneCompProperties_GenderRatio>()!;
         pawn.gender = Rand.Chance(comp.femaleChance) ? Gender.Female : Gender.Male;
         return;
 
+        // It's important that we pass null as the pawn to ValidFor so that gender restrictions in the genes aren't applied.
         static bool HasGenderRatio(GeneDef geneDef, GeneType geneType) =>
             geneDef.Extension_GeneWithComps is { } extension &&
             geneDef.CompProps<GeneCompProperties_GenderRatio>() != null &&
-            !(extension.geneType is { } type && type != geneType);
+            extension.ValidFor(null, geneType);
     }
 }
