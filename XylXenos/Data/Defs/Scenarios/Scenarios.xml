@@ -317,7 +317,7 @@
           <thingDef>Turret_MiniTurret</thingDef>
           <stuff>Steel</stuff>
         </li>
-        <li Class="ScenPart_StartingThing_Defined">
+        <li Class="XylXenos.ScenPart_StartingThing_Defined_Charged">
           <def>StartingThing_Defined</def>
           <thingDef>Battery</thingDef>
           <count>1</count>
