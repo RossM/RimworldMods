@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Xylib.Analyzer\Xylib.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4995-unstable" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.5000-unstable" />
     <PackageReference Include="PolySharp" Version="1.16.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

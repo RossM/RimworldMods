@@ -4,6 +4,6 @@
     <ProjectReference Include="..\Yobai\Yobai.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="Krafs.Rimworld.Ref" Version="1.7.4995-unstable" />
+    <PackageReference Update="Krafs.Rimworld.Ref" Version="1.7.5000-unstable" />
   </ItemGroup>
 </Project>
