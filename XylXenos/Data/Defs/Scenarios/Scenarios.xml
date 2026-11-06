@@ -238,4 +238,120 @@
     </scenario>
   </ScenarioDef>
 
+  <ScenarioDef ParentName="ScenarioBase">
+    <defName>XylHomeOnTheRim</defName>
+    <label>Home on the Rim</label>
+    <description>You quit your safe, steady, boring job and sunk everything you had into a tailored gene package, a few supplies, and a one-way ticket to this remote rimworld. What happens from here on out is entirely up to you.</description>
+    <scenario>
+      <summary>One settler and a few supplies. Difficult.</summary>
+      <parts>
+        
+        <li Class="XylXenos.ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext">
+          <def>ConfigurePawnsXenotypes</def>
+          <xenotypeCounts>
+            <li>
+              <xenotype>XylSteadling</xenotype>
+              <count>1</count>
+            </li>
+          </xenotypeCounts>
+        </li>
+        <li Class="ScenPart_PlayerPawnsArriveMethod">
+          <def>PlayerPawnsArriveMethod</def>
+          <method>DropPods</method>
+        </li>
+        <li Class="ScenPart_ForcedHediff">
+          <def>ForcedHediff</def>
+          <chance>0.5</chance>
+          <context>PlayerStarter</context>
+          <hideOffMap>True</hideOffMap>
+          <hediff>CryptosleepSickness</hediff>
+          <severityRange>1~1</severityRange>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Silver</thingDef>
+          <count>200</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MealSurvivalPack</thingDef>
+          <count>20</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MedicineIndustrial</thingDef>
+          <count>10</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>ComponentIndustrial</thingDef>
+          <count>10</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>SmokeleafJoint</thingDef>
+          <count>10</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_BoltActionRifle</thingDef>
+          <quality>Good</quality>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_Duster</thingDef>
+          <stuff>Synthread</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_CowboyHat</thingDef>
+          <stuff>Synthread</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Turret_MiniTurret</thingDef>
+          <stuff>Steel</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Battery</thingDef>
+          <count>1</count>
+        </li>
+        <li Class="ScenPart_StartingAnimal">
+          <def>StartingAnimal</def>
+          <count>1</count>
+          <bondToRandomPlayerPawnChance>1</bondToRandomPlayerPawnChance>
+        </li>
+        <li Class="XylXenos.ScenPart_StartingLivestock">
+          <def>XylStartingLivestock</def>
+          <tradeTags>
+            <li>AnimalFarm</li>
+          </tradeTags>
+          <countMale>1</countMale>
+          <countFemale>1</countFemale>
+        </li>
+        <li Class="ScenPart_ScatterThingsNearPlayerStart">
+          <def>ScatterThingsNearPlayerStart</def>
+          <thingDef>Steel</thingDef>
+          <count>150</count>
+          <allowRoofed>True</allowRoofed>
+        </li>
+        <li Class="ScenPart_ScatterThingsNearPlayerStart">
+          <def>ScatterThingsNearPlayerStart</def>
+          <thingDef>WoodLog</thingDef>
+          <count>200</count>
+          <allowRoofed>True</allowRoofed>
+        </li>
+
+        <li Class="ScenPart_GameStartDialog">
+          <def>GameStartDialog</def>
+          <text>Welcome to the rim.</text>
+          <textKey>GameStartDialog</textKey>
+          <closeSound>GameStartSting</closeSound>
+        </li>
+
+      </parts>
+    </scenario>
+  </ScenarioDef>
+
 </Defs>

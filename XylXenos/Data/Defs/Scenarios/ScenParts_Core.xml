@@ -11,13 +11,22 @@
     <summaryPriority>310</summaryPriority>
   </ScenPartDef>
 
+  <ScenPartDef>
+    <defName>XylStartingLivestock</defName>
+    <label>start with livestock</label>
+    <scenPartClass>XylXenos.ScenPart_StartingLivestock</scenPartClass>
+    <category>StartingImportant</category>
+    <selectionWeight>1.0</selectionWeight>
+    <summaryPriority>311</summaryPriority>
+  </ScenPartDef>
+
   <ScenPartDef MayRequire="Ludeon.Rimworld.Royalty">
     <defName>XylPsylinkLevels</defName>
     <label>start with psylink levels</label>
     <scenPartClass>XylXenos.ScenPart_PsylinkLevels</scenPartClass>
     <category>StartingImportant</category>
     <selectionWeight>1.0</selectionWeight>
-    <summaryPriority>311</summaryPriority>
+    <summaryPriority>312</summaryPriority>
   </ScenPartDef>
 
   <ScenPartDef MayRequire="Ludeon.Rimworld.Royalty">
@@ -26,7 +35,7 @@
     <scenPartClass>XylXenos.ScenPart_Psycast</scenPartClass>
     <category>StartingImportant</category>
     <selectionWeight>1.0</selectionWeight>
-    <summaryPriority>312</summaryPriority>
+    <summaryPriority>313</summaryPriority>
   </ScenPartDef>
 
   <ScenPartDef>
@@ -35,7 +44,7 @@
     <scenPartClass>XylXenos.ScenPart_RandomXenotype</scenPartClass>
     <category>StartingImportant</category>
     <selectionWeight>1.0</selectionWeight>
-    <summaryPriority>313</summaryPriority>
+    <summaryPriority>314</summaryPriority>
   </ScenPartDef>
 
 </Defs>
