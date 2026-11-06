@@ -10,8 +10,8 @@ public class ScenPart_StartingLivestock : ScenPart
     public int countMale = 1;
     public int countFemale = 1;
 
-    private string countMaleBuf;
-    private string countFemaleBuf;
+    [Unsaved] private string? countMaleBuf;
+    [Unsaved] private string? countFemaleBuf;
 
     public override void ExposeData()
     {
@@ -60,7 +60,7 @@ public class ScenPart_StartingLivestock : ScenPart
         return animalKind?.label ?? "XylRandomLivestock".Translate();
     }
 
-    private IEnumerable<PawnKindDef> RandomPets()
+    private List<PawnKindDef> RandomPets()
     {
         List<PawnKindDef> result = [.. PossibleAnimals().Where(Validate)];
         if (result is not { Count: >0 })
