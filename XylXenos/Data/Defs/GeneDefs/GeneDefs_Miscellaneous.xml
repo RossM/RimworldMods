@@ -562,7 +562,7 @@
   <GeneDef>
     <defName>XylWoundHealing_UltraFast</defName>
     <label>ultra-fast wound healing</label>
-    <description>Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or blood loss.</description>
+    <description>Carriers of this gene heal wounds unnaturally quickly, often recovering from even the most serious injuries in mere hours. It won't fix permanent scars or missing parts.</description>
     <displayCategory>Archite</displayCategory>
     <displayOrderInCategory>0</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_UltraFastWoundHealing</iconPath>
