@@ -142,6 +142,10 @@ Individual xenotypes, including base-game xenotypes, can be enabled or disabled 
 
 <!-- TODO: Explain endogenes versus xenogenes, Scaleborn lineage inheritance, and other special inheritance rules. -->
 
+### I'm a mod author. Can I use your stuff in my mod?
+
+Sure! You can depend on my mod, or you can use my code or assets as a start for your own &mdash; it's all MIT licensed. If you'd like to use the code that powers the mod without pulling in all the gameplay content, I'm considering making it available as a standalone library mod; let me know if you want that to happen.
+
 ## Documentation and support
 
 - [Full xenotype and gene reference](../../README.md)
