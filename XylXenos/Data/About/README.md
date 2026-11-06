@@ -2,7 +2,7 @@
 
 Yep, it's yet another gene and xenotype mod for RimWorld. But this one is mine, and I'm very proud of it. So *nyah.* Download it and give it a try, it would make me happy. It would also make me happy if you give it a thumbs up if you like it.
 
-This mod includes the 12 xenotypes, 121 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed and balanced to be lore-friendly and fit with vanilla RimWorld as well as I can make it.
+This mod includes 12 xenotypes, 121 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed and balanced to be lore-friendly and fit with vanilla RimWorld as well as I can make it.
 
 Since this is an initial release, and finding good playtesters is *hard,* there's probably a lot of rough edges. Want to be a playtester? Just play and report your thoughts and experiences in the comments section. It really helps! There should be dedicated threads for bug reports, balance feedback, gameplay stories, and mod compatibility reports/requests. If there aren't I forgot to make them, oops.
 
