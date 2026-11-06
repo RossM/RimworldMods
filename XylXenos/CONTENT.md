@@ -14,6 +14,12 @@ What is this xenotype's unique strength? Easy to keep and feed.
 What is this xenotype bad at? Ranged combat.
 What does this xenotype need? A large colony.
 
+Genes
+
+* Herd instinct, docile, pain reversal: Designed as livestock, they're well suited for poor treatment and make especially good slaves.
+* Herbivore stomach, cold tolerant, heat tolerant, fertile, hyperlactation, usually female: They survive well in poor conditions, and convert raw plants into cookable milk.
+* Seeing red, large horns, robust: They're incredibly dangerous if provoked.
+
 #### Chyrr
 
 Nocturnal flyers. Their wings and innate stun ability make them excellent skirmishers, but they go into hibernation in lower temperatures.
@@ -34,6 +40,13 @@ What is this xenotype's unique strength? Labor.
 What is this xenotype bad at? Social niceties.
 What does this xenotype need? Plenty of alcohol.
 
+Genes
+
+* Fungus eater,	strong stomach, dark vision, indoor dweller, heat super-tolerant: Well suited for life underground eating raw fungus.
+* Alcohol dependency: They need alcohol to get through the working day.
+* Strong construction, strong mining, strong crafting, industrious: Excellent workers.
+* Stoic, melancholy, aggressive: Normally they just grumble, but they're easy to push over the edge.
+
 #### Nixie
 
 Aquatic sirens. They're unmatched in water, but unless they periodically soak to keep their skin moist they'll become very unhappy.
@@ -43,6 +56,13 @@ Nixies do best in cold maps with lots of water. They're poor at melee, but speci
 What is this xenotype's unique strength? Aquatic movement.
 What is this xenotype bad at? Building.
 What does this xenotype need? Cool temperatures or lots of water.
+
+Genes
+
+* Beckon, focus, psy-sensitive: Their innate psychic powers make them a force in combat.
+* Scaleskin, naked speed, webbed phalanges, weak melee damage: They can run circles around other xenotypes in water, but are weak in a straight-up brawl.
+* Attractive, strong social: They make good diplomats and negotitors.
+* Aquatic, unhappy, cold super-tolerant, heat weakness: Theye need cool temperatures and plenty of water to stay comfortable.
 
 #### Titan
 
@@ -74,6 +94,13 @@ What is this xenotype's unique strength? Melee combat.
 What is this xenotype bad at? Civilzied life.
 What does this xenotype need? A regular supply of raw meat.
 
+Genes:
+
+* Carnivore stomach, meat dependence, poor plants: They're specialized on a pure carnivore diet.
+* Feral rage, retractable claws, fast reflexes, strong melee damage, great melee: They are incredible melee fighters.
+* Moody, hyper-aggressive: They're prone to fits of rage and randomly hunting small animals.
+* Poor crafting, sleepy: They're not great workers.
+
 #### Zeegee
 
 High-tech spacers. They learn fast and are excellent shots with long-ranged weapons, but they do poorly on planetary surfaces.
@@ -83,6 +110,12 @@ Zeegees can be challenging to play. They're excellent in space, with the ability
 What is this xenotype's unique strength? Suitability for high tech and ranged weapons.
 What is this xenotype bad at? Living on the planet's surface.
 What does this xenotype need? Support from others.
+
+Genes
+* Tech affinity, quick study, strong intellectual: They take naturally to high technology.
+* Emergency reserves, planet sickness, low gravity adapted, dark vision, indoor dweller: They're well suited for life in space but do poor in planetary gravity.
+* Telescopic vision, strong shooting: They make good snipers.
+* Weak immunity, weak melee damage, delicate: They're not well suited for close-in fighting.
 
 ### Minor xenotypes
 
