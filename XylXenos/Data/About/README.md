@@ -14,9 +14,9 @@ Since this is an initial release, and finding good playtesters is *hard,* there'
 
 Optional DLC unlocks additional content:
 
-- **Royalty:** Innate psycast genes and a Nixie-specific scenario.
+- **Royalty:** Innate psycast genes and a nixie-specific scenario.
 - **Ideology:** Integration with the ideoligeon system and additional gene-based unlocks for Ideology content that's normally locked to specific memes.
-- **Odyssey:** Additional space-related content and a variant seal that Nixie traders will use as pack animals.
+- **Odyssey:** Additional space-related content and a variant seal that nixie traders will use as pack animals.
 
 <!-- TODO: Confirm framework dependencies and load order for the published build. -->
 
@@ -26,95 +26,39 @@ Optional DLC unlocks additional content:
 
 ### Bossaps: Sentient livestock
 
-![Bossaps — Sentient livestock](../Docs/Images/XenotypeCards/bossaps-card.png)
-
 ### Chyrr: Nocturnal fliers
-
-![Chyrr — Nocturnal flyers](../Docs/Images/XenotypeCards/chyrr-card.png)
 
 ### Dvergr: Industrious dwarves
 
-![Dvergr — Industrious dwarves](../Docs/Images/XenotypeCards/dvergr-card.png)
-
 ### Nixie: Aquatic sirens
-
-![Nixie — Aquatic sirens](../Docs/Images/XenotypeCards/nixie-card.png)
 
 *"Some years, if it gets cold enough in winter, you can walk right out onto the ice on the bay. That's when you can hear it. Singing from underneath the ice. I heard it once in my youth. So beautiful. I'd give anything to hear it again."*
 
 ### Titan: Engineered stone giants
 
-![Titan — Engineered stone giants](../Docs/Images/XenotypeCards/titan-card.png)
-
-*Reclamation report, day 575: Excavation uncovered a class 3 insect hive. One worker seriously wounded, one minorly injured. No interruption to schedule.<br>
+*Reclamation report, day 575: Excavation uncovered a class 3 insect hive. One worker seriously wounded, one minor injuries. No interruption to schedule.<br>
 Reclamation report, day 576: Toxic sludge flow directly through base camp. Minor damage to structure, no injuries.<br>
 Reclamation report, day 577: Cook missed a dose of atlasite. Emergency evacuation shuttle delayed by meteor shower. Requesting replacement cook from headquarters.*
 
 ### Trog: Adaptable mutants
 
-![Trog — Adaptable mutants](../Docs/Images/XenotypeCards/trog-card.png)
-
 ### Warcat: Graceful predators
-
-![Warcat — Graceful predators](../Docs/Images/XenotypeCards/warcat-card.png)
 
 *"I am not 'Hey, cute kitty'. I am a proud warrior of the Red Leopard Tribe. I have eaten men like you for breakfast, literally. I could slit your throat with these claws right now. I could -- ooh, that's the spot. Yeah, right there, behind the ears. Purrrrr..."*
 
-### Zeegee: High-teck spacers
-
-![Zeegee — High-tech spacers](../Docs/Images/XenotypeCards/zeegee-card.png)
+### Zeegee: High-tech spacers
 
 ### Omegabeaver: Cheerful builders
 
-![Omegabeaver — Cheerful builders](../Docs/Images/XenotypeCards/omegabeaver-card.png)
-
 ### Scaleborn: Draconic warriors
-
-![Scaleborn — Draconic warriors](../Docs/Images/XenotypeCards/scaleborn-card.png)
 
 ### Steadling: Hardy generalists
 
-![Steadling — Hardy generalists](../Docs/Images/XenotypeCards/steadling-card.png)
-
 ### Succuboid: Charming seductresses
 
-![Succuboid — Charming seductresses](../Docs/Images/XenotypeCards/succuboid-card.png)
+## More information
 
-## Genes
-
-<!-- TODO: Introduce the gene collection and highlight a few distinctive mechanics, cosmetic options, and Royalty psycasts. Add selected gene illustrations and point to the complete reference below. -->
-
-## Other content
-
-### Factions
-
-<!-- TODO: Introduce the rough dvergr union, gentle nixie tribe, cannibal warcat tribe, and savage trog tribe. -->
-
-### Scenarios
-
-<!-- TODO: Summarize Dvergr Fortress, Menagerie, The Siren, and Warcat Tribe. Mark DLC requirements. -->
-
-### Events and quests
-
-<!-- TODO: Introduce A Titanic Problem, wild bossaps herds, and the zeegee pod crash. Explain how they bring the xenotypes into a colony's story. -->
-
-### Items and buildings
-
-<!-- TODO: Highlight lithoid drugs, coral, sea silk, and the nixie shower, with screenshots where useful. -->
-
-### Animals
-
-<!-- TODO: Introduce selkies and shellbacks, including where players encounter them. -->
-
-### Ideology integration
-
-<!-- TODO: Explain xenotype preferences for memes and gene-based recipe/building unlocks. -->
-
-## Configuration
-
-Individual xenotypes, including base-game xenotypes, can be enabled or disabled in the mod settings. Changes require a restart and do not alter characters or factions already present in a save.
-
-<!-- TODO: Add a settings screenshot and any other player-facing options. -->
+For fuller information on xenotypes, genes, factions, etc., see the documentation on GitHub pages. <!-- TODO: Insert GitHub pages link. -->
 
 ## Compatibility and known issues
 
@@ -124,31 +68,23 @@ Individual xenotypes, including base-game xenotypes, can be enabled or disabled 
 
 ### Can I add this to an existing save?
 
-<!-- TODO: Verify and describe mid-save installation, including which factions, events, or other content require a new world. -->
+Yes. Some content, such as the factions, requires a new save to see.
 
 ### Can I remove it from an existing save?
 
-<!-- TODO: Document removal separately from installation, based on tested behavior. -->
+Not recommended.
 
 ### How do I find the xenotypes and acquire their genes?
 
-The first eight xenotypes listed, bossaps through zeegee, are what I consider "major" xenotypes. Most of them have their own factions or events to introduce them, and all of them appear fairly frequently in appropriate factions. You shouldn't have any trouble finding them during play, except maybe chyrr, which are intentionally a bit rarer.
+Bossaps, chyrr, dvergr, nixie, titan, trog, warcat, and zeegee are what I consider "major" xenotypes. Most of them have their own factions or events to introduce them, and all of them appear fairly frequently in appropriate factions. You shouldn't have any trouble finding them during play, except maybe chyrr, which are intentionally a bit rarer.
 
-The last four xenotypes - omegabeaver, scaleborn, steadling, and succuboid - are "minor" xenotypes. You might rarely see one during play, but your best bet is to pick one as a starting colonist.
+The other four xenotypes - omegabeaver, scaleborn, steadling, and succuboid - are "minor" xenotypes. You might rarely see one during play, but your best bet is to pick one as a starting colonist.
 
 Most of the genes can also be found in gene packs available from traders.
 
-### Can I use these genes in custom xenotypes?
-
-<!-- TODO: Explain gene availability, special restrictions, and any dependencies between genes. -->
-
-### Which genes are inherited?
-
-<!-- TODO: Explain endogenes versus xenogenes, Scaleborn lineage inheritance, and other special inheritance rules. -->
-
 ### I'm a mod author. Can I use your stuff in my mod?
 
-Sure! You can depend on my mod, or you can use my code or assets as a start for your own &mdash; it's all MIT licensed. If you'd like to use the code that powers the mod without pulling in all the gameplay content, I'm considering making it available as a standalone library mod; let me know if you want that to happen.
+Sure! You can depend on my mod, or you can use my code or assets as a start for your own - it's all MIT licensed. If you'd like to use the code that powers the mod without pulling in all the gameplay content, I'm considering making it available as a standalone library mod; let me know if you want that to happen.
 
 ### I am a writer or artist. How can I help?
 
