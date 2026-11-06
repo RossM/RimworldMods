@@ -112,7 +112,7 @@ What is this xenotype bad at? Living on the planet's surface.
 What does this xenotype need? Support from others.
 
 Genes
-* Tech affinity, quick study, strong intellectual: They take naturally to high technology.
+* Tech affinity, quick study, strong intellectual: They make good researchers and take naturally to high technology.
 * Emergency reserves, planet sickness, low gravity adapted, dark vision, indoor dweller: They're well suited for life in space but do poor in planetary gravity.
 * Telescopic vision, strong shooting: They make good snipers.
 * Weak immunity, weak melee damage, delicate: They're not well suited for close-in fighting.
