@@ -150,6 +150,18 @@ Most of the genes can also be found in gene packs available from traders.
 
 Sure! You can depend on my mod, or you can use my code or assets as a start for your own &mdash; it's all MIT licensed. If you'd like to use the code that powers the mod without pulling in all the gameplay content, I'm considering making it available as a standalone library mod; let me know if you want that to happen.
 
+### I am a writer or artist. How can I help?
+
+Great! I love help. I'm a software engineer by trade, so writing and art are not my strong suits. The best way to reach me is on the RimWorld modding discord <!-- TODO: insert link. ==>.
+
+### I am not a writer or artist. How can I help?
+
+The best way to help is to just play and provide feedback. <!-- TODO: Add links to specific feedback discussions. -->
+
+### I have a cool idea, will you add it to your mod?
+
+I'm always open to suggestions, but if they need substantial amounts of writing or art they might not make it unless someone helps with that. See "I am a writer or artist. How can I help?"
+
 ## Documentation and support
 
 <!-- TODO: Add the final source-code, release-history, and bug-report links. Include what to provide with a bug report: game/mod versions, mod list, logs, reproduction steps, and a save when relevant. -->
