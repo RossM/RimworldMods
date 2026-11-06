@@ -14,9 +14,9 @@ Since this is an initial release, and finding good playtesters is *hard,* there'
 
 Optional DLC unlocks additional content:
 
-- **Royalty:** Innate psycast genes and The Siren scenario.
-- **Ideology:** Xenotype preferences for memes and additional gene-based recipe and building unlocks.
-- **Odyssey:** Additional space-related content, the zeegee pod crash, and selkie pack animals.
+- **Royalty:** Innate psycast genes and a Nixie-specific scenario.
+- **Ideology:** Integration with the ideoligeon system and additional gene-based unlocks for Ideology content that's normally locked to specific memes.
+- **Odyssey:** Additional space-related content and a variant seal that Nixie traders will use as pack animals.
 
 <!-- TODO: Confirm framework dependencies and load order for the published build. -->
 
