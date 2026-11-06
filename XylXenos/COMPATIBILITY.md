@@ -23,10 +23,8 @@ These are the mods in my regular playtesting mod list:
 
 These are mods that have compatability code in Xyl's Xenos and have been checked that things look vaguely right, but not extensively playtested:
 
-* Alpha Genes
 * Better Gene Inheritance
 	* New scaleborn and succuboid pawns will use Better Gene Inheritance genes rather than Xyl's Xenos genes with identical effects.
-* Big and Small
 * Big and Small Framework
 * Lactation Expansion
 	* This mod replaces the vanilla lactation system. If it's installed, bossaps will lose access to their custom milking mechanics and instead use Lactation Expansion's. 
@@ -35,6 +33,10 @@ These are mods that have compatability code in Xyl's Xenos and have been checked
 
 ## Partially compatible
 
+* Alpha Genes
+	* Mixing the gender genes from different mods is not recommended.
+* Big and Small
+	* Mixing the gender genes from different mods is not recommended.
 * Dubs Bad Hygiene
 	* Nixies will get wetness from Dubs baths and showers, but don't know to use a Dubs bath or shower when they are low on wetness.
 * Vanilla Psycasts Expanded
