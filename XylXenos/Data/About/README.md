@@ -132,7 +132,11 @@ Individual xenotypes, including base-game xenotypes, can be enabled or disabled 
 
 ### How do I find the xenotypes and acquire their genes?
 
-<!-- TODO: Cover starting colonists, factions, events, traders, gene packs, and extraction where applicable. -->
+The first eight xenotypes listed, bossaps through zeegee, are what I consider "major" xenotypes. Most of them have their own factions or events to introduce them, and all of them appear fairly frequently in appropriate factions. You shouldn't have any trouble finding them during play, except maybe chyrr, which are intentionally a bit rarer.
+
+The last four xenotypes - omegabeaver, scaleborn, steadling, and succuboid - are "minor" xenotypes. You might rarely see one during play, but your best bet is to pick one as a starting colonist.
+
+Most of the genes can also be found in gene packs available from traders.
 
 ### Can I use these genes in custom xenotypes?
 
