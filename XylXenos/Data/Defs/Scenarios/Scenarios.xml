@@ -309,6 +309,11 @@
         </li>
         <li Class="ScenPart_StartingThing_Defined">
           <def>StartingThing_Defined</def>
+          <thingDef>Novel</thingDef>
+          <quality>Good</quality>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
           <thingDef>Turret_MiniTurret</thingDef>
           <stuff>Steel</stuff>
         </li>
