@@ -148,9 +148,6 @@ Sure! You can depend on my mod, or you can use my code or assets as a start for 
 
 ## Documentation and support
 
-- [Full xenotype and gene reference](../../README.md)
-- [Content overview](../../CONTENT.md)
-
 <!-- TODO: Add the final source-code, release-history, and bug-report links. Include what to provide with a bug report: game/mod versions, mod list, logs, reproduction steps, and a save when relevant. -->
 
 ## Credits and license
