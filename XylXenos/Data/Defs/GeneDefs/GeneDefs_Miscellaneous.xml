@@ -609,7 +609,7 @@
   <HediffDef ParentName="DiseaseBase">
     <defName>XylPlanetSickness</defName>
     <label>planet sickness</label>
-    <description>Nausea and vomiting caused by a genetic predisposition to motion sickness on planetary surfaces. An episode lasts about a day.</description>
+    <description>Nausea and vomiting caused by a genetic predisposition to sickness on planetary surfaces. An episode lasts about a day.</description>
     <descriptionHyperlinks>
       <GeneDef>XylPlanetSickness</GeneDef>
     </descriptionHyperlinks>
