@@ -487,7 +487,7 @@ def build_card(library, def_name, descriptor):
            *filters, '</defs>',
            f'<rect x="0.5" y="0.5" width="{CARD_WIDTH-1}" height="{CARD_HEIGHT-1}" rx="10" fill="url(#surface)" stroke="#4a4c52" stroke-width="1"/>',
            *parts, '</svg>']
-    stem = name.lower() + "-card"
+    stem = name
     svg_path = GENERATED_OUT / (stem + ".svg")
     png_path = PNG_OUT / (stem + ".png")
     write_text(svg_path, "\n".join(svg))
@@ -514,7 +514,7 @@ def build_card(library, def_name, descriptor):
                                     genes=[gene_data(gene) for gene in lineage.genes]) for lineage in lineages]
     if specialties:
         manifest["specialties"] = [gene_data(gene) for gene in specialties]
-    write_text(GENERATED_OUT / (stem + "-data.json"), json.dumps(manifest, indent=2))
+    write_text(GENERATED_OUT / (stem + ".json"), json.dumps(manifest, indent=2))
     render_png(["-background", "none", str(svg_path)], png_path)
     with Image.open(png_path) as saved:
         saved.verify()
