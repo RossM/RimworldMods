@@ -59,6 +59,7 @@
           <color>(170,240,255)</color>
         </bodyGraphicData>
         <swimmingGraphicData>
+          <!-- Selkie has a custom pack graphic for swimming, but the game will not use it -->
           <texPath>Xyl/Things/Pawn/Animal/Selkie/Swimming_Selkie</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
           <drawSize>1.0</drawSize>
