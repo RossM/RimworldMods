@@ -22,27 +22,16 @@ Optional DLC unlocks additional content:
 
 [list]
 [*][b]Bossaps - Sentient livestock:[/b] Designed as livestock, bossaps survive well in harsh conditions and put up with poor treatment - but if they're injured in combat they may go into a berserk rage and charge enemies horns-first.
-
 [*][b]Chyrr - Nocturnal fliers:[/b] Functional wings and innate sonic stun ability make them outstanding at hit-and-run tactics, especially at night, but they're bad at toe-to-to fighting. Cold temperatures can send them into a state of helpless torpor.
-
 [*][b]Dvergr - Industrious dwarves:[/b] Dvergr are excellent workers, skilled at mining, construction, and crafting, but not so great at social niceties. They're well suited for life underground, using raw fungus as both food and raw material for booze to fulfil their genetic alcohol need.
-
 [*][b]Nixie - Aquatic sirens:[/b] Nixies do best on maps with lots of water. They can use their innate psychic abilities to lure enemies into the water and then swim circles around them. The downside? They need to spend hours a day soaking in water, especially in hot environments.
-
 [*][b]Titan - Engineered stone giants:[/b] Titans are purpose-built workers designed for the extreme environments of deathworlds. They're nearly indestructible, with high health, natural armor, and plenty of resistances and immunities. They can even pick up and throw rocks in combat, making them living siege weapons. The downsides? They move slowly, heal slowly, and learn slowly, and need special drugs designed for their unique biochemistry.
-
 [*][b]Trog - Adaptable mutants:[/b] Trogs are ugly, slow, and dumb. At first glance their genome seems like nothing but disadvantages, but somehow they're incredible survivors - much to the dismay of their neighbors. Their most unique and feared trait is their special pheromones that allow them to interact with wild insects without being attacked. Trog tribes frequently use giant insects as war animals.
-
 [*][b]Warcat - Graceful predators:[/b] These feline hunters are biochemically dependent on a diet of raw meat. They're incredible melee fighters, but not great workers, and if you don't keep them happy they'll take their rage out on the local fauna - or your other colonists.
-
 [*][b]Zeegee - High-tech spacers:[/b] Evolved for life in space, zeegees make great snipers, researchers, mechanitors, and gravhip pilots. But on a planet's surface they're clumsy and prone to debilitating bouts of nausea.
-
 [*][b]Omegabeaver - Cheerful builders:[/b] These alphabeaver descendants are great builders and cute mascots. Just don't expect them to do much in a fight.
-
 [*][b]Scaleborn - Draconic warriors:[/b] Reptilian warriors with five distinct lineages, each with its own breath weapon, defensive ability, and skill bonus. Keeping them happy can be quite a challenge.
-
 [*][b]Steadling - Hardy generalists:[/b] These pioneers are perfect for early stage colonies, but they tend to find themselves out of place in larger settlements.
-
 [*][b]Succuboid - Charming seductresses:[/b] Beautiful temptresses who can provide massive mood boosts and random inspirations to their romantic partners - at the cost of a neurochemical addiction that leaves the partner dependent on regular lovin'.
 [/list]
 
