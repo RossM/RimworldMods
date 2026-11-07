@@ -22,27 +22,51 @@ Optional DLC unlocks additional content:
 
 [h2]Bossaps: Sentient livestock[/h2]
 
+Designed as livestock, bossaps survive well in harsh conditions and put up with poor treatment, even happily accepting slavery. However, if they're injured in combat there's a chance they'll go into a berserk rage and charge enemies horns-first.
+
 [h2]Chyrr: Nocturnal fliers[/h2]
+
+A mysterious bat-like xenotype, chyrr can exploit their functional wings and innate sonic stun ability to be incredibly effective skirmish fighters, especially at night. They're bad at toe-to-to fighting, though, and cold temperatures can send them into a state of helpless torpor.
 
 [h2]Dvergr: Industrious dwarves[/h2]
 
+Dvergr are basically what you'd expect from dwarves. They're excellent workers, skilled at mining, construction, and crafting, but not so great at social niceties. They're well suited for life underground, using raw fungus as both food and raw material for booze to fulfil their genetic alcohol need. They take minor setbacks in stride, but they're easy to push over the edge. Watch out for tantrum spirals.
+
 [h2]Nixie: Aquatic sirens[/h2]
+
+Nixies are wet environment specialists. In water-rich maps they can use their innate psychic abilities to lure enemies into the water and then swim circles around them. They're also natural diplomats and negotiators. The downside? They need to spend hours a day soaking in water, especially in hot environments.
 
 [h2]Titan: Engineered stone giants[/h2]
 
+Titans are purpose-built workers designed for the extreme environments of deathworlds. They're nearly indestructible, with high health, natural armor, skin that seals bleeding wounds automatically, and resistance or immunity to disease, psychic effects, and toxins. They can even pick up and throw rocks in combat, making them living siege weapons. But they can't use regular drugs, and depend on rare and expensive specialized drugs to stay at peak performance and avoid the genetic disease called petrification.
+
 [h2]Trog: Adaptable mutants[/h2]
+
+Trogs are ugly, slow, and dumb. At first glance their genome seems like nothing but disadvantages, but somehow they're incredible survivors - much to the dismay of their neighbors. Their most unique and feared trait is their special pheromones that allow them to interact with wild insects without being attacked. Trog tribes frequently use giant insects as war animals.
 
 [h2]Warcat: Graceful predators[/h2]
 
+These feline hunters are specialized for a diet of raw meat, so much so that they're biochemically dependent on it. They're incredible melee fighters, but not great workers, and if you don't keep them happy they'll take their rage out on the local fauna - or your other colonists.
+
 [h2]Zeegee: High-tech spacers[/h2]
+
+Evolved for life in space, zeegees are excellent with techology and make great snipers. But on a planet's surface they're slow and clumsy and prone to debilitating bouts of nausea.
 
 [h2]Omegabeaver: Cheerful builders[/h2]
 
+These alphabeaver descendants are great builders and cute mascots. Just don't expect them to do much in a fight.
+
 [h2]Scaleborn: Draconic warriors[/h2]
+
+Reptilian warriors with five distinct lineages, each with its own breath weapon, defensive ability, and skill bonus. Keeping them happy can be quite a challenge.
 
 [h2]Steadling: Hardy generalists[/h2]
 
+These pioneers are perfect for early stage colonies, but they tend to find themselves out of place in larger settlements.
+
 [h2]Succuboid: Charming seductresses[/h2]
+
+Beautiful temptresses who can provide massive mood boosts and random inspirations to their romantic partners - at the cost of a neurochemical addiction that leaves the partner dependent on regular lovin'.
 
 [h1]More information[/h1]
 
