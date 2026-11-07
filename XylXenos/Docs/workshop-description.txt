@@ -76,7 +76,7 @@ Sure. You can depend on my mod, or you can use my code or assets as a start for 
 
 [h2]I am a writer or artist. How can I help?[/h2]
 
-Yes! I love help. I'm a software engineer by trade, so writing and art are not my strong suits. The best way to reach me is on [url=https://discord.gg/rimworld]Discord[/url].
+I love help. I'm a software engineer by trade, so writing and art are not my strong suits. If you'd like to improve part of the mod, or contribute additional content, please let me know. The best way to reach me is on [url=https://discord.gg/rimworld]Discord[/url] but you can also use Steam comments or the GitHub page.
 
 [h2]I am not a writer or artist. How can I help?[/h2]
 
