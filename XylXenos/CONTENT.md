@@ -1,3 +1,5 @@
+This file contains unpolished notes on various content included in the mod. It is not intended as final documentation, it's more of a repository of information waiting for a better organized place to live.
+
 ## Xenotypes
 
 ### Major xenotypes
@@ -30,6 +32,13 @@ What is this xenotype's unique strength? Flight.
 What is this xenotype bad at? Straight-up fighting.
 What does this xenotype need? Warm temperatures.
 
+Genes
+
+* Sonic wave, bat wings: Excellent at hit-and-run skirmish tactics.
+* Weak immunity, delicate: Delicate and poor suited for intense combat.
+* Torpor, cold weaknesss, heat tolerant: Need high temperatures.
+* Nocturnal, echolocation, keen ears, dark vision: Naturally active at night, and able to function even while completely blind.
+
 #### Dvergr
 
 Industrious dwarves. Great workers and craftspeople, but they have a genetic dependence on alcohol and tend to get into fights and throw tantrums.
@@ -49,6 +58,8 @@ Genes
 
 #### Nixie
 
+*"Some years, if it gets cold enough in winter, you can walk right out onto the ice on the bay. That's when you can hear it. Singing from underneath the ice. I heard it once in my youth. So beautiful. I'd give anything to hear it again."*
+
 Aquatic sirens. They're unmatched in water, but unless they periodically soak to keep their skin moist they'll become very unhappy.
 
 Nixies do best in cold maps with lots of water. They're poor at melee, but specialize at using Beckon to lure enemies into water where they can swim circles around them. Their main drawback is they need to spend hours a day soaking in water. The amount of soaking they need climbs rapidly as temperatures go up.
@@ -66,6 +77,10 @@ Genes
 
 #### Titan
 
+*Reclamation report, day 575: Excavation uncovered a class 3 insect hive. One worker seriously wounded, one minor injuries. No interruption to schedule.<br>
+Reclamation report, day 576: Toxic sludge flow directly through base camp. Minor damage to structure, no injuries.<br>
+Reclamation report, day 577: Cook missed a dose of atlasite. Emergency evacuation shuttle delayed by meteor shower. Requesting replacement cook from headquarters.*
+
 Engineered stone giants. They're super tough and each is specialized in one random skill, but they move slowly and have difficulty learning other skills. They can't use most normal drugs and require special drugs designed for lithoids.
 
 Titans' gene package is focused on one thing: toughness. They have extra HP, their skin provides natural armor that reduces damage, bleeding wounds close automatically, and they shrug off infections and are completely immune to toxins. However, if they do get injured, they will spend a long time recovering. Labor-wise, each Titan is particularly good at one thing, but generally terrible at anything else. Their unique drugs also provide a special challenge to supply.
@@ -73,6 +88,13 @@ Titans' gene package is focused on one thing: toughness. They have extra HP, the
 What is this xenotype's unique strength? Nearly indestructible.
 What is this xenotype bad at? Learning new skills.
 What does this xenotype need? A steady supply of specialized drugs.
+
+Genes:
+
+* Giant, rockskin, super immunity, superclotting, psychically deaf, tox immunity: Nearly indestructible.
+* Joyless, focused, super-specialist: Dedicated workers.
+* Rock toss, strong melee damage, slow runner: Living siege weapons.
+* Petrification, lithoid, slow wound healing: Lithoid biochemistry.
 
 #### Trog
 
@@ -84,7 +106,18 @@ What is this xenotype's unique strength? Taming giant insects.
 What is this xenotype bad at? High technology.
 What does this xenotype need? Very little, actually.
 
+Genes:
+
+* Toxic burst, strong melee damage, reduced pain: Dangerous in close combat.
+* Drug resistant, strong immunity, partial antitoxic lungs: Resistant to drugs and environmental toxins.
+* Bio-rejection, slow study, awful intellectual: Poor with technology.
+* Slow runner, mild UV sensitivity, dark vision, strong mining: Slow and better suited for underground.
+* Insect pheromones, pollution stimulus, strong animals: Able to tame and control giant insects.
+* Genetic atavism, very unattractive, mild cell instability: Ugly mutants.
+
 #### Warcat
+
+*"I am not 'Hey, cute kitty'. I am a proud warrior of the Red Leopard Tribe. I have eaten men like you for breakfast, literally. I could slit your throat with these claws right now. I could -- ooh, that's the spot. Yeah, right there, behind the ears. Purrrrr..."*
 
 Graceful predators. They're powerful melee fighters with a rage ability that lets them move and attack incredibly quickly, but they need to eat raw meat regularly to survive.
 

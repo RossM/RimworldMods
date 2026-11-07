@@ -32,19 +32,11 @@ Optional DLC unlocks additional content:
 
 ### Nixie: Aquatic sirens
 
-*"Some years, if it gets cold enough in winter, you can walk right out onto the ice on the bay. That's when you can hear it. Singing from underneath the ice. I heard it once in my youth. So beautiful. I'd give anything to hear it again."*
-
 ### Titan: Engineered stone giants
-
-*Reclamation report, day 575: Excavation uncovered a class 3 insect hive. One worker seriously wounded, one minor injuries. No interruption to schedule.<br>
-Reclamation report, day 576: Toxic sludge flow directly through base camp. Minor damage to structure, no injuries.<br>
-Reclamation report, day 577: Cook missed a dose of atlasite. Emergency evacuation shuttle delayed by meteor shower. Requesting replacement cook from headquarters.*
 
 ### Trog: Adaptable mutants
 
 ### Warcat: Graceful predators
-
-*"I am not 'Hey, cute kitty'. I am a proud warrior of the Red Leopard Tribe. I have eaten men like you for breakfast, literally. I could slit your throat with these claws right now. I could -- ooh, that's the spot. Yeah, right there, behind the ears. Purrrrr..."*
 
 ### Zeegee: High-tech spacers
 
