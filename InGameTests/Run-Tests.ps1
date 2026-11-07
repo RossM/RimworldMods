@@ -148,7 +148,7 @@ Ensure-ModLink 'DevTools' (Join-Path $repositoryDirectory 'ModBin/DevTools')
 Ensure-ModLink "$Suite.Tests" $testMod
 if ($Suite -ne 'Xylib') {
     $gameplayMod = if ($Suite -eq 'Yobai') { 'Yobai' } else { 'XylXenos' }
-    $gameplayPackage = if ($Suite -eq 'Yobai') { 'xylthixlm.yobai' } else { 'xylthixlm.races.core' }
+    $gameplayPackage = if ($Suite -eq 'Yobai') { 'xylthixlm.yobai' } else { 'xylthixlm.xenotypes' }
     Ensure-ModLink $gameplayMod (Join-Path $repositoryDirectory "ModBin/$gameplayMod")
 }
 
