@@ -115,7 +115,3 @@ I'm always open to suggestions, but if they need substantial amounts of writing 
 Source on [url=https://github.com/RossM/RimworldMods/blob/main/XylXenos/]GitHub[/url]
 
 Ping me on [url=https://discord.gg/rimworld]Discord[/url]
-
-[h1]Credits and license[/h1]
-
-Created by Xylthixlm. Licensed under the [url=https://github.com/RossM/RimworldMods/blob/main/LICENSE]MIT license[/url].
