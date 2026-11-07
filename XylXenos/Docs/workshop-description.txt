@@ -94,6 +94,4 @@ Ping me on [url=https://discord.gg/rimworld]Discord[/url]
 
 [h1]Credits and license[/h1]
 
-Created by Xylthixlm.
-
-[MIT license](../../../LICENSE)
+Created by Xylthixlm. Licensed under the [url=https://github.com/RossM/RimworldMods/blob/main/LICENSE]MIT license[/url].
