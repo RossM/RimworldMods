@@ -26,8 +26,8 @@ from gene_art import (ART_DIR, DEF_DIR, GAME_DATA, GENE_ICON_SCALE, ROOT, WHITE,
                       read_defs, read_gene_icons, texture_path)
 
 
-OUTPUT = ROOT / "XylXenos/Data/Docs/Images/Genes"
-XENOTYPE_OUTPUT = ROOT / "XylXenos/Data/Docs/Images/Xenotypes"
+OUTPUT = ROOT / "XylXenos/Docs/Images/Genes"
+XENOTYPE_OUTPUT = ROOT / "XylXenos/Docs/Images/Xenotypes"
 CONTACT_SHEET_OUTPUT = ROOT / "Art/Generated"
 ICON_SIZE = 80
 XENOTYPE_ICON_SIZE = 48

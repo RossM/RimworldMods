@@ -17,7 +17,7 @@ without loading other installed mods. Totals precede random or lineage additions
 Scaleborn lineages and Titan specialties are shown separately so alternatives
 cannot be mistaken for traits every pawn receives; their trigger icons are omitted.
 
-PNG cards and the overview go to XylXenos/Data/Docs/Images/XenotypeCards/ for use
+PNG cards and the overview go to XylXenos/Docs/Images/XenotypeCards/ for use
 in mod documentation. Editable SVGs, diagnostic JSON snapshots, and the review
 gallery go to Art/Generated/Xenotype cards/ so build intermediates stay outside
 the distributed mod. Cutouts retain their original in-game canvas alignment.
@@ -45,7 +45,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "Art/Rimworld art"
 MOD = ROOT / "XylXenos/Data"
 GENERATED_OUT = ROOT / "Art/Generated/Xenotype cards"
-PNG_OUT = MOD / "Docs/Images/XenotypeCards"
+PNG_OUT = ROOT / "XylXenos/Docs/Images/XenotypeCards"
 SEMIBOLD_FONT = "C:/Windows/Fonts/seguisb.ttf"
 BOLD_FONT = "C:/Windows/Fonts/segoeuib.ttf"
 # Work at the Workshop description column's observed display width so legibility
