@@ -10,7 +10,7 @@ Since this is an initial release, and finding good playtesters is [i]hard,[/i] t
 
 RimWorld 1.7 and Biotech are required.
 
-Optional DLC unlocks additional content:
+Recommended optional DLCs unlock additional content:
 
 [list]
 [*] Royalty: Innate psycast genes and a nixie-specific scenario.
