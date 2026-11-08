@@ -36,7 +36,6 @@
   <ItemGroup>
     <ModDestination Include="..\ModBin\XylIdeos" />
     <ModAssembly Include="Xylib.dll" />
-    <ModAssembly Include="0Harmony.dll;Disharmony.dll;Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' != ''" />
   </ItemGroup>
   <PropertyGroup>
     <SharedModDataDirectory>$(MSBuildProjectDirectory)\..\Xylib\Data</SharedModDataDirectory>

@@ -30,6 +30,12 @@
 
   <!-- The project's own assembly is automatic; entries name additional DLLs in its build output. -->
   <Target Name="CollectModAssemblies">
+    <!-- Disharmony's mod assemblies can differ from its compile-time dependencies. -->
+    <MSBuild Projects="@(ProjectReference)" Targets="GetRimWorldModAssemblies"
+             Condition="'%(ProjectReference.Filename)' == 'Disharmony.RimWorld'"
+             Properties="TargetFramework=$(TargetFramework);Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="_ModAssembly" />
+    </MSBuild>
     <ItemGroup>
       <_ModAssembly Include="$(TargetPath);@(ModAssembly->'$(TargetDir)%(Identity)')" />
     </ItemGroup>

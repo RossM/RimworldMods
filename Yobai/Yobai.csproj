@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ModDestination Include="..\ModBin\Yobai" />
-    <ModAssembly Include="0Harmony.dll;Disharmony.dll;Disharmony.RimWorld.dll" Condition="'$(DisharmonySourceDirectory)' != ''" />
   </ItemGroup>
   <Import Project="..\ModBuild.targets" />
   <Target Name="ConfigureBundledDisharmony" AfterTargets="SyncModData" Condition="'$(DisharmonySourceDirectory)' != ''">
