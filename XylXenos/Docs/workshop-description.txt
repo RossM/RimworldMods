@@ -1,10 +1,10 @@
-Yep, it's yet another gene and xenotype mod for RimWorld. But this one is mine, and I'm very proud of it. So [i]nyah.[/i] Download it and give it a try, it would make me happy. It would also make me happy if you give it a thumbs up if you like it.
+Yep, it's yet another gene and xenotype mod for RimWorld. But this one is mine, and I'm very proud of it. So [i]nyah.[/i] Download it and give it a try. It would make me happy. If you like it, a thumbs up would make me happy too.
 
-This mod includes 12 xenotypes, 121 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed and balanced to be lore-friendly and fit with vanilla RimWorld as well as I can make it.
+This mod includes 12 xenotypes, 121 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed to be lore-friendly and balanced to fit vanilla RimWorld as well as I can manage.
 
-Since this is an initial release, and finding good playtesters is [i]hard,[/i] there's probably a lot of rough edges. Want to be a playtester? Just play and report your thoughts and experiences in the comments section. It really helps! There should be dedicated threads for bug reports, balance feedback, gameplay stories, and mod compatibility reports/requests. If there aren't I forgot to make them, oops.
+Since this is an initial release and finding good playtesters is [i]hard,[/i] there are probably a lot of rough edges. Want to be a playtester? Just play and report your thoughts and experiences in the comments section. It really helps! There should be dedicated threads for bug reports, balance feedback, gameplay stories, and mod compatibility reports/requests. If there aren't, I forgot to make them. Oops.
 
-[b]AI disclosure:[/b] AI was used in minor ways while developing this mod, primarily for writing tests and auxiliary scripts and build management and other boring stuff. AI generated content was used during iteration on some ideas but the final results are all mine.
+[b]AI disclosure:[/b] I used AI in minor ways while developing this mod, mostly for tests, auxiliary scripts, build management, and other boring stuff. I used AI-generated content while iterating on some ideas, but the final results are all mine.
 
 [h1]Requirements[/h1]
 
@@ -14,24 +14,24 @@ Recommended optional DLCs unlock additional content:
 
 [list]
 [*] Royalty: Innate psycast genes and a nixie-specific scenario.
-[*] Ideology: Integration with the ideoligeon system and additional gene-based unlocks for some Ideology content that's normally locked to specific memes.
-[*] Odyssey: Additional space-related content and a variant seal that nixie traders will use as pack animals.
+[*] Ideology: Integration with the ideoligion system and additional gene-based unlocks for some Ideology content that's normally locked to specific memes.
+[*] Odyssey: Additional space-related content and a seal variant that nixie traders use as a pack animal.
 [/list]
 
 [h1]Xenotypes[/h1]
 
 [list]
 [*][b]Bossaps - Sentient livestock:[/b] Designed as livestock, bossaps survive well in harsh conditions and put up with poor treatment - but if they're injured in combat they may go into a berserk rage and charge enemies horns-first.
-[*][b]Chyrr - Nocturnal fliers:[/b] Functional wings and innate sonic stun ability make them outstanding at hit-and-run tactics, especially at night, but they're bad at toe-to-to fighting. Cold temperatures can send them into a state of helpless torpor.
+[*][b]Chyrr - Nocturnal fliers:[/b] Functional wings and an innate sonic stun ability make them outstanding at hit-and-run tactics, especially at night, but they're bad at toe-to-toe fighting. Cold temperatures can send them into a state of helpless torpor.
 [*][b]Dvergr - Industrious dwarves:[/b] Dvergr are excellent workers, skilled at mining, construction, and crafting, but not so great at social niceties. They're well suited for life underground, using raw fungus as both food and raw material for booze to fulfil their genetic alcohol need.
 [*][b]Nixie - Aquatic sirens:[/b] Nixies do best on maps with lots of water. They can use their innate psychic abilities to lure enemies into the water and then swim circles around them. The downside? They need to spend hours a day soaking in water, especially in hot environments.
 [*][b]Titan - Engineered stone giants:[/b] Titans are purpose-built workers designed for the extreme environments of deathworlds. They're nearly indestructible, with high health, natural armor, and plenty of resistances and immunities. They can even pick up and throw rocks in combat, making them living siege weapons. The downsides? They move slowly, heal slowly, and learn slowly, and need special drugs designed for their unique biochemistry.
-[*][b]Trog - Adaptable mutants:[/b] Trogs are ugly, slow, and dumb. At first glance their genome seems like nothing but disadvantages, but somehow they're incredible survivors - much to the dismay of their neighbors. Their most unique and feared trait is their special pheromones that allow them to interact with wild insects without being attacked. Trog tribes frequently use giant insects as war animals.
-[*][b]Warcat - Graceful predators:[/b] These feline hunters are biochemically dependent on a diet of raw meat. They're incredible melee fighters, but not great workers, and if you don't keep them happy they'll take their rage out on the local fauna - or your other colonists.
-[*][b]Zeegee - High-tech spacers:[/b] Evolved for life in space, zeegees make great snipers, researchers, mechanitors, and gravhip pilots. But on a planet's surface they're clumsy and prone to debilitating bouts of nausea.
+[*][b]Trog - Adaptable mutants:[/b] Trogs are ugly, slow, and dumb. At first glance, their genome seems like nothing but disadvantages, but somehow they're incredible survivors - much to the dismay of their neighbors. Their most distinctive and feared trait? Pheromones that let them interact with wild insects without being attacked. Trog tribes frequently use giant insects as war animals.
+[*][b]Warcat - Graceful predators:[/b] These feline hunters are biochemically dependent on a diet of raw meat. They're incredible melee fighters, but not great workers, and if you don't keep them happy, they'll take their rage out on the local fauna - or your other colonists.
+[*][b]Zeegee - High-tech spacers:[/b] Evolved for life in space, zeegees make great snipers, researchers, mechanitors, and gravship pilots. But on a planet's surface, they're clumsy and prone to debilitating bouts of nausea.
 [*][b]Omegabeaver - Cheerful builders:[/b] These alphabeaver descendants are great builders and cute mascots. Just don't expect them to do much in a fight.
 [*][b]Scaleborn - Draconic warriors:[/b] Reptilian warriors with five distinct lineages, each with its own breath weapon, defensive ability, and skill bonus. Keeping them happy can be quite a challenge.
-[*][b]Steadling - Hardy generalists:[/b] These pioneers are perfect for early stage colonies, but they tend to find themselves out of place in larger settlements.
+[*][b]Steadling - Hardy generalists:[/b] These pioneers are perfect for early-stage colonies, but they tend to find themselves out of place in larger settlements.
 [*][b]Succuboid - Charming seductresses:[/b] Beautiful temptresses who can provide massive mood boosts and random inspirations to their romantic partners - at the cost of a neurochemical addiction that leaves the partner dependent on regular lovin'.
 [/list]
 
@@ -41,7 +41,7 @@ There are too many genes to fit in the Workshop character limit. Some highlights
 
 [list]
 [*] Every psycast gets a gene that unlocks it without a psylink. Requires Royalty. Does not include Vanilla Psycasts Expanded psycasts; see "Compatibility" below.
-[*] Functional wings that use the same flight system used by birds, but fully player controlled.
+[*] Functional wings that use the same flight system as birds, with full player control.
 [*] Genes to specialize in digesting raw meat, raw plants, or raw fungus.
 [*] Innate melee attacks and innate armor.
 [*] ... too many more to list.
@@ -59,7 +59,7 @@ For fuller information on xenotypes, genes, factions, etc., see the [url=https:/
 
 [h2]Can I add this to an existing save?[/h2]
 
-Yes. Some content, such as the factions, requires a new save to see.
+Yes. You'll need a new save to see some content, such as the factions.
 
 [h2]Can I remove it from an existing save?[/h2]
 
@@ -79,15 +79,15 @@ Sure. You can depend on my mod, or you can use my code or assets as a start for 
 
 [h2]I am a writer or artist. How can I help?[/h2]
 
-If you'd like to improve part of the mod, or contribute additional content, please let me know. The best way to reach me is on [url=https://discord.gg/rimworld]Discord[/url] but you can also use Steam comments or the GitHub page.
+If you'd like to improve part of the mod or contribute more content, please let me know. The best way to reach me is on [url=https://discord.gg/rimworld]Discord[/url], but you can also use Steam comments or the GitHub page.
 
 [h2]I am not a writer or artist. How can I help?[/h2]
 
 The best way to help is to just play and provide feedback in the discussion threads below.
 
-[h2]I have a cool idea, will you add it to your mod?[/h2]
+[h2]I have a cool idea. Will you add it to your mod?[/h2]
 
-I'm always open to suggestions, but if they need substantial amounts of writing or art they might not make it unless someone helps with that. See "I am a writer or artist. How can I help?"
+I'm always open to suggestions, but if they need a lot of writing or art, they might not make it unless someone helps with that. See "I am a writer or artist. How can I help?"
 
 [h1]Links[/h1]
 
