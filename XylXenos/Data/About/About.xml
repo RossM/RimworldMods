@@ -5,6 +5,7 @@
   <packageId>Xylthixlm.Xenotypes</packageId>
   <name>Xyl's Xenotypes</name>
   <author>Xylthixlm</author>
+  <modVersion>1.0</modVersion>
   <description>
     Yep, it's yet another gene and xenotype mod for RimWorld. But this one is mine, and I'm very proud of it. So nyah.
 
@@ -23,5 +24,9 @@
     <li>Xylthixlm.Disharmony</li>
     <li>sarg.alphagenes</li>
   </loadAfter>
-
+  <incompatibleWith>
+    <!-- Older Posthuman Drift mod that this is a redo of -->
+    <li>xylthixlm.races.core</li>
+  </incompatibleWith>
+  
 </ModMetaData>
