@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <packageId>Xylthixlm.Yobai</packageId>
-  <name>Yobai</name>
+  <name>Yobai: Simple Harem Management</name>
   <author>Xylthixlm</author>
-  <description>Let pawns choose beds within their polycule bedroom and make night visits to partners without changing bed assignments. Vanilla bedroom classification is preserved. Ideoligions determine which romantic relationships connect a polycule; members can share a bed there as a last resort despite the usual pairwise restrictions.</description>
+  <description>
+    Tired of manually swapping around beds so everyone in your harem gets lovin'? Don't like the idea of installing a harem bed that holds 8 people? This mod makes it so that harem members will automatically swap around beds so everyone gets a turn. Don't want to build a harem bedroom? Spouses and lovers will get up and borrow an empty spot in a double bed to get some lovin' instead.
+  </description>
   <supportedVersions>
     <li>1.7</li>
   </supportedVersions>

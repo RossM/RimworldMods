@@ -33,7 +33,7 @@ internal static class SleepingAssignments
     {
         // Temporary records in this view have already passed the lifetime check, including the
         // selection grace period. An absent permanent owner keeps an assignment but permits borrowing.
-        public bool IsInUse => IsTemporary || IsUsingPlace(Pawn, Place);
+        public bool IsInUse => IsTemporary || Place.BeingUsedBy(Pawn);
     }
 
     public static IReadOnlyList<ActiveAssignment> GetActiveAssignments(Map? map)
@@ -110,80 +110,22 @@ internal static class SleepingAssignments
         return assignment == null || assignment.Pawn == pawn || !assignment.IsInUse;
     }
 
-    public static bool CanAssignForNightVisit(Pawn pawn, SleepingPlace place)
-    {
-        Pawn? assignee = GetAssignedPawn(place);
-        return (assignee == null || assignee == pawn) && CanAssignTemporary(pawn, place);
-    }
-
-    public static bool CanAssignTemporary(Pawn pawn, SleepingPlace place)
-    {
-        if (place.Bed.GetComp<CompBedSharing>() == null || !IsAvailable(pawn, place))
-            return false;
-
-        // Selecting another place in the same bed must not overwrite an existing stay.
-        // Transfers to another bed let a sleeping pawn leave for a night visit.
-        if (GetTemporaryAssignment(pawn)?.Bed == place.Bed)
-            return false;
-        return BedSharingHelpers.CanSleepInSharedBed(pawn, place.Bed);
-    }
-
-    public static bool TryAssignTemporary(Pawn pawn, SleepingPlace place)
-    {
-        if (!CanAssignTemporary(pawn, place))
-            return false;
-
-        SleepingPlace? previous = GetTemporaryAssignment(pawn);
-        CompBedSharing? previousComp = previous?.Bed.GetComp<CompBedSharing>();
-        TemporarySleepingSlot? previousAssignment
-            = previousComp?.TemporaryAssignments.FirstOrDefault(assignment => assignment.Pawn == pawn);
-        if (previousAssignment != null)
-            previousComp!.RemoveAssignment(previousAssignment);
-
-        CompBedSharing comp = place.Bed.GetComp<CompBedSharing>();
-        TemporarySleepingSlot assignment = new(pawn, place.Slot);
-        comp.AddAssignment(assignment);
-        if (RestUtility.IsValidBedFor(place.Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
-            return true;
-
-        comp.RemoveAssignment(assignment);
-        if (previousAssignment != null)
-            previousComp!.AddAssignment(previousAssignment);
-        return false;
-    }
-
     internal static bool IsActive(TemporarySleepingSlot assignment, Building_Bed bed)
     {
-        if (!BedSharingHelpers.IsBedEligibleForSharing(bed)
-            || assignment.Pawn is not { } pawn || !IsOnBedMap(pawn, bed)
+        if (!bed.IsEligibleForBedSharing
+            || assignment.Pawn is not { } pawn || !pawn.IsOnMap(bed.Map!)
             || assignment.Slot < 0 || assignment.Slot >= bed.SleepingSlotsCount)
             return false;
 
-        return assignment.TickCreated == Find.TickManager.TicksGame || IsUsingPlace(pawn, new SleepingPlace(bed, assignment.Slot));
+        return assignment.TickCreated == Find.TickManager.TicksGame || new SleepingPlace(bed, assignment.Slot).BeingUsedBy(pawn);
     }
 
-    private static bool IsUsingPlace(Pawn pawn, SleepingPlace place)
+    extension(Pawn pawn)
     {
-        if (!IsOnBedMap(pawn, place.Bed))
-            return false;
-        IntVec3 position = place.Bed.GetSleepingSlotPos(place.Slot);
-        if (pawn.GetPosture().InBed() && pawn.Position == position)
-            return true;
-
-        Job? job = pawn.CurJob;
-        bool goingToBed = (pawn.jobs.curDriver is JobDriver_LayDown && job?.targetA.Thing == place.Bed)
-                          || (pawn.jobs.curDriver is JobDriver_Lovin && job?.targetB.Thing == place.Bed);
-        if (!goingToBed)
-            return false;
-
-        // Pre-toil validation runs after the job is accepted but before GotoBed starts its path.
-        return pawn.jobs.curDriver.CurToilIndex < 0 || pawn.Position == position
-                                                    || (pawn.pather.Moving && pawn.pather.Destination.Cell == position);
-    }
-
-    private static bool IsOnBedMap(Pawn pawn, Building_Bed bed)
-    {
-        return pawn is { Spawned: true, Dead: false } && pawn.Map == bed.Map;
+        internal bool IsOnMap(Map map)
+        {
+            return pawn is { Spawned: true, Dead: false } && pawn.Map == map;
+        }
     }
 
     private static IEnumerable<CompBedSharing> GetBedComps(Map map)

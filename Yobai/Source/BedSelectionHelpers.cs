@@ -6,7 +6,7 @@ internal static class BedSelectionHelpers
     {
         List<Building_Bed> beds =
         [
-            .. GetPolyculeBedroomBeds(pawn).Where(bed => GetAvailablePolyculeBedroomSlots(pawn, bed).Any()),
+            .. GetPolyculeBedroomBeds(pawn).Where(bed => HasAvailablePolyculeBedroomSlot(pawn, bed)),
         ];
         beds.Shuffle();
 
@@ -37,7 +37,7 @@ internal static class BedSelectionHelpers
 
             if (!BedSharingJobHelpers.CanBookSleepingPlace(pawn, place))
                 continue;
-            if (!SleepingAssignments.TryAssignTemporary(pawn, place))
+            if (!place.TryAssignTemporary(pawn))
                 continue;
 
             return true;
@@ -51,16 +51,35 @@ internal static class BedSelectionHelpers
         return pawn.ownership.OwnedBed?.GetRoom()?.ContainedBeds ?? [];
     }
 
+    private static bool HasAvailablePolyculeBedroomSlot(Pawn pawn, Building_Bed bed)
+    {
+        if (!ValidBed(pawn, bed) || bed.GetComp<CompBedSharing>() is not { } comp)
+            return false;
+
+        IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
+        HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
+        if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot)
+            return true;
+
+        foreach (int slot in slots)
+        {
+            Pawn? owner = bed.OwnersForReading.ElementAtOrDefault(slot);
+            if (owner != null && !members.Contains(owner))
+                continue;
+            if (comp.CanAssignSleepingSlot(pawn, slot))
+                return true;
+        }
+
+        return false;
+    }
+
     private static IEnumerable<int> GetAvailablePolyculeBedroomSlots(Pawn pawn, Building_Bed bed)
     {
-        if (!BedSharingHelpers.CanChooseSharedBed(pawn)
-            || !BedSharingHelpers.CanSleepInSharedBed(pawn, bed)
-            || !BedSharingHelpers.IsBedInAssignedPolyculeBedroom(pawn, bed)
-            || bed.GetComp<CompBedSharing>() is not { } comp)
+        if (!ValidBed(pawn, bed) || bed.GetComp<CompBedSharing>() is not { } comp)
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
-        HashSet<Pawn> members = PolyculeHelpers.GetPolycule(pawn);
+        HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
         if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot)
             slots = slots.Prepend(ownedSlot).Distinct();
         foreach (int slot in slots)
@@ -72,4 +91,9 @@ internal static class BedSelectionHelpers
                 yield return slot;
         }
     }
+
+    private static bool ValidBed(Pawn pawn, Building_Bed bed) =>
+        pawn.CanShareBedsNow
+        && pawn.CanSleepInSharedBed(bed)
+        && bed.InPolyculeBedroomFor(pawn);
 }

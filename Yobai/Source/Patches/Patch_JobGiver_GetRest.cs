@@ -8,7 +8,7 @@ internal static class Patch_JobGiver_GetRest
     [Target("TryGiveJob")]
     public static void FindBedFor_Postfix(Pawn pawn, ref Building_Bed? __result)
     {
-        if (__result is { Medical: true } || !BedSharingHelpers.CanChooseSharedBed(pawn))
+        if (__result is { Medical: true } || !pawn.CanShareBedsNow)
             return;
 
         // Reuse the booking while travelling; another AI check must not reshuffle it.

@@ -55,7 +55,7 @@ public sealed class CompBedSharing : ThingComp
     {
         if (slot < 0 || slot >= Bed.SleepingSlotsCount)
             return false;
-        return SleepingAssignments.CanAssignTemporary(pawn, new SleepingPlace(Bed, slot));
+        return new SleepingPlace(Bed, slot).CanAssignTemporary(pawn);
     }
 
     internal void AddAssignment(TemporarySleepingSlot assignment)
@@ -88,7 +88,7 @@ public sealed class CompBedSharing : ThingComp
 
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
-        if (!BedSharingHelpers.IsBedEligibleForNightVisits(Bed)
+        if (!Bed.IsEligibleForNightVisits
             || !Bed.OwnersForReading.Any(owner => PolyculeHelpers.GetLovePartnersWillingToShareBed(owner)
                 .Any(partner => partner.ownership.OwnedBed != Bed)))
             yield break;

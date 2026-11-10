@@ -33,7 +33,7 @@ internal static class Patch_RestUtility
         ref int? assignedSleepingSlot,
         ref bool __result)
     {
-        if (!BedSharingHelpers.CanSleepInSharedBed(sleeper, bed))
+        if (!sleeper.CanSleepInSharedBed(bed))
             return;
         if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(sleeper, out int slot) != true)
             return;

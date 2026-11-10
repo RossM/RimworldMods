@@ -17,7 +17,7 @@ internal static class Patch_JobDriver_LayDown
 
         // An arriving owner must respect existing stays before its reservation can block them.
         // Temporary sleepers also need to remain eligible for shared beds.
-        __result = (!hasTemporaryAssignment || BedSharingHelpers.CanSleepInSharedBed(driver.pawn, bed))
+        __result = (!hasTemporaryAssignment || driver.pawn.CanSleepInSharedBed(bed))
                    && RestUtility.IsValidBedFor(bed, driver.pawn, driver.pawn, true, guestStatus: driver.pawn.GuestStatus);
         if (!__result)
             driver.pawn.ClearReservationsForJob(driver.job);

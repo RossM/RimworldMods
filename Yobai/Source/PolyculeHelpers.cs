@@ -11,27 +11,7 @@ internal static class PolyculeHelpers
 
     public static IEnumerable<Pawn> GetLovePartnersWillingToShareBed(Pawn pawn)
     {
-        foreach (DirectPawnRelation relation in pawn.relations.DirectRelations)
-        {
-            if (AreLovePartnersWillingToShareBed(pawn, relation.otherPawn))
-                yield return relation.otherPawn;
-        }
-    }
-
-    public static HashSet<Pawn> GetPolycule(Pawn pawn)
-    {
-        HashSet<Pawn> members = [pawn];
-        Stack<Pawn> pending = new();
-        pending.Push(pawn);
-        while (pending.Count > 0)
-        {
-            foreach (Pawn partner in GetLovePartnersWillingToShareBed(pending.Pop()))
-            {
-                if (members.Add(partner))
-                    pending.Push(partner);
-            }
-        }
-
-        return members;
+        return pawn.relations.DirectRelations.Where(relation => AreLovePartnersWillingToShareBed(pawn, relation.otherPawn))
+            .Select(relation => relation.otherPawn);
     }
 }
