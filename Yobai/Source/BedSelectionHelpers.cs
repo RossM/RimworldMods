@@ -32,14 +32,6 @@ internal static class BedSelectionHelpers
         }
     }
 
-    internal static bool TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
-    {
-        if (!HasAvailablePolyculeBedroomSlot(pawn, bed))
-            return false;
-        MakePolyculeBedroomSleepJob(pawn, bed);
-        return true;
-    }
-
     public static void MakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
     {
         var slot = GetAvailablePolyculeBedroomSlots(pawn, bed).First();
