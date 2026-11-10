@@ -2,6 +2,8 @@ namespace Yobai;
 
 internal sealed class SleepingPlace
 {
+    [ThreadStatic] internal static int? alwaysAllowSlot; 
+
     internal SleepingPlace(Building_Bed bed, int slot)
     {
         ArgumentNullException.ThrowIfNull(bed);
@@ -28,9 +30,29 @@ internal sealed class SleepingPlace
         return SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed != Bed && pawn.CanSleepInSharedBed(Bed);
     }
 
+    private bool IsValidBedForWithTemporaryAssignment(
+        Building_Bed bed,
+        Pawn sleeper,
+        Pawn traveler,
+        bool checkSocialProperness,
+        GuestStatus? guestStatus = null)
+    {
+        alwaysAllowSlot = Slot;
+        try
+        {
+            return RestUtility.IsValidBedFor(bed, sleeper, traveler, checkSocialProperness, guestStatus: guestStatus);
+        }
+        finally
+        {
+            alwaysAllowSlot = null;
+        }
+    }
+
     public bool TryAssignTemporary(Pawn pawn)
     {
         if (!CanAssignTemporary(pawn))
+            return false;
+        if (!IsValidBedForWithTemporaryAssignment(Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
             return false;
 
         SleepingPlace? previous = SleepingAssignments.GetTemporaryAssignment(pawn);
@@ -43,13 +65,7 @@ internal sealed class SleepingPlace
         CompBedSharing comp = Bed.GetComp<CompBedSharing>();
         TemporarySleepingSlot assignment = new(pawn, Slot);
         comp.AddAssignment(assignment);
-        if (RestUtility.IsValidBedFor(Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
-            return true;
-
-        comp.RemoveAssignment(assignment);
-        if (previousAssignment != null)
-            previousComp!.AddAssignment(previousAssignment);
-        return false;
+        return true;
     }
 
     public bool BeingUsedBy(Pawn pawn)

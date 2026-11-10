@@ -28,6 +28,12 @@ public sealed class CompBedSharing : ThingComp
 
     internal bool TryGetSleepingSlot(Pawn pawn, out int slot)
     {
+        if (SleepingPlace.alwaysAllowSlot is { } alwaysAllowSlot)
+        {
+            slot = alwaysAllowSlot;
+            return true;
+        }
+
         SleepingPlace? assignment = SleepingAssignments.GetTemporaryAssignment(pawn);
         slot = assignment?.Bed == Bed ? assignment.Slot : -1;
         return slot >= 0;
@@ -40,6 +46,9 @@ public sealed class CompBedSharing : ThingComp
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)
     {
+        if (SleepingPlace.alwaysAllowSlot is not null)
+            return true;
+
         for (int slot = 0; slot < Bed.SleepingSlotsCount; slot++)
         {
             if (Bed.GetSleepingSlotPos(slot) == position)
