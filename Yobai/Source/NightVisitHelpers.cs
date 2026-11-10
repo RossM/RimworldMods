@@ -4,8 +4,8 @@ internal static class NightVisitHelpers
 {
     public static bool CanLeaveBed(Pawn pawn)
     {
-        if (!pawn.CanShareBedsNow || pawn.Awake() || pawn.CurJob is not { playerForced: false }
-            || pawn.CurJobDef != JobDefOf.LayDown || pawn.CurrentBed() is not { Medical: false } bed)
+        if (pawn.Awake() || pawn is not { CanShareBedsNow: true, CurJob.playerForced: false } || pawn.CurJobDef != JobDefOf.LayDown ||
+            pawn.CurrentBed() is not { Medical: false } bed)
             return false;
 
         IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
@@ -30,7 +30,7 @@ internal static class NightVisitHelpers
             || bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true } comp)
             yield break;
 
-        if (!comp.GetBedmates().Any(other => PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
+        if (!comp.GetBedmates().Any(other => BedSharingHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
@@ -43,22 +43,10 @@ internal static class NightVisitHelpers
         SleepingPlace place = bed.GetSleepingPlace(slot);
         foreach (Pawn partner in bed.CurOccupants)
         {
-            if (PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake()
-                                                                                   && partner.CanShareBedsNow)
+            if (BedSharingHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake() && partner.CanShareBedsNow)
                 yield return new NightVisit(partner, place);
         }
     }
 
-    public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed)
-    {
-        NightVisit? visit = FindVisits(visitor, bed).FirstOrDefault();
-        return visit == null ? null : TryMakeVisitJob(visitor, visit);
-    }
-
-    public static Job? TryMakeVisitJob(Pawn visitor, NightVisit visit)
-    {
-        if (!visit.Place.CanAssignForNightVisit(visitor))
-            return null;
-        return BedSharingJobHelpers.TryMakeLovinJob(visitor, visit.Partner, visit.Place);
-    }
+    public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed) => FindVisits(visitor, bed).FirstOrDefault()?.TryMakeVisitJob(visitor);
 }

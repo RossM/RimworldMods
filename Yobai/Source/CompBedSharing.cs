@@ -117,7 +117,7 @@ public sealed class CompBedSharing : ThingComp
     public override IEnumerable<Gizmo> CompGetGizmosExtra()
     {
         if (!Bed.IsEligibleForNightVisits
-            || !Bed.OwnersForReading.Any(owner => PolyculeHelpers.GetLovePartnersWillingToShareBed(owner)
+            || !Bed.OwnersForReading.Any(owner => BedSharingHelpers.GetLovePartnersWillingToShareBed(owner)
                 .Any(partner => partner.ownership.OwnedBed != Bed)))
             yield break;
 

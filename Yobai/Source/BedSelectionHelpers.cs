@@ -10,7 +10,7 @@ internal static class BedSelectionHelpers
         ];
         beds.Shuffle();
 
-        foreach (Building_Bed bed in beds.OrderByDescending(bed => bed.GetComp<CompBedSharing>()!.GetBedmates().Any(bedmate => PolyculeHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate)) || bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2))
+        foreach (Building_Bed bed in beds.OrderByDescending(bed => bed.GetComp<CompBedSharing>()!.GetBedmates().Any(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate)) || bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2))
         {
             if (TryMakePolyculeBedroomSleepJob(pawn, bed))
                 return bed;

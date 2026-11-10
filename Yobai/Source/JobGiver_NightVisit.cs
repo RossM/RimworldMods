@@ -16,7 +16,7 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
 
         List<NightVisit> visits =
         [
-            .. PolyculeHelpers.GetLovePartnersWillingToShareBed(pawn)
+            .. BedSharingHelpers.GetLovePartnersWillingToShareBed(pawn)
                 // ReSharper disable once RedundantEnumerableCastCall
                 .Select(partner => partner.CurrentBed()).OfType<Building_Bed>().Distinct()
                 .SelectMany(bed => NightVisitHelpers.FindVisits(pawn, bed))
@@ -32,6 +32,6 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
         bool willing = Rand.MTBEventOccurs(LovePartnerRelationUtility.GetLovinMtbHours(pawn, visit.Partner),
             GenDate.TicksPerHour, GenDate.TicksPerHour);
 
-        return willing ? NightVisitHelpers.TryMakeVisitJob(pawn, visit) : null;
+        return willing ? visit.TryMakeVisitJob(pawn) : null;
     }
 }
