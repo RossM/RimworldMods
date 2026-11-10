@@ -8,31 +8,44 @@ internal static class BedSelectionHelpers
         [
             .. GetPolyculeBedroomBeds(pawn).Where(bed => HasAvailablePolyculeBedroomSlot(pawn, bed)),
         ];
-        beds.Shuffle();
 
-        foreach (Building_Bed bed in beds.OrderByDescending(bed => bed.GetComp<CompBedSharing>()!.GetBedmates().Any(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate)) || bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2))
+        if (beds.Count == 0)
+            return null;
+
+        int bedsWithTwoFreeSlots = beds.Count(bed => bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2);
+        
+        if (!beds.TryRandomElementByWeight(WeightSelector, out var selected))
+            selected = beds.RandomElement()!;
+        MakePolyculeBedroomSleepJob(pawn, selected);
+        return selected;
+
+        float WeightSelector(Building_Bed bed)
         {
-            if (TryMakePolyculeBedroomSleepJob(pawn, bed))
-                return bed;
+            int partnerCount = bed.GetComp<CompBedSharing>()!.GetBedmates()
+                .Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
+            if (partnerCount > 0)
+                //return partnerCount;
+                return 1f;
+            if (bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2)
+                //return 1f / bedsWithTwoFreeSlots;
+                return 1f;
+            return 0f;
         }
-
-        return null;
     }
 
-    public static bool TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
+    internal static bool TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
     {
-        foreach (int slot in GetAvailablePolyculeBedroomSlots(pawn, bed))
-        {
-            SleepingPlace place = bed.GetSleepingPlace(slot);
+        if (!HasAvailablePolyculeBedroomSlot(pawn, bed))
+            return false;
+        MakePolyculeBedroomSleepJob(pawn, bed);
+        return true;
+    }
 
-            if (!place.BookableBy(pawn))
-                continue;
-            place.AssignTemporary(pawn);
-
-            return true;
-        }
-
-        return false;
+    public static void MakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
+    {
+        var slot = GetAvailablePolyculeBedroomSlots(pawn, bed).First();
+        SleepingPlace place = bed.GetSleepingPlace(slot);
+        place.AssignTemporary(pawn);
     }
 
     private static IEnumerable<Building_Bed> GetPolyculeBedroomBeds(Pawn pawn)
@@ -40,14 +53,14 @@ internal static class BedSelectionHelpers
         return pawn.ownership.OwnedBed?.GetRoom()?.ContainedBeds ?? [];
     }
 
-    private static bool HasAvailablePolyculeBedroomSlot(Pawn pawn, Building_Bed bed)
+    internal static bool HasAvailablePolyculeBedroomSlot(Pawn pawn, Building_Bed bed)
     {
         if (!ValidBed(pawn, bed) || bed.GetComp<CompBedSharing>() is not { } comp)
             return false;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
         HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
-        if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot)
+        if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot && bed.GetSleepingPlace(ownedSlot) is SleepingPlace place2 && place2.BookableBy(pawn))
             return true;
 
         foreach (int slot in slots)
@@ -55,7 +68,7 @@ internal static class BedSelectionHelpers
             Pawn? owner = bed.OwnersForReading.ElementAtOrDefault(slot);
             if (owner != null && !members.Contains(owner))
                 continue;
-            if (comp.CanAssignSleepingSlot(pawn, slot))
+            if (bed.GetSleepingPlace(slot) is SleepingPlace place && place.BookableBy(pawn))
                 return true;
         }
 
@@ -76,7 +89,7 @@ internal static class BedSelectionHelpers
             Pawn? owner = bed.OwnersForReading.ElementAtOrDefault(slot);
             if (owner != null && !members.Contains(owner))
                 continue;
-            if (comp.CanAssignSleepingSlot(pawn, slot))
+            if (bed.GetSleepingPlace(slot) is SleepingPlace place && place.BookableBy(pawn))
                 yield return slot;
         }
     }
