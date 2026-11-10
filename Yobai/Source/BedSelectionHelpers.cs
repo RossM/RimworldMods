@@ -19,16 +19,15 @@ internal static class BedSelectionHelpers
         MakePolyculeBedroomSleepJob(pawn, selected);
         return selected;
 
+        // https://en.wikipedia.org/wiki/Chinese_restaurant_process
         float WeightSelector(Building_Bed bed)
         {
-            int partnerCount = bed.GetComp<CompBedSharing>()!.GetBedmates()
-                .Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
+            var comp = bed.GetComp<CompBedSharing>()!;
+            int partnerCount = comp.GetBedmates().Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
             if (partnerCount > 0)
-                //return partnerCount;
-                return 1f;
-            if (bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2)
-                //return 1f / bedsWithTwoFreeSlots;
-                return 1f;
+                return partnerCount;
+            if (comp.FreeSlotsExcluding(pawn) >= 2)
+                return 1f / bedsWithTwoFreeSlots;
             return 0f;
         }
     }
@@ -60,9 +59,6 @@ internal static class BedSelectionHelpers
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
         HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
-        if (bed.IsOwner(pawn, out int? assignedSlot) && assignedSlot is int ownedSlot && bed.GetSleepingPlace(ownedSlot) is SleepingPlace place2 && place2.BookableBy(pawn))
-            return true;
-
         foreach (int slot in slots)
         {
             Pawn? owner = bed.OwnersForReading.ElementAtOrDefault(slot);
