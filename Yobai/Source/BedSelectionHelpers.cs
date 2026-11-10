@@ -27,8 +27,7 @@ internal static class BedSelectionHelpers
 
             if (!place.BookableBy(pawn))
                 continue;
-            if (!place.TryAssignTemporary(pawn))
-                continue;
+            place.AssignTemporary(pawn);
 
             return true;
         }

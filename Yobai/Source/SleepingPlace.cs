@@ -26,6 +26,8 @@ internal sealed class SleepingPlace
     {
         if (Bed.GetComp<CompBedSharing>() == null || !IsAvailableFor(pawn))
             return false;
+        if (!IsValidBedForWithTemporaryAssignment(Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
+            return false;
 
         return SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed != Bed && pawn.CanSleepInSharedBed(Bed);
     }
@@ -48,24 +50,13 @@ internal sealed class SleepingPlace
         }
     }
 
-    public bool TryAssignTemporary(Pawn pawn)
+    public void AssignTemporary(Pawn pawn)
     {
         if (!CanAssignTemporary(pawn))
-            return false;
-        if (!IsValidBedForWithTemporaryAssignment(Bed, pawn, pawn, true, guestStatus: pawn.GuestStatus))
-            return false;
+            throw new InvalidOperationException("CanAssignTemporary should have already been checked");
 
-        SleepingPlace? previous = SleepingAssignments.GetTemporaryAssignment(pawn);
-        CompBedSharing? previousComp = previous?.Bed.GetComp<CompBedSharing>();
-        TemporarySleepingSlot? previousAssignment
-            = previousComp?.TemporaryAssignments.FirstOrDefault(assignment => assignment.Pawn == pawn);
-        if (previousAssignment != null)
-            previousComp!.RemoveAssignment(previousAssignment);
-
-        CompBedSharing comp = Bed.GetComp<CompBedSharing>();
-        TemporarySleepingSlot assignment = new(pawn, Slot);
-        comp.AddAssignment(assignment);
-        return true;
+        SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed.GetComp<CompBedSharing>()?.RemoveAssignmentsFor(pawn);
+        Bed.GetComp<CompBedSharing>()!.AddAssignment(pawn, Slot);
     }
 
     public bool BeingUsedBy(Pawn pawn)

@@ -126,4 +126,17 @@ public sealed class CompBedSharing : ThingComp
 
         return assignment.TickCreated == Find.TickManager.TicksGame || bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(pawn);
     }
+
+    public void RemoveAssignmentsFor(Pawn pawn)
+    {
+        TemporarySleepingSlot? previousAssignment = TemporaryAssignments.FirstOrDefault(assignment => assignment.Pawn == pawn);
+        if (previousAssignment != null)
+            RemoveAssignment(previousAssignment);
+    }
+
+    public void AddAssignment(Pawn pawn, int slot)
+    {
+        TemporarySleepingSlot assignment = new(pawn, slot);
+        AddAssignment(assignment);
+    }
 }

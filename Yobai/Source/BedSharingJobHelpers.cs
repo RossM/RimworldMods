@@ -7,8 +7,7 @@ internal static class BedSharingJobHelpers
         if (!place.BookableBy(pawn))
             return null;
 
-        if (!place.TryAssignTemporary(pawn))
-            return null;
+        place.AssignTemporary(pawn);
 
         Job job = JobMaker.MakeJob(JobDefOf.LayDown, place.Bed);
 
@@ -20,8 +19,7 @@ internal static class BedSharingJobHelpers
         if (!pawn.CanReserve(partner) || !place.BookableBy(pawn))
             return null;
 
-        if (!place.TryAssignTemporary(pawn))
-            return null;
+        place.AssignTemporary(pawn);
 
         Job job = JobMaker.MakeJob(JobDefOf.Lovin, partner, place.Bed);
 
