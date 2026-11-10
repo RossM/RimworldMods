@@ -5,17 +5,20 @@ public sealed class CompBedSharing : ThingComp
 {
     private sealed class TemporarySleepingSlot : IExposable
     {
-        public Pawn? Pawn => pawn;
+        public Pawn Pawn => pawn;
         public int Slot => slot;
 
         [field: Unsaved]
         public int TickCreated { get; } = -1;
 
-        private Pawn? pawn;
+        private Pawn pawn;
         private int slot;
 
         [UsedImplicitly]
-        public TemporarySleepingSlot() { }
+        public TemporarySleepingSlot()
+        {
+            pawn = null!;
+        }
 
         public TemporarySleepingSlot(Pawn pawn, int slot)
         {
@@ -42,8 +45,7 @@ public sealed class CompBedSharing : ThingComp
         {
             RemoveDepartedSleepers();
             foreach (var temporarySleepingSlot in temporarySleepingSlots)
-                if (temporarySleepingSlot.Pawn is { } pawn)
-                    yield return (pawn, temporarySleepingSlot.Slot);
+                yield return (temporarySleepingSlot.Pawn, temporarySleepingSlot.Slot);
         }
     }
 
@@ -138,24 +140,27 @@ public sealed class CompBedSharing : ThingComp
 
     private bool IsActive(TemporarySleepingSlot assignment)
     {
-        Building_Bed bed = Bed;
-        if (!bed.IsEligibleForBedSharing
-            || assignment.Pawn is not { } pawn || !pawn.IsOnMap(bed.Map!)
-            || assignment.Slot < 0 || assignment.Slot >= bed.SleepingSlotsCount)
-            return false;
-
-        return assignment.TickCreated == Find.TickManager.TicksGame || bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(pawn);
+        return Bed.IsEligibleForBedSharing && assignment.Pawn.IsOnMap(Bed.Map!) && IsValidAssignment(Bed, assignment) &&
+               (assignment.TickCreated == Find.TickManager.TicksGame || Bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(assignment.Pawn));
     }
 
-    public void RemoveAssignmentFor(Pawn pawn)
+    private static bool IsValidAssignment(Building_Bed bed, TemporarySleepingSlot assignment) => (assignment.Slot >= 0 && assignment.Slot < bed.SleepingSlotsCount);
+
+    public bool RemoveAssignment(Pawn pawn)
+    {
+        TemporarySleepingSlot? previousAssignment = temporarySleepingSlots.FirstOrDefault(assignment => assignment.Pawn == pawn);
+        if (previousAssignment == null)
+            return false;
+        temporarySleepingSlots.Remove(previousAssignment);
+        return true;
+    }
+
+    public bool AddAssignment(Pawn pawn, int slot)
     {
         TemporarySleepingSlot? previousAssignment = temporarySleepingSlots.FirstOrDefault(assignment => assignment.Pawn == pawn);
         if (previousAssignment != null)
-            temporarySleepingSlots.Remove(previousAssignment);
-    }
-
-    public void AddAssignment(Pawn pawn, int slot)
-    {
+            return false;
         temporarySleepingSlots.Add(new(pawn, slot));
+        return true;
     }
 }
