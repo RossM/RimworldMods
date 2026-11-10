@@ -4,6 +4,10 @@ namespace Yobai;
 
 internal static class BedSharingHelpers
 {
+    // This is used to enable checking what result IsValidBedFor() would give if a temporary slot was assigned, without actually
+    // needing to set up a temporary slot and undo it afterwards.
+    [ThreadStatic] internal static int? candidateSlotForIsValidBedFor;
+
     extension(Building_Bed bed)
     {
         public bool IsEligibleForBedSharing =>
@@ -35,7 +39,8 @@ internal static class BedSharingHelpers
             {
                 Spawned: true, RaceProps.Humanlike: true, Dead: false, Downed: false, Drafted: false, InMentalState: false,
                 IsPrisoner: false, Deathresting: false, needs.rest: not null, health.capacities.CanBeAwake: true,
-            } && pawn.Faction == Faction.OfPlayer && !HealthAIUtility.ShouldSeekMedicalRest(pawn) && !pawn.IsWildMan() && pawn.roping?.IsRoped != true &&
+            } && pawn.Faction == Faction.OfPlayer && !HealthAIUtility.ShouldSeekMedicalRest(pawn) && !pawn.IsWildMan() &&
+            pawn.roping?.IsRoped != true &&
             // Caravan duties can allow rest while requiring the pawn to stay out of beds.
             pawn.GetLord()?.CurLordToil?.AllowRestingInBed != false;
 
@@ -44,6 +49,11 @@ internal static class BedSharingHelpers
             return pawn.CanShareBedsNow && bed.IsEligibleForBedSharing && bed.Map == pawn.Map
                    && AllBedmatesWillingToShareBed(pawn, bed);
         }
+
+        internal bool IsOnMap(Map map)
+        {
+            return pawn is { Spawned: true, Dead: false } && pawn.Map == map;
+        }
     }
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
@@ -51,7 +61,8 @@ internal static class BedSharingHelpers
         IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
         HashSet<Pawn> loveCluster = [.. pawn.GetLoveCluster()];
         return bedmates.All(bedmate => pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) ||
-                                       (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) && loveCluster.Contains(bedmate)));
+                                       (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) &&
+                                        loveCluster.Contains(bedmate)));
     }
 
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
@@ -73,5 +84,24 @@ internal static class BedSharingHelpers
     {
         return pawn.relations.DirectRelations.Where(relation => AreLovePartnersWillingToShareBed(pawn, relation.otherPawn))
             .Select(relation => relation.otherPawn);
+    }
+
+    public static bool IsValidBedForWithTemporaryAssignment(
+        Building_Bed bed,
+        int slot,
+        Pawn sleeper,
+        Pawn traveler,
+        bool checkSocialProperness,
+        GuestStatus? guestStatus = null)
+    {
+        candidateSlotForIsValidBedFor = slot;
+        try
+        {
+            return RestUtility.IsValidBedFor(bed, sleeper, traveler, checkSocialProperness, guestStatus: guestStatus);
+        }
+        finally
+        {
+            candidateSlotForIsValidBedFor = null;
+        }
     }
 }

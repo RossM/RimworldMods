@@ -96,14 +96,6 @@ internal static class SleepingAssignments
         }
     }
 
-    extension(Pawn pawn)
-    {
-        internal bool IsOnMap(Map map)
-        {
-            return pawn is { Spawned: true, Dead: false } && pawn.Map == map;
-        }
-    }
-
     private static IEnumerable<CompBedSharing> GetBedComps(Map map)
     {
         foreach (Building_Bed bed in map.listerBuildings.allBuildingsColonist.OfType<Building_Bed>())

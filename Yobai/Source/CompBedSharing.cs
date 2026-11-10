@@ -24,7 +24,7 @@ public sealed class CompBedSharing : ThingComp
         {
             this.pawn = pawn;
             this.slot = slot;
-            this.TickCreated = Find.TickManager.TicksGame;
+            TickCreated = Find.TickManager.TicksGame;
         }
 
         public void ExposeData()
@@ -60,9 +60,9 @@ public sealed class CompBedSharing : ThingComp
 
     internal bool TryGetSleepingSlot(Pawn pawn, out int slot)
     {
-        if (SleepingPlace.alwaysAllowSlot is { } alwaysAllowSlot)
+        if (BedSharingHelpers.candidateSlotForIsValidBedFor is { } allowSlot)
         {
-            slot = alwaysAllowSlot;
+            slot = allowSlot;
             return true;
         }
 
@@ -78,7 +78,7 @@ public sealed class CompBedSharing : ThingComp
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)
     {
-        if (SleepingPlace.alwaysAllowSlot is not null)
+        if (BedSharingHelpers.candidateSlotForIsValidBedFor is not null)
             return true;
 
         for (int slot = 0; slot < Bed.SleepingSlotsCount; slot++)
