@@ -3,17 +3,47 @@ namespace Yobai;
 [UsedImplicitly]
 public sealed class CompBedSharing : ThingComp
 {
+    private sealed class TemporarySleepingSlot : IExposable
+    {
+        public Pawn? Pawn => pawn;
+        public int Slot => slot;
+
+        [field: Unsaved]
+        public int TickCreated { get; } = -1;
+
+        private Pawn? pawn;
+        private int slot;
+
+        [UsedImplicitly]
+        public TemporarySleepingSlot() { }
+
+        public TemporarySleepingSlot(Pawn pawn, int slot)
+        {
+            this.pawn = pawn;
+            this.slot = slot;
+            this.TickCreated = Find.TickManager.TicksGame;
+        }
+
+        public void ExposeData()
+        {
+            Scribe_References.Look(ref pawn, "pawn");
+            Scribe_Values.Look(ref slot, "slot");
+        }
+    }
+
     internal Building_Bed Bed => (Building_Bed)parent;
 
     public bool nightVisitsEnabled = true;
     private List<TemporarySleepingSlot> temporarySleepingSlots = [];
 
-    internal IReadOnlyList<TemporarySleepingSlot> TemporaryAssignments
+    internal IEnumerable<(Pawn pawn, int slot)> TemporaryAssignments
     {
         get
         {
             RemoveDepartedSleepers();
-            return temporarySleepingSlots;
+            foreach (var temporarySleepingSlot in temporarySleepingSlots)
+                if (temporarySleepingSlot.Pawn is { } pawn)
+                    yield return (pawn, temporarySleepingSlot.Slot);
         }
     }
 
@@ -67,16 +97,6 @@ public sealed class CompBedSharing : ThingComp
         return Bed.GetSleepingPlace(slot).CanAssignTemporary(pawn);
     }
 
-    internal void AddAssignment(TemporarySleepingSlot assignment)
-    {
-        temporarySleepingSlots.Add(assignment);
-    }
-
-    internal void RemoveAssignment(TemporarySleepingSlot assignment)
-    {
-        temporarySleepingSlots.Remove(assignment);
-    }
-
     internal void RemoveDepartedSleepers()
     {
         temporarySleepingSlots.RemoveAll(assignment => !IsActive(assignment));
@@ -127,16 +147,15 @@ public sealed class CompBedSharing : ThingComp
         return assignment.TickCreated == Find.TickManager.TicksGame || bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(pawn);
     }
 
-    public void RemoveAssignmentsFor(Pawn pawn)
+    public void RemoveAssignmentFor(Pawn pawn)
     {
-        TemporarySleepingSlot? previousAssignment = TemporaryAssignments.FirstOrDefault(assignment => assignment.Pawn == pawn);
+        TemporarySleepingSlot? previousAssignment = temporarySleepingSlots.FirstOrDefault(assignment => assignment.Pawn == pawn);
         if (previousAssignment != null)
-            RemoveAssignment(previousAssignment);
+            temporarySleepingSlots.Remove(previousAssignment);
     }
 
     public void AddAssignment(Pawn pawn, int slot)
     {
-        TemporarySleepingSlot assignment = new(pawn, slot);
-        AddAssignment(assignment);
+        temporarySleepingSlots.Add(new(pawn, slot));
     }
 }

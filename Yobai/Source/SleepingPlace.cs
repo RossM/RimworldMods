@@ -55,7 +55,7 @@ internal sealed class SleepingPlace
         if (!CanAssignTemporary(pawn))
             throw new InvalidOperationException("CanAssignTemporary should have already been checked");
 
-        SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed.GetComp<CompBedSharing>()?.RemoveAssignmentsFor(pawn);
+        SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed.GetComp<CompBedSharing>()?.RemoveAssignmentFor(pawn);
         Bed.GetComp<CompBedSharing>()!.AddAssignment(pawn, Slot);
     }
 

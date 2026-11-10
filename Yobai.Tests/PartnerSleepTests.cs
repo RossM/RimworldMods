@@ -204,9 +204,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(first);
             }
             using RandBlock random = new(12345 + attempt);
             Job? job = GetSleepJob(first);
@@ -267,9 +266,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(first);
             }
             using RandBlock random = new(24680 + attempt);
             Job? chosen = GetSleepJob(first);
@@ -303,9 +301,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(first);
             }
             using RandBlock random = new(13579 + attempt);
             Job? sleep = GetSleepJob(first);
@@ -364,9 +361,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(first);
             }
             Job? chosen = GetSleepJob(first);
             Expect.ReferencesAreNotEqual(thirdBed, chosen?.targetA.Thing);
@@ -587,9 +583,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(first);
             }
             using RandBlock random = new(45678 + attempt);
             Job? job = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
@@ -1105,9 +1100,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == third).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(third);
             }
             using RandBlock random = new(45678 + attempt);
             Job? bedtime = new JobGiver_GetRest().TryIssueJobPackage(third, default).Job;
@@ -1150,8 +1144,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         if (chosen != null)
         {
             first.ClearReservationsForJob(chosen);
-            CompBedSharing comp = ((Building_Bed)chosen.targetA.Thing).GetComp<CompBedSharing>();
-            comp.RemoveAssignment(comp.TemporaryAssignments.Single(a => a.Pawn == first));
+            CompBedSharing comp = ((Building_Bed)chosen.targetA.Thing).GetComp<CompBedSharing>()!;
+            comp.RemoveAssignmentFor(first);
             JobMaker.ReturnToPool(chosen);
         }
         StartPolyculeBedroomSleepJob(first, secondBed);
@@ -1816,9 +1810,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             {
                 foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
                 {
-                    CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                    foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                        comp.RemoveAssignment(assignment);
+                    CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                    comp.RemoveAssignmentFor(first);
                 }
                 using RandBlock random = new(13579 + attempt);
                 Job? sleep = GetSleepJob(first);
@@ -1897,7 +1890,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Scribe.saver.InitSaving(path, "YobaiTest");
         comp.PostExposeData();
         Scribe.saver.FinalizeSaving();
-        comp.RemoveAssignment(comp.TemporaryAssignments.Single());
+        comp.RemoveAssignmentFor(first);
         Expect.IsFalse(BedSharingHelpers.CanUseTemporarySleepingSlot(first, thirdBed));
         Scribe.loader.InitLoading(path);
         comp.PostExposeData();
@@ -2330,9 +2323,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.GetComp<CompBedSharing>();
-                foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments.Where(a => a.Pawn == first).ToArray())
-                    comp.RemoveAssignment(assignment);
+                CompBedSharing comp = bed.GetComp<CompBedSharing>()!;
+                comp.RemoveAssignmentFor(first);
             }
             Job? sleep = GetSleepJob(first);
             Expect.IsNotNull(sleep);

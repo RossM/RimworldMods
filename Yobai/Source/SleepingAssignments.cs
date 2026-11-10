@@ -90,10 +90,9 @@ internal static class SleepingAssignments
 
     private static IEnumerable<ActiveAssignment> TemporaryAssignments(CompBedSharing comp)
     {
-        foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments)
+        foreach (var (pawn, slot) in comp.TemporaryAssignments)
         {
-            if (assignment.Pawn is { } pawn)
-                yield return new ActiveAssignment(pawn, comp.Bed.GetSleepingPlace(assignment.Slot), IsTemporary: true);
+            yield return new ActiveAssignment(pawn, comp.Bed.GetSleepingPlace(slot), IsTemporary: true);
         }
     }
 
