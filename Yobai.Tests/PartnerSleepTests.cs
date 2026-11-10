@@ -163,7 +163,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
     public void PolyculeRoomIsBedroom()
     {
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
-        Expect.IsTrue(BedSharingHelpers.InPolyculeBedroomFor(thirdBed, first));
+        Expect.IsTrue(thirdBed.InPolyculeBedroomFor(first));
     }
 
     [Test]
@@ -172,7 +172,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         thirdBed.CompAssignableToPawn.TryUnassignPawn(third);
         thirdBed.CompAssignableToPawn.TryAssignPawn(outsider);
         Expect.AreEqual(RoomRoleDefOf.Barracks, firstBed.GetRoom().Role);
-        Expect.IsTrue(BedSharingHelpers.InPolyculeBedroomFor(secondBed, first));
+        Expect.IsTrue(secondBed.InPolyculeBedroomFor(first));
     }
 
     [Test]
@@ -190,7 +190,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         second.ownership.ClaimBedIfNonMedical(visitBed);
         secondBed.Destroy();
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
-        Expect.IsTrue(BedSharingHelpers.InPolyculeBedroomFor(thirdBed, first));
+        Expect.IsTrue(thirdBed.InPolyculeBedroomFor(first));
     }
 
     [Test]
@@ -478,7 +478,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(first, visitBed);
         IntVec3 firstSlot = first.Position;
         IntVec3 secondSlot = second.Position;
-        Expect.IsFalse(BedSharingHelpers.InPolyculeBedroomFor(visitBed, first));
+        Expect.IsFalse(visitBed.InPolyculeBedroomFor(first));
         Expect.AreEqual(JobDefOf.Lovin, first.CurJobDef);
         // Exercise the normal timer expiry and finish actions without simulating the duration.
         typeof(JobDriver_Lovin).GetField("ticksLeft", BindingFlags.Instance | BindingFlags.NonPublic)!
@@ -821,7 +821,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         int visitId = visit!.loadID;
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);
         Expect.IsTrue(((HashSet<Pawn>)[.. first.GetLoveCluster()]).Contains(second));
-        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, secondBed));
+        Expect.IsTrue(first.CanSleepInSharedBed(secondBed));
         Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, second));
         Find.TickManager.DoSingleTick();
         Expect.AreNotEqual(visitId, first.CurJob?.loadID);
@@ -1030,7 +1030,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
             Expect.IsTrue(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, second));
             Expect.IsFalse(PolyculeHelpers.AreLovePartnersWillingToShareBed(first, outsider));
-            Expect.IsFalse(BedSharingHelpers.CanSleepInSharedBed(first, bed));
+            Expect.IsFalse(first.CanSleepInSharedBed(bed));
             Expect.IsFalse(NightVisitHelpers.FindVisits(first, bed).Any());
             Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, bed));
         }
@@ -1163,7 +1163,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         StartPolyculeBedroomSleepJob(second, thirdBed);
         ArriveAtBed(second, thirdBed);
         first.ownership.ClaimBedIfNonMedical(visitBed);
-        Expect.IsFalse(BedSharingHelpers.InPolyculeBedroomFor(thirdBed, first));
+        Expect.IsFalse(thirdBed.InPolyculeBedroomFor(first));
         first.mindState.canLovinTick = 0;
         second.mindState.canLovinTick = 0;
         Job? visit = NightVisitHelpers.TryMakeVisitJob(first, thirdBed);
@@ -1195,7 +1195,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
     public void MedicalBedsAreExcluded()
     {
         secondBed.Medical = true;
-        Expect.IsFalse(BedSharingHelpers.CanSleepInSharedBed(first, secondBed));
+        Expect.IsFalse(first.CanSleepInSharedBed(secondBed));
         Expect.IsFalse(secondBed.GetComp<CompBedSharing>().CompGetGizmosExtra().Any());
     }
 
@@ -1680,7 +1680,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.IsNull(second.CurrentBed());
             CompBedSharing assignments = secondBed.GetComp<CompBedSharing>();
             Expect.IsTrue(assignments.GetBedmates().Contains(second));
-            Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(outsider, secondBed));
+            Expect.IsTrue(outsider.CanSleepInSharedBed(secondBed));
             Expect.IsTrue(assignments.CanAssignSleepingSlot(outsider, 1));
             Expect.IsFalse(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(outsider, secondBed));
         }
@@ -1702,9 +1702,9 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Job ownerSleep = JobMaker.MakeJob(JobDefOf.LayDown, secondBed);
         second.jobs.StartJob(ownerSleep, JobCondition.InterruptForced);
         Expect.IsNull(second.CurrentBed());
-        Expect.IsFalse(BedSharingHelpers.CanSleepInSharedBed(outsider, secondBed));
+        Expect.IsFalse(outsider.CanSleepInSharedBed(secondBed));
         Expect.IsFalse(secondBed.GetComp<CompBedSharing>().CanAssignSleepingSlot(outsider, 1));
-        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, secondBed));
+        Expect.IsTrue(first.CanSleepInSharedBed(secondBed));
         second.ClearReservationsForJob(ownerSleep);
         second.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
     }
@@ -2344,7 +2344,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
     {
         StartPolyculeBedroomSleepJob(third, thirdBed);
         ArriveAtBed(third, thirdBed);
-        Expect.IsTrue(BedSharingHelpers.InPolyculeBedroomFor(thirdBed, first));
+        Expect.IsTrue(thirdBed.InPolyculeBedroomFor(first));
         Expect.IsFalse(NightVisitHelpers.FindVisits(first, thirdBed).Any());
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, thirdBed));
         Expect.IsNull(new JobGiver_NightVisit().TryIssueJobPackage(first, default).Job);
@@ -2358,7 +2358,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(third, visitBed);
         Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, third));
         Expect.IsTrue(BedUtility.WillingToShareBed(first, third));
-        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, visitBed));
+        Expect.IsTrue(first.CanSleepInSharedBed(visitBed));
         Expect.IsFalse(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, visitBed));
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, visitBed));
     }
@@ -2373,7 +2373,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.ReferencesAreEqual(thirdBed, outsider.CurrentBed());
         Expect.IsFalse(((HashSet<Pawn>)[.. first.GetLoveCluster()]).Contains(outsider));
         Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
-        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, thirdBed));
+        Expect.IsTrue(first.CanSleepInSharedBed(thirdBed));
         Expect.IsTrue(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
         Expect.IsTrue(RestUtility.IsValidBedFor(thirdBed, first, first, true));
         Expect.AreNotEqual(outsider.Position, RestUtility.GetBedSleepingSlotPosFor(first, thirdBed));
@@ -2391,7 +2391,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         third.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
         ArriveAtBed(third, visitBed);
         Expect.IsTrue(((HashSet<Pawn>)[.. first.GetLoveCluster()]).Contains(third));
-        Expect.IsFalse(BedSharingHelpers.CanSleepInSharedBed(first, visitBed));
+        Expect.IsFalse(first.CanSleepInSharedBed(visitBed));
         Expect.IsFalse(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, visitBed));
         Expect.IsNull(NightVisitHelpers.TryMakeVisitJob(first, visitBed));
     }
@@ -2407,8 +2407,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         // Put an unrelated sleeper in the room without changing its bed assignments.
         outsider.Position = thirdBed.GetSleepingSlotPos(0);
         Expect.ReferencesAreEqual(thirdBed, outsider.CurrentBed());
-        Expect.IsTrue(BedSharingHelpers.InPolyculeBedroomFor(thirdBed, first));
-        Expect.IsFalse(BedSharingHelpers.CanSleepInSharedBed(first, thirdBed));
+        Expect.IsTrue(thirdBed.InPolyculeBedroomFor(first));
+        Expect.IsFalse(first.CanSleepInSharedBed(thirdBed));
         Expect.IsFalse(BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
     }
 
@@ -2758,7 +2758,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(third, thirdBed);
         Expect.AreEqual(RoomRoleDefOf.Bedroom, thirdBed.GetRoom().Role);
         Expect.IsFalse(((HashSet<Pawn>)[.. first.GetLoveCluster()]).Contains(child));
-        Expect.IsTrue(BedSharingHelpers.CanSleepInSharedBed(first, thirdBed));
+        Expect.IsTrue(first.CanSleepInSharedBed(thirdBed));
         Expect.AreEqual(!childOwnsFreeSlot, BedSelectionHelpers.TryMakePolyculeBedroomSleepJob(first, thirdBed));
         Expect.ReferencesAreEqual(third, thirdBed.OwnersForReading[0]);
         if (childOwnsFreeSlot)
