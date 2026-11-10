@@ -16,21 +16,15 @@ internal static class BedSharingHelpers
 
         public bool IsEligibleForNightVisits => bed is { IsEligibleForBedSharing: true, SleepingSlotsCount: > 1 };
 
-        public bool InPolyculeBedroomFor(Pawn pawn) => bed.InBedroomOf(pawn) && bed.OwnedByPolyculeMemberWith(pawn);
-
-        private bool OwnedByPolyculeMemberWith(Pawn pawn)
+        public bool InBedroomOf(Pawn pawn)
         {
-            HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
-            return members.Count > 1 && bed.OwnersForReading.Any(members.Contains);
+            Room? room = pawn.ownership.OwnedBed?.GetRoom();
+            return room != null && bed.GetRoom() == room;
         }
 
-        private bool InBedroomOf(Pawn pawn)
+        public SleepingPlace GetSleepingPlace(int slot)
         {
-            Building_Bed? ownedBed = pawn.ownership.OwnedBed;
-            Room? room = ownedBed?.GetRoom();
-            if (room == null || bed.GetRoom() != room)
-                return false;
-            return true;
+            return new SleepingPlace(bed, slot);
         }
     }
 
@@ -45,28 +39,19 @@ internal static class BedSharingHelpers
             // Caravan duties can allow rest while requiring the pawn to stay out of beds.
             pawn.GetLord()?.CurLordToil?.AllowRestingInBed != false;
 
-        private bool CanSleepInBed(Building_Bed bed) =>
-            bed.Map == pawn.Map
-            && AllBedmatesWillingToShareBed(pawn, bed);
-
         public bool CanSleepInSharedBed(Building_Bed bed)
         {
-            return pawn.CanShareBedsNow && bed.IsEligibleForBedSharing && pawn.CanSleepInBed(bed);
+            return pawn.CanShareBedsNow && bed.IsEligibleForBedSharing && bed.Map == pawn.Map
+                   && AllBedmatesWillingToShareBed(pawn, bed);
         }
     }
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
     {
         IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
-        return bedmates.All(bedmate => WillingToShareBed(pawn, bedmate, bed));
-    }
-
-    public static bool WillingToShareBed(Pawn pawn, Pawn bedmate, Building_Bed bed)
-    {
-        if (pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate))
-            return true;
-
-        return bed.InPolyculeBedroomFor(pawn) && pawn.GetLoveCluster().Contains(bedmate);
+        HashSet<Pawn> loveCluster = [.. pawn.GetLoveCluster()];
+        return bedmates.All(bedmate => pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) ||
+                                       (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) && loveCluster.Contains(bedmate)));
     }
 
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)

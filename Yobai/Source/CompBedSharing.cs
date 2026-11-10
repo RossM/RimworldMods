@@ -49,13 +49,13 @@ public sealed class CompBedSharing : ThingComp
         return false;
     }
 
-    internal bool IsSleepingPlaceAvailable(Pawn pawn, int slot) => SleepingAssignments.IsAvailable(pawn, new SleepingPlace(Bed, slot));
+    internal bool IsSleepingPlaceAvailable(Pawn pawn, int slot) => Bed.GetSleepingPlace(slot).IsAvailableFor(pawn);
 
     internal bool CanAssignSleepingSlot(Pawn pawn, int slot)
     {
         if (slot < 0 || slot >= Bed.SleepingSlotsCount)
             return false;
-        return new SleepingPlace(Bed, slot).CanAssignTemporary(pawn);
+        return Bed.GetSleepingPlace(slot).CanAssignTemporary(pawn);
     }
 
     internal void AddAssignment(TemporarySleepingSlot assignment)
@@ -70,8 +70,7 @@ public sealed class CompBedSharing : ThingComp
 
     internal void RemoveDepartedSleepers()
     {
-        Building_Bed bed = (Building_Bed)parent;
-        temporarySleepingSlots.RemoveAll(assignment => !SleepingAssignments.IsActive(assignment, bed));
+        temporarySleepingSlots.RemoveAll(assignment => !IsActive(assignment));
     }
 
     public override void PostExposeData()
@@ -101,5 +100,21 @@ public sealed class CompBedSharing : ThingComp
             isActive = () => nightVisitsEnabled,
             toggleAction = () => nightVisitsEnabled = !nightVisitsEnabled,
         };
+    }
+
+    public int FreeSlotsExcluding(Pawn pawn)
+    {
+        return Bed.SleepingSlotsCount - GetBedmates().Count(p => p != pawn);
+    }
+
+    private bool IsActive(TemporarySleepingSlot assignment)
+    {
+        Building_Bed bed = Bed;
+        if (!bed.IsEligibleForBedSharing
+            || assignment.Pawn is not { } pawn || !pawn.IsOnMap(bed.Map!)
+            || assignment.Slot < 0 || assignment.Slot >= bed.SleepingSlotsCount)
+            return false;
+
+        return assignment.TickCreated == Find.TickManager.TicksGame || bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(pawn);
     }
 }

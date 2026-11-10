@@ -4,7 +4,7 @@ internal static class BedSharingJobHelpers
 {
     public static Job? TryMakeSleepJob(Pawn pawn, SleepingPlace place)
     {
-        if (!CanBookSleepingPlace(pawn, place))
+        if (!place.BookableBy(pawn))
             return null;
 
         if (!place.TryAssignTemporary(pawn))
@@ -17,7 +17,7 @@ internal static class BedSharingJobHelpers
 
     public static Job? TryMakeLovinJob(Pawn pawn, Pawn partner, SleepingPlace place)
     {
-        if (!pawn.CanReserve(partner) || !CanBookSleepingPlace(pawn, place))
+        if (!pawn.CanReserve(partner) || !place.BookableBy(pawn))
             return null;
 
         if (!place.TryAssignTemporary(pawn))
@@ -26,11 +26,5 @@ internal static class BedSharingJobHelpers
         Job job = JobMaker.MakeJob(JobDefOf.Lovin, partner, place.Bed);
 
         return job;
-    }
-
-    public static bool CanBookSleepingPlace(Pawn pawn, SleepingPlace place)
-    {
-        return place.CanAssignTemporary(pawn)
-               && pawn.CanReserve(place.Bed, place.Bed.SleepingSlotsCount, 0);
     }
 }

@@ -10,7 +10,7 @@ internal static class BedSelectionHelpers
         ];
         beds.Shuffle();
 
-        foreach (Building_Bed bed in beds.OrderByDescending(bed => HasLovePartnerWillingToShareBed(pawn, bed) || FreeSlots(pawn, bed) >= 2))
+        foreach (Building_Bed bed in beds.OrderByDescending(bed => bed.GetComp<CompBedSharing>()!.GetBedmates().Any(bedmate => PolyculeHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate)) || bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2))
         {
             if (TryMakePolyculeBedroomSleepJob(pawn, bed))
                 return bed;
@@ -19,23 +19,13 @@ internal static class BedSelectionHelpers
         return null;
     }
 
-    private static int FreeSlots(Pawn pawn, Building_Bed bed)
-    {
-        return bed.SleepingSlotsCount - bed.GetComp<CompBedSharing>().GetBedmates().Count(p => p != pawn);
-    }
-
-    private static bool HasLovePartnerWillingToShareBed(Pawn pawn, Building_Bed bed)
-    {
-        return bed.GetComp<CompBedSharing>().GetBedmates().Any(bedmate => PolyculeHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
-    }
-
     public static bool TryMakePolyculeBedroomSleepJob(Pawn pawn, Building_Bed bed)
     {
         foreach (int slot in GetAvailablePolyculeBedroomSlots(pawn, bed))
         {
-            SleepingPlace place = new SleepingPlace(bed, slot);
+            SleepingPlace place = bed.GetSleepingPlace(slot);
 
-            if (!BedSharingJobHelpers.CanBookSleepingPlace(pawn, place))
+            if (!place.BookableBy(pawn))
                 continue;
             if (!place.TryAssignTemporary(pawn))
                 continue;
@@ -92,8 +82,12 @@ internal static class BedSelectionHelpers
         }
     }
 
-    private static bool ValidBed(Pawn pawn, Building_Bed bed) =>
-        pawn.CanShareBedsNow
-        && pawn.CanSleepInSharedBed(bed)
-        && bed.InPolyculeBedroomFor(pawn);
+    private static bool ValidBed(Pawn pawn, Building_Bed bed)
+    {
+        HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
+        return pawn.CanShareBedsNow
+               && pawn.CanSleepInSharedBed(bed)
+               && bed.InBedroomOf(pawn) && 
+               bed.OwnersForReading.Any(members.Contains);
+    }
 }

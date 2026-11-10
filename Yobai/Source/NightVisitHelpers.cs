@@ -36,11 +36,11 @@ internal static class NightVisitHelpers
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
         if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
             slots = slots.Prepend(ownedSlot).Distinct();
-        int slot = slots.FirstOrDefault(slot => new SleepingPlace(bed, slot).CanAssignForNightVisit(visitor), -1);
+        int slot = slots.FirstOrDefault(slot => bed.GetSleepingPlace(slot).CanAssignForNightVisit(visitor), -1);
         if (slot < 0)
             yield break;
 
-        SleepingPlace place = new(bed, slot);
+        SleepingPlace place = bed.GetSleepingPlace(slot);
         foreach (Pawn partner in bed.CurOccupants)
         {
             if (PolyculeHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake()

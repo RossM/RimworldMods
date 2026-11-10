@@ -42,7 +42,7 @@ internal static class SleepingAssignments
             return [];
 
         List<CompBedSharing> comps = [.. GetBedComps(map)];
-        List<ActiveAssignment> temporaryAssignments = [.. ReadTemporaryAssignments(comps)];
+        List<ActiveAssignment> temporaryAssignments = [.. comps.SelectMany(TemporaryAssignments)];
         HashSet<Pawn> temporaryPawns = [.. temporaryAssignments.Select(assignment => assignment.Pawn)];
         HashSet<(Building_Bed Bed, int Slot)> temporaryPlaces =
         [
@@ -58,7 +58,7 @@ internal static class SleepingAssignments
                 // Deathrest caskets have their own ownership, separate from the pawn's sleeping bed.
                 if (owner.ownership.OwnedBed != comp.Bed || temporaryPawns.Contains(owner) || temporaryPlaces.Contains((comp.Bed, slot)))
                     continue;
-                active.Add(new ActiveAssignment(owner, new SleepingPlace(comp.Bed, slot), IsTemporary: false));
+                active.Add(new ActiveAssignment(owner, comp.Bed.GetSleepingPlace(slot), IsTemporary: false));
             }
         }
 
@@ -88,36 +88,13 @@ internal static class SleepingAssignments
         return bed.CurOccupants.Concat(sleepers).Distinct();
     }
 
-    private static IEnumerable<ActiveAssignment> ReadTemporaryAssignments(IEnumerable<CompBedSharing> comps)
+    private static IEnumerable<ActiveAssignment> TemporaryAssignments(CompBedSharing comp)
     {
-        foreach (CompBedSharing comp in comps)
+        foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments)
         {
-            foreach (TemporarySleepingSlot assignment in comp.TemporaryAssignments)
-            {
-                if (assignment.Pawn is { } pawn)
-                    yield return new ActiveAssignment(pawn, new SleepingPlace(comp.Bed, assignment.Slot), IsTemporary: true);
-            }
+            if (assignment.Pawn is { } pawn)
+                yield return new ActiveAssignment(pawn, comp.Bed.GetSleepingPlace(assignment.Slot), IsTemporary: true);
         }
-    }
-
-    public static bool IsAvailable(Pawn pawn, SleepingPlace place)
-    {
-        Pawn? occupant = place.Bed.GetCurOccupant(place.Slot);
-        if (occupant != null && occupant != pawn)
-            return false;
-        ActiveAssignment? assignment = GetActiveAssignments(place.Bed.Map)
-            .FirstOrDefault(assignment => assignment.Place.Bed == place.Bed && assignment.Place.Slot == place.Slot);
-        return assignment == null || assignment.Pawn == pawn || !assignment.IsInUse;
-    }
-
-    internal static bool IsActive(TemporarySleepingSlot assignment, Building_Bed bed)
-    {
-        if (!bed.IsEligibleForBedSharing
-            || assignment.Pawn is not { } pawn || !pawn.IsOnMap(bed.Map!)
-            || assignment.Slot < 0 || assignment.Slot >= bed.SleepingSlotsCount)
-            return false;
-
-        return assignment.TickCreated == Find.TickManager.TicksGame || new SleepingPlace(bed, assignment.Slot).BeingUsedBy(pawn);
     }
 
     extension(Pawn pawn)
