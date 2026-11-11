@@ -24,11 +24,17 @@ internal static class NightVisitHelpers
 
     public static SleepingPlace? GetFreeSlotInBed(Pawn visitor, Building_Bed bed)
     {
-        IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
-        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
-            slots = slots.Prepend(ownedSlot).Distinct();
-        int slot = slots.FirstOrDefault(slot => bed.GetSleepingPlace(slot).CanAssignForNightVisit(visitor), -1);
-        return slot >= 0 ? bed.GetSleepingPlace(slot) : null;
+        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot && bed.GetSleepingPlace(ownedSlot).CanAssignForNightVisit(visitor))
+            return bed.GetSleepingPlace(ownedSlot);
+        
+        for (int slot = 0; slot < bed.SleepingSlotsCount; slot++)
+        {
+            SleepingPlace place = bed.GetSleepingPlace(slot);
+            if (place.CanAssignForNightVisit(visitor))
+                return place;
+        }
+
+        return null;
     }
 
     public static bool BedIsEligibleForNightVisits(Pawn visitor, Building_Bed bed) =>
