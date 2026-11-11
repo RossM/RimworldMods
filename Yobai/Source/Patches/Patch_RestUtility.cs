@@ -24,6 +24,33 @@ internal static class Patch_RestUtility
         __result = comp.IsSleepingPlaceAvailable(sleeper, RestUtility.GetBedSleepingSlotPosFor(sleeper, bed));
     }
 
+    [Prefix]
+    [Target(nameof(RestUtility.GetBedSleepingSlotPosFor))]
+    public static bool GetBedSleepingSlotPosFor_Prefix(Pawn pawn, Building_Bed bed, out IntVec3 __result)
+    {
+        __result = default;
+        if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(pawn, out int slot) != true)
+            return true;
+
+        // Running the original method and then changing the result might log a “Could not find good sleeping slot position” warning,
+        // so this patch has to be a prefix.
+        __result = bed.GetSleepingSlotPos(slot);
+        return false;
+    }
+
+    [Postfix]
+    [Inner(typeof(CompAssignableToPawn), nameof(CompAssignableToPawn.IdeoligionForbids))]
+    [Target(nameof(RestUtility.CanUseBedNow))]
+    public static void IdeoligionForbids_Postfix(
+        [Argument("sleeper", Scope.Outer)] Pawn sleeper,
+        [Argument("bedThing", Scope.Outer)] Thing bedThing,
+        ref bool __result)
+    {
+        // A temporary assignment concerns the bedmates present, rather than absent permanent owners.
+        if (bedThing is Building_Bed bed && BedSharingHelpers.CanUseTemporarySleepingSlot(sleeper, bed))
+            __result = false;
+    }
+
     [Postfix]
     [Inner(typeof(Building_Bed), nameof(Building_Bed.IsOwner), typeof(Pawn), typeof(Out<int?>))]
     [Target(nameof(RestUtility.CanUseBedNow))]
@@ -40,32 +67,5 @@ internal static class Patch_RestUtility
 
         __result = true;
         assignedSleepingSlot = slot;
-    }
-
-    [Postfix]
-    [Inner(typeof(CompAssignableToPawn), nameof(CompAssignableToPawn.IdeoligionForbids))]
-    [Target(nameof(RestUtility.CanUseBedNow))]
-    public static void IdeoligionForbids_Postfix(
-        [Argument("sleeper", Scope.Outer)] Pawn sleeper,
-        [Argument("bedThing", Scope.Outer)] Thing bedThing,
-        ref bool __result)
-    {
-        // A temporary assignment concerns the bedmates present, rather than absent permanent owners.
-        if (bedThing is Building_Bed bed && BedSharingHelpers.CanUseTemporarySleepingSlot(sleeper, bed))
-            __result = false;
-    }
-
-    [Prefix]
-    [Target(nameof(RestUtility.GetBedSleepingSlotPosFor))]
-    public static bool GetBedSleepingSlotPosFor_Prefix(Pawn pawn, Building_Bed bed, out IntVec3 __result)
-    {
-        __result = default;
-        if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(pawn, out int slot) != true)
-            return true;
-
-        // Running the original method and then changing the result might log a “Could not find good sleeping slot position” warning,
-        // so this patch has to be a prefix.
-        __result = bed.GetSleepingSlotPos(slot);
-        return false;
     }
 }

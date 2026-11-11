@@ -8,9 +8,6 @@ public sealed class CompBedSharing : ThingComp
         public Pawn Pawn => pawn;
         public int Slot => slot;
 
-        [field: Unsaved]
-        public int TickCreated { get; } = -1;
-
         private Pawn pawn;
         private int slot;
 
@@ -26,6 +23,9 @@ public sealed class CompBedSharing : ThingComp
             this.slot = slot;
             TickCreated = Find.TickManager.TicksGame;
         }
+
+        [field: Unsaved]
+        public int TickCreated { get; } = -1;
 
         public void ExposeData()
         {
@@ -144,7 +144,8 @@ public sealed class CompBedSharing : ThingComp
                (assignment.TickCreated == Find.TickManager.TicksGame || Bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(assignment.Pawn));
     }
 
-    private static bool IsValidAssignment(Building_Bed bed, TemporarySleepingSlot assignment) => (assignment.Slot >= 0 && assignment.Slot < bed.SleepingSlotsCount);
+    private static bool IsValidAssignment(Building_Bed bed, TemporarySleepingSlot assignment) =>
+        assignment.Slot >= 0 && assignment.Slot < bed.SleepingSlotsCount;
 
     public bool RemoveAssignment(Pawn pawn)
     {

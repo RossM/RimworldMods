@@ -53,8 +53,8 @@ internal sealed class SleepingPlace
             return false;
 
         // Pre-toil validation runs after the job is accepted but before GotoBed starts its path.
-        return pawn.jobs.curDriver.CurToilIndex < 0 || pawn.Position == position
-                                                    || (pawn.pather!.Moving && pawn.pather.Destination.Cell == position);
+        return pawn.jobs.curDriver.CurToilIndex < 0 || pawn.Position == position ||
+               (pawn.pather!.Moving && pawn.pather.Destination.Cell == position);
     }
 
     public bool IsAvailableFor(Pawn pawn)

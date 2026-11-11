@@ -48,5 +48,6 @@ internal static class NightVisitHelpers
         }
     }
 
-    public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed) => FindVisits(visitor, bed).FirstOrDefault()?.TryMakeVisitJob(visitor);
+    public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed) =>
+        FindVisits(visitor, bed).FirstOrDefault()?.TryMakeVisitJob(visitor);
 }

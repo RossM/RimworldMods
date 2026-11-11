@@ -4,6 +4,30 @@ namespace Yobai.Patches;
 internal static class Patch_Toils_Bed
 {
     [Postfix]
+    [Target(nameof(Toils_Bed.ClaimBedIfNonMedical))]
+    public static void ClaimBedIfNonMedical_Postfix(TargetIndex ind, TargetIndex claimantIndex, Toil __result)
+    {
+        Action claimBed = __result.initAction;
+        __result.initAction = () =>
+        {
+            Pawn actor = __result.actor;
+            Pawn claimant = claimantIndex == TargetIndex.None
+                ? actor
+                : (Pawn)actor.CurJob.GetTarget(claimantIndex).Thing;
+            SleepingAssignments.ActiveAssignment? assignment = SleepingAssignments.GetActiveAssignments(claimant.Map)
+                .FirstOrDefault(assignment => assignment.Pawn == claimant);
+            if (assignment is { IsTemporary: true })
+                return;
+            if (claimant.ownership.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)
+                return;
+
+            // Outside temporary stays or displacement, vanilla may claim an unowned sleeping place
+            // even when the pawn already owns a bed. This lets pawns claim a bed on another map.
+            claimBed();
+        };
+    }
+
+    [Postfix]
     [Target(nameof(Toils_Bed.GotoBed))]
     public static void GotoBed_Postfix(TargetIndex bedIndex, Toil __result)
     {
@@ -33,30 +57,6 @@ internal static class Patch_Toils_Bed
             }
 
             gotoBed();
-        };
-    }
-
-    [Postfix]
-    [Target(nameof(Toils_Bed.ClaimBedIfNonMedical))]
-    public static void ClaimBedIfNonMedical_Postfix(TargetIndex ind, TargetIndex claimantIndex, Toil __result)
-    {
-        Action claimBed = __result.initAction;
-        __result.initAction = () =>
-        {
-            Pawn actor = __result.actor;
-            Pawn claimant = claimantIndex == TargetIndex.None
-                ? actor
-                : (Pawn)actor.CurJob.GetTarget(claimantIndex).Thing;
-            SleepingAssignments.ActiveAssignment? assignment = SleepingAssignments.GetActiveAssignments(claimant.Map)
-                .FirstOrDefault(assignment => assignment.Pawn == claimant);
-            if (assignment is { IsTemporary: true })
-                return;
-            if (claimant.ownership.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)
-                return;
-
-            // Outside temporary stays or displacement, vanilla may claim an unowned sleeping place
-            // even when the pawn already owns a bed. This lets pawns claim a bed on another map.
-            claimBed();
         };
     }
 }

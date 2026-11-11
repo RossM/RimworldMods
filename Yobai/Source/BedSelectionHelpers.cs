@@ -13,7 +13,7 @@ internal static class BedSelectionHelpers
             return null;
 
         int bedsWithTwoFreeSlots = beds.Count(bed => bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2);
-        
+
         if (!beds.TryRandomElementByWeight(WeightSelector, out var selected))
             selected = beds.RandomElement()!;
         MakePolyculeBedroomSleepJob(pawn, selected);
@@ -87,7 +87,7 @@ internal static class BedSelectionHelpers
         HashSet<Pawn> members = [.. pawn.GetLoveCluster()];
         return pawn.CanShareBedsNow
                && pawn.CanSleepInSharedBed(bed)
-               && bed.InBedroomOf(pawn) && 
+               && bed.InBedroomOf(pawn) &&
                bed.OwnersForReading.Any(members.Contains);
     }
 }
