@@ -57,15 +57,15 @@ For fuller information on xenotypes, genes, factions, etc., see the [url=https:/
 
 [h1]FAQ[/h1]
 
-[h2]Can I add this to an existing save?[/h2]
+[h3]Can I add this to an existing save?[/h3]
 
 Yes. You'll need a new save to see some content, such as the factions.
 
-[h2]Can I remove it from an existing save?[/h2]
+[h3]Can I remove it from an existing save?[/h3]
 
 Not recommended. Let me know if it works.
 
-[h2]How do I find the xenotypes and acquire their genes?[/h2]
+[h3]How do I find the xenotypes and acquire their genes?[/h3]
 
 Bossaps, chyrr, dvergr, nixie, titan, trog, warcat, and zeegee are what I consider "major" xenotypes. Most of them have their own factions or events to introduce them, and all of them appear fairly frequently in appropriate factions. You shouldn't have any trouble finding them during play, except maybe chyrr, which are intentionally a bit rarer.
 
@@ -73,19 +73,19 @@ The other four xenotypes - omegabeaver, scaleborn, steadling, and succuboid - ar
 
 Most of the genes can also be found in gene packs available from traders.
 
-[h2]I'm a mod author. Can I use your stuff in my mod?[/h2]
+[h3]I'm a mod author. Can I use your stuff in my mod?[/h3]
 
 Sure. You can depend on my mod, or you can use my code or assets as a start for your own - it's all MIT licensed. If you'd like to use the code that powers the mod without pulling in all the gameplay content, I'm considering making it available as a standalone library mod; let me know if you want that to happen.
 
-[h2]I am a writer or artist. How can I help?[/h2]
+[h3]I am a writer or artist. How can I help?[/h3]
 
 If you'd like to improve part of the mod or contribute more content, please let me know. The best way to reach me is on [url=https://discord.gg/rimworld]Discord[/url], but you can also use Steam comments or the GitHub page.
 
-[h2]I am not a writer or artist. How can I help?[/h2]
+[h3]I am not a writer or artist. How can I help?[/h3]
 
 The best way to help is to just play and provide feedback in the discussion threads below.
 
-[h2]I have a cool idea. Will you add it to your mod?[/h2]
+[h3]I have a cool idea. Will you add it to your mod?[/h3]
 
 I'm always open to suggestions, but if they need a lot of writing or art, they might not make it unless someone helps with that. See "I am a writer or artist. How can I help?"
 
