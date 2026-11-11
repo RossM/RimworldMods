@@ -1267,7 +1267,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(second, bed);
         ArriveAtBed(third, bed);
         Expect.IsTrue(NightVisitHelpers.FindVisits(outsider, bed).Any());
-        Job? incoming = NightVisitHelpers.TryMakeVisitJob(first, bed);
+        Job? incoming = NightVisitHelpers.FindVisits(first, bed).FirstOrDefault()?.TryMakeVisitJob(first);
         Expect.IsNotNull(incoming);
         try
         {
