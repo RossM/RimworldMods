@@ -16,7 +16,7 @@ internal static class NightVisitHelpers
     {
         int now = Find.TickManager.TicksGame;
         return LovePartnerRelationUtility.LovePartnerRelationExists(first, second)
-               && now >= first.mindState.canLovinTick && now >= second.mindState.canLovinTick
+               && now >= first.mindState!.canLovinTick && now >= second.mindState!.canLovinTick
                && first.health.capacities.CanBeAwake && second.health.capacities.CanBeAwake
                && first.CanReserve(second) && second.CanReserve(first)
                && LovePartnerRelationUtility.GetLovinMtbHours(first, second) > 0f;
@@ -24,29 +24,38 @@ internal static class NightVisitHelpers
 
     public static IEnumerable<NightVisit> FindVisits(Pawn visitor, Building_Bed bed)
     {
-        if (!visitor.CanShareBedsNow
-            || !visitor.CanSleepInSharedBed(bed)
-            || !bed.IsEligibleForNightVisits
-            || bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true } comp)
+        if (!BedIsEligibleForNightVisits(visitor, bed))
             yield break;
+
+        var comp = bed.GetComp<CompBedSharing>()!;
 
         if (!comp.GetBedmates().Any(other => BedSharingHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
             yield break;
 
-        IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
-        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
-            slots = slots.Prepend(ownedSlot).Distinct();
-        int slot = slots.FirstOrDefault(slot => bed.GetSleepingPlace(slot).CanAssignForNightVisit(visitor), -1);
-        if (slot < 0)
+        if (GetFreeSlotInBed(visitor, bed) is not { } place)
             yield break;
 
-        SleepingPlace place = bed.GetSleepingPlace(slot);
         foreach (Pawn partner in bed.CurOccupants)
         {
             if (BedSharingHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake() && partner.CanShareBedsNow)
                 yield return new NightVisit(partner, place);
         }
     }
+
+    public static SleepingPlace? GetFreeSlotInBed(Pawn visitor, Building_Bed bed)
+    {
+        IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
+        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot)
+            slots = slots.Prepend(ownedSlot).Distinct();
+        int slot = slots.FirstOrDefault(slot => bed.GetSleepingPlace(slot).CanAssignForNightVisit(visitor), -1);
+        return slot >= 0 ? bed.GetSleepingPlace(slot) : null;
+    }
+
+    public static bool BedIsEligibleForNightVisits(Pawn visitor, Building_Bed bed) =>
+        (visitor.CanShareBedsNow
+         && visitor.CanSleepInSharedBed(bed)
+         && bed.IsEligibleForNightVisits
+         && bed.GetComp<CompBedSharing>() is { nightVisitsEnabled: true });
 
     public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed) =>
         FindVisits(visitor, bed).FirstOrDefault()?.TryMakeVisitJob(visitor);

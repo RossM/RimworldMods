@@ -14,14 +14,28 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
             return null;
         pawn.mindState.thinkData[UniqueSaveKey] = now;
 
-        List<NightVisit> visits =
-        [
-            .. BedSharingHelpers.GetLovePartnersWillingToShareBed(pawn)
-                // ReSharper disable once RedundantEnumerableCastCall
-                .Select(partner => partner.CurrentBed()).OfType<Building_Bed>().Distinct()
-                .SelectMany(bed => NightVisitHelpers.FindVisits(pawn, bed))
-                .Where(visit => NightVisitHelpers.AreReadyForLovin(pawn, visit.Partner)),
-        ];
+        // This finds potential empty slots in beds that have a romantic partner
+        List<NightVisit> visits = [];
+
+        foreach (var partner in BedSharingHelpers.GetLovePartnersWillingToShareBed(pawn))
+        {
+            if (partner.Awake())
+                continue;
+            if (!partner.CanShareBedsNow)
+                continue;
+            if (!NightVisitHelpers.AreReadyForLovin(pawn, partner))
+                continue;
+            if (partner.CurrentBed() is not { } bed)
+                continue;
+            if (!NightVisitHelpers.BedIsEligibleForNightVisits(pawn, bed))
+                continue;
+            if (NightVisitHelpers.GetFreeSlotInBed(pawn, bed) is not { } place)
+                continue;
+
+            visits.Add(new(partner, place));
+        }
+
+
         if (visits.Count == 0)
             return null;
 
