@@ -185,7 +185,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-1</biostatMet>
     <statOffsets>
-      <MoveSpeed>0.1</MoveSpeed>
+      <MoveSpeed>0.08</MoveSpeed>
     </statOffsets>
     <renderNodeProperties>
       <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
