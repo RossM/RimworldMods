@@ -1,3 +1,5 @@
+using static XylXenos.Tests.TestDefOf;
+
 namespace XylXenos.Tests;
 
 [TestFixture(TestType.Playing)]
@@ -6,8 +8,7 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void RemovalCompTransfersSeverityAndBodyPart()
     {
-        HediffDef replacement = HediffDef();
-        HediffDef def = HediffDef(new HediffCompProperties_GiveHediffOnRemoval { hediff = replacement, inheritSeverity = true });
+        HediffDef replacement = XylXenosTestHediff, def = XylXenosTestTransferOnRemoval;
         BodyPartRecord part = pawn.RaceProps.body.corePart;
         Hediff condition = pawn.health.AddHediff(def, part);
         condition.Severity = 0.65f;
@@ -20,12 +21,8 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void GrowthModesChangeSeverityRateAndModifyInstanceStageOnly()
     {
-        var first = new GrowthMode { severityPerDay = 0.2f, causesNoPain = true, enableHediffGivers = false, allowTend = false };
-        var second = new GrowthMode { severityPerDay = -0.1f };
-        HediffDef def = HediffDef(new HediffCompProperties_GrowthModeExt { modes = [first, second] });
-        def.hediffClass = typeof(HediffWithCompsExt);
-        def.tendable = true;
-        def.stages = [new HediffStage { painOffset = 0.3f, hediffGivers = [new HediffGiver_Event { hediff = HediffDef() }] }];
+        HediffDef def = XylXenosTestGrowthModes;
+        GrowthMode second = def.CompProps<HediffCompProperties_GrowthModeExt>().modes[1];
         var condition = (HediffWithCompsExt)pawn.health.AddHediff(def);
         var comp = condition.TryGetComp<HediffComp_GrowthModeExt>();
         Expect.AreApproximatelyEqual(0.2f, comp.SeverityChangePerDay());
@@ -43,10 +40,8 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void PetrificationTendingSwitchesGrowthModeAtQualityThreshold()
     {
-        GrowthMode first = new(), second = new();
-        HediffDef def = HediffDef(new HediffCompProperties_GrowthModeExt { modes = [first, second] },
-            new HediffCompProperties_PetrificationTendDuration { changeModeAtTotalTendQuality = 0.5f });
-        def.hediffClass = typeof(HediffWithCompsExt);
+        HediffDef def = XylXenosTestTendSwitchesMode;
+        GrowthMode second = def.CompProps<HediffCompProperties_GrowthModeExt>().modes[1];
         var condition = (HediffWithCompsExt)pawn.health.AddHediff(def);
         var growth = condition.TryGetComp<HediffComp_GrowthModeExt>();
         var tend = condition.TryGetComp<HediffComp_PetrificationTendDuration>();
@@ -61,11 +56,8 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void SaturationGainsWithSourceAndLosesWithoutIt()
     {
-        HediffDef source = HediffDef();
-        var condition = (HediffWithComps)HediffMaker.MakeHediff(HediffDef(new HediffCompProperties_Saturation
-        {
-            sourceHediff = source, severityGainPerDay = 0.8f, severityLossPerDay = -0.3f,
-        }), pawn);
+        HediffDef source = XylXenosTestHediff;
+        var condition = (HediffWithComps)HediffMaker.MakeHediff(XylXenosTestSaturation, pawn);
         var comp = condition.TryGetComp<HediffComp_Saturation>();
         Expect.AreApproximatelyEqual(-0.3f, comp.SeverityChangePerDay());
         Hediff effect = pawn.health.AddHediff(source);
@@ -77,11 +69,7 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void StageRecoveryLabelMeasuresRemainingCurrentStage()
     {
-        HediffDef def = HediffDef(new HediffCompProperties_SeverityPerDay_Stage
-        {
-            severityPerDay = -0.5f, showHoursToRecoverStages = new IntRange(1),
-        });
-        def.stages = [new HediffStage(), new HediffStage { minSeverity = 0.5f }];
+        HediffDef def = XylXenosTestStageRecovery;
         var condition = (HediffWithComps)pawn.health.AddHediff(def);
         condition.Severity = 0.75f;
         var comp = condition.TryGetComp<HediffComp_SeverityPerDay_Stage>();
@@ -93,12 +81,10 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void BioRejectionCountsImplantsRatherThanStoredSeverity()
     {
-        HediffDef def = HediffDef();
-        def.hediffClass = typeof(Hediff_BioRejection);
+        HediffDef def = XylXenosTestBioRejection;
         var condition = (Hediff_BioRejection)pawn.health.AddHediff(def);
         Expect.AreApproximatelyEqual(0, condition.Severity);
-        HediffDef implant = HediffDef();
-        implant.countsAsAddedPartOrImplant = true;
+        HediffDef implant = XylXenosTestImplant;
         Hediff added = pawn.health.AddHediff(implant, pawn.RaceProps.body.corePart);
         Expect.AreApproximatelyEqual(1, condition.Severity);
         condition.Severity = 99;
@@ -111,10 +97,7 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void PetrifiedFleshClampsSeverityToPartHealthAndUsesRelativeStages()
     {
-        HediffDef def = HediffDef();
-        def.hediffClass = typeof(Hediff_PetrifiedFlesh);
-        def.maxSeverity = float.MaxValue;
-        def.stages = [new HediffStage(), new HediffStage { minSeverity = 0.5f }];
+        HediffDef def = XylXenosTestPetrifiedFlesh;
         BodyPartRecord part = pawn.RaceProps.body.corePart;
         var condition = (Hediff_PetrifiedFlesh)pawn.health.AddHediff(def, part);
         condition.Severity = part.def.GetMaxHealth(pawn) * 2f;
@@ -127,10 +110,7 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void DietDependencyUsesConfiguredNutritionConversion()
     {
-        HediffDef def = HediffDef();
-        def.hediffClass = typeof(Hediff_DietDependency);
-        def.modExtensions = [new DefModExtension_Hediff_DietDependency { severityReductionPerNutrition = 2 }];
-        def.stages = Enumerable.Range(0, Hediff_DietDependency.StageCount).Select(i => new HediffStage { minSeverity = i }).ToList();
+        HediffDef def = XylXenosTestDietDependency;
         var condition = (Hediff_DietDependency)pawn.health.AddHediff(def);
         condition.Severity = 3;
         Expect.IsTrue(condition.ShouldSatisfy);
@@ -149,14 +129,7 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void SubstituteCapacityValidatesCapacityAndStatExclusions()
     {
-        HediffDef def = HediffDef();
-        def.hediffClass = typeof(Hediff_SubstituteCapacity);
-        def.modExtensions = [new DefModExtension_Hediff_SubstituteCapacity
-        {
-            originalCapacity = PawnCapacityDefOf.Sight, substituteCapacity = PawnCapacityDefOf.Hearing,
-            mode = DefModExtension_Hediff_SubstituteCapacity.SubstitutionMode.Always,
-            excludeStats = [StatDefOf.MoveSpeed],
-        }];
+        HediffDef def = XylXenosTestSubstituteCapacity;
         var condition = (Hediff_SubstituteCapacity)pawn.health.AddHediff(def);
         Expect.IsTrue(condition.Validate(StatDefOf.WorkSpeedGlobal, PawnCapacityDefOf.Sight));
         Expect.IsFalse(condition.Validate(StatDefOf.WorkSpeedGlobal, PawnCapacityDefOf.Hearing));
@@ -166,14 +139,11 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void LovinNeedFallsAndAddictionStageTracksSatisfaction()
     {
-        var needDef = new NeedDef { defName = "TestLovinNeed", label = "test need", needClass = typeof(Need_Lovin), fallPerDay = 0.4f };
-        var need = new Need_Lovin(pawn) { def = needDef };
+        var need = new Need_Lovin(pawn) { def = XylXenosTestLovinNeed };
         pawn.needs.AllNeeds.Add(need);
         try
         {
-            HediffDef def = HediffDef();
-            def.hediffClass = typeof(Hediff_LovinAddiction);
-            def.stages = [new HediffStage(), new HediffStage()];
+            HediffDef def = XylXenosTestLovinAddiction;
             var condition = (Hediff_LovinAddiction)pawn.health.AddHediff(def);
             need.CurLevel = 0.5f;
             need.NeedInterval();
@@ -193,7 +163,7 @@ public sealed class HediffTests : PawnTestFixture
     public void TorporGiverGainsInColdAndRecoversInWarmth()
     {
         GenSpawn.Spawn(pawn, new IntVec3(70, 0, 70), Find.CurrentMap);
-        HediffDef def = HediffDef();
+        HediffDef def = XylXenosTestHediff;
         var giver = new HediffGiver_Torpor
         {
             hediff = def, temperatureThreshold = pawn.AmbientTemperature + 10,
@@ -211,7 +181,7 @@ public sealed class HediffTests : PawnTestFixture
     [Test]
     public void RandomNotInSpaceUsesOrdinaryChanceForUnspawnedPawn()
     {
-        var giver = new HediffGiver_RandomNotInSpace { hediff = HediffDef() };
+        var giver = new HediffGiver_RandomNotInSpace { hediff = XylXenosTestHediff };
         Expect.AreApproximatelyEqual(new HediffGiver_Random().ChanceFactor(pawn), giver.ChanceFactor(pawn));
     }
 

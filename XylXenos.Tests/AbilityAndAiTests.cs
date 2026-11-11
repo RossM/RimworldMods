@@ -1,3 +1,4 @@
+using static XylXenos.Tests.TestDefOf;
 using System.Reflection;
 using Verse.AI;
 
@@ -49,7 +50,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
     {
         var comp = new CompAbilityEffect_RockToss
         {
-            parent = new Ability(pawn), props = new CompProperties_AbilityRockToss { projectileDef = new ThingDef() },
+            parent = new Ability(pawn), props = new CompProperties_AbilityRockToss { projectileDef = XylBullet_RockToss },
         };
         Thing item = ThingMaker.MakeThing(ThingDefOf.Silver);
         things.Add(item);
@@ -59,11 +60,11 @@ public sealed class AbilityAndAiTests : PawnTestFixture
     [Test]
     public void BlindDamageAppliesHediffToEverySightSource()
     {
-        HediffDef blindness = HediffDef();
-        var damage = new DamageDef { hediff = blindness };
+        DamageDef damage = XylOil;
+        HediffDef blindness = damage.hediff;
         BodyPartRecord[] eyes = pawn.health.hediffSet.GetNotMissingParts(tag: BodyPartTagDefOf.SightSource).ToArray();
         Expect.IsNotEmpty(eyes);
-        new DamageWorker_Blind().Apply(new DamageInfo(damage, 0.7f), pawn);
+        damage.Worker.Apply(new DamageInfo(damage, 0.7f), pawn);
         foreach (BodyPartRecord eye in eyes)
         {
             Hediff effect = pawn.health.hediffSet.hediffs.Single(h => h.def == blindness && h.Part == eye);
@@ -74,7 +75,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
     [Test]
     public void GeneConditionalTracksPresenceAndCopiesItsConfiguration()
     {
-        GeneDef gene = GeneDef();
+        GeneDef gene = XylXenosTestGene;
         var node = new ThinkNode_ConditionalHasGene { gene = gene };
         MethodInfo satisfied = typeof(ThinkNode_ConditionalHasGene).GetMethod("Satisfied", BindingFlags.Instance | BindingFlags.NonPublic)!;
         Expect.IsFalse((bool)satisfied.Invoke(node, [pawn])!);
@@ -100,7 +101,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
         GenSpawn.Spawn(pawn, new IntVec3(70, 0, 70), Find.CurrentMap);
         var ability = new Ability(pawn)
         {
-            def = new AbilityDef { verbProperties = new VerbProperties { targetParams = new TargetingParameters { canTargetPawns = true, canTargetSelf = true } } },
+            def = XylXenosTestSelfTargetAbility,
         };
         var node = new JobGiver_AICastAbilityOnTarget { targetSelf = true };
         var target = (LocalTargetInfo)typeof(JobGiver_AICastAbilityOnTarget).GetMethod("GetTarget", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(node, [pawn, ability])!;
@@ -121,7 +122,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
             map.terrainGrid.SetTerrain(cell, TerrainDefOf.WaterShallow);
             map.fogGrid.Unfog(cell);
             GenSpawn.Spawn(pawn, cell, map);
-            var jobDef = new JobDef { defName = "TestSoak", driverClass = typeof(JobDriver_Soak) };
+            JobDef jobDef = XylSoak;
             var node = new JobGiver_GetWetness { soakJobDef = jobDef };
             Expect.AreApproximatelyEqual(1, Need_Wetness.GetWetness(cell, map));
             Job job = node.TryIssueJobPackage(pawn, default).Job;
@@ -138,10 +139,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
     public void DietJobGiverPrioritizesCravingAndSelectsInventoryFood()
     {
         GenSpawn.Spawn(pawn, new IntVec3(70, 0, 70), Find.CurrentMap);
-        HediffDef def = HediffDef();
-        def.hediffClass = typeof(Hediff_DietDependency);
-        def.modExtensions = [new DefModExtension_Hediff_DietDependency { severityReductionPerNutrition = 1 }];
-        def.stages = Enumerable.Range(0, Hediff_DietDependency.StageCount).Select(i => new HediffStage { minSeverity = i }).ToList();
+        HediffDef def = XylXenosTestDietCraving;
         var node = new JobGiver_SatisfyDietDependency();
         Expect.AreApproximatelyEqual(0, node.GetPriority(pawn));
         Hediff condition = pawn.health.AddHediff(def);
@@ -170,7 +168,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
     [Test]
     public void SeeingRedMentalStateUsesGeneEnemySet()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_SeeingRed { hediffDef = HediffDef() }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestSeeingRed, false);
         Thing target = ThingMaker.MakeThing(ThingDefOf.Silver);
         things.Add(target);
         var state = new MentalState_SeeingRed { pawn = pawn };
@@ -183,9 +181,9 @@ public sealed class AbilityAndAiTests : PawnTestFixture
     [Test]
     public void MilkingDriverAndWorkGiverRequireReadyGeneComp()
     {
-        HediffDef def = HediffDef(new HediffCompProperties_Chargeable { fullChargeAmount = 1, initialCharge = 1 });
+        HediffDef def = XylXenosTestFullCharge;
         pawn.health.AddHediff(def);
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_Milkable { hediff = def, item = ThingDefOf.Silver }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestMilkableReady, false);
         var comp = gene.GetComp<GeneComp_Milkable>()!;
         var driver = new JobDriver_MilkHuman();
         Expect.IsFalse(driver.ValidateTarget(pawn));

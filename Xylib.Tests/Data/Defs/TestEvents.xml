@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <Xylib.EventDef>
+    <defName>XylibTestSignal</defName>
+  </Xylib.EventDef>
+
+  <Xylib.EventDef>
+    <defName>XylibTestTyped</defName>
+    <dataType>System.String</dataType>
+  </Xylib.EventDef>
+
+  <Xylib.EventDef>
+    <defName>XylibTestDuringScribe</defName>
+    <allowDuringScribe>true</allowDuringScribe>
+  </Xylib.EventDef>
+</Defs>

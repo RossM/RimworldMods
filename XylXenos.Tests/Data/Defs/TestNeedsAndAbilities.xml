@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <NeedDef>
+    <defName>XylXenosTestLovinNeed</defName>
+    <label>test lovin need</label>
+    <description>Fixture for the lovin addiction test.</description>
+    <needClass>XylXenos.Need_Lovin</needClass>
+    <onlyIfCausedByHediff>true</onlyIfCausedByHediff>
+    <fallPerDay>0.4</fallPerDay>
+  </NeedDef>
+
+  <NeedDef>
+    <defName>XylXenosTestWetnessNeed</defName>
+    <label>test wetness need</label>
+    <description>Fixture for wetness and missing-need tests.</description>
+    <needClass>XylXenos.Need_Wetness</needClass>
+    <onlyIfCausedByGene>true</onlyIfCausedByGene>
+    <seekerFallPerHour>0.2</seekerFallPerHour>
+    <seekerRisePerHour>0.4</seekerRisePerHour>
+  </NeedDef>
+
+  <AbilityDef>
+    <defName>XylXenosTestSelfTargetAbility</defName>
+    <label>test self-targeting ability</label>
+    <description>Fixture for ability target selection.</description>
+    <verbProperties>
+      <verbClass>Verb_CastAbility</verbClass>
+      <targetParams>
+        <canTargetPawns>true</canTargetPawns>
+        <canTargetSelf>true</canTargetSelf>
+      </targetParams>
+    </verbProperties>
+  </AbilityDef>
+</Defs>

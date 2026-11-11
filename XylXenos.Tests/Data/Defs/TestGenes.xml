@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <GeneCategoryDef>
+    <defName>XylXenosTestGenes</defName>
+    <label>test genes</label>
+  </GeneCategoryDef>
+
+  <GeneDef Name="XylXenosTestGeneBase" Abstract="True">
+    <geneClass>Xylib.GeneWithComps</geneClass>
+    <description>Fixture used by the in-game tests.</description>
+    <displayCategory>XylXenosTestGenes</displayCategory>
+    <selectionWeight>0</selectionWeight>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestGene</defName>
+    <label>test gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylXenosTestBonusCookingMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>AptitudePoor_Cooking</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestBonusCooking</defName>
+    <label>cooking bonus source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylXenosTestBonusCookingMaker</maker>
+            <removeAfterAdding>true</removeAfterAdding>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestEmergencyReserves</defName>
+    <label>emergency reserves</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_EmergencyReserves">
+            <hediff>XylXenosTestReserves</hediff>
+            <severityRange>0.7</severityRange>
+            <triggers>
+              <XylXenosTestHediff>0.5</XylXenosTestHediff>
+            </triggers>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestFlight</defName>
+    <label>test flight</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Flight" />
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestHyperlactation</defName>
+    <label>test hyperlactation</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Hyperlactation">
+            <hediff>XylXenosTestHediff</hediff>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestLoveEuphoria</defName>
+    <label>love euphoria</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_LoveEuphoria">
+            <need>Rest</need>
+            <highHediff>XylXenosTestSource</highHediff>
+            <addictionHediff>XylXenosTestHediff</addictionHediff>
+            <addictionChance>1</addictionChance>
+            <needOffset>0.3</needOffset>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestMeditationFocus</defName>
+    <label>test meditation focus</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_MeditationFocus">
+            <allowedMeditationFocusTypes>
+              <li>Natural</li>
+            </allowedMeditationFocusTypes>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase" MayRequire="Ludeon.RimWorld.Royalty">
+    <defName>XylXenosTestPsycast</defName>
+    <label>test psycast</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Psycast" />
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestRegeneration</defName>
+    <label>test regeneration</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Regeneration">
+            <healthPerHour>10</healthPerHour>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestSeeingRed</defName>
+    <label>test seeing red</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_SeeingRed">
+            <hediffDef>XylXenosTestHediff</hediffDef>
+            <chance>1</chance>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestMilkableCharge</defName>
+    <label>charge-based milking</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Milkable">
+            <hediff>XylXenosTestTimedCharge</hediff>
+            <item>Silver</item>
+            <chargePerItem>0.25</chargePerItem>
+            <ticksPerFullnessStage>20</ticksPerFullnessStage>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestMilkableReady</defName>
+    <label>milking readiness</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Milkable">
+            <hediff>XylXenosTestFullCharge</hediff>
+            <item>Silver</item>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestMilkableFullness</defName>
+    <label>milking fullness</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_Milkable">
+            <hediff>XylXenosTestHediff</hediff>
+            <item>Silver</item>
+            <ticksPerFullnessStage>10</ticksPerFullnessStage>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestDisableHostility</defName>
+    <label>test hostility override</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_DisableHostility">
+            <factions>
+              <li>AncientsHostile</li>
+            </factions>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestTrackerFactors</defName>
+    <label>tracker factors</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_MeleeDamageFactors">
+            <factors>
+              <li>
+                <damageDef>Blunt</damageDef>
+                <factor>2</factor>
+                <chanceBonus>0.1</chanceBonus>
+              </li>
+            </factors>
+          </li>
+          <li Class="XylXenos.GeneCompProperties_JoyGiverChances">
+            <factors>
+              <Play_Chess>0.5</Play_Chess>
+            </factors>
+          </li>
+          <li Class="XylXenos.GeneCompProperties_DisableHostility">
+            <factions>
+              <li>AncientsHostile</li>
+            </factions>
+          </li>
+          <li Class="XylXenos.GeneCompProperties_IngestionThoughtOverrides">
+            <overrides>
+              <li>
+                <thoughts>
+                  <li>AteFineMeal</li>
+                </thoughts>
+              </li>
+            </overrides>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylXenosTestGeneBase">
+    <defName>XylXenosTestTrackerMoreFactors</defName>
+    <label>additional tracker factors</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="XylXenos.GeneCompProperties_MeleeDamageFactors">
+            <factors>
+              <li>
+                <damageDef>Blunt</damageDef>
+                <factor>3</factor>
+                <chanceBonus>0.2</chanceBonus>
+              </li>
+            </factors>
+          </li>
+          <li Class="XylXenos.GeneCompProperties_JoyGiverChances">
+            <factors>
+              <Play_Chess>0.5</Play_Chess>
+            </factors>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+</Defs>

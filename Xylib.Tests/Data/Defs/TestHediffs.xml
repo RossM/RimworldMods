@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <HediffDef Name="XylibTestHediffBase" Abstract="True">
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>0.4</initialSeverity>
+    <maxSeverity>10</maxSeverity>
+    <isBad>false</isBad>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestHediff</defName>
+    <label>test hediff</label>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestOtherHediff</defName>
+    <label>other test hediff</label>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestCachedHediff</defName>
+    <label>cached hediff</label>
+    <modExtensions>
+      <li Class="Xylib.Tests.TestExtension" />
+    </modExtensions>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_Source" />
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestGeneticHediff</defName>
+    <label>genetic hediff</label>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_Genetic">
+        <gene>XylibTestGene</gene>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestBerserkHediff</defName>
+    <label>berserk hediff</label>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_ForceMentalState">
+        <mentalState>Berserk</mentalState>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestDebugGiver</defName>
+    <label>debug giver hediff</label>
+    <stages>
+      <li>
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>XylibTestHediff</hediff>
+          </li>
+        </hediffGivers>
+      </li>
+    </stages>
+    <comps>
+      <li>
+        <compClass>Xylib.HediffComp_DebugHediffGivers</compClass>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestExtendedStages</defName>
+    <label>extended hediff stages</label>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
+    <stages>
+      <li>
+        <painOffset>0.1</painOffset>
+      </li>
+      <li>
+        <minSeverity>0.5</minSeverity>
+        <painOffset>0.3</painOffset>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestSetNeed</defName>
+    <label>staged rest clamp</label>
+    <stages>
+      <li />
+      <li>
+        <minSeverity>0.5</minSeverity>
+      </li>
+    </stages>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_SetNeed">
+        <need>Rest</need>
+        <range>0.3~0.6</range>
+        <stages>0</stages>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestVisibleSource</defName>
+    <label>visible hediff source</label>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_Source" />
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylibTestHediffBase">
+    <defName>XylibTestHiddenSource</defName>
+    <label>hidden hediff source</label>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_Source">
+        <showName>false</showName>
+      </li>
+    </comps>
+  </HediffDef>
+</Defs>

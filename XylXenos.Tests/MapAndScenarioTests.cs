@@ -1,3 +1,4 @@
+using static XylXenos.Tests.TestDefOf;
 using UnityEngine;
 
 namespace XylXenos.Tests;
@@ -14,7 +15,7 @@ public sealed class MapAndScenarioTests : PawnTestFixture
             Faction.OfAncientsHostile, canGeneratePawnRelations: false, forcedXenotype: XenotypeDefOf.Baseliner));
         things.Add(enemy);
         GenSpawn.Spawn(enemy, new IntVec3(71, 0, 70), map);
-        pawn.genes.AddGene(GeneDef(new GeneCompProperties_DisableHostility { factions = [enemy.Faction.def] }), false);
+        pawn.genes.AddGene(XylXenosTestDisableHostility, false);
         var manager = new HostilityOverrideManager(map)
         {
             anyOverrides = true, activeOverrides = [(pawn.Faction, enemy.Faction)],
@@ -31,7 +32,7 @@ public sealed class MapAndScenarioTests : PawnTestFixture
     public void MoteBubbleIsCreatedAndDestroyedWithHediff()
     {
         GenSpawn.Spawn(pawn, new IntVec3(70, 0, 70), Find.CurrentMap);
-        var condition = (HediffWithComps)pawn.health.AddHediff(HediffDef(new HediffCompProperties_MoteBubble { iconPath = "UI/Icons/PassionMajor" }));
+        var condition = (HediffWithComps)pawn.health.AddHediff(XylXenosTestMoteBubble);
         var comp = condition.TryGetComp<HediffComp_MoteBubble>();
         Expect.IsNotNull(comp.mote);
         Expect.IsFalse(comp.mote!.Destroyed);
@@ -43,7 +44,7 @@ public sealed class MapAndScenarioTests : PawnTestFixture
     public void RandomInspirationCompCanStartInspiration()
     {
         GenSpawn.Spawn(pawn, new IntVec3(70, 0, 70), Find.CurrentMap);
-        var condition = (HediffWithComps)pawn.health.AddHediff(HediffDef(new HediffCompProperties_RandomInspiration { mtbDays = 0.000001f, letter = "Test inspiration" }));
+        var condition = (HediffWithComps)pawn.health.AddHediff(XylXenosTestInspiration);
         Expect.IsFalse(pawn.Inspired);
         Expect.IsNotNull(pawn.mindState.inspirationHandler.GetRandomAvailableInspirationDef());
         float adjustment = 0;
@@ -77,12 +78,12 @@ public sealed class MapAndScenarioTests : PawnTestFixture
     [Test]
     public void PetrificationSurgeryReplacesConditionWithTendedCut()
     {
-        HediffDef def = HediffDef();
+        RecipeDef recipe = XylExcisePetrifiedFlesh;
+        HediffDef def = recipe.removesHediff;
         BodyPartRecord part = pawn.RaceProps.body.corePart;
         Hediff condition = pawn.health.AddHediff(def, part);
         condition.Severity = 2;
-        var recipe = new RecipeDef { removesHediff = def, targetsBodyPart = true, defaultIngredientFilter = new ThingFilter() };
-        var worker = new Recipe_RemoveHediff_Petrified { recipe = recipe };
+        RecipeWorker worker = recipe.Worker;
         Expect.IsTrue(worker.GetPartsToApplyOn(pawn, recipe).Contains(part));
         worker.ApplyOnPawn(pawn, part, null, [], new Bill_Medical(recipe, []));
         Expect.IsFalse(pawn.health.hediffSet.HasHediff(def));

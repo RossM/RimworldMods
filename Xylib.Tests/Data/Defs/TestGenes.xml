@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <GeneCategoryDef>
+    <defName>XylibTestGenes</defName>
+    <label>test genes</label>
+  </GeneCategoryDef>
+
+  <GeneDef Name="XylibTestGeneBase" Abstract="True">
+    <geneClass>Xylib.GeneWithComps</geneClass>
+    <description>Fixture used by the in-game tests.</description>
+    <displayCategory>XylibTestGenes</displayCategory>
+    <selectionWeight>0</selectionWeight>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestGene</defName>
+    <label>test gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestOtherGene</defName>
+    <label>other test gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestThirdGene</defName>
+    <label>third test gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestProbe</defName>
+    <label>probe gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.Tests.ProbeProperties" />
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestDerivedProbe</defName>
+    <label>derived probe gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.Tests.ProbeProperties">
+            <compClass>Xylib.Tests.DerivedProbeComp</compClass>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestMetabolism</defName>
+    <label>metabolism gene</label>
+    <biostatMet>2</biostatMet>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestConflictA</defName>
+    <label>conflicting gene a</label>
+    <exclusionTags>
+      <li>XylibTestConflict</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestConflictB</defName>
+    <label>conflicting gene b</label>
+    <exclusionTags>
+      <li>XylibTestConflict</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestConflictC</defName>
+    <label>conflicting gene c</label>
+    <exclusionTags>
+      <li>XylibTestConflict</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestConflictD</defName>
+    <label>conflicting gene d</label>
+    <exclusionTags>
+      <li>XylibTestConflict</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestInheritedA</defName>
+    <label>inherited conflict a</label>
+    <exclusionTags>
+      <li>XylibTestInherited</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestInheritedB</defName>
+    <label>inherited conflict b</label>
+    <exclusionTags>
+      <li>XylibTestInherited</li>
+    </exclusionTags>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestAddBonusMaker</defName>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestGene</li>
+        <li>XylibTestOtherGene</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestAddBonus</defName>
+    <label>bonus gene source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestAddBonusMaker</maker>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestReplaceXenogenesMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestConflictD</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestReplaceXenogenes</defName>
+    <label>xenogene replacement source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestReplaceXenogenesMaker</maker>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestReplaceEndogenesMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestConflictC</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestReplaceEndogenes</defName>
+    <label>endogene replacement source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestReplaceEndogenesMaker</maker>
+            <addedGeneType>Endogene</addedGeneType>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef MayRequire="Ludeon.RimWorld.Biotech">
+    <defName>XylibTestBonusBeautyMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>Beauty_Beautiful</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase" MayRequire="Ludeon.RimWorld.Biotech">
+    <defName>XylibTestBonusBeauty</defName>
+    <label>beauty bonus source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestBonusBeautyMaker</maker>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef MayRequire="Ludeon.RimWorld.Biotech">
+    <defName>XylibTestBonusCookingMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>FireSpew</li>
+        <li>FireResistant</li>
+        <li>AptitudePoor_Cooking</li>
+        <li>Skin_DeepRed</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase" MayRequire="Ludeon.RimWorld.Biotech">
+    <defName>XylibTestBonusCooking</defName>
+    <label>cooking bonus source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestBonusCookingMaker</maker>
+            <removeAfterAdding>true</removeAfterAdding>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestNestedBonusMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestConflictB</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestNestedBonus</defName>
+    <label>nested bonus source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestNestedBonusMaker</maker>
+            <removeAfterAdding>true</removeAfterAdding>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestDeferredBonusMaker</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestNestedBonus</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestDeferredBonus</defName>
+    <label>deferred bonus source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestDeferredBonusMaker</maker>
+            <removeAfterAdding>true</removeAfterAdding>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestScribedBonusMaker</defName>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestOtherGene</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestScribedBonus</defName>
+    <label>scribed bonus source</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_BonusGenes">
+            <maker>XylibTestScribedBonusMaker</maker>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestRespectConflicts</defName>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestConflictB</li>
+        <li>XylibTestInheritedB</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestIgnoreConflicts</defName>
+    <overrideExistingGenes>true</overrideExistingGenes>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestConflictB</li>
+        <li>XylibTestInheritedB</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <Xylib.GeneSetMakerDef>
+    <defName>XylibTestSingleGeneMaker</defName>
+    <root Class="Xylib.GeneSetMaker_List">
+      <genes>
+        <li>XylibTestGene</li>
+      </genes>
+    </root>
+  </Xylib.GeneSetMakerDef>
+
+  <XenotypeDef>
+    <defName>XylibTestInheritedXenotype</defName>
+    <label>test inherited xenotype</label>
+    <genes>
+      <li>XylibTestInheritedA</li>
+    </genes>
+    <inheritable>true</inheritable>
+    <canGenerateAsCombatant>false</canGenerateAsCombatant>
+    <factionlessGenerationWeight>0</factionlessGenerationWeight>
+  </XenotypeDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestTrackerFactors</defName>
+    <label>tracker factors</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_RaceModifiers">
+            <bodySizeFactor>2</bodySizeFactor>
+            <healthScaleFactor>3</healthScaleFactor>
+          </li>
+          <li Class="Xylib.GeneCompProperties_RenderNodeModifiers">
+            <bodyScale>2</bodyScale>
+            <headScale>0.5</headScale>
+          </li>
+          <li Class="Xylib.GeneCompProperties_UnlockRecipes">
+            <recipes>
+              <li>CookMealSimple</li>
+            </recipes>
+          </li>
+          <li Class="Xylib.GeneCompProperties_UnlockBuildables">
+            <buildables>
+              <li>Wall</li>
+            </buildables>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestTrackerBodySize</defName>
+    <label>tracker body size</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_RaceModifiers">
+            <bodySizeFactor>0.75</bodySizeFactor>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestCongenitalHediffGene</defName>
+    <label>congenital hediff gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_CongenitalHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylibTestHediff</hediff>
+              </li>
+            </hediffs>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestPermanentHediffGene</defName>
+    <label>permanent hediff gene</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_PermanentHediffs">
+            <hediffs>
+              <li>
+                <hediff>XylibTestHediff</hediff>
+              </li>
+            </hediffs>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+
+  <GeneDef ParentName="XylibTestGeneBase">
+    <defName>XylibTestStartingItems</defName>
+    <label>starting items</label>
+    <modExtensions>
+      <li Class="Xylib.DefModExtension_GeneWithComps">
+        <showInXenotypeCreation>false</showInXenotypeCreation>
+        <comps>
+          <li Class="Xylib.GeneCompProperties_StartingItems">
+            <items>
+              <li>
+                <item>XylibTestSmallStack</item>
+                <count>20</count>
+              </li>
+              <li>
+                <item>XylibTestSmallStack</item>
+                <count>3</count>
+              </li>
+            </items>
+          </li>
+        </comps>
+      </li>
+    </modExtensions>
+  </GeneDef>
+</Defs>

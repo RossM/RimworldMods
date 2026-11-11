@@ -9,6 +9,7 @@ public sealed class GenerationTests : SeededTestFixture
     [Test]
     public void GeneTemplateCopiesAbilityBiostatsAndClonesExtensions()
     {
+        // A loaded template would generate genes for matching game abilities during startup.
         var extension = new DefModExtension_GeneWithComps();
         var template = new GeneTemplateDef
         {
@@ -34,14 +35,14 @@ public sealed class GenerationTests : SeededTestFixture
     [Test]
     public void StockReferenceDelegatesHandlingAndGeneration()
     {
-        var item = new ThingDef();
+        ThingDef item = ThingDefOf.Silver;
         var expected = new Thing { def = item };
         var generator = new StockGenerator_Ref
         {
             traderKind = new TraderKindDef { stockGenerators = [new TestStockGenerator { item = item, result = expected }] },
         };
         Expect.IsTrue(generator.HandlesThingDef(item));
-        Expect.IsFalse(generator.HandlesThingDef(new ThingDef()));
+        Expect.IsFalse(generator.HandlesThingDef(ThingDefOf.WoodLog));
         Expect.ReferencesAreEqual(expected, generator.GenerateThings(PlanetTile.Invalid).Single());
     }
 }

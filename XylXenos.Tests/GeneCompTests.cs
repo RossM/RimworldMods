@@ -1,3 +1,5 @@
+using static XylXenos.Tests.TestDefOf;
+
 namespace XylXenos.Tests;
 
 [TestFixture(TestType.Playing)]
@@ -6,22 +8,16 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void BonusGenesReplaceLaterCookingGeneDuringPawnGeneration()
     {
-        GeneDef existing = DefDatabase<GeneDef>.GetNamed("AptitudeTerrible_Cooking");
-        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("AptitudePoor_Cooking");
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            removeAfterAdding = true,
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [bonus] },
-            },
-        });
+        GeneDef existing = AptitudeTerrible_Cooking;
+        GeneDef bonus = AptitudePoor_Cooking;
+        GeneDef owner = XylXenosTestBonusCooking;
         // Template-generated genes can be appended after the bonus source when XML references resolve.
         var xenotype = new CustomXenotype { name = "bonus cooking", inheritable = true, genes = [owner, existing] };
 
         Pawn generated = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
-            Faction.OfPlayer, fixedBiologicalAge: 25, fixedChronologicalAge: 25,
+            Faction.OfPlayer, forceGenerateNewPawn: true,
+            validatorPreGear: candidate => !candidate.skills.GetSkill(SkillDefOf.Cooking).TotallyDisabled,
+            fixedBiologicalAge: 25, fixedChronologicalAge: 25,
             canGeneratePawnRelations: false, forceNoGear: true, forcedXenotype: XenotypeDefOf.Baseliner,
             forcedCustomXenotype: xenotype));
         things.Add(generated);
@@ -35,12 +31,8 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void EmergencyReservesTriggersAtThresholdAndEntersCooldown()
     {
-        HediffDef trigger = HediffDef(), reserves = HediffDef();
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_EmergencyReserves
-        {
-            hediff = reserves, severityRange = new FloatRange(0.7f),
-            triggers = [new GeneCompProperties_EmergencyReserves.HediffSeverity { hediff = trigger, minSeverity = 0.5f }],
-        }), false);
+        HediffDef trigger = XylXenosTestHediff, reserves = XylXenosTestReserves;
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestEmergencyReserves, false);
         var comp = gene.GetComp<GeneComp_EmergencyReserves>()!;
         Expect.IsTrue(gene.ImmuneToVacuumBurns);
         Hediff condition = pawn.health.AddHediff(trigger);
@@ -57,11 +49,10 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void FlightCompChecksApparelExtensionAndRechecksOnEvent()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_Flight()), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestFlight, false);
         var comp = gene.GetComp<GeneComp_Flight>()!;
-        var clothing = new ThingDef { modExtensions = [new DefModExtension_Thing_Flight { allowsFlight = false }] };
-        Expect.IsFalse(GeneComp_Flight.ApparelAllowsFlight(clothing));
-        Expect.IsTrue(GeneComp_Flight.ApparelAllowsFlight(new ThingDef()));
+        Expect.IsFalse(GeneComp_Flight.ApparelAllowsFlight(ThingDefOf.Apparel_Parka));
+        Expect.IsTrue(GeneComp_Flight.ApparelAllowsFlight(Apparel_Jacket));
         // With no worn apparel, an apparel-change event clears a stale restriction.
         comp.flightAllowedByApparel = false;
         EventManager.Instance.Notify(EventDefOf.PostApparelChanged, pawn);
@@ -71,8 +62,8 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void HyperlactationAddsHediffButStopsWhileMalnourished()
     {
-        HediffDef health = HediffDef();
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_Hyperlactation { hediff = health }), false);
+        HediffDef health = XylXenosTestHediff;
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestHyperlactation, false);
         Hediff condition = pawn.health.hediffSet.GetFirstHediffOfDef(health);
         Expect.AreApproximatelyEqual(1, condition.Severity);
         pawn.health.RemoveHediff(condition);
@@ -84,12 +75,8 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void LoveEuphoriaAffectsPartnerAndRecordsSource()
     {
-        HediffDef high = HediffDef(new HediffCompProperties_Source()), addiction = HediffDef();
-        pawn.genes.AddGene(GeneDef(new GeneCompProperties_LoveEuphoria
-        {
-            need = NeedDefOf.Rest, highHediff = high, addictionHediff = addiction,
-            addictionChance = 1, needOffset = 0.3f,
-        }), false);
+        HediffDef high = XylXenosTestSource, addiction = XylXenosTestHediff;
+        pawn.genes.AddGene(XylXenosTestLoveEuphoria, false);
         Pawn partner = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
             Faction.OfPlayer, canGeneratePawnRelations: false, forcedXenotype: XenotypeDefOf.Baseliner));
         things.Add(partner);
@@ -104,29 +91,21 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void MeditationFocusEnablesOnlyConfiguredType()
     {
-        var allowed = new MeditationFocusDef();
-        var other = new MeditationFocusDef();
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_MeditationFocus
-        {
-            allowedMeditationFocusTypes = [allowed],
-        }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestMeditationFocus, false);
         var comp = gene.GetComp<GeneComp_MeditationFocus>()!;
-        Expect.IsTrue(comp.EnablesMeditationType(allowed));
-        Expect.IsFalse(comp.EnablesMeditationType(other));
+        Expect.IsTrue(comp.EnablesMeditationType(Natural));
+        Expect.IsFalse(comp.EnablesMeditationType(Dignified));
     }
 
     [Test]
     public void MilkableUsesChargeQuantityToggleAndCooldown()
     {
-        HediffDef health = HediffDef(new HediffCompProperties_Chargeable { fullChargeAmount = 1, ticksToFullCharge = 1000 });
+        HediffDef health = XylXenosTestTimedCharge;
         var hediff = (HediffWithComps)pawn.health.AddHediff(health);
         var charge = hediff.TryGetComp<HediffComp_Chargeable>();
         charge.GreedyConsume(float.MaxValue);
         charge.TryCharge(0.75f);
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_Milkable
-        {
-            hediff = health, item = ThingDefOf.Silver, chargePerItem = 0.25f, ticksPerFullnessStage = 20,
-        }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestMilkableCharge, false);
         var comp = gene.GetComp<GeneComp_Milkable>()!;
         Expect.AreEqual(3, comp.ItemCount);
         Expect.IsFalse(comp.ItemsFull);
@@ -151,7 +130,7 @@ public sealed class GeneCompTests : PawnTestFixture
     public void PsycastCompInitializesPsyfocus()
     {
         pawn.psychicEntropy.OffsetPsyfocusDirectly(-1);
-        pawn.genes.AddGene(GeneDef(new GeneCompProperties_Psycast()), false);
+        pawn.genes.AddGene(XylXenosTestPsycast, false);
         Expect.GreaterThan(pawn.psychicEntropy.CurrentPsyfocus, 0f);
         Expect.IsTrue(pawn.GeneTracker_XylXenos!.hasPsycast);
     }
@@ -162,7 +141,7 @@ public sealed class GeneCompTests : PawnTestFixture
         var injury = (Hediff_Injury)HediffMaker.MakeHediff(HediffDefOf.Cut, pawn, pawn.RaceProps.body.corePart);
         injury.Severity = 5;
         pawn.health.AddHediff(injury);
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_Regeneration { healthPerHour = 10 }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestRegeneration, false);
         float before = injury.Severity;
         gene.GetComp<GeneComp_Regeneration>()!.CompTickInterval(60);
         Expect.LessThan(injury.Severity, before);
@@ -171,9 +150,9 @@ public sealed class GeneCompTests : PawnTestFixture
     [Test]
     public void SeeingRedRemembersAttackerAndClearsAfterHediffEnds()
     {
-        HediffDef rage = HediffDef();
+        HediffDef rage = XylXenosTestHediff;
         GenSpawn.Spawn(pawn, new IntVec3(70, 0, 70), Find.CurrentMap);
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_SeeingRed { hediffDef = rage, chance = 1 }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylXenosTestSeeingRed, false);
         Thing attacker = ThingMaker.MakeThing(ThingDefOf.Silver);
         things.Add(attacker);
         EventManager.Instance.Notify(EventDefOf.PreTakeDamage, pawn, new DamageInfo(DamageDefOf.Blunt, 1, instigator: attacker));

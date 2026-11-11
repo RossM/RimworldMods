@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <ThoughtDef>
+    <defName>XylXenosTestRestThought</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>exhausted</label>
+      </li>
+      <li>
+        <label>very tired</label>
+      </li>
+      <li>
+        <label>tired</label>
+      </li>
+      <li>
+        <label>rested</label>
+      </li>
+      <li>
+        <label>well rested</label>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought_Need">
+        <need>Rest</need>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestMissingNeedThought</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>exhausted</label>
+      </li>
+      <li>
+        <label>very tired</label>
+      </li>
+      <li>
+        <label>tired</label>
+      </li>
+      <li>
+        <label>rested</label>
+      </li>
+      <li>
+        <label>well rested</label>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought_Need">
+        <need>XylXenosTestWetnessNeed</need>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestPrisonerThought</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>prisoner</label>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought_PawnStatus">
+        <status>Prisoner</status>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestFreemanThought</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>freeman</label>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought_PawnStatus">
+        <status>Freeman</status>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestHasGeneThought</defName>
+    <thoughtClass>Thought_SituationalSocial</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>other pawn has gene</label>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought">
+        <gene>XylXenosTestGene</gene>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestHerdThought</defName>
+    <thoughtClass>XylXenos.Thought_Situational_HerdInstinct</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>alone</label>
+      </li>
+      <li>
+        <label>small group</label>
+      </li>
+      <li>
+        <label>large group</label>
+      </li>
+      <li>
+        <label>huge group</label>
+      </li>
+    </stages>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestFullnessThought</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>full</label>
+      </li>
+      <li>
+        <label>very full</label>
+      </li>
+    </stages>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Thought">
+        <gene>XylXenosTestMilkableFullness</gene>
+      </li>
+    </modExtensions>
+  </ThoughtDef>
+
+  <ThoughtDef>
+    <defName>XylXenosTestSourceThought</defName>
+    <thoughtClass>Thought_Situational</thoughtClass>
+    <validWhileDespawned>true</validWhileDespawned>
+    <stages>
+      <li>
+        <label>source pawn</label>
+      </li>
+    </stages>
+    <hediff>XylXenosTestSource</hediff>
+  </ThoughtDef>
+</Defs>

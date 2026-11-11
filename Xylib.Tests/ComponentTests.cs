@@ -1,3 +1,5 @@
+using static Xylib.Tests.TestDefOf;
+
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
@@ -6,14 +8,9 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusGenesAddsAndRemovesOnlyItsOwnGenes()
     {
-        GeneDef existing = GeneDef();
-        GeneDef bonus = GeneDef();
+        GeneDef existing = XylibTestGene, bonus = XylibTestOtherGene;
         pawn.genes.AddGene(existing, false);
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [existing, bonus] } },
-        });
-        Gene gene = pawn.genes.AddGene(owner, true);
+        Gene gene = pawn.genes.AddGene(XylibTestAddBonus, true);
         Expect.IsTrue(pawn.genes.Xenogenes.Any(g => g.def == bonus));
         Expect.AreEqual(1, pawn.genes.GenesListForReading.Count(g => g.def == existing));
         pawn.genes.RemoveGene(gene);
@@ -24,22 +21,13 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusXenogeneReplacesAllConflictingXenogenesAndPreservesEndogenes()
     {
-        GeneDef first = GeneDef(), second = GeneDef(), endogene = GeneDef(), bonus = GeneDef(), unrelated = GeneDef();
-        first.exclusionTags = second.exclusionTags = endogene.exclusionTags = bonus.exclusionTags = ["TestConflict"];
+        GeneDef first = XylibTestConflictA, second = XylibTestConflictB, endogene = XylibTestConflictC;
+        GeneDef bonus = XylibTestConflictD, unrelated = XylibTestGene;
         pawn.genes.AddGene(first, true);
         pawn.genes.AddGene(second, true);
         Gene preserved = pawn.genes.AddGene(endogene, false);
         Gene other = pawn.genes.AddGene(unrelated, true);
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [bonus] },
-            },
-        });
-
-        Gene gene = pawn.genes.AddGene(owner, true);
+        Gene gene = pawn.genes.AddGene(XylibTestReplaceXenogenes, true);
         Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == first || g.def == second));
         Expect.IsTrue(pawn.genes.Xenogenes.Any(g => g.def == bonus));
         Expect.IsTrue(pawn.genes.Endogenes.Contains(preserved));
@@ -53,22 +41,13 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusEndogeneReplacesConflictingEndogenesUsingConfiguredGeneType()
     {
-        GeneDef existing = GeneDef(), xenogene = GeneDef(), bonus = GeneDef(), unrelated = GeneDef();
-        existing.exclusionTags = xenogene.exclusionTags = bonus.exclusionTags = ["TestConflict"];
+        GeneDef existing = XylibTestConflictA, xenogene = XylibTestConflictB;
+        GeneDef bonus = XylibTestConflictC, unrelated = XylibTestGene;
         pawn.genes.AddGene(existing, false);
         Gene preserved = pawn.genes.AddGene(xenogene, true);
         Gene other = pawn.genes.AddGene(unrelated, false);
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            addedGeneType = GeneType.Endogene,
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [bonus] },
-            },
-        });
 
-        pawn.genes.AddGene(owner, true);
+        pawn.genes.AddGene(XylibTestReplaceEndogenes, true);
         Expect.IsFalse(pawn.genes.Endogenes.Any(g => g.def == existing));
         Expect.IsTrue(pawn.genes.Endogenes.Any(g => g.def == bonus));
         Expect.IsTrue(pawn.genes.Xenogenes.Contains(preserved));
@@ -78,21 +57,13 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusXenogeneReplacesExistingGeneDespiteLowerVanillaOverridePriority()
     {
-        GeneDef existing = DefDatabase<GeneDef>.GetNamed("Beauty_Ugly");
-        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("Beauty_Beautiful");
+        GeneDef existing = Beauty_Ugly;
+        GeneDef bonus = Beauty_Beautiful;
         Expect.IsTrue(GeneUtility.Overrides(existing, bonus, true, true));
         Expect.IsFalse(GeneUtility.Overrides(bonus, existing, true, true));
         Gene oldGene = pawn.genes.AddGene(existing, true);
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [bonus] },
-            },
-        });
 
-        pawn.genes.AddGene(owner, true);
+        pawn.genes.AddGene(XylibTestBonusBeauty, true);
 
         Expect.IsFalse(pawn.genes.GenesListForReading.Contains(oldGene));
         Expect.IsTrue(pawn.genes.Xenogenes.Single(g => g.def == bonus).Active);
@@ -101,21 +72,13 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusEndogeneReplacesExistingGeneDespiteLowerVanillaOverridePriority()
     {
-        GeneDef existing = DefDatabase<GeneDef>.GetNamed("Beauty_Ugly");
-        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("Beauty_Beautiful");
+        GeneDef existing = Beauty_Ugly;
+        GeneDef bonus = Beauty_Beautiful;
         Expect.IsTrue(GeneUtility.Overrides(existing, bonus, false, false));
         Expect.IsFalse(GeneUtility.Overrides(bonus, existing, false, false));
         Gene oldGene = pawn.genes.AddGene(existing, false);
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [bonus] },
-            },
-        });
 
-        pawn.genes.AddGene(owner, false);
+        pawn.genes.AddGene(XylibTestBonusBeauty, false);
 
         Expect.IsFalse(pawn.genes.GenesListForReading.Contains(oldGene));
         Expect.IsTrue(pawn.genes.Endogenes.Single(g => g.def == bonus).Active);
@@ -124,25 +87,12 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusCookingAptitudeReplacesTerribleAptitudeDuringXenotypeApplication()
     {
-        GeneDef existing = DefDatabase<GeneDef>.GetNamed("AptitudeTerrible_Cooking");
-        GeneDef bonus = DefDatabase<GeneDef>.GetNamed("AptitudePoor_Cooking");
+        GeneDef existing = AptitudeTerrible_Cooking;
+        GeneDef bonus = AptitudePoor_Cooking;
         Expect.IsTrue(bonus.ConflictsWith(existing));
         Expect.IsFalse(pawn.skills.GetSkill(SkillDefOf.Cooking).TotallyDisabled);
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            removeAfterAdding = true,
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List
-                {
-                    genes = [DefDatabase<GeneDef>.GetNamed("FireSpew"),
-                        DefDatabase<GeneDef>.GetNamed("FireResistant"), bonus,
-                        DefDatabase<GeneDef>.GetNamed("Skin_DeepRed")],
-                },
-            },
-        });
-
+        GeneDef owner = XylibTestBonusCooking;
+        // Keep the aptitude first. XML cross-references can append implied genes after ordinary genes.
         pawn.genes.SetXenotype(new XenotypeDef { inheritable = true, genes = [existing, owner] });
 
         Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == existing));
@@ -153,26 +103,8 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void DeferredBonusGenesResolveNestedBonusesAfterBaseGenes()
     {
-        GeneDef existing = GeneDef(), bonus = GeneDef();
-        existing.exclusionTags = bonus.exclusionTags = ["TestNestedBonus"];
-        GeneDef nested = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            removeAfterAdding = true,
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [bonus] },
-            },
-        });
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            removeAfterAdding = true,
-            maker = new GeneSetMakerDef
-            {
-                overrideExistingGenes = true,
-                root = new GeneSetMaker_List { genes = [nested] },
-            },
-        });
+        GeneDef existing = XylibTestConflictA, bonus = XylibTestConflictB;
+        GeneDef nested = XylibTestNestedBonus, owner = XylibTestDeferredBonus;
 
         Pawn generated = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
             Faction.OfPlayer, fixedBiologicalAge: 25, fixedChronologicalAge: 25,
@@ -187,11 +119,7 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BonusGenesApplyToPawnLoadedFromScribe()
     {
-        GeneDef bonus = GeneDef();
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes
-        {
-            maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [bonus] } },
-        });
+        GeneDef bonus = XylibTestOtherGene, owner = XylibTestScribedBonus;
         string path = Path.Combine(GenFilePaths.SaveDataFolderPath, "bonus-genes-pawn-test.xml");
         ProgramState previousState = Current.ProgramState;
         Pawn saved = pawn;
@@ -242,9 +170,9 @@ public sealed class ComponentTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void PostGenerateGenesDoesNotRepeatAlreadyAppliedBonuses()
     {
-        GeneDef first = GeneDef(), second = GeneDef();
+        GeneDef first = XylibTestGene, second = XylibTestOtherGene;
         var maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [first] } };
-        GeneDef owner = GeneDef(new GeneCompProperties_BonusGenes { maker = maker });
+        GeneDef owner = CreateMutableGeneDef(new GeneCompProperties_BonusGenes { maker = maker });
         pawn.genes.AddGene(owner, false);
         Gene originalBonus = pawn.genes.Endogenes.Single(g => g.def == first);
 
@@ -259,11 +187,8 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void CongenitalHediffsRespondToGenerationEvent()
     {
-        HediffDef health = HediffDef();
-        pawn.genes.AddGene(GeneDef(new GeneCompProperties_CongenitalHediffs
-        {
-            hediffs = [new HediffGiver_Event { hediff = health }],
-        }), false);
+        HediffDef health = XylibTestHediff;
+        pawn.genes.AddGene(XylibTestCongenitalHediffGene, false);
         Expect.IsFalse(pawn.health.hediffSet.HasHediff(health));
         EventManager.Instance.Notify(EventDefOf.PostGenerateInitialHediffs, pawn);
         Expect.IsTrue(pawn.health.hediffSet.HasHediff(health));
@@ -272,11 +197,8 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void PermanentHediffsAreAddedResetAndRemovedWithGene()
     {
-        HediffDef health = HediffDef();
-        Gene gene = pawn.genes.AddGene(GeneDef(new GeneCompProperties_PermanentHediffs
-        {
-            hediffs = [new HediffGiver_Event { hediff = health }],
-        }), false);
+        HediffDef health = XylibTestHediff;
+        Gene gene = pawn.genes.AddGene(XylibTestPermanentHediffGene, false);
         Hediff hediff = pawn.health.hediffSet.GetFirstHediffOfDef(health);
         Expect.IsNotNull(hediff);
         hediff.Severity = 0.8f;
@@ -289,16 +211,16 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void ExtraApparelHonorsKindTagsAndExplicitBypass()
     {
-        var apparel = new ThingDef { apparel = new ApparelProperties { tags = ["TestAllowed"] } };
+        ThingDef apparel = ThingDefOf.Apparel_Parka;
         PawnKindDef original = pawn.kindDef;
         try
         {
-            pawn.kindDef = new PawnKindDef { apparelTags = ["TestOther"] };
+            pawn.kindDef = XylibTestOtherApparel;
             Expect.IsFalse(GeneComp_ExtraApparel.ValidApparel(pawn, apparel));
             Expect.IsTrue(GeneComp_ExtraApparel.ValidApparel(pawn, apparel, ignoreRestrictions: true));
-            pawn.kindDef.apparelTags = ["TestAllowed"];
+            pawn.kindDef = PawnKindDefOf.Colonist;
             Expect.IsTrue(GeneComp_ExtraApparel.ValidApparel(pawn, apparel));
-            pawn.kindDef.apparelDisallowTags = ["TestAllowed"];
+            pawn.kindDef = XylibTestDisallowApparel;
             Expect.IsFalse(GeneComp_ExtraApparel.ValidApparel(pawn, apparel));
         }
         finally { pawn.kindDef = original; }
@@ -307,12 +229,8 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void StartingItemsClampStacksAndLimitPossessionsToTwo()
     {
-        var item = new ThingDef { stackLimit = 7 };
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new GeneCompProperties_StartingItems
-        {
-            items = [new StartingItemOption { item = item, count = new IntRange(20) },
-                new StartingItemOption { item = item, count = new IntRange(3) }],
-        }), false);
+        ThingDef item = XylibTestSmallStack;
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestStartingItems, false);
         List<ThingDefCount> possessions = [new(item, 1)];
         EventManager.Instance.Notify(EventDefOf.InGeneratePossessions, pawn, possessions);
         Expect.AreEqual(2, possessions.Count);
@@ -324,8 +242,8 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void GeneticHediffRequiresAnActiveGene()
     {
-        GeneDef gene = GeneDef();
-        var hediff = (HediffWithComps)HediffMaker.MakeHediff(HediffDef(new HediffCompProperties_Genetic { gene = gene }), pawn);
+        GeneDef gene = XylibTestGene;
+        var hediff = (HediffWithComps)HediffMaker.MakeHediff(XylibTestGeneticHediff, pawn);
         var comp = hediff.TryGetComp<HediffComp_Genetic>();
         Expect.IsTrue(comp.CompShouldRemove);
         Gene instance = pawn.genes.AddGene(gene, false);
@@ -337,8 +255,7 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void SetNeedClampsOnlyInConfiguredStages()
     {
-        var props = new HediffCompProperties_SetNeed { need = NeedDefOf.Rest, range = new FloatRange(0.3f, 0.6f) };
-        var hediff = (HediffWithComps)HediffMaker.MakeHediff(HediffDef(props), pawn);
+        var hediff = (HediffWithComps)HediffMaker.MakeHediff(XylibTestSetNeed, pawn);
         var comp = hediff.TryGetComp<HediffComp_SetNeed>();
         pawn.needs.rest.CurLevel = 0.9f;
         float adjustment = 0;
@@ -347,7 +264,7 @@ public sealed class ComponentTests : PawnTestFixture
         pawn.needs.rest.CurLevel = 0.1f;
         comp.CompPostTickInterval(ref adjustment, 15);
         Expect.AreApproximatelyEqual(0.3f, pawn.needs.rest.CurLevel);
-        props.stages = new IntRange(5);
+        hediff.Severity = 0.8f;
         pawn.needs.rest.CurLevel = 0.1f;
         comp.CompPostTickInterval(ref adjustment, 15);
         Expect.AreApproximatelyEqual(0.1f, pawn.needs.rest.CurLevel);
@@ -356,22 +273,21 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void SourceCompExposesSourcePawnAndOptionalLabel()
     {
-        var props = new HediffCompProperties_Source();
-        HediffDef def = HediffDef(props);
-        def.hediffClass = typeof(HediffWithCompsExt);
-        var hediff = (HediffWithCompsExt)HediffMaker.MakeHediff(def, pawn);
+        var hediff = (HediffWithCompsExt)HediffMaker.MakeHediff(XylibTestVisibleSource, pawn);
         var comp = hediff.TryGetComp<HediffComp_Source>();
         comp.other = pawn;
         Expect.ReferencesAreEqual(pawn, hediff.SourcePawn);
         Expect.AreEqual(pawn.LabelShort, comp.CompLabelInBracketsExtra);
-        props.showName = false;
-        Expect.IsNull(comp.CompLabelInBracketsExtra);
+        var hidden = (HediffWithCompsExt)HediffMaker.MakeHediff(XylibTestHiddenSource, pawn);
+        var hiddenComp = hidden.TryGetComp<HediffComp_Source>();
+        hiddenComp.other = pawn;
+        Expect.IsNull(hiddenComp.CompLabelInBracketsExtra);
     }
 
     [Test]
     public void ForceMentalStateStartsAndEndsStateWithHediff()
     {
-        HediffDef def = HediffDef(new HediffCompProperties_ForceMentalState { mentalState = MentalStateDefOf.Berserk });
+        HediffDef def = XylibTestBerserkHediff;
         var hediff = (HediffWithComps)pawn.health.AddHediff(def);
         Expect.AreEqual(MentalStateDefOf.Berserk, pawn.MentalStateDef);
         Expect.IsFalse(hediff.TryGetComp<HediffComp_ForceMentalState>().CompShouldRemove);
@@ -382,9 +298,7 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void DebugHediffGizmoInvokesConfiguredGiver()
     {
-        HediffDef applied = HediffDef();
-        HediffDef def = HediffDef(new HediffCompProperties { compClass = typeof(HediffComp_DebugHediffGivers) });
-        def.stages = [new HediffStage { hediffGivers = [new HediffGiver_Event { hediff = applied }] }];
+        HediffDef applied = XylibTestHediff, def = XylibTestDebugGiver;
         var hediff = (HediffWithComps)HediffMaker.MakeHediff(def, pawn);
         bool original = DebugSettings.godMode;
         bool dev = Prefs.DevMode;
@@ -402,8 +316,8 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void RandomHediffGiverInheritsSeverityAndRejectsDuplicates()
     {
-        HediffDef result = HediffDef();
-        Hediff cause = HediffMaker.MakeHediff(HediffDef(), pawn);
+        HediffDef result = XylibTestHediff;
+        Hediff cause = HediffMaker.MakeHediff(XylibTestOtherHediff, pawn);
         cause.Severity = 0.75f;
         var giver = new HediffGiver_RandomExt { hediff = result, inheritSeverity = true, sendLetter = false };
         Expect.IsTrue(giver.TryApply(pawn, cause));
@@ -415,9 +329,7 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void ExtendedHediffStagesAreClonedAndRebuiltAfterSeverityChanges()
     {
-        HediffDef def = HediffDef();
-        def.hediffClass = typeof(HediffWithCompsExt);
-        def.stages = [new HediffStage { painOffset = 0.1f }, new HediffStage { minSeverity = 0.5f, painOffset = 0.3f }];
+        HediffDef def = XylibTestExtendedStages;
         var condition = (HediffWithCompsExt)HediffMaker.MakeHediff(def, pawn);
         HediffStage first = condition.CurStage!;
         Expect.ReferencesAreNotEqual(def.stages[0], first);
@@ -433,7 +345,7 @@ public sealed class ComponentTests : PawnTestFixture
     [Test]
     public void GeneticStatPartAppliesFactorOnlyWhileGenePresent()
     {
-        GeneDef def = GeneDef();
+        GeneDef def = XylibTestGene;
         var part = new StatPart_Genetic { gene = def, factor = 2.5f };
         float value = 4;
         part.TransformValue(StatRequest.For(pawn), ref value);

@@ -1,3 +1,5 @@
+using static Xylib.Tests.TestDefOf;
+
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
@@ -6,8 +8,8 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void CreationInitializesCompParentPropertiesAndPostMake()
     {
-        var properties = new ProbeProperties();
-        GeneDef def = GeneDef(properties);
+        GeneDef def = XylibTestProbe;
+        var properties = def.GetModExtension<DefModExtension_GeneWithComps>().comps!.Single();
         var gene = (GeneWithComps)pawn.genes.AddGene(def, false);
         ProbeComp comp = gene.GetComp<ProbeComp>()!;
         Expect.ReferencesAreEqual(gene, comp.parent);
@@ -20,7 +22,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void GeneWithoutCompsSupportsLifecycleAndTicks()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestGene, false);
         Expect.IsTrue(gene.Active);
         gene.Tick();
         gene.TickInterval(15);
@@ -34,7 +36,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void TickAndIntervalCallbacksRunOnlyWhileActive()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new ProbeProperties()), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestProbe, false);
         var comp = gene.GetComp<ProbeComp>()!;
         gene.Tick();
         gene.TickInterval(15);
@@ -51,7 +53,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void InheritedTickOverridesAreDispatched()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new ProbeProperties { compClass = typeof(DerivedProbeComp) }), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestDerivedProbe, false);
         gene.Tick();
         gene.TickInterval(7);
         var comp = gene.GetComp<ProbeComp>()!;
@@ -62,19 +64,19 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void GeneChangeEventInvalidatesCachedActiveState()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new ProbeProperties()), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestProbe, false);
         var comp = gene.GetComp<ProbeComp>()!;
         Expect.IsTrue(gene.Active);
         comp.allow = false;
         Expect.IsTrue(gene.Active, "Active is cached until a relevant event.");
-        pawn.genes.AddGene(GeneDef(), false);
+        pawn.genes.AddGene(XylibTestGene, false);
         Expect.IsFalse(gene.Active);
     }
 
     [Test]
     public void GenderAndGeneTypeRestrictionsControlActivation()
     {
-        GeneDef def = GeneDef();
+        GeneDef def = CreateMutableGeneDef();
         var extension = def.GetModExtension<DefModExtension_GeneWithComps>();
         extension.gender = pawn.gender == Gender.Female ? Gender.Male : Gender.Female;
         var gene = (GeneWithComps)pawn.genes.AddGene(def, true);
@@ -92,7 +94,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void ResetRemovalAndChildListenerLifetimeAreForwarded()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new ProbeProperties()), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestProbe, false);
         var comp = gene.GetComp<ProbeComp>()!;
         EventManager.Instance.Notify(EventDefOf.PostBirthday, pawn);
         Expect.AreEqual(1, comp.events);
@@ -107,7 +109,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void ScribeRoundTripRecreatesCompsAndRestoresTheirState()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new ProbeProperties()), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestProbe, false);
         gene.GetComp<ProbeComp>()!.savedValue = 42;
         string path = Path.Combine(GenFilePaths.SaveDataFolderPath, "gene-comps-test.xml");
         try
@@ -140,7 +142,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
     [Test]
     public void CompsContributeGizmosStatsAndVacuumImmunity()
     {
-        var gene = (GeneWithComps)pawn.genes.AddGene(GeneDef(new ProbeProperties()), false);
+        var gene = (GeneWithComps)pawn.genes.AddGene(XylibTestProbe, false);
         var comp = gene.GetComp<ProbeComp>()!;
         Expect.IsTrue(gene.GetGizmos().Contains(comp.gizmo));
         Expect.IsTrue(gene.SpecialDisplayStats().Contains(comp.stat));

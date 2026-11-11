@@ -1,13 +1,10 @@
 namespace InGameTests;
 
-// Linked into both suites. Only the frequently used pawn/def construction lives here;
-// each test supplies its own behavior and values.
 public abstract class PawnTestFixture : SeededTestFixture
 {
     protected Pawn pawn = null!;
     protected readonly List<Thing> things = [];
-    private readonly List<GeneDef> geneDefs = [];
-    private readonly List<HediffDef> hediffDefs = [];
+    private readonly List<GeneDef> mutableGeneDefs = [];
 
     [SetUp]
     public void SetUpPawn()
@@ -21,7 +18,8 @@ public abstract class PawnTestFixture : SeededTestFixture
             pawn.genes.RemoveGene(gene);
     }
 
-    protected GeneDef GeneDef(params GeneCompProperties[] comps)
+    // Tests that change a live gene's configuration need a private def.
+    protected GeneDef CreateMutableGeneDef(params GeneCompProperties[] comps)
     {
         var extension = new DefModExtension_GeneWithComps { comps = [.. comps] };
         var def = new GeneDef
@@ -31,21 +29,8 @@ public abstract class PawnTestFixture : SeededTestFixture
             displayCategory = new GeneCategoryDef { defName = "TestGenes", label = "test genes" },
         };
         DefDatabase<GeneDef>.Add(def);
-        geneDefs.Add(def);
+        mutableGeneDefs.Add(def);
         extension.ResolveReferences(def);
-        return def;
-    }
-
-    protected HediffDef HediffDef(params HediffCompProperties[] comps)
-    {
-        var def = new HediffDef
-        {
-            defName = "TestHediff_" + Guid.NewGuid().ToString("N"), label = "test hediff",
-            hediffClass = typeof(HediffWithComps), initialSeverity = 0.4f,
-            maxSeverity = 10f, isBad = false, comps = [.. comps],
-        };
-        DefDatabase<HediffDef>.Add(def);
-        hediffDefs.Add(def);
         return def;
     }
 
@@ -71,13 +56,9 @@ public abstract class PawnTestFixture : SeededTestFixture
             }
         }
         things.Clear();
-        // RimWorld has no public def-removal API. These defs were appended, so
-        // removing them leaves the original indices intact; clear our index-based cache.
-        foreach (GeneDef def in geneDefs)
+        // The private defs were appended, so removing them leaves the loaded def indices intact.
+        foreach (GeneDef def in mutableGeneDefs)
             typeof(DefDatabase<GeneDef>).GetMethod("Remove", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!.Invoke(null, [def]);
-        foreach (HediffDef def in hediffDefs)
-            typeof(DefDatabase<HediffDef>).GetMethod("Remove", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!.Invoke(null, [def]);
-        geneDefs.Clear();
-        hediffDefs.Clear();
+        mutableGeneDefs.Clear();
     }
 }

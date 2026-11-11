@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <HediffDef Name="XylXenosTestHediffBase" Abstract="True">
+    <hediffClass>HediffWithComps</hediffClass>
+    <initialSeverity>0.4</initialSeverity>
+    <maxSeverity>10</maxSeverity>
+    <isBad>false</isBad>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestHediff</defName>
+    <label>test hediff</label>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestReserves</defName>
+    <label>emergency reserves</label>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestSource</defName>
+    <label>sourced hediff</label>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
+    <comps>
+      <li Class="Xylib.HediffCompProperties_Source" />
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestTimedCharge</defName>
+    <label>timed charge</label>
+    <comps>
+      <li Class="HediffCompProperties_Chargeable">
+        <fullChargeAmount>1</fullChargeAmount>
+        <ticksToFullCharge>1000</ticksToFullCharge>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestFullCharge</defName>
+    <label>full charge</label>
+    <comps>
+      <li Class="HediffCompProperties_Chargeable">
+        <fullChargeAmount>1</fullChargeAmount>
+        <initialCharge>1</initialCharge>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestTransferOnRemoval</defName>
+    <label>severity transfer</label>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GiveHediffOnRemoval">
+        <hediff>XylXenosTestHediff</hediff>
+        <inheritSeverity>true</inheritSeverity>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestGrowthModes</defName>
+    <label>growth modes</label>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
+    <tendable>true</tendable>
+    <stages>
+      <li>
+        <painOffset>0.3</painOffset>
+        <hediffGivers>
+          <li Class="HediffGiver_Event">
+            <hediff>XylXenosTestHediff</hediff>
+          </li>
+        </hediffGivers>
+      </li>
+    </stages>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
+        <modes>
+          <li>
+            <severityPerDay>0.2</severityPerDay>
+            <causesNoPain>true</causesNoPain>
+            <enableHediffGivers>false</enableHediffGivers>
+            <allowTend>false</allowTend>
+          </li>
+          <li>
+            <severityPerDay>-0.1</severityPerDay>
+          </li>
+        </modes>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestTendSwitchesMode</defName>
+    <label>tending threshold</label>
+    <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
+        <modes>
+          <li />
+          <li />
+        </modes>
+      </li>
+      <li Class="XylXenos.HediffCompProperties_PetrificationTendDuration">
+        <changeModeAtTotalTendQuality>0.5</changeModeAtTotalTendQuality>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestSaturation</defName>
+    <label>test saturation</label>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_Saturation">
+        <sourceHediff>XylXenosTestHediff</sourceHediff>
+        <severityGainPerDay>0.8</severityGainPerDay>
+        <severityLossPerDay>-0.3</severityLossPerDay>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestStageRecovery</defName>
+    <label>stage recovery</label>
+    <stages>
+      <li />
+      <li>
+        <minSeverity>0.5</minSeverity>
+      </li>
+    </stages>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_SeverityPerDay_Stage">
+        <severityPerDay>-0.5</severityPerDay>
+        <showHoursToRecoverStages>1</showHoursToRecoverStages>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestBioRejection</defName>
+    <label>test bio-rejection</label>
+    <hediffClass>XylXenos.Hediff_BioRejection</hediffClass>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestImplant</defName>
+    <label>test implant</label>
+    <countsAsAddedPartOrImplant>true</countsAsAddedPartOrImplant>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestPetrifiedFlesh</defName>
+    <label>test petrified flesh</label>
+    <hediffClass>XylXenos.Hediff_PetrifiedFlesh</hediffClass>
+    <maxSeverity>3.40282347E+38</maxSeverity>
+    <stages>
+      <li />
+      <li>
+        <minSeverity>0.5</minSeverity>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef Name="XylXenosTestDietBase" Abstract="True" ParentName="XylXenosTestHediffBase">
+    <hediffClass>XylXenos.Hediff_DietDependency</hediffClass>
+    <stages>
+      <li>
+        <minSeverity>0</minSeverity>
+      </li>
+      <li>
+        <minSeverity>1</minSeverity>
+      </li>
+      <li>
+        <minSeverity>2</minSeverity>
+      </li>
+      <li>
+        <minSeverity>3</minSeverity>
+      </li>
+      <li>
+        <minSeverity>4</minSeverity>
+      </li>
+      <li>
+        <minSeverity>5</minSeverity>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestDietBase">
+    <defName>XylXenosTestDietDependency</defName>
+    <label>test diet dependency</label>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_DietDependency">
+        <severityReductionPerNutrition>2</severityReductionPerNutrition>
+      </li>
+    </modExtensions>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestDietBase">
+    <defName>XylXenosTestDietCraving</defName>
+    <label>test diet dependency</label>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_DietDependency">
+        <severityReductionPerNutrition>1</severityReductionPerNutrition>
+      </li>
+    </modExtensions>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestSubstituteCapacity</defName>
+    <label>test capacity substitution</label>
+    <hediffClass>XylXenos.Hediff_SubstituteCapacity</hediffClass>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Hediff_SubstituteCapacity">
+        <originalCapacity>Sight</originalCapacity>
+        <substituteCapacity>Hearing</substituteCapacity>
+        <mode>Always</mode>
+        <excludeStats>
+          <li>MoveSpeed</li>
+        </excludeStats>
+      </li>
+    </modExtensions>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestLovinAddiction</defName>
+    <label>test lovin addiction</label>
+    <hediffClass>XylXenos.Hediff_LovinAddiction</hediffClass>
+    <stages>
+      <li>
+        <label>satisfied</label>
+      </li>
+      <li>
+        <label>unsatisfied</label>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestMoteBubble</defName>
+    <label>mote bubble</label>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_MoteBubble">
+        <iconPath>UI/Icons/PassionMajor</iconPath>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="XylXenosTestHediffBase">
+    <defName>XylXenosTestInspiration</defName>
+    <label>test inspiration</label>
+    <comps>
+      <li Class="XylXenos.HediffCompProperties_RandomInspiration">
+        <mtbDays>1e-06</mtbDays>
+        <letter>Test inspiration</letter>
+      </li>
+    </comps>
+  </HediffDef>
+</Defs>

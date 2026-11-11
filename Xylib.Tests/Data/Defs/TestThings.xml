@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <ThingDef ParentName="ResourceBase">
+    <defName>XylibTestSmallStack</defName>
+    <label>test item</label>
+    <description>An item with a small stack limit.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/Silver</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <statBases>
+      <MarketValue>1</MarketValue>
+      <Mass>0.01</Mass>
+    </statBases>
+    <stackLimit>7</stackLimit>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BasePlayerPawnKind">
+    <defName>XylibTestOtherApparel</defName>
+    <label>other apparel</label>
+    <apparelTags>
+      <li>XylibTestOther</li>
+    </apparelTags>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="BasePlayerPawnKind">
+    <defName>XylibTestDisallowApparel</defName>
+    <label>disallowed apparel</label>
+    <apparelTags>
+      <li>IndustrialBasic</li>
+    </apparelTags>
+    <apparelDisallowTags>
+      <li>IndustrialBasic</li>
+    </apparelDisallowTags>
+  </PawnKindDef>
+</Defs>

@@ -1,3 +1,5 @@
+using static Xylib.Tests.TestDefOf;
+
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
@@ -6,7 +8,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test]
     public void GeneCacheInvalidatesAfterRealGeneAddAndRemoval()
     {
-        GeneDef def = GeneDef(new ProbeProperties());
+        GeneDef def = XylibTestProbe;
         var cache = pawn.GeneAndHediffCache;
         Expect.IsEmpty(cache.GetGenesWithDef(def));
         Expect.IsEmpty(cache.GetGenesOfType<GeneWithComps>());
@@ -24,8 +26,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test]
     public void HediffCacheInvalidatesAllQueryKindsAfterAddAndRemoval()
     {
-        HediffDef def = HediffDef(new HediffCompProperties_Source());
-        def.modExtensions = [new TestExtension()];
+        HediffDef def = XylibTestCachedHediff;
         var cache = pawn.GeneAndHediffCache;
         Expect.IsEmpty(cache.GetHediffsWithDef(def));
         Expect.IsEmpty(cache.GetHediffsOfType<HediffWithComps>());
@@ -46,21 +47,15 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test]
     public void TrackerAggregatesRaceRenderAndUnlockPropertiesThenResets()
     {
-        var recipe = new RecipeDef();
-        var building = new ThingDef();
-        Gene first = pawn.genes.AddGene(GeneDef(
-            new GeneCompProperties_RaceModifiers { bodySizeFactor = 2, healthScaleFactor = 3 },
-            new GeneCompProperties_RenderNodeModifiers { bodyScale = 2, headScale = 0.5f },
-            new GeneCompProperties_UnlockRecipes { recipes = [recipe] },
-            new GeneCompProperties_UnlockBuildables { buildables = [building] }), false);
-        Gene second = pawn.genes.AddGene(GeneDef(new GeneCompProperties_RaceModifiers { bodySizeFactor = 0.75f }), false);
+        Gene first = pawn.genes.AddGene(XylibTestTrackerFactors, false);
+        Gene second = pawn.genes.AddGene(XylibTestTrackerBodySize, false);
         var tracker = pawn.GeneTracker_Xylib!;
         Expect.AreApproximatelyEqual(1.5f, tracker.bodySizeFactor);
         Expect.AreApproximatelyEqual(3, tracker.healthScaleFactor);
         Expect.AreApproximatelyEqual(2, tracker.bodyScale);
         Expect.AreApproximatelyEqual(0.5f, tracker.headScale);
-        Expect.IsTrue(tracker.unlockedRecipes!.Contains(recipe));
-        Expect.IsTrue(tracker.unlockedBuildables!.Contains(building));
+        Expect.IsTrue(tracker.unlockedRecipes!.Contains(CookMealSimple));
+        Expect.IsTrue(tracker.unlockedBuildables!.Contains(ThingDefOf.Wall));
         pawn.genes.RemoveGene(first);
         pawn.genes.RemoveGene(second);
         Expect.AreApproximatelyEqual(1, tracker.bodySizeFactor);
@@ -72,7 +67,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void ListMakerReturnsOnlyNewGenesAndHonorsCount()
     {
-        GeneDef existing = GeneDef(), first = GeneDef(), second = GeneDef();
+        GeneDef existing = XylibTestGene, first = XylibTestOtherGene, second = XylibTestThirdGene;
         pawn.genes.AddGene(existing, false);
         var maker = new GeneSetMaker_List { genes = [existing, first, second], count = new IntRange(1) };
         GeneSet generated = maker.Generate(pawn);
@@ -86,7 +81,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void ListMakerWithZeroCountReturnsNoGenes()
     {
-        GeneDef candidate = GeneDef();
+        GeneDef candidate = XylibTestGene;
         var maker = new GeneSetMaker_List { genes = [candidate], count = IntRange.Zero };
 
         Expect.IsEmpty(maker.Generate(pawn).GenesListForReading);
@@ -96,12 +91,9 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void MakerDefRespectsPawnAndXenotypeGenesByDefault()
     {
-        GeneDef existing = GeneDef(), inherited = GeneDef(), first = GeneDef(), second = GeneDef();
-        existing.exclusionTags = first.exclusionTags = ["TestExisting"];
-        inherited.exclusionTags = second.exclusionTags = ["TestInherited"];
-        pawn.genes.AddGene(existing, false);
-        pawn.genes.SetXenotypeDirect(new XenotypeDef { genes = [inherited] });
-        var maker = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [first, second] } };
+        pawn.genes.AddGene(XylibTestConflictA, false);
+        pawn.genes.SetXenotypeDirect(XylibTestInheritedXenotype);
+        GeneSetMakerDef maker = XylibTestRespectConflicts;
 
         Expect.IsFalse(maker.overrideExistingGenes);
         Expect.IsEmpty(maker.Generate(pawn).GenesListForReading);
@@ -110,16 +102,10 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void MakerDefCanIgnorePawnAndXenotypeGenesDuringGeneration()
     {
-        GeneDef existing = GeneDef(), inherited = GeneDef(), first = GeneDef(), second = GeneDef();
-        existing.exclusionTags = first.exclusionTags = ["TestExisting"];
-        inherited.exclusionTags = second.exclusionTags = ["TestInherited"];
+        GeneDef existing = XylibTestConflictA, first = XylibTestConflictB, second = XylibTestInheritedB;
         pawn.genes.AddGene(existing, false);
-        pawn.genes.SetXenotypeDirect(new XenotypeDef { genes = [inherited] });
-        var maker = new GeneSetMakerDef
-        {
-            overrideExistingGenes = true,
-            root = new GeneSetMaker_List { genes = [first, second] },
-        };
+        pawn.genes.SetXenotypeDirect(XylibTestInheritedXenotype);
+        GeneSetMakerDef maker = XylibTestIgnoreConflicts;
 
         GeneSet generated = maker.Generate(pawn);
         Expect.AreEqual(2, generated.GenesListForReading.Count);
@@ -131,7 +117,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void OptionMakerSelectsItsWeightedSubtree()
     {
-        GeneDef expected = GeneDef();
+        GeneDef expected = XylibTestGene;
         var maker = new GeneSetMaker_Option
         {
             options = [new GeneSetMakerWeight { maker = new GeneSetMaker_List { genes = [expected] }, weight = 1 }],
@@ -142,16 +128,15 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void SubtreeMakerDelegatesToReferencedMaker()
     {
-        GeneDef expected = GeneDef();
-        var maker = new GeneSetMaker_Subtree { def = new GeneSetMakerDef { root = new GeneSetMaker_List { genes = [expected] } } };
+        GeneDef expected = XylibTestGene;
+        var maker = new GeneSetMaker_Subtree { def = XylibTestSingleGeneMaker };
         Expect.ReferencesAreEqual(expected, maker.Generate(pawn).GenesListForReading.Single());
     }
 
     [Test, LoadIfBiotechActive]
     public void BiostatMakerRejectsOutOfRangeAndProhibitedGenes()
     {
-        GeneDef def = GeneDef();
-        def.biostatMet = 2;
+        GeneDef def = XylibTestMetabolism;
         var maker = new GeneSetMaker_Biostats { biostatMet = new IntRange(1, 3) };
         Expect.IsTrue(maker.Validate(def, new GeneSet(), GeneType.Xenogene, pawn));
         maker.biostatMet = new IntRange(-3, -1);
@@ -164,8 +149,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BiostatTotalMakerWithoutShuffleUsesDeclaredOrder()
     {
-        GeneDef first = GeneDef(), second = GeneDef();
-        first.exclusionTags = second.exclusionTags = ["TestOrderedSubmakers"];
+        GeneDef first = XylibTestConflictA, second = XylibTestConflictB;
         var maker = new GeneSetMaker_BiostatTotal
         {
             count = new IntRange(2), shuffle = false,
@@ -182,7 +166,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BiostatTotalMakerShufflesBeforeSelectingLimitedSubmakers()
     {
-        GeneDef first = GeneDef(), second = GeneDef();
+        GeneDef first = XylibTestGene, second = XylibTestOtherGene;
         var maker = new GeneSetMaker_BiostatTotal
         {
             count = IntRange.One, shuffle = true,
@@ -203,8 +187,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BiostatTotalMakerShufflesExecutionOrderOfConflictingSubmakers()
     {
-        GeneDef first = GeneDef(), second = GeneDef();
-        first.exclusionTags = second.exclusionTags = ["TestShuffledSubmakers"];
+        GeneDef first = XylibTestConflictA, second = XylibTestConflictB;
         var maker = new GeneSetMaker_BiostatTotal
         {
             count = new IntRange(2), shuffle = true,
@@ -225,8 +208,7 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
     [Test, LoadIfBiotechActive]
     public void BiostatTotalMakerRetainsExistingGenesWhileAddingValidSet()
     {
-        GeneDef existing = GeneDef(), added = GeneDef();
-        added.biostatMet = 2;
+        GeneDef existing = XylibTestGene, added = XylibTestMetabolism;
         pawn.genes.AddGene(existing, false);
         var maker = new GeneSetMaker_BiostatTotal
         {
