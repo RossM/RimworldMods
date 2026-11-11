@@ -58,5 +58,30 @@ internal static class NightVisitHelpers
          && bed.GetComp<CompBedSharing>() is { nightVisitsEnabled: true });
 
     public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed) =>
+        // GetPotentialNightVisits(visitor).FirstOrDefault(visit => visit.Place.Bed == bed)?.TryMakeVisitJob(visitor);
         FindVisits(visitor, bed).FirstOrDefault()?.TryMakeVisitJob(visitor);
+
+    public static List<NightVisit> GetPotentialNightVisits(Pawn pawn)
+    {
+        List<NightVisit> visits = [];
+        foreach (var partner in BedSharingHelpers.GetLovePartnersWillingToShareBed(pawn))
+        {
+            if (partner.Awake())
+                continue;
+            if (!partner.CanShareBedsNow)
+                continue;
+            if (!AreReadyForLovin(pawn, partner))
+                continue;
+            if (partner.CurrentBed() is not { } bed)
+                continue;
+            if (!BedIsEligibleForNightVisits(pawn, bed))
+                continue;
+            if (GetFreeSlotInBed(pawn, bed) is not { } place)
+                continue;
+
+            visits.Add(new(partner, place));
+        }
+
+        return visits;
+    }
 }

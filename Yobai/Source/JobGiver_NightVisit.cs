@@ -10,31 +10,11 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
             return null;
 
         int now = Find.TickManager.TicksGame;
-        if (pawn.mindState.thinkData.TryGetValue(UniqueSaveKey, out int lastTry) && now < lastTry + GenDate.TicksPerHour)
+        if (pawn.mindState!.thinkData.TryGetValue(UniqueSaveKey, out int lastTry) && now < lastTry + GenDate.TicksPerHour)
             return null;
         pawn.mindState.thinkData[UniqueSaveKey] = now;
 
-        // This finds potential empty slots in beds that have a romantic partner
-        List<NightVisit> visits = [];
-
-        foreach (var partner in BedSharingHelpers.GetLovePartnersWillingToShareBed(pawn))
-        {
-            if (partner.Awake())
-                continue;
-            if (!partner.CanShareBedsNow)
-                continue;
-            if (!NightVisitHelpers.AreReadyForLovin(pawn, partner))
-                continue;
-            if (partner.CurrentBed() is not { } bed)
-                continue;
-            if (!NightVisitHelpers.BedIsEligibleForNightVisits(pawn, bed))
-                continue;
-            if (NightVisitHelpers.GetFreeSlotInBed(pawn, bed) is not { } place)
-                continue;
-
-            visits.Add(new(partner, place));
-        }
-
+        List<NightVisit> visits = NightVisitHelpers.GetPotentialNightVisits(pawn);
 
         if (visits.Count == 0)
             return null;
