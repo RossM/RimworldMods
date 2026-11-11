@@ -607,7 +607,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(first, firstBed);
         first.mindState.canLovinTick = 0;
         second.mindState.canLovinTick = 0;
-        Expect.IsTrue(NightVisitHelpers.CanLeaveBed(first));
+        Expect.IsTrue(first.CanDoNightVisits);
         Job? visit = NightVisitHelpers.GetPotentialNightVisits(first).SingleOrDefault()?.TryMakeVisitJob(first);
         Expect.IsNotNull(visit);
         Expect.AreEqual(JobDefOf.Lovin, visit?.def);
@@ -642,7 +642,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, outsider));
             Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
             Expect.IsTrue(firstBed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
-            Expect.IsTrue(NightVisitHelpers.CanLeaveBed(first));
+            Expect.IsTrue(first.CanDoNightVisits);
             DebugSettings.alwaysDoLovin = true;
             first.mindState.canLovinTick = 0;
             second.mindState.canLovinTick = 0;
@@ -698,7 +698,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, outsider));
             Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
             Expect.IsTrue(firstBed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
-            Expect.IsTrue(NightVisitHelpers.CanLeaveBed(first));
+            Expect.IsTrue(first.CanDoNightVisits);
             DebugSettings.alwaysDoLovin = true;
             first.mindState.canLovinTick = 0;
             second.mindState.canLovinTick = 0;
@@ -2200,7 +2200,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         BedSelectionHelpers.MakePolyculeBedroomSleepJob(second, firstBed);
         Job incoming = JobMaker.MakeJob(JobDefOf.LayDown, firstBed);
         Expect.IsNull(second.CurrentBed());
-        Expect.IsFalse(NightVisitHelpers.CanLeaveBed(first));
+        Expect.IsFalse(first.CanDoNightVisits);
         Expect.ReferencesAreEqual(firstBed, first.CurrentBed());
         second.ClearReservationsForJob(incoming);
         JobMaker.ReturnToPool(incoming);
@@ -2901,7 +2901,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         outsider.mindState.canLovinTick = 0;
         // The visitor also has a temporary stay. A night visit transfers that assignment,
         // releasing its source slot while retaining one active booking.
-        Expect.IsTrue(NightVisitHelpers.CanLeaveBed(outsider));
+        Expect.IsTrue(outsider.CanDoNightVisits);
         Job? visit = NightVisitHelpers.GetPotentialNightVisits(outsider).SingleOrDefault()?.TryMakeVisitJob(outsider);
         Expect.IsNotNull(visit);
         Expect.IsFalse(thirdBed.GetComp<CompBedSharing>().TryGetSleepingSlot(outsider, out _));

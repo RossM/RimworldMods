@@ -6,7 +6,7 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
 
     protected override Job? TryGiveJob(Pawn pawn)
     {
-        if (!NightVisitHelpers.CanLeaveBed(pawn))
+        if (!pawn.CanDoNightVisits)
             return null;
 
         int now = Find.TickManager.TicksGame;

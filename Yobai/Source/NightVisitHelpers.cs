@@ -2,14 +2,20 @@ namespace Yobai;
 
 internal static class NightVisitHelpers
 {
-    public static bool CanLeaveBed(Pawn pawn)
+    extension(Pawn pawn)
     {
-        if (pawn.Awake() || pawn is not { CanShareBedsNow: true, CurJob.playerForced: false } || pawn.CurJobDef != JobDefOf.LayDown ||
-            pawn.CurrentBed() is not { Medical: false } bed)
-            return false;
+        public bool CanDoNightVisits
+        {
+            get
+            {
+                if (pawn.Awake() || pawn is not { CanShareBedsNow: true, CurJob.playerForced: false } || pawn.CurJobDef != JobDefOf.LayDown ||
+                    pawn.CurrentBed() is not { Medical: false } bed)
+                    return false;
 
-        IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
-        return !bedmates.Any(other => pawn != other && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
+                IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
+                return !bedmates.Any(other => pawn != other && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
+            }
+        }
     }
 
     public static bool AreReadyForLovin(Pawn first, Pawn second)
@@ -39,12 +45,6 @@ internal static class NightVisitHelpers
         return null;
     }
 
-    public static bool BedIsEligibleForNightVisits(Pawn visitor, Building_Bed bed) =>
-        (visitor.CanShareBedsNow
-         && visitor.CanSleepInSharedBed(bed)
-         && bed.IsEligibleForNightVisits
-         && bed.GetComp<CompBedSharing>() is { nightVisitsEnabled: true });
-
     public static List<NightVisit> GetPotentialNightVisits(Pawn pawn)
     {
         List<NightVisit> visits = [];
@@ -58,7 +58,11 @@ internal static class NightVisitHelpers
                 continue;
             if (partner.CurrentBed() is not { } bed)
                 continue;
-            if (!BedIsEligibleForNightVisits(pawn, bed))
+            if (!pawn.CanSleepInSharedBed(bed))
+                continue;
+            if (!bed.IsEligibleForNightVisits)
+                continue;
+            if (bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true })
                 continue;
             if (GetFreeSlotInBed(pawn, bed) is not { } place)
                 continue;
