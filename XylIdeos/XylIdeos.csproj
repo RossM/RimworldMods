@@ -16,7 +16,7 @@
 
   <ItemGroup Condition="'$(DisharmonySourceDirectory)' != ''">
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony\Disharmony.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
-    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" />
+    <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" BundleRimWorldModAssemblies="true" />
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.Analyzers\Disharmony.Analyzers.csproj" AdditionalProperties="ShouldUnsetParentConfigurationAndPlatform=false" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
