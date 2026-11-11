@@ -22,26 +22,6 @@ internal static class NightVisitHelpers
                && LovePartnerRelationUtility.GetLovinMtbHours(first, second) > 0f;
     }
 
-    public static IEnumerable<NightVisit> FindVisits(Pawn visitor, Building_Bed bed)
-    {
-        if (!BedIsEligibleForNightVisits(visitor, bed))
-            yield break;
-
-        var comp = bed.GetComp<CompBedSharing>()!;
-
-        if (!comp.GetBedmates().Any(other => BedSharingHelpers.AreLovePartnersWillingToShareBed(visitor, other)))
-            yield break;
-
-        if (GetFreeSlotInBed(visitor, bed) is not { } place)
-            yield break;
-
-        foreach (Pawn partner in bed.CurOccupants)
-        {
-            if (BedSharingHelpers.AreLovePartnersWillingToShareBed(visitor, partner) && !partner.Awake() && partner.CanShareBedsNow)
-                yield return new NightVisit(partner, place);
-        }
-    }
-
     public static SleepingPlace? GetFreeSlotInBed(Pawn visitor, Building_Bed bed)
     {
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
@@ -56,10 +36,6 @@ internal static class NightVisitHelpers
          && visitor.CanSleepInSharedBed(bed)
          && bed.IsEligibleForNightVisits
          && bed.GetComp<CompBedSharing>() is { nightVisitsEnabled: true });
-
-    public static Job? TryMakeVisitJob(Pawn visitor, Building_Bed bed) =>
-        // GetPotentialNightVisits(visitor).SingleOrDefault(visit => visit.Place.Bed == bed)?.TryMakeVisitJob(visitor);
-        FindVisits(visitor, bed).SingleOrDefault()?.TryMakeVisitJob(visitor);
 
     public static List<NightVisit> GetPotentialNightVisits(Pawn pawn)
     {
