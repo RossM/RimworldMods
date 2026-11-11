@@ -15,11 +15,13 @@ internal static class NightVisitHelpers
     public static bool AreReadyForLovin(Pawn first, Pawn second)
     {
         int now = Find.TickManager.TicksGame;
-        return LovePartnerRelationUtility.LovePartnerRelationExists(first, second)
-               && now >= first.mindState!.canLovinTick && now >= second.mindState!.canLovinTick
-               && first.health.capacities.CanBeAwake && second.health.capacities.CanBeAwake
-               && first.CanReserve(second) && second.CanReserve(first)
-               && LovePartnerRelationUtility.GetLovinMtbHours(first, second) > 0f;
+        return now >= first.mindState!.canLovinTick &&
+               now >= second.mindState!.canLovinTick &&
+               first.health.capacities.CanBeAwake &&
+               second.health.capacities.CanBeAwake &&
+               first.CanReserve(second) &&
+               second.CanReserve(first) &&
+               LovePartnerRelationUtility.GetLovinMtbHours(first, second) > 0f;
     }
 
     public static SleepingPlace? GetFreeSlotInBed(Pawn visitor, Building_Bed bed)
