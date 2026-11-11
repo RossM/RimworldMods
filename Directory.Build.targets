@@ -1,0 +1,7 @@
+<Project>
+  <Target Name="LinkModsAfterBuild" AfterTargets="Build"
+          Condition="'$(LinkModsOnBuild)' == 'true' and '$(DesignTimeBuild)' != 'true' and '@(ModDestination)' != ''">
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)Link-Mod.ps1&quot; -ModsDirectory &quot;$(RimWorldDirectory)\Mods&quot; -ModDirectory &quot;%(ModDestination.FullPath)&quot;"
+          LogStandardErrorAsError="true" />
+  </Target>
+</Project>

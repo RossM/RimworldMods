@@ -26,6 +26,12 @@ Each mod keeps its C# code under `Source/` and its assets under `Data/`, with on
 
 Dependencies, analyzers and framework settings stay in the individual project files. Xylib itself does not deploy an assembly; XylXenos and XylIdeos copy their built Xylib dependency.
 
+## Linking builds into RimWorld
+
+Copy [Directory.Build.local.example.props](Directory.Build.local.example.props) to `Directory.Build.local.props`, or merge the settings into your existing file. Set `LinkModsOnBuild` to `true` and point `RimWorldDirectory` at the folder containing `RimWorld.exe`. The default path is the standard Steam install on Windows.
+
+After a successful build, each built mod, including test mods and DevTools, gets a persistent junction from the game's `Mods` folder to its `ModBin` output. Builds reuse matching junctions or directory symlinks. A conflicting entry fails the build and must be resolved manually. The account running the build needs write access to the game's `Mods` folder.
+
 ## Developing with local Disharmony source
 
 To try changes in your own [Disharmony checkout](https://github.com/RossM/Disharmony), create `Directory.Build.local.props` in this repository's root:
@@ -44,7 +50,7 @@ Build the solution as usual. It builds the local Disharmony library, analyzer, a
 
 ## Returning to the released package
 
-Remove `Directory.Build.local.props` and rebuild, then enable the official Disharmony mod before testing any of the mods. Yobai, XylXenos and XylIdeos remove previously bundled `0Harmony.dll`, `Disharmony.dll` and `Disharmony.RimWorld.dll`; the installed Disharmony mod supplies all three.
+Remove `DisharmonySourceDirectory` from `Directory.Build.local.props` and rebuild, then enable the official Disharmony mod before testing any of the mods. Yobai, XylXenos and XylIdeos remove previously bundled `0Harmony.dll`, `Disharmony.dll` and `Disharmony.RimWorld.dll`; the installed Disharmony mod supplies all three.
 
 For a single NuGet build without removing your settings file, use:
 

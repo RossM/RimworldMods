@@ -10,7 +10,10 @@
     <File Path=".gitignore" />
     <File Path="AGENTS.md" />
     <File Path="DataAnalysis/calculate_elo.py" />
+    <File Path="Directory.Build.local.example.props" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Link-Mod.ps1" />
     <File Path="ModBuild.targets" />
     <File Path="README.md" />
   </Folder>

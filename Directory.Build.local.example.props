@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <!-- Copy this file to Directory.Build.local.props and adjust the game path as needed. -->
+    <LinkModsOnBuild>true</LinkModsOnBuild>
+    <RimWorldDirectory>C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDirectory>
+
+    <!-- Uncomment to build against a local Disharmony checkout. -->
+    <!-- <DisharmonySourceDirectory>..\Disharmony</DisharmonySourceDirectory> -->
+  </PropertyGroup>
+</Project>

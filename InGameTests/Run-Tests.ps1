@@ -26,21 +26,6 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-function Ensure-ModLink([string] $Name, [string] $Source) {
-    $linkPath = Join-Path $modsDirectory $Name
-    $sourcePath = (Resolve-Path -LiteralPath $Source).ProviderPath
-    $existing = Get-Item -LiteralPath $linkPath -Force -ErrorAction SilentlyContinue
-    if ($null -ne $existing) {
-        if ($existing.LinkType -in @('Junction', 'SymbolicLink')) {
-            $target = @($existing.Target)[0]
-            if (![IO.Path]::IsPathRooted($target)) { $target = Join-Path $modsDirectory $target }
-            if ([IO.Path]::GetFullPath($target).TrimEnd('\') -eq $sourcePath.TrimEnd('\')) { return }
-        }
-        throw "Mod path already exists and does not link to ${sourcePath}: $linkPath. Update it manually before running tests."
-    }
-    New-Item -ItemType Junction -Path $linkPath -Target $sourcePath | Out-Null
-}
-
 function ConvertTo-ProcessArgument([string] $Argument) {
     # Windows arguments double backslashes before embedded or closing quotes.
     $escaped = [regex]::Replace($Argument, '(\\*)"', '$1$1\"')
@@ -144,12 +129,13 @@ foreach ($directory in Get-ChildItem -LiteralPath $modsDirectory -Directory) {
 
 $testMod = Join-Path $repositoryDirectory "ModBin/$Suite.Tests"
 $testPackage = ('xylthixlm.' + $Suite + '.tests').ToLowerInvariant()
-Ensure-ModLink 'DevTools' (Join-Path $repositoryDirectory 'ModBin/DevTools')
-Ensure-ModLink "$Suite.Tests" $testMod
+$linkMod = Join-Path $repositoryDirectory 'Link-Mod.ps1'
+& $linkMod -ModsDirectory $modsDirectory -ModDirectory (Join-Path $repositoryDirectory 'ModBin/DevTools')
+& $linkMod -ModsDirectory $modsDirectory -ModDirectory $testMod
 if ($Suite -ne 'Xylib') {
     $gameplayMod = if ($Suite -eq 'Yobai') { 'Yobai' } else { 'XylXenos' }
     $gameplayPackage = if ($Suite -eq 'Yobai') { 'xylthixlm.yobai' } else { 'xylthixlm.xenotypes' }
-    Ensure-ModLink $gameplayMod (Join-Path $repositoryDirectory "ModBin/$gameplayMod")
+    & $linkMod -ModsDirectory $modsDirectory -ModDirectory (Join-Path $repositoryDirectory "ModBin/$gameplayMod")
 }
 
 $saveDataDirectory = Join-Path $OutputDirectory 'UserData'
