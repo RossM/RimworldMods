@@ -85,5 +85,7 @@
   <XylMeditationFocusPerBrazierAbstract>{1} per nearby lit brazier (up to {0})</XylMeditationFocusPerBrazierAbstract>
   <XylMeditationFocusPerBrazier>{2} per nearby lit brazier ({0} / {1})</XylMeditationFocusPerBrazier>
   <XylRandomLivestock>random livestock</XylRandomLivestock>
+  <XylStatReport_Hot>above {0}</XylStatReport_Hot>
+  <XylStatReport_Cold>below {0}</XylStatReport_Cold>
 
 </LanguageData>

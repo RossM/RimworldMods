@@ -120,8 +120,9 @@ class Lineage:
 FEATURED_GENE_LAYOUT = GeneLayout(max_columns=5, icon_size=52, row_gap=12)
 SUPPORTING_GENE_LAYOUT = GeneLayout(max_columns=10, icon_size=32, row_gap=10)
 # Narrow shared lists only where a separate panel explains mutually exclusive options.
-SCALEBORN_GENES_RIGHT = 410
-SCALEBORN_FEATURED_LAYOUT = GeneLayout(max_columns=3, icon_size=52, row_gap=12)
+SCALEBORN_GENES_RIGHT = 430
+SCALEBORN_GENES_LEFT = 188
+SCALEBORN_FEATURED_LAYOUT = GeneLayout(max_columns=4, icon_size=52, row_gap=12)
 SCALEBORN_SUPPORTING_LAYOUT = GeneLayout(max_columns=5, icon_size=32, row_gap=10)
 TITAN_GENES_RIGHT = 468
 TITAN_FEATURED_LAYOUT = GeneLayout(max_columns=4, icon_size=52, row_gap=12)
@@ -624,11 +625,11 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
         return png_path
 
     if is_scaleborn:
-        genes_right, featured_style, supporting_style = SCALEBORN_GENES_RIGHT, SCALEBORN_FEATURED_LAYOUT, SCALEBORN_SUPPORTING_LAYOUT
+        genes_right, genes_left, featured_style, supporting_style = SCALEBORN_GENES_RIGHT, SCALEBORN_GENES_LEFT, SCALEBORN_FEATURED_LAYOUT, SCALEBORN_SUPPORTING_LAYOUT
     elif is_titan:
-        genes_right, featured_style, supporting_style = TITAN_GENES_RIGHT, TITAN_FEATURED_LAYOUT, TITAN_SUPPORTING_LAYOUT
+        genes_right, genes_left, featured_style, supporting_style = TITAN_GENES_RIGHT, GENES_LEFT, TITAN_FEATURED_LAYOUT, TITAN_SUPPORTING_LAYOUT
     else:
-        genes_right, featured_style, supporting_style = GENES_RIGHT, FEATURED_GENE_LAYOUT, SUPPORTING_GENE_LAYOUT
+        genes_right, genes_left, featured_style, supporting_style = GENES_RIGHT, GENES_LEFT, FEATURED_GENE_LAYOUT, SUPPORTING_GENE_LAYOUT
     groups = [
         ("featured", featured_genes, featured_style),
         ("supporting", supporting_genes, supporting_style)]
@@ -640,8 +641,8 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
     if stack_height > GENES_BOTTOM - GENES_TOP:
         raise ValueError(f"{name} gene stack exceeds the card")
     y = GENES_TOP + (GENES_BOTTOM - GENES_TOP - stack_height) / 2
-    group_center = (GENES_LEFT + genes_right) / 2
-    divider_width = (genes_right - GENES_LEFT) * GENE_DIVIDER_FRACTION
+    group_center = (genes_left + genes_right) / 2
+    divider_width = (genes_right - genes_left) * GENE_DIVIDER_FRACTION
     for group_index, (group_name, rows, style) in enumerate(gene_groups):
         if group_index:
             # Equal clearance on either side makes the line a group separator;
@@ -649,7 +650,7 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
             divider_y = y + GENE_GROUP_GAP / 2
             parts.append(f'<path d="M{group_center-divider_width/2:.2f} {divider_y:.2f}H{group_center+divider_width/2:.2f}" stroke="#51515a" stroke-width="1"/>')
             y += GENE_GROUP_GAP
-        spacing = (genes_right - GENES_LEFT) / style.max_columns
+        spacing = (genes_right - genes_left) / style.max_columns
         for row_index, row in enumerate(rows):
             if row_index:
                 y += style.row_gap
@@ -661,7 +662,7 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
     # Separate colored boxes express mutually exclusive packages. The first icon
     # identifies the skin color without needing another text label.
     if lineages:
-        text(522, CHOICE_LABEL_Y, "One lineage of", 16, "#c9c4cf", 600, anchor="middle")
+        text(534, CHOICE_LABEL_Y, "One lineage of", 16, "#c9c4cf", 600, anchor="middle")
     lineage_top, lineage_bottom = CHOICE_PANEL_TOP, GENES_BOTTOM
     row_height, icon_size = 40, 32
     if lineages and len(lineages) * row_height > lineage_bottom - lineage_top:
@@ -670,9 +671,9 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
                / max(1, len(lineages) - 1))
     for row_index, lineage in enumerate(lineages):
         y = lineage_top + row_index * (row_height + row_gap)
-        parts.append(lineage_band(lineage, 430, y, 184, row_height))
+        parts.append(lineage_band(lineage, 454, y, 160, row_height))
         for col, gene in enumerate(lineage.genes):
-            gene_icon(gene, 450 + col * 48, y + 4, icon_size, f"lineage:{lineage.skin.defName}")
+            gene_icon(gene, 474 + col * 40, y + 4, icon_size, f"lineage:{lineage.skin.defName}")
 
     if specialties:
         icon_size, gap, columns = 32, 10, 2
