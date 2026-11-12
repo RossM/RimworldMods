@@ -3,7 +3,7 @@
   "xenotype": "Scaleborn",
   "descriptor": "Draconic warriors",
   "complexity": 18,
-  "metabolism": -1,
+  "metabolism": 0,
   "width": 630,
   "height": 340,
   "character": "Art\\Cutouts\\Processed\\Scaleborn_South.png",
@@ -166,7 +166,7 @@
       "category_priority": 270.0,
       "priority": 21.0,
       "complexity": 1,
-      "metabolism": 0,
+      "metabolism": 1,
       "archites": 0
     },
     {

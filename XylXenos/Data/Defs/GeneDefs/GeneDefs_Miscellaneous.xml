@@ -812,8 +812,8 @@
     <conditionalStatAffecters>
       <li Class="XylXenos.ConditionalStatAffecter_Cold">
         <statOffsets>
-          <MoveSpeed>-0.2</MoveSpeed>
-          <WorkSpeedGlobal>-0.1</WorkSpeedGlobal>
+          <MoveSpeed>-0.4</MoveSpeed>
+          <WorkSpeedGlobal>-0.2</WorkSpeedGlobal>
         </statOffsets>
       </li>
       <li Class="XylXenos.ConditionalStatAffecter_Hot">
@@ -824,7 +824,7 @@
       </li>
     </conditionalStatAffecters>
     <biostatCpx>1</biostatCpx>
-    <biostatMet>0</biostatMet>
+    <biostatMet>1</biostatMet>
   </GeneDef>
 
 
