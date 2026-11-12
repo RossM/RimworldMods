@@ -200,7 +200,7 @@ public class GeneSetMaker_Biostats : GeneSetMaker
 [PublicAPI]
 public class GeneSetMaker_List : GeneSetMaker
 {
-    public static readonly List<GeneDef> _genesTemp = [];
+    private static readonly List<GeneDef> genesTemp = [];
 
     public required List<GeneDef> genes;
 
@@ -217,12 +217,12 @@ public class GeneSetMaker_List : GeneSetMaker
         if (countValue <= 0)
             return;
 
-        _genesTemp.Clear();
-        _genesTemp.AddRange(genes);
-        _genesTemp.Shuffle();
+        genesTemp.Clear();
+        genesTemp.AddRange(genes);
+        genesTemp.Shuffle();
 
         int added = 0;
-        foreach (var gene in _genesTemp)
+        foreach (var gene in genesTemp)
         {
             if (!Validate(gene, geneSet, geneType, pawn))
                 continue;
