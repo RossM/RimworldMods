@@ -154,7 +154,7 @@
     {
       "defName": "XylMoveSpeed_Hot",
       "label": "cold blooded",
-      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\NoArt.png",
+      "path": "XylXenos\\Data\\Textures\\Xyl\\UI\\Icons\\Genes\\Gene_MoveSpeed_Hot.png",
       "color": [
         1.0,
         1.0,

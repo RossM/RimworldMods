@@ -807,7 +807,7 @@
     <defName>XylMoveSpeed_Hot</defName>
     <label>cold blooded</label>
     <description>Carriers of this gene move faster in hot temperatures but are slowed in cold temperatures.</description>
-    <iconPath>Xyl/UI/Icons/Genes/NoArt</iconPath>
+    <iconPath>Xyl/UI/Icons/Genes/Gene_MoveSpeed_Hot</iconPath>
     <displayOrderInCategory>21</displayOrderInCategory>
     <conditionalStatAffecters>
       <li Class="XylXenos.ConditionalStatAffecter_Cold">
