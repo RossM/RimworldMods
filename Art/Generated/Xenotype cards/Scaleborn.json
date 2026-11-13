@@ -2,8 +2,8 @@
   "defName": "XylScaleborn",
   "xenotype": "Scaleborn",
   "descriptor": "Draconic warriors",
-  "complexity": 18,
-  "metabolism": 0,
+  "complexity": 17,
+  "metabolism": -1,
   "width": 630,
   "height": 340,
   "character": "Art\\Cutouts\\Processed\\Scaleborn_South.png",
@@ -166,25 +166,7 @@
       "category_priority": 270.0,
       "priority": 21.0,
       "complexity": 1,
-      "metabolism": 1,
-      "archites": 0
-    },
-    {
-      "defName": "MoveSpeed_Slow",
-      "label": "slow runner",
-      "path": "Art\\Rimworld art\\Genes\\Gene_SlowMovespeed.png",
-      "color": [
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "source": "vanilla",
-      "category": "Movement",
-      "category_priority": 470.0,
-      "priority": 0.0,
-      "complexity": 1,
-      "metabolism": 3,
+      "metabolism": 2,
       "archites": 0
     },
     {
@@ -206,9 +188,9 @@
       "archites": 0
     },
     {
-      "defName": "Aggression_Aggressive",
-      "label": "aggressive",
-      "path": "Art\\Rimworld art\\Genes\\Gene_Aggressive.png",
+      "defName": "Aggression_HyperAggressive",
+      "label": "hyper-aggressive",
+      "path": "Art\\Rimworld art\\Genes\\Gene_HyperAggressive.png",
       "color": [
         1.0,
         1.0,
@@ -218,9 +200,9 @@
       "source": "vanilla",
       "category": "Violence",
       "category_priority": 430.0,
-      "priority": 10.0,
+      "priority": 20.0,
       "complexity": 1,
-      "metabolism": 2,
+      "metabolism": 3,
       "archites": 0
     },
     {
@@ -383,37 +365,30 @@
       "size": 52
     },
     {
-      "defName": "MoveSpeed_Slow",
-      "group": "supporting",
-      "x": 212.2,
-      "y": 238.0,
-      "size": 32
-    },
-    {
       "defName": "MaxTemp_SmallIncrease",
       "group": "supporting",
-      "x": 260.6,
+      "x": 236.4,
       "y": 238.0,
       "size": 32
     },
     {
-      "defName": "Aggression_Aggressive",
+      "defName": "Aggression_HyperAggressive",
       "group": "supporting",
-      "x": 309.0,
+      "x": 284.8,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "MeleeDamage_Strong",
       "group": "supporting",
-      "x": 357.4,
+      "x": 333.2,
       "y": 238.0,
       "size": 32
     },
     {
       "defName": "Sleepy",
       "group": "supporting",
-      "x": 405.8,
+      "x": 381.6,
       "y": 238.0,
       "size": 32
     },

@@ -68,10 +68,9 @@
     <combatPowerFactor>1.5</combatPowerFactor>
     <genes>
       <li>XylCarnivoreStomach</li>
-      <li>MoveSpeed_Slow</li>
       <li>XylGreedy</li>
       <li>MaxTemp_SmallIncrease</li>
-      <li>Aggression_Aggressive</li>
+      <li>Aggression_HyperAggressive</li>
       <li>MeleeDamage_Strong</li>
       <li>XylLargeHorns</li>
       <li>Sleepy</li>
