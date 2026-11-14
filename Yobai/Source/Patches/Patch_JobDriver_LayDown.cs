@@ -11,7 +11,7 @@ internal static class Patch_JobDriver_LayDown
                       || bed.GetComp<CompBedSharing>() is not { } comp)
             return;
 
-        bool hasTemporaryAssignment = comp.TryGetSleepingSlot(driver.pawn, out _);
+        bool hasTemporaryAssignment = comp.HasSleepingSlot(driver.pawn);
         if (!hasTemporaryAssignment && !comp.HasTemporaryAssignments)
             return;
 

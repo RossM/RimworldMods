@@ -9,7 +9,7 @@ internal static class Patch_JobInBedUtility
     {
         if (driver.job.def != JobDefOf.Lovin
             || driver.job.GetTarget(bedIndex).Thing is not Building_Bed bed
-            || bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(driver.pawn, out _) != true
+            || bed.GetComp<CompBedSharing>()?.HasSleepingSlot(driver.pawn) != true
             || driver.pawn.Position == RestUtility.GetBedSleepingSlotPosFor(driver.pawn, bed))
             return true;
 

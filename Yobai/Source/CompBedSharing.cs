@@ -58,6 +58,11 @@ public sealed class CompBedSharing : ThingComp
         }
     }
 
+    internal bool HasSleepingSlot(Pawn pawn)
+    {
+        return BedSharingHelpers.candidateSlotForIsValidBedFor is not null || SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed == Bed;
+    }
+
     internal bool TryGetSleepingSlot(Pawn pawn, out int slot)
     {
         if (BedSharingHelpers.candidateSlotForIsValidBedFor is { } allowSlot)

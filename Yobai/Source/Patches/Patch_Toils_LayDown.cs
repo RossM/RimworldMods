@@ -8,7 +8,7 @@ internal static class Patch_Toils_LayDown
     [Target("ApplyBedThoughts")]
     public static void OwnedBed_Postfix(Pawn actor, Building_Bed? bed, ref Building_Bed? __result)
     {
-        if (bed?.GetComp<CompBedSharing>()?.TryGetSleepingSlot(actor, out _) == true)
+        if (bed?.GetComp<CompBedSharing>()?.HasSleepingSlot(actor) == true)
             __result = bed;
     }
 }
