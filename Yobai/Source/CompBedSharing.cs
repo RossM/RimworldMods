@@ -72,8 +72,14 @@ public sealed class CompBedSharing : ThingComp
         }
 
         SleepingPlace? assignment = SleepingAssignments.GetTemporaryAssignment(pawn);
-        slot = assignment?.Bed == Bed ? assignment.Slot : -1;
-        return slot >= 0;
+        if (assignment?.Bed == Bed)
+        {
+            slot = assignment.Slot;
+            return true;
+        }
+
+        slot = -1;
+        return false;
     }
 
     internal IEnumerable<Pawn> GetBedmates()
