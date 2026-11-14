@@ -17,8 +17,6 @@ These are the mods in my regular playtesting mod list:
 
 ## Incompatible
 
-* Vanilla Skills Expanded
-
 # Not tested or only superficially tested
 
 ## Compatible
@@ -31,6 +29,8 @@ These are mods that have compatability code in Xyl's Xenos and have been checked
 * Lactation Expansion
 	* This mod replaces the vanilla lactation system. If it's installed, bossaps will lose access to their custom milking mechanics and instead use Lactation Expansion's. 
 	* I don't recommend this mod as it removes some Bossaps unique mechanics and un-fixes several base game lactation bugs that Xyl's Xenos has fixes for.
+* Vanilla Skills Expanded
+	* Titans and Steadlings can't get the new passion types added by Vanilla Skills Expanded.
 * Vanilla Races Expanded: Highmate
 
 ## Partially compatible

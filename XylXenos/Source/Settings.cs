@@ -47,10 +47,7 @@ public class Settings : ModSettings
         if (ModLister.GetActiveModWithIdentifier(ModIdOf.LactationExpansion) is null)
             EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
 
-        // This fix doesn't work under VSE because it completely replaces GenerateSkills. The replacement
-        // has the same bug vanilla had, of course.
-        if (ModLister.GetActiveModWithIdentifier(ModIdOf.VanillaSkillsExpanded) is null)
-            BoolSetting(listing, nameof(fixGeneticPassions));
+        BoolSetting(listing, nameof(fixGeneticPassions));
 
         listing.Gap();
         if (listing.ButtonText("XylEnableDisableXenotypes".Translate()))
