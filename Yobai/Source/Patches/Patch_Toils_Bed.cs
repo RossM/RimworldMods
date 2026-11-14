@@ -14,8 +14,7 @@ internal static class Patch_Toils_Bed
             Pawn claimant = claimantIndex == TargetIndex.None
                 ? actor
                 : (Pawn)actor.CurJob.GetTarget(claimantIndex).Thing;
-            SleepingAssignments.ActiveAssignment? assignment = SleepingAssignments.GetActiveAssignments(claimant.Map)
-                .FirstOrDefault(assignment => assignment.Pawn == claimant);
+            SleepingAssignments.ActiveAssignment? assignment = claimant.ActiveSleepingAssignment;
             if (assignment is { IsTemporary: true })
                 return;
             if (claimant.ownership.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)
@@ -37,7 +36,7 @@ internal static class Patch_Toils_Bed
             Pawn visitor = __result.actor;
             if (visitor.CurJobDef == JobDefOf.Lovin
                 && visitor.CurJob!.GetTarget(bedIndex).Thing is Building_Bed bed
-                && bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(visitor, out _) == true
+                && bed.CompBedSharing.HasSleepingSlot(visitor)
                 && visitor.Position != RestUtility.GetBedSleepingSlotPosFor(visitor, bed))
             {
                 Pawn partner = (Pawn)visitor.CurJob.targetA.Thing!;

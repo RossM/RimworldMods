@@ -12,7 +12,7 @@ internal static class BedSelectionHelpers
         if (beds.Count == 0)
             return null;
 
-        int bedsWithTwoFreeSlots = beds.Count(bed => bed.GetComp<CompBedSharing>()!.FreeSlotsExcluding(pawn) >= 2);
+        int bedsWithTwoFreeSlots = beds.Count(bed => bed.CompBedSharing.FreeSlotsExcluding(pawn) >= 2);
 
         if (!beds.TryRandomElementByWeight(WeightSelector, out var selected))
             selected = beds.RandomElement()!;
@@ -22,11 +22,10 @@ internal static class BedSelectionHelpers
         // https://en.wikipedia.org/wiki/Chinese_restaurant_process
         float WeightSelector(Building_Bed bed)
         {
-            var comp = bed.GetComp<CompBedSharing>()!;
-            int partnerCount = comp.GetBedmates().Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
+            int partnerCount = bed.AllAssignedPawns.Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
             if (partnerCount > 0)
                 return partnerCount;
-            if (comp.FreeSlotsExcluding(pawn) >= 2)
+            if (bed.CompBedSharing.FreeSlotsExcluding(pawn) >= 2)
                 return 1f / bedsWithTwoFreeSlots;
             return 0f;
         }
@@ -46,7 +45,7 @@ internal static class BedSelectionHelpers
 
     internal static bool HasAvailablePolyculeBedroomSlot(Pawn pawn, Building_Bed bed)
     {
-        if (!ValidBed(pawn, bed) || bed.GetComp<CompBedSharing>() is not { } comp)
+        if (!ValidBed(pawn, bed))
             return false;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);
@@ -65,7 +64,7 @@ internal static class BedSelectionHelpers
 
     private static IEnumerable<int> GetAvailablePolyculeBedroomSlots(Pawn pawn, Building_Bed bed)
     {
-        if (!ValidBed(pawn, bed) || bed.GetComp<CompBedSharing>() is not { } comp)
+        if (!ValidBed(pawn, bed))
             yield break;
 
         IEnumerable<int> slots = Enumerable.Range(0, bed.SleepingSlotsCount);

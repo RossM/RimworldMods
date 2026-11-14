@@ -27,7 +27,8 @@ namespace Yobai;
 ///     (or the visitor's own place), rather than merely an empty place. Both features retain their
 ///     separate bedroom, relationship and bedmate-compatibility requirements.
 /// </remarks>
-internal static class SleepingAssignments
+[UsedImplicitly]
+internal class SleepingAssignments(Map map) : MapComponent(map)
 {
     internal sealed record ActiveAssignment(Pawn Pawn, SleepingPlace Place, bool IsTemporary)
     {
@@ -36,70 +37,52 @@ internal static class SleepingAssignments
         public bool IsInUse => IsTemporary || Place.BeingUsedBy(Pawn);
     }
 
-    public static IReadOnlyList<ActiveAssignment> GetActiveAssignments(Map? map)
+    private IEnumerable<ActiveAssignment> GetActiveAssignments()
     {
-        if (map == null)
-            return [];
+        HashSet<Pawn> seenPawns = [];
+        HashSet<SleepingPlace> seenPlaces = [];
 
-        List<CompBedSharing> comps = [.. GetBedComps(map)];
-        List<ActiveAssignment> temporaryAssignments = [.. comps.SelectMany(TemporaryAssignments)];
-        HashSet<Pawn> temporaryPawns = [.. temporaryAssignments.Select(assignment => assignment.Pawn)];
-        HashSet<(Building_Bed Bed, int Slot)> temporaryPlaces =
-        [
-            .. temporaryAssignments.Select(assignment => (assignment.Place.Bed, assignment.Place.Slot)),
-        ];
-        List<ActiveAssignment> active = [.. temporaryAssignments];
+        List<CompBedSharing> comps = [.. map.listerBuildings.allBuildingsColonist.OfType<Building_Bed>().Select(bed => bed.CompBedSharing)];
 
-        foreach (CompBedSharing comp in comps)
+        foreach (var comp in comps)
         {
-            for (int slot = 0; slot < Math.Min(comp.Bed.OwnersForReading.Count, comp.Bed.SleepingSlotsCount); slot++)
+            foreach ((Pawn pawn, int slot) in comp.TemporaryAssignments)
             {
-                Pawn owner = comp.Bed.OwnersForReading[slot];
-                // Deathrest caskets have their own ownership, separate from the pawn's sleeping bed.
-                if (owner.ownership.OwnedBed != comp.Bed || temporaryPawns.Contains(owner) || temporaryPlaces.Contains((comp.Bed, slot)))
-                    continue;
-                active.Add(new ActiveAssignment(owner, comp.Bed.GetSleepingPlace(slot), IsTemporary: false));
+                SleepingPlace sleepingPlace = comp.Bed.GetSleepingPlace(slot);
+                if (seenPawns.Add(pawn) && seenPlaces.Add(sleepingPlace))
+                    yield return new ActiveAssignment(pawn, sleepingPlace, IsTemporary: true);
             }
         }
 
-        return active;
-    }
-
-    public static SleepingPlace? GetTemporaryAssignment(Pawn pawn)
-    {
-        return GetActiveAssignments(pawn.Map).FirstOrDefault(assignment => assignment.IsTemporary && assignment.Pawn == pawn)?.Place;
-    }
-
-    public static SleepingPlace? GetActiveAssignment(Pawn pawn)
-    {
-        return GetActiveAssignments(pawn.Map).FirstOrDefault(assignment => assignment.Pawn == pawn)?.Place;
-    }
-
-    public static Pawn? GetAssignedPawn(SleepingPlace place)
-    {
-        return GetActiveAssignments(place.Bed.Map)
-            .FirstOrDefault(assignment => assignment.Place.Bed == place.Bed && assignment.Place.Slot == place.Slot)?.Pawn;
-    }
-
-    public static IEnumerable<Pawn> GetBedmates(Building_Bed bed)
-    {
-        IEnumerable<Pawn> sleepers = GetActiveAssignments(bed.Map)
-            .Where(assignment => assignment.Place.Bed == bed && assignment.IsInUse).Select(assignment => assignment.Pawn);
-        return bed.CurOccupants.Concat(sleepers).Distinct();
-    }
-
-    private static IEnumerable<ActiveAssignment> TemporaryAssignments(CompBedSharing comp)
-    {
-        foreach (var (pawn, slot) in comp.TemporaryAssignments)
-            yield return new ActiveAssignment(pawn, comp.Bed.GetSleepingPlace(slot), IsTemporary: true);
-    }
-
-    private static IEnumerable<CompBedSharing> GetBedComps(Map map)
-    {
-        foreach (Building_Bed bed in map.listerBuildings.allBuildingsColonist.OfType<Building_Bed>())
+        foreach (var comp in comps)
         {
-            if (bed.GetComp<CompBedSharing>() is { } comp)
-                yield return comp;
+            for (int slot = 0; slot < Math.Min(comp.Bed.OwnersForReading.Count, comp.Bed.SleepingSlotsCount); slot++)
+            {
+                Pawn pawn = comp.Bed.OwnersForReading[slot];
+
+                // Deathrest caskets have their own ownership, separate from the pawn's sleeping bed.
+                if (pawn.ownership.OwnedBed != comp.Bed)
+                    continue;
+
+                SleepingPlace sleepingPlace = comp.Bed.GetSleepingPlace(slot);
+                if (seenPawns.Add(pawn) && seenPlaces.Add(sleepingPlace))
+                    yield return new ActiveAssignment(pawn, sleepingPlace, IsTemporary: false);
+            }
         }
+    }
+
+    public ActiveAssignment? GetAssignment(SleepingPlace place)
+    {
+        return GetActiveAssignments().SingleOrDefault(assignment => assignment.Place == place);
+    }
+
+    public ActiveAssignment? GetAssignment(Pawn pawn)
+    {
+        return GetActiveAssignments().SingleOrDefault(assignment => assignment.Pawn == pawn);
+    }
+
+    public IEnumerable<ActiveAssignment> GetAssignments(Building_Bed bed)
+    {
+        return GetActiveAssignments().Where(assignment => assignment.Place.Bed == bed);
     }
 }

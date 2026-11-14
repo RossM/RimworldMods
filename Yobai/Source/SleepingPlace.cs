@@ -1,7 +1,11 @@
 namespace Yobai;
 
-internal sealed class SleepingPlace
+internal sealed record SleepingPlace
 {
+    public Pawn? AssignedPawn => ActiveAssignment?.Pawn;
+
+    public SleepingAssignments.ActiveAssignment? ActiveAssignment => Bed.Map?.SleepingAssignments.GetAssignment(this);
+
     internal SleepingPlace(Building_Bed bed, int slot)
     {
         ArgumentNullException.ThrowIfNull(bed);
@@ -16,18 +20,18 @@ internal sealed class SleepingPlace
 
     public bool CanAssignForNightVisit(Pawn pawn)
     {
-        Pawn? assignee = SleepingAssignments.GetAssignedPawn(this);
+        Pawn? assignee = AssignedPawn;
         return (assignee == null || assignee == pawn) && CanAssignTemporary(pawn);
     }
 
     public bool CanAssignTemporary(Pawn pawn)
     {
-        if (Bed.GetComp<CompBedSharing>() == null || !IsAvailableFor(pawn))
+        if (!IsAvailableFor(pawn))
             return false;
         if (!BedSharingHelpers.IsValidBedForWithTemporaryAssignment(Bed, Slot, pawn, pawn, true, guestStatus: pawn.GuestStatus))
             return false;
 
-        return SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed != Bed && pawn.CanSleepInSharedBed(Bed);
+        return pawn.TemporarySleepingAssignment?.Place.Bed != Bed && pawn.CanSleepInSharedBed(Bed);
     }
 
     public void AssignTemporary(Pawn pawn)
@@ -35,8 +39,8 @@ internal sealed class SleepingPlace
         if (!CanAssignTemporary(pawn))
             throw new InvalidOperationException("CanAssignTemporary should have already been checked");
 
-        SleepingAssignments.GetTemporaryAssignment(pawn)?.Bed.GetComp<CompBedSharing>()?.RemoveAssignment(pawn);
-        Bed.GetComp<CompBedSharing>()!.AddAssignment(pawn, Slot);
+        pawn.TemporarySleepingAssignment?.Place.Bed.CompBedSharing.RemoveAssignment(pawn);
+        Bed.CompBedSharing.AddAssignment(pawn, Slot);
     }
 
     public bool BeingUsedBy(Pawn pawn)
@@ -62,8 +66,7 @@ internal sealed class SleepingPlace
         Pawn? occupant = Bed.GetCurOccupant(Slot);
         if (occupant != null && occupant != pawn)
             return false;
-        SleepingAssignments.ActiveAssignment? assignment = SleepingAssignments.GetActiveAssignments(Bed.Map)
-            .FirstOrDefault(assignment => assignment.Place.Bed == Bed && assignment.Place.Slot == Slot);
+        SleepingAssignments.ActiveAssignment? assignment = ActiveAssignment;
         return assignment == null || assignment.Pawn == pawn || !assignment.IsInUse;
     }
 

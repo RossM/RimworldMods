@@ -1,4 +1,5 @@
 using Verse.AI.Group;
+using Waylith.Injection;
 
 namespace Yobai;
 
@@ -10,6 +11,11 @@ internal static class BedSharingHelpers
 
     extension(Building_Bed bed)
     {
+        [InjectedField]
+        private extern ref CompBedSharing? CompBedSharingCached { get; }
+
+        public CompBedSharing CompBedSharing => bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>()!;
+
         public bool IsEligibleForBedSharing =>
             bed.IsNormalHumanlikeBed &&
             bed.Faction == Faction.OfPlayer;
@@ -30,6 +36,10 @@ internal static class BedSharingHelpers
         {
             return new SleepingPlace(bed, slot);
         }
+
+        public Pawn? GetAssignedPawn(int slot) => bed.GetSleepingPlace(slot).AssignedPawn;
+        public bool HasOccupant(Pawn value) => bed.AllAssignedPawns.Contains(value);
+        public IEnumerable<Pawn> AllAssignedPawns => bed.CompBedSharing.AllAssignedPawns;
     }
 
     extension(Pawn pawn)
@@ -54,21 +64,35 @@ internal static class BedSharingHelpers
         {
             return pawn is { Spawned: true, Dead: false } && pawn.Map == map;
         }
+
+        internal SleepingAssignments.ActiveAssignment? ActiveSleepingAssignment => pawn.Map?.SleepingAssignments.GetAssignment(pawn);
+
+        internal SleepingAssignments.ActiveAssignment? TemporarySleepingAssignment => 
+            pawn.ActiveSleepingAssignment is { IsTemporary: true } assignment ? assignment : null;
+
+        public Building_Bed? ActiveBed => pawn.ActiveSleepingAssignment?.Place.Bed;
+    }
+
+    extension(Map map)
+    {
+        [InjectedField]
+        private extern ref SleepingAssignments? SleepingAssignmentsCached { get; }
+
+        public SleepingAssignments SleepingAssignments => map.SleepingAssignmentsCached ??= map.GetComponent<SleepingAssignments>()!;
     }
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
     {
-        IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
         HashSet<Pawn> loveCluster = [.. pawn.GetLoveCluster()];
-        return bedmates.All(bedmate => pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) ||
-                                       (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) &&
-                                        loveCluster.Contains(bedmate)));
+        return bed.AllAssignedPawns.All(bedmate =>
+            pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) || 
+            (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) && loveCluster.Contains(bedmate)));
     }
 
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
     {
         return bed != null && pawn.CanSleepInSharedBed(bed)
-                           && bed.GetComp<CompBedSharing>() is { } comp
+                           && bed.CompBedSharing is { } comp
                            && comp.TryGetSleepingSlot(pawn, out int slot)
                            && comp.IsSleepingPlaceAvailable(pawn, slot);
     }
