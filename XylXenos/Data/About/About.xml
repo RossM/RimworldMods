@@ -27,6 +27,8 @@
   <incompatibleWith>
     <!-- Older Posthuman Drift mod that this is a redo of -->
     <li>xylthixlm.races.core</li>
+    <!-- Breaks assumptions about there being only 3 passion levels, causing incompatibility with multiple things -->
+    <li>vanillaexpanded.skills</li>
   </incompatibleWith>
   
 </ModMetaData>

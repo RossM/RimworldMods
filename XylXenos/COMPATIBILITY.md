@@ -17,6 +17,8 @@ These are the mods in my regular playtesting mod list:
 
 ## Incompatible
 
+* Vanilla Skills Expanded
+
 # Not tested or only superficially tested
 
 ## Compatible
