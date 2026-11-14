@@ -16,13 +16,13 @@ internal sealed record SleepingPlace
 
     public bool CanAssignForNightVisit(Pawn pawn)
     {
-        Pawn? assignee = this.Bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(this);
+        Pawn? assignee = Bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(this);
         return (assignee == null || assignee == pawn) && CanAssignTemporary(pawn);
     }
 
     public bool CanAssignTemporary(Pawn pawn)
     {
-        if (Bed.GetComp<CompBedSharing>() == null || !IsAvailableFor(pawn))
+        if (!IsAvailableFor(pawn))
             return false;
         if (!BedSharingHelpers.IsValidBedForWithTemporaryAssignment(Bed, Slot, pawn, pawn, true, guestStatus: pawn.GuestStatus))
             return false;
@@ -35,8 +35,8 @@ internal sealed record SleepingPlace
         if (!CanAssignTemporary(pawn))
             throw new InvalidOperationException("CanAssignTemporary should have already been checked");
 
-        pawn.TemporarySleepingAssignment?.Place.Bed.GetComp<CompBedSharing>()?.RemoveAssignment(pawn);
-        Bed.GetComp<CompBedSharing>()!.AddAssignment(pawn, Slot);
+        pawn.TemporarySleepingAssignment?.Place.Bed.CompBedSharing.RemoveAssignment(pawn);
+        Bed.CompBedSharing.AddAssignment(pawn, Slot);
     }
 
     public bool BeingUsedBy(Pawn pawn)

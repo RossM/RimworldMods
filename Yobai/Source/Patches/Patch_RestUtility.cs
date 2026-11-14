@@ -9,8 +9,8 @@ internal static class Patch_RestUtility
     {
         if (!__result || bedThing is not Building_Bed bed)
             return;
-        CompBedSharing? comp = bed.GetComp<CompBedSharing>();
-        if (comp?.HasTemporaryAssignments != true)
+        CompBedSharing comp = bed.CompBedSharing;
+        if (!comp.HasTemporaryAssignments)
             return;
 
         // Owning the bed does not override compatibility with its current sleepers.
@@ -29,7 +29,7 @@ internal static class Patch_RestUtility
     public static bool GetBedSleepingSlotPosFor_Prefix(Pawn pawn, Building_Bed bed, out IntVec3 __result)
     {
         __result = default;
-        if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(pawn, out int slot) != true)
+        if (!bed.CompBedSharing.TryGetSleepingSlot(pawn, out int slot))
             return true;
 
         // Running the original method and then changing the result might log a “Could not find good sleeping slot position” warning,
@@ -62,7 +62,7 @@ internal static class Patch_RestUtility
     {
         if (!sleeper.CanSleepInSharedBed(bed))
             return;
-        if (bed.GetComp<CompBedSharing>()?.TryGetSleepingSlot(sleeper, out int slot) != true)
+        if (!bed.CompBedSharing.TryGetSleepingSlot(sleeper, out int slot))
             return;
 
         __result = true;

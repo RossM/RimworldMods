@@ -7,10 +7,10 @@ internal static class Patch_JobDriver_LayDown
     [Target(nameof(JobDriver_LayDown.TryMakePreToilReservations))]
     public static void TryMakePreToilReservations_Postfix([Instance] JobDriver_LayDown driver, ref bool __result)
     {
-        if (!__result || driver.Bed is not { } bed
-                      || bed.GetComp<CompBedSharing>() is not { } comp)
+        if (!__result || driver.Bed is not { } bed)
             return;
 
+        var comp = bed.CompBedSharing;
         bool hasTemporaryAssignment = comp.HasSleepingSlot(driver.pawn);
         if (!hasTemporaryAssignment && !comp.HasTemporaryAssignments)
             return;

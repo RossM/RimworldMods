@@ -1,4 +1,5 @@
 using Verse.AI.Group;
+using Waylith.Injection;
 
 namespace Yobai;
 
@@ -10,6 +11,11 @@ internal static class BedSharingHelpers
 
     extension(Building_Bed bed)
     {
+        [InjectedField]
+        private extern ref CompBedSharing? CompBedSharingCached { get; }
+
+        public CompBedSharing CompBedSharing => bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>()!;
+
         public bool IsEligibleForBedSharing =>
             bed.IsNormalHumanlikeBed &&
             bed.Faction == Faction.OfPlayer;
@@ -33,7 +39,7 @@ internal static class BedSharingHelpers
 
         public Pawn? GetAssignedPawn(int slot) => bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(bed.GetSleepingPlace(slot));
         public bool HasOccupant(Pawn value) => bed.AllAssignedPawns.Contains(value);
-        public IEnumerable<Pawn> AllAssignedPawns => bed.GetComp<CompBedSharing>()?.AllAssignedPawns ?? bed.CurOccupants;
+        public IEnumerable<Pawn> AllAssignedPawns => bed.CompBedSharing.AllAssignedPawns;
     }
 
     extension(Pawn pawn)
@@ -79,7 +85,7 @@ internal static class BedSharingHelpers
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
     {
         return bed != null && pawn.CanSleepInSharedBed(bed)
-                           && bed.GetComp<CompBedSharing>() is { } comp
+                           && bed.CompBedSharing is { } comp
                            && comp.TryGetSleepingSlot(pawn, out int slot)
                            && comp.IsSleepingPlaceAvailable(pawn, slot);
     }

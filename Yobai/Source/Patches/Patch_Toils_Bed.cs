@@ -36,7 +36,7 @@ internal static class Patch_Toils_Bed
             Pawn visitor = __result.actor;
             if (visitor.CurJobDef == JobDefOf.Lovin
                 && visitor.CurJob!.GetTarget(bedIndex).Thing is Building_Bed bed
-                && bed.GetComp<CompBedSharing>()?.HasSleepingSlot(visitor) == true
+                && bed.CompBedSharing.HasSleepingSlot(visitor)
                 && visitor.Position != RestUtility.GetBedSleepingSlotPosFor(visitor, bed))
             {
                 Pawn partner = (Pawn)visitor.CurJob.targetA.Thing!;

@@ -42,7 +42,8 @@ internal class SleepingAssignments(Map map) : MapComponent(map)
         HashSet<Pawn> seenPawns = [];
         HashSet<SleepingPlace> seenPlaces = [];
 
-        List<CompBedSharing> comps = [.. GetBedComps()];
+        List<CompBedSharing> comps = [.. map.listerBuildings.allBuildingsColonist.OfType<Building_Bed>().Select(bed => bed.CompBedSharing)];
+
         foreach (var comp in comps)
         {
             foreach ((Pawn pawn, int slot) in comp.TemporaryAssignments)
@@ -74,14 +75,5 @@ internal class SleepingAssignments(Map map) : MapComponent(map)
     {
         return GetActiveAssignments()
             .FirstOrDefault(assignment => assignment.Place.Bed == place.Bed && assignment.Place.Slot == place.Slot)?.Pawn;
-    }
-
-    private IEnumerable<CompBedSharing> GetBedComps()
-    {
-        foreach (Building_Bed bed in map.listerBuildings.allBuildingsColonist.OfType<Building_Bed>())
-        {
-            if (bed.GetComp<CompBedSharing>() is { } comp)
-                yield return comp;
-        }
     }
 }

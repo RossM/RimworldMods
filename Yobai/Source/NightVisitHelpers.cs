@@ -62,7 +62,7 @@ internal static class NightVisitHelpers
                 continue;
             if (!bed.IsEligibleForNightVisits)
                 continue;
-            if (bed.GetComp<CompBedSharing>() is not { nightVisitsEnabled: true })
+            if (bed.CompBedSharing is not { nightVisitsEnabled: true })
                 continue;
             if (GetFreeSlotInBed(pawn, bed) is not { } place)
                 continue;
