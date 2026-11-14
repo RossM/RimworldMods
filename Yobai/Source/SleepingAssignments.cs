@@ -37,7 +37,7 @@ internal class SleepingAssignments(Map map) : MapComponent(map)
         public bool IsInUse => IsTemporary || Place.BeingUsedBy(Pawn);
     }
 
-    public IEnumerable<ActiveAssignment> GetActiveAssignments()
+    private IEnumerable<ActiveAssignment> GetActiveAssignments()
     {
         HashSet<Pawn> seenPawns = [];
         HashSet<SleepingPlace> seenPlaces = [];
@@ -79,5 +79,10 @@ internal class SleepingAssignments(Map map) : MapComponent(map)
     public ActiveAssignment? GetAssignment(Pawn pawn)
     {
         return GetActiveAssignments().SingleOrDefault(assignment => assignment.Pawn == pawn);
+    }
+
+    public IEnumerable<ActiveAssignment> GetAssignments(Building_Bed bed)
+    {
+        return GetActiveAssignments().Where(assignment => assignment.Place.Bed == bed);
     }
 }

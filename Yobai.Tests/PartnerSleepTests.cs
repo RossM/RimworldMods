@@ -2936,11 +2936,11 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsTrue(BedSelectionHelpers.HasAvailablePolyculeBedroomSlot(second, thirdBed));
         BedSelectionHelpers.MakePolyculeBedroomSleepJob(second, thirdBed);
         Pawn[] pawns = [first, second, third, outsider];
-        SleepingAssignments.ActiveAssignment[] active = first.Map?.SleepingAssignments.GetActiveAssignments()
-            .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray() ?? [];
+        SleepingAssignments.ActiveAssignment[] active =
+            [.. pawns.Select(pawn => pawn.Map!.SleepingAssignments.GetAssignment(pawn)).Where(assignment => assignment != null)!];
         Expect.AreEqual(3, active.Length);
         Expect.AreEqual(active.Length, active.Select(assignment => assignment.Pawn).Distinct().Count());
-        Expect.AreEqual(active.Length, active.Select(assignment => (assignment.Place.Bed, assignment.Place.Slot)).Distinct().Count());
+        Expect.AreEqual(active.Length, active.Select(assignment => assignment.Place).Distinct().Count());
         foreach (SleepingAssignments.ActiveAssignment assignment in active)
         {
             SleepingPlace? byPawn = assignment.Pawn.ActiveSleepingAssignment?.Place;
@@ -2951,8 +2951,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsNull(third.ActiveSleepingAssignment?.Place);
         Expect.IsNull(secondBed.GetAssignedPawn(0));
         Find.TickManager.DoSingleTick();
-        active = first.Map?.SleepingAssignments.GetActiveAssignments()
-            .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray() ?? [];
+        active = [.. pawns.Select(pawn => pawn.Map!.SleepingAssignments.GetAssignment(pawn)).Where(assignment => assignment != null)!];
         Expect.AreEqual(4, active.Length);
         Expect.IsFalse(active.Any(assignment => assignment.IsTemporary));
         foreach (SleepingAssignments.ActiveAssignment assignment in active)
