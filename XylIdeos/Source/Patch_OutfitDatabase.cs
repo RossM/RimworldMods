@@ -56,6 +56,6 @@ public static class Patch_OutfitDatabase
     public static class Defs
     {
         [UsedImplicitly] public static BodyPartGroupDef Neck;
-        [UsedImplicitly] public static StatDef SlaveSuppressionOffset;
+        [UsedImplicitly, MayRequire("Ludeon.RimWorld.Ideology")] public static StatDef SlaveSuppressionOffset;
     }
 }

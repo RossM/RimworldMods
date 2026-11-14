@@ -26,7 +26,7 @@
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
-          <li Class="Xylib.GeneCompProperties_ExtraApparel">
+          <li Class="Xylib.GeneCompProperties_ExtraApparel" MayRequire="Ludeon.RimWorld.Ideology">
             <items>              
               <li>
                 <item>Apparel_Collar</item>
@@ -686,7 +686,7 @@
             <hediff>XylEmergencyReserves</hediff>
             <triggers>
               <!-- Vacuum exposure has a visible onset of 0.15 but vacuum burns trigger independently of that -->
-              <VacuumExposure>0.02</VacuumExposure>
+              <VacuumExposure MayRequire="Ludeon.RimWorld.Odyssey">0.02</VacuumExposure>
               <!-- Visible onset 0.04 -->
               <Hypothermia>0.02</Hypothermia>
               <!-- Visible onset 0.04 -->
@@ -740,7 +740,7 @@
         <minSeverity>0.8</minSeverity>
         <statOffsets>
           <ToxicResistance>1</ToxicResistance>
-          <VacuumResistance>1</VacuumResistance>
+          <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
           <XylHeatstrokeResistance>1</XylHeatstrokeResistance>
           <XylHypothermiaResistance>1</XylHypothermiaResistance>
         </statOffsets>

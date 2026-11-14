@@ -4,6 +4,16 @@
 
   <Operation Class="PatchOperationAdd">
     <xpath>
+      Defs/FactionDef[defName="TradersGuild"]/xenotypeSet/xenotypeChances
+    </xpath>
+    <value>
+      <XylTitan>0.05</XylTitan>
+      <XylZeegee>0.1</XylZeegee>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>
       Defs/FactionDef[defName="Salvagers"]/xenotypeSet/xenotypeChances
     </xpath>
     <value>

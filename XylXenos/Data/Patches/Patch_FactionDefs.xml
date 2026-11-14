@@ -51,47 +51,32 @@
     </value>
   </Operation>
 
-  <Operation Class="PatchOperationAdd">
-    <xpath>
-      Defs/FactionDef[defName="Empire"]/xenotypeSet/xenotypeChances
-    </xpath>
-    <value>
-      <XylTitan>0.025</XylTitan>
-    </value>
+  <Operation Class="PatchOperationSequence">
+    <operations>
+      <li Class="PatchOperationAdd" MayRequireAnyOf="Ludeon.RimWorld.Royalty,Ludeon.RimWorld.Ideology">
+        <xpath>
+          Defs/FactionDef[
+          defName="OutlanderRefugee" or
+          defName="Beggars" or
+          defName="Pilgrims"
+          ]/xenotypeSet/xenotypeChances
+        </xpath>
+        <value>
+          <XylBossaps>0.05</XylBossaps>
+          <XylChyrr>0.025</XylChyrr>
+          <XylDvergr>0.05</XylDvergr>
+          <XylNixie>0.05</XylNixie>
+          <XylTitan>0.025</XylTitan>
+          <XylOmegabeaver>0.01</XylOmegabeaver>
+          <XylSuccuboid>0.01</XylSuccuboid>
+          <XylScaleborn>0.01</XylScaleborn>
+          <XylSteadling>0.01 </XylSteadling>
+          <XylZeegee>0.01</XylZeegee>
+        </value>
+      </li>
+    </operations>
   </Operation>
-
-  <Operation Class="PatchOperationAdd">
-    <xpath>
-      Defs/FactionDef[defName="TradersGuild"]/xenotypeSet/xenotypeChances
-    </xpath>
-    <value>
-      <XylTitan>0.05</XylTitan>
-      <XylZeegee>0.1</XylZeegee>
-    </value>
-  </Operation>
-
-  <Operation Class="PatchOperationAdd">
-    <xpath>
-      Defs/FactionDef[
-        defName="OutlanderRefugee" or
-        defName="Beggars" or
-        defName="Pilgrims"
-      ]/xenotypeSet/xenotypeChances
-    </xpath>
-    <value>
-      <XylBossaps>0.05</XylBossaps>
-      <XylChyrr>0.025</XylChyrr>
-      <XylDvergr>0.05</XylDvergr>
-      <XylNixie>0.05</XylNixie>
-      <XylTitan>0.025</XylTitan>
-      <XylOmegabeaver>0.01</XylOmegabeaver>
-      <XylSuccuboid>0.01</XylSuccuboid>
-      <XylScaleborn>0.01</XylScaleborn>
-      <XylSteadling>0.01 </XylSteadling>
-      <XylZeegee>0.01</XylZeegee>
-    </value>
-  </Operation>
-
+  
   <!-- Change Waster faction to use XenotypeSetWithDefault so chances add to 100% -->
   <Operation Class="PatchOperationAttributeAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet</xpath>
@@ -108,12 +93,4 @@
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet/xenotypeChances/Waster</xpath>
   </Operation>
 
-  <!-- Fix empire to not gank the nixies -->
-  <Operation Class="PatchOperationAdd">
-    <xpath>Defs/FactionDef[defName="Empire"]/permanentEnemyToEveryoneExcept</xpath>
-    <value>
-      <li>XylTribeGentleNixie</li>
-    </value>
-  </Operation>
-  
 </Patch>
