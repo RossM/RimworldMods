@@ -37,7 +37,7 @@ internal static class BedSharingHelpers
             return new SleepingPlace(bed, slot);
         }
 
-        public Pawn? GetAssignedPawn(int slot) => bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(bed.GetSleepingPlace(slot));
+        public Pawn? GetAssignedPawn(int slot) => bed.GetSleepingPlace(slot).AssignedPawn;
         public bool HasOccupant(Pawn value) => bed.AllAssignedPawns.Contains(value);
         public IEnumerable<Pawn> AllAssignedPawns => bed.CompBedSharing.AllAssignedPawns;
     }
@@ -66,12 +66,20 @@ internal static class BedSharingHelpers
         }
 
         internal SleepingAssignments.ActiveAssignment? ActiveSleepingAssignment =>
-            pawn.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn);
+            pawn.Map?.SleepingAssignments.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn);
 
         internal SleepingAssignments.ActiveAssignment? TemporarySleepingAssignment =>
-            pawn.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn && assignment.IsTemporary);
+            pawn.Map?.SleepingAssignments.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn && assignment.IsTemporary);
 
         public Building_Bed? ActiveBed => pawn.ActiveSleepingAssignment?.Place.Bed;
+    }
+
+    extension(Map map)
+    {
+        [InjectedField]
+        private extern ref SleepingAssignments? SleepingAssignmentsCached { get; }
+
+        public SleepingAssignments SleepingAssignments => map.SleepingAssignmentsCached ??= map.GetComponent<SleepingAssignments>()!;
     }
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)

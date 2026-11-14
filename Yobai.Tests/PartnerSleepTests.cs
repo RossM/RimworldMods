@@ -2936,7 +2936,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsTrue(BedSelectionHelpers.HasAvailablePolyculeBedroomSlot(second, thirdBed));
         BedSelectionHelpers.MakePolyculeBedroomSleepJob(second, thirdBed);
         Pawn[] pawns = [first, second, third, outsider];
-        SleepingAssignments.ActiveAssignment[] active = first.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+        SleepingAssignments.ActiveAssignment[] active = first.Map?.SleepingAssignments.GetActiveAssignments()
             .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray() ?? [];
         Expect.AreEqual(3, active.Length);
         Expect.AreEqual(active.Length, active.Select(assignment => assignment.Pawn).Distinct().Count());
@@ -2946,12 +2946,12 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             SleepingPlace? byPawn = assignment.Pawn.ActiveSleepingAssignment?.Place;
             Expect.ReferencesAreEqual(assignment.Place.Bed, byPawn?.Bed);
             Expect.AreEqual(assignment.Place.Slot, byPawn?.Slot);
-            Expect.ReferencesAreEqual(assignment.Pawn, assignment.Place.Bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(assignment.Place));
+            Expect.ReferencesAreEqual(assignment.Pawn, assignment.Place.AssignedPawn);
         }
         Expect.IsNull(third.ActiveSleepingAssignment?.Place);
         Expect.IsNull(secondBed.GetAssignedPawn(0));
         Find.TickManager.DoSingleTick();
-        active = first.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+        active = first.Map?.SleepingAssignments.GetActiveAssignments()
             .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray() ?? [];
         Expect.AreEqual(4, active.Length);
         Expect.IsFalse(active.Any(assignment => assignment.IsTemporary));

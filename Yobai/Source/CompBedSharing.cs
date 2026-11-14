@@ -88,7 +88,7 @@ public sealed class CompBedSharing : ThingComp
         {
             if (Bed.Map == null)
                 return Bed.CurOccupants;
-            IEnumerable<Pawn> sleepers = Bed.Map.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+            IEnumerable<Pawn> sleepers = Bed.Map.SleepingAssignments.GetActiveAssignments()
                 .Where(assignment => assignment.Place.Bed == Bed && assignment.IsInUse).Select(assignment => assignment.Pawn);
             return Bed.CurOccupants.Concat(sleepers).Distinct();
         }

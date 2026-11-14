@@ -16,9 +16,11 @@ internal sealed record SleepingPlace
 
     public bool CanAssignForNightVisit(Pawn pawn)
     {
-        Pawn? assignee = Bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(this);
+        Pawn? assignee = AssignedPawn;
         return (assignee == null || assignee == pawn) && CanAssignTemporary(pawn);
     }
+
+    public Pawn? AssignedPawn => Bed.Map?.SleepingAssignments.GetAssignedPawn(this);
 
     public bool CanAssignTemporary(Pawn pawn)
     {
@@ -62,7 +64,7 @@ internal sealed record SleepingPlace
         Pawn? occupant = Bed.GetCurOccupant(Slot);
         if (occupant != null && occupant != pawn)
             return false;
-        SleepingAssignments.ActiveAssignment? assignment = Bed.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+        SleepingAssignments.ActiveAssignment? assignment = Bed.Map?.SleepingAssignments.GetActiveAssignments()
             .FirstOrDefault(assignment => assignment.Place.Bed == Bed && assignment.Place.Slot == Slot);
         return assignment == null || assignment.Pawn == pawn || !assignment.IsInUse;
     }
