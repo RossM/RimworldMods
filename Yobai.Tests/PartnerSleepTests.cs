@@ -641,7 +641,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             }
             Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, outsider));
             Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
-            Expect.IsTrue(firstBed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+            Expect.IsTrue(firstBed.HasOccupant(outsider));
             Expect.IsTrue(first.CanDoNightVisits);
             DebugSettings.alwaysDoLovin = true;
             first.mindState.canLovinTick = 0;
@@ -697,7 +697,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             ArriveAtBed(outsider, firstBed);
             Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, outsider));
             Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
-            Expect.IsTrue(firstBed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+            Expect.IsTrue(firstBed.HasOccupant(outsider));
             Expect.IsTrue(first.CanDoNightVisits);
             DebugSettings.alwaysDoLovin = true;
             first.mindState.canLovinTick = 0;
@@ -1110,7 +1110,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         outsider.jobs.StartJob(bedmateSleep, JobCondition.InterruptForced);
         ArriveAtBed(outsider, bed);
         Expect.IsTrue(bed.IsEligibleForNightVisits);
-        Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+        Expect.IsTrue(bed.HasOccupant(outsider));
         Expect.IsTrue(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, second));
         Expect.IsFalse(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, outsider));
         Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
@@ -1160,7 +1160,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         try
         {
             Expect.IsTrue(bed.IsEligibleForNightVisits);
-            Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+            Expect.IsTrue(bed.HasOccupant(outsider));
             Expect.IsTrue(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, second));
             Expect.IsFalse(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, outsider));
             Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
@@ -1219,7 +1219,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(outsider, bed);
 
         Expect.IsTrue(bed.IsEligibleForNightVisits);
-        Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+        Expect.IsTrue(bed.HasOccupant(outsider));
         Expect.IsTrue(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, second));
         Expect.IsFalse(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, outsider));
         Expect.IsFalse(first.CanSleepInSharedBed(bed));
@@ -1251,7 +1251,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         try
         {
             Expect.IsTrue(bed.IsEligibleForNightVisits);
-            Expect.IsTrue(bed.GetComp<CompBedSharing>().GetBedmates().Contains(outsider));
+            Expect.IsTrue(bed.HasOccupant(outsider));
             Expect.IsTrue(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, second));
             Expect.IsFalse(BedSharingHelpers.AreLovePartnersWillingToShareBed(first, outsider));
             Expect.IsFalse(first.CanSleepInSharedBed(bed));
@@ -1990,7 +1990,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             second.jobs.StartJob(ownerSleep, JobCondition.InterruptForced);
             Expect.IsNull(second.CurrentBed());
             CompBedSharing assignments = secondBed.GetComp<CompBedSharing>();
-            Expect.IsTrue(assignments.GetBedmates().Contains(second));
+            Expect.IsTrue(secondBed.HasOccupant(second));
             Expect.IsTrue(outsider.CanSleepInSharedBed(secondBed));
             Expect.IsTrue(assignments.CanAssignSleepingSlot(outsider, 1));
             Expect.IsFalse(BedSelectionHelpers.HasAvailablePolyculeBedroomSlot(outsider, secondBed));

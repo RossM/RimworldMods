@@ -23,7 +23,7 @@ internal static class BedSelectionHelpers
         float WeightSelector(Building_Bed bed)
         {
             var comp = bed.GetComp<CompBedSharing>()!;
-            int partnerCount = comp.GetBedmates().Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
+            int partnerCount = bed.AllAssignedPawns.Count(bedmate => BedSharingHelpers.AreLovePartnersWillingToShareBed(pawn, bedmate));
             if (partnerCount > 0)
                 return partnerCount;
             if (comp.FreeSlotsExcluding(pawn) >= 2)

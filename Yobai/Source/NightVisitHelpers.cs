@@ -12,7 +12,7 @@ internal static class NightVisitHelpers
                     pawn.CurrentBed() is not { Medical: false } bed)
                     return false;
 
-                IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
+                IEnumerable<Pawn> bedmates = bed.AllAssignedPawns;
                 return !bedmates.Any(other => pawn != other && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
             }
         }

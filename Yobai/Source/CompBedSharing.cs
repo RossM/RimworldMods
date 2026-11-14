@@ -82,12 +82,16 @@ public sealed class CompBedSharing : ThingComp
         return false;
     }
 
-    internal IEnumerable<Pawn> GetBedmates()
+    internal IEnumerable<Pawn> AllAssignedPawns
     {
-        if (Bed.Map == null)
-            return Bed.CurOccupants;
-        IEnumerable<Pawn> sleepers = Bed.Map.GetComponent<SleepingAssignments>()!.GetSleepers(Bed);
-        return Bed.CurOccupants.Concat(sleepers).Distinct();
+        get
+        {
+            if (Bed.Map == null)
+                return Bed.CurOccupants;
+            IEnumerable<Pawn> sleepers = Bed.Map.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+                .Where(assignment => assignment.Place.Bed == Bed && assignment.IsInUse).Select(assignment => assignment.Pawn);
+            return Bed.CurOccupants.Concat(sleepers).Distinct();
+        }
     }
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)
@@ -149,7 +153,7 @@ public sealed class CompBedSharing : ThingComp
 
     public int FreeSlotsExcluding(Pawn pawn)
     {
-        return Bed.SleepingSlotsCount - GetBedmates().Count(p => p != pawn);
+        return Bed.SleepingSlotsCount - AllAssignedPawns.Count(p => p != pawn);
     }
 
     private bool IsActive(TemporarySleepingSlot assignment)

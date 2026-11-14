@@ -32,6 +32,8 @@ internal static class BedSharingHelpers
         }
 
         public Pawn? GetAssignedPawn(int slot) => bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(bed.GetSleepingPlace(slot));
+        public bool HasOccupant(Pawn value) => bed.AllAssignedPawns.Contains(value);
+        public IEnumerable<Pawn> AllAssignedPawns => bed.GetComp<CompBedSharing>()?.AllAssignedPawns ?? bed.CurOccupants;
     }
 
     extension(Pawn pawn)
@@ -68,11 +70,10 @@ internal static class BedSharingHelpers
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
     {
-        IEnumerable<Pawn> bedmates = bed.GetComp<CompBedSharing>()?.GetBedmates() ?? bed.CurOccupants;
         HashSet<Pawn> loveCluster = [.. pawn.GetLoveCluster()];
-        return bedmates.All(bedmate => pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) ||
-                                       (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) &&
-                                        loveCluster.Contains(bedmate)));
+        return bed.AllAssignedPawns.All(bedmate =>
+            pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) || 
+            (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) && loveCluster.Contains(bedmate)));
     }
 
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)

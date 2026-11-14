@@ -1,6 +1,6 @@
 namespace Yobai;
 
-internal sealed class SleepingPlace
+internal sealed record SleepingPlace
 {
     internal SleepingPlace(Building_Bed bed, int slot)
     {
