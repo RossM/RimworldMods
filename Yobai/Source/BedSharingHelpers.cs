@@ -66,10 +66,10 @@ internal static class BedSharingHelpers
         }
 
         internal SleepingAssignments.ActiveAssignment? ActiveSleepingAssignment =>
-            pawn.Map?.SleepingAssignments.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn);
+            pawn.Map?.SleepingAssignments.GetActiveAssignments().SingleOrDefault(assignment => assignment.Pawn == pawn);
 
         internal SleepingAssignments.ActiveAssignment? TemporarySleepingAssignment =>
-            pawn.Map?.SleepingAssignments.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn && assignment.IsTemporary);
+            pawn.Map?.SleepingAssignments.GetActiveAssignments().SingleOrDefault(assignment => assignment.Pawn == pawn && assignment.IsTemporary);
 
         public Building_Bed? ActiveBed => pawn.ActiveSleepingAssignment?.Place.Bed;
     }

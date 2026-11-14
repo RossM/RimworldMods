@@ -2,6 +2,10 @@ namespace Yobai;
 
 internal sealed record SleepingPlace
 {
+    public Pawn? AssignedPawn => ActiveAssignment?.Pawn;
+
+    public SleepingAssignments.ActiveAssignment? ActiveAssignment => Bed.Map?.SleepingAssignments.GetAssignment(this);
+
     internal SleepingPlace(Building_Bed bed, int slot)
     {
         ArgumentNullException.ThrowIfNull(bed);
@@ -19,8 +23,6 @@ internal sealed record SleepingPlace
         Pawn? assignee = AssignedPawn;
         return (assignee == null || assignee == pawn) && CanAssignTemporary(pawn);
     }
-
-    public Pawn? AssignedPawn => Bed.Map?.SleepingAssignments.GetAssignedPawn(this);
 
     public bool CanAssignTemporary(Pawn pawn)
     {
@@ -64,8 +66,7 @@ internal sealed record SleepingPlace
         Pawn? occupant = Bed.GetCurOccupant(Slot);
         if (occupant != null && occupant != pawn)
             return false;
-        SleepingAssignments.ActiveAssignment? assignment = Bed.Map?.SleepingAssignments.GetActiveAssignments()
-            .FirstOrDefault(assignment => assignment.Place.Bed == Bed && assignment.Place.Slot == Slot);
+        SleepingAssignments.ActiveAssignment? assignment = ActiveAssignment;
         return assignment == null || assignment.Pawn == pawn || !assignment.IsInUse;
     }
 

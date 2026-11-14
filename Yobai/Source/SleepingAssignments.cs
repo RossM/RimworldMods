@@ -71,9 +71,8 @@ internal class SleepingAssignments(Map map) : MapComponent(map)
         }
     }
 
-    public Pawn? GetAssignedPawn(SleepingPlace place)
+    public ActiveAssignment? GetAssignment(SleepingPlace place)
     {
-        return GetActiveAssignments()
-            .FirstOrDefault(assignment => assignment.Place.Bed == place.Bed && assignment.Place.Slot == place.Slot)?.Pawn;
+        return GetActiveAssignments().SingleOrDefault(assignment => assignment.Place == place);
     }
 }
