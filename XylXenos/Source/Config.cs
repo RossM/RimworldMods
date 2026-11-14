@@ -10,6 +10,7 @@ public static class FeatureNameOf
 {
     public const string Bugfix_Lactation = nameof(Bugfix_Lactation);
     public const string Bugfix_Misc = nameof(Bugfix_Misc);
+    // ReSharper disable once InconsistentNaming
     public const string UI_Misc = nameof(UI_Misc);
     public const string Joyless = nameof(Joyless);
     public const string Parthenogenesis = nameof(Parthenogenesis);
@@ -18,6 +19,7 @@ public static class FeatureNameOf
 
 public static class ModIdOf
 {
-    public const string LactationExpansion = "Euterpe.MilkyTitfuck";
     public const string DubsBadHygiene = "Dubwise.DubsBadHygiene";
+    public const string LactationExpansion = "Euterpe.MilkyTitfuck";
+    public const string VanillaSkillsExpanded = "vanillaexpanded.skills";
 }

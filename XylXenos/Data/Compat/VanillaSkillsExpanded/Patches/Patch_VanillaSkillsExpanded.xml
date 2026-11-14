@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/VSE.Passions.PassionDef[not(defName="None" or defName="Minor" or defName="Major")]</xpath>
+    <value>
+      <blockingGenes>
+        <li>XylLearning_Focused</li>
+        <li>XylLearning_Generalist</li>
+      </blockingGenes>
+    </value>
+  </Operation>
+  
+</Patch>

@@ -40,10 +40,17 @@ public class Settings : ModSettings
         listing.Begin(inRect);
 
         EnumSetting<ThreeStateMode>(listing, nameof(allowBackerBackstories));
+        BoolSetting(listing, nameof(useDistinctiveFactionColors));
+
+        // This fix doesn't work under Lactation Expansion because it replaces the lactation system,
+        // and only fixes some of the vanilla bugs.
         if (ModLister.GetActiveModWithIdentifier(ModIdOf.LactationExpansion) is null)
             EnumSetting<ThreeStateMode>(listing, nameof(fixLactationBugs));
-        BoolSetting(listing, nameof(useDistinctiveFactionColors));
-        BoolSetting(listing, nameof(fixGeneticPassions));
+
+        // This fix doesn't work under VSE because it completely replaces GenerateSkills. The replacement
+        // has the same bug vanilla had, of course.
+        if (ModLister.GetActiveModWithIdentifier(ModIdOf.VanillaSkillsExpanded) is null)
+            BoolSetting(listing, nameof(fixGeneticPassions));
 
         listing.Gap();
         if (listing.ButtonText("XylEnableDisableXenotypes".Translate()))
