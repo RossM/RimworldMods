@@ -14,8 +14,7 @@ internal static class Patch_Toils_Bed
             Pawn claimant = claimantIndex == TargetIndex.None
                 ? actor
                 : (Pawn)actor.CurJob.GetTarget(claimantIndex).Thing;
-            SleepingAssignments.ActiveAssignment? assignment = SleepingAssignments.GetActiveAssignments(claimant.Map)
-                .FirstOrDefault(assignment => assignment.Pawn == claimant);
+            SleepingAssignments.ActiveAssignment? assignment = claimant.ActiveSleepingAssignment;
             if (assignment is { IsTemporary: true })
                 return;
             if (claimant.ownership.OwnedBed is { } ownedBed && ownedBed.Map == claimant.Map && assignment == null)

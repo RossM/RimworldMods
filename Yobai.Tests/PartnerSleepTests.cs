@@ -2895,8 +2895,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(second, thirdBed);
         ArriveAtBed(outsider, thirdBed);
         Expect.IsFalse(firstBed.AnyUnownedSleepingSlot);
-        Expect.IsNull(SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(1)));
-        Expect.ReferencesAreEqual(thirdBed, SleepingAssignments.GetActiveAssignment(second)?.Bed);
+        Expect.IsNull(firstBed.GetAssignedPawn(1));
+        Expect.ReferencesAreEqual(thirdBed, second.ActiveBed);
         first.mindState.canLovinTick = 0;
         outsider.mindState.canLovinTick = 0;
         // The visitor also has a temporary stay. A night visit transfers that assignment,
@@ -2905,7 +2905,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Job? visit = NightVisitHelpers.GetPotentialNightVisits(outsider).SingleOrDefault()?.TryMakeVisitJob(outsider);
         Expect.IsNotNull(visit);
         Expect.IsFalse(thirdBed.GetComp<CompBedSharing>().HasSleepingSlot(outsider));
-        Expect.ReferencesAreEqual(outsider, SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(1)));
+        Expect.ReferencesAreEqual(outsider, firstBed.GetAssignedPawn(1));
         outsider.jobs.StartJob(visit!, JobCondition.InterruptForced);
         ArriveAtBed(outsider, firstBed);
         Expect.AreEqual(firstBed.GetSleepingSlotPos(1), outsider.Position);
@@ -2916,13 +2916,13 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         // only after that slot's temporary holder also leaves; ownership never changes.
         second.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Goto, new IntVec3(40, 0, 43)), JobCondition.InterruptForced);
         Find.TickManager.DoSingleTick();
-        Expect.IsNull(SleepingAssignments.GetActiveAssignment(second));
-        Expect.ReferencesAreEqual(outsider, SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(1)));
+        Expect.IsNull(second.ActiveSleepingAssignment?.Place);
+        Expect.ReferencesAreEqual(outsider, firstBed.GetAssignedPawn(1));
         outsider.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Goto, new IntVec3(42, 0, 43)), JobCondition.InterruptForced);
         Find.TickManager.DoSingleTick();
-        Expect.ReferencesAreEqual(firstBed, SleepingAssignments.GetActiveAssignment(second)?.Bed);
-        Expect.AreEqual(1, SleepingAssignments.GetActiveAssignment(second)?.Slot);
-        Expect.ReferencesAreEqual(second, SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(1)));
+        Expect.ReferencesAreEqual(firstBed, second.ActiveBed);
+        Expect.AreEqual(1, second.ActiveSleepingAssignment?.Place?.Slot);
+        Expect.ReferencesAreEqual(second, firstBed.GetAssignedPawn(1));
     }
 
     [Test]
@@ -2936,23 +2936,23 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsTrue(BedSelectionHelpers.HasAvailablePolyculeBedroomSlot(second, thirdBed));
         BedSelectionHelpers.MakePolyculeBedroomSleepJob(second, thirdBed);
         Pawn[] pawns = [first, second, third, outsider];
-        SleepingAssignments.ActiveAssignment[] active = SleepingAssignments.GetActiveAssignments(first.Map)
-            .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray();
+        SleepingAssignments.ActiveAssignment[] active = first.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+            .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray() ?? [];
         Expect.AreEqual(3, active.Length);
         Expect.AreEqual(active.Length, active.Select(assignment => assignment.Pawn).Distinct().Count());
         Expect.AreEqual(active.Length, active.Select(assignment => (assignment.Place.Bed, assignment.Place.Slot)).Distinct().Count());
         foreach (SleepingAssignments.ActiveAssignment assignment in active)
         {
-            SleepingPlace? byPawn = SleepingAssignments.GetActiveAssignment(assignment.Pawn);
+            SleepingPlace? byPawn = assignment.Pawn.ActiveSleepingAssignment?.Place;
             Expect.ReferencesAreEqual(assignment.Place.Bed, byPawn?.Bed);
             Expect.AreEqual(assignment.Place.Slot, byPawn?.Slot);
-            Expect.ReferencesAreEqual(assignment.Pawn, SleepingAssignments.GetAssignedPawn(assignment.Place));
+            Expect.ReferencesAreEqual(assignment.Pawn, assignment.Place.Bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(assignment.Place));
         }
-        Expect.IsNull(SleepingAssignments.GetActiveAssignment(third));
-        Expect.IsNull(SleepingAssignments.GetAssignedPawn(secondBed.GetSleepingPlace(0)));
+        Expect.IsNull(third.ActiveSleepingAssignment?.Place);
+        Expect.IsNull(secondBed.GetAssignedPawn(0));
         Find.TickManager.DoSingleTick();
-        active = SleepingAssignments.GetActiveAssignments(first.Map)
-            .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray();
+        active = first.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments()
+            .Where(assignment => pawns.Contains(assignment.Pawn)).ToArray() ?? [];
         Expect.AreEqual(4, active.Length);
         Expect.IsFalse(active.Any(assignment => assignment.IsTemporary));
         foreach (SleepingAssignments.ActiveAssignment assignment in active)
@@ -2969,11 +2969,11 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         first.ClearReservationsForJob(first.CurJob);
         Find.TickManager.DoSingleTick();
         Expect.IsFalse(first.HasReserved(thirdBed));
-        Expect.ReferencesAreEqual(thirdBed, SleepingAssignments.GetTemporaryAssignment(first)?.Bed);
-        Expect.ReferencesAreEqual(first, SleepingAssignments.GetAssignedPawn(thirdBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(thirdBed, first.TemporarySleepingAssignment?.Place?.Bed);
+        Expect.ReferencesAreEqual(first, thirdBed.GetAssignedPawn(0));
         ArriveAtBed(first, thirdBed);
-        Expect.ReferencesAreEqual(thirdBed, SleepingAssignments.GetActiveAssignment(first)?.Bed);
-        Expect.IsNull(SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(thirdBed, first.ActiveBed);
+        Expect.IsNull(firstBed.GetAssignedPawn(0));
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
 
@@ -2990,10 +2990,10 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.IsTrue(unstarted.TryMakePreToilReservations(first, false));
             Find.TickManager.DoSingleTick();
             Expect.IsTrue(first.HasReserved(thirdBed));
-            Expect.IsNull(SleepingAssignments.GetTemporaryAssignment(first));
-            Expect.ReferencesAreEqual(firstBed, SleepingAssignments.GetActiveAssignment(first)?.Bed);
-            Expect.ReferencesAreEqual(first, SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(0)));
-            Expect.ReferencesAreEqual(third, SleepingAssignments.GetAssignedPawn(thirdBed.GetSleepingPlace(0)));
+            Expect.IsNull(first.TemporarySleepingAssignment?.Place);
+            Expect.ReferencesAreEqual(firstBed, first.ActiveBed);
+            Expect.ReferencesAreEqual(first, firstBed.GetAssignedPawn(0));
+            Expect.ReferencesAreEqual(third, thirdBed.GetAssignedPawn(0));
         }
         finally
         {
@@ -3010,13 +3010,13 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         // reservation, and the permanent default becomes active again.
         StartPolyculeBedroomSleepJob(first, thirdBed);
         Find.TickManager.DoSingleTick();
-        Expect.ReferencesAreEqual(thirdBed, SleepingAssignments.GetTemporaryAssignment(first)?.Bed);
+        Expect.ReferencesAreEqual(thirdBed, first.TemporarySleepingAssignment?.Place?.Bed);
         first.pather.StartPath(thirdBed.GetSleepingSlotPos(1), PathEndMode.OnCell);
         Expect.IsTrue(first.HasReserved(thirdBed));
-        Expect.IsNull(SleepingAssignments.GetTemporaryAssignment(first));
-        Expect.ReferencesAreEqual(firstBed, SleepingAssignments.GetActiveAssignment(first)?.Bed);
-        Expect.ReferencesAreEqual(first, SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(0)));
-        Expect.ReferencesAreEqual(third, SleepingAssignments.GetAssignedPawn(thirdBed.GetSleepingPlace(0)));
+        Expect.IsNull(first.TemporarySleepingAssignment?.Place);
+        Expect.ReferencesAreEqual(firstBed, first.ActiveBed);
+        Expect.ReferencesAreEqual(first, firstBed.GetAssignedPawn(0));
+        Expect.ReferencesAreEqual(third, thirdBed.GetAssignedPawn(0));
     }
 
     [Test]
@@ -3029,14 +3029,14 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Job? move = BedSharingJobHelpers.TryMakeSleepJob(first, thirdBed.GetSleepingPlace(0));
         Expect.IsNotNull(move);
         Expect.IsFalse(secondBed.GetComp<CompBedSharing>().HasSleepingSlot(first));
-        Expect.ReferencesAreEqual(second, SleepingAssignments.GetAssignedPawn(secondBed.GetSleepingPlace(0)));
-        Expect.ReferencesAreEqual(first, SleepingAssignments.GetAssignedPawn(thirdBed.GetSleepingPlace(0)));
-        Expect.IsNull(SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(second, secondBed.GetAssignedPawn(0));
+        Expect.ReferencesAreEqual(first, thirdBed.GetAssignedPawn(0));
+        Expect.IsNull(firstBed.GetAssignedPawn(0));
         // Assignment and physical occupancy are separate: the pawn remains in its source slot until travel starts.
         Expect.IsFalse(secondBed.GetSleepingPlace(0).IsAvailableFor(second));
         first.jobs.StartJob(move!, JobCondition.InterruptForced);
         ArriveAtBed(first, thirdBed);
-        Expect.ReferencesAreEqual(thirdBed, SleepingAssignments.GetActiveAssignment(first)?.Bed);
+        Expect.ReferencesAreEqual(thirdBed, first.ActiveBed);
         Expect.IsTrue(secondBed.GetSleepingPlace(0).IsAvailableFor(second));
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
         Expect.ReferencesAreEqual(secondBed, second.ownership.OwnedBed);
@@ -3060,10 +3060,10 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         thirdBed.SetForbidden(true, false);
         Expect.IsTrue(thirdBed.IsForbidden(first));
         Expect.IsNull(BedSharingJobHelpers.TryMakeSleepJob(first, thirdBed.GetSleepingPlace(0)));
-        Expect.ReferencesAreEqual(secondBed, SleepingAssignments.GetActiveAssignment(first)?.Bed);
-        Expect.ReferencesAreEqual(first, SleepingAssignments.GetAssignedPawn(secondBed.GetSleepingPlace(0)));
-        Expect.ReferencesAreEqual(third, SleepingAssignments.GetAssignedPawn(thirdBed.GetSleepingPlace(0)));
-        Expect.IsNull(SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(secondBed, first.ActiveBed);
+        Expect.ReferencesAreEqual(first, secondBed.GetAssignedPawn(0));
+        Expect.ReferencesAreEqual(third, thirdBed.GetAssignedPawn(0));
+        Expect.IsNull(firstBed.GetAssignedPawn(0));
     }
 
     [Test]
@@ -3075,7 +3075,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         // the selected borrow active while its sleep job awaits startup.
         visitBed.CompAssignableToPawn.TryUnassignPawn(outsider);
 
-        Expect.IsTrue(SleepingAssignments.GetActiveAssignment(first) != null);
+        Expect.IsTrue(first.ActiveSleepingAssignment?.Place != null);
         first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
         Expect.ReferencesAreEqual(visitBed, first.ownership.OwnedBed);
         Expect.IsFalse(firstBed.IsOwner(first));
@@ -3093,12 +3093,12 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsTrue(BedSelectionHelpers.HasAvailablePolyculeBedroomSlot(second, firstBed));
         BedSelectionHelpers.MakePolyculeBedroomSleepJob(second, firstBed);
 
-        Expect.IsFalse(SleepingAssignments.GetActiveAssignment(first) != null);
+        Expect.IsFalse(first.ActiveSleepingAssignment?.Place != null);
         first.jobs.StartJob(JobMaker.MakeJob(JobDefOf.LayDown, visitBed), JobCondition.InterruptForced);
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
         Expect.IsTrue(firstBed.IsOwner(first));
         Expect.IsFalse(visitBed.IsOwner(first));
-        Expect.ReferencesAreEqual(second, SleepingAssignments.GetAssignedPawn(firstBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(second, firstBed.GetAssignedPawn(0));
     }
 
     [Test]
@@ -3113,8 +3113,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(outsider, visitBed);
         Expect.ReferencesAreEqual(visitBed, outsider.CurrentBed());
         Expect.ReferencesAreEqual(visitBed, outsider.ownership.OwnedBed);
-        Expect.ReferencesAreEqual(visitBed, SleepingAssignments.GetActiveAssignment(outsider)?.Bed);
-        Expect.ReferencesAreEqual(outsider, SleepingAssignments.GetAssignedPawn(visitBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(visitBed, outsider.ActiveBed);
+        Expect.ReferencesAreEqual(outsider, visitBed.GetAssignedPawn(0));
     }
 
     [Test]
@@ -3129,8 +3129,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(outsider, visitBed);
         Expect.ReferencesAreEqual(visitBed, outsider.CurrentBed());
         Expect.IsNull(outsider.ownership.OwnedBed);
-        Expect.ReferencesAreEqual(visitBed, SleepingAssignments.GetActiveAssignment(outsider)?.Bed);
-        Expect.ReferencesAreEqual(outsider, SleepingAssignments.GetAssignedPawn(visitBed.GetSleepingPlace(0)));
+        Expect.ReferencesAreEqual(visitBed, outsider.ActiveBed);
+        Expect.ReferencesAreEqual(outsider, visitBed.GetAssignedPawn(0));
     }
 
     [Test]

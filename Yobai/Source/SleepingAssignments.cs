@@ -27,7 +27,8 @@ namespace Yobai;
 ///     (or the visitor's own place), rather than merely an empty place. Both features retain their
 ///     separate bedroom, relationship and bedmate-compatibility requirements.
 /// </remarks>
-internal static class SleepingAssignments
+[UsedImplicitly]
+internal class SleepingAssignments(Map map) : MapComponent(map)
 {
     internal sealed record ActiveAssignment(Pawn Pawn, SleepingPlace Place, bool IsTemporary)
     {
@@ -36,12 +37,9 @@ internal static class SleepingAssignments
         public bool IsInUse => IsTemporary || Place.BeingUsedBy(Pawn);
     }
 
-    public static IReadOnlyList<ActiveAssignment> GetActiveAssignments(Map? map)
+    public IReadOnlyList<ActiveAssignment> GetActiveAssignments()
     {
-        if (map == null)
-            return [];
-
-        List<CompBedSharing> comps = [.. GetBedComps(map)];
+        List<CompBedSharing> comps = [.. GetBedComps()];
         List<ActiveAssignment> temporaryAssignments = [.. comps.SelectMany(TemporaryAssignments)];
         HashSet<Pawn> temporaryPawns = [.. temporaryAssignments.Select(assignment => assignment.Pawn)];
         HashSet<(Building_Bed Bed, int Slot)> temporaryPlaces =
@@ -65,27 +63,16 @@ internal static class SleepingAssignments
         return active;
     }
 
-    public static SleepingPlace? GetTemporaryAssignment(Pawn pawn)
+    public Pawn? GetAssignedPawn(SleepingPlace place)
     {
-        return GetActiveAssignments(pawn.Map).FirstOrDefault(assignment => assignment.IsTemporary && assignment.Pawn == pawn)?.Place;
-    }
-
-    public static SleepingPlace? GetActiveAssignment(Pawn pawn)
-    {
-        return GetActiveAssignments(pawn.Map).FirstOrDefault(assignment => assignment.Pawn == pawn)?.Place;
-    }
-
-    public static Pawn? GetAssignedPawn(SleepingPlace place)
-    {
-        return GetActiveAssignments(place.Bed.Map)
+        return GetActiveAssignments()
             .FirstOrDefault(assignment => assignment.Place.Bed == place.Bed && assignment.Place.Slot == place.Slot)?.Pawn;
     }
 
-    public static IEnumerable<Pawn> GetBedmates(Building_Bed bed)
+    public IEnumerable<Pawn> GetSleepers(Building_Bed bed)
     {
-        IEnumerable<Pawn> sleepers = GetActiveAssignments(bed.Map)
+        return GetActiveAssignments()
             .Where(assignment => assignment.Place.Bed == bed && assignment.IsInUse).Select(assignment => assignment.Pawn);
-        return bed.CurOccupants.Concat(sleepers).Distinct();
     }
 
     private static IEnumerable<ActiveAssignment> TemporaryAssignments(CompBedSharing comp)
@@ -94,7 +81,7 @@ internal static class SleepingAssignments
             yield return new ActiveAssignment(pawn, comp.Bed.GetSleepingPlace(slot), IsTemporary: true);
     }
 
-    private static IEnumerable<CompBedSharing> GetBedComps(Map map)
+    private IEnumerable<CompBedSharing> GetBedComps()
     {
         foreach (Building_Bed bed in map.listerBuildings.allBuildingsColonist.OfType<Building_Bed>())
         {

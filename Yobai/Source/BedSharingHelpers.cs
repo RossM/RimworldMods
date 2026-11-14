@@ -30,6 +30,8 @@ internal static class BedSharingHelpers
         {
             return new SleepingPlace(bed, slot);
         }
+
+        public Pawn? GetAssignedPawn(int slot) => bed.Map?.GetComponent<SleepingAssignments>()!.GetAssignedPawn(bed.GetSleepingPlace(slot));
     }
 
     extension(Pawn pawn)
@@ -54,6 +56,14 @@ internal static class BedSharingHelpers
         {
             return pawn is { Spawned: true, Dead: false } && pawn.Map == map;
         }
+
+        internal SleepingAssignments.ActiveAssignment? ActiveSleepingAssignment =>
+            pawn.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn);
+
+        internal SleepingAssignments.ActiveAssignment? TemporarySleepingAssignment =>
+            pawn.Map?.GetComponent<SleepingAssignments>()!.GetActiveAssignments().FirstOrDefault(assignment => assignment.Pawn == pawn && assignment.IsTemporary);
+
+        public Building_Bed? ActiveBed => pawn.ActiveSleepingAssignment?.Place.Bed;
     }
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
