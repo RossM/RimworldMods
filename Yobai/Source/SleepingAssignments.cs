@@ -75,4 +75,9 @@ internal class SleepingAssignments(Map map) : MapComponent(map)
     {
         return GetActiveAssignments().SingleOrDefault(assignment => assignment.Place == place);
     }
+
+    public ActiveAssignment? GetAssignment(Pawn pawn)
+    {
+        return GetActiveAssignments().SingleOrDefault(assignment => assignment.Pawn == pawn);
+    }
 }
