@@ -7,7 +7,11 @@ internal static class Patch_SkillRecord
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionMinor))]
     [Feature(nameof(XStatDefOf.XylLearnFactorPassionMajor))]
     [Postfix]
-    [Target(nameof(SkillRecord.LearnRateFactor))]
+    // We need to use an inner postfix rather than a regular postfix here because Vanilla Skills Expanded applies a
+    // destructive prefix to LearnRateFactor().
+    [Inner(typeof(SkillRecord), nameof(SkillRecord.LearnRateFactor))]
+    [Target(typeof(SkillRecord), nameof(SkillRecord.Learn))]
+    [Target(typeof(BookOutcomeDoerGainSkillExp), nameof(BookOutcomeDoerGainSkillExp.GetBenefitsString))]
     public static void LearnRateFactor_Postfix(SkillRecord __instance, ref float __result)
     {
         DebugAssert.NotNull(__instance.Pawn);
@@ -17,7 +21,8 @@ internal static class Patch_SkillRecord
             Passion.None => __instance.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionNone) / SkillRecord.LearnFactorPassionNone,
             Passion.Minor => __instance.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionMinor) / SkillRecord.LearnFactorPassionMinor,
             Passion.Major => __instance.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionMajor) / SkillRecord.LearnFactorPassionMajor,
-            _ => throw new ArgumentOutOfRangeException(),
+            // Vanilla Skills Expanded adds new passion types. Ignore them.
+            _ => 1,
         };
     }
 }

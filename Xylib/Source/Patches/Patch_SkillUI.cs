@@ -16,7 +16,8 @@ internal static class Patch_SkillUI
             Passion.None => sk.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionNone),
             Passion.Minor => sk.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionMinor),
             Passion.Major => sk.Pawn.GetStatValue(XStatDefOf.XylLearnFactorPassionMajor),
-            _ => throw new ArgumentOutOfRangeException(nameof(passion), passion, null),
+            // Vanilla Skills Expanded adds new passion types. Ignore them.
+            _ => __result,
         };
     }
 }
