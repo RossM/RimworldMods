@@ -45,10 +45,10 @@
               </li>
             </hediffs>
           </li>
-          <li Class="Xylib.GeneCompProperties_ExtraApparel">
+          <li Class="Xylib.GeneCompProperties_ExtraApparel" MayRequire="Ludeon.RimWorld.Ideology">
             <items>
               <li>
-                <item MayRequire="Ludeon.RimWorld.Ideology">Apparel_Blindfold</item>
+                <item>Apparel_Blindfold</item>
                 <chance>0.2</chance>
                 <ignoreRestrictions>true</ignoreRestrictions>
               </li>

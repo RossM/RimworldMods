@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+
+<Patch>
+  
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/StatDef[defName="SlaveSuppressionFallRate"]</xpath>
+    <order>Prepend</order>
+    <value>
+      <parts>
+        <li Class="Xylib.StatPart_Genetic">
+          <gene>XylDocile</gene>
+          <factor>0.25</factor>
+        </li>
+      </parts>
+    </value>
+  </Operation>
+
+</Patch>

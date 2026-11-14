@@ -15,7 +15,7 @@
   <Operation Class="PatchOperationInsert">
     <xpath>Defs/BiomeDef/coastalWildAnimals/Seal[text()>0]</xpath>
     <value>
-      <XylSelkie>0.05</XylSelkie>
+      <XylSelkie MayRequire="Ludeon.RimWorld.Odyssey">0.05</XylSelkie>
     </value>
   </Operation>
 
