@@ -229,7 +229,10 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
         parent = geneDef;
 
-        if (geneDef.geneClass == typeof(Gene))
+        // Vanilla Races Expanded: Starjack clones all genes(!) and sets their geneClass to VEF.Genes.Gene_Astrogene.
+        // This is phenomenally bad behavior and I do not feel the need to go out of my way to make their broken system
+        // work, but I can at least make the gene still work as a GeneWithComps.
+        if (geneDef.geneClass == typeof(Gene) || geneDef.geneClass.Name == "Gene_Astrogene")
             geneDef.geneClass = typeof(GeneWithComps);
 
         if (comps is null)
