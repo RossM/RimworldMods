@@ -43,8 +43,10 @@ internal static class Patch_PawnUtility
     [Postfix]
     [InnerConstant("StatsReport_FinalValue")]
     [Target(nameof(PawnUtility.GetManhunterOnTameFailChanceExplanation))]
-    public static void GetManhunterOnTameFailChanceExplanation_StatsReport_FinalValue_Postfix(Pawn pawn, [State] StringBuilder sb)
+    public static void GetManhunterOnTameFailChanceExplanation_StatsReport_FinalValue_Postfix(Pawn? pawn, [State] StringBuilder sb)
     {
+        if (pawn == null)
+            return;
         PatchHelpers.AppendExtraStatFactors(pawn, XStatDefOf.XylManhunterChanceOnTameFailFactor, sb);
     }
 
@@ -52,8 +54,10 @@ internal static class Patch_PawnUtility
     [Postfix]
     [InnerConstant("StatsReport_FinalValue")]
     [Target(nameof(PawnUtility.GetManhunterOnDamageChanceExplanation))]
-    public static void GetManhunterOnDamageChanceExplanation_StatsReport_FinalValue_Postfix(Pawn pawn, [State] StringBuilder sb)
+    public static void GetManhunterOnDamageChanceExplanation_StatsReport_FinalValue_Postfix(Pawn? pawn, [State] StringBuilder sb)
     {
+        if (pawn == null)
+            return;
         PatchHelpers.AppendExtraStatFactors(pawn, XStatDefOf.XylManhunterChanceOnDamageFactor, sb);
     }
 }
