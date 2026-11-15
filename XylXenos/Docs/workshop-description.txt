@@ -49,11 +49,11 @@ There are too many genes to fit in the Workshop character limit. Some highlights
 
 [h1]More information[/h1]
 
-For fuller information on xenotypes, genes, factions, etc., see the [url=https://github.com/RossM/RimworldMods/blob/main/XylXenos/README.md]README[/url] on GitHub.
+See the [url=https://github.com/RossM/RimworldMods/wiki/XylXenos-Xenotypes-and-Genes]xenotype, gene, and faction guide[/url] on the GitHub wiki.
 
 [h1]Compatibility and known issues[/h1]
 
-[url=https://github.com/RossM/RimworldMods/blob/main/XylXenos/COMPATIBILITY.md]See here.[/url]
+See the [url=https://github.com/RossM/RimworldMods/wiki/XylXenos-Compatibility]mod compatibility page[/url].
 
 [h1]FAQ[/h1]
 
