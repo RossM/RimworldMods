@@ -192,7 +192,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
         if (parent.geneClass is not Type type)
             yield return "geneClass is null or invalid type";
         else if (!typeof(GeneWithComps).IsAssignableFrom(type))
-            yield return "geneClass is not GeneExt or subclass thereof";
+            yield return $"geneClass is not {nameof(GeneWithComps)} or subclass thereof";
 
         if (comps is null)
             yield break;
