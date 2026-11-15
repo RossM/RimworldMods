@@ -11,7 +11,6 @@ Since this is an initial release and finding good playtesters is [i]hard,[/i] th
 RimWorld 1.7 and Biotech are required.
 
 Recommended optional DLCs unlock additional content:
-
 [list]
 [*] Royalty: Innate psycast genes and a nixie-specific scenario.
 [*] Ideology: Integration with the ideoligion system and additional gene-based unlocks for some Ideology content that's normally locked to specific memes.
@@ -19,7 +18,6 @@ Recommended optional DLCs unlock additional content:
 [/list]
 
 [h1]Xenotypes[/h1]
-
 [list]
 [*][b]Bossaps - Sentient livestock:[/b] Designed as livestock, bossaps survive well in harsh conditions and put up with poor treatment - but if they're injured in combat they may go into a berserk rage and charge enemies horns-first.
 [*][b]Chyrr - Nocturnal fliers:[/b] Functional wings and an innate sonic stun ability make them outstanding at hit-and-run tactics, especially at night, but they're bad at toe-to-toe fighting. Cold temperatures can send them into a state of helpless torpor.
@@ -38,7 +36,6 @@ Recommended optional DLCs unlock additional content:
 [h1]Genes[/h1]
 
 There are too many genes to fit in the Workshop character limit. Some highlights:
-
 [list]
 [*] Every psycast gets a gene that unlocks it without a psylink. Requires Royalty. Does not include Vanilla Psycasts Expanded psycasts; see "Compatibility" below.
 [*] Functional wings that use the same flight system as birds, with full player control.
