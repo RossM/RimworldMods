@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+
+  <!-- 
+  VRE: Starjack will copy any gene that doesn't have a custom GeneClass set and change its GeneClass. This interacts
+  badly with the way we implicitly set the geneClass, so set it explicitly.
+  -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/GeneDef[modExtensions/li[@Class="Xylib.DefModExtension_GeneWithComps"] and not(geneClass)]</xpath>
+    <value>
+      <geneClass>Xylib.GeneWithComps</geneClass>
+    </value>
+  </Operation>
+  
+</Patch>
