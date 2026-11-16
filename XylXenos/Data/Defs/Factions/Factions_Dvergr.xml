@@ -163,7 +163,7 @@
     <defaultFactionDef>XylOutlanderRoughDvergr</defaultFactionDef>
     <canBeSapper>true</canBeSapper>
     <isGoodBreacher>true</isGoodBreacher>
-    <weaponMoney>100~250</weaponMoney>
+    <weaponMoney>120~250</weaponMoney>
     <weaponTags Inherit="False">
       <li>NeolithicMeleeDestructive</li>
     </weaponTags>
