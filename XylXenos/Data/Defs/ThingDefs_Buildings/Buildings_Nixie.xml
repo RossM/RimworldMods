@@ -47,6 +47,9 @@
   <ThingDef Name="XylAquaticSleepingSpotBase" ParentName="SleepingSpotBase" Abstract="True">
     <terrainAffordanceNeeded>ShallowWater</terrainAffordanceNeeded>
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <building>
+      <bed_showSleeperBody>False</bed_showSleeperBody>
+    </building>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Bed_GeneRestricted">
         <requiredGenesAny>
