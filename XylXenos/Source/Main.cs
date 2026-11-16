@@ -21,7 +21,7 @@ public class Main : Mod
 {
     public Main(ModContentPack content) : base(content)
     {
-        BackCompatibility.conversionChain.Add(new BackCompatibilityConverter_PosthumanDrift());
+        RegisterForBackCompatibility();
 
         using (new ProfileBlock("XylXenos Load settings"))
         {
@@ -41,6 +41,13 @@ public class Main : Mod
         {
             RegisterXmlLoaders();
         }
+    }
+
+    private static void RegisterForBackCompatibility()
+    {
+        BackCompatibility.conversionChain.Add(new BackCompatibilityConverter_PosthumanDrift());
+        BackCompatibility.RemovedDefs.Add(new("Osteoliths", typeof(FurDef)));
+        BackCompatibility.RemovedDefs.Add(new("Scaleskin", typeof(FurDef)));
     }
 
     // This a stupid trick to add a custom XML parser to a type that should have one but doesn't.

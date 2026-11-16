@@ -18,10 +18,46 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
                 _ => null,
             };
 
+        if (defType == typeof(HeadTypeDef))
+        {
+            return defName switch
+            {
+                "Female_Osteoliths_Average_Normal" => "Female_AverageNormal",
+                "Female_Osteoliths_Average_Wide" => "Female_AverageWide",
+                "Female_Osteoliths_Narrow_Wide" => "Female_NarrowWide",
+                "Male_Osteoliths_Average_Normal" => "Male_AverageNormal",
+                "Male_Osteoliths_Average_Wide" => "Male_AverageWide",
+                "Male_Osteoliths_Narrow_Wide" => "Male_NarrowWide",
+                "Female_Scaleskin_Average_Normal" => "Female_AverageNormal",
+                "Female_Scaleskin_Average_Pointy" => "Female_AveragePointy",
+                "Female_Scaleskin_Narrow_Normal" => "Female_AverageNormal",
+                "Female_Scaleskin_Narrow_Pointy" => "Female_NarrowPointy",
+                "Male_Scaleskin_Average_Normal" => "Male_AverageNormal",
+                "Male_Scaleskin_Average_Pointy" => "Male_AveragePointy",
+                "Male_Scaleskin_Narrow_Normal" => "Male_NarrowNormal",
+                "Male_Scaleskin_Narrow_Pointy" => "Male_NarrowPointy",
+                _ => null,
+            };
+        }
+
         if (defType == typeof(ThoughtDef) && defName == "XylSoreBreasts")
             return "XylFullMilk";
-        if (defType == typeof(ThingDef) && defName == "XylFungusStill")
-            return "Brewery";
+
+        if (defType == typeof(FactionDef) && defName == "XylSirenPlayerColony")
+            return "PlayerColony";
+
+        if (defType == typeof(HediffDef) && defName == "XylFeralRageBacklash")
+            return "XylFeralRage";
+
+        if (defType == typeof(ThingDef))
+        {
+            return defName switch
+            {
+                "XylFungusStill" => "Brewery",
+                "Apparel_XylBlindfoldMask" => "Apparel_Blindfold",
+                _ => null,
+            };
+        }
 
         return null;
     }
