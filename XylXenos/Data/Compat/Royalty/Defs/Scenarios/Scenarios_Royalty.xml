@@ -224,7 +224,7 @@
     <comps>
       <li Class="HediffCompProperties_RemoveIfOtherHediff">
         <hediffs>
-          <li>BrainwipeComa</li>
+          <li MayRequire="Ludeon.RimWorld.Anomaly">BrainwipeComa</li>
         </hediffs>
       </li>
     </comps>
