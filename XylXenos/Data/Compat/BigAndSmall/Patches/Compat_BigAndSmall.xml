@@ -55,7 +55,7 @@
   </Operation>
 
   <Operation Class="Xylib.PatchOperationMerge">
-    <xpath>Defs/GeneDef[@Name="GeneLearningBase" or defName="XylLearning_Focused"]</xpath>
+    <xpath>Defs/GeneDef[@Name="GeneLearningBase" or defName="XylLearning_Focused" or defName="XylLearning_Generalist"]</xpath>
     <value>
       <displayCategory>BS_Learning</displayCategory>
     </value>
