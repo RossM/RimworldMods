@@ -63,7 +63,7 @@
   <ThingDef ParentName="XylAquaticSleepingSpotBase">
     <defName>XylAquaticSleepingSpot</defName>
     <label>aquatic sleeping spot</label>
-    <description>Designates a spot on shallow water where people should sleep. Not comfortable.</description>
+    <description>Designates a spot on shallow water where people should sleep. Not comfortable, and only usable by aquatic characters.</description>
     <graphicData>
       <texPath>Things/Building/Furniture/Bed/SleepSpot</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
@@ -75,7 +75,7 @@
   <ThingDef ParentName="XylAquaticSleepingSpotBase">
     <defName>XylAquaticDoubleSleepingSpot</defName>
     <label>aquatic double sleeping spot</label>
-    <description>Designates a spot on shallow water where two people should sleep together. Not comfortable.</description>
+    <description>Designates a spot on shallow water where two people should sleep together. Not comfortable, and only usable by aquatic characters.</description>
     <graphicData>
       <texPath>Things/Building/Furniture/Bed/DoubleSleepSpot</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
