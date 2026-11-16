@@ -30,7 +30,7 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
                 "Male_Osteoliths_Narrow_Wide" => "Male_NarrowWide",
                 "Female_Scaleskin_Average_Normal" => "Female_AverageNormal",
                 "Female_Scaleskin_Average_Pointy" => "Female_AveragePointy",
-                "Female_Scaleskin_Narrow_Normal" => "Female_AverageNormal",
+                "Female_Scaleskin_Narrow_Normal" => "Female_NarrowNormal",
                 "Female_Scaleskin_Narrow_Pointy" => "Female_NarrowPointy",
                 "Male_Scaleskin_Average_Normal" => "Male_AverageNormal",
                 "Male_Scaleskin_Average_Pointy" => "Male_AveragePointy",
@@ -46,14 +46,20 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
         if (defType == typeof(FactionDef) && defName == "XylSirenPlayerColony")
             return "PlayerColony";
 
+        // Known issue: this converts all rage and backlash into rage with full remaining time
         if (defType == typeof(HediffDef) && defName == "XylFeralRageBacklash")
             return "XylFeralRage";
+
+        if (defType == typeof(ThinkTreeDef) && defName == "XylSeeingRed")
+            return "Humanlike";
 
         if (defType == typeof(ThingDef))
         {
             return defName switch
             {
                 "XylFungusStill" => "Brewery",
+                "Blueprint_XylFungusStill" => "Blueprint_Brewery",
+                "Frame_XylFungusStill" => "Frame_Brewery",
                 "Apparel_XylBlindfoldMask" => "Apparel_Blindfold",
                 _ => null,
             };
@@ -77,8 +83,10 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
             "XylRacesCore.MentalState_HuntingVermin" => typeof(MentalState_HuntingVermin),
             "XylRacesCore.MentalState_SeeingRed" => typeof(MentalState_SeeingRed),
             "XylRacesCore.ScenPart_StartingSlaves" => typeof(ScenPart_StartingSlaves),
+            // Known issue: ScenPart_PsylinkLevels and ScenPart_Psycast default to chance 0 after conversion
             "XylRacesCore.ScenPart_PsylinkLevels" => typeof(ScenPart_PsylinkLevels),
             "XylRacesCore.ScenPart_Psycast" => typeof(ScenPart_Psycast),
+            "XylRacesCore.ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext" => typeof(ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext),
             _ when providedClassName.StartsWith("XylRacesCore.Genes.") => typeof(GeneWithComps),
             _ => null,
         };
