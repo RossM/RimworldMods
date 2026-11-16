@@ -21,6 +21,8 @@ public class Main : Mod
 {
     public Main(ModContentPack content) : base(content)
     {
+        BackCompatibility.conversionChain.Add(new BackCompatibilityConverter_PosthumanDrift());
+
         using (new ProfileBlock("XylXenos Load settings"))
         {
             Settings.instance = GetSettings<Settings>();
