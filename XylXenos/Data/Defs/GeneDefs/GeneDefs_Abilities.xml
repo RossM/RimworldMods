@@ -73,7 +73,7 @@
     <defName>XylFeralRage</defName>
     <hediffClass>HediffWithComps</hediffClass>
     <label>feral rage</label>
-    <description>A temporary frenzy state. It increases movement and melee attack speed.</description>
+    <description>A temporary frenzy state in which the usual limiting functions of the brain are muted, allowing muscles to work at a higher capacity than normal. It increases movement and melee attack speed, but the soreness and pain afterwards might put someone out of commission for the rest of the day.</description>
     <descriptionHyperlinks>
       <GeneDef>XylFeralRage</GeneDef>
       <AbilityDef>XylFeralRage</AbilityDef>
@@ -91,7 +91,7 @@
     <stages>
       <li>
         <label>backlash</label>
-        <overrideTooltip>Recovering from a frenzy state. Causes pain and decreases movement speed.</overrideTooltip>
+        <overrideTooltip>The results of overexertion during a frenzy state. Causes pain and decreases movement speed, but should fade away in time.</overrideTooltip>
         <capMods>
           <li>
             <capacity>Moving</capacity>

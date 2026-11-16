@@ -33,6 +33,12 @@
           <method>DropPods</method>
         </li>
 
+        <!-- Starting techs -->
+        <li Class="ScenPart_StartingResearch" MayRequire="Ludeon.RimWorld.Odyssey">
+          <def>StartingResearch</def>
+          <project>Fishing</project>
+        </li>
+
         <!-- Starting psychics -->
         <li Class="XylXenos.ScenPart_PsylinkLevels">
           <def>XylPsylinkLevels</def>

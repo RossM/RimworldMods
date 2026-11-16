@@ -43,4 +43,45 @@
       </li>
     </modExtensions>
   </ThingDef>
+
+  <ThingDef Name="XylAquaticSleepingSpotBase" ParentName="SleepingSpotBase" Abstract="True">
+    <terrainAffordanceNeeded>ShallowWater</terrainAffordanceNeeded>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <building>
+      <bed_showSleeperBody>false</bed_showSleeperBody>
+      <bed_canBeMedical>false</bed_canBeMedical>
+    </building>
+    <modExtensions>
+      <li Class="XylXenos.DefModExtension_Bed_GeneRestricted">
+        <requiredGenesAny>
+          <li>XylAquatic</li>
+        </requiredGenesAny>
+      </li>
+    </modExtensions>
+  </ThingDef>
+  
+  <ThingDef ParentName="XylAquaticSleepingSpotBase">
+    <defName>XylAquaticSleepingSpot</defName>
+    <label>aquatic sleeping spot</label>
+    <description>Designates a spot on shallow water where people should sleep. Not comfortable, and only usable by aquatic characters.</description>
+    <graphicData>
+      <texPath>Things/Building/Furniture/Bed/SleepSpot</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(3,4)</drawSize>
+    </graphicData>
+    <size>(1,2)</size>
+  </ThingDef>
+
+  <ThingDef ParentName="XylAquaticSleepingSpotBase">
+    <defName>XylAquaticDoubleSleepingSpot</defName>
+    <label>aquatic double sleeping spot</label>
+    <description>Designates a spot on shallow water where two people should sleep together. Not comfortable, and only usable by aquatic characters.</description>
+    <graphicData>
+      <texPath>Things/Building/Furniture/Bed/DoubleSleepSpot</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(4,4)</drawSize>
+    </graphicData>
+    <size>(2,2)</size>
+  </ThingDef>
+
 </Defs>

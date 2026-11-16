@@ -247,7 +247,7 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
-    private void InitializeComps()
+    public void InitializeComps()
     {
         var compProperties = DefExt.comps;
         if (compProperties == null)

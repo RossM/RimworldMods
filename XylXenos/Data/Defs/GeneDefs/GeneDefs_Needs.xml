@@ -29,6 +29,8 @@
           <li Class="Xylib.GeneCompProperties_UnlockBuildables">
             <buildables>
               <li>XylShower</li>
+              <li>XylAquaticSleepingSpot</li>
+              <li>XylAquaticDoubleSleepingSpot</li>
             </buildables>
           </li>
         </comps>

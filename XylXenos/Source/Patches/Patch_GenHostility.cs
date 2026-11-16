@@ -15,7 +15,7 @@ public static class Patch_GenHostility
         if (a.Faction == null || b.Faction == null)
             return;
 
-        var manager = HostilityOverrideManager.GetManager(a.Map);
+        var manager = a.Map?.HostilityOverrideManager;
         if (manager == null)
             return;
 

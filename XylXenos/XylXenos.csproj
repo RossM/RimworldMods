@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -34,6 +34,8 @@
     <Publicize Include="Assembly-CSharp:RimWorld.GameConditionManager.AllowEnjoyableOutsideNow" />
     <Publicize Include="Assembly-CSharp:RimWorld.Pawn_FlightTracker.flightCooldownTicks" />
     <Publicize Include="Assembly-CSharp:RimWorld.XenotypeSet.xenotypeChances" />
+    <Publicize Include="Assembly-CSharp:Verse.BackCompatibility.conversionChain" />
+    <Publicize Include="Assembly-CSharp:Verse.BackCompatibility.RemovedDefs" />
     <Publicize Include="Assembly-CSharp:Verse.HediffComp_TendDuration.totalTendQuality" />
     <Publicize Include="Assembly-CSharp:Verse.ShotReport.factorFromCoveringGas" />
     <Publicize Include="Assembly-CSharp:Verse.XmlToObjectUtils.customDataLoadMethodCache" />

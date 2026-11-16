@@ -1,13 +1,25 @@
-﻿namespace XylXenos;
+﻿using Waylith.Injection;
+
+namespace XylXenos;
+
+internal static class MapExtensions
+{
+    extension(Map map)
+    {
+        [InjectedField]
+        private extern ref HostilityOverrideManager? HostilityOverrideManagerCached { get; }
+
+        public HostilityOverrideManager HostilityOverrideManager =>
+            map.HostilityOverrideManagerCached ??= map.GetComponent<HostilityOverrideManager>()!;
+    }
+
+}
 
 [UsedFromReflection]
 public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListener
 {
     public const int ViolationDisableTicks = 2500;
     public const int CheckFrequency = 60;
-
-    [Unsaved] private static Map? _lastMap;
-    [Unsaved] private static HostilityOverrideManager? _lastManager;
 
     public bool anyOverrides = false;
     public HashSet<(Faction, Faction)> activeOverrides = [];
@@ -21,19 +33,6 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
         Scribe_Ext.Look(ref activeOverrides, nameof(activeOverrides), LookMode.Reference);
         Scribe_Collections.Look(ref lastHostileActionTick, nameof(lastHostileActionTick), keyLookMode: LookMode.Deep,
             valueLookMode: LookMode.Value);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static HostilityOverrideManager? GetManager(Map? map)
-    {
-        if (map == null)
-            return null;
-        if (map == _lastMap)
-            return _lastManager;
-
-        _lastMap = map;
-        _lastManager = map.GetComponent<HostilityOverrideManager>();
-        return _lastManager;
     }
 
     public bool HostilityDisabled(Thing source, Thing target)
