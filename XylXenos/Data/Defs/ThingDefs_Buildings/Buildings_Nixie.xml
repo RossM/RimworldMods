@@ -48,7 +48,8 @@
     <terrainAffordanceNeeded>ShallowWater</terrainAffordanceNeeded>
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <building>
-      <bed_showSleeperBody>False</bed_showSleeperBody>
+      <bed_showSleeperBody>false</bed_showSleeperBody>
+      <bed_canBeMedical>false</bed_canBeMedical>
     </building>
     <modExtensions>
       <li Class="XylXenos.DefModExtension_Bed_GeneRestricted">
