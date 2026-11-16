@@ -1,6 +1,6 @@
 Yep, it's yet another gene and xenotype mod for RimWorld. But this one is mine, and I'm very proud of it. So [i]nyah.[/i] Download it and give it a try. It would make me happy. If you like it, a thumbs up would make me happy too.
 
-This mod includes 12 xenotypes, 121 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed to be lore-friendly and balanced to fit vanilla RimWorld as well as I can manage.
+This mod includes 12 xenotypes, 122 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed to be lore-friendly and balanced to fit vanilla RimWorld as well as I can manage.
 
 Since this is an initial release and finding good playtesters is [i]hard,[/i] there are probably a lot of rough edges. Want to be a playtester? Just play and report your thoughts and experiences in the discussions section. It really helps! There are dedicated threads for bug reports, balance feedback, gameplay stories, and mod compatibility reports/requests.
 
@@ -58,9 +58,9 @@ See the [url=https://github.com/RossM/RimworldMods/wiki/XylXenos-Compatibility]m
 
 Yes. You'll need a new save to see some content, such as the factions.
 
-[h3]Can I remove it from an existing save?[/h3]
+[h3]Is this compatible with the older Posthuman Drift mod series?[/h3]
 
-Not recommended. Let me know if it works.
+This mod replaces the Posthuman Drift mod series and can load existing saves that use them. Before switching, back up your save and disable all Posthuman Drift mods.
 
 [h3]How do I find the xenotypes and acquire their genes?[/h3]
 
