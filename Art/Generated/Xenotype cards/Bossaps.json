@@ -3,7 +3,7 @@
   "xenotype": "Bossaps",
   "descriptor": "Sentient livestock",
   "complexity": 16,
-  "metabolism": 1,
+  "metabolism": 0,
   "width": 630,
   "height": 340,
   "character": "Art\\Cutouts\\Processed\\Bossaps_South.png",
@@ -56,7 +56,7 @@
       "category_priority": 460.0,
       "priority": 110.0,
       "complexity": 1,
-      "metabolism": 2,
+      "metabolism": 1,
       "archites": 0
     },
     {
