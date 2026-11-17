@@ -14,4 +14,19 @@ public static class Patch_GeneDef_GetDescriptionFull
         __result = false;
         return stage is not null;
     }
+
+    [Feature(FeatureNameOf.UI_Misc)]
+    [Postfix]
+    [Inner(typeof(StatDef), nameof(StatDef.CanShowWithLoadedMods))]
+    [Target(nameof(GeneDef.SpecialDisplayStats))]
+    [Target("GetDescriptionFull")]
+    public static void CanShowWithLoadedMods_Postfix(GeneDef __caller, StatDef __instance, ref bool __result)
+    {
+        // Paranoia for modded genes
+        if (__caller.GetType() != typeof(GeneDef))
+            return;
+
+        if (!__instance.showOnNonWildManHumanlikes)
+            __result = false;
+    }
 }

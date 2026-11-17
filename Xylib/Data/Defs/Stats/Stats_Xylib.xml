@@ -348,6 +348,7 @@
     <defaultBaseValue>1</defaultBaseValue>
     <hideAtValue>1</hideAtValue>
     <minValue>0</minValue>
+    <showOnNonWildManHumanlikes>false</showOnNonWildManHumanlikes>
     <displayPriorityInCategory>1001</displayPriorityInCategory>
   </StatDef>
   <StatDef>
@@ -360,6 +361,7 @@
     <defaultBaseValue>1</defaultBaseValue>
     <hideAtValue>1</hideAtValue>
     <minValue>0</minValue>
+    <showOnNonWildManHumanlikes>false</showOnNonWildManHumanlikes>
     <displayPriorityInCategory>1001</displayPriorityInCategory>
   </StatDef>
 
