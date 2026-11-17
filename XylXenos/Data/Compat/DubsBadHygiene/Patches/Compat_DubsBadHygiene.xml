@@ -6,7 +6,7 @@
   <Operation Class="PatchOperationRemove">
     <xpath>
       Defs/GeneDef[defName="XylAquatic"]/modExtensions/li[@Class="Xylib.DefModExtension_GeneWithComps"]/comps/
-      li[@Class="Xylib.GeneCompProperties_UnlockBuildables"][buildables/li="XylShower"]
+      li[@Class="Xylib.GeneCompProperties_UnlockBuildables"]/buildables/li[.="XylShower"]
     </xpath>
   </Operation>
 
