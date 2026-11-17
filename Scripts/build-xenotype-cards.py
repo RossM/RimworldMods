@@ -509,9 +509,10 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
     inheritable = (library.value(xenotype, "inheritable") or "false").lower() == "true"
     background_type = "Endogene" if inheritable else "Xenogene"
     gene_background = ART / "Genes" / f"GeneBackground_{background_type}.png"
-    portrait = ROOT / "Art/Cutouts/Processed" / (name + "_South.png")
+    portrait_suffix = "_South"
+    portrait = ROOT / "Art/Cutouts/Processed" / (name + portrait_suffix + ".png")
     if not portrait.is_file():
-        portrait = ROOT / "Art/Cutouts" / (name + "_South.png")
+        portrait = ROOT / "Art/Cutouts" / (name + portrait_suffix + ".png")
     parts = []
 
     def text(x, y, value, size=22, fill="#ebe7df", weight=400, anchor="start"):
@@ -595,7 +596,7 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
         SCREENSHOT_OUT.mkdir(parents=True, exist_ok=True)
 
         def save_screenshot(stem, page_title, description):
-            svg_path = SCREENSHOT_OUT / f"{stem}.svg"
+            svg_path = GENERATED_OUT / f"{stem}_workshop.svg"
             png_path = SCREENSHOT_OUT / f"{stem}.png"
             write_text(svg_path, card_svg(description, page_title))
             render_png(["-background", "none", str(svg_path)], png_path)
@@ -703,7 +704,7 @@ def build_card(library, def_name, descriptor, *, screenshot=False):
                    "Each group is sorted by category priority descending, gene priority ascending, "
                    f"and label alphabetically.{lineage_description}{specialty_description}")
     stem = name
-    svg_path = GENERATED_OUT / (stem + ".svg")
+    svg_path = GENERATED_OUT / (stem + "_card.svg")
     png_path = PNG_OUT / (stem + ".png")
     write_text(svg_path, card_svg(description, title))
     def gene_data(gene):
