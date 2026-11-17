@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Xylib;
+﻿namespace Xylib;
 
 [UsedFromReflection]
 public class Mod_Xylib : Mod
@@ -9,7 +7,7 @@ public class Mod_Xylib : Mod
     {
         using (new ProfileBlock("Xylib Disharmony patching"))
         {
-            Patcher.PatchAll(Assembly.GetExecutingAssembly());
+            Patcher.PatchAll(typeof(Mod_Xylib).Assembly);
         }
     }
 }

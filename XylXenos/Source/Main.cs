@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Xml;
+﻿using System.Xml;
 
 namespace XylXenos;
 
@@ -10,7 +9,7 @@ public static class PatchLate
     {
         using (new ProfileBlock("XylXenos Disharmony patching"))
         {
-            Patcher.PatchCategory(Assembly.GetExecutingAssembly(), "PostLoadDefs");
+            Patcher.PatchCategory(typeof(PatchLate).Assembly, "PostLoadDefs");
         }
     }
 }
@@ -30,11 +29,12 @@ public class Main : Mod
 
         using (new ProfileBlock("XylXenos Disharmony patching"))
         {
-            Patcher.PatchCategory(Assembly.GetExecutingAssembly(), "PreLoadDefs");
-            Patcher.PatchCategory(Assembly.GetExecutingAssembly(), null);
+            var assembly = typeof(Main).Assembly;
+            Patcher.PatchCategory(assembly, "PreLoadDefs");
+            Patcher.PatchCategory(assembly, null);
 
             if (ModLister.GetActiveModWithIdentifier(ModIdOf.DubsBadHygiene) is not null)
-                Patcher.PatchCategory(Assembly.GetExecutingAssembly(), ModIdOf.DubsBadHygiene);
+                Patcher.PatchCategory(assembly, ModIdOf.DubsBadHygiene);
         }
 
         using (new ProfileBlock("XylXenos Register XML loaders"))
