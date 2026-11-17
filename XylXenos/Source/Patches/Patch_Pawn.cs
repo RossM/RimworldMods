@@ -11,4 +11,13 @@ public static class Patch_Pawn
         if (__instance.GeneTracker_XylXenos is { } geneTracker)
             __result |= geneTracker.hasPsycast;
     }
+
+    [Feature(nameof(MyDefOf.XylDocile))]
+    [Postfix]
+    [Target(nameof(Pawn.GetAcceptArrestChance))]
+    public static void GetAcceptArrestChance_Postfix(Pawn __instance, ref float __result)
+    {
+        if (__instance.HasActiveGene(MyDefOf.XylDocile))
+            __result = 1f;
+    }
 }
