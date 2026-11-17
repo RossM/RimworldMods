@@ -3,7 +3,7 @@
 [Patch(typeof(CompAssignableToPawn_Bed))]
 public static class Patch_CompAssignableToPawn_Bed
 {
-    [Feature("TODO")]
+    [Feature(nameof(DefModExtension_Bed_GeneRestricted))]
     [Postfix]
     [Target(nameof(CompAssignableToPawn_Bed.AssigningCandidates))]
     public static void AssigningCandidates_Postfix(Thing ___parent, ref IEnumerable<Pawn> __result)

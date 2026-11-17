@@ -3,7 +3,7 @@
 [Patch(typeof(GeneUtility))]
 public static class Patch_GeneUtility
 {
-    [Feature("TODO")]
+    [Feature(FeatureNameOf.UI_Misc)]
     [Postfix]
     [Inner(typeof(GenCollection), nameof(GenCollection.SortBy),
         genericTypes: [typeof(GeneDef), typeof(float), typeof(string), typeof(float)])]

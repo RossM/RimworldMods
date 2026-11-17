@@ -3,7 +3,7 @@
 [Patch(typeof(Verb_MeleeAttack))]
 public static class Patch_Verb_MeleeAttack
 {
-    [Feature("TODO")]
+    [Feature(nameof(DefModExtension_Hediff_InnateWeapon))]
     [Postfix]
     [Target("GetNonMissChance")]
     public static void GetNonMissChance_Postfix(Verb __instance, ref float __result)

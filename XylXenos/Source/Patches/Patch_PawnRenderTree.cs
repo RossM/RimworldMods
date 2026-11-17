@@ -4,7 +4,7 @@
 public static class Patch_PawnRenderTree
 {
     // This allows tattoos to draw properly on top of scaleskin
-    [Feature("TODO")]
+    [Feature(FeatureNameOf.Bugfix_Misc)]
     [Postfix]
     [Target(nameof(PawnRenderTree.ParallelPreDraw))]
     public static void ParallelPreDraw_Postfix(PawnDrawParms parms, List<PawnGraphicDrawRequest> ___drawRequests)
