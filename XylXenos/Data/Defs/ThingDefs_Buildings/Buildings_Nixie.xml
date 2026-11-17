@@ -55,6 +55,7 @@
       <li Class="XylXenos.DefModExtension_Bed_GeneRestricted">
         <requiredGenesAny>
           <li>XylAquatic</li>
+          <li MayRequire="Arquebus.StagzMerfolk">Stagz_Aquatic</li>
         </requiredGenesAny>
       </li>
     </modExtensions>

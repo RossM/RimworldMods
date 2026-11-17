@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+  <Operation Class="Xylib.PatchOperationMerge">
+    <xpath>Defs/GeneDef[defName="Stagz_Aquatic"]</xpath>
+    <value>
+      <modExtensions>
+        <li Class="Xylib.DefModExtension_GeneWithComps">
+          <comps>
+            <li Class="Xylib.GeneCompProperties_UnlockBuildables">
+              <buildables>
+                <li>XylAquaticSleepingSpot</li>
+                <li>XylAquaticDoubleSleepingSpot</li>
+              </buildables>
+            </li>
+          </comps>
+        </li>
+      </modExtensions>
+    </value>
+  </Operation>
+
+</Patch>
