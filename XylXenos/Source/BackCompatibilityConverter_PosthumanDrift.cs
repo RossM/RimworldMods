@@ -94,10 +94,5 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
 
     public override void PostExposeData(object obj)
     {
-        if (Scribe.mode != LoadSaveMode.PostLoadInit)
-            return;
-
-        if (obj is GeneWithComps { comps: null } geneWithComps)
-            geneWithComps.InitializeComps();
     }
 }

@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Xml;
 using RimWorld.Planet;
 
 namespace XylXenos.Tests;
@@ -6,6 +7,18 @@ namespace XylXenos.Tests;
 [TestFixture(TestType.Playing)]
 public sealed class GenerationTests : SeededTestFixture
 {
+    [Test]
+    public void BackCompatibilityUpgradesPlainGenesWithACompsExtension()
+    {
+        Type converterType = typeof(GeneDefGenerator).Assembly.GetType("XylXenos.BackCompatibilityConverter_GeneWithComps", throwOnError: true)!;
+        var converter = (BackCompatibilityConverter)Activator.CreateInstance(converterType)!;
+        var xml = new XmlDocument();
+        xml.LoadXml("<li><def>XylAquatic</def></li>");
+
+        Type? convertedType = converter.GetBackCompatibleType(typeof(Gene), typeof(Gene).FullName!, xml.DocumentElement);
+        Expect.AreEqual(typeof(GeneWithComps), convertedType);
+    }
+
     [Test]
     public void GeneTemplateCopiesAbilityBiostatsAndClonesExtensions()
     {
