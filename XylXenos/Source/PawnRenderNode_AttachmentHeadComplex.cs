@@ -6,6 +6,11 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
 {
     protected override Shader DefaultShader => ShaderDatabase.CutoutComplex;
 
+    public override Color ColorFor(Pawn pawn)
+    {
+        return apparel is { DrawColor: var color } ? color : base.ColorFor(pawn);
+    }
+
     public override Graphic? GraphicFor(Pawn pawn)
     {
         string texPath = TexPathFor(pawn);
