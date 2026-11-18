@@ -8,7 +8,16 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
 
     public override Color ColorFor(Pawn pawn)
     {
-        return apparel is { DrawColor: var color } ? color : base.ColorFor(pawn);
+        if (apparel is { DrawColor: var color })
+            return color;
+        return base.ColorFor(pawn);
+    }
+
+    protected override string TexPathFor(Pawn pawn)
+    {
+        if (apparel is { StyleDef.wornGraphicPath: { Length: > 0 } path })
+            return path;
+        return base.TexPathFor(pawn);
     }
 
     public override Graphic? GraphicFor(Pawn pawn)
@@ -23,6 +32,8 @@ public class PawnRenderNode_AttachmentHeadComplex(Pawn pawn, PawnRenderNodePrope
 
     public new Shader ShaderFor(Pawn pawn)
     {
+        if (apparel is { StyleDef.graphicData.shaderType.Shader: { } shader } && !pawn.Drawer.renderer.StatueColor.HasValue)
+            return shader;
         if (props.shaderTypeDef?.Shader != null)
             return props.shaderTypeDef.Shader;
         if (pawn.Drawer.renderer.StatueColor.HasValue)
