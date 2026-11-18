@@ -25,6 +25,10 @@
     <!-- By default, don't show on pawns. Pawns with the Aquatic gene will have it set to show by StatPart_Temperature. -->
     <showOnPawns>false</showOnPawns>
     <parts>
+      <li Class="StatPart_GearStatOffset">
+        <apparelStat>XylWetnessFallRateOffset</apparelStat>
+        <includeWeapon>true</includeWeapon>
+      </li>
       <li Class="XylXenos.StatPart_Temperature">
         <curve>
           <points>
@@ -42,6 +46,17 @@
         </showForPawnsWithGenes>
       </li>
     </parts>
+  </StatDef>
+  <StatDef>
+    <defName>XylWetnessFallRateOffset</defName>
+    <label>wetness fall rate offset</label>
+    <description>An offset applied to the user's wetness fall rate.</description>
+    <category>Basics</category>
+    <toStringStyle>PercentZero</toStringStyle>
+    <defaultBaseValue>0</defaultBaseValue>
+    <showOnAnimals>false</showOnAnimals>
+    <showIfUndefined>false</showIfUndefined>
+    <showOnPawns>false</showOnPawns>
   </StatDef>
 
 </Defs>

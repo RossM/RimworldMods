@@ -24,7 +24,6 @@
     <apparelStuffFilter Inherit="false">
       <thingDefs>
         <li>XylCoral</li>
-        <li>Cloth</li>
         <li>XylSeaSilk</li>
       </thingDefs>
       <stuffCategoriesToAllow>

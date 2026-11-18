@@ -96,6 +96,9 @@
       </categories>
       <commonality>0.01</commonality>
       <color>(215,170,90)</color>
+      <statOffsets>
+        <XylWetnessFallRateOffset>-0.05</XylWetnessFallRateOffset>
+      </statOffsets>
       <statFactors>
         <Flammability>0.5</Flammability>
         <MaxHitPoints>1.3</MaxHitPoints>
