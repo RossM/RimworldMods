@@ -21,6 +21,8 @@ public class Main : Mod
 {
     public Main(ModContentPack content) : base(content)
     {
+        Config.ModId = content.PackageId;
+
         RegisterForBackCompatibility();
 
         using (new ProfileBlock("XylXenos Load settings"))

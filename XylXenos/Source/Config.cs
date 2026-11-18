@@ -4,6 +4,7 @@
 public class Config : Def
 {
     public static Config Instance => field ??= DefDatabase<Config>.AllDefs.Single();
+    public static string ModId { get; set; } = "xylthixlm.xenotypes";
 }
 
 public static class FeatureNameOf
