@@ -37,10 +37,13 @@ internal class BackCompatibilityConverter_GeneWithComps : BackCompatibilityConve
 
     public override void PostExposeData(object obj)
     {
-        if (Scribe.mode != LoadSaveMode.PostLoadInit)
+        if (Scribe.mode != LoadSaveMode.PostLoadInit || obj is not Pawn pawn || pawn.genes?.GenesListForReading is not { } genes)
             return;
 
-        if (obj is GeneWithComps { comps: null } geneWithComps)
-            geneWithComps.InitializeComps();
+        foreach (Gene gene in genes)
+        {
+            if (gene is GeneWithComps { comps: null } geneWithComps)
+                geneWithComps.InitializeComps();
+        }
     }
 }

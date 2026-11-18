@@ -22,11 +22,12 @@ public static class Patch_Game
                 Log.Error($"Xylthixlm.Xenotypes: Failed to parse mod version");
                 return;
             }
-            string expectedVerion = $"{parts[0]}.{parts[1]}";
-            string? actualVersion = expectedVerion;
+            bool isAlpha = parts.Length >= 3 && parts[2].Contains("alpha", StringComparison.InvariantCultureIgnoreCase);
+            string expectedVersion = $"{parts[0]}.{parts[1]}";
+            string? actualVersion = expectedVersion;
 
             Scribe_Values.Look(ref actualVersion, "modVersion");
-            if (Scribe.mode == LoadSaveMode.LoadingVars && actualVersion != expectedVerion)
+            if (Scribe.mode == LoadSaveMode.LoadingVars && (actualVersion != expectedVersion || isAlpha))
                 ScribeMetaHeaderUtility.modListChanged = true;
         }
         finally
