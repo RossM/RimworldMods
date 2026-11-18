@@ -70,12 +70,7 @@ public class Need_Wetness : Need_Seeker
 
         var caravan = pawn.GetCaravan();
         if (caravan != null)
-        {
-            var tile = Find.WorldGrid[caravan.Tile];
-            if (tile.IsCoastalOrRiverTile || tile.IsWetlandBiome)
-                return 1.0f;
-            return RainfallToWetnessCurve.Evaluate(tile.rainfall);
-        }
+            return GetWetness(Find.WorldGrid[caravan.Tile]);
 
         if (!pawn.Spawned)
             return 0.0f;
@@ -91,6 +86,13 @@ public class Need_Wetness : Need_Seeker
         }
 
         return GetWetness(pawn.Position, pawn.Map);
+    }
+
+    private static float GetWetness(Tile tile)
+    {
+        if (tile.IsCoastalOrRiverTile || tile.IsWetlandBiome)
+            return 1.0f;
+        return RainfallToWetnessCurve.Evaluate(tile.rainfall);
     }
 
     public static float GetWetness(IntVec3 position, Map map)
