@@ -19,15 +19,15 @@
     </stuffCategories>
     <costStuffCount>20</costStuffCount>
     <statBases>
-      <WorkToMake>1400</WorkToMake>
-      <MaxHitPoints>80</MaxHitPoints>
-      <Mass>0.08</Mass>
-      <StuffEffectMultiplierArmor>0.2</StuffEffectMultiplierArmor>
-      <StuffEffectMultiplierInsulation_Cold>0.05</StuffEffectMultiplierInsulation_Cold>
+      <WorkToMake>2500</WorkToMake>
+      <Mass>0.11</Mass>
+      <StuffEffectMultiplierArmor>0.3</StuffEffectMultiplierArmor>
+      <StuffEffectMultiplierInsulation_Cold>0.1</StuffEffectMultiplierInsulation_Cold>
       <StuffEffectMultiplierInsulation_Heat>0.05</StuffEffectMultiplierInsulation_Heat>
       <EquipDelay>1.5</EquipDelay>
     </statBases>
     <equippedStatOffsets>
+      <PainShockThreshold>0.05</PainShockThreshold>
     </equippedStatOffsets>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
