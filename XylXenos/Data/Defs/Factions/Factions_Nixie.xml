@@ -62,11 +62,11 @@
         <commonality>100</commonality>
         <options>
           <Tribal_Penitent>5</Tribal_Penitent>
-          <Tribal_Warrior>5</Tribal_Warrior>
+          <Tribal_Warrior_XylNixie>5</Tribal_Warrior_XylNixie>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
-          <Tribal_Berserker>5</Tribal_Berserker>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
+          <Tribal_Berserker_XylNixie>5</Tribal_Berserker_XylNixie>
           <Tribal_ChiefRanged>3</Tribal_ChiefRanged>
           <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
         </options>
@@ -77,8 +77,8 @@
         <commonality>60</commonality>
         <options>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
           <Tribal_ChiefRanged>5</Tribal_ChiefRanged>
         </options>
       </li>
@@ -88,8 +88,8 @@
         <commonality>60</commonality>
         <options>
           <Tribal_Penitent>10</Tribal_Penitent>
-          <Tribal_Warrior>10</Tribal_Warrior>
-          <Tribal_Berserker>10</Tribal_Berserker>
+          <Tribal_Warrior_XylNixie>10</Tribal_Warrior_XylNixie>
+          <Tribal_Berserker_XylNixie>10</Tribal_Berserker_XylNixie>
           <Tribal_ChiefMelee>5</Tribal_ChiefMelee>
         </options>
       </li>
@@ -98,13 +98,13 @@
         <kindDef>Combat</kindDef>
         <commonality>5</commonality>
         <options>
-          <Tribal_Breacher>5</Tribal_Breacher>
+          <Tribal_Breacher_XylNixie>5</Tribal_Breacher_XylNixie>
           <Tribal_Penitent>5</Tribal_Penitent>
-          <Tribal_Warrior>5</Tribal_Warrior>
+          <Tribal_Warrior_XylNixie>5</Tribal_Warrior_XylNixie>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
-          <Tribal_Berserker>5</Tribal_Berserker>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
+          <Tribal_Berserker_XylNixie>5</Tribal_Berserker_XylNixie>
           <Tribal_ChiefRanged>3</Tribal_ChiefRanged>
           <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
         </options>
@@ -113,12 +113,12 @@
         <!-- Peaceful -->
         <kindDef>Peaceful</kindDef>
         <options>
-          <Tribal_Warrior>20</Tribal_Warrior>
+          <Tribal_Warrior_XylNixie>20</Tribal_Warrior_XylNixie>
           <Tribal_Child MayRequire="Ludeon.RimWorld.Biotech">10</Tribal_Child>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
-          <Tribal_Berserker>5</Tribal_Berserker>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
+          <Tribal_Berserker_XylNixie>5</Tribal_Berserker_XylNixie>
           <Tribal_ChiefRanged>3</Tribal_ChiefRanged>
           <Tribal_ChiefMelee>1.5</Tribal_ChiefMelee>
         </options>
@@ -135,21 +135,21 @@
           <Mastodon MayRequire="Ludeon.RimWorld.Odyssey">1</Mastodon>
         </carriers>
         <guards>
-          <Tribal_Warrior>7</Tribal_Warrior>
+          <Tribal_Warrior_XylNixie>7</Tribal_Warrior_XylNixie>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
-          <Tribal_Berserker>7</Tribal_Berserker>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
+          <Tribal_Berserker_XylNixie>7</Tribal_Berserker_XylNixie>
         </guards>
       </li>
       <li>
         <kindDef>Settlement</kindDef>
         <options>
-          <Tribal_Warrior>7</Tribal_Warrior>
+          <Tribal_Warrior_XylNixie>7</Tribal_Warrior_XylNixie>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
-          <Tribal_Berserker>7</Tribal_Berserker>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
+          <Tribal_Berserker_XylNixie>7</Tribal_Berserker_XylNixie>
           <Tribal_ChiefRanged>10</Tribal_ChiefRanged>
         </options>
       </li>
@@ -157,8 +157,8 @@
         <kindDef>Settlement_RangedOnly</kindDef>
         <options>
           <Tribal_Archer>10</Tribal_Archer>
-          <Tribal_Hunter>10</Tribal_Hunter>
-          <Tribal_HeavyArcher>10</Tribal_HeavyArcher>
+          <Tribal_Hunter_XylNixie>10</Tribal_Hunter_XylNixie>
+          <Tribal_HeavyArcher_XylNixie>10</Tribal_HeavyArcher_XylNixie>
           <Tribal_ChiefRanged>10</Tribal_ChiefRanged>
         </options>
       </li>
@@ -173,7 +173,7 @@
         <kindDef>Hunters</kindDef>
         <commonality>1</commonality>
         <options>
-          <Tribal_Hunter>1</Tribal_Hunter>
+          <Tribal_Hunter_XylNixie>1</Tribal_Hunter_XylNixie>
         </options>
       </li>
       <li MayRequire="Ludeon.RimWorld.Ideology">
@@ -192,5 +192,81 @@
       </li>
     </pawnGroupMakers>
   </FactionDef>
+
+  <PawnKindDef ParentName="TribalWarriorBase">
+    <defName>Tribal_Warrior_XylNixie</defName>
+    <apparelRequired Inherit="False">
+      <li>XylApparel_Circlet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="Tribal_Hunter">
+    <defName>Tribal_Hunter_XylNixie</defName>
+    <apparelRequired Inherit="False">
+      <li>XylApparel_Circlet</li>
+    </apparelRequired>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="TribalBase">
+    <defName>Tribal_Breacher_XylNixie</defName>
+    <label>breacher</label>
+    <combatPower>55</combatPower>
+    <itemQuality>Poor</itemQuality>
+    <canBeSapper>true</canBeSapper>
+    <isGoodBreacher>true</isGoodBreacher>
+    <gearHealthRange>0.5~1.8</gearHealthRange>
+    <apparelMoney>200~300</apparelMoney>
+    <apparelRequired Inherit="False">
+      <li>XylApparel_Circlet</li>
+    </apparelRequired>
+    <weaponMoney>150~150</weaponMoney>
+    <weaponTags>
+      <li>NeolithicMeleeDestructive</li>
+    </weaponTags>
+    <initialWillRange>1~3</initialWillRange>
+    <initialResistanceRange>12~19</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="TribalBase">
+    <defName>Tribal_Berserker_XylNixie</defName>
+    <label>berserker</label>
+    <combatPower>65</combatPower>
+    <canBeSapper>true</canBeSapper>
+    <apparelMoney>200~550</apparelMoney>
+    <apparelRequired Inherit="False">
+      <li>XylApparel_Circlet</li>
+    </apparelRequired>
+    <weaponMoney>300~300</weaponMoney>
+    <weaponTags>
+      <li>NeolithicMeleeAdvanced</li>
+    </weaponTags>
+    <requiredWorkTags>
+      <li>Violent</li>
+    </requiredWorkTags>
+    <initialWillRange>2~4</initialWillRange>
+    <initialResistanceRange>13~20</initialResistanceRange>
+  </PawnKindDef>
+
+  <PawnKindDef ParentName="TribalBase">
+    <defName>Tribal_HeavyArcher_XylNixie</defName>
+    <label>heavy archer</label>
+    <combatPower>75</combatPower>
+    <apparelMoney>200~550</apparelMoney>
+    <apparelRequired Inherit="False">
+      <li>XylApparel_Circlet</li>
+    </apparelRequired>
+    <weaponMoney>250~250</weaponMoney>
+    <weaponTags>
+      <li>NeolithicRangedHeavy</li>
+    </weaponTags>
+    <disallowedTraits>
+      <li>Brawler</li>
+    </disallowedTraits>
+    <requiredWorkTags>
+      <li>Violent</li>
+    </requiredWorkTags>
+    <initialWillRange>2~4</initialWillRange>
+    <initialResistanceRange>14~22</initialResistanceRange>
+  </PawnKindDef>
 
 </Defs>
