@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Xml;
 
 namespace Xylib;
 
@@ -272,6 +273,32 @@ internal static class PatchHelpers
                 Log.WarningOnce("Unhandled case in GetChemicalBlockedByGenesReason");
                 return "";
             }
+        }
+    }
+
+    public static void AddNamesForInheritance(XmlDocument xmlDoc)
+    {
+        foreach (var node in xmlDoc.SelectNodes("/Defs/*[@ParentDefName]")!.OfType<XmlElement>())
+        {
+            string defType = node.Name;
+            string parentDefName = node.GetAttribute("ParentDefName");
+            var parent = xmlDoc.SelectNodes($"/Defs/{defType}[defName=\"{parentDefName}\"]")!.OfType<XmlElement>()
+                .LastOrDefault();
+            
+            if (parent is null)
+            {
+                Log.Warning($"ParentDefName {parentDefName} not found");
+                continue;
+            }
+
+            var parentName = parent.GetAttribute("Name");
+            if (parentName == "")
+            {
+                parentName = $"{defType}.{parentDefName}";
+                parent.SetAttribute("Name", parentName);
+            }
+
+            node.SetAttribute("ParentName", parentName);
         }
     }
 }

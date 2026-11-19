@@ -193,35 +193,35 @@
     </pawnGroupMakers>
   </FactionDef>
 
-  <PawnKindDef ParentName="TribalWarriorBase">
+  <PawnKindDef ParentDefName="Tribal_Warrior">
     <defName>Tribal_Warrior_XylNixie</defName>
     <apparelRequired Inherit="False">
       <li>XylApparel_Circlet</li>
     </apparelRequired>
   </PawnKindDef>
 
-  <PawnKindDef ParentName="Tribal_Hunter">
+  <PawnKindDef ParentDefName="Tribal_Hunter">
     <defName>Tribal_Hunter_XylNixie</defName>
     <apparelRequired Inherit="False">
       <li>XylApparel_Circlet</li>
     </apparelRequired>
   </PawnKindDef>
 
-  <PawnKindDef ParentName="Tribal_Breacher">
+  <PawnKindDef ParentDefName="Tribal_Breacher">
     <defName>Tribal_Breacher_XylNixie</defName>
     <apparelRequired Inherit="False">
       <li>XylApparel_Circlet</li>
     </apparelRequired>
   </PawnKindDef>
 
-  <PawnKindDef ParentName="Tribal_Berserker">
+  <PawnKindDef ParentDefName="Tribal_Berserker">
     <defName>Tribal_Berserker_XylNixie</defName>
     <apparelRequired Inherit="False">
       <li>XylApparel_Circlet</li>
     </apparelRequired>
   </PawnKindDef>
 
-  <PawnKindDef ParentName="Tribal_HeavyArcher">
+  <PawnKindDef ParentDefName="Tribal_HeavyArcher">
     <defName>Tribal_HeavyArcher_XylNixie</defName>
     <apparelRequired Inherit="False">
       <li>XylApparel_Circlet</li>
