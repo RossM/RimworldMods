@@ -19,11 +19,11 @@
     </stuffCategories>
     <costStuffCount>20</costStuffCount>
     <statBases>
-      <WorkToMake>2500</WorkToMake>
-      <Mass>0.11</Mass>
-      <StuffEffectMultiplierArmor>0.3</StuffEffectMultiplierArmor>
+      <WorkToMake>2400</WorkToMake>
+      <Mass>0.5</Mass>
+      <StuffEffectMultiplierArmor>0.2</StuffEffectMultiplierArmor>
       <StuffEffectMultiplierInsulation_Cold>0.1</StuffEffectMultiplierInsulation_Cold>
-      <StuffEffectMultiplierInsulation_Heat>0.05</StuffEffectMultiplierInsulation_Heat>
+      <StuffEffectMultiplierInsulation_Heat>0</StuffEffectMultiplierInsulation_Heat>
       <EquipDelay>1.5</EquipDelay>
     </statBases>
     <equippedStatOffsets>
