@@ -27,6 +27,11 @@
     <statBases>
       <MarketValue>5</MarketValue>
       <Mass>0.5</Mass>
+      <StuffPower_Armor_Sharp>0.6</StuffPower_Armor_Sharp>
+      <StuffPower_Armor_Blunt>0.6</StuffPower_Armor_Blunt>
+      <StuffPower_Armor_Heat>0.2</StuffPower_Armor_Heat>
+      <StuffPower_Insulation_Cold>10</StuffPower_Insulation_Cold>
+      <StuffPower_Insulation_Heat>0</StuffPower_Insulation_Heat>
       <SharpDamageMultiplier>1.2</SharpDamageMultiplier>
       <BluntDamageMultiplier>1.0</BluntDamageMultiplier>
     </statBases>
