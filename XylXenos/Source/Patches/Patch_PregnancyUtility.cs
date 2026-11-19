@@ -7,46 +7,6 @@
 [Category("PostLoadDefs")]
 public static class Patch_PregnancyUtility
 {
-    [Feature(typeof(GeneCompProperties_GenderRatio))]
-    [Prefix]
-    [Inner(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.AddDirectRelation))]
-    [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
-    public static bool AddDirectRelation_Prefix(
-        Pawn ___pawn,
-        PawnRelationDef def,
-        Pawn otherPawn,
-        Pawn geneticMother,
-        Pawn? father,
-        Thing? birtherThing)
-    {
-        Pawn? birtherPawn = birtherThing as Pawn;
-
-        // Gender changes allows the same pawn to be genetic mother, father, AND birther.
-
-        if (def == PawnRelationDefOf.Parent && otherPawn == father && father == geneticMother &&
-            ___pawn.relations.DirectRelationExists(def, otherPawn))
-            return false;
-        if (def == PawnRelationDefOf.ParentBirth && otherPawn == birtherPawn && birtherPawn == father)
-            return false;
-
-        return true;
-    }
-
-    [Feature(typeof(GeneCompProperties_GenderRatio))]
-    [Postfix]
-    [Inner(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.AddDirectRelation))]
-    [Target(nameof(PregnancyUtility.ApplyBirthOutcome))]
-    public static void AddDirectRelation_Postfix(Pawn ___pawn, PawnRelationDef def, Pawn otherPawn, Pawn geneticMother, Pawn father)
-    {
-        if (def != PawnRelationDefOf.Parent)
-            return;
-
-        if (otherPawn == geneticMother)
-            ___pawn.relations.GetDirectRelation(def, otherPawn)?.OriginalGender = Gender.Female;
-        else if (otherPawn == father)
-            ___pawn.relations.GetDirectRelation(def, otherPawn)?.OriginalGender = Gender.Male;
-    }
-
     [Feature(typeof(GeneCompProperties_Inheritance))]
     [Postfix]
     [Inner(typeof(PawnGenerator), nameof(PawnGenerator.GeneratePawn), typeof(PawnGenerationRequest))]
