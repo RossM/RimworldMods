@@ -29,7 +29,7 @@ namespace Xylib
             ArgumentNullException.ThrowIfNull(xml);
 
             var defs = xml.SelectNodes($"/Defs/{defType}")!.OfType<XmlElement>().ToList();
-            var parentDef = defs.FirstOrDefault(def => def["defName"]?.InnerText == parent);
+            var parentDef = defs.LastOrDefault(def => def["defName"]?.InnerText == parent);
             if (parentDef is null)
                 return false;
 
