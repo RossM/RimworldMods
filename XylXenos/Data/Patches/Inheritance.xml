@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Patch>
+  
+  <Operation Class="Xylib.PatchOperationAddInheritance">
+    <defType>PawnKindDef</defType>
+    <parent>Tribal_Breacher</parent>
+    <child>Tribal_Breacher_XylNixie</child>
+  </Operation>
+  <Operation Class="Xylib.PatchOperationAddInheritance">
+    <defType>PawnKindDef</defType>
+    <parent>Tribal_Berserker</parent>
+    <child>Tribal_Berserker_XylNixie</child>
+  </Operation>
+  <Operation Class="Xylib.PatchOperationAddInheritance">
+    <defType>PawnKindDef</defType>
+    <parent>Tribal_HeavyArcher</parent>
+    <child>Tribal_HeavyArcher_XylNixie</child>
+  </Operation>
+
+</Patch>
