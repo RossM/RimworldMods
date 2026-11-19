@@ -31,6 +31,7 @@
     </equippedStatOffsets>
     <apparel>
       <countsAsClothingForNudity>false</countsAsClothingForNudity>
+      <renderSkipFlags/>
       <bodyPartGroups>
         <li>UpperHead</li>
       </bodyPartGroups>
@@ -45,7 +46,7 @@
             <drawData>
             <scale>0.5</scale>
             <defaultData>
-              <layer>62</layer>
+              <layer>64</layer>
             </defaultData>
             <dataNorth>
               <layer>-3</layer>
