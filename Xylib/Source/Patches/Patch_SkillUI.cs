@@ -1,5 +1,6 @@
 namespace Xylib.Patches;
 
+// ReSharper disable once InconsistentNaming
 [Patch(typeof(SkillUI))]
 internal static class Patch_SkillUI
 {

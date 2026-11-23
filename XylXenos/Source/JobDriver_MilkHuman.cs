@@ -28,7 +28,7 @@ public class JobDriver_MilkHuman : JobDriver_InteractWithPawn
         if (Target is null)
             return;
 
-        if (Target.ActiveGeneCompsOfType<GeneComp_Milkable>().FirstOrDefault(comp => comp.ReadyToMilk) is not { } comp)
+        if (Target.ActiveGeneCompsOfType<GeneComp_Milkable>().FirstOrDefault(milkable => milkable.ReadyToMilk) is not { } comp)
             return;
 
         DebugAssert.NotNull(Target.Map);

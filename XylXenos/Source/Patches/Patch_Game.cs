@@ -19,7 +19,7 @@ public static class Patch_Game
             string[] parts = ModLister.GetModWithIdentifier(Config.ModId).ModVersion.Split('.', 3);
             if (parts.Length < 2)
             {
-                Log.Error($"Xylthixlm.Xenotypes: Failed to parse mod version");
+                Log.Error("Xylthixlm.Xenotypes: Failed to parse mod version");
                 return;
             }
             bool isAlpha = parts.Length >= 3 && parts[2].Contains("alpha", StringComparison.InvariantCultureIgnoreCase);

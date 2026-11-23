@@ -1,5 +1,6 @@
 namespace Xylib.Patches;
 
+// ReSharper disable once InconsistentNaming
 [Patch(typeof(DrugPolicyUIUtility))]
 internal static class Patch_DrugPolicyUIUtility
 {

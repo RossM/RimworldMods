@@ -1,6 +1,7 @@
 ﻿namespace XylXenos;
 
 [UsedFromXml]
+// ReSharper disable once InconsistentNaming
 public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
 {
     private static readonly List<Pawn> potentialTargets = [];

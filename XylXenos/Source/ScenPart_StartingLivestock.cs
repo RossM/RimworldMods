@@ -44,7 +44,7 @@ public class ScenPart_StartingLivestock : ScenPart
 
     private static IEnumerable<PawnKindDef> PossibleAnimals(bool checkForTamer = true)
     {
-        return DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef td) => td.RaceProps.Animal && (!checkForTamer || CanKeepPetTame(td)));
+        return DefDatabase<PawnKindDef>.AllDefs.Where(kindDef => kindDef.RaceProps.Animal && (!checkForTamer || CanKeepPetTame(kindDef)));
     }
 
     private static bool CanKeepPetTame(PawnKindDef def)

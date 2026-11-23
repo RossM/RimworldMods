@@ -1,6 +1,4 @@
-﻿using RimWorld.Planet;
-
-namespace XylXenos.Patches;
+﻿namespace XylXenos.Patches;
 
 [Patch(typeof(PawnGroupKindWorker_Trader))]
 public static class Patch_PawnGroupKindWorker_Trader

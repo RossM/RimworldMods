@@ -37,10 +37,7 @@ public class ThoughtWorker_Need : ThoughtWorker
 
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {
-        if (ThoughtUtility.ThoughtNullified(p, def))
-            return ThoughtState.Inactive;
-
-        if (p.needs?.TryGetNeed(DefExt.need) is not { } need)
+        if (ThoughtUtility.ThoughtNullified(p, def) || p.needs?.TryGetNeed(DefExt.need) is not { } need)
             return ThoughtState.Inactive;
 
         int stage = CurStageGetter(need);
