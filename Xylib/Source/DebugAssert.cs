@@ -16,7 +16,7 @@ public static class DebugAssert
         [CallerFilePath] string filePath = "??",
         [CallerLineNumber] int lineNumber = 0)
     {
-        if (value != null)
+        if (value is not null)
             return;
 
         Log.ErrorOnce($"[{filePath}:{lineNumber}] {valueExpression} is null");

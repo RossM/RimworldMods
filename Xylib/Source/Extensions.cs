@@ -95,7 +95,7 @@ public static class Extensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (pawn.genes == null)
+                if (pawn.genes is null)
                     return null;
                 if (pawn.GeneTracker_Xylib_Internal is { } tracker)
                     return tracker;
@@ -115,7 +115,7 @@ public static class Extensions
         ///     The matching genes.
         /// </returns>
         public IEnumerable<Gene> AllGenesOfDef(GeneDef def) =>
-            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
+            pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesWithDef(def);
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with the specified def.
@@ -127,10 +127,10 @@ public static class Extensions
         ///     <see langword="true" /> if the pawn has an active matching gene; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasActiveGene(GeneDef? def) =>
-            def != null && pawn.genes != null && pawn.GeneAndHediffCache.GetGenesWithDef(def).Any(gene => gene.Active);
+            def is not null && pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesWithDef(def).Any(gene => gene.Active);
 
         public Gene? FirstActiveGene(GeneDef? def) => 
-            def == null || pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesWithDef(def).FirstOrDefault(gene => gene.Active);
+            def is null || pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesWithDef(def).FirstOrDefault(gene => gene.Active);
 
         /// <summary>
         ///     Gets all genes on the pawn that are assignable to the specified type.
@@ -141,7 +141,7 @@ public static class Extensions
         /// <returns>
         ///     The matching genes.
         /// </returns>
-        public IEnumerable<T> AllGenesOfType<T>() where T : Gene => pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
+        public IEnumerable<T> AllGenesOfType<T>() where T : Gene => pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>();
 
         /// <summary>
         ///     Gets all active genes on the pawn that are assignable to the specified type.
@@ -153,7 +153,7 @@ public static class Extensions
         ///     The matching active genes.
         /// </returns>
         public IEnumerable<T> ActiveGenesOfType<T>() where T : Gene =>
-            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>().Where(gene => gene.Active);
+            pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>().Where(gene => gene.Active);
 
         /// <summary>
         ///     Gets all active genes on the pawn that are assignable to the specified type and satisfy a predicate.
@@ -168,7 +168,7 @@ public static class Extensions
         ///     The matching active genes.
         /// </returns>
         public IEnumerable<T> ActiveGenesOfType<T>(Func<T, bool> predicate) where T : Gene => 
-            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>().Where(gene => gene.Active && predicate(gene));
+            pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>().Where(gene => gene.Active && predicate(gene));
 
         /// <summary>
         ///     Gets the first active gene on the pawn that is assignable to the specified type.
@@ -180,7 +180,7 @@ public static class Extensions
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
         public T? FirstActiveGeneOfType<T>() where T : Gene =>
-            pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesOfType<T>().FirstOrDefault(gene => gene.Active);
+            pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesOfType<T>().FirstOrDefault(gene => gene.Active);
 
         /// <summary>
         ///     Gets the first active gene on the pawn that is assignable to the specified type and satisfies a predicate.
@@ -195,7 +195,7 @@ public static class Extensions
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
         public T? FirstActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene => 
-            pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesOfType<T>().FirstOrDefault(gene => gene.Active && predicate(gene));
+            pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesOfType<T>().FirstOrDefault(gene => gene.Active && predicate(gene));
 
         /// <summary>
         ///     Determines whether the pawn has an active gene assignable to the specified type.
@@ -207,7 +207,7 @@ public static class Extensions
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasActiveGeneOfType<T>() where T : Gene =>
-            pawn.genes != null && pawn.GeneAndHediffCache.GetGenesOfType<T>().Any(gene => gene.Active);
+            pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesOfType<T>().Any(gene => gene.Active);
 
         /// <summary>
         ///     Determines whether the pawn has an active gene assignable to the specified type and satisfying a predicate.
@@ -222,7 +222,7 @@ public static class Extensions
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene => 
-            pawn.genes != null && pawn.GeneAndHediffCache.GetGenesOfType<T>().Any(gene => gene.Active && predicate(gene));
+            pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesOfType<T>().Any(gene => gene.Active && predicate(gene));
 
         /// <summary>
         ///     Gets all genes on the pawn that have a <see cref="GeneComp" /> of the specified type.
@@ -234,7 +234,7 @@ public static class Extensions
         ///     Matching genes with <see cref="GeneComp" /> instances.
         /// </returns>
         public IEnumerable<GeneWithComps> AllGenesWithComp<T>() where T : GeneComp =>
-            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
+            pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>();
 
         /// <summary>
         ///     Gets all active genes on the pawn that have a <see cref="GeneComp" /> of the specified type.
@@ -246,7 +246,7 @@ public static class Extensions
         ///     Matching active genes with <see cref="GeneComp" /> instances.
         /// </returns>
         public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>() where T : GeneComp =>
-            pawn.genes == null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>().Where(gene => gene.Active);
+            pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesWithComp<T>().Where(gene => gene.Active);
 
         /// <summary>
         ///     Gets all active genes on the pawn that have a <see cref="GeneComp" /> of the specified type which satisfies a
@@ -263,7 +263,7 @@ public static class Extensions
         /// </returns>
         public IEnumerable<GeneWithComps> ActiveGenesWithComp<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            return pawn.genes == null ? [] : Iterator();
+            return pawn.genes is null ? [] : Iterator();
 
             IEnumerable<GeneWithComps> Iterator()
             {
@@ -286,7 +286,7 @@ public static class Extensions
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
         public GeneWithComps? FirstActiveGeneWithComp<T>() where T : GeneComp => 
-            pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active);
+            pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active);
 
         /// <summary>
         ///     Gets the first active gene on the pawn that has a <see cref="GeneComp" /> of the specified type which satisfies a
@@ -302,7 +302,7 @@ public static class Extensions
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
         public GeneWithComps? FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp => 
-            pawn.genes == null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
+            pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with a <see cref="GeneComp" /> of the specified type.
@@ -314,7 +314,7 @@ public static class Extensions
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasActiveGeneWithComp<T>() where T : GeneComp =>
-            pawn.genes != null && pawn.GeneAndHediffCache.GetGenesWithComp<T>().Any(gene => gene.Active);
+            pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesWithComp<T>().Any(gene => gene.Active);
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with a <see cref="GeneComp" /> of the specified type which satisfies
@@ -330,7 +330,7 @@ public static class Extensions
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp => 
-            pawn.genes != null && pawn.GeneAndHediffCache.GetGenesWithComp<T>().Any(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
+            pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesWithComp<T>().Any(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
 
         /// <summary>
         ///     Gets <see cref="GeneComp" /> instances of the specified type from the pawn's active genes.
@@ -343,7 +343,7 @@ public static class Extensions
         /// </returns>
         public IEnumerable<T> ActiveGeneCompsOfType<T>() where T : GeneComp
         {
-            return pawn.genes == null ? [] : Iterator();
+            return pawn.genes is null ? [] : Iterator();
 
             IEnumerable<T> Iterator()
             {
@@ -370,7 +370,7 @@ public static class Extensions
         /// </returns>
         public IEnumerable<T> ActiveGeneCompsOfType<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            return pawn.genes == null ? [] : Iterator();
+            return pawn.genes is null ? [] : Iterator();
 
             IEnumerable<T> Iterator()
             {
@@ -394,7 +394,7 @@ public static class Extensions
         /// </returns>
         public T? FirstActiveGeneCompOfType<T>() where T : GeneComp
         {
-            if (pawn.genes == null)
+            if (pawn.genes is null)
                 return null;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
@@ -422,7 +422,7 @@ public static class Extensions
         /// </returns>
         public T? FirstActiveGeneCompOfType<T>(Func<T, bool> predicate) where T : GeneComp
         {
-            if (pawn.genes == null)
+            if (pawn.genes is null)
                 return null;
 
             IReadOnlyList<GeneWithComps> genes = pawn.GeneAndHediffCache.GetGenesWithComp<T>();
@@ -604,7 +604,7 @@ public static class Extensions
         public bool ChemicalIsAllowedByGenes(ChemicalDef? chemicalDef)
         {
             var defExtension = chemicalDef?.GetModExtension<DefModExtension_Chemical>();
-            if (defExtension == null)
+            if (defExtension is null)
                 return true;
 
             if (defExtension.prohibitedGenes is { Count: > 0 } && defExtension.prohibitedGenes.Any(pawn.HasActiveGene))
@@ -620,7 +620,7 @@ public static class Extensions
         public bool ChemicalIsAllowedByGenes(ThingDef drug)
         {
             ChemicalDef? chemical = DrugStatsUtility.GetChemical(drug);
-            return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
+            return chemical is null || pawn.ChemicalIsAllowedByGenes(chemical);
         }
     }
 
@@ -636,7 +636,7 @@ public static class Extensions
     {
         public T MemberwiseClone()
         {
-            if (_memberwiseCloneFn == null)
+            if (_memberwiseCloneFn is null)
             {
                 var method = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
                 DebugAssert.NotNull(method);

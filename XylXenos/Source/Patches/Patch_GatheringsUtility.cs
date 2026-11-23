@@ -10,7 +10,7 @@ public static class Patch_GatheringsUtility
     {
         DebugAssert.False(p.Dead);
 
-        if (gatheringDef.respectTimetable && p.needs.joy == null)
+        if (gatheringDef.respectTimetable && p.needs.joy is null)
             __result = false;
     }
 }

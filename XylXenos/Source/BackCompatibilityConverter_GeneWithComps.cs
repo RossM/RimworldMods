@@ -19,7 +19,7 @@ internal class BackCompatibilityConverter_GeneWithComps : BackCompatibilityConve
     public override Type? GetBackCompatibleType(Type baseType, string providedClassName, XmlNode? node)
     {
         if (baseType == typeof(Gene) && providedClassName is "Gene" or "Verse.Gene"
-            && node != null && HasGeneWithCompsExtension(node))
+            && node is not null && HasGeneWithCompsExtension(node))
             return typeof(GeneWithComps);
 
         return null;
@@ -27,12 +27,11 @@ internal class BackCompatibilityConverter_GeneWithComps : BackCompatibilityConve
 
     private static bool HasGeneWithCompsExtension(XmlNode node)
     {
-        XmlElement? defNode = node["def"];
-        if (defNode == null || defNode.InnerText is "" or "null")
+        if (node["def"] is not { } defNode || defNode.InnerText is "" or "null")
             return false;
 
         string defName = BackCompatibility.BackCompatibleDefName(typeof(GeneDef), defNode.InnerText, node: defNode);
-        return DefDatabase<GeneDef>.GetNamedSilentFail(defName)?.Extension_GeneWithComps != null;
+        return DefDatabase<GeneDef>.GetNamedSilentFail(defName)?.Extension_GeneWithComps is not null;
     }
 
     public override void PostExposeData(object obj)

@@ -8,7 +8,7 @@ public static class Patch_ThingDef
     [Target(nameof(ThingDef.SpecialDisplayStats))]
     public static void SpecialDisplayStats_Postfix(ThingDef __instance, ref IEnumerable<StatDrawEntry> __result)
     {
-        if (__instance.apparel == null)
+        if (__instance.apparel is null)
             return;
 
         bool allowsFlight = GeneComp_Flight.ApparelAllowsFlight(__instance);

@@ -19,7 +19,7 @@ public static class PawnExtensions
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (pawn.genes == null)
+                if (pawn.genes is null)
                     return null;
                 if (pawn.GeneTracker_XylXenos_Internal is { } tracker)
                     return tracker;
@@ -35,7 +35,7 @@ public static class PawnExtensions
                 return 0;
 
             if (pawn.ActiveGenesOfType<GeneWithComps>().Any(gene =>
-                    gene.GetComp<GeneComp_Psycast>() != null && gene.def.abilities?.Contains(ability) is true))
+                    gene.GetComp<GeneComp_Psycast>() is not null && gene.def.abilities?.Contains(ability) is true))
                 return ability.level;
 
             return 0;

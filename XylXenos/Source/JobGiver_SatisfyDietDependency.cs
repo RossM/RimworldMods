@@ -25,8 +25,7 @@ public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
         {
             foreach (Hediff_DietDependency dietDependency in tmpDietDependencies)
             {
-                Thing? food = dietDependency.FindFoodFor(pawn);
-                if (food == null)
+                if (dietDependency.FindFoodFor(pawn) is not { } food)
                     continue;
 
                 float nutritionPer = FoodUtility.NutritionForEater(pawn, food);
@@ -35,7 +34,7 @@ public class JobGiver_SatisfyDietDependency : ThinkNode_JobGiver
 
                 Pawn? pawn2 = (food.ParentHolder as Pawn_InventoryTracker)?.pawn;
                 Job job;
-                if (pawn2 != null && pawn2 != pawn)
+                if (pawn2 is not null && pawn2 != pawn)
                     job = JobMaker.MakeJob(JobDefOf.TakeFromOtherInventory, food, pawn2);
                 else
                     job = JobMaker.MakeJob(JobDefOf.Ingest, food);

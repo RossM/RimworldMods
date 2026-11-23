@@ -80,7 +80,7 @@ internal static class Patch_PawnGenerator
     [Target("TryGenerateNewPawnInternal")]
     public static void TryGenerateNewPawnInternal_Postfix(ref Pawn? __result, ref PawnGenerationRequest request)
     {
-        if (__result == null)
+        if (__result is null)
             return;
         EventManager.Instance.Notify(EventDefOf.PostGenerateNewPawn, __result, request);
     }

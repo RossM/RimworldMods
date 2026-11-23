@@ -35,7 +35,7 @@ public class JobGiver_AICastAbilityOnTarget : JobGiver_AICastAbility
 
         HashSet<IAttackTarget> targets = [];
 
-        if (targetAllies && caster.Faction != null)
+        if (targetAllies && caster.Faction is not null)
             targets.AddRange(caster.Map.mapPawns.PawnsInFaction(caster.Faction).Except(caster));
         if (targetEnemies)
             targets.AddRange(caster.Map.attackTargetsCache.GetPotentialTargetsFor(caster));

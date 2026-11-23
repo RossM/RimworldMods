@@ -9,8 +9,8 @@ internal static class Patch_StartingPawnUtility
     [Target("GeneratePossessions")]
     public static bool List_Add_Prefix(List<ThingDefCount> __instance, ThingDefCount item, Pawn pawn)
     {
-        var chemical = item.ThingDef?.GetCompProperties<CompProperties_Drug>()?.chemical;
-        return chemical == null || pawn.ChemicalIsAllowedByGenes(chemical);
+        return item.ThingDef?.GetCompProperties<CompProperties_Drug>()?.chemical is not { } chemical ||
+               pawn.ChemicalIsAllowedByGenes(chemical);
     }
 
     [Feature(nameof(EventDefOf.InGeneratePossessions))]

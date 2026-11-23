@@ -34,7 +34,7 @@ internal static class PatchHelpers
             try
             {
                 var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
-                if (impliedDefsMethodInfo == null)
+                if (impliedDefsMethodInfo is null)
                 {
                     Log.Error($"{type.FullName} is marked as DefGenerator but doesn't have ImpliedDefs method");
                     continue;
@@ -61,18 +61,17 @@ internal static class PatchHelpers
     {
         outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
             gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
-        return outGene != null;
+        return outGene is not null;
     }
 
     private static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
-        var defExt = geneDef.Extension_GeneWithComps;
-        if (defExt == null)
+        if (geneDef.Extension_GeneWithComps is not { } defExt)
             return true;
 
         if (!defExt.showInXenotypeCreation)
             return false;
-        if (defExt.geneType != null && defExt.geneType != geneType)
+        if (defExt.geneType is not null && defExt.geneType != geneType)
             return false;
 
         return true;
@@ -108,7 +107,7 @@ internal static class PatchHelpers
 
     public static void AddSlaveRebellionMtbFactorExplanation(StringBuilder stringBuilder, Pawn? pawn)
     {
-        if (pawn == null)
+        if (pawn is null)
             return;
 
         StatRequest statRequest = StatRequest.For(pawn);
@@ -129,8 +128,7 @@ internal static class PatchHelpers
         HashSet<RecipeDef> result = [];
         foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
         {
-            var recipes = geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
-            if (recipes != null)
+            if (geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes is { } recipes)
                 result.AddRange(recipes);
         }
 
@@ -146,7 +144,7 @@ internal static class PatchHelpers
 
         foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_Xylib?.unlockedBuildables))
         {
-            if (designators == null)
+            if (designators is null)
                 continue;
 
             geneDesignators.AddRange(designators.Where(def => def.designationCategory == __instance)
@@ -225,8 +223,7 @@ internal static class PatchHelpers
 
     public static List<string>? RequiredMemberErrors(object def)
     {
-        var checkerFunc = GetRequiredMemberCheckerFunc(def.GetType());
-        if (checkerFunc == null)
+        if (GetRequiredMemberCheckerFunc(def.GetType()) is not { } checkerFunc)
             return null;
 
         List<string> errors = [];

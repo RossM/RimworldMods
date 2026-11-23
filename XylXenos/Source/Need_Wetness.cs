@@ -68,8 +68,7 @@ public class Need_Wetness : Need_Seeker
     {
         DebugAssert.NotNull(Find.WorldGrid);
 
-        var caravan = pawn.GetCaravan();
-        if (caravan != null)
+        if (pawn.GetCaravan() is { } caravan)
             return GetWetness(Find.WorldGrid[caravan.Tile]);
 
         if (!pawn.Spawned)

@@ -43,17 +43,17 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
     {
         if (!Pawn.IsHashIntervalTick(CheckInterval, delta))
             return;
-        if (extraEnemies == null)
+        if (extraEnemies is null)
             return;
 
         Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
-        if (hediff == null)
+        if (hediff is null)
             extraEnemies.Clear();
     }
 
     public bool ForceHostility(Thing thing)
     {
-        return extraEnemies != null && extraEnemies.Contains(thing);
+        return extraEnemies is not null && extraEnemies.Contains(thing);
     }
 
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
@@ -79,7 +79,7 @@ public class GeneComp_SeeingRed : GeneComp, IEventListener
 
         Hediff? hediff = Pawn.health.hediffSet.GetFirstHediffOfDef(Props.hediffDef);
 
-        if (hediff == null && !Rand.Chance(Props.chance))
+        if (hediff is null && !Rand.Chance(Props.chance))
             return;
 
         hediff ??= Pawn.health.AddHediff(Props.hediffDef);

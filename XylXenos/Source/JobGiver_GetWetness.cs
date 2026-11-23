@@ -12,10 +12,10 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
         get
         {
-            if (field != null)
+            if (field is not null)
                 return field;
 
-            return field = [.. DefDatabase<ThingDef>.AllDefs.Where(def => def.GetModExtension<DefModExtension_Thing_WetnessSource>() != null)];
+            return field = [.. DefDatabase<ThingDef>.AllDefs.Where(def => def.GetModExtension<DefModExtension_Thing_WetnessSource>() is not null)];
         }
     }
 
@@ -24,7 +24,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
         base.ResolveReferences();
 
-        if (soakJobDef == null)
+        if (soakJobDef is null)
             Log.Warning($"{nameof(soakJobDef)} is null in {nameof(ThinkNode_ConditionalHasGene)}");
     }
 
@@ -124,8 +124,7 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
     {
         DebugAssert.False(pawn.Dead);
 
-        var need = pawn.needs.TryGetNeed<Need_Wetness>();
-        if (need == null)
+        if (pawn.needs.TryGetNeed<Need_Wetness>() is not { } need)
             return 0.0f;
 
         var projectedWetness = need.CurLevel - 8f * need.FallPerHour;

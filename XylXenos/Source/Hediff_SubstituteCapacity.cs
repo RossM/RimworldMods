@@ -99,7 +99,7 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             return false;
         if (DefExt.originalCapacity != pawnCapacityDef)
             return false;
-        if (DefExt.excludeStats != null && DefExt.excludeStats.Contains(statDef))
+        if (DefExt.excludeStats is not null && DefExt.excludeStats.Contains(statDef))
             return false;
         return true;
     }

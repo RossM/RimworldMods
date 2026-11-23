@@ -302,7 +302,7 @@ public class EventManager
     private class RegistrationRecord(EventDef eventDef, Thing? target)
     {
         public readonly EventDef eventDef = eventDef;
-        public readonly System.WeakReference<Thing>? target = target == null ? null : new(target);
+        public readonly System.WeakReference<Thing>? target = target is null ? null : new(target);
     }
 
     /// <summary>
@@ -398,7 +398,7 @@ public class EventManager
 
         if (_doDebug)
             Debug.Log(
-                $"[EventManager] Register eventDef={eventDef} {(target == null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
+                $"[EventManager] Register eventDef={eventDef} {(target is null ? "global" : $"target=[{target}]")} listener={listener} name={name} priority={priority}");
 
         var registrationInfo = registrations.GetOrCreateValue(listener);
 
@@ -408,7 +408,7 @@ public class EventManager
         }
 
         NotificationInfo? notificationInfo = Notifications[eventDef.index];
-        if (notificationInfo == null)
+        if (notificationInfo is null)
         {
             Interlocked.CompareExchange(ref Notifications[eventDef.index], new(), null);
             notificationInfo = Notifications[eventDef.index]!;
@@ -421,7 +421,7 @@ public class EventManager
 
         lock (notificationInfo.sync)
         {
-            if (target == null)
+            if (target is null)
             {
                 if (notificationInfo.globalCallbacks.Any(c => c.listener == listener && c.name == name))
                 {
@@ -478,7 +478,7 @@ public class EventManager
     {
         ArgumentNullException.ThrowIfNull(callback);
 
-        if (eventDef == null)
+        if (eventDef is null)
         {
             Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
@@ -524,7 +524,7 @@ public class EventManager
     {
         ArgumentNullException.ThrowIfNull(callback);
 
-        if (eventDef == null)
+        if (eventDef is null)
         {
             Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
@@ -567,7 +567,7 @@ public class EventManager
     {
         ArgumentNullException.ThrowIfNull(callback);
 
-        if (eventDef == null)
+        if (eventDef is null)
         {
             Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
@@ -603,7 +603,7 @@ public class EventManager
     {
         ArgumentNullException.ThrowIfNull(callback);
 
-        if (eventDef == null)
+        if (eventDef is null)
         {
             Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
@@ -662,7 +662,7 @@ public class EventManager
         ArgumentNullException.ThrowIfNull(listener);
         ArgumentNullException.ThrowIfNull(callback);
 
-        if (eventDef == null)
+        if (eventDef is null)
         {
             Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
@@ -705,7 +705,7 @@ public class EventManager
 
                 lock (notificationInfo.sync)
                 {
-                    if (record.target == null)
+                    if (record.target is null)
                     {
                         notificationInfo.globalCallbacks.RemoveAll(callback => callback.listener == listener);
                     }
@@ -745,7 +745,7 @@ public class EventManager
     public void Notify(EventDef? eventDef, Thing? target, object? data = null,
         [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
     {
-        if (eventDef == null)
+        if (eventDef is null)
         {
             Log.ErrorOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
@@ -761,7 +761,7 @@ public class EventManager
             ValidateNotifyArgs(eventDef, target, data);
 
         NotificationInfo? notificationInfo = Notifications[eventDef.index];
-        if (notificationInfo == null)
+        if (notificationInfo is null)
             return;
 
         _tempCallbacks ??= [];
@@ -771,7 +771,7 @@ public class EventManager
             lock (notificationInfo.sync)
             {
                 callbackList.AddRange(notificationInfo.globalCallbacks);
-                if (target != null && notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo>? localCallbacks))
+                if (target is not null && notificationInfo.localCallbacks.TryGetValue(target, out List<CallbackInfo>? localCallbacks))
                     callbackList.AddRange(localCallbacks);
             }
 
@@ -803,19 +803,19 @@ public class EventManager
     {
         if (eventDef.global)
         {
-            if (target != null)
+            if (target is not null)
                 Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is global but was called with target {target}",
                     Gen.HashCombineInt(0x34330AEF, eventDef.index));
         }
         else
         {
-            if (target == null)
+            if (target is null)
                 Log.ErrorOnce($"[EventManager] Notification {eventDef.defName} is not global but was called with null target");
         }
 
-        if (eventDef.dataType != null)
+        if (eventDef.dataType is not null)
         {
-            if (data == null)
+            if (data is null)
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} should take data of type {eventDef.dataType} but was given null");
             else if (!eventDef.dataType.IsInstanceOfType(data))
@@ -824,7 +824,7 @@ public class EventManager
         }
         else
         {
-            if (data != null)
+            if (data is not null)
                 Log.ErrorOnce(
                     $"[EventManager] Notification {eventDef.defName} shouldn't take data but was given {data.GetType()}");
         }

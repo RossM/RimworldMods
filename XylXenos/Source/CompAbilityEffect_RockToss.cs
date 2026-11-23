@@ -38,7 +38,7 @@ public class CompAbilityEffect_RockToss : CompAbilityEffect_WithDest, ITargeting
         // JobDriver_CastWithHeldThing, the destination (target B) becomes the primary target. Otherwise
         // the targeter would abort because target A is in our inventory and no longer spawned.
         base.Apply(target, dest);
-        if (parent.pawn.carryTracker.CarriedThing != null)
+        if (parent.pawn.carryTracker.CarriedThing is not null)
             LaunchProjectile(target);
     }
 

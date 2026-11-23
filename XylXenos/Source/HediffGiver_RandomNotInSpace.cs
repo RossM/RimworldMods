@@ -17,7 +17,7 @@ public class HediffGiver_RandomNotInSpace : HediffGiver_Random
         float mtb = mtbDays;
         float factor = ChanceFactor(pawn);
         if (factor != 0f && Rand.MTBEventOccurs(mtb / factor, 60000f, 60f) && TryApply(pawn))
-            if (message != null)
+            if (message is not null)
                 Messages.Message(message.Formatted(pawn.LabelShortCap, hediff.LabelCap, pawn.Named("PAWN")).CapitalizeFirst(),
                     MessageTypeDefOf.NegativeEvent);
     }

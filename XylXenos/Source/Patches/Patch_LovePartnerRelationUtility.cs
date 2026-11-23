@@ -22,7 +22,7 @@ public static class Patch_LovePartnerRelationUtility
     [Target("LovinMtbSinglePawnFactor")]
     public static void LovinMtbSinglePawnFactor_Postfix(Pawn pawn, ref float __result)
     {
-        if (ModsConfig.BiotechActive && pawn.genes != null)
+        if (ModsConfig.BiotechActive && pawn.genes is not null)
             foreach (Gene item in pawn.genes.GenesListForReading)
                 __result *= item.def.lovinMTBFactor;
 

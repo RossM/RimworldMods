@@ -13,14 +13,13 @@ public static class Patch_TileFinder
         Faction? faction,
         ref Predicate<PlanetTile>? extraValidator)
     {
-        var extension = faction?.def.GetModExtension<DefModExtension_Faction>();
-        if (extension == null)
+        if (faction?.def.GetModExtension<DefModExtension_Faction>() is not { } extension)
             return;
 
         var oldValidator = extraValidator;
         extraValidator = planetTile =>
         {
-            if (oldValidator != null && !oldValidator(planetTile))
+            if (oldValidator is not null && !oldValidator(planetTile))
                 return false;
 
             return extension.ValidatePlanetTile(planetTile);

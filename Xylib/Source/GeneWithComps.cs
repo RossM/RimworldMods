@@ -192,7 +192,7 @@ public class GeneWithComps : Gene, IEventListener
         if (!DefExt.ValidFor(pawn, GeneType))
             return false;
 
-        return comps == null || comps.All(comp => comp.CompAllowActive);
+        return comps is null || comps.All(comp => comp.CompAllowActive);
     }
 
     public virtual bool ImmuneToVacuumBurns
@@ -202,7 +202,7 @@ public class GeneWithComps : Gene, IEventListener
             if (def.immuneToVacuumBurns)
                 return true;
 
-            return comps != null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
+            return comps is not null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
         }
     }
 
@@ -215,7 +215,7 @@ public class GeneWithComps : Gene, IEventListener
         if (Scribe.mode == LoadSaveMode.LoadingVars)
             InitializeComps();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (GeneComp comp in comps)
             comp.CompExposeData();
@@ -229,7 +229,7 @@ public class GeneWithComps : Gene, IEventListener
         base.PostMake();
         InitializeComps();
 
-        if (comps == null)
+        if (comps is null)
             return;
 
         for (int num = comps.Count - 1; num >= 0; num--)
@@ -249,15 +249,13 @@ public class GeneWithComps : Gene, IEventListener
 
     public void InitializeComps()
     {
-        var compProperties = DefExt.comps;
-        if (compProperties == null)
+        if (DefExt.comps is not { } compProperties)
             return;
 
         comps = [];
         foreach (GeneCompProperties compProps in compProperties)
         {
-            Type? compClass = compProps.compClass;
-            if (compClass == null)
+            if (compProps.compClass is not { } compClass)
                 continue;
 
             GeneComp? comp = null;
@@ -285,7 +283,7 @@ public class GeneWithComps : Gene, IEventListener
             catch (Exception ex)
             {
                 Log.Error("Could not instantiate or initialize a GeneComp: " + ex);
-                if (comp != null)
+                if (comp is not null)
                     comps.Remove(comp);
             }
         }
@@ -300,10 +298,10 @@ public class GeneWithComps : Gene, IEventListener
             if (pawn.ChemicalIsAllowedByGenes(chemicalDef))
                 continue;
 
-            if (chemicalDef.toleranceHediff != null)
-                hediffDefsToRemove.Add(chemicalDef.toleranceHediff);
-            if (chemicalDef.addictionHediff != null)
-                hediffDefsToRemove.Add(chemicalDef.addictionHediff);
+            if (chemicalDef.toleranceHediff is { } toleranceHediff)
+                hediffDefsToRemove.Add(toleranceHediff);
+            if (chemicalDef.addictionHediff is { } addictionHediff)
+                hediffDefsToRemove.Add(addictionHediff);
         }
 
         var hediffs = new List<Hediff>(pawn.health.hediffSet.hediffs);
@@ -322,7 +320,7 @@ public class GeneWithComps : Gene, IEventListener
 
         base.PostAdd();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (var comp in comps)
             comp.CompPostPostAdd();
@@ -339,7 +337,7 @@ public class GeneWithComps : Gene, IEventListener
 
         base.PostRemove();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (var comp in comps)
             comp.CompPostPostRemove();
@@ -352,7 +350,7 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.Reset();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (var comp in comps)
             comp.CompReset();
@@ -362,7 +360,7 @@ public class GeneWithComps : Gene, IEventListener
     ///     Gets stats which are displayed on the pawn's description screen.
     /// </summary>
     /// <returns></returns>
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() => comps == null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() => comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
 
     /// <summary>
     ///     Called periodically on gameplay tick.
@@ -403,7 +401,7 @@ public class GeneWithComps : Gene, IEventListener
     /// <returns></returns>
     public override IEnumerable<Gizmo> GetGizmos()
     {
-        if (comps != null)
+        if (comps is not null)
         {
             foreach (Gizmo gizmo in comps.SelectMany(comp => comp.CompGetGizmos()))
                 yield return gizmo;
@@ -411,7 +409,7 @@ public class GeneWithComps : Gene, IEventListener
 
         if (!DebugSettings.ShowDevGizmos)
             yield break;
-        if (DefExt.hediffGivers == null)
+        if (DefExt.hediffGivers is null)
             yield break;
 
         for (var index = 0; index < DefExt.hediffGivers.Count; index++)
@@ -456,7 +454,7 @@ public class GeneWithComps : Gene, IEventListener
         manager.Register(EventDefOf.PostMutated, pawn, SetActiveStateNeedsUpdating);
         manager.Register(EventDefOf.PostBirthday, pawn, SetActiveStateNeedsUpdating);
 
-        if (comps == null)
+        if (comps is null)
             return;
 
         foreach (var comp in comps.OfType<IEventListener>())
@@ -465,7 +463,7 @@ public class GeneWithComps : Gene, IEventListener
 
     void IEventListener.PreUnregister(EventManager manager)
     {
-        if (comps == null)
+        if (comps is null)
             return;
 
         foreach (var comp in comps.OfType<IEventListener>())

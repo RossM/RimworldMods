@@ -26,7 +26,7 @@ public class GeneTracker_XylXenos(Pawn pawn) : GeneTracker(pawn)
         meleeChanceBonuses?.Clear();
         hasPsycast = false;
 
-        if (Pawn.genes == null)
+        if (Pawn.genes is null)
             return;
 
         foreach (var gene in Pawn.ActiveGenesOfType<GeneWithComps>())
@@ -42,7 +42,7 @@ public class GeneTracker_XylXenos(Pawn pawn) : GeneTracker(pawn)
             Add(ref meleeChanceBonuses, def.CompProps<GeneCompProperties_MeleeDamageFactors>()?.factors,
                 item => item.damageDef, item => item.chanceBonus);
 
-            hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() != null;
+            hasPsycast |= def.CompProps<GeneCompProperties_Psycast>() is not null;
         }
     }
 }

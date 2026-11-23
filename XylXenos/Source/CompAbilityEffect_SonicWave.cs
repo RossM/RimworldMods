@@ -40,7 +40,7 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
     {
         var value = base.GetDurationSeconds(targetPawn);
 
-        if (Props.durationMultiplierCapacity != null)
+        if (Props.durationMultiplierCapacity is not null)
             value *= targetPawn.health.capacities.GetLevel(Props.durationMultiplierCapacity);
 
         return value;
@@ -56,7 +56,7 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
     {
         DebugAssert.NotNull(parent.pawn.Map);
 
-        if (parent.pawn.Faction == null)
+        if (parent.pawn.Faction is null)
             return false;
 
         bool affectsAlly = false;

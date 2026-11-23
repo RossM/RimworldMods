@@ -17,7 +17,7 @@ public class GeneCompProperties_RenderNodeModifiers : GeneCompProperties
     {
         LongEventHandler.ExecuteWhenFinished(() =>
         {
-            if (bodyTypeGraphicPaths == null)
+            if (bodyTypeGraphicPaths is null)
                 return;
 
             bodyTypeGraphics = [];

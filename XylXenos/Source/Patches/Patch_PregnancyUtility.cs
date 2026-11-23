@@ -20,7 +20,7 @@ public static class Patch_PregnancyUtility
             case PatchHelpers.DominantParent.Father:
             {
                 DebugAssert.NotNull(father);
-                if (geneticMother != null && childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) &&
+                if (geneticMother is not null && childGenes.SetsEqual(InheritableGenesFrom(geneticMother)) &&
                     !childGenes.SetsEqual(InheritableGenesFrom(father)))
                     PatchHelpers.CopyXenotype(__result, geneticMother);
                 else
@@ -30,7 +30,7 @@ public static class Patch_PregnancyUtility
             case PatchHelpers.DominantParent.Mother:
             {
                 DebugAssert.NotNull(geneticMother);
-                if (father != null && childGenes.SetsEqual(InheritableGenesFrom(father)) &&
+                if (father is not null && childGenes.SetsEqual(InheritableGenesFrom(father)) &&
                     !childGenes.SetsEqual(InheritableGenesFrom(geneticMother)))
                     PatchHelpers.CopyXenotype(__result, father);
                 else

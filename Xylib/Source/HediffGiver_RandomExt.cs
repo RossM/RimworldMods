@@ -82,13 +82,13 @@ public class HediffGiver_RandomExt : HediffGiver
 
     private bool TryApplyInner(Pawn pawn, Hediff? cause)
     {
-        if (canAffectAnyLivePart || partsToAffect != null)
+        if (canAffectAnyLivePart || partsToAffect is not null)
         {
             bool result = false;
             for (int i = 0; i < countToAffect; i++)
             {
                 IEnumerable<BodyPartRecord> parts = pawn.health.hediffSet.GetNotMissingParts();
-                if (partsToAffect != null)
+                if (partsToAffect is not null)
                     parts = parts.Where(p => partsToAffect.Contains(p.def));
                 if (canAffectAnyLivePart)
                     parts = parts.Where(p => p.def.alive);

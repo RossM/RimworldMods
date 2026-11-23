@@ -94,8 +94,7 @@ public class ScenPart_StartingLivestock : ScenPart
 
     private static float PetWeight(PawnKindDef animal)
     {
-        Ideo? ideo = Find.GameInitData!.playerFaction.ideos?.PrimaryIdeo;
-        if (ideo == null)
+        if (Find.GameInitData!.playerFaction.ideos?.PrimaryIdeo is not { } ideo)
             return 1f;
         return Enumerable.Any(ideo.VeneratedAnimals, veneratedAnimal => veneratedAnimal == animal.race) ? 8f : 1f;
     }
@@ -108,7 +107,7 @@ public class ScenPart_StartingLivestock : ScenPart
         {
             PawnGenerationRequest request = new PawnGenerationRequest(kindDef, Faction.OfPlayer, fixedGender: Gender.Male);
             Pawn animal = PawnGenerator.GeneratePawn(request);
-            if (animal.Name == null || animal.Name.Numerical)
+            if (animal.Name is null or { Numerical: true })
                 animal.Name = PawnBioAndNameGenerator.GeneratePawnName(animal);
             yield return animal;
         }
@@ -116,7 +115,7 @@ public class ScenPart_StartingLivestock : ScenPart
         {
             PawnGenerationRequest request = new PawnGenerationRequest(kindDef, Faction.OfPlayer, fixedGender: Gender.Female);
             Pawn animal = PawnGenerator.GeneratePawn(request);
-            if (animal.Name == null || animal.Name.Numerical)
+            if (animal.Name is null or { Numerical: true })
                 animal.Name = PawnBioAndNameGenerator.GeneratePawnName(animal);
             yield return animal;
         }

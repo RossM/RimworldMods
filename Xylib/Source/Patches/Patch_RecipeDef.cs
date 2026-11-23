@@ -16,7 +16,7 @@ internal static class Patch_RecipeDef
         // require the original meme prerequisite (if any) or an empty list to make it unavailable.
         if (PatchHelpers.IsRecipeUnlockedByGenes(__instance))
             __result = null;
-        else if (__result == null)
+        else if (__result is null)
             __result = [];
     }
 }

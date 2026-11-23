@@ -20,9 +20,9 @@ public abstract class GeneTracker(Pawn pawn) : IEventListener
 
     protected static void Append<T>(ref List<T>? dest, List<T>? source)
     {
-        if (source == null || source.Count == 0)
+        if (source is null || source.Count == 0)
             return;
-        if (dest == null)
+        if (dest is null)
             dest = [.. source];
         else
             dest.AddRange(source);

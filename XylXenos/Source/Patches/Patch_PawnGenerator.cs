@@ -15,7 +15,7 @@ public static class Patch_PawnGenerator
         // Back out genetic passion modifiers so we can re-apply them after natural passions have been rolled
         foreach (var gene in genes.GenesListForReading)
         {
-            if (gene.def.passionMod == null)
+            if (gene.def.passionMod is null)
                 continue;
 
             SkillRecord skill = pawn.skills!.GetSkill(gene.def.passionMod.skill);
@@ -35,7 +35,7 @@ public static class Patch_PawnGenerator
         // Apply genetic passion modifiers now that skills have set natural passion
         foreach (var gene in genes.GenesListForReading)
         {
-            if (gene.def.passionMod == null)
+            if (gene.def.passionMod is null)
                 continue;
 
             SkillRecord skill = pawn.skills!.GetSkill(gene.def.passionMod.skill);

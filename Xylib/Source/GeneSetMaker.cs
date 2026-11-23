@@ -17,7 +17,7 @@ public abstract class GeneSetMaker
 
     public GeneSet Generate(Pawn pawn, GeneType geneType, bool overrideExistingGenes)
     {
-        if (pawn.genes == null)
+        if (pawn.genes is null)
             throw new ArgumentException("genes is null", nameof(pawn));
 
         var geneSet = new GeneSet();
@@ -25,11 +25,11 @@ public abstract class GeneSetMaker
 
         if (!overrideExistingGenes)
         {
-            if (pawn.genes.Xenotype != null)
+            if (pawn.genes.Xenotype is not null)
                 foreach (var gene in pawn.genes.Xenotype.genes)
                     geneSet.AddGene(gene);
 
-            if (pawn.genes.CustomXenotype != null)
+            if (pawn.genes.CustomXenotype is not null)
                 foreach (var gene in pawn.genes.CustomXenotype.genes)
                     geneSet.AddGene(gene);
 
@@ -130,7 +130,7 @@ public class GeneSetMaker_Option : GeneSetMaker
 
         foreach (var option in options)
         {
-            if (option.maker == null)
+            if (option.maker is null)
                 yield return $"null {nameof(option.maker)} in {nameof(option)}";
             else
                 foreach (var error in option.maker.ConfigErrors())
@@ -211,7 +211,7 @@ public class GeneSetMaker_List : GeneSetMaker
 
     protected override void AddGenesInt(GeneSet geneSet, GeneType geneType, Pawn pawn, int countValue)
     {
-        if (genes == null)
+        if (genes is null)
             throw new InvalidOperationException();
 
         if (countValue <= 0)

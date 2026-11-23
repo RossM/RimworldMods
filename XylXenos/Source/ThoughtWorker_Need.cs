@@ -40,8 +40,7 @@ public class ThoughtWorker_Need : ThoughtWorker
         if (ThoughtUtility.ThoughtNullified(p, def))
             return ThoughtState.Inactive;
 
-        var need = p.needs?.TryGetNeed(DefExt.need);
-        if (need == null)
+        if (p.needs?.TryGetNeed(DefExt.need) is not { } need)
             return ThoughtState.Inactive;
 
         int stage = CurStageGetter(need);

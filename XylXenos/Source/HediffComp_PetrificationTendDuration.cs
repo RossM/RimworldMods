@@ -38,7 +38,7 @@ public class HediffComp_PetrificationTendDuration : HediffComp_TendDuration
             {
                 if (TProps.showTendQuality)
                 {
-                    if (parent.Part != null && GetTendedLabel(parent.Part) is { } tendedLabel)
+                    if (parent.Part is { } part && GetTendedLabel(part) is { } tendedLabel)
                         stringBuilder.AppendLine(tendedLabel.CapitalizeFirst() + " (" + "quality".Translate() + " " +
                                                  tendQuality.ToStringPercent("F0") + ")");
                     else

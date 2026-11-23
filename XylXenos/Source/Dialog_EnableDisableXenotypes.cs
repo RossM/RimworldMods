@@ -94,7 +94,7 @@ public class Dialog_EnableDisableXenotypes : Window
     {
         foreach (var faction in DefDatabase<FactionDef>.AllDefs)
         {
-            if (faction.xenotypeSet == null || faction.hidden)
+            if (faction.xenotypeSet is null || faction.hidden)
                 continue;
             if ((faction.GetModExtension<DefModExtension_SettingsData>()?.requiredXenotype is { } xenotype && 
                  newDisabledXenotypes.Contains(xenotype.defName)) ||

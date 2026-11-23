@@ -9,8 +9,7 @@ public static class IncidentHelpers
         Dictionary<XenotypeDef, float> weights = new();
         foreach (var faction in Find.FactionManager.AllFactionsVisible)
         {
-            var xenotypeSet = faction.def.xenotypeSet;
-            if (xenotypeSet == null)
+            if (faction.def.xenotypeSet is not { } xenotypeSet)
                 continue;
 
             for (int i = 0; i < xenotypeSet.Count; i++)

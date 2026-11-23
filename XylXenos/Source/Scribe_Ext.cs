@@ -28,7 +28,7 @@ public static class Scribe_Ext
             (lookMode != LookMode.Reference && Scribe.mode == LoadSaveMode.LoadingVars))
         {
             valueTuples = [];
-            if (listFirst != null && listSecond != null)
+            if (listFirst is not null && listSecond is not null)
                 foreach (var pair in listFirst.Zip(listSecond, (f, s) => (f, s)))
                     valueTuples.Add(pair);
         }

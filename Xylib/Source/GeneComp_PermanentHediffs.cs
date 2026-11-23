@@ -38,7 +38,7 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
                 totalArmorPenetration += armorPenetration * weight;
                 totalWeight += weight;
 
-                if (verb.tool != null)
+                if (verb.tool is not null)
                 {
                     sbDps.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity?.label})");
                     sbArmorPenetration.AppendLine($"  {verb.tool.LabelCap} ({verb.ToolCapacity?.label})");
@@ -76,10 +76,10 @@ public class GeneCompProperties_PermanentHediffs : GeneCompProperties
         foreach (var hediff in hediffs)
         {
             var props = hediff.hediff.CompProps<HediffCompProperties_VerbGiver>();
-            if (props?.verbs != null)
-                verbs.AddRange(props.verbs);
-            if (props?.tools != null)
-                tools.AddRange(props.tools);
+            if (props?.verbs is { } extraVerbs)
+                verbs.AddRange(extraVerbs);
+            if (props?.tools is { } extraTools)
+                tools.AddRange(extraTools);
         }
     }
 }

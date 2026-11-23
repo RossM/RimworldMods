@@ -77,7 +77,7 @@ public static class DebugOutputs
             })),
         ];
 
-        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null),
+        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet is not null),
             [.. columns]);
         return;
 
@@ -184,7 +184,7 @@ public static class DebugOutputs
         {
             foreach (var def in GenDefDatabase.GetAllDefsInDatabaseForDef(type))
             {
-                if (def.modContentPack == null)
+                if (def.modContentPack is null)
                     missingDefs.Add(def);
             }
         }
@@ -245,7 +245,7 @@ public static class DebugOutputs
                 offset = gene.statOffsets?.Where(m => m.stat == stat).Aggregate(offset, (o, m) => o + m.value) ?? offset;
                 factor = gene.statFactors?.Where(m => m.stat == stat).Aggregate(factor, (f, m) => f * m.value) ?? factor;
 
-                if (gene.forcedTraits == null)
+                if (gene.forcedTraits is null)
                     continue;
 
                 foreach (var trait in gene.forcedTraits)

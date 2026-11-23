@@ -54,7 +54,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
     {
         if (base.HasNullDefs())
             return true;
-        return psycast == null;
+        return psycast is null;
     }
 
     protected override void ModifyNewPawn(Pawn pawn)
@@ -69,7 +69,7 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
 
     private void LearnPsycast(Pawn pawn)
     {
-        if (psycast == null || !CanLearnPsycast(pawn, psycast))
+        if (psycast is null || !CanLearnPsycast(pawn, psycast))
             return;
 
         DebugAssert.NotNull(pawn.abilities);
@@ -79,6 +79,6 @@ public class ScenPart_Psycast : ScenPart_PawnModifier
 
     private static bool CanLearnPsycast(Pawn pawn, AbilityDef abilityDef)
     {
-        return pawn.abilities != null && pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) == null;
+        return pawn.abilities is not null && pawn.GetPsylinkLevel() >= abilityDef.level && pawn.abilities.GetAbility(abilityDef) is null;
     }
 }

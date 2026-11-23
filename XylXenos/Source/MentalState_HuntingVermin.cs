@@ -55,7 +55,7 @@ public class MentalState_HuntingVermin : MentalState
     {
         DebugAssert.NotNull(pawn);
 
-        if (target == null)
+        if (target is null)
         {
             Log.Error("No target. This should have been checked in this mental state's worker.");
             return "";
@@ -69,7 +69,7 @@ public class MentalState_HuntingVermin : MentalState
     private bool TryFindNewTarget()
     {
         target = FindPawnToKill(pawn);
-        return target != null;
+        return target is not null;
     }
 
     public bool IsTargetStillValidAndReachable()
@@ -91,7 +91,7 @@ public class MentalState_HuntingVermin : MentalState
         IReadOnlyList<Pawn> allPawnsSpawned = pawn.Map.mapPawns.AllPawnsSpawned;
         foreach (Pawn pawn2 in allPawnsSpawned)
         {
-            if (pawn2.Faction == null && pawn2.IsAnimal && pawn2.BodySize <= pawn.BodySize &&
+            if (pawn2.Faction is null && pawn2.IsAnimal && pawn2.BodySize <= pawn.BodySize &&
                 pawn2.RaceProps.manhunterOnDamageChance <= 0.1f &&
                 pawn.CanReach(pawn2, PathEndMode.Touch, Danger.Some))
                 tmpTargets.Add(pawn2);

@@ -11,7 +11,7 @@ public class JobGiver_SeeingRed : ThinkNode_JobGiver
 
     protected override Job? TryGiveJob(Pawn pawn)
     {
-        if (pawn.TryGetAttackVerb(null) == null)
+        if (pawn.TryGetAttackVerb(null) is null)
             return null;
 
         if (FindAttackTarget(pawn) is not { } thing)

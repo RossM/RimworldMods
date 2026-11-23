@@ -43,7 +43,7 @@ public class Hediff_PetrifiedFlesh : HediffWithCompsExt
     {
         base.PostAdd(dinfo);
 
-        if (Part == null)
+        if (Part is null)
             throw new InvalidOperationException($"{nameof(Part)} is null");
     }
 }

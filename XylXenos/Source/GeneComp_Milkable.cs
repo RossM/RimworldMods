@@ -24,7 +24,7 @@ public class GeneComp_Milkable : GeneComp
 
     public int ItemCount => Mathf.FloorToInt((Chargeable?.Charge ?? 0) / Props.chargePerItem);
 
-    public bool ItemsFull => Chargeable != null && Chargeable.Charge >= Chargeable.Props.fullChargeAmount;
+    public bool ItemsFull => Chargeable is not null && Chargeable.Charge >= Chargeable.Props.fullChargeAmount;
 
     public bool ReadyToMilk =>
         Active &&

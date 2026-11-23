@@ -14,11 +14,10 @@ internal static class Patch_FloatMenuOptionProvider_Ingest
     {
         DebugAssert.NotNull(context.FirstSelectedPawn);
 
-        if (__result == null)
+        if (__result is null)
             return;
 
-        ChemicalDef? chemical = DrugStatsUtility.GetChemical(clickedThing.def);
-        if (chemical == null)
+        if (DrugStatsUtility.GetChemical(clickedThing.def) is not { } chemical)
             return;
 
         if (context.FirstSelectedPawn.ChemicalIsAllowedByGenes(chemical))

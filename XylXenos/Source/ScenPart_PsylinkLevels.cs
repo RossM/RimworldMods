@@ -42,7 +42,7 @@ public class ScenPart_PsylinkLevels : ScenPart_PawnModifier
         DebugAssert.NotNull(HediffDefOf.PsychicAmplifier);
 
         Hediff_Psylink? mainPsylinkSource = pawn.GetMainPsylinkSource();
-        if (mainPsylinkSource == null)
+        if (mainPsylinkSource is null)
         {
             mainPsylinkSource = (Hediff_Psylink)HediffMaker.MakeHediff(HediffDefOf.PsychicAmplifier, pawn);
             try
