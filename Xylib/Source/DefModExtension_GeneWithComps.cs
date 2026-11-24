@@ -159,7 +159,7 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     public string? GetExtraGeneEffectDescription()
     {
-        if (comps is null)
+        if (comps is not { Count: > 0 })
             return null;
 
         StringBuilder sb = new();
