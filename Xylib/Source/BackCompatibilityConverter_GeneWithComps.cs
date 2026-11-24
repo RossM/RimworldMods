@@ -34,15 +34,5 @@ internal class BackCompatibilityConverter_GeneWithComps : BackCompatibilityConve
         return DefDatabase<GeneDef>.GetNamedSilentFail(defName)?.Extension_GeneWithComps is not null;
     }
 
-    public override void PostExposeData(object obj)
-    {
-        if (Scribe.mode != LoadSaveMode.PostLoadInit || obj is not Pawn pawn || pawn.genes?.GenesListForReading is not { } genes)
-            return;
-
-        foreach (Gene gene in genes)
-        {
-            if (gene is GeneWithComps { comps: null } geneWithComps)
-                geneWithComps.InitializeComps();
-        }
-    }
+    public override void PostExposeData(object obj) { }
 }
