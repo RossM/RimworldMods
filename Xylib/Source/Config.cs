@@ -23,7 +23,6 @@ public class Config : Def
         get
         {
             field ??= DefDatabase<Config>.GetNamed("XylibConfig") ?? throw new InvalidOperationException("XylibConfig not found");
-            DebugAssert.NotNull(field);
 
             return field;
         }

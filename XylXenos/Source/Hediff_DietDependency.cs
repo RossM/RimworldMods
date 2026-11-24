@@ -72,8 +72,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
     {
         get
         {
-            DebugAssert.NotNull(def.stages);
-            DebugAssert.True(def.stages.Count >= StageCount);
+            if (def.stages is null || def.stages.Count < StageCount)
+                return base.TipStringExtra;
 
             string text = base.TipStringExtra;
 
