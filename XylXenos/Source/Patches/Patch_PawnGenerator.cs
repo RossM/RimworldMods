@@ -42,8 +42,8 @@ public static class Patch_PawnGenerator
 
             // Only humanlike pawns have a gene tracker, and they also have a skill tracker.
             SkillRecord skill = pawn.skills!.GetSkill(gene.def.passionMod.skill);
-            DebugAssert.NotNull(gene.passionPreAdd);
-            skill.passion = gene.passionPreAdd!.Value;
+            if (gene.passionPreAdd is { } passion)
+                skill.passion = passion;
         }
     }
 }
