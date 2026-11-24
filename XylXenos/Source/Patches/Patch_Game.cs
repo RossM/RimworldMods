@@ -22,6 +22,7 @@ public static class Patch_Game
                 Log.Error("Xylthixlm.Xenotypes: Failed to parse mod version");
                 return;
             }
+
             bool isAlpha = parts.Length >= 3 && parts[2].Contains("alpha", StringComparison.InvariantCultureIgnoreCase);
             string expectedVersion = $"{parts[0]}.{parts[1]}";
             string? actualVersion = expectedVersion;

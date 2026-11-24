@@ -11,5 +11,6 @@ public class StatPart_Temperature : StatPart_Curve
 
     protected override string ExplanationLabel(StatRequest req) => "Temperature".Translate();
 
-    public override bool ForceShow(StatRequest req) => showForPawnsWithGenes is { Count: >0 } && req.Thing is Pawn p && showForPawnsWithGenes.Any(g => p.HasActiveGene(g));
+    public override bool ForceShow(StatRequest req) => showForPawnsWithGenes is { Count: > 0 } && req.Thing is Pawn p &&
+                                                       showForPawnsWithGenes.Any(g => p.HasActiveGene(g));
 }

@@ -58,6 +58,18 @@ public sealed class CompBedSharing : ThingComp
         }
     }
 
+    internal IEnumerable<Pawn> AllAssignedPawns
+    {
+        get
+        {
+            if (Bed.Map == null)
+                return Bed.CurOccupants;
+            IEnumerable<Pawn> sleepers = Bed.Map.SleepingAssignments.GetAssignments(Bed).Where(assignment => assignment.IsInUse)
+                .Select(assignment => assignment.Pawn);
+            return Bed.CurOccupants.Concat(sleepers).Distinct();
+        }
+    }
+
     internal bool HasSleepingSlot(Pawn pawn)
     {
         return BedSharingHelpers.candidateSlotForIsValidBedFor is not null || pawn.TemporarySleepingAssignment?.Place.Bed == Bed;
@@ -80,17 +92,6 @@ public sealed class CompBedSharing : ThingComp
 
         slot = -1;
         return false;
-    }
-
-    internal IEnumerable<Pawn> AllAssignedPawns
-    {
-        get
-        {
-            if (Bed.Map == null)
-                return Bed.CurOccupants;
-            IEnumerable<Pawn> sleepers = Bed.Map.SleepingAssignments.GetAssignments(Bed).Where(assignment => assignment.IsInUse).Select(assignment => assignment.Pawn);
-            return Bed.CurOccupants.Concat(sleepers).Distinct();
-        }
     }
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)

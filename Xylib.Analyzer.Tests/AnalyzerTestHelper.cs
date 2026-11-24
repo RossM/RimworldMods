@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
@@ -97,7 +96,9 @@ internal static class AnalyzerTestHelper
         }
         """;
 
-    internal static async Task<ImmutableArray<Diagnostic>> Analyze(string source, string contracts = Contracts,
+    internal static async Task<ImmutableArray<Diagnostic>> Analyze(
+        string source,
+        string contracts = Contracts,
         MetadataReference? additionalReference = null)
     {
         MetadataReference[] references = [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)];
@@ -111,6 +112,7 @@ internal static class AnalyzerTestHelper
             Assert.That(emit.Success, Is.True, string.Join("\n", emit.Diagnostics));
             references = [.. references, MetadataReference.CreateFromImage(stream.ToArray())];
         }
+
         if (additionalReference is not null)
             references = [.. references, additionalReference];
         var compilation = CSharpCompilation.Create("Test",

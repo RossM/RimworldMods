@@ -8,7 +8,8 @@ internal static class NightVisitHelpers
         {
             get
             {
-                if (pawn.Awake() || pawn is not { CanShareBedsNow: true, CurJob.playerForced: false } || pawn.CurJobDef != JobDefOf.LayDown ||
+                if (pawn.Awake() || pawn is not { CanShareBedsNow: true, CurJob.playerForced: false } ||
+                    pawn.CurJobDef != JobDefOf.LayDown ||
                     pawn.CurrentBed() is not { Medical: false } bed)
                     return false;
 
@@ -32,9 +33,10 @@ internal static class NightVisitHelpers
 
     public static SleepingPlace? GetFreeSlotInBed(Pawn visitor, Building_Bed bed)
     {
-        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot && bed.GetSleepingPlace(ownedSlot).CanAssignForNightVisit(visitor))
+        if (bed.IsOwner(visitor, out int? assignedSlot) && assignedSlot is int ownedSlot &&
+            bed.GetSleepingPlace(ownedSlot).CanAssignForNightVisit(visitor))
             return bed.GetSleepingPlace(ownedSlot);
-        
+
         for (int slot = 0; slot < bed.SleepingSlotsCount; slot++)
         {
             SleepingPlace place = bed.GetSleepingPlace(slot);

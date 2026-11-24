@@ -6,13 +6,12 @@ internal static class MapExtensions
 {
     extension(Map map)
     {
-        [InjectedField]
-        private extern ref HostilityOverrideManager? HostilityOverrideManagerCached { get; }
-
         public HostilityOverrideManager HostilityOverrideManager =>
             map.HostilityOverrideManagerCached ??= map.GetComponent<HostilityOverrideManager>()!;
-    }
 
+        [InjectedField]
+        private extern ref HostilityOverrideManager? HostilityOverrideManagerCached { get; }
+    }
 }
 
 [UsedFromReflection]

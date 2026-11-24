@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Xml;
 
 namespace Xylib.Tests;
@@ -9,11 +10,13 @@ public sealed class XmlOperationTests : SeededTestFixture
     public void MergeCombinesContainersAndSameClassExtensions()
     {
         var xml = new XmlDocument();
-        xml.LoadXml("<Defs><GeneDef><tags><li>A</li></tags><modExtensions><li Class='Example'><first>1</first></li></modExtensions></GeneDef></Defs>");
+        xml.LoadXml(
+            "<Defs><GeneDef><tags><li>A</li></tags><modExtensions><li Class='Example'><first>1</first></li></modExtensions></GeneDef></Defs>");
         var value = new XmlDocument();
-        value.LoadXml("<value><tags><li>B</li></tags><modExtensions><li Class='Example'><second>2</second></li></modExtensions><newField>3</newField></value>");
+        value.LoadXml(
+            "<value><tags><li>B</li></tags><modExtensions><li Class='Example'><second>2</second></li></modExtensions><newField>3</newField></value>");
         var operation = new PatchOperationMerge { value = new XmlContainer { node = value.DocumentElement } };
-        typeof(PatchOperationPathed).GetField("xpath", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+        typeof(PatchOperationPathed).GetField("xpath", BindingFlags.Instance | BindingFlags.NonPublic)!
             .SetValue(operation, "/Defs/GeneDef");
         Expect.IsTrue(operation.Apply(xml));
         Expect.AreEqual(1, xml.SelectNodes("/Defs/GeneDef/tags")!.Count);
@@ -27,7 +30,8 @@ public sealed class XmlOperationTests : SeededTestFixture
     public void ReplaceGenesDoesNotChainAndDisablesOriginals()
     {
         var xml = new XmlDocument();
-        xml.LoadXml("<Defs><GeneDef><defName>A</defName></GeneDef><GeneDef><defName>B</defName></GeneDef><XenotypeDef><genes><li>A</li><li>B</li></genes></XenotypeDef></Defs>");
+        xml.LoadXml(
+            "<Defs><GeneDef><defName>A</defName></GeneDef><GeneDef><defName>B</defName></GeneDef><XenotypeDef><genes><li>A</li><li>B</li></genes></XenotypeDef></Defs>");
         var operation = new PatchOperationReplaceGenes
         {
             entries = [new() { original = "A", replacement = "B" }, new() { original = "B", replacement = "C" }],

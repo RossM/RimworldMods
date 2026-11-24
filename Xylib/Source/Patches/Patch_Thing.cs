@@ -34,8 +34,6 @@ internal static class Patch_Thing
             __result *= ingester.GetFoodPoisonChanceFactor(thing);
     }
 
-    private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant or Mineable);
-
     [Feature(typeof(EventManager))]
     [Postfix]
     [Target(nameof(Thing.PostMake))]
@@ -61,4 +59,6 @@ internal static class Patch_Thing
 
         EventManager.Instance.Notify(EventDefOf.PreTakeDamage, __instance, dinfo);
     }
+
+    private static bool IsInteresting(Thing thing) => thing is ThingWithComps and not (Projectile or Plant or Mineable);
 }

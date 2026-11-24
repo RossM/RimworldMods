@@ -32,7 +32,7 @@ public class ScenPart_StartingLivestock : ScenPart
         Widgets.TextFieldNumericLabeled(curRect, "Female".Translate().CapitalizeFirst(), ref countFemale, ref countFemaleBuf, 1f);
         curRect.y += RowHeight;
         if (!Widgets.ButtonText(curRect, CurrentAnimalLabel().CapitalizeFirst()))
-            return; 
+            return;
         List<FloatMenuOption> list =
         [
             new("XylRandomLivestock".Translate().CapitalizeFirst(), () => { animalKind = null; }),
@@ -63,7 +63,7 @@ public class ScenPart_StartingLivestock : ScenPart
     private List<PawnKindDef> RandomPets()
     {
         List<PawnKindDef> result = [.. PossibleAnimals().Where(Validate)];
-        if (result is not { Count: >0 })
+        if (result is not { Count: > 0 })
             result = [.. PossibleAnimals(checkForTamer: false).Where(Validate)];
         return result;
 
@@ -83,7 +83,8 @@ public class ScenPart_StartingLivestock : ScenPart
     public override IEnumerable<string> GetSummaryListEntries(string tag)
     {
         if (tag == "PlayerStartsWith")
-            yield return $"{CurrentAnimalLabel().CapitalizeFirst()} x{countMale + countFemale} ({countMale} {"Male".Translate()}, {countFemale} {"Female".Translate()})";
+            yield return
+                $"{CurrentAnimalLabel().CapitalizeFirst()} x{countMale + countFemale} ({countMale} {"Male".Translate()}, {countFemale} {"Female".Translate()})";
     }
 
     public override void Randomize()
@@ -111,6 +112,7 @@ public class ScenPart_StartingLivestock : ScenPart
                 animal.Name = PawnBioAndNameGenerator.GeneratePawnName(animal);
             yield return animal;
         }
+
         for (int i = 0; i < countFemale; i++)
         {
             PawnGenerationRequest request = new PawnGenerationRequest(kindDef, Faction.OfPlayer, fixedGender: Gender.Female);
@@ -120,4 +122,4 @@ public class ScenPart_StartingLivestock : ScenPart
             yield return animal;
         }
     }
-}   
+}

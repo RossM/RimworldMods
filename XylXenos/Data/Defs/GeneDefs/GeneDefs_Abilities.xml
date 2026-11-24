@@ -298,7 +298,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_ExtraApparel">
-            <items>              
+            <items>
               <li>
                 <item>Apparel_GasMask</item>
                 <chance>0.5</chance>
@@ -364,7 +364,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps" />
+      <li Class="Xylib.DefModExtension_GeneWithComps"/>
     </modExtensions>
   </GeneDef>
 
@@ -421,7 +421,7 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>-2</biostatMet>
     <modExtensions>
-      <li Class="Xylib.DefModExtension_GeneWithComps" />
+      <li Class="Xylib.DefModExtension_GeneWithComps"/>
     </modExtensions>
   </GeneDef>
 

@@ -235,7 +235,8 @@ public class GeneSetMaker_List : GeneSetMaker
 }
 
 /// <summary>
-///     Generates genes by calling a list of <see cref="GeneSetMaker" />s then accepting or rejecting the result based on total biostats.
+///     Generates genes by calling a list of <see cref="GeneSetMaker" />s then accepting or rejecting the result based on
+///     total biostats.
 /// </summary>
 [UsedFromXml]
 public class GeneSetMaker_BiostatTotal : GeneSetMaker
@@ -256,7 +257,7 @@ public class GeneSetMaker_BiostatTotal : GeneSetMaker
 
         // "For reading" is just a suggestion
         List<GeneDef> genes = geneSet.GenesListForReading;
-        
+
         int initialGeneCount = genes.Count;
 
         for (int iteration = 0; iteration < TryCount; iteration++)

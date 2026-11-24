@@ -5,16 +5,6 @@
 [Patch(typeof(GeneDef))]
 public static class Patch_GeneDef_GetDescriptionFull
 {
-    [Feature(FeatureNameOf.Bugfix_Misc)]
-    [Prefix]
-    [Targets("GetDescriptionFull.*", typeof(ThoughtStage))]
-    [PatchOptions(PatchOptions.Inline)]
-    public static bool GetDescriptionFull_Lambda_Prefix([Argument(0)] ThoughtStage? stage, [ReturnValue] out bool __result)
-    {
-        __result = false;
-        return stage is not null;
-    }
-
     [Feature(FeatureNameOf.UI_Misc)]
     [Postfix]
     [Inner(typeof(StatDef), nameof(StatDef.CanShowWithLoadedMods))]
@@ -28,5 +18,15 @@ public static class Patch_GeneDef_GetDescriptionFull
 
         if (!__instance.showOnNonWildManHumanlikes)
             __result = false;
+    }
+
+    [Feature(FeatureNameOf.Bugfix_Misc)]
+    [Prefix]
+    [Targets("GetDescriptionFull.*", typeof(ThoughtStage))]
+    [PatchOptions(PatchOptions.Inline)]
+    public static bool GetDescriptionFull_Lambda_Prefix([Argument(0)] ThoughtStage? stage, [ReturnValue] out bool __result)
+    {
+        __result = false;
+        return stage is not null;
     }
 }

@@ -2,5 +2,7 @@
   <packageId>SmashPhil.DevTools</packageId>
   <name>DevTools (in-game tests)</name>
   <author>Smash Phil</author>
-  <supportedVersions><li>1.7</li></supportedVersions>
+  <supportedVersions>
+    <li>1.7</li>
+  </supportedVersions>
 </ModMetaData>

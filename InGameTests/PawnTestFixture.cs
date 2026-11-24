@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace InGameTests;
 
 public abstract class PawnTestFixture : SeededTestFixture
@@ -44,6 +46,7 @@ public abstract class PawnTestFixture : SeededTestFixture
                 p.genes!.RemoveGene(gene);
             p.health.RemoveAllHediffs();
         }
+
         foreach (Thing thing in things.AsEnumerable().Reverse())
         {
             if (!thing.Destroyed)
@@ -55,10 +58,11 @@ public abstract class PawnTestFixture : SeededTestFixture
                 p.Discard(silentlyRemoveReferences: true);
             }
         }
+
         things.Clear();
         // The private defs were appended, so removing them leaves the loaded def indices intact.
         foreach (GeneDef def in mutableGeneDefs)
-            typeof(DefDatabase<GeneDef>).GetMethod("Remove", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!.Invoke(null, [def]);
+            typeof(DefDatabase<GeneDef>).GetMethod("Remove", BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, [def]);
         mutableGeneDefs.Clear();
     }
 }

@@ -3,8 +3,8 @@
 namespace XylXenos;
 
 /// <summary>
-/// This updates genes on existing pawns which have had a <see cref="DefModExtension_GeneWithComps"/> added to use
-/// <see cref="GeneWithComps"/> as their gene class.
+///     This updates genes on existing pawns which have had a <see cref="DefModExtension_GeneWithComps" /> added to use
+///     <see cref="GeneWithComps" /> as their gene class.
 /// </summary>
 [UsedFromReflection]
 internal class BackCompatibilityConverter_GeneWithComps : BackCompatibilityConverter
@@ -19,7 +19,7 @@ internal class BackCompatibilityConverter_GeneWithComps : BackCompatibilityConve
     public override Type? GetBackCompatibleType(Type baseType, string providedClassName, XmlNode? node)
     {
         if (baseType == typeof(Gene) && providedClassName is "Gene" or "Verse.Gene"
-            && node is not null && HasGeneWithCompsExtension(node))
+                                     && node is not null && HasGeneWithCompsExtension(node))
             return typeof(GeneWithComps);
 
         return null;

@@ -11,9 +11,9 @@ namespace Xylib;
 [PublicAPI]
 public static class Extensions
 {
-    private delegate object MemberwiseCloneDelegate(object obj);
-
     private static MemberwiseCloneDelegate? _memberwiseCloneFn;
+
+    private delegate object MemberwiseCloneDelegate(object obj);
 
     extension(Faction faction)
     {
@@ -129,7 +129,7 @@ public static class Extensions
         public bool HasActiveGene(GeneDef? def) =>
             def is not null && pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesWithDef(def).Any(gene => gene.Active);
 
-        public Gene? FirstActiveGene(GeneDef? def) => 
+        public Gene? FirstActiveGene(GeneDef? def) =>
             def is null || pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesWithDef(def).FirstOrDefault(gene => gene.Active);
 
         /// <summary>
@@ -167,7 +167,7 @@ public static class Extensions
         /// <returns>
         ///     The matching active genes.
         /// </returns>
-        public IEnumerable<T> ActiveGenesOfType<T>(Func<T, bool> predicate) where T : Gene => 
+        public IEnumerable<T> ActiveGenesOfType<T>(Func<T, bool> predicate) where T : Gene =>
             pawn.genes is null ? [] : pawn.GeneAndHediffCache.GetGenesOfType<T>().Where(gene => gene.Active && predicate(gene));
 
         /// <summary>
@@ -194,7 +194,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public T? FirstActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene => 
+        public T? FirstActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene =>
             pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesOfType<T>().FirstOrDefault(gene => gene.Active && predicate(gene));
 
         /// <summary>
@@ -221,7 +221,7 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene => 
+        public bool HasActiveGeneOfType<T>(Func<T, bool> predicate) where T : Gene =>
             pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesOfType<T>().Any(gene => gene.Active && predicate(gene));
 
         /// <summary>
@@ -285,7 +285,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public GeneWithComps? FirstActiveGeneWithComp<T>() where T : GeneComp => 
+        public GeneWithComps? FirstActiveGeneWithComp<T>() where T : GeneComp =>
             pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active);
 
         /// <summary>
@@ -301,8 +301,11 @@ public static class Extensions
         /// <returns>
         ///     The first matching active gene, or <see langword="null" /> if no match is found.
         /// </returns>
-        public GeneWithComps? FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp => 
-            pawn.genes is null ? null : pawn.GeneAndHediffCache.GetGenesWithComp<T>().FirstOrDefault(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
+        public GeneWithComps? FirstActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp =>
+            pawn.genes is null
+                ? null
+                : pawn.GeneAndHediffCache.GetGenesWithComp<T>()
+                    .FirstOrDefault(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
 
         /// <summary>
         ///     Determines whether the pawn has an active gene with a <see cref="GeneComp" /> of the specified type.
@@ -329,8 +332,9 @@ public static class Extensions
         /// <returns>
         ///     <see langword="true" /> if a matching active gene exists; otherwise, <see langword="false" />.
         /// </returns>
-        public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp => 
-            pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesWithComp<T>().Any(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
+        public bool HasActiveGeneWithComp<T>(Func<T, bool> predicate) where T : GeneComp =>
+            pawn.genes is not null && pawn.GeneAndHediffCache.GetGenesWithComp<T>()
+                .Any(gene => gene.Active && gene.GetComp<T>() is { } comp && predicate(comp));
 
         /// <summary>
         ///     Gets <see cref="GeneComp" /> instances of the specified type from the pawn's active genes.
@@ -518,7 +522,7 @@ public static class Extensions
         /// <returns>
         ///     The first matching hediff, or <see langword="null" /> if no match is found.
         /// </returns>
-        public HediffWithComps? FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp => 
+        public HediffWithComps? FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp =>
             pawn.GeneAndHediffCache.GetHediffsWithComp<T>().FirstOrDefault(hediff => predicate(hediff.GetComp<T>()!));
 
         /// <summary>
@@ -598,7 +602,7 @@ public static class Extensions
         /// <returns>
         ///     The matching hediffs.
         /// </returns>
-        public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension => 
+        public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension =>
             pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>().Where(hediff => predicate(hediff.def.GetModExtension<T>()!));
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef? chemicalDef)

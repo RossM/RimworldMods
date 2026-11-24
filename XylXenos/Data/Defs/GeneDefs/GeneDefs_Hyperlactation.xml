@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -98,7 +98,7 @@
       <li>XylHyperlactation</li>
     </requiredGenes>
     <stages>
-      <li IsNull="true" />
+      <li IsNull="true"/>
       <li>
         <label>full milk (sore)</label>
         <description>My breasts are full, heavy, and sore. This is uncomfortable.</description>

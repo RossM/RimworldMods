@@ -5,11 +5,11 @@
   <Xylib.GeneSetMakerDef Name="GeneSetBiostatBase" Abstract="true">
     <root Class="Xylib.GeneSetMaker_Biostats">
       <prohibitedModContentPacks>
-        <li IsNull="true" />
+        <li IsNull="true"/>
         <li>vanillaracesexpanded.android</li>
         <li>vanillaracesexpanded.starjack</li>
       </prohibitedModContentPacks>
-    </root>    
+    </root>
   </Xylib.GeneSetMakerDef>
 
   <GeneDef>
@@ -45,7 +45,7 @@
       <biostatArc>0</biostatArc>
       <biostatCpx>1~</biostatCpx>
       <biostatMet>-3~3</biostatMet>
-    </root>    
+    </root>
   </Xylib.GeneSetMakerDef>
 
   <GeneDef Name="XylSpecialistBase" Abstract="true">
@@ -117,7 +117,7 @@
       </li>
     </modExtensions>
   </GeneDef>
-  
+
   <Xylib.GeneSetMakerDef>
     <defName>XylRandomAptitudeRemarkable</defName>
     <root Class="Xylib.GeneSetMaker_List">
@@ -161,7 +161,7 @@
       </li>
     </modExtensions>
   </GeneDef>
-  
+
   <Xylib.GeneSetMakerDef>
     <defName>XylScalebornLineage</defName>
     <overrideExistingGenes>true</overrideExistingGenes>
@@ -173,7 +173,7 @@
               <li>FireSpew</li>
               <li>FireResistant</li>
               <li>AptitudePoor_Cooking</li>
-              <li>Skin_DeepRed</li>                      
+              <li>Skin_DeepRed</li>
             </genes>
           </maker>
         </li>
@@ -193,7 +193,7 @@
               <li>FoamSpray</li>
               <li>WoundHealing_Fast</li>
               <li>AptitudeStrong_Medicine</li>
-              <li>Skin_SheerWhite</li>                      
+              <li>Skin_SheerWhite</li>
             </genes>
           </maker>
         </li>
@@ -203,7 +203,7 @@
               <li>XylEMPBurst</li>
               <li>Unstoppable</li>
               <li>AptitudeStrong_Intellectual</li>
-              <li>XylSkin_DarkBlue</li>                      
+              <li>XylSkin_DarkBlue</li>
             </genes>
           </maker>
         </li>

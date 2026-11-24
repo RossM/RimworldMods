@@ -151,9 +151,11 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     #endregion
 
-    public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req) => comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats(req));
+    public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req) =>
+        comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats(req));
 
-    public virtual IEnumerable<string> GetCustomEffectDescriptions() => comps is null ? [] : comps.SelectMany(comp => comp.CustomEffectDescriptions());
+    public virtual IEnumerable<string> GetCustomEffectDescriptions() =>
+        comps is null ? [] : comps.SelectMany(comp => comp.CustomEffectDescriptions());
 
     public string? GetExtraGeneEffectDescription()
     {

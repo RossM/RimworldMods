@@ -8,7 +8,6 @@
     <displayPriorityInXenotype>399</displayPriorityInXenotype>
   </GeneCategoryDef>
 
-  
   <GeneDef Name="XylGenderRatioBase" Abstract="True">
     <biostatCpx>1</biostatCpx>
     <biostatMet>0</biostatMet>
@@ -61,7 +60,7 @@
       </li>
     </modExtensions>
   </GeneDef>
-  
+
   <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_UsuallyFemale</defName>
     <label>usually female</label>
@@ -80,7 +79,7 @@
       </li>
     </modExtensions>
   </GeneDef>
-  
+
   <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_UsuallyMale</defName>
     <label>usually male</label>
@@ -99,7 +98,7 @@
       </li>
     </modExtensions>
   </GeneDef>
-  
+
   <GeneDef ParentName="XylGenderRatioBase">
     <defName>XylGender_AlwaysMale</defName>
     <label>always male</label>
@@ -346,7 +345,7 @@
     <validWhileDespawned>true</validWhileDespawned>
     <developmentalStageFilter>Adult</developmentalStageFilter>
     <stages>
-      <li IsNull="True" />
+      <li IsNull="True"/>
       <li>
         <label>lovin' withdrawal ({SOURCE_nameDef})</label>
         <description>I can't forget the feel of {SOURCE_possessive} touch...</description>

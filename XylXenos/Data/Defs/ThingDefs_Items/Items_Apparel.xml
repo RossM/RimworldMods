@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -43,7 +43,7 @@
           <shaderTypeDef>CutoutComplex</shaderTypeDef>
           <texPath>Xyl/Things/Pawn/Humanlike/Apparel/Circlet/Circlet</texPath>
           <parentTagDef>ApparelHead</parentTagDef>
-            <drawData>
+          <drawData>
             <scale>0.5</scale>
             <defaultData>
               <layer>64</layer>

@@ -14,9 +14,7 @@ var bytes = File.ReadAllBytes(path);
 var hadUtf8Bom = bytes is [0xEF, 0xBB, 0xBF, ..];
 var text = Encoding.UTF8.GetString(bytes);
 if (hadUtf8Bom && text.Length > 0 && text[0] == '\uFEFF')
-{
     text = text[1..];
-}
 
 var members = ReadTopLevelMembers(text).ToList();
 var sortedMembers = members
@@ -49,7 +47,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
     {
         DtdProcessing = DtdProcessing.Prohibit,
         IgnoreComments = false,
-        IgnoreWhitespace = false
+        IgnoreWhitespace = false,
     };
 
     using var stringReader = new StringReader(text);
@@ -64,9 +62,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
         if (reader is { NodeType: XmlNodeType.Element, Depth: 0 })
         {
             if (reader.Name != "assembly")
-            {
                 throw new InvalidOperationException("Expected top-level <assembly> element.");
-            }
 
             sawAssembly = true;
         }
@@ -87,9 +83,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
         else if (reader is { NodeType: XmlNodeType.EndElement, Depth: 1, Name: "member" })
         {
             if (memberName is null || memberStart is null)
-            {
                 throw new InvalidOperationException("Found </member> without a matching top-level <member>.");
-            }
 
             var memberEnd = FindTagEnd(text, GetOffset(lineStarts, lineInfo)) + 1;
             yield return new MemberBlock(memberName, memberStart.Value, memberEnd, text[memberStart.Value..memberEnd]);
@@ -99,9 +93,7 @@ static IEnumerable<MemberBlock> ReadTopLevelMembers(string text)
     }
 
     if (!sawAssembly)
-    {
         throw new InvalidOperationException("Expected top-level <assembly> element.");
-    }
 }
 
 static List<int> GetLineStarts(string text)
@@ -110,9 +102,7 @@ static List<int> GetLineStarts(string text)
     for (var i = 0; i < text.Length; i++)
     {
         if (text[i] == '\n')
-        {
             lineStarts.Add(i + 1);
-        }
     }
 
     return lineStarts;
@@ -127,9 +117,7 @@ static int FindTagEnd(string text, int start)
 {
     var end = text.IndexOf('>', start);
     if (end < 0)
-    {
         throw new InvalidOperationException($"Could not find tag end after offset {start}.");
-    }
 
     return end;
 }

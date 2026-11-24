@@ -37,10 +37,10 @@
     </questDescriptionRules>
     <root Class="QuestNode_Sequence">
       <nodes>
-        <li Class="QuestNode_GetMap" />
+        <li Class="QuestNode_GetMap"/>
         <li Class="QuestNode_FactionExists">
           <faction>Mechanoid</faction>
-          <elseNode Class="QuestNode_CannotRun" />
+          <elseNode Class="QuestNode_CannotRun"/>
         </li>
         <li Class="QuestNode_Set">
           <name>enemyFaction</name>

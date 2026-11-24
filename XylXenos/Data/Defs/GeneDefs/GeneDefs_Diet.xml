@@ -280,7 +280,7 @@
     <baseCommonality>1</baseCommonality>
     <requiredGene>XylMeatDependence</requiredGene>
   </MentalBreakDef>
-  
+
   <MentalStateDef ParentName="BaseMentalState">
     <defName>XylHuntingVermin</defName>
     <stateClass>XylXenos.MentalState_HuntingVermin</stateClass>

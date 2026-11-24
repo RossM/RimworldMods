@@ -11,19 +11,23 @@ public static class DebugArena
 
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
-    private static readonly HashSet<PawnKindDef> badKinds = [.. ((IEnumerable<PawnKindDef?>)[
-        PawnKindDefOf.Nociosphere,
-        PawnKindDefOf.Revenant,
-        PawnKindDefOf.FleshmassNucleus,
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Basic"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Carrier"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Clawer"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Barkskin"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Woodmaker"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Medicinemaker"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Berrymaker"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Gaumaker"),
-    ]).OfType<PawnKindDef>()];
+    private static readonly HashSet<PawnKindDef> badKinds =
+    [
+        .. ((IEnumerable<PawnKindDef?>)
+        [
+            PawnKindDefOf.Nociosphere,
+            PawnKindDefOf.Revenant,
+            PawnKindDefOf.FleshmassNucleus,
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Basic"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Carrier"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Clawer"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Barkskin"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Woodmaker"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Medicinemaker"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Berrymaker"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Gaumaker"),
+        ]).OfType<PawnKindDef>(),
+    ];
 
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
@@ -158,7 +162,9 @@ public static class DebugArena
         List<PawnKindDef> pawnKindsForBattleRoyale =
         [
             .. DefDatabase<PawnKindDef>.AllDefsListForReading.Where(pawnKindDef => !badKinds.Contains(pawnKindDef))
-                .SelectMany(pawnKindDef => pawnKindDef.RaceProps.Humanlike ? xenotypes.Select(xenotypeDef => PawnKindWithXenotype(pawnKindDef, xenotypeDef)) : [pawnKindDef]),
+                .SelectMany(pawnKindDef => pawnKindDef.RaceProps.Humanlike
+                    ? xenotypes.Select(xenotypeDef => PawnKindWithXenotype(pawnKindDef, xenotypeDef))
+                    : [pawnKindDef]),
         ];
 
         List<DebugActionNode> actions = [];

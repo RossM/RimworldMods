@@ -26,8 +26,6 @@ public class GeneCompProperties_IngestionThoughtOverrides : GeneCompProperties
             yield break;
 
         if (overrides.Any(o => o.thoughts is null))
-        {
             yield return $"null {nameof(GeneIngestionThoughtOverride.thoughts)} in {nameof(overrides)}";
-        }
     }
 }

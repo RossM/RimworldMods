@@ -3,7 +3,8 @@ using System.Xml;
 namespace Xylib;
 
 /// <summary>
-///     Replaces genes in XenotypeDef gene lists and disables the original genes for xenotype creation and gene set generation.
+///     Replaces genes in XenotypeDef gene lists and disables the original genes for xenotype creation and gene set
+///     generation.
 /// </summary>
 /// <remarks>
 ///     Use <c>&lt;Operation Class="Xylib.PatchOperation_ReplaceGenes"&gt;</c> with a <c>&lt;entries&gt;</c> list.

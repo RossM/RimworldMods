@@ -28,6 +28,15 @@ public class GeneComp
     public bool Active => parent.Active;
 
     /// <summary>
+    ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be
+    ///     inactive.
+    /// </summary>
+    /// <value></value>
+    public virtual bool CompAllowActive => true;
+
+    public virtual bool CompImmuneToVacuumBurns => false;
+
+    /// <summary>
     ///     The gene this component is attached to.
     /// </summary>
     // ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
@@ -66,11 +75,13 @@ public class GeneComp
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer interval,
+    ///         It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer
+    ///         interval,
     ///         to avoid performance issues.
     ///     </para>
     ///     <para>
-    ///         <see cref="GeneWithComps"/> is optimized so that a subclass that doesn't override this method will incur no overhead
+    ///         <see cref="GeneWithComps" /> is optimized so that a subclass that doesn't override this method will incur no
+    ///         overhead
     ///         when <see cref="GeneWithComps.TickInterval" /> is called.
     ///     </para>
     /// </remarks>
@@ -85,7 +96,8 @@ public class GeneComp
     ///         This can have a significant impact on performance. Prefer to use <see cref="CompTickInterval" /> if possible.
     ///     </para>
     ///     <para>
-    ///         <see cref="GeneWithComps"/> is optimized so that a subclass that doesn't override this method will incur no overhead
+    ///         <see cref="GeneWithComps" /> is optimized so that a subclass that doesn't override this method will incur no
+    ///         overhead
     ///         when <see cref="GeneWithComps.Tick" /> is called.
     ///     </para>
     /// </remarks>
@@ -114,15 +126,6 @@ public class GeneComp
     ///     This should set the state of the gene component to its initial state.
     /// </summary>
     public virtual void CompReset() { }
-
-    /// <summary>
-    ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be
-    ///     inactive.
-    /// </summary>
-    /// <value></value>
-    public virtual bool CompAllowActive => true;
-
-    public virtual bool CompImmuneToVacuumBurns => false;
 }
 
 /// <summary>
@@ -131,6 +134,18 @@ public class GeneComp
 [PublicAPI]
 public class GeneWithComps : Gene, IEventListener
 {
+    /// <summary>
+    ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
+    /// </summary>
+    public DefModExtension_GeneWithComps DefExt =>
+        field ??= def.Extension_GeneWithComps ??
+                  throw new InvalidOperationException("GeneWithComps is missing DefModExtension_GeneWithComps");
+
+    /// <summary>
+    ///     Whether this gene is an endogene or xenogene.
+    /// </summary>
+    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
+
     private static readonly Dictionary<Type, bool> hasTickCache = [];
     private static readonly Dictionary<Type, bool> hasTickIntervalCache = [];
 
@@ -142,17 +157,6 @@ public class GeneWithComps : Gene, IEventListener
     ///     The components for this gene.
     /// </summary>
     public List<GeneComp>? comps;
-
-    /// <summary>
-    ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
-    /// </summary>
-    public DefModExtension_GeneWithComps DefExt => 
-        field ??= def.Extension_GeneWithComps ?? throw new InvalidOperationException("GeneWithComps is missing DefModExtension_GeneWithComps");
-
-    /// <summary>
-    ///     Whether this gene is an endogene or xenogene.
-    /// </summary>
-    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     /// <summary>
     ///     Whether the gene is currently active. Inactive genes shouldn't have any effect on the pawn.
@@ -177,6 +181,17 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    public virtual bool ImmuneToVacuumBurns
+    {
+        get
+        {
+            if (def.immuneToVacuumBurns)
+                return true;
+
+            return comps is not null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
+        }
+    }
+
     private event Action? CompTick;
     private event Action<int>? CompTickInterval;
 
@@ -193,17 +208,6 @@ public class GeneWithComps : Gene, IEventListener
             return false;
 
         return comps is null || comps.All(comp => comp.CompAllowActive);
-    }
-
-    public virtual bool ImmuneToVacuumBurns
-    {
-        get
-        {
-            if (def.immuneToVacuumBurns)
-                return true;
-
-            return comps is not null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
-        }
     }
 
     /// <summary>
@@ -306,9 +310,7 @@ public class GeneWithComps : Gene, IEventListener
 
         var hediffs = new List<Hediff>(pawn.health.hediffSet.hediffs);
         foreach (Hediff hediff in hediffs.Where(hediff => hediffDefsToRemove.Contains(hediff.def)))
-        {
             pawn.health.RemoveHediff(hediff);
-        }
     }
 
     /// <summary>
@@ -360,7 +362,8 @@ public class GeneWithComps : Gene, IEventListener
     ///     Gets stats which are displayed on the pawn's description screen.
     /// </summary>
     /// <returns></returns>
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() => comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() =>
+        comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
 
     /// <summary>
     ///     Called periodically on gameplay tick.
@@ -402,10 +405,8 @@ public class GeneWithComps : Gene, IEventListener
     public override IEnumerable<Gizmo> GetGizmos()
     {
         if (comps is not null)
-        {
             foreach (Gizmo gizmo in comps.SelectMany(comp => comp.CompGetGizmos()))
                 yield return gizmo;
-        }
 
         if (!DebugSettings.ShowDevGizmos)
             yield break;

@@ -1,16 +1,20 @@
 using System.Reflection;
+using System.Xml;
+using DevTools;
 using DevTools.Testing;
+using InGameTests;
 using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
+
 // ReSharper disable PossibleNullReferenceException
 // ReSharper disable AssignNullToNotNullAttribute
 
 namespace Yobai.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
+public sealed class PartnerSleepTests : SeededTestFixture
 {
     private Pawn first = null!;
     private Pawn second = null!;
@@ -28,21 +32,23 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
     {
         Map map = Find.CurrentMap;
         startingTick = Find.TickManager.TicksGame;
-        DevTools.DevLog.Write("Starting " + Test.Current.TestCase.FullName);
-        DevTools.DevLog.Flush();
+        DevLog.Write("Starting " + Test.Current.TestCase.FullName);
+        DevLog.Flush();
         foreach (IntVec3 cell in CellRect.CenteredOn(new IntVec3(40, 0, 40), 6))
         {
             map.terrainGrid.SetTerrain(cell, TerrainDefOf.Soil);
             if (cell.x == 34 || cell.x == 46 || cell.z == 34 || cell.z == 46)
             {
                 ThingDef wallDef = cell == new IntVec3(40, 0, 34)
-                    ? DefDatabase<ThingDef>.GetNamed("Door") : ThingDefOf.Wall;
+                    ? DefDatabase<ThingDef>.GetNamed("Door")
+                    : ThingDefOf.Wall;
                 Thing wall = ThingMaker.MakeThing(wallDef, ThingDefOf.WoodLog);
                 wall.SetFaction(Faction.OfPlayer);
                 GenSpawn.Spawn(wall, cell, map);
                 spawned.Add(wall);
             }
         }
+
         foreach (IntVec3 cell in CellRect.CenteredOn(new IntVec3(40, 0, 40), 5))
             map.roofGrid.SetRoof(cell, RoofDefOf.RoofConstructed);
 
@@ -63,6 +69,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             pawns[index] = pawn;
             spawned.Add(pawn);
         }
+
         // First -- spouse -- Second -- spouse -- Third; Outsider has no romantic ties.
         (first, second, third, outsider) = (pawns[0], pawns[1], pawns[2], pawns[3]);
         first.relations.AddDirectRelation(PawnRelationDefOf.Spouse, second);
@@ -78,6 +85,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             beds[index] = bed;
             spawned.Add(bed);
         }
+
         (firstBed, secondBed, thirdBed) = (beds[0], beds[1], beds[2]);
         visitBed = (Building_Bed)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("DoubleBed"), ThingDefOf.WoodLog);
         visitBed.SetFaction(Faction.OfPlayer);
@@ -93,10 +101,13 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         if (Test.Current.Status == Status.Failed)
         {
             foreach (Pawn pawn in spawned.OfType<Pawn>())
-                DevTools.DevLog.Write($"{pawn.LabelShort}: job={pawn.CurJob}, bed={pawn.CurrentBed()}, owned={pawn.ownership.OwnedBed}, eligible={pawn.CanShareBedsNow}, hediffs={string.Join(", ", pawn.health.hediffSet.hediffs.Select(h => h.def.defName))}");
+                DevLog.Write(
+                    $"{pawn.LabelShort}: job={pawn.CurJob}, bed={pawn.CurrentBed()}, owned={pawn.ownership.OwnedBed}, eligible={pawn.CanShareBedsNow}, hediffs={string.Join(", ", pawn.health.hediffSet.hediffs.Select(h => h.def.defName))}");
             foreach (Building_Bed bed in spawned.OfType<Building_Bed>().Where(b => b.Spawned))
-                DevTools.DevLog.Write($"{bed}: owners={string.Join(", ", bed.OwnersForReading.Select(p => p.LabelShort))}, occupants={string.Join(", ", bed.CurOccupants.Select(p => p.LabelShort))}, room={bed.GetRoom().Role}");
+                DevLog.Write(
+                    $"{bed}: owners={string.Join(", ", bed.OwnersForReading.Select(p => p.LabelShort))}, occupants={string.Join(", ", bed.CurOccupants.Select(p => p.LabelShort))}, room={bed.GetRoom().Role}");
         }
+
         // Remove the roof first so it cannot collapse during the next test.
         foreach (IntVec3 cell in CellRect.CenteredOn(new IntVec3(40, 0, 40), 6))
             Find.CurrentMap.roofGrid.SetRoof(cell, null);
@@ -105,8 +116,9 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             if (!thing.Destroyed)
                 thing.Destroy();
         }
+
         spawned.Clear();
-        DevTools.DevLog.Flush();
+        DevLog.Flush();
         Expect.IsTrue(Find.TickManager.TicksGame - startingTick <= 2, "Each test may simulate at most two ticks.");
     }
 
@@ -134,6 +146,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             pawn.pather.StopDead();
             pawn.jobs.curDriver.Notify_PatherArrived();
         }
+
         Expect.ReferencesAreEqual(bed, pawn.CurrentBed());
         Expect.AreEqual(slot, pawn.Position);
         if (pawn.CurJobDef == JobDefOf.LayDown)
@@ -206,6 +219,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(first);
             }
+
             using RandBlock random = new(12345 + attempt);
             Job? job = GetSleepJob(first);
             if (job != null)
@@ -215,6 +229,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 JobMaker.ReturnToPool(job);
             }
         }
+
         Expect.AreEqual(3, selected.Count);
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
@@ -269,6 +284,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(first);
             }
+
             using RandBlock random = new(24680 + attempt);
             Job? chosen = GetSleepJob(first);
             Expect.IsNotNull(chosen);
@@ -284,6 +300,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 JobMaker.ReturnToPool(chosen!);
             }
         }
+
         Expect.AreEqual(2, selected.Count);
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
@@ -304,6 +321,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(first);
             }
+
             using RandBlock random = new(13579 + attempt);
             Job? sleep = GetSleepJob(first);
             Expect.IsNotNull(sleep);
@@ -319,6 +337,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 JobMaker.ReturnToPool(sleep!);
             }
         }
+
         Expect.AreEqual(3, selected.Count);
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
@@ -331,7 +350,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         CompForbiddable comp = new()
         {
             parent = secondBed,
-            props = new CompProperties { compClass = typeof(CompForbiddable) }
+            props = new CompProperties { compClass = typeof(CompForbiddable) },
         };
         secondBed.AllComps.Add(comp);
         secondBed.compForbiddable = comp;
@@ -364,6 +383,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(first);
             }
+
             Job? chosen = GetSleepJob(first);
             Expect.ReferencesAreNotEqual(thirdBed, chosen?.targetA.Thing);
             if (chosen != null)
@@ -473,7 +493,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(second, visitBed);
         first.mindState.canLovinTick = 0;
         second.mindState.canLovinTick = 0;
-        first.jobs.StartJob(NightVisitHelpers.GetPotentialNightVisits(first).SingleOrDefault()?.TryMakeVisitJob(first)!, JobCondition.InterruptForced);
+        first.jobs.StartJob(NightVisitHelpers.GetPotentialNightVisits(first).SingleOrDefault()?.TryMakeVisitJob(first)!,
+            JobCondition.InterruptForced);
         ArriveAtBed(first, visitBed);
         IntVec3 firstSlot = first.Position;
         IntVec3 secondSlot = second.Position;
@@ -535,13 +556,14 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             CompForbiddable comp = new()
             {
                 parent = bed,
-                props = new CompProperties { compClass = typeof(CompForbiddable) }
+                props = new CompProperties { compClass = typeof(CompForbiddable) },
             };
             bed.AllComps.Add(comp);
             bed.compForbiddable = comp;
             bed.SetForbidden(true);
             Expect.IsTrue(bed.IsForbidden(first));
         }
+
         Expect.IsNull(RestUtility.FindBedFor(first));
         Job? sleep = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
         Expect.IsNotNull(sleep);
@@ -551,9 +573,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.IsFalse(sleep.targetA.HasThing);
             Expect.IsTrue(sleep.targetA.Cell.IsValid);
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
-            {
                 Expect.IsFalse(bed.CompBedSharing.HasTemporaryAssignments);
-            }
             Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
         }
         finally
@@ -586,6 +606,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(first);
             }
+
             using RandBlock random = new(45678 + attempt);
             Job? job = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
             if (job?.targetA.Thing == visitBed)
@@ -593,6 +614,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             first.ClearReservationsForJob(job!);
             JobMaker.ReturnToPool(job!);
         }
+
         Expect.AreEqual(0, visits);
     }
 
@@ -639,6 +661,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 outsider.jobs.StartJob(bedmateSleep, JobCondition.InterruptForced);
                 Expect.IsNull(outsider.CurrentBed());
             }
+
             Expect.IsFalse(LovePartnerRelationUtility.LovePartnerRelationExists(first, outsider));
             Expect.IsTrue(BedUtility.WillingToShareBed(first, outsider));
             Expect.IsTrue(firstBed.HasOccupant(outsider));
@@ -865,7 +888,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.AreNotEqual(JobDefOf.Lovin, first.CurJobDef);
         Expect.IsFalse(visitBed.CompBedSharing.HasSleepingSlot(first));
         Expect.IsFalse(first.jobs.jobQueue.Any(queued => queued.job.def == JobDefOf.LayDown
-            && queued.job.targetA.Thing == visitBed));
+                                                         && queued.job.targetA.Thing == visitBed));
         Expect.IsFalse(first.needs.mood.thoughts.memories.Memories.Any(memory => memory.def == ThoughtDefOf.GotSomeLovin));
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
@@ -963,7 +986,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         ArriveAtBed(second, visitBed);
         first.mindState.canLovinTick = 0;
         second.mindState.canLovinTick = 0;
-        first.jobs.StartJob(NightVisitHelpers.GetPotentialNightVisits(first).SingleOrDefault()?.TryMakeVisitJob(first)!, JobCondition.InterruptForced);
+        first.jobs.StartJob(NightVisitHelpers.GetPotentialNightVisits(first).SingleOrDefault()?.TryMakeVisitJob(first)!,
+            JobCondition.InterruptForced);
         ArriveAtBed(first, visitBed);
         second.jobs.curDriver.asleep = false;
         Expect.IsTrue(RestUtility.CanUseBedNow(visitBed, first, false));
@@ -1306,6 +1330,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             first.ClearReservationsForJob(incoming!);
             JobMaker.ReturnToPool(incoming!);
         }
+
         Find.TickManager.DoSingleTick();
         Expect.AreEqual(2, NightVisitHelpers.GetPotentialNightVisits(outsider).Count);
     }
@@ -1333,12 +1358,14 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(third);
             }
+
             using RandBlock random = new(45678 + attempt);
             Job? bedtime = new JobGiver_GetRest().TryIssueJobPackage(third, default).Job;
             Expect.ReferencesAreNotEqual(visitBed, bedtime?.targetA.Thing);
             third.ClearReservationsForJob(bedtime!);
             JobMaker.ReturnToPool(bedtime!);
         }
+
         Expect.ReferencesAreEqual(firstBed, first.CurrentBed());
     }
 
@@ -1435,7 +1462,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         CompForbiddable comp = new()
         {
             parent = secondBed,
-            props = new CompProperties { compClass = typeof(CompForbiddable) }
+            props = new CompProperties { compClass = typeof(CompForbiddable) },
         };
         secondBed.AllComps.Add(comp);
         secondBed.compForbiddable = comp;
@@ -1800,6 +1827,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 second.ClearReservationsForJob(visit);
                 JobMaker.ReturnToPool(visit);
             }
+
             if (incoming != null)
             {
                 third.ClearReservationsForJob(incoming);
@@ -1883,6 +1911,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 second.ClearReservationsForJob(visit);
                 JobMaker.ReturnToPool(visit);
             }
+
             third.ClearReservationsForJob(incoming!);
             JobMaker.ReturnToPool(incoming!);
         }
@@ -2002,7 +2031,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         }
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void IncomingOwnerCountsAsBedmate()
     {
         // An arriving owner counts for bedmate compatibility. A pawn whose ideology forbids
@@ -2113,7 +2143,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         }
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void RelationshipChangeRejectsIncompatibleArrivalsBeforeEitherArrives()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
@@ -2163,6 +2194,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                     CompBedSharing comp = bed.CompBedSharing!;
                     comp.RemoveAssignment(first);
                 }
+
                 using RandBlock random = new(13579 + attempt);
                 Job? sleep = GetSleepJob(first);
                 Expect.IsNotNull(sleep);
@@ -2178,6 +2210,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                     JobMaker.ReturnToPool(sleep!);
                 }
             }
+
             Expect.AreEqual(3, selected.Count);
             Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
         }
@@ -2220,7 +2253,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Scribe.saver.InitSaving(path, "YobaiTest");
         thirdBed.CompBedSharing.PostExposeData();
         Scribe.saver.FinalizeSaving();
-        System.Xml.XmlDocument saved = new();
+        XmlDocument saved = new();
         saved.Load(path);
         Expect.AreEqual(0, saved.SelectNodes("//Yobai_TemporarySleepingSlots/li")!.Count);
         File.Delete(path);
@@ -2251,7 +2284,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         // reuses the live pawn instead of loading a second copy into the test map.
         LoadedObjectDirectory directory = (LoadedObjectDirectory)typeof(CrossRefHandler)
             .GetField("loadedObjectDirectory", BindingFlags.Instance
-                | BindingFlags.NonPublic)!.GetValue(Scribe.loader.crossRefs)!;
+                                               | BindingFlags.NonPublic)!.GetValue(Scribe.loader.crossRefs)!;
         directory.RegisterLoaded(first);
         Scribe.loader.FinalizeLoading();
         Expect.IsTrue(comp.TryGetSleepingSlot(first, out int restoredSlot));
@@ -2323,7 +2356,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.ReferencesAreEqual(firstBed, first.ownership.OwnedBed);
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void TravellersMustBeCompatibleBedmates()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
@@ -2435,7 +2469,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         JobMaker.ReturnToPool(booking);
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void RelationshipChangeCannotAdmitIncompatibleBookedBedmates()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
@@ -2490,12 +2525,13 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             CompForbiddable comp = new()
             {
                 parent = bed,
-                props = new CompProperties { compClass = typeof(CompForbiddable) }
+                props = new CompProperties { compClass = typeof(CompForbiddable) },
             };
             bed.AllComps.Add(comp);
             bed.compForbiddable = comp;
             bed.SetForbidden(true, false);
         }
+
         Expect.IsFalse(RestUtility.IsValidBedFor(thirdBed, first, first, true));
         Job? sleep = new JobGiver_GetRest().TryIssueJobPackage(first, default).Job;
         Expect.IsNotNull(sleep);
@@ -2549,7 +2585,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         JobMaker.ReturnToPool(booking);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void ChildMayShareBedroomWithPolyculeParents()
     {
         Pawn child = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
@@ -2578,7 +2615,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.AreEqual(RoomRoleDefOf.Bedroom, firstBed.GetRoom().Role);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void UnrelatedChildDoesNotQualifyForPolyculeBedroom()
     {
         Pawn child = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist,
@@ -2690,12 +2728,14 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
                 CompBedSharing comp = bed.CompBedSharing!;
                 comp.RemoveAssignment(first);
             }
+
             Job? sleep = GetSleepJob(first);
             Expect.IsNotNull(sleep);
             Expect.ReferencesAreNotEqual(thirdBed, sleep?.targetA.Thing);
             first.ClearReservationsForJob(sleep!);
             JobMaker.ReturnToPool(sleep!);
         }
+
         third.ClearReservationsForJob(incoming);
         third.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
     }
@@ -2747,7 +2787,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.ReferencesAreEqual(visitBed, outsider.ownership.OwnedBed);
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void PolyculeFallbackDoesNotApplyOutsideBedroom()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
@@ -2764,7 +2805,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.AreEqual(0, NightVisitHelpers.GetPotentialNightVisits(first).Count);
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void IdeologyIncompatibleOccupantCannotBecomeAFallbackBedmate()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
@@ -2781,13 +2823,14 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsFalse(BedSelectionHelpers.HasAvailablePolyculeBedroomSlot(first, thirdBed));
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void SpouseOnlyIdeologyAllowsLastResortPolyculeSharing()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         // Conversion removes spouses above the ideoligion's limit; preserve the test polycule.
         foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue?.defName
-            is "SpouseCount_Male" or "SpouseCount_Female").ToList())
+                     is "SpouseCount_Male" or "SpouseCount_Female").ToList())
             ideo.RemovePrecept(precept, true);
         ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("SpouseCount_Male_Unlimited")));
         ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("SpouseCount_Female_Unlimited")));
@@ -2823,13 +2866,14 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.IsNull(LovePartnerRelationUtility.GetPartnerInMyBed(first));
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void ProhibitedLoversKeepVanillaLovinPenaltiesDuringFallbackSharing()
     {
         Ideo ideo = CreateIdeoWithLovinPrecept("Lovin_SpouseOnly_Strict");
         // Conversion removes spouses above the ideoligion's limit; preserve the test polycule.
         foreach (Precept precept in ideo.PreceptsListForReading.Where(p => p.def.issue?.defName
-            is "SpouseCount_Male" or "SpouseCount_Female").ToList())
+                     is "SpouseCount_Male" or "SpouseCount_Female").ToList())
             ideo.RemovePrecept(precept, true);
         ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("SpouseCount_Male_Unlimited")));
         ideo.AddPrecept(PreceptMaker.MakePrecept(DefDatabase<PreceptDef>.GetNamed("SpouseCount_Female_Unlimited")));
@@ -2948,6 +2992,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
             Expect.AreEqual(assignment.Place.Slot, byPawn?.Slot);
             Expect.ReferencesAreEqual(assignment.Pawn, assignment.Place.AssignedPawn);
         }
+
         Expect.IsNull(third.ActiveSleepingAssignment?.Place);
         Expect.IsNull(secondBed.GetAssignedPawn(0));
         Find.TickManager.DoSingleTick();
@@ -3052,7 +3097,7 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         CompForbiddable forbiddable = new()
         {
             parent = thirdBed,
-            props = new CompProperties { compClass = typeof(CompForbiddable) }
+            props = new CompProperties { compClass = typeof(CompForbiddable) },
         };
         thirdBed.AllComps.Add(forbiddable);
         thirdBed.compForbiddable = forbiddable;
@@ -3186,7 +3231,8 @@ public sealed class PartnerSleepTests : InGameTests.SeededTestFixture
         Expect.ReferencesAreEqual(child, thirdBed.OwnersForReading[1]);
     }
 
-    [Test, LoadIfIdeologyActive]
+    [Test]
+    [LoadIfIdeologyActive]
     public void SpouseOnlyIdeologyExcludesLoversAndFiances()
     {
         first.relations.RemoveDirectRelation(PawnRelationDefOf.Spouse, second);

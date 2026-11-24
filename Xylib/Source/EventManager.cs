@@ -321,8 +321,6 @@ public class EventManager
         }
     }
 
-    private readonly Lazy<NotificationInfo?[]> notifications = new(() => new NotificationInfo?[DefDatabase<EventDef>.DefCount]);
-
     /// <summary>
     ///     Callback registrations indexed by <c>EventDef.index</c>.
     /// </summary>
@@ -339,6 +337,8 @@ public class EventManager
     ///     Temporary callback list used when a notification needs priority ordering.
     /// </summary>
     [ThreadStatic] private static List<CallbackInfo>? _tempCallbacks;
+
+    private readonly Lazy<NotificationInfo?[]> notifications = new(() => new NotificationInfo?[DefDatabase<EventDef>.DefCount]);
 
     /// <summary>
     ///     Static listeners that have been registered since the last reset.
@@ -465,22 +465,30 @@ public class EventManager
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
     /// <param name="eventDefExpression">
-    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled
+    ///     in by the compiler.
     /// </param>
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
     /// <remarks>
-    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener
+    ///     from different threads is undefined.
     /// </remarks>
-    public void Register<T>(EventDef? eventDef, Thing? target, Action<Thing?, T> callback, int priority = 0, 
-        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
+    public void Register<T>(
+        EventDef? eventDef,
+        Thing? target,
+        Action<Thing?, T> callback,
+        int priority = 0,
+        [CallerArgumentExpression(nameof(eventDef))]
+        string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef is null)
         {
-            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
+            Log.WarningOnce(
+                $"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -511,22 +519,30 @@ public class EventManager
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
     /// <param name="eventDefExpression">
-    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled
+    ///     in by the compiler.
     /// </param>
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
     /// <remarks>
-    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener
+    ///     from different threads is undefined.
     /// </remarks>
-    public void Register<T>(EventDef? eventDef, Thing? target, Action<T> callback, int priority = 0,
-        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
+    public void Register<T>(
+        EventDef? eventDef,
+        Thing? target,
+        Action<T> callback,
+        int priority = 0,
+        [CallerArgumentExpression(nameof(eventDef))]
+        string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef is null)
         {
-            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
+            Log.WarningOnce(
+                $"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -557,19 +573,27 @@ public class EventManager
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
     /// <param name="eventDefExpression">
-    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled
+    ///     in by the compiler.
     /// </param>
     /// <remarks>
-    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener
+    ///     from different threads is undefined.
     /// </remarks>
-    public void Register(EventDef? eventDef, Thing? target, Action<Thing?> callback, int priority = 0,
-        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
+    public void Register(
+        EventDef? eventDef,
+        Thing? target,
+        Action<Thing?> callback,
+        int priority = 0,
+        [CallerArgumentExpression(nameof(eventDef))]
+        string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef is null)
         {
-            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
+            Log.WarningOnce(
+                $"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -593,19 +617,27 @@ public class EventManager
     ///     Optional callback priority. Higher-priority callbacks run first.
     /// </param>
     /// <param name="eventDefExpression">
-    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled
+    ///     in by the compiler.
     /// </param>
     /// <remarks>
-    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener
+    ///     from different threads is undefined.
     /// </remarks>
-    public void Register(EventDef? eventDef, Thing? target, Action callback, int priority = 0,
-        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
+    public void Register(
+        EventDef? eventDef,
+        Thing? target,
+        Action callback,
+        int priority = 0,
+        [CallerArgumentExpression(nameof(eventDef))]
+        string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef is null)
         {
-            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
+            Log.WarningOnce(
+                $"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -644,27 +676,31 @@ public class EventManager
     ///     The callback to invoke.
     /// </param>
     /// <param name="eventDefExpression">
-    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled
+    ///     in by the compiler.
     /// </param>
     /// <typeparam name="T">
     ///     The expected type of the event data.
     /// </typeparam>
     /// <remarks>
-    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener
+    ///     from different threads is undefined.
     /// </remarks>
     public void Register<T>(
         IEventListener listener,
         EventDef? eventDef,
         Thing? target,
         Action<Thing?, T?> callback,
-        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
+        [CallerArgumentExpression(nameof(eventDef))]
+        string? eventDefExpression = null)
     {
         ArgumentNullException.ThrowIfNull(listener);
         ArgumentNullException.ThrowIfNull(callback);
 
         if (eventDef is null)
         {
-            Log.WarningOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
+            Log.WarningOnce(
+                $"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 
@@ -686,7 +722,8 @@ public class EventManager
     ///     The listener to remove.
     /// </param>
     /// <remarks>
-    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener from different threads is undefined.
+    ///     This method is thread safe. However, the effect of calling Register() and RemoveListener() on the same listener
+    ///     from different threads is undefined.
     /// </remarks>
     public void RemoveListener(IEventListener listener)
     {
@@ -737,17 +774,23 @@ public class EventManager
     ///     Optional event data. When supplied, its type should match <see cref="EventDef.dataType" />.
     /// </param>
     /// <param name="eventDefExpression">
-    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled in by the compiler.
+    ///     Used in error reporting to indicate the expression used to pass the eventDef argument. This is automatically filled
+    ///     in by the compiler.
     /// </param>
     /// <remarks>
     ///     This method is thread safe.
     /// </remarks>
-    public void Notify(EventDef? eventDef, Thing? target, object? data = null,
-        [CallerArgumentExpression(nameof(eventDef))] string? eventDefExpression = null)
+    public void Notify(
+        EventDef? eventDef,
+        Thing? target,
+        object? data = null,
+        [CallerArgumentExpression(nameof(eventDef))]
+        string? eventDefExpression = null)
     {
         if (eventDef is null)
         {
-            Log.ErrorOnce($"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
+            Log.ErrorOnce(
+                $"[EventManager] eventDef ({eventDefExpression ?? "unknown"}) is null - are you missing a NotificationDef in XML?");
             return;
         }
 

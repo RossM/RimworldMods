@@ -156,7 +156,10 @@ public sealed class HediffTests : PawnTestFixture
             Expect.IsTrue(need.Satisfied);
             Expect.AreEqual(0, condition.CurStageIndex);
         }
-        finally { pawn.needs.AllNeeds.Remove(need); }
+        finally
+        {
+            pawn.needs.AllNeeds.Remove(need);
+        }
     }
 
     [Test]

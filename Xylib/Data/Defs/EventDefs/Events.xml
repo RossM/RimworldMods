@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -6,44 +6,44 @@
     <defName>PreTakeDamage</defName>
     <dataType>DamageInfo</dataType>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostGenesChanged</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostHediffsChanged</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostCheckForStateChange</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostApparelChanged</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostSatisfyChemicalGenes</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostDiscard</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostPostMake</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PostLoadedGame</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>GlobalPostGameDispose</defName>
     <global>true</global>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>PreGenerateNewPawn</defName>
     <dataType>Xylib.PawnGenerationData</dataType>
@@ -84,12 +84,12 @@
   <Xylib.EventDef>
     <defName>InGeneratePossessions</defName>
     <dataType>System.Collections.Generic.List`1[Verse.ThingDefCount]</dataType>
-  </Xylib.EventDef>    
+  </Xylib.EventDef>
 
   <Xylib.EventDef>
     <defName>PostBirthday</defName>
   </Xylib.EventDef>
-  
+
   <Xylib.EventDef>
     <defName>InPawnExposeData</defName>
     <allowDuringScribe>true</allowDuringScribe>

@@ -19,21 +19,6 @@ public static class Patch_RaceProperties
     }
 
     [Feature(FeatureNameOf.Bugfix_Lactation)]
-    [Prefix]
-    [Inner(typeof(float), nameof(float.ToString), typeof(string))]
-    [Target(nameof(RaceProperties.NutritionEatenPerDay))]
-    private static void float_ToString_Prefix(Pawn p, [Instance] ref float value)
-    {
-        if (!Settings.instance.ShouldFixLactationBugsFor(p))
-            return;
-
-        // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
-        // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
-        // directly consumes food per tick. This correctly displays that effect.
-        value += p.HediffCompsOfType<HediffComp_Lactating>().Sum(comp => comp.AddedNutritionPerDay());
-    }
-
-    [Feature(FeatureNameOf.Bugfix_Lactation)]
     [Postfix]
     [InnerConstant("StatsReport_FinalValue")]
     [Target("NutritionEatenPerDayExplanation")]
@@ -49,5 +34,20 @@ public static class Patch_RaceProperties
     public static void StringBuilder_ctor_Postfix(StringBuilder __result, [State] out StringBuilder sb)
     {
         sb = __result;
+    }
+
+    [Feature(FeatureNameOf.Bugfix_Lactation)]
+    [Prefix]
+    [Inner(typeof(float), nameof(float.ToString), typeof(string))]
+    [Target(nameof(RaceProperties.NutritionEatenPerDay))]
+    private static void float_ToString_Prefix(Pawn p, [Instance] ref float value)
+    {
+        if (!Settings.instance.ShouldFixLactationBugsFor(p))
+            return;
+
+        // There is a bug in the base game that causes the nutrition from lactation to be counted twice, once as part of
+        // NutritionEatenPerDay which is used to calculate food fall per tick, and then the lactation hediff itself also
+        // directly consumes food per tick. This correctly displays that effect.
+        value += p.HediffCompsOfType<HediffComp_Lactating>().Sum(comp => comp.AddedNutritionPerDay());
     }
 }

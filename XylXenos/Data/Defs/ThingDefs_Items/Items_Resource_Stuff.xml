@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
-  
+
   <StuffCategoryDef>
     <defName>XylPreciousStone</defName>
     <label>precious stone</label>
@@ -10,7 +10,7 @@
     <destroySoundMedium>BuildingDestroyed_Stone_Medium</destroySoundMedium>
     <destroySoundLarge>BuildingDestroyed_Stone_Big</destroySoundLarge>
   </StuffCategoryDef>
-  
+
   <ThingDef ParentName="ResourceBase">
     <defName>XylCoral</defName>
     <label>coral</label>

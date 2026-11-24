@@ -196,7 +196,8 @@ public static class PatchHelpers
 
     public static bool MilkablePrisonerInRoomCanProduce(Room? r, ThingDef thingDef)
     {
-        return r is { IsPrisonCell: true } && r.Owners.Any(owner => owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef));
+        return r is { IsPrisonCell: true } &&
+               r.Owners.Any(owner => owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef));
     }
 
     public static bool IsUsingEcholocation(Thing caster)

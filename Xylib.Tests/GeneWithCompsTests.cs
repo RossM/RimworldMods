@@ -1,3 +1,4 @@
+using System.Reflection;
 using static Xylib.Tests.TestDefOf;
 
 namespace Xylib.Tests;
@@ -121,7 +122,7 @@ public sealed class GeneWithCompsTests : PawnTestFixture
             Scribe.loader.InitLoading(path);
             Scribe_Deep.Look(ref restored, "gene");
             var directory = (LoadedObjectDirectory)typeof(CrossRefHandler)
-                .GetField("loadedObjectDirectory", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .GetField("loadedObjectDirectory", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .GetValue(Scribe.loader.crossRefs)!;
             directory.RegisterLoaded(pawn);
             Scribe.loader.FinalizeLoading();
@@ -135,7 +136,8 @@ public sealed class GeneWithCompsTests : PawnTestFixture
         finally
         {
             Scribe.ForceStop();
-            if (File.Exists(path)) File.Delete(path);
+            if (File.Exists(path))
+                File.Delete(path);
         }
     }
 
@@ -159,13 +161,13 @@ public sealed class ProbeProperties : GeneCompProperties
 
 public class ProbeComp : GeneComp, IEventListener
 {
+    public override bool CompAllowActive => allow;
+    public override bool CompImmuneToVacuumBurns => immune;
     public int made, added, removed, resets, ticks, delta, events;
     public int savedValue;
     public bool allow = true, immune;
     public readonly Gizmo gizmo = new Command_Action();
     public readonly StatDrawEntry stat = new(StatCategoryDefOf.PawnMisc, "test", "value", "description", 0);
-    public override bool CompAllowActive => allow;
-    public override bool CompImmuneToVacuumBurns => immune;
     public override void CompPostMake() => made++;
     public override void CompPostPostAdd() => added++;
     public override void CompPostPostRemove() => removed++;
@@ -175,9 +177,9 @@ public class ProbeComp : GeneComp, IEventListener
     public override void CompTickInterval(int value) => delta += value;
     public override IEnumerable<Gizmo> CompGetGizmos() => [gizmo];
     public override IEnumerable<StatDrawEntry> SpecialDisplayStats() => [stat];
+    private void Birthday() => events++;
     public void RegisterWith(EventManager manager) => manager.Register(EventDefOf.PostBirthday, Pawn, Birthday);
     public void PreUnregister(EventManager manager) { }
-    private void Birthday() => events++;
 }
 
 public sealed class DerivedProbeComp : ProbeComp;

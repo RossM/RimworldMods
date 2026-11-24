@@ -7,9 +7,9 @@
 
   <Target Name="CollectModData">
     <ItemGroup>
-      <SharedModData Include="$(SharedModDataDirectory)\**\*" Condition="'$(SharedModDataDirectory)' != ''" />
-      <DirectoryModData Include="$(ModDataDirectory)\**\*" />
-      <ModData Include="@(SharedModData);@(DirectoryModData)" ModRelativePath="%(RecursiveDir)%(Filename)%(Extension)" />
+      <SharedModData Include="$(SharedModDataDirectory)\**\*" Condition="'$(SharedModDataDirectory)' != ''"/>
+      <DirectoryModData Include="$(ModDataDirectory)\**\*"/>
+      <ModData Include="@(SharedModData);@(DirectoryModData)" ModRelativePath="%(RecursiveDir)%(Filename)%(Extension)"/>
     </ItemGroup>
   </Target>
 
@@ -21,11 +21,11 @@
     </PropertyGroup>
     <ItemGroup>
       <StaleModData Include="$(_ModDestination)\**\*"
-                    Exclude="$(_ModDestination)\Assemblies\**\*;@(ModData->'$(_ModDestination)\%(ModRelativePath)')" />
+                    Exclude="$(_ModDestination)\Assemblies\**\*;@(ModData->'$(_ModDestination)\%(ModRelativePath)')"/>
     </ItemGroup>
-    <Delete Files="@(StaleModData)" />
+    <Delete Files="@(StaleModData)"/>
     <Copy SourceFiles="@(ModData)" DestinationFiles="@(ModData->'$(_ModDestination)\%(ModRelativePath)')"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="true"/>
   </Target>
 
   <!-- The project's own assembly is automatic. ModAssembly entries name additional files in its build output. -->
@@ -34,10 +34,10 @@
     <MSBuild Projects="@(ProjectReference)" Targets="GetRimWorldModAssemblies"
              Condition="'%(ProjectReference.BundleRimWorldModAssemblies)' == 'true'"
              Properties="TargetFramework=$(TargetFramework);Configuration=$(Configuration);Platform=$(Platform)">
-      <Output TaskParameter="TargetOutputs" ItemName="_ModAssembly" />
+      <Output TaskParameter="TargetOutputs" ItemName="_ModAssembly"/>
     </MSBuild>
     <ItemGroup>
-      <_ModAssembly Include="$(TargetPath);@(ModAssembly->'$(TargetDir)%(Identity)')" />
+      <_ModAssembly Include="$(TargetPath);@(ModAssembly->'$(TargetDir)%(Identity)')"/>
     </ItemGroup>
   </Target>
 
@@ -48,14 +48,13 @@
     </PropertyGroup>
     <ItemGroup>
       <StaleModAssembly Include="$(_ModAssemblyDestination)\*.dll"
-                        Exclude="@(_ModAssembly->'$(_ModAssemblyDestination)\%(Filename)%(Extension)')" />
+                        Exclude="@(_ModAssembly->'$(_ModAssemblyDestination)\%(Filename)%(Extension)')"/>
     </ItemGroup>
-    <Delete Files="@(StaleModAssembly)" />
-    <Copy SourceFiles="@(_ModAssembly)"
-          DestinationFolder="$(_ModAssemblyDestination)" SkipUnchangedFiles="true" />
+    <Delete Files="@(StaleModAssembly)"/>
+    <Copy SourceFiles="@(_ModAssembly)" DestinationFolder="$(_ModAssemblyDestination)" SkipUnchangedFiles="true"/>
   </Target>
 
   <Target Name="CleanModOutput" AfterTargets="Clean">
-    <RemoveDir Directories="@(ModDestination)" />
+    <RemoveDir Directories="@(ModDestination)"/>
   </Target>
 </Project>

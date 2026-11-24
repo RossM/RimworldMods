@@ -10,7 +10,8 @@ public sealed class GenerationTests : SeededTestFixture
     [Test]
     public void BackCompatibilityUpgradesPlainGenesWithACompsExtension()
     {
-        Type converterType = typeof(GeneDefGenerator).Assembly.GetType("XylXenos.BackCompatibilityConverter_GeneWithComps", throwOnError: true)!;
+        Type converterType
+            = typeof(GeneDefGenerator).Assembly.GetType("XylXenos.BackCompatibilityConverter_GeneWithComps", throwOnError: true)!;
         var converter = (BackCompatibilityConverter)Activator.CreateInstance(converterType)!;
         var xml = new XmlDocument();
         xml.LoadXml("<li><def>XylAquatic</def></li>");
@@ -28,10 +29,14 @@ public sealed class GenerationTests : SeededTestFixture
         {
             defName = "TestTemplate", label = "Gene {0}", description = "Ability {0}", iconPath = "Icon/{0}",
             displayCategory = new GeneCategoryDef(), displayOrderOffset = 17, selectionWeight = 0.25f,
-            biostats = [new GeneTemplateDef.AbilityBiostatInfo { levels = new IntRange(2), biostatArc = 1, biostatCpx = 3, biostatMet = -2 }],
+            biostats =
+            [
+                new GeneTemplateDef.AbilityBiostatInfo { levels = new IntRange(2), biostatArc = 1, biostatCpx = 3, biostatMet = -2 },
+            ],
             modExtensions = [extension],
         };
-        var ability = new AbilityDef { defName = "TestAbility", label = "test ability", description = "test description", level = 2, iconPath = "Test" };
+        var ability = new AbilityDef
+            { defName = "TestAbility", label = "test ability", description = "test description", level = 2, iconPath = "Test" };
         var gene = (GeneDef)typeof(GeneDefGenerator).GetMethod("GetFromTemplate", BindingFlags.NonPublic | BindingFlags.Static)!
             .Invoke(null, [template, ability, 1000, false])!;
         Expect.AreEqual("TestTemplate_TestAbility", gene.defName);

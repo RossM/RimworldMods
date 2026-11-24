@@ -13,7 +13,7 @@
     <iconPath>Xyl/UI/Icons/Genes/Gene_HerdInstinct</iconPath>
     <iconColor>(0.75, 0.75, 0.75)</iconColor>
     <suppressedTraits>
-      <Recluse />
+      <Recluse/>
     </suppressedTraits>
     <exclusionTags>
       <li>XylColonySize</li>

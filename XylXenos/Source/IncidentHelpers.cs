@@ -29,8 +29,10 @@ public static class IncidentHelpers
         static IEnumerable<XenotypeDef> GetPlayerXenotypes()
         {
             foreach (var pawn in Faction.OfPlayer.AllAlivePawns)
+            {
                 if (pawn.genes is { Xenotype: { } xenotypeDef, CustomXenotype: null })
                     yield return xenotypeDef;
+            }
         }
     }
 

@@ -1,5 +1,5 @@
-using static XylXenos.Tests.TestDefOf;
 using UnityEngine;
+using static XylXenos.Tests.TestDefOf;
 
 namespace XylXenos.Tests;
 
@@ -11,14 +11,15 @@ public sealed class NeedThoughtAndTrackerTests : PawnTestFixture
     {
         var need = new Need_Wetness(pawn) { def = XylXenosTestWetnessNeed };
         foreach ((float level, WetnessCategory category) in new[]
-        {
-            (0f, WetnessCategory.Parched), (0.1f, WetnessCategory.VeryDry), (0.3f, WetnessCategory.Dry),
-            (0.6f, WetnessCategory.Neutral), (1f, WetnessCategory.Wet),
-        })
+                 {
+                     (0f, WetnessCategory.Parched), (0.1f, WetnessCategory.VeryDry), (0.3f, WetnessCategory.Dry),
+                     (0.6f, WetnessCategory.Neutral), (1f, WetnessCategory.Wet),
+                 })
         {
             need.CurLevel = level;
             Expect.AreEqual(category, need.CurCategory);
         }
+
         need.CurLevel = 0.5f;
         Expect.AreApproximatelyEqual(0, need.CurInstantLevel, "An unspawned pawn has no wetness source.");
         need.NeedInterval();
@@ -131,6 +132,7 @@ public sealed class NeedThoughtAndTrackerTests : PawnTestFixture
             for (int i = 0; i < 64; i++)
                 reachedLastSegment |= generator.NewRandomizedColor().b > 0;
         }
+
         Expect.IsTrue(reachedLastSegment, "The final green-blue segment must be selectable.");
     }
 }

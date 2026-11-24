@@ -17,16 +17,16 @@
       <li TKey="XylChyrrSonicWaveFriendlyFire">Sonic wave won't affect the character using it, but it will affect allies.</li>
 
       <li TKey="XylFoodPoisoning">The carnivore stomach and herbivore stomach genes prevent food poisoning from raw meat and raw plants, respectively.</li>
-      
+
       <li TKey="XylNixieShower">Characters with the aquatic gene can build showers and use them to stay wet.</li>
       <li TKey="XylNixieSpeed">Nixies move faster than almost anything else in the water. You can use this to your advantage in combat.</li>
       <li TKey="XylNixieHot">Nixies' skin starts to dry out much faster when the temperature climbs above 31°C (88°F).</li>
 
       <li TKey="XylScalebornLineages">Each of the five scaleborn lineages has a unique skin color, breath ability, defensive trait, and skill aptitude.</li>
-      
+
       <li TKey="XylTitanAtlasiteRequired">Reaching maximum atlasite saturation takes ten doses, with one dose taken every three days.</li>
       <li TKey="XylTitanCrystalBrainDamage">Building up a tolerance to crystal can cause chemical brain damage.</li>
-      
+
       <li TKey="XylTrogPets">The insect pheromones gene also protects colony animals.</li>
       <li TKey="XylTrogInsects">Trogs can make use of wild insects in multiple ways. Try taming them, or just luring enemies close to a hive.</li>
 
@@ -34,7 +34,7 @@
       <li TKey="XylHuntingVermin">Meat-deficient warcats may kill and eat wild animals to fulfil their need.</li>
 
       <li TKey="XylInnateWeapons">Large horns and retractable claws have an innate hit chance bonus.</li>
-      
+
     </tips>
   </TipSetDef>
 

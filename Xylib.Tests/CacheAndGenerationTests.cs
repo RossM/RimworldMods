@@ -64,7 +64,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsEmpty(tracker.unlockedBuildables!);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void ListMakerReturnsOnlyNewGenesAndHonorsCount()
     {
         GeneDef existing = XylibTestGene, first = XylibTestOtherGene, second = XylibTestThirdGene;
@@ -78,7 +79,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == second));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void ListMakerWithZeroCountReturnsNoGenes()
     {
         GeneDef candidate = XylibTestGene;
@@ -88,7 +90,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == candidate));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void MakerDefRespectsPawnAndXenotypeGenesByDefault()
     {
         pawn.genes.AddGene(XylibTestConflictA, false);
@@ -99,7 +102,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsEmpty(maker.Generate(pawn).GenesListForReading);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void MakerDefCanIgnorePawnAndXenotypeGenesDuringGeneration()
     {
         GeneDef existing = XylibTestConflictA, first = XylibTestConflictB, second = XylibTestInheritedB;
@@ -114,7 +118,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.ReferencesAreEqual(existing, pawn.genes.GenesListForReading.Single().def);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void OptionMakerSelectsItsWeightedSubtree()
     {
         GeneDef expected = XylibTestGene;
@@ -125,7 +130,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.ReferencesAreEqual(expected, maker.Generate(pawn).GenesListForReading.Single());
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void SubtreeMakerDelegatesToReferencedMaker()
     {
         GeneDef expected = XylibTestGene;
@@ -133,7 +139,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.ReferencesAreEqual(expected, maker.Generate(pawn).GenesListForReading.Single());
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BiostatMakerRejectsOutOfRangeAndProhibitedGenes()
     {
         GeneDef def = XylibTestMetabolism;
@@ -146,7 +153,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsFalse(maker.Validate(def, new GeneSet(), GeneType.Xenogene, pawn));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BiostatTotalMakerWithoutShuffleUsesDeclaredOrder()
     {
         GeneDef first = XylibTestConflictA, second = XylibTestConflictB;
@@ -163,7 +171,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         }
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BiostatTotalMakerShufflesBeforeSelectingLimitedSubmakers()
     {
         GeneDef first = XylibTestGene, second = XylibTestOtherGene;
@@ -184,7 +193,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsTrue(selected.Contains(second), "Shuffling must allow either submaker to fill the single available slot.");
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BiostatTotalMakerShufflesExecutionOrderOfConflictingSubmakers()
     {
         GeneDef first = XylibTestConflictA, second = XylibTestConflictB;
@@ -205,7 +215,8 @@ public sealed class CacheAndGenerationTests : PawnTestFixture
         Expect.IsTrue(selected.Contains(second), "Either conflicting gene must be able to win by executing its submaker first.");
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BiostatTotalMakerRetainsExistingGenesWhileAddingValidSet()
     {
         GeneDef existing = XylibTestGene, added = XylibTestMetabolism;

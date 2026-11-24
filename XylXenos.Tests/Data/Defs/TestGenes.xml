@@ -76,7 +76,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <showInXenotypeCreation>false</showInXenotypeCreation>
         <comps>
-          <li Class="XylXenos.GeneCompProperties_Flight" />
+          <li Class="XylXenos.GeneCompProperties_Flight"/>
         </comps>
       </li>
     </modExtensions>
@@ -140,7 +140,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <showInXenotypeCreation>false</showInXenotypeCreation>
         <comps>
-          <li Class="XylXenos.GeneCompProperties_Psycast" />
+          <li Class="XylXenos.GeneCompProperties_Psycast"/>
         </comps>
       </li>
     </modExtensions>

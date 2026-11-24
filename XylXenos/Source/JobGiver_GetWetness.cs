@@ -15,7 +15,8 @@ public class JobGiver_GetWetness : ThinkNode_JobGiver
             if (field is not null)
                 return field;
 
-            return field = [.. DefDatabase<ThingDef>.AllDefs.Where(def => def.GetModExtension<DefModExtension_Thing_WetnessSource>() is not null)];
+            return field =
+                [.. DefDatabase<ThingDef>.AllDefs.Where(def => def.GetModExtension<DefModExtension_Thing_WetnessSource>() is not null)];
         }
     }
 

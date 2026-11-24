@@ -29,26 +29,6 @@ internal static class Patch_PawnGenerator
         return false;
     }
 
-    [Feature(typeof(XenotypeSetWithDefault))]
-    [Postfix]
-    [Inner(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
-    [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
-    public static void XenotypeDefOf_Baseliner_Postfix(FactionDef? factionDef, Faction? faction, ref XenotypeDef? __result)
-    {
-        if ((faction?.def ?? factionDef)?.xenotypeSet is XenotypeSetWithDefault withDefault)
-            __result = withDefault.defaultXenotype;
-    }
-
-    [Feature(nameof(EventDefOf.PreGenerateNewPawn))]
-    [Prefix]
-    [Target("TryGenerateNewPawnInternal")]
-    public static void TryGenerateNewPawnInternal_Prefix(ref PawnGenerationRequest request)
-    {
-        var data = new PawnGenerationData(request);
-        EventManager.Instance.Notify(EventDefOf.PreGenerateNewPawn, null, data);
-        request = data.request;
-    }
-
     [Feature(nameof(EventDefOf.PostGenerateGenes))]
     [Postfix]
     [Target("GenerateGenes")]
@@ -83,5 +63,25 @@ internal static class Patch_PawnGenerator
         if (__result is null)
             return;
         EventManager.Instance.Notify(EventDefOf.PostGenerateNewPawn, __result, request);
+    }
+
+    [Feature(nameof(EventDefOf.PreGenerateNewPawn))]
+    [Prefix]
+    [Target("TryGenerateNewPawnInternal")]
+    public static void TryGenerateNewPawnInternal_Prefix(ref PawnGenerationRequest request)
+    {
+        var data = new PawnGenerationData(request);
+        EventManager.Instance.Notify(EventDefOf.PreGenerateNewPawn, null, data);
+        request = data.request;
+    }
+
+    [Feature(typeof(XenotypeSetWithDefault))]
+    [Postfix]
+    [Inner(typeof(XenotypeDefOf), nameof(XenotypeDefOf.Baseliner))]
+    [Target(nameof(PawnGenerator.XenotypesAvailableFor))]
+    public static void XenotypeDefOf_Baseliner_Postfix(FactionDef? factionDef, Faction? faction, ref XenotypeDef? __result)
+    {
+        if ((faction?.def ?? factionDef)?.xenotypeSet is XenotypeSetWithDefault withDefault)
+            __result = withDefault.defaultXenotype;
     }
 }

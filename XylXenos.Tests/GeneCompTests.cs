@@ -126,7 +126,8 @@ public sealed class GeneCompTests : PawnTestFixture
         Expect.AreEqual(-1, comp.FullnessStage);
     }
 
-    [Test, LoadIfRoyaltyActive]
+    [Test]
+    [LoadIfRoyaltyActive]
     public void PsycastCompInitializesPsyfocus()
     {
         pawn.psychicEntropy.OffsetPsyfocusDirectly(-1);

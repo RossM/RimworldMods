@@ -76,7 +76,7 @@
       </li>
     </operations>
   </Operation>
-  
+
   <!-- Change Waster faction to use XenotypeSetWithDefault so chances add to 100% -->
   <Operation Class="PatchOperationAttributeAdd">
     <xpath>Defs/FactionDef[defName="PirateWaster"]/xenotypeSet</xpath>

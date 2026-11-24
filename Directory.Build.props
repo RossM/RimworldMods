@@ -1,6 +1,6 @@
 <Project>
   <Import Project="$(MSBuildThisFileDirectory)Directory.Build.local.props"
-          Condition="'$(ImportLocalBuildProps)' != 'false' and Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
+          Condition="'$(ImportLocalBuildProps)' != 'false' and Exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')"/>
 
   <PropertyGroup>
     <RimWorldDirectory Condition="'$(RimWorldDirectory)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldDirectory>

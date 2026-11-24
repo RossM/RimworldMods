@@ -52,9 +52,7 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
         }
 
         if (modes.Any(mode => mode is null))
-        {
             yield return "mode is null";
-        }
     }
 }
 

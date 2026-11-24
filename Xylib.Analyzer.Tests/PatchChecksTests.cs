@@ -51,7 +51,8 @@ public sealed class PatchChecksTests
             }
             """);
         Assert.That(diagnostics.Select(d => d.Id), Is.EqualTo(new[] { id }));
-        Assert.That(diagnostics.Single().Location.SourceTree!.GetText().ToString(diagnostics.Single().Location.SourceSpan), Is.EqualTo(name));
+        Assert.That(diagnostics.Single().Location.SourceTree!.GetText().ToString(diagnostics.Single().Location.SourceSpan),
+            Is.EqualTo(name));
     }
 
     [TestCase("Prefix", "Prefix")]
@@ -146,7 +147,8 @@ public sealed class PatchChecksTests
     public async Task DoesNotInheritNonInheritedFeatureAttributes()
     {
         var contracts = AnalyzerTestHelper.Contracts.Replace(
-            "System.AttributeTargets.Method, AllowMultiple = true", "System.AttributeTargets.Method, AllowMultiple = true, Inherited = false");
+            "System.AttributeTargets.Method, AllowMultiple = true",
+            "System.AttributeTargets.Method, AllowMultiple = true, Inherited = false");
         var diagnostics = await AnalyzerTestHelper.Analyze("""
             class Parent
             {

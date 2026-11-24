@@ -60,7 +60,7 @@
       </li>
     </modExtensions>
   </ThingDef>
-  
+
   <ThingDef ParentName="XylAquaticSleepingSpotBase">
     <defName>XylAquaticSleepingSpot</defName>
     <label>aquatic sleeping spot</label>

@@ -11,7 +11,8 @@ internal static class PatchHelpers
 
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
-    private static readonly MethodInfo methodInfo_RunDefGenerator = typeof(PatchHelpers).GetMethod(nameof(RunDefGenerator), BindingFlags.NonPublic | BindingFlags.Static)!;
+    private static readonly MethodInfo methodInfo_RunDefGenerator
+        = typeof(PatchHelpers).GetMethod(nameof(RunDefGenerator), BindingFlags.NonPublic | BindingFlags.Static)!;
 
     private static readonly ConcurrentDictionary<Type, Action<object, List<string>>?> requiredMemberCheckerCache = new();
     private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)])!;
@@ -24,7 +25,7 @@ internal static class PatchHelpers
 
     public static void RunDefGenerators(bool hotReload)
     {
-        foreach ((Type type, Type defType) in 
+        foreach ((Type type, Type defType) in
                  GenTypes.AllTypes.SelectMany(
                      type => type.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDefGenerator<>)),
                      (type, i) => (type, i.GetGenericArguments()[0])))
@@ -171,7 +172,9 @@ internal static class PatchHelpers
 
     public static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
     {
-        return ignoreRestrictions ? genes : [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
+        return ignoreRestrictions
+            ? genes
+            : [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
     }
 
     private static Action<object, List<string>>? GetRequiredMemberCheckerFunc(Type defType)
@@ -281,7 +284,7 @@ internal static class PatchHelpers
             string parentDefName = node.GetAttribute("ParentDefName");
             var parent = xmlDoc.SelectNodes($"/Defs/{defType}[defName=\"{parentDefName}\"]")!.OfType<XmlElement>()
                 .LastOrDefault();
-            
+
             if (parent is null)
             {
                 Log.Warning($"ParentDefName {parentDefName} not found");
