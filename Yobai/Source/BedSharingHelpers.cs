@@ -12,9 +12,7 @@ internal static class BedSharingHelpers
     extension(Building_Bed bed)
     {
         public CompBedSharing CompBedSharing =>
-            bed.GetBedSharingComp() ?? throw new InvalidOperationException($"Bed {bed} is missing {nameof(CompBedSharing)}.");
-
-        internal CompBedSharing? GetBedSharingComp() => bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>();
+            bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>() ?? throw new InvalidOperationException($"Bed {bed} is missing {nameof(CompBedSharing)}.");
 
         public bool IsEligibleForBedSharing =>
             bed.IsNormalHumanlikeBed &&
@@ -96,9 +94,8 @@ internal static class BedSharingHelpers
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
     {
         return bed != null && pawn.CanSleepInSharedBed(bed)
-                           && bed.GetBedSharingComp() is { } comp
-                           && comp.TryGetSleepingSlot(pawn, out int slot)
-                           && comp.IsSleepingPlaceAvailable(pawn, slot);
+                           && bed.CompBedSharing.TryGetSleepingSlot(pawn, out int slot)
+                           && bed.CompBedSharing.IsSleepingPlaceAvailable(pawn, slot);
     }
 
     public static bool AreLovePartnersWillingToShareBed(Pawn first, Pawn second)
