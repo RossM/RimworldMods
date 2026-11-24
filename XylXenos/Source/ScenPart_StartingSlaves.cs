@@ -33,30 +33,23 @@ public class ScenPart_StartingSlaves : ScenPart_PawnModifier
 
     public override void GenerateIntoMap(Map map)
     {
-        DebugAssert.NotNull(Find.Scenario);
-
         List<Pawn> pawns = map.mapPawns.FreeColonists;
 
         // If the scenario is set up by xenotype, sort the pawn list so that they are ordered
         // the way they were in the scenario. This is used by the Warcat Tribe scenario
         // to ensure that the non-warcats are the slaves.
-        if (Find.Scenario.AllParts.OfType<ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes>().FirstOrDefault() is { } xenotypeConfig)
+        if (Find.Scenario?.AllParts.OfType<ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes>().FirstOrDefault()?.xenotypeCounts is
+            { } counts)
             pawns =
             [
                 .. pawns.OrderBy(p =>
                 {
-                    DebugAssert.NotNull(xenotypeConfig.xenotypeCounts);
-
-                    int index = xenotypeConfig.xenotypeCounts.FindIndex(x => x.xenotype == p.genes?.Xenotype);
-                    return index == -1 ? xenotypeConfig.xenotypeCounts.Count : index;
+                    int index = counts.FindIndex(x => x.xenotype == p.genes?.Xenotype);
+                    return index == -1 ? counts.Count : index;
                 }),
             ];
 
         foreach (var pawn in pawns.Skip(Math.Max(0, pawns.Count - count)))
-        {
-            DebugAssert.NotNull(pawn.guest);
-
-            pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
-        }
+            pawn.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
     }
 }
