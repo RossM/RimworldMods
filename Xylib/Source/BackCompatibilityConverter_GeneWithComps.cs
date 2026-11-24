@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace XylXenos;
+namespace Xylib;
 
 /// <summary>
 ///     This updates genes on existing pawns which have had a <see cref="DefModExtension_GeneWithComps" /> added to use

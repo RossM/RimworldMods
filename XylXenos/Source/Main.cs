@@ -48,7 +48,6 @@ public class Main : Mod
     private static void RegisterForBackCompatibility()
     {
         BackCompatibility.conversionChain.Add(new BackCompatibilityConverter_PosthumanDrift());
-        BackCompatibility.conversionChain.Add(new BackCompatibilityConverter_GeneWithComps());
         BackCompatibility.RemovedDefs.Add(new("Osteoliths", typeof(FurDef)));
         BackCompatibility.RemovedDefs.Add(new("Scaleskin", typeof(FurDef)));
     }

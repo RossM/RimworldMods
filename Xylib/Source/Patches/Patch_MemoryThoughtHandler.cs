@@ -1,4 +1,6 @@
-﻿namespace XylXenos.Patches;
+﻿using XylXenos;
+
+namespace Xylib.Patches;
 
 [Patch(typeof(MemoryThoughtHandler))]
 public static class Patch_MemoryThoughtHandler

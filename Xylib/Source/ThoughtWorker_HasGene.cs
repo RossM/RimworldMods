@@ -1,4 +1,7 @@
-﻿namespace XylXenos;
+﻿using Xylib;
+
+#pragma warning disable IDE0130
+namespace XylXenos;
 
 [UsedFromXml]
 public class ThoughtWorker_HasGene : ThoughtWorker
