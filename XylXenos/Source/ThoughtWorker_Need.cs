@@ -17,7 +17,7 @@ public class ThoughtWorker_Need : ThoughtWorker
         {
             var extension = def.GetModExtension<DefModExtension_Thought_Need>();
             DebugAssert.NotNull(extension);
-            return extension!;
+            return extension;
         }
     }
 

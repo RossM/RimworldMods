@@ -25,7 +25,7 @@ public class Hediff_SubstituteCapacity : HediffWithComps
         {
             var extension = def.GetModExtension<DefModExtension_Hediff_SubstituteCapacity>();
             DebugAssert.NotNull(extension);
-            return extension!;
+            return extension;
         }
     }
 

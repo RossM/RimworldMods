@@ -15,7 +15,7 @@ public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
         {
             var extension = def.GetModExtension<DefModExtension_WorkGiver_InteractWithPawn>();
             DebugAssert.NotNull(extension);
-            return extension!;
+            return extension;
         }
     }
 

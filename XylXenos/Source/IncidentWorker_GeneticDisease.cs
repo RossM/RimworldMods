@@ -38,7 +38,7 @@ public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
         {
             var extension = def.GetModExtension<DefModExtension_Incident_GeneticDisease>();
             DebugAssert.NotNull(extension);
-            return extension!;
+            return extension;
         }
     }
 

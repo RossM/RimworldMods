@@ -216,7 +216,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(first);
             }
 
@@ -281,7 +281,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(first);
             }
 
@@ -318,7 +318,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(first);
             }
 
@@ -380,7 +380,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(first);
             }
 
@@ -603,7 +603,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(first);
             }
 
@@ -1355,7 +1355,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(third);
             }
 
@@ -1402,7 +1402,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         Expect.IsNotNull(chosen);
         Expect.IsTrue(chosen!.targetA.Thing == firstBed || chosen.targetA.Thing == secondBed);
         first.ClearReservationsForJob(chosen);
-        CompBedSharing comp = ((Building_Bed)chosen.targetA.Thing).CompBedSharing!;
+        CompBedSharing comp = ((Building_Bed)chosen.targetA.Thing).CompBedSharing;
         comp.RemoveAssignment(first);
         JobMaker.ReturnToPool(chosen);
         StartPolyculeBedroomSleepJob(first, secondBed);
@@ -2191,7 +2191,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
             {
                 foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
                 {
-                    CompBedSharing comp = bed.CompBedSharing!;
+                    CompBedSharing comp = bed.CompBedSharing;
                     comp.RemoveAssignment(first);
                 }
 
@@ -2725,7 +2725,7 @@ public sealed class PartnerSleepTests : SeededTestFixture
         {
             foreach (Building_Bed bed in new[] { firstBed, secondBed, thirdBed })
             {
-                CompBedSharing comp = bed.CompBedSharing!;
+                CompBedSharing comp = bed.CompBedSharing;
                 comp.RemoveAssignment(first);
             }
 

@@ -52,15 +52,15 @@ public class ScenPart_StartingLivestock : ScenPart
     {
         var initData = Find.GameInitData;
         DebugAssert.NotNull(initData);
-        var bestTamer = initData!.startingAndOptionalPawns.Take(initData.startingPawnCount).MaxBy(pawn =>
+        var bestTamer = initData.startingAndOptionalPawns.Take(initData.startingPawnCount).MaxBy(pawn =>
         {
             DebugAssert.NotNull(pawn.skills);
             return pawn.skills!.GetSkill(SkillDefOf.Animals).Level;
         });
         DebugAssert.NotNull(bestTamer);
-        var skills = bestTamer!.skills;
+        var skills = bestTamer.skills;
         DebugAssert.NotNull(skills);
-        int level = skills!.GetSkill(SkillDefOf.Animals).Level;
+        int level = skills.GetSkill(SkillDefOf.Animals).Level;
         float statValueAbstract = def.race.GetStatValueAbstract(StatDefOf.MinimumHandlingSkill);
         return level >= statValueAbstract;
     }
@@ -107,7 +107,7 @@ public class ScenPart_StartingLivestock : ScenPart
     {
         var initData = Find.GameInitData;
         DebugAssert.NotNull(initData);
-        if (initData!.playerFaction.ideos?.PrimaryIdeo is not { } ideo)
+        if (initData.playerFaction.ideos?.PrimaryIdeo is not { } ideo)
             return 1f;
         return Enumerable.Any(ideo.VeneratedAnimals, veneratedAnimal => veneratedAnimal == animal.race) ? 8f : 1f;
     }

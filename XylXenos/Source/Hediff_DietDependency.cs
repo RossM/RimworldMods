@@ -58,7 +58,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
             var extension = def.GetModExtension<DefModExtension_Hediff_DietDependency>();
             DebugAssert.NotNull(extension);
-            return field = extension!;
+            return field = extension;
         }
     }
 
@@ -89,11 +89,11 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
                 .severityPerDay;
             var mildDeficiency = def.stages[(int)Stages.MildDeficiency];
             DebugAssert.NotNull(mildDeficiency);
-            var deficiencyDays = mildDeficiency!.minSeverity / severityPerDay;
+            var deficiencyDays = mildDeficiency.minSeverity / severityPerDay;
 
             var coma = def.stages[(int)Stages.Coma];
             DebugAssert.NotNull(coma);
-            var comaDays = coma!.minSeverity / severityPerDay;
+            var comaDays = coma.minSeverity / severityPerDay;
             var deathDays = def.lethalSeverity / severityPerDay;
             text += "GeneDefChemicalNeedDurationDesc".Translate(DefExt.foodLabel,
                 pawn.Named("PAWN"),

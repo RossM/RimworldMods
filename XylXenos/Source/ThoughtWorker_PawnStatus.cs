@@ -26,7 +26,7 @@ public class ThoughtWorker_PawnStatus : ThoughtWorker
         {
             var extension = def.GetModExtension<DefModExtension_Thought_PawnStatus>();
             DebugAssert.NotNull(extension);
-            return extension!;
+            return extension;
         }
     }
 

@@ -268,7 +268,7 @@ public class GeneWithComps : Gene, IEventListener
             {
                 var instance = Activator.CreateInstance(compClass);
                 DebugAssert.NotNull(instance);
-                comp = (GeneComp)instance!;
+                comp = (GeneComp)instance;
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);

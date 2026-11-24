@@ -29,7 +29,7 @@ public class HediffComp_SeverityPerDay_Stage : HediffComp_SeverityPerDay
             {
                 var stage = parent.CurStage;
                 DebugAssert.NotNull(stage);
-                return Mathf.RoundToInt((parent.Severity - stage!.minSeverity) / Mathf.Abs(SeverityChangePerDay()) * 24f)
+                return Mathf.RoundToInt((parent.Severity - stage.minSeverity) / Mathf.Abs(SeverityChangePerDay()) * 24f)
                     .ToString() + "LetterHour".Translate();
             }
             return null;
@@ -45,7 +45,7 @@ public class HediffComp_SeverityPerDay_Stage : HediffComp_SeverityPerDay
                 var stage = parent.CurStage;
                 DebugAssert.NotNull(stage);
                 return "DaysToRecover"
-                    .Translate(((parent.Severity - stage!.minSeverity) / Mathf.Abs(SeverityChangePerDay())).ToString("0.0"))
+                    .Translate(((parent.Severity - stage.minSeverity) / Mathf.Abs(SeverityChangePerDay())).ToString("0.0"))
                     .Resolve();
             }
             return null;

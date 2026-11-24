@@ -503,7 +503,7 @@ public class EventManager
         RegisterInternal(eventDef, target, (t, data) =>
         {
             DebugAssert.NotNull(data);
-            callback(t, (T)data!);
+            callback(t, (T)data);
         }, callback.Target, MethodName(callback), priority);
     }
 
@@ -561,7 +561,7 @@ public class EventManager
         RegisterInternal(eventDef, target, (_, data) =>
         {
             DebugAssert.NotNull(data);
-            callback((T)data!);
+            callback((T)data);
         }, callback.Target, MethodName(callback), priority);
     }
 
