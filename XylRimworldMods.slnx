@@ -2,6 +2,7 @@
   <Folder Name="/InGameTests/">
     <File Path="InGameTests/Build-DevTools.ps1" />
     <File Path="InGameTests/PawnTestFixture.cs" />
+    <File Path="InGameTests/SeededTestFixture.cs" />
     <File Path="InGameTests/README.md" />
     <File Path="InGameTests/Run-Tests.ps1" />
     <File Path="InGameTests/Tests.props" />
