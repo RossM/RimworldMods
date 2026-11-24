@@ -1,4 +1,7 @@
+using DevTools.Testing;
+using RimWorld;
 using System.Reflection;
+using Verse;
 
 namespace InGameTests;
 
@@ -6,7 +9,7 @@ public abstract class PawnTestFixture : SeededTestFixture
 {
     protected Pawn pawn = null!;
     protected readonly List<Thing> things = [];
-    private readonly List<GeneDef> mutableGeneDefs = [];
+    protected readonly List<GeneDef> mutableGeneDefs = [];
 
     [SetUp]
     public void SetUpPawn()
@@ -18,22 +21,6 @@ public abstract class PawnTestFixture : SeededTestFixture
         pawn.health.RemoveAllHediffs();
         foreach (Gene gene in pawn.genes.GenesListForReading.ToArray())
             pawn.genes.RemoveGene(gene);
-    }
-
-    // Tests that change a live gene's configuration need a private def.
-    protected GeneDef CreateMutableGeneDef(params GeneCompProperties[] comps)
-    {
-        var extension = new DefModExtension_GeneWithComps { comps = [.. comps] };
-        var def = new GeneDef
-        {
-            defName = "TestGene_" + Guid.NewGuid().ToString("N"), label = "test gene",
-            geneClass = typeof(GeneWithComps), modExtensions = [extension],
-            displayCategory = new GeneCategoryDef { defName = "TestGenes", label = "test genes" },
-        };
-        DefDatabase<GeneDef>.Add(def);
-        mutableGeneDefs.Add(def);
-        extension.ResolveReferences(def);
-        return def;
     }
 
     [TearDown]

@@ -4,7 +4,7 @@ using static Xylib.Tests.TestDefOf;
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class GeneWithCompsTests : PawnTestFixture
+public sealed class GeneWithCompsTests : XylibPawnTestFixture
 {
     [Test]
     public void CreationInitializesCompParentPropertiesAndPostMake()

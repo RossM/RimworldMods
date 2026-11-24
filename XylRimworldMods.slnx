@@ -1,12 +1,4 @@
 <Solution>
-  <Folder Name="/InGameTests/">
-    <File Path="InGameTests/Build-DevTools.ps1" />
-    <File Path="InGameTests/PawnTestFixture.cs" />
-    <File Path="InGameTests/SeededTestFixture.cs" />
-    <File Path="InGameTests/README.md" />
-    <File Path="InGameTests/Run-Tests.ps1" />
-    <File Path="InGameTests/Tests.props" />
-  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
     <File Path="AGENTS.md" />
@@ -20,6 +12,7 @@
   </Folder>
   <Project Path="AutoColorApparel/AutoColorApparel.csproj" />
   <Project Path="InGameTests/DevTools/DevTools.csproj" />
+  <Project Path="InGameTests/InGameTests.csproj" />
   <Project Path="Scripts/Scripts.csproj" />
   <Project Path="Xylib.Analyzer.Tests/Xylib.Analyzer.Tests.csproj" />
   <Project Path="Xylib.Analyzer/Xylib.Analyzer.csproj" />

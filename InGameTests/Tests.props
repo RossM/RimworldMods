@@ -4,24 +4,11 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DevToolsAssemblyPath>$(MSBuildThisFileDirectory)..\ModBin\DevTools\1.7\Assemblies\DevTools.dll</DevToolsAssemblyPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)SeededTestFixture.cs" Link="SeededTestFixture.cs"/>
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.4977-alpha.1"/>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.5000-unstable"/>
     <Reference Include="DevTools" HintPath="$(DevToolsAssemblyPath)" Private="false"/>
     <ProjectReference Include="$(MSBuildThisFileDirectory)DevTools\DevTools.csproj" ReferenceOutputAssembly="false"/>
-    <ModDestination Include="..\ModBin\$(MSBuildProjectName)"/>
-    <ModAssembly Include="$(MSBuildProjectName).pdb"/>
   </ItemGroup>
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Yobai.Tests'">
-    <Compile Include="..\InGameTests\PawnTestFixture.cs" Link="PawnTestFixture.cs"/>
-    <Using Include="DevTools.Testing"/>
-    <Using Include="RimWorld"/>
-    <Using Include="Verse"/>
-    <Using Include="Xylib"/>
-    <Using Include="InGameTests"/>
-  </ItemGroup>
-  <Import Project="..\ModBuild.targets"/>
 </Project>

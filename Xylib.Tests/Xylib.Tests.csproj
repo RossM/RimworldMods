@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\InGameTests\Tests.props" />
+  <Import Project="..\InGameTests\TestMod.props" />
   <PropertyGroup>
     <SharedModDataDirectory>$(MSBuildProjectDirectory)\..\Xylib\Data</SharedModDataDirectory>
   </PropertyGroup>
@@ -7,9 +7,6 @@
     <ProjectReference Include="..\Xylib\Xylib.csproj" />
     <ProjectReference Include="$(DisharmonyProjectDirectory)Disharmony.RimWorld\Disharmony.RimWorld.csproj" Condition="'$(DisharmonySourceDirectory)' != ''" BundleRimWorldModAssemblies="true" />
     <ModAssembly Include="Xylib.dll;Xylib.pdb" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Krafs.Rimworld.Ref" Version="1.7.5000-unstable" />
   </ItemGroup>
   <Target Name="ConfigureBundledDisharmony" AfterTargets="SyncModData" Condition="'$(DisharmonySourceDirectory)' != ''">
     <XmlPoke XmlInputPath="@(ModDestination->'%(FullPath)\About\About.xml')" Query="/ModMetaData/modDependencies" Value="&lt;li&gt;&lt;packageId&gt;SmashPhil.DevTools&lt;/packageId&gt;&lt;displayName&gt;DevTools&lt;/displayName&gt;&lt;downloadUrl&gt;https://github.com/SmashPhil/DevTools&lt;/downloadUrl&gt;&lt;/li&gt;" />

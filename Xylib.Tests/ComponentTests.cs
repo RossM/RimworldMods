@@ -5,7 +5,7 @@ using static Xylib.Tests.TestDefOf;
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class ComponentTests : PawnTestFixture
+public sealed class ComponentTests : XylibPawnTestFixture
 {
     [Test]
     [LoadIfBiotechActive]
