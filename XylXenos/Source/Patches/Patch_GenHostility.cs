@@ -12,11 +12,10 @@ public static class Patch_GenHostility
         if (!__result)
             return;
 
-        if (a.Faction == null || b.Faction == null)
+        if (a.Faction is null || b.Faction is null)
             return;
 
-        var manager = a.Map?.HostilityOverrideManager;
-        if (manager == null)
+        if (a.Map?.HostilityOverrideManager is not { } manager)
             return;
 
         __result = !manager.HostilityDisabled(b, a) && !manager.HostilityDisabled(a, b);

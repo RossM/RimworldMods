@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Defs>
 
@@ -94,7 +94,7 @@
             <canAffectAnyLivePart>true</canAffectAnyLivePart>
             <allowDuplicates>true</allowDuplicates>
             <sendLetter>false</sendLetter>
-          </li>          
+          </li>
         </hediffGivers>
       </li>
       <li>
@@ -183,7 +183,7 @@
     <label>excise petrified flesh</label>
     <description>Excise petrified flesh.</description>
     <descriptionHyperlinks>
-      <HediffDef>XylPetrifiedFlesh</HediffDef>      
+      <HediffDef>XylPetrifiedFlesh</HediffDef>
     </descriptionHyperlinks>
     <workerClass>XylXenos.Recipe_RemoveHediff_Petrified</workerClass>
     <jobString>Excising petrified flesh.</jobString>

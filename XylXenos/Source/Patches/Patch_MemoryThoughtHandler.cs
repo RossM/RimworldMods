@@ -8,10 +8,9 @@ public static class Patch_MemoryThoughtHandler
     [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefIf))]
     public static void RemoveMemoriesOfDefIf_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Func<Thought_Memory, bool> predicate)
     {
-        var extension = def.GetModExtension<DefModExtension_Thought>();
-        if (extension?.extraThoughts == null)
+        if (def.GetModExtension<DefModExtension_Thought>()?.extraThoughts is not { } extraThoughts)
             return;
-        foreach (var extraDef in extension.extraThoughts)
+        foreach (var extraDef in extraThoughts)
             __instance.RemoveMemoriesOfDefIf(extraDef, predicate);
     }
 
@@ -20,10 +19,9 @@ public static class Patch_MemoryThoughtHandler
     [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDefWhereOtherPawnIs))]
     public static void RemoveMemoriesOfDefWhereOtherPawnIs_Postfix(MemoryThoughtHandler __instance, ThoughtDef def, Pawn otherPawn)
     {
-        var extension = def.GetModExtension<DefModExtension_Thought>();
-        if (extension?.extraThoughts == null)
+        if (def.GetModExtension<DefModExtension_Thought>()?.extraThoughts is not { } extraThoughts)
             return;
-        foreach (var extraDef in extension.extraThoughts)
+        foreach (var extraDef in extraThoughts)
             __instance.RemoveMemoriesOfDefWhereOtherPawnIs(extraDef, otherPawn);
     }
 
@@ -32,10 +30,9 @@ public static class Patch_MemoryThoughtHandler
     [Target(nameof(MemoryThoughtHandler.RemoveMemoriesOfDef))]
     public static void RemoveMemoriesOfDef_Postfix(MemoryThoughtHandler __instance, ThoughtDef def)
     {
-        var extension = def.GetModExtension<DefModExtension_Thought>();
-        if (extension?.extraThoughts == null)
+        if (def.GetModExtension<DefModExtension_Thought>()?.extraThoughts is not { } extraThoughts)
             return;
-        foreach (var extraDef in extension.extraThoughts)
+        foreach (var extraDef in extraThoughts)
             __instance.RemoveMemoriesOfDef(extraDef);
     }
 
@@ -44,12 +41,11 @@ public static class Patch_MemoryThoughtHandler
     [Target(nameof(MemoryThoughtHandler.TryGainMemory), typeof(Thought_Memory), typeof(Pawn))]
     public static void TryGainMemory_Postfix(MemoryThoughtHandler __instance, Thought_Memory newThought, Pawn otherPawn)
     {
-        var extension = newThought.def.GetModExtension<DefModExtension_Thought>();
-        if (extension?.extraThoughts == null)
+        if (newThought.def.GetModExtension<DefModExtension_Thought>()?.extraThoughts is not { } extraThoughts)
             return;
-        foreach (var extraDef in extension.extraThoughts)
+        foreach (var extraDef in extraThoughts)
         {
-            if (extraDef.stages[newThought.CurStageIndex] != null)
+            if (extraDef.stages[newThought.CurStageIndex] is not null)
                 __instance.TryGainMemory(ThoughtMaker.MakeThought(extraDef, newThought.CurStageIndex), otherPawn);
         }
     }

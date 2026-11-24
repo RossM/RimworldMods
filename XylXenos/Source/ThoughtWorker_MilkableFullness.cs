@@ -10,8 +10,7 @@ public class ThoughtWorker_MilkableFullness : ThoughtWorker
 
         var gene = p.FirstActiveGene(geneDef);
 
-        var comp = (gene as GeneWithComps)?.GetComp<GeneComp_Milkable>();
-        if (comp == null)
+        if ((gene as GeneWithComps)?.GetComp<GeneComp_Milkable>() is not { } comp)
             return ThoughtState.Inactive;
 
         var fullnessStage = comp.FullnessStage;

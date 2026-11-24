@@ -13,8 +13,7 @@ public static class Patch_IdeoUtility
         if (PreceptDefOf.PreferredXenotype is null)
             return true;
 
-        XenotypeSet? xenotypeSet = factionDef.xenotypeSet;
-        if (xenotypeSet == null)
+        if (factionDef.xenotypeSet is not { } xenotypeSet)
             return true;
 
         var precept = (Precept_Xenotype?)ideo.GetPrecept(PreceptDefOf.PreferredXenotype);

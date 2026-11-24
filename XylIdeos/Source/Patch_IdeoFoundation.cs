@@ -20,9 +20,7 @@ public static class Patch_IdeoFoundation
         {
             if (preceptsListForReading[num] is Precept_Apparel preceptApparel &&
                 nudityPrecepts.Any(precept => !preceptApparel.CompatibleWith(precept)))
-            {
                 ideo.RemovePrecept(preceptsListForReading[num]);
-            }
         }
 
         return false;

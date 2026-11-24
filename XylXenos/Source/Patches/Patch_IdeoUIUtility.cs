@@ -1,5 +1,6 @@
 ﻿namespace XylXenos.Patches;
 
+// ReSharper disable once InconsistentNaming
 [Patch(typeof(IdeoUIUtility))]
 public static class Patch_IdeoUIUtility
 {

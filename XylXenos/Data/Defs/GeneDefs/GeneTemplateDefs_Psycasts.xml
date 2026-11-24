@@ -43,7 +43,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <backgroundPath>Xyl/UI/Icons/Genes/GeneBackground_Psycast</backgroundPath>
         <comps>
-          <li Class="XylXenos.GeneCompProperties_Psycast" />
+          <li Class="XylXenos.GeneCompProperties_Psycast"/>
         </comps>
       </li>
     </modExtensions>

@@ -1,6 +1,7 @@
-using static XylXenos.Tests.TestDefOf;
 using System.Reflection;
+using UnityEngine;
 using Verse.AI;
+using static XylXenos.Tests.TestDefOf;
 
 namespace XylXenos.Tests;
 
@@ -84,11 +85,13 @@ public sealed class AbilityAndAiTests : PawnTestFixture
         Expect.ReferencesAreEqual(gene, ((ThinkNode_ConditionalHasGene)node.DeepCopy(false)).gene);
     }
 
-    [Test, LoadIfRoyaltyActive]
+    [Test]
+    [LoadIfRoyaltyActive]
     public void EntropyConditionalChecksThresholdAndCopiesIt()
     {
         var node = new ThinkNode_ConditionalPsychicEntropy { maximum = -1 };
-        MethodInfo satisfied = typeof(ThinkNode_ConditionalPsychicEntropy).GetMethod("Satisfied", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        MethodInfo satisfied
+            = typeof(ThinkNode_ConditionalPsychicEntropy).GetMethod("Satisfied", BindingFlags.Instance | BindingFlags.NonPublic)!;
         Expect.IsFalse((bool)satisfied.Invoke(node, [pawn])!);
         node.maximum = pawn.psychicEntropy.EntropyValue;
         Expect.IsTrue((bool)satisfied.Invoke(node, [pawn])!);
@@ -104,7 +107,8 @@ public sealed class AbilityAndAiTests : PawnTestFixture
             def = XylXenosTestSelfTargetAbility,
         };
         var node = new JobGiver_AICastAbilityOnTarget { targetSelf = true };
-        var target = (LocalTargetInfo)typeof(JobGiver_AICastAbilityOnTarget).GetMethod("GetTarget", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(node, [pawn, ability])!;
+        var target = (LocalTargetInfo)typeof(JobGiver_AICastAbilityOnTarget).GetMethod("GetTarget",
+            BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(node, [pawn, ability])!;
         Expect.ReferencesAreEqual(pawn, target.Thing);
         var copy = (JobGiver_AICastAbilityOnTarget)node.DeepCopy(false);
         Expect.IsTrue(copy.targetSelf);
@@ -132,7 +136,10 @@ public sealed class AbilityAndAiTests : PawnTestFixture
             Expect.IsTrue(new JobDriver_Soak().TryMakePreToilReservations(false));
             JobMaker.ReturnToPool(job);
         }
-        finally { map.terrainGrid.SetTerrain(cell, original); }
+        finally
+        {
+            map.terrainGrid.SetTerrain(cell, original);
+        }
     }
 
     [Test]
@@ -151,7 +158,7 @@ public sealed class AbilityAndAiTests : PawnTestFixture
         Job job = node.TryIssueJobPackage(pawn, default).Job;
         Expect.ReferencesAreEqual(food, job.targetA.Thing);
         Expect.AreEqual(JobDefOf.Ingest, job.def);
-        Expect.AreEqual(Math.Min(4, UnityEngine.Mathf.CeilToInt(2 / FoodUtility.NutritionForEater(pawn, food))), job.count);
+        Expect.AreEqual(Math.Min(4, Mathf.CeilToInt(2 / FoodUtility.NutritionForEater(pawn, food))), job.count);
         JobMaker.ReturnToPool(job);
     }
 

@@ -45,6 +45,7 @@ internal sealed record SleepingPlace
 
     public bool BeingUsedBy(Pawn pawn)
     {
+        // IsOnMap only compares map identity. A null bed map cannot match a spawned pawn's map.
         if (!pawn.IsOnMap(Bed.Map!))
             return false;
         IntVec3 position = Bed.GetSleepingSlotPos(Slot);
@@ -57,6 +58,7 @@ internal sealed record SleepingPlace
             return false;
 
         // Pre-toil validation runs after the job is accepted but before GotoBed starts its path.
+        // IsOnMap requires a spawned pawn, and spawning creates its path follower.
         return pawn.jobs.curDriver.CurToilIndex < 0 || pawn.Position == position ||
                (pawn.pather!.Moving && pawn.pather.Destination.Cell == position);
     }

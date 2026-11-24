@@ -46,7 +46,8 @@ public sealed class EventManagerTests : SeededTestFixture, IEventListener
     }
 
     [Test]
-    [WarningsAllowed(@"^\[EventManager\] Adding a duplicate callback: eventDef=XylibTestSignal global listener=Xylib.Tests.EventManagerTests name=Xylib.Tests.EventManagerTests.Global$")]
+    [WarningsAllowed(
+        @"^\[EventManager\] Adding a duplicate callback: eventDef=XylibTestSignal global listener=Xylib.Tests.EventManagerTests name=Xylib.Tests.EventManagerTests.Global$")]
     public void RegisteringSameCallbackTwiceDeliversOnce()
     {
         manager.Register(XylibTestSignal, null, Global);
@@ -124,24 +125,31 @@ public sealed class EventManagerTests : SeededTestFixture, IEventListener
             manager.Notify(XylibTestSignal, new Thing());
             manager.Notify(XylibTestDuringScribe, new Thing());
         }
-        finally { Scribe.mode = original; }
+        finally
+        {
+            Scribe.mode = original;
+        }
+
         Expect.AreEqual("local", string.Join(",", calls));
     }
 
-    public void RegisterWith(EventManager events) => events.Register(XylibTestSignal, null, Global);
-    public void PreUnregister(EventManager events) => unregistered++;
     private void Global() => calls.Add("global");
     private void Local() => calls.Add("local");
     private void TargetOnly(Thing? target) => receivedTarget = target;
+
     private void TypedWithTarget(Thing? target, string data)
     {
         receivedTarget = target;
         receivedData = data;
         calls.Add("typed");
     }
+
     private void TypedData(string data)
     {
         receivedData = data;
         calls.Add("targetless");
     }
+
+    public void RegisterWith(EventManager events) => events.Register(XylibTestSignal, null, Global);
+    public void PreUnregister(EventManager events) => unregistered++;
 }

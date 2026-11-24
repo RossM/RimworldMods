@@ -22,7 +22,7 @@
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <drawData>
           <defaultData>
-            <layer>63</layer>
+            <layer>66</layer>
           </defaultData>
         </drawData>
       </li>
@@ -50,7 +50,7 @@
         <!--<skipFlag>Hair</skipFlag>-->
         <drawData>
           <defaultData>
-            <layer>63</layer>
+            <layer>66</layer>
           </defaultData>
           <dataNorth>
             <layer>11</layer>

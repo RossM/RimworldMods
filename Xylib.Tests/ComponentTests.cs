@@ -1,11 +1,14 @@
+using System.Reflection;
+using RimWorld.Planet;
 using static Xylib.Tests.TestDefOf;
 
 namespace Xylib.Tests;
 
 [TestFixture(TestType.Playing)]
-public sealed class ComponentTests : PawnTestFixture
+public sealed class ComponentTests : XylibPawnTestFixture
 {
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusGenesAddsAndRemovesOnlyItsOwnGenes()
     {
         GeneDef existing = XylibTestGene, bonus = XylibTestOtherGene;
@@ -18,7 +21,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.GenesListForReading.Any(g => g.def == existing));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusXenogeneReplacesAllConflictingXenogenesAndPreservesEndogenes()
     {
         GeneDef first = XylibTestConflictA, second = XylibTestConflictB, endogene = XylibTestConflictC;
@@ -38,7 +42,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.Xenogenes.Contains(other));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusEndogeneReplacesConflictingEndogenesUsingConfiguredGeneType()
     {
         GeneDef existing = XylibTestConflictA, xenogene = XylibTestConflictB;
@@ -54,7 +59,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.Endogenes.Contains(other));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusXenogeneReplacesExistingGeneDespiteLowerVanillaOverridePriority()
     {
         GeneDef existing = Beauty_Ugly;
@@ -69,7 +75,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.Xenogenes.Single(g => g.def == bonus).Active);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusEndogeneReplacesExistingGeneDespiteLowerVanillaOverridePriority()
     {
         GeneDef existing = Beauty_Ugly;
@@ -84,7 +91,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsTrue(pawn.genes.Endogenes.Single(g => g.def == bonus).Active);
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusCookingAptitudeReplacesTerribleAptitudeDuringXenotypeApplication()
     {
         GeneDef existing = AptitudeTerrible_Cooking;
@@ -100,7 +108,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsFalse(pawn.genes.GenesListForReading.Any(g => g.def == owner));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void DeferredBonusGenesResolveNestedBonusesAfterBaseGenes()
     {
         GeneDef existing = XylibTestConflictA, bonus = XylibTestConflictB;
@@ -116,7 +125,8 @@ public sealed class ComponentTests : PawnTestFixture
         Expect.IsFalse(generated.genes.GenesListForReading.Any(g => g.def == existing || g.def == nested || g.def == owner));
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void BonusGenesApplyToPawnLoadedFromScribe()
     {
         GeneDef bonus = XylibTestOtherGene, owner = XylibTestScribedBonus;
@@ -144,7 +154,7 @@ public sealed class ComponentTests : PawnTestFixture
             Scribe_Deep.Look(ref restored, "pawn");
             things.Add(restored);
             var directory = (LoadedObjectDirectory)typeof(CrossRefHandler)
-                .GetField("loadedObjectDirectory", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+                .GetField("loadedObjectDirectory", BindingFlags.Instance | BindingFlags.NonPublic)!
                 .GetValue(Scribe.loader.crossRefs)!;
             directory.RegisterLoaded(Faction.OfPlayer);
             if (ideology != null)
@@ -152,7 +162,7 @@ public sealed class ComponentTests : PawnTestFixture
             Scribe.loader.FinalizeLoading();
             Current.ProgramState = previousState;
 
-            Find.WorldPawns.PassToWorld(restored, RimWorld.Planet.PawnDiscardDecideMode.KeepForever);
+            Find.WorldPawns.PassToWorld(restored, PawnDiscardDecideMode.KeepForever);
             EventManager.Instance.LoadedGame();
             restored.genes.AddGene(owner, false);
 
@@ -163,11 +173,13 @@ public sealed class ComponentTests : PawnTestFixture
         {
             Scribe.ForceStop();
             Current.ProgramState = previousState;
-            if (File.Exists(path)) File.Delete(path);
+            if (File.Exists(path))
+                File.Delete(path);
         }
     }
 
-    [Test, LoadIfBiotechActive]
+    [Test]
+    [LoadIfBiotechActive]
     public void PostGenerateGenesDoesNotRepeatAlreadyAppliedBonuses()
     {
         GeneDef first = XylibTestGene, second = XylibTestOtherGene;
@@ -223,7 +235,10 @@ public sealed class ComponentTests : PawnTestFixture
             pawn.kindDef = XylibTestDisallowApparel;
             Expect.IsFalse(GeneComp_ExtraApparel.ValidApparel(pawn, apparel));
         }
-        finally { pawn.kindDef = original; }
+        finally
+        {
+            pawn.kindDef = original;
+        }
     }
 
     [Test]
@@ -310,7 +325,11 @@ public sealed class ComponentTests : PawnTestFixture
             command.action();
             Expect.IsTrue(pawn.health.hediffSet.HasHediff(applied));
         }
-        finally { DebugSettings.godMode = original; Prefs.DevMode = dev; }
+        finally
+        {
+            DebugSettings.godMode = original;
+            Prefs.DevMode = dev;
+        }
     }
 
     [Test]

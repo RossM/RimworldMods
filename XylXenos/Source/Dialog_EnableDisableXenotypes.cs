@@ -74,6 +74,7 @@ public class Dialog_EnableDisableXenotypes : Window
     public override void PostClose()
     {
         if (!newDisabledXenotypes.SetEquals(settings.disabledXenotypes))
+            // This button is handled while the dialog is being drawn by the window stack.
             Find.WindowStack!.Add(new Dialog_MessageBox(
                 "XylXenotypeSelectionRestartWarning".Translate(),
                 "Yes".Translate(),
@@ -94,9 +95,9 @@ public class Dialog_EnableDisableXenotypes : Window
     {
         foreach (var faction in DefDatabase<FactionDef>.AllDefs)
         {
-            if (faction.xenotypeSet == null || faction.hidden)
+            if (faction.xenotypeSet is null || faction.hidden)
                 continue;
-            if ((faction.GetModExtension<DefModExtension_SettingsData>()?.requiredXenotype is { } xenotype && 
+            if ((faction.GetModExtension<DefModExtension_SettingsData>()?.requiredXenotype is { } xenotype &&
                  newDisabledXenotypes.Contains(xenotype.defName)) ||
                 (faction.xenotypeSet.Count == 1 && faction.xenotypeSet[0].chance >= 1f &&
                  newDisabledXenotypes.Contains(faction.xenotypeSet[0].xenotype.defName)) ||

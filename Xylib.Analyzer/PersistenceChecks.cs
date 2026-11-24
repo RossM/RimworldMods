@@ -16,7 +16,8 @@ internal sealed class PersistenceChecks
     internal PersistenceChecks(Compilation compilation)
     {
         this.compilation = compilation;
-        exposeData = compilation.GetTypeByMetadataName("Verse.IExposable")?.GetMembers("ExposeData").OfType<IMethodSymbol>().FirstOrDefault();
+        exposeData = compilation.GetTypeByMetadataName("Verse.IExposable")?.GetMembers("ExposeData").OfType<IMethodSymbol>()
+            .FirstOrDefault();
         thingComp = compilation.GetTypeByMetadataName("Verse.ThingComp");
         unsaved = compilation.GetTypeByMetadataName("Verse.UnsavedAttribute");
     }

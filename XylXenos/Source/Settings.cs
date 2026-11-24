@@ -50,6 +50,7 @@ public class Settings : ModSettings
         BoolSetting(listing, nameof(fixGeneticPassions));
 
         listing.Gap();
+        // The mod settings dialog draws this button from the window stack.
         if (listing.ButtonText("XylEnableDisableXenotypes".Translate()))
             Find.WindowStack!.Add(new Dialog_EnableDisableXenotypes(this));
 
@@ -72,6 +73,7 @@ public class Settings : ModSettings
         var valueRef = AccessTools.FieldRefAccess<T>(GetType(), fieldName);
         DebugAssert.NotNull(valueRef);
 
+        // The callers supply fields of concrete enum types, so the field value cannot be null.
         if (listing.ButtonTextLabeled(
                 $"XylSettingDescription_{fieldName}".Translate(),
                 $"XylSettingOption_{fieldName}_{valueRef(this)!.ToString()}".Translate(),
@@ -100,7 +102,7 @@ public class Settings : ModSettings
         {
             ThreeStateMode.Always => true,
             ThreeStateMode.Never => false,
-            ThreeStateMode.Sometimes => pawn.FirstActiveGeneWithComp<GeneComp_Hyperlactation>() != null,
+            ThreeStateMode.Sometimes => pawn.FirstActiveGeneWithComp<GeneComp_Hyperlactation>() is not null,
             _ => throw new ArgumentOutOfRangeException(),
         };
     }

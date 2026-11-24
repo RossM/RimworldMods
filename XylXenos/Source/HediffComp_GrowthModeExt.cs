@@ -52,9 +52,7 @@ public class HediffCompProperties_GrowthModeExt : HediffCompProperties_SeverityP
         }
 
         if (modes.Any(mode => mode is null))
-        {
             yield return "mode is null";
-        }
     }
 }
 
@@ -73,17 +71,8 @@ public class HediffComp_GrowthModeExt : HediffComp_SeverityPerDay, IHediffCompEx
 
     public GrowthMode GrowthMode
     {
-        get
-        {
-            DebugAssert.NotNull(TProps.modes);
-
-            return TProps.modes[growthModeIndex];
-        }
-        set
-        {
-            DebugAssert.NotNull(TProps.modes);
-            growthModeIndex = TProps.modes.IndexOf(value);
-        }
+        get => TProps.modes[growthModeIndex];
+        set => growthModeIndex = TProps.modes.IndexOf(value);
     }
 
     public void CompUpdateCurStage(HediffStage stage)

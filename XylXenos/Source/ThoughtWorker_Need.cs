@@ -11,7 +11,15 @@ public class DefModExtension_Thought_Need : DefModExtension
 [UsedFromXml]
 public class ThoughtWorker_Need : ThoughtWorker
 {
-    public DefModExtension_Thought_Need DefExt => def.GetModExtension<DefModExtension_Thought_Need>()!;
+    public DefModExtension_Thought_Need DefExt
+    {
+        get
+        {
+            var extension = def.GetModExtension<DefModExtension_Thought_Need>();
+            DebugAssert.NotNull(extension);
+            return extension;
+        }
+    }
 
     public Func<Need, int> CurStageGetter => field ??= MakeGetter(DefExt.need.needClass);
 
@@ -37,11 +45,7 @@ public class ThoughtWorker_Need : ThoughtWorker
 
     protected override ThoughtState CurrentStateInternal(Pawn p)
     {
-        if (ThoughtUtility.ThoughtNullified(p, def))
-            return ThoughtState.Inactive;
-
-        var need = p.needs?.TryGetNeed(DefExt.need);
-        if (need == null)
+        if (ThoughtUtility.ThoughtNullified(p, def) || p.needs?.TryGetNeed(DefExt.need) is not { } need)
             return ThoughtState.Inactive;
 
         int stage = CurStageGetter(need);

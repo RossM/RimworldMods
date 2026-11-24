@@ -13,7 +13,7 @@ public class HediffWithCompsExt : HediffWithComps
     {
         get
         {
-            if (curStageInternal != null)
+            if (curStageInternal is not null)
                 return curStageInternal;
 
             var stage = def.stages?[CurStageIndex];
@@ -78,7 +78,7 @@ public class HediffWithCompsExt : HediffWithComps
         {
             tipSb.AppendLine().AppendLineTagged(def.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         }
-        else if (curStage != null && !curStage.overrideTooltip.NullOrEmpty())
+        else if (curStage is not null && !curStage.overrideTooltip.NullOrEmpty())
         {
             tipSb.AppendLine().AppendLineTagged(curStage.overrideTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         }
@@ -91,7 +91,7 @@ public class HediffWithCompsExt : HediffWithComps
 
         if (!def.extraTooltip.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(def.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
-        if (curStage != null && !curStage.extraTooltip.NullOrEmpty())
+        if (curStage is not null && !curStage.extraTooltip.NullOrEmpty())
             tipSb.AppendLine().AppendLineTagged(curStage.extraTooltip.Formatted(pawn.Named("PAWN"), sourcePawn.Named("SOURCE")));
         string tipStringExtra = TipStringExtra;
         if (!tipStringExtra.NullOrEmpty())

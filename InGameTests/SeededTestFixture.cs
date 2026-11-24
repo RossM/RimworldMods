@@ -1,5 +1,5 @@
-using System.Reflection;
 using DevTools.Testing;
+using System.Reflection;
 using Verse;
 
 namespace InGameTests;
@@ -17,7 +17,10 @@ public abstract class SeededTestFixture
         // the draw counter resets too, without keeping a RandBlock open across coroutine frames.
         object state;
         using (new RandBlock(1234567))
+        {
             state = randomState.GetValue(null)!;
+        }
+
         randomState.SetValue(null, state);
     }
 }

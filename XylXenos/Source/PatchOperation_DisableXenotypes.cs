@@ -18,11 +18,12 @@ public class PatchOperation_DisableXenotypes : PatchOperation
 
         foreach (var disabledXenotype in disabledXenotypes)
         {
-            if (xenotype != null && disabledXenotype != xenotype)
+            if (xenotype is not null && disabledXenotype != xenotype)
                 continue;
 
             XmlNode patchesCopy = patches.node.CloneNode(deep: true);
 
+            // The cloned patch element supports XPath. The query yields text nodes with a string Value.
             foreach (XmlNode text in patchesCopy.SelectNodes(".//text()")!)
                 text.Value = text.Value!.Replace("{0}", disabledXenotype);
 

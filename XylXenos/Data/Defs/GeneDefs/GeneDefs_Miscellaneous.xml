@@ -21,13 +21,13 @@
       <li>Will never start or join a slave rebellion while mood is at least 50.</li>
     </customEffectDescriptions>
     <suppressedTraits>
-      <Bloodlust />
+      <Bloodlust/>
     </suppressedTraits>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <comps>
           <li Class="Xylib.GeneCompProperties_ExtraApparel" MayRequire="Ludeon.RimWorld.Ideology">
-            <items>              
+            <items>
               <li>
                 <item>Apparel_Collar</item>
                 <chance>0.25</chance>
@@ -236,10 +236,10 @@
       <li>Wings</li>
     </exclusionTags>
     <renderNodeProperties>
-      <li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
         <debugLabel>BatWings</debugLabel>
+        <useBodyGraphicScale>true</useBodyGraphicScale>
         <nodeClass>XylXenos.PawnRenderNode_Wings</nodeClass>
-        <workerClass>PawnRenderNodeWorker_AttachmentBody</workerClass>
         <texPaths>
           <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWings</li>
           <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
@@ -247,7 +247,51 @@
         <rotDrawMode>Fresh, Rotting</rotDrawMode>
         <colorType>Hair</colorType>
         <parentTagDef>Body</parentTagDef>
+        <disallowedGenes>
+          <li>XylScaleskin</li>
+        </disallowedGenes>
         <drawData>
+          <bodyTypeScales>
+            <Hulk>1.35</Hulk>
+          </bodyTypeScales>
+          <defaultData>
+            <layer>50</layer>
+            <offset>(0,0,-0.1)</offset>
+          </defaultData>
+          <dataNorth>
+            <layer>80</layer>
+            <offset>(0,0,-0.1)</offset>
+          </dataNorth>
+          <dataSouth>
+            <layer>-10</layer>
+            <offset>(0,0,-0.1)</offset>
+          </dataSouth>
+          <dataEast>
+            <offset>(-0.05,0,-0.1)</offset>
+          </dataEast>
+          <dataWest>
+            <offset>(0.05,0,-0.1)</offset>
+          </dataWest>
+        </drawData>
+      </li>
+      <li Class="XylXenos.PawnRenderNodeProperties_GeneDependent">
+        <debugLabel>BatWings_Scaleskin</debugLabel>
+        <useBodyGraphicScale>true</useBodyGraphicScale>
+        <nodeClass>XylXenos.PawnRenderNode_Wings</nodeClass>
+        <texPaths>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWings</li>
+          <li>Xyl/Things/Pawn/Humanlike/BodyAttachments/BatWings/BatWingsExtended</li>
+        </texPaths>
+        <rotDrawMode>Fresh, Rotting</rotDrawMode>
+        <colorType>Skin</colorType>
+        <parentTagDef>Body</parentTagDef>
+        <requiredGenes>
+          <li>XylScaleskin</li>
+        </requiredGenes>
+        <drawData>
+          <bodyTypeScales>
+            <Hulk>1.35</Hulk>
+          </bodyTypeScales>
           <defaultData>
             <layer>50</layer>
             <offset>(0,0,-0.1)</offset>
@@ -429,7 +473,7 @@
     <displayOrderInCategory>300</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_BioRejection</iconPath>
     <suppressedTraits>
-      <Transhumanist />
+      <Transhumanist/>
     </suppressedTraits>
     <modExtensions>
       <li Class="Xylib.DefModExtension_GeneWithComps">
@@ -603,7 +647,7 @@
             <message>{PAWN_labelShort} has developed planet sickness.</message>
           </li>
         </hediffGivers>
-      </li>      
+      </li>
     </modExtensions>
   </GeneDef>
   <HediffDef ParentName="DiseaseBase">
@@ -826,6 +870,5 @@
     <biostatCpx>1</biostatCpx>
     <biostatMet>2</biostatMet>
   </GeneDef>
-
 
 </Defs>

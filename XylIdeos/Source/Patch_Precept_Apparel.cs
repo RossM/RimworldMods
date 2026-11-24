@@ -20,9 +20,7 @@ public static class Patch_Precept_Apparel
         // Change: Apparel requirement precepts ARE compatible with nudity precepts
         if (other.def.prefersNudity &&
             (__instance.TargetGender == Gender.None || __instance.TargetGender == other.def.genderPrefersNudity))
-        {
             return false;
-        }
 
         return true;
     }

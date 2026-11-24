@@ -44,7 +44,7 @@ public class GeneAndHediffCache(Pawn pawn) : IEventListener
     /// </returns>
     public IReadOnlyList<T> GetGenesOfType<T>() where T : Gene
     {
-        if (Pawn.genes == null)
+        if (Pawn.genes is null)
             return [];
 
         if (genesByType.TryGetValue(typeof(T), out IList? value))
@@ -69,7 +69,7 @@ public class GeneAndHediffCache(Pawn pawn) : IEventListener
     /// </returns>
     public IReadOnlyList<Gene> GetGenesWithDef(GeneDef def)
     {
-        if (Pawn.genes == null)
+        if (Pawn.genes is null)
             return [];
 
         if (genesByDef.TryGetValue(def, out List<Gene>? value))
@@ -91,13 +91,13 @@ public class GeneAndHediffCache(Pawn pawn) : IEventListener
     /// </returns>
     public IReadOnlyList<GeneWithComps> GetGenesWithComp<T>() where T : GeneComp
     {
-        if (Pawn.genes == null)
+        if (Pawn.genes is null)
             return [];
 
         if (genesByComp.TryGetValue(typeof(T), out List<GeneWithComps>? value))
             return value;
 
-        value = [.. Pawn.genes.GenesListForReading.OfType<GeneWithComps>().Where(g => g.GetComp<T>() != null)];
+        value = [.. Pawn.genes.GenesListForReading.OfType<GeneWithComps>().Where(g => g.GetComp<T>() is not null)];
         genesByComp.Add(typeof(T), value);
         return value;
     }

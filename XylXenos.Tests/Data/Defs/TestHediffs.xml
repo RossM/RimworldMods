@@ -24,7 +24,7 @@
     <label>sourced hediff</label>
     <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
     <comps>
-      <li Class="Xylib.HediffCompProperties_Source" />
+      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
   </HediffDef>
 
@@ -100,8 +100,8 @@
     <comps>
       <li Class="XylXenos.HediffCompProperties_GrowthModeExt">
         <modes>
-          <li />
-          <li />
+          <li/>
+          <li/>
         </modes>
       </li>
       <li Class="XylXenos.HediffCompProperties_PetrificationTendDuration">
@@ -126,7 +126,7 @@
     <defName>XylXenosTestStageRecovery</defName>
     <label>stage recovery</label>
     <stages>
-      <li />
+      <li/>
       <li>
         <minSeverity>0.5</minSeverity>
       </li>
@@ -157,7 +157,7 @@
     <hediffClass>XylXenos.Hediff_PetrifiedFlesh</hediffClass>
     <maxSeverity>3.40282347E+38</maxSeverity>
     <stages>
-      <li />
+      <li/>
       <li>
         <minSeverity>0.5</minSeverity>
       </li>

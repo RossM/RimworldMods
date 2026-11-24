@@ -27,7 +27,7 @@ public static class FoodHelpers
 
                     if (foodGroup.humanlike && race?.Humanlike is not true)
                         continue;
-                    if (foodGroup.fleshType != null && race?.FleshType != foodGroup.fleshType)
+                    if (foodGroup.fleshType is not null && race?.FleshType != foodGroup.fleshType)
                         continue;
 
                     yield return foodGroup;
@@ -60,8 +60,8 @@ public static class FoodHelpers
             float result = 1f;
             foreach (var food in foodGroups)
             {
-                if (food.rawNutritionStat != null)
-                    result *= eater.GetStatValue(food.rawNutritionStat);
+                if (food.rawNutritionStat is { } nutritionStat)
+                    result *= eater.GetStatValue(nutritionStat);
             }
 
             return result;
@@ -72,8 +72,8 @@ public static class FoodHelpers
             float result = 1f;
             foreach (var food in foodGroups)
             {
-                if (food.cookedNutritionStat != null)
-                    result *= eater.GetStatValue(food.cookedNutritionStat);
+                if (food.cookedNutritionStat is { } nutritionStat)
+                    result *= eater.GetStatValue(nutritionStat);
             }
 
             return result;
@@ -90,8 +90,8 @@ public static class FoodHelpers
             float result = 1f;
             foreach (var food in foodGroups)
             {
-                if (food.rawFoodPoisonChanceStat != null)
-                    result *= eater.GetStatValue(food.rawFoodPoisonChanceStat);
+                if (food.rawFoodPoisonChanceStat is { } foodPoisonChanceStat)
+                    result *= eater.GetStatValue(foodPoisonChanceStat);
             }
 
             return result;

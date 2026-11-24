@@ -19,12 +19,13 @@ public static class PatchHelpers
         float result = 0f;
 
         Ideo? ideo = pawn.Ideo;
-        if (ideo == null)
+        if (ideo is null)
             return 0f;
 
         XenotypeDef? recipientXenotype = recipient.genes?.Xenotype;
         var xenotypeDefExtension = recipientXenotype?.GetModExtension<DefModExtension_Xenotype>();
-        if (xenotypeDefExtension == null)
+        // A non-null extension below also establishes that recipientXenotype exists.
+        if (xenotypeDefExtension is null)
             return 0f;
 
         string text = "";
@@ -45,14 +46,14 @@ public static class PatchHelpers
                 text += MemeAndXenotypeDesc(meme, recipientXenotype!, offset);
             }
 
-        if (sb != null && !text.NullOrEmpty())
+        if (sb is not null && !text.NullOrEmpty())
             sb.AppendInNewLine($" -  {"AbilityIdeoConvertBreakdownPawnIdeo".Translate(pawn.Named("PAWN"))}: {text}");
 
         return result;
 
         string MemeAndXenotypeDesc(MemeDef meme, XenotypeDef xenotype, float offset)
         {
-            if (sb == null)
+            if (sb is null)
                 return string.Empty;
 
             // Adding 1 to the offset and reporting it as a percentage is complete nonsense and gives the impression
@@ -114,7 +115,7 @@ public static class PatchHelpers
                 .. Find.FactionManager.AllFactionsListForReading
                     .Where(faction => CanExistOnLayer(layer, faction.def)),
             ];
-            List<Faction> shuffledFactions = [.. allFactions.Where(faction => faction.def.colorSpectrum != null)];
+            List<Faction> shuffledFactions = [.. allFactions.Where(faction => faction.def.colorSpectrum is not null)];
             shuffledFactions.Shuffle();
 
             for (int iter = 0; iter < 3; iter++)
@@ -176,7 +177,7 @@ public static class PatchHelpers
 
         static int XenotypeStrength(Pawn? pawn)
         {
-            if (pawn?.genes == null)
+            if (pawn?.genes is null)
                 return int.MinValue;
 
             return pawn.ActiveGenesOfType<GeneWithComps>()
@@ -196,7 +197,8 @@ public static class PatchHelpers
 
     public static bool MilkablePrisonerInRoomCanProduce(Room? r, ThingDef thingDef)
     {
-        return r is { IsPrisonCell: true } && r.Owners.Any(owner => owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef));
+        return r is { IsPrisonCell: true } &&
+               r.Owners.Any(owner => owner.ActiveGeneCompsOfType<GeneComp_Milkable>().Any(comp => comp.Props.item == thingDef));
     }
 
     public static bool IsUsingEcholocation(Thing caster)
@@ -233,7 +235,7 @@ public static class PatchHelpers
         ThoughtDef? thought,
         ThingDef? ingestible)
     {
-        if (thought == null || ingestible == null)
+        if (thought is null || ingestible is null)
             return false;
 
         if (eater.GeneTracker_XylXenos?.ingestionThoughtOverrides is not List<GeneIngestionThoughtOverride> thoughtOverrides)
@@ -241,7 +243,7 @@ public static class PatchHelpers
 
         foreach (var thoughtOverride in thoughtOverrides)
         {
-            if (thoughtOverride.thing != null && thoughtOverride.thing != ingestible)
+            if (thoughtOverride.thing is not null && thoughtOverride.thing != ingestible)
                 continue;
 
             List<FoodGroupDef> foodGroups = [.. ingestible.FoodGroups];
@@ -264,7 +266,7 @@ public static class PatchHelpers
         if (minorPassions <= 0)
             return false;
 
-        if (!ModsConfig.BiotechActive || pawn.genes == null)
+        if (!ModsConfig.BiotechActive || pawn.genes is null)
             return false;
 
         foreach (Gene item2 in pawn.genes.GenesListForReading)
@@ -282,6 +284,7 @@ public static class PatchHelpers
         static bool IsSkinColor(GeneDef g) => g.displayCategory == VanillaDefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
 
         var colorGenes = list.Where(IsSkinColor).ToList();
+        // IsSkinColor only retains genes with a skinColorOverride value.
         SortByColor(colorGenes, g => g.skinColorOverride!.Value);
 
         int i = 0;
@@ -315,6 +318,7 @@ public static class PatchHelpers
 
         foreach (var hediff in pawn.HediffsWithComp<HediffComp_Lactating>())
         {
+            // HediffsWithComp only returns hediffs containing this comp.
             var hediffComp_Lactating = hediff.GetComp<HediffComp_Lactating>()!;
             stringBuilder.AppendLine(
                 $"{hediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
@@ -354,7 +358,7 @@ public static class PatchHelpers
 
     public static void ModifyGenderByGenes(Pawn pawn, PawnGenerationRequest request, XenotypeDef? xenotype)
     {
-        if (request.FixedGender != null)
+        if (request.FixedGender is not null)
             return;
 
         List<GeneDef>? genes = request.ForcedXenogenes?.Where(def => HasGenderRatio(def, GeneType.Xenogene)).ToList();
@@ -368,6 +372,7 @@ public static class PatchHelpers
         if (genes.NullOrEmpty())
             return;
 
+        // The non-empty list only contains genes that passed HasGenderRatio and have the comp props.
         var comp = genes.RandomElement()!.CompProps<GeneCompProperties_GenderRatio>()!;
         pawn.gender = Rand.Chance(comp.femaleChance) ? Gender.Female : Gender.Male;
         return;
@@ -375,6 +380,6 @@ public static class PatchHelpers
         // It's important that we pass null as the pawn to ValidFor so that gender restrictions in the genes aren't applied.
         static bool HasGenderRatio(GeneDef geneDef, GeneType geneType) =>
             geneDef.Extension_GeneWithComps?.ValidFor(null, geneType) is true &&
-            geneDef.CompProps<GeneCompProperties_GenderRatio>() != null;
+            geneDef.CompProps<GeneCompProperties_GenderRatio>() is not null;
     }
 }

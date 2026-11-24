@@ -6,6 +6,18 @@ public class PawnRenderNode_AttachmentComplex(Pawn pawn, PawnRenderNodePropertie
 {
     protected override Shader DefaultShader => ShaderDatabase.CutoutComplex;
 
+    public override Color ColorFor(Pawn pawn)
+    {
+        return apparel is { DrawColor: var color } ? color : base.ColorFor(pawn);
+    }
+
+    protected override string TexPathFor(Pawn pawn)
+    {
+        if (apparel is { StyleDef.wornGraphicPath: { Length: > 0 } path })
+            return path;
+        return base.TexPathFor(pawn);
+    }
+
     public override Graphic? GraphicFor(Pawn pawn)
     {
         string texPath = TexPathFor(pawn);
@@ -18,6 +30,8 @@ public class PawnRenderNode_AttachmentComplex(Pawn pawn, PawnRenderNodePropertie
 
     public new Shader ShaderFor(Pawn pawn)
     {
+        if (apparel is { StyleDef.graphicData.shaderType.Shader: { } shader } && !pawn.Drawer.renderer.StatueColor.HasValue)
+            return shader;
         if (props.shaderTypeDef?.Shader != null)
             return props.shaderTypeDef.Shader;
         if (pawn.Drawer.renderer.StatueColor.HasValue)

@@ -26,7 +26,8 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
         DebugAssert.NotNull(parent.pawn.Map);
 
         Map map = parent.pawn.Map;
-        foreach (Pawn targetPawn in AffectedCells(target).Select(item => item.GetThingList(map)).SelectMany(thingList => thingList.OfType<Pawn>()))
+        foreach (Pawn targetPawn in AffectedCells(target).Select(item => item.GetThingList(map))
+                     .SelectMany(thingList => thingList.OfType<Pawn>()))
         {
             DebugAssert.NotNull(targetPawn.stances);
 
@@ -40,7 +41,7 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
     {
         var value = base.GetDurationSeconds(targetPawn);
 
-        if (Props.durationMultiplierCapacity != null)
+        if (Props.durationMultiplierCapacity is not null)
             value *= targetPawn.health.capacities.GetLevel(Props.durationMultiplierCapacity);
 
         return value;
@@ -56,13 +57,14 @@ public class CompAbilityEffect_SonicWave : CompAbilityEffect_WithDuration
     {
         DebugAssert.NotNull(parent.pawn.Map);
 
-        if (parent.pawn.Faction == null)
+        if (parent.pawn.Faction is null)
             return false;
 
         bool affectsAlly = false;
         bool affectsEnemy = false;
 
-        foreach (Pawn targetPawn in AffectedCells(target).Select(item => item.GetThingList(parent.pawn.Map)).SelectMany(thingList => thingList.OfType<Pawn>()))
+        foreach (Pawn targetPawn in AffectedCells(target).Select(item => item.GetThingList(parent.pawn.Map))
+                     .SelectMany(thingList => thingList.OfType<Pawn>()))
         {
             DebugAssert.NotNull(targetPawn.stances);
 

@@ -14,7 +14,7 @@ public static class Patch_WorkGiver_Warden_Feed
         ref Job? __result,
         [Method] Func<Pawn, Thing, bool, bool> ShouldTakeCareOfPrisoner)
     {
-        if (__result != null)
+        if (__result is not null)
             return;
 
         if (!ShouldTakeCareOfPrisoner(pawn, t, forced))
@@ -29,11 +29,9 @@ public static class Patch_WorkGiver_Warden_Feed
                      .OrderByDescending(h => h.Severity))
         {
             //Log.Message($"JobOnThing_Postfix: pawn: {pawn}, prisoner: {prisoner}, hediff: {hediff}, severity: {hediff.Severity}");
-            Thing? foodSource = hediff.FindFoodFor(pawn);
-            if (foodSource == null)
+            if (hediff.FindFoodFor(pawn) is not { } foodSource)
                 continue;
-            ThingDef? foodDef = FoodUtility.GetFinalIngestibleDef(foodSource);
-            if (foodDef == null)
+            if (FoodUtility.GetFinalIngestibleDef(foodSource) is not { } foodDef)
                 continue;
 
             Job job = JobMaker.MakeJob(JobDefOf.FeedPatient, foodSource, prisoner);

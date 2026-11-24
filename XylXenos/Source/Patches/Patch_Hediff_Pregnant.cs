@@ -8,7 +8,7 @@ public static class Patch_Hediff_Pregnant
     [Target(nameof(Hediff_Pregnant.PostAdd))]
     public static void PostAdd_Postfix(Hediff_Pregnant __instance)
     {
-        if (__instance.Mother != null || __instance.Father != null)
+        if (__instance.Mother is not null || __instance.Father is not null)
             return;
 
         GeneSet inheritedGeneSet = PregnancyUtility.GetInheritedGeneSet(null, __instance.pawn, out var success);

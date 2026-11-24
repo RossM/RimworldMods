@@ -41,7 +41,7 @@ public class GeneTracker_Xylib(Pawn pawn) : GeneTracker(pawn)
         headOffset = Vector3.zero;
         headScale = 1f;
 
-        if (Pawn.genes == null)
+        if (Pawn.genes is null)
             return;
         if (Pawn.Dead)
             return;

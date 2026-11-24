@@ -213,7 +213,7 @@
     <modExtensions>
       <li Class="XylXenos.DefModExtension_IncidentWorker_CultistJoin">
         <hediff>XylCultistSong</hediff>
-       </li>
+      </li>
     </modExtensions>
   </IncidentDef>
 

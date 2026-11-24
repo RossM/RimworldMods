@@ -23,10 +23,10 @@
     <defName>XylibTestCachedHediff</defName>
     <label>cached hediff</label>
     <modExtensions>
-      <li Class="Xylib.Tests.TestExtension" />
+      <li Class="Xylib.Tests.TestExtension"/>
     </modExtensions>
     <comps>
-      <li Class="Xylib.HediffCompProperties_Source" />
+      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
   </HediffDef>
 
@@ -88,7 +88,7 @@
     <defName>XylibTestSetNeed</defName>
     <label>staged rest clamp</label>
     <stages>
-      <li />
+      <li/>
       <li>
         <minSeverity>0.5</minSeverity>
       </li>
@@ -107,7 +107,7 @@
     <label>visible hediff source</label>
     <hediffClass>Xylib.HediffWithCompsExt</hediffClass>
     <comps>
-      <li Class="Xylib.HediffCompProperties_Source" />
+      <li Class="Xylib.HediffCompProperties_Source"/>
     </comps>
   </HediffDef>
 

@@ -16,9 +16,7 @@ public static class Patch_OutfitDatabase
         {
             if (def.apparel != null && (def.apparel.defaultOutfitTags.NotNullAndContains("Nudist") ||
                                         !def.apparel.countsAsClothingForNudity))
-            {
                 outfitNudist.filter.SetAllow(def, allow: true);
-            }
         }
 
         if (ModsConfig.IdeologyActive)
@@ -56,6 +54,8 @@ public static class Patch_OutfitDatabase
     public static class Defs
     {
         [UsedImplicitly] public static BodyPartGroupDef Neck;
-        [UsedImplicitly, MayRequire("Ludeon.RimWorld.Ideology")] public static StatDef SlaveSuppressionOffset;
+
+        [UsedImplicitly] [MayRequire("Ludeon.RimWorld.Ideology")]
+        public static StatDef SlaveSuppressionOffset;
     }
 }

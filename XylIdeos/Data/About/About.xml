@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ModMetaData>
 
   <packageId>Xylthixlm.IdeoTweaks</packageId>
@@ -6,7 +7,7 @@
   <author>Xylthixlm</author>
   <description>
     This mod includes various tweaks to the ideology system, as I feel like changing things.
-    
+
     [list]
     [*] It's possible to have both required apparel and nudity precepts at the same time, as long as the apparel doesn't cover the chest or groin. In that case, the required apparel doesn't count as breaking the nudity precept.
     [*] Some additional items can be set as required apparel for precepts.

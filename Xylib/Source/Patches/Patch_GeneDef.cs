@@ -18,8 +18,7 @@ internal static class Patch_GeneDef
     [Target("SpecialDisplayStats")]
     public static void GeneDef_SpecialDisplayStats_Postfix(GeneDef __instance, StatRequest req, ref IEnumerable<StatDrawEntry> __result)
     {
-        var defExt = __instance.Extension_GeneWithComps;
-        if (defExt == null)
+        if (__instance.Extension_GeneWithComps is not { } defExt)
             return;
 
         __result = __result.Concat(defExt.SpecialDisplayStats(req));

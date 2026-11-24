@@ -28,6 +28,15 @@ public class GeneComp
     public bool Active => parent.Active;
 
     /// <summary>
+    ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be
+    ///     inactive.
+    /// </summary>
+    /// <value></value>
+    public virtual bool CompAllowActive => true;
+
+    public virtual bool CompImmuneToVacuumBurns => false;
+
+    /// <summary>
     ///     The gene this component is attached to.
     /// </summary>
     // ReSharper disable once NotNullOrRequiredMemberIsNotInitialized
@@ -66,11 +75,13 @@ public class GeneComp
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer interval,
+    ///         It's recommended to use <see cref="Gen.IsHashIntervalTick(Thing, int)" /> to perform actions at a longer
+    ///         interval,
     ///         to avoid performance issues.
     ///     </para>
     ///     <para>
-    ///         <see cref="GeneWithComps"/> is optimized so that a subclass that doesn't override this method will incur no overhead
+    ///         <see cref="GeneWithComps" /> is optimized so that a subclass that doesn't override this method will incur no
+    ///         overhead
     ///         when <see cref="GeneWithComps.TickInterval" /> is called.
     ///     </para>
     /// </remarks>
@@ -85,7 +96,8 @@ public class GeneComp
     ///         This can have a significant impact on performance. Prefer to use <see cref="CompTickInterval" /> if possible.
     ///     </para>
     ///     <para>
-    ///         <see cref="GeneWithComps"/> is optimized so that a subclass that doesn't override this method will incur no overhead
+    ///         <see cref="GeneWithComps" /> is optimized so that a subclass that doesn't override this method will incur no
+    ///         overhead
     ///         when <see cref="GeneWithComps.Tick" /> is called.
     ///     </para>
     /// </remarks>
@@ -114,15 +126,6 @@ public class GeneComp
     ///     This should set the state of the gene component to its initial state.
     /// </summary>
     public virtual void CompReset() { }
-
-    /// <summary>
-    ///     Determines whether this component allows the gene to be active. If any component returns false, the gene will be
-    ///     inactive.
-    /// </summary>
-    /// <value></value>
-    public virtual bool CompAllowActive => true;
-
-    public virtual bool CompImmuneToVacuumBurns => false;
 }
 
 /// <summary>
@@ -131,6 +134,19 @@ public class GeneComp
 [PublicAPI]
 public class GeneWithComps : Gene, IEventListener
 {
+    /// <summary>
+    ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
+    /// </summary>
+    public DefModExtension_GeneWithComps DefExt =>
+        field ??= def.Extension_GeneWithComps ??
+                  throw new InvalidOperationException("GeneWithComps is missing DefModExtension_GeneWithComps");
+
+    /// <summary>
+    ///     Whether this gene is an endogene or xenogene.
+    /// </summary>
+    // The humanlike pawn's gene tracker creates and owns this gene.
+    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
+
     private static readonly Dictionary<Type, bool> hasTickCache = [];
     private static readonly Dictionary<Type, bool> hasTickIntervalCache = [];
 
@@ -142,17 +158,6 @@ public class GeneWithComps : Gene, IEventListener
     ///     The components for this gene.
     /// </summary>
     public List<GeneComp>? comps;
-
-    /// <summary>
-    ///     Gets the <see cref="DefModExtension_GeneWithComps" /> for this gene.
-    /// </summary>
-    public DefModExtension_GeneWithComps DefExt => 
-        field ??= def.Extension_GeneWithComps ?? throw new InvalidOperationException("GeneWithComps is missing DefModExtension_GeneWithComps");
-
-    /// <summary>
-    ///     Whether this gene is an endogene or xenogene.
-    /// </summary>
-    public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     /// <summary>
     ///     Whether the gene is currently active. Inactive genes shouldn't have any effect on the pawn.
@@ -177,6 +182,17 @@ public class GeneWithComps : Gene, IEventListener
         }
     }
 
+    public virtual bool ImmuneToVacuumBurns
+    {
+        get
+        {
+            if (def.immuneToVacuumBurns)
+                return true;
+
+            return comps is not null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
+        }
+    }
+
     private event Action? CompTick;
     private event Action<int>? CompTickInterval;
 
@@ -192,18 +208,7 @@ public class GeneWithComps : Gene, IEventListener
         if (!DefExt.ValidFor(pawn, GeneType))
             return false;
 
-        return comps == null || comps.All(comp => comp.CompAllowActive);
-    }
-
-    public virtual bool ImmuneToVacuumBurns
-    {
-        get
-        {
-            if (def.immuneToVacuumBurns)
-                return true;
-
-            return comps != null && comps.Any(comp => comp.CompImmuneToVacuumBurns);
-        }
+        return comps is null || comps.All(comp => comp.CompAllowActive);
     }
 
     /// <summary>
@@ -215,7 +220,7 @@ public class GeneWithComps : Gene, IEventListener
         if (Scribe.mode == LoadSaveMode.LoadingVars)
             InitializeComps();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (GeneComp comp in comps)
             comp.CompExposeData();
@@ -229,7 +234,7 @@ public class GeneWithComps : Gene, IEventListener
         base.PostMake();
         InitializeComps();
 
-        if (comps == null)
+        if (comps is null)
             return;
 
         for (int num = comps.Count - 1; num >= 0; num--)
@@ -249,21 +254,21 @@ public class GeneWithComps : Gene, IEventListener
 
     public void InitializeComps()
     {
-        var compProperties = DefExt.comps;
-        if (compProperties == null)
+        if (DefExt.comps is not { } compProperties)
             return;
 
         comps = [];
         foreach (GeneCompProperties compProps in compProperties)
         {
-            Type? compClass = compProps.compClass;
-            if (compClass == null)
+            if (compProps.compClass is not { } compClass)
                 continue;
 
             GeneComp? comp = null;
             try
             {
-                comp = (GeneComp)Activator.CreateInstance(compClass)!;
+                var instance = Activator.CreateInstance(compClass);
+                DebugAssert.NotNull(instance);
+                comp = (GeneComp)instance;
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);
@@ -285,7 +290,7 @@ public class GeneWithComps : Gene, IEventListener
             catch (Exception ex)
             {
                 Log.Error("Could not instantiate or initialize a GeneComp: " + ex);
-                if (comp != null)
+                if (comp is not null)
                     comps.Remove(comp);
             }
         }
@@ -300,17 +305,15 @@ public class GeneWithComps : Gene, IEventListener
             if (pawn.ChemicalIsAllowedByGenes(chemicalDef))
                 continue;
 
-            if (chemicalDef.toleranceHediff != null)
-                hediffDefsToRemove.Add(chemicalDef.toleranceHediff);
-            if (chemicalDef.addictionHediff != null)
-                hediffDefsToRemove.Add(chemicalDef.addictionHediff);
+            if (chemicalDef.toleranceHediff is { } toleranceHediff)
+                hediffDefsToRemove.Add(toleranceHediff);
+            if (chemicalDef.addictionHediff is { } addictionHediff)
+                hediffDefsToRemove.Add(addictionHediff);
         }
 
         var hediffs = new List<Hediff>(pawn.health.hediffSet.hediffs);
         foreach (Hediff hediff in hediffs.Where(hediff => hediffDefsToRemove.Contains(hediff.def)))
-        {
             pawn.health.RemoveHediff(hediff);
-        }
     }
 
     /// <summary>
@@ -322,7 +325,7 @@ public class GeneWithComps : Gene, IEventListener
 
         base.PostAdd();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (var comp in comps)
             comp.CompPostPostAdd();
@@ -339,7 +342,7 @@ public class GeneWithComps : Gene, IEventListener
 
         base.PostRemove();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (var comp in comps)
             comp.CompPostPostRemove();
@@ -352,7 +355,7 @@ public class GeneWithComps : Gene, IEventListener
     {
         base.Reset();
 
-        if (comps == null)
+        if (comps is null)
             return;
         foreach (var comp in comps)
             comp.CompReset();
@@ -362,7 +365,8 @@ public class GeneWithComps : Gene, IEventListener
     ///     Gets stats which are displayed on the pawn's description screen.
     /// </summary>
     /// <returns></returns>
-    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() => comps == null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
+    public override IEnumerable<StatDrawEntry> SpecialDisplayStats() =>
+        comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats());
 
     /// <summary>
     ///     Called periodically on gameplay tick.
@@ -403,15 +407,13 @@ public class GeneWithComps : Gene, IEventListener
     /// <returns></returns>
     public override IEnumerable<Gizmo> GetGizmos()
     {
-        if (comps != null)
-        {
+        if (comps is not null)
             foreach (Gizmo gizmo in comps.SelectMany(comp => comp.CompGetGizmos()))
                 yield return gizmo;
-        }
 
         if (!DebugSettings.ShowDevGizmos)
             yield break;
-        if (DefExt.hediffGivers == null)
+        if (DefExt.hediffGivers is null)
             yield break;
 
         for (var index = 0; index < DefExt.hediffGivers.Count; index++)
@@ -456,7 +458,7 @@ public class GeneWithComps : Gene, IEventListener
         manager.Register(EventDefOf.PostMutated, pawn, SetActiveStateNeedsUpdating);
         manager.Register(EventDefOf.PostBirthday, pawn, SetActiveStateNeedsUpdating);
 
-        if (comps == null)
+        if (comps is null)
             return;
 
         foreach (var comp in comps.OfType<IEventListener>())
@@ -465,7 +467,7 @@ public class GeneWithComps : Gene, IEventListener
 
     void IEventListener.PreUnregister(EventManager manager)
     {
-        if (comps == null)
+        if (comps is null)
             return;
 
         foreach (var comp in comps.OfType<IEventListener>())

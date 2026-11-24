@@ -151,13 +151,15 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     #endregion
 
-    public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req) => comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats(req));
+    public IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req) =>
+        comps is null ? [] : comps.SelectMany(comp => comp.SpecialDisplayStats(req));
 
-    public virtual IEnumerable<string> GetCustomEffectDescriptions() => comps is null ? [] : comps.SelectMany(comp => comp.CustomEffectDescriptions());
+    public virtual IEnumerable<string> GetCustomEffectDescriptions() =>
+        comps is null ? [] : comps.SelectMany(comp => comp.CustomEffectDescriptions());
 
     public string? GetExtraGeneEffectDescription()
     {
-        if (comps is null)
+        if (comps is not { Count: > 0 })
             return null;
 
         StringBuilder sb = new();
@@ -257,9 +259,9 @@ public class DefModExtension_GeneWithComps : DefModExtension
 
     public bool ValidFor(Pawn? pawn, GeneType? pawnGeneType)
     {
-        if (pawn != null && gender != null && gender != pawn.gender)
+        if (pawn is not null && gender is not null && gender != pawn.gender)
             return false;
-        if (geneType != null && geneType != pawnGeneType)
+        if (geneType is not null && geneType != pawnGeneType)
             return false;
         return true;
     }

@@ -6,13 +6,13 @@ internal static class MapExtensions
 {
     extension(Map map)
     {
-        [InjectedField]
-        private extern ref HostilityOverrideManager? HostilityOverrideManagerCached { get; }
-
+        // Map.FillComponents constructs this component during map initialization.
         public HostilityOverrideManager HostilityOverrideManager =>
             map.HostilityOverrideManagerCached ??= map.GetComponent<HostilityOverrideManager>()!;
-    }
 
+        [InjectedField]
+        private extern ref HostilityOverrideManager? HostilityOverrideManagerCached { get; }
+    }
 }
 
 [UsedFromReflection]
@@ -99,7 +99,7 @@ public class HostilityOverrideManager(Map map) : MapComponent(map), IEventListen
 
         Thing? source = info.Instigator;
 
-        if (source?.Faction == null || target.Faction == null)
+        if (source?.Faction is null || target.Faction is null)
             return;
 
         if (activeOverrides.Contains((source.Faction, target.Faction)))

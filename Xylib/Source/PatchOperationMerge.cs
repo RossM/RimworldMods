@@ -76,8 +76,7 @@ public class PatchOperationMerge : PatchOperationPathed
                 Debug.Log($"[{nameof(PatchOperationMerge)}] xpath: {xpath}");
 
             result = true;
-            XmlDocument? xmlNodeOwnerDocument = xmlNode.OwnerDocument;
-            if (xmlNodeOwnerDocument == null)
+            if (xmlNode.OwnerDocument is not { } xmlNodeOwnerDocument)
                 continue;
 
             var childNodes = node.ChildNodes.OfType<XmlNode>().ToList();

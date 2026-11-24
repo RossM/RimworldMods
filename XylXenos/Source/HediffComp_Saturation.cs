@@ -27,7 +27,7 @@ public class HediffCompProperties_Saturation : HediffCompPropertiesExt
             yield return new(StatCategoryDefOf.Drug, "XylSaturationGain".Translate(),
                 "PerDay".Translate(severityGainPerDay.ToStringPercent()),
                 "XylSaturationGainDesc".Translate(), 0);
-            if (parent != null)
+            if (parent is not null)
                 yield return new(StatCategoryDefOf.Drug, "XylDaysToFullSaturation".Translate(),
                     "PeriodDays".Translate((parent.maxSeverity / severityGainPerDay).ToStringDecimalIfSmall()),
                     "XylDaysToFullSaturationDesc".Translate(), 0);

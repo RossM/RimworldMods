@@ -19,7 +19,7 @@ public class HediffComp_SetNeed : HediffComp
 {
     public HediffCompProperties_SetNeed Props => (HediffCompProperties_SetNeed)props;
 
-    private bool Active => Need != null && Props.stages.Includes(parent.CurStageIndex);
+    private bool Active => Need is not null && Props.stages.Includes(parent.CurStageIndex);
 
     public Need? Need
     {

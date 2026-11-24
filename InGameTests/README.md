@@ -1,6 +1,6 @@
 # Shared in-game test infrastructure
 
-[Xylib.Tests](../Xylib.Tests/README.md), [XylXenos.Tests](../XylXenos.Tests/README.md), and [Yobai.Tests](../Yobai.Tests/README.md) use SmashPhil's DevTools inside the installed Steam game. Each suite has a small `Run-Tests.ps1` entry point forwarding to [Run-Tests.ps1](Run-Tests.ps1). All suites share MSBuild configuration; Xylib and XylXenos also share a linked pawn fixture; no test infrastructure ships in gameplay assemblies.
+[Xylib.Tests](../Xylib.Tests/README.md), [XylXenos.Tests](../XylXenos.Tests/README.md), and [Yobai.Tests](../Yobai.Tests/README.md) use SmashPhil's DevTools inside the installed Steam game. Each suite has a small `Run-Tests.ps1` entry point forwarding to [Run-Tests.ps1](Run-Tests.ps1). All three suites reference [InGameTests.csproj](InGameTests.csproj) for shared fixtures and use common MSBuild configuration.
 
 ## Dependencies and execution
 
@@ -8,7 +8,7 @@ Use PowerShell 5.1 or 7 and .NET SDK 10.0.400 or later. Install the Workshop [Ha
 
 Build the solution normally in Visual Studio or with `dotnet build .\XylRimworldMods.slnx`. All three test projects are enabled in Debug and Release. Their DevTools project dependency downloads and builds the pinned source automatically, so the launcher is not needed to prepare a Visual Studio build. To link mods into the game automatically after builds, set `LinkModsOnBuild` to `true` in `Directory.Build.local.props`. Set `RimWorldDirectory` there for a nonstandard game installation. See [the build instructions](../BUILDING.md#linking-builds-into-rimworld).
 
-Each test mod is written to `ModBin/<suite>.Tests`, including its definitions, default test configuration, DLL, and PDB. Yobai.Tests and XylXenos.Tests each ship only their own test DLL. The launcher activates the corresponding gameplay mod so RimWorld loads its packaged assemblies, including any Disharmony DLLs it bundles. Xylib.Tests contains Xylib and its shared definitions so it can run standalone. When built against a local Disharmony checkout, it also bundles the matching runtime assemblies.
+Each test mod is written to `ModBin/<suite>.Tests`, including its definitions, default test configuration, and both the suite and shared fixture DLLs and PDBs. For Yobai.Tests and XylXenos.Tests, the launcher activates the corresponding gameplay mod so RimWorld loads its packaged assemblies, including any Disharmony DLLs it bundles. Xylib.Tests contains Xylib and its shared definitions so it can run standalone. When built against a local Disharmony checkout, it also bundles the matching runtime assemblies.
 
 The launcher builds the selected suite in Debug by default, creates a new profile under `TestResults/<suite>`, and launches RimWorld headlessly. It creates persistent directory junctions from the game's `Mods` folder to the required ModBin outputs and reuses existing junctions or symbolic links with the same targets. Links stay installed after success or failure, so the mods remain available for debugging and manual runs through DevTools. Conflicting folders or links cause an error; update them manually. Normal saves and settings are untouched. Run suites sequentially because they share game mod paths, configurations, and build outputs.
 

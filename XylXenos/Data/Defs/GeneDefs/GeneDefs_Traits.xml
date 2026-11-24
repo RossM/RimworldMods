@@ -13,7 +13,7 @@
     <displayOrderInCategory>120</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_FastReflexes</iconPath>
     <forcedTraits>
-      <Nimble />
+      <Nimble/>
     </forcedTraits>
   </GeneDef>
 
@@ -31,7 +31,7 @@
       <li>XylMelancholyAndEvenTemper</li>
     </exclusionTags>
     <forcedTraits>
-      <TorturedArtist />
+      <TorturedArtist/>
     </forcedTraits>
   </GeneDef>
 
@@ -49,7 +49,7 @@
       <li>XylNightOwl</li>
     </exclusionTags>
     <forcedTraits>
-      <NightOwl />
+      <NightOwl/>
     </forcedTraits>
   </GeneDef>
 
@@ -63,7 +63,7 @@
     <displayOrderInCategory>100</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_PainReversal</iconPath>
     <forcedTraits>
-      <Masochist />
+      <Masochist/>
     </forcedTraits>
   </GeneDef>
 
@@ -117,11 +117,11 @@
       <Nerves>2</Nerves>
       <Neurotic>1</Neurotic>
       <Neurotic>2</Neurotic>
-      <Bloodlust />
-      <TooSmart />
-      <Greedy />
-      <Jealous />
-      <TorturedArtist />
+      <Bloodlust/>
+      <TooSmart/>
+      <Greedy/>
+      <Jealous/>
+      <TorturedArtist/>
     </suppressedTraits>
     <exclusionTags>
       <li>XylMelancholyAndEvenTemper</li>
@@ -138,7 +138,7 @@
     <displayOrderInCategory>200</displayOrderInCategory>
     <iconPath>Xyl/UI/Icons/Genes/Gene_Shameless</iconPath>
     <forcedTraits>
-      <Nudist />
+      <Nudist/>
     </forcedTraits>
   </GeneDef>
 
@@ -260,7 +260,7 @@
       <li>XylColonySize</li>
     </exclusionTags>
     <forcedTraits>
-      <Recluse />
+      <Recluse/>
     </forcedTraits>
   </GeneDef>
 

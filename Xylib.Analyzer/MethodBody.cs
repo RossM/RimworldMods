@@ -25,7 +25,8 @@ internal sealed class MethodBody : OperationWalker
             if (reference.GetSyntax(cancellationToken) is not MethodDeclarationSyntax declaration)
                 continue;
             var syntax = (SyntaxNode?)declaration.Body ?? declaration.ExpressionBody?.Expression;
-            if (syntax is not null && compilation.GetSemanticModel(syntax.SyntaxTree).GetOperation(syntax, cancellationToken) is { } operation)
+            if (syntax is not null && compilation.GetSemanticModel(syntax.SyntaxTree).GetOperation(syntax, cancellationToken) is
+                    { } operation)
                 return new MethodBody(operation);
         }
 

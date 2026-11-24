@@ -33,7 +33,7 @@ public class ScenPart_RandomXenotype : ScenPart_PawnModifier, IEventListener
         if (!data.request.KindDef.RaceProps.Humanlike)
             return;
 
-        if (data.request.ForcedCustomXenotype != null)
+        if (data.request.ForcedCustomXenotype is not null)
             return;
 
         if (data.request.ForcedXenotype is { Archite: true })

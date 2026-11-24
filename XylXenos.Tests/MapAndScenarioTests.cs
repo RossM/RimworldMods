@@ -1,5 +1,4 @@
 using static XylXenos.Tests.TestDefOf;
-using UnityEngine;
 
 namespace XylXenos.Tests;
 
@@ -52,7 +51,8 @@ public sealed class MapAndScenarioTests : PawnTestFixture
         Expect.IsTrue(pawn.Inspired);
     }
 
-    [Test, LoadIfRoyaltyActive]
+    [Test]
+    [LoadIfRoyaltyActive]
     public void PsylinkScenarioHelperAddsLevelsWithoutGrantingAbilities()
     {
         int before = pawn.abilities.AllAbilitiesForReading.Count;

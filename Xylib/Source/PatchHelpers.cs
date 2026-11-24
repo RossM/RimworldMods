@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Xml;
 
 namespace Xylib;
 
@@ -10,9 +11,12 @@ internal static class PatchHelpers
 
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
-    private static readonly MethodInfo methodInfo_RunDefGenerator = typeof(PatchHelpers).GetMethod(nameof(RunDefGenerator), BindingFlags.NonPublic | BindingFlags.Static)!;
+    // RunDefGenerator is the declared private static method on this type.
+    private static readonly MethodInfo methodInfo_RunDefGenerator
+        = typeof(PatchHelpers).GetMethod(nameof(RunDefGenerator), BindingFlags.NonPublic | BindingFlags.Static)!;
 
     private static readonly ConcurrentDictionary<Type, Action<object, List<string>>?> requiredMemberCheckerCache = new();
+    // List<string> declares a public Add method taking a string.
     private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)])!;
 
     private static void RunDefGenerator<T, TDef>(bool hotReload) where TDef : Def, new() where T : IDefGenerator<TDef>
@@ -23,17 +27,18 @@ internal static class PatchHelpers
 
     public static void RunDefGenerators(bool hotReload)
     {
-        foreach ((Type type, Type defType) in 
+        foreach ((Type type, Type defType) in
                  GenTypes.AllTypes.SelectMany(
                      type => type.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDefGenerator<>)),
                      (type, i) => (type, i.GetGenericArguments()[0])))
         {
+            // GenTypes.AllTypes enumerates declared assembly types, which have qualified names.
             using var _ = new ProfileBlock(type.FullName!);
 
             try
             {
                 var impliedDefsMethodInfo = type.GetMethod("ImpliedDefs");
-                if (impliedDefsMethodInfo == null)
+                if (impliedDefsMethodInfo is null)
                 {
                     Log.Error($"{type.FullName} is marked as DefGenerator but doesn't have ImpliedDefs method");
                     continue;
@@ -60,18 +65,17 @@ internal static class PatchHelpers
     {
         outGene = pawn.genes?.GenesListForReading.FirstOrDefault(gene =>
             gene.Active && gene.def.Extension_GeneWithComps?.showInDrugPolicies is true);
-        return outGene != null;
+        return outGene is not null;
     }
 
     private static bool GeneShouldBeVisible(GeneDef geneDef, GeneType geneType)
     {
-        var defExt = geneDef.Extension_GeneWithComps;
-        if (defExt == null)
+        if (geneDef.Extension_GeneWithComps is not { } defExt)
             return true;
 
         if (!defExt.showInXenotypeCreation)
             return false;
-        if (defExt.geneType != null && defExt.geneType != geneType)
+        if (defExt.geneType is not null && defExt.geneType != geneType)
             return false;
 
         return true;
@@ -107,7 +111,7 @@ internal static class PatchHelpers
 
     public static void AddSlaveRebellionMtbFactorExplanation(StringBuilder stringBuilder, Pawn? pawn)
     {
-        if (pawn == null)
+        if (pawn is null)
             return;
 
         StatRequest statRequest = StatRequest.For(pawn);
@@ -128,8 +132,7 @@ internal static class PatchHelpers
         HashSet<RecipeDef> result = [];
         foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
         {
-            var recipes = geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes;
-            if (recipes != null)
+            if (geneDef.CompProps<GeneCompProperties_UnlockRecipes>()?.recipes is { } recipes)
                 result.AddRange(recipes);
         }
 
@@ -145,7 +148,7 @@ internal static class PatchHelpers
 
         foreach (var designators in Faction.OfPlayer.AllAlivePawns.Select(pawn => pawn.GeneTracker_Xylib?.unlockedBuildables))
         {
-            if (designators == null)
+            if (designators is null)
                 continue;
 
             geneDesignators.AddRange(designators.Where(def => def.designationCategory == __instance)
@@ -172,7 +175,9 @@ internal static class PatchHelpers
 
     public static List<GeneDef> FilterGenes(List<GeneDef> genes, bool inheritable, bool ignoreRestrictions)
     {
-        return ignoreRestrictions ? genes : [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
+        return ignoreRestrictions
+            ? genes
+            : [.. genes.Where(g => GeneShouldBeVisible(g, inheritable ? GeneType.Endogene : GeneType.Xenogene))];
     }
 
     private static Action<object, List<string>>? GetRequiredMemberCheckerFunc(Type defType)
@@ -224,8 +229,7 @@ internal static class PatchHelpers
 
     public static List<string>? RequiredMemberErrors(object def)
     {
-        var checkerFunc = GetRequiredMemberCheckerFunc(def.GetType());
-        if (checkerFunc == null)
+        if (GetRequiredMemberCheckerFunc(def.GetType()) is not { } checkerFunc)
             return null;
 
         List<string> errors = [];
@@ -272,6 +276,34 @@ internal static class PatchHelpers
                 Log.WarningOnce("Unhandled case in GetChemicalBlockedByGenesReason");
                 return "";
             }
+        }
+    }
+
+    public static void AddNamesForInheritance(XmlDocument xmlDoc)
+    {
+        // XmlDocument supports XPath and returns an empty node list when there are no matches.
+        foreach (var node in xmlDoc.SelectNodes("/Defs/*[@ParentDefName]")!.OfType<XmlElement>())
+        {
+            string defType = node.Name;
+            string parentDefName = node.GetAttribute("ParentDefName");
+            // XmlDocument supports XPath and returns an empty node list when there are no matches.
+            var parent = xmlDoc.SelectNodes($"/Defs/{defType}[defName=\"{parentDefName}\"]")!.OfType<XmlElement>()
+                .LastOrDefault();
+
+            if (parent is null)
+            {
+                Log.Warning($"ParentDefName {parentDefName} not found");
+                continue;
+            }
+
+            var parentName = parent.GetAttribute("Name");
+            if (parentName == "")
+            {
+                parentName = $"{defType}.{parentDefName}";
+                parent.SetAttribute("Name", parentName);
+            }
+
+            node.SetAttribute("ParentName", parentName);
         }
     }
 }

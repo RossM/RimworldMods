@@ -56,7 +56,7 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
     {
         DebugAssert.NotNull(Pawn.genes);
 
-        if (geneDef == null)
+        if (geneDef is null)
             return;
         if (Pawn.genes.GenesListForReading.Any(g => g.def == geneDef))
             return;
@@ -78,7 +78,7 @@ public class GeneComp_BonusGenes : GeneComp, IEventListener
 
         if (Props.removeAfterAdding)
             return;
-        if (addedGenes == null)
+        if (addedGenes is null)
             return;
 
         foreach (var gene in addedGenes)

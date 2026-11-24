@@ -51,7 +51,7 @@
       <li Class="Xylib.DefModExtension_GeneWithComps">
         <showInXenotypeCreation>false</showInXenotypeCreation>
         <comps>
-          <li Class="Xylib.Tests.ProbeProperties" />
+          <li Class="Xylib.Tests.ProbeProperties"/>
         </comps>
       </li>
     </modExtensions>

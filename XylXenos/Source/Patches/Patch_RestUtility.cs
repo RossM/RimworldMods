@@ -3,7 +3,7 @@
 [Patch(typeof(RestUtility))]
 public static class Patch_RestUtility
 {
-    [Feature("TODO")]
+    [Feature(nameof(DefModExtension_Bed_GeneRestricted))]
     [Postfix]
     [Target(nameof(RestUtility.CanUseBedEver))]
     public static void CanUseBedEver_Postfix(Pawn p, ThingDef bedDef, ref bool __result)

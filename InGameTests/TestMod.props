@@ -1,0 +1,19 @@
+<Project>
+  <Import Project="Tests.props"/>
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)InGameTests.csproj"/>
+    <ModDestination Include="..\ModBin\$(MSBuildProjectName)"/>
+    <ModAssembly Include="$(MSBuildProjectName).pdb;InGameTests.dll;InGameTests.pdb"/>
+  </ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'Yobai.Tests'">
+    <Using Include="DevTools.Testing"/>
+    <Using Include="RimWorld"/>
+    <Using Include="Verse"/>
+    <Using Include="Xylib"/>
+    <Using Include="InGameTests"/>
+  </ItemGroup>
+  <Import Project="..\ModBuild.targets"/>
+</Project>

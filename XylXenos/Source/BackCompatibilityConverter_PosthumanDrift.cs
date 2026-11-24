@@ -19,7 +19,6 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
             };
 
         if (defType == typeof(HeadTypeDef))
-        {
             return defName switch
             {
                 "Female_Osteoliths_Average_Normal" => "Female_AverageNormal",
@@ -38,7 +37,6 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
                 "Male_Scaleskin_Narrow_Pointy" => "Male_NarrowPointy",
                 _ => null,
             };
-        }
 
         if (defType == typeof(ThoughtDef) && defName == "XylSoreBreasts")
             return "XylFullMilk";
@@ -54,7 +52,6 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
             return "Humanlike";
 
         if (defType == typeof(ThingDef))
-        {
             return defName switch
             {
                 "XylFungusStill" => "Brewery",
@@ -63,7 +60,6 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
                 "Apparel_XylBlindfoldMask" => "Apparel_Blindfold",
                 _ => null,
             };
-        }
 
         return null;
     }
@@ -86,18 +82,12 @@ internal class BackCompatibilityConverter_PosthumanDrift : BackCompatibilityConv
             // Known issue: ScenPart_PsylinkLevels and ScenPart_Psycast default to chance 0 after conversion
             "XylRacesCore.ScenPart_PsylinkLevels" => typeof(ScenPart_PsylinkLevels),
             "XylRacesCore.ScenPart_Psycast" => typeof(ScenPart_Psycast),
-            "XylRacesCore.ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext" => typeof(ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext),
+            "XylRacesCore.ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext" =>
+                typeof(ScenPart_ConfigPage_ConfigureStartingPawns_Xenotypes_Ext),
             _ when providedClassName.StartsWith("XylRacesCore.Genes.") => typeof(GeneWithComps),
             _ => null,
         };
     }
 
-    public override void PostExposeData(object obj)
-    {
-        if (Scribe.mode != LoadSaveMode.PostLoadInit)
-            return;
-
-        if (obj is GeneWithComps { comps: null } geneWithComps)
-            geneWithComps.InitializeComps();
-    }
+    public override void PostExposeData(object obj) { }
 }

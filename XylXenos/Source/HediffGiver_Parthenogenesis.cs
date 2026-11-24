@@ -17,6 +17,7 @@ public class HediffGiver_Parthenogenesis : HediffGiver_Random
         // Only apply the stat parts from Fertility, which cover age and hediffs. We deliberately ignore fertility
         // modifications from genes.
         float fertility = 1.0f;
+        // The Biotech check above ensures its Fertility stat is loaded.
         StatDefOf.Fertility!.Worker.FinalizeValue(StatRequest.For(pawn), ref fertility, true);
 
         return fertility;

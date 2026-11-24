@@ -10,9 +10,8 @@ public static class Patch_Thought
     {
         DebugAssert.NotNull(__instance.pawn);
 
-        GeneDef? sourceGene =
-            __instance.def.requiredGenes?.FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef));
-        if (sourceGene == null)
+        if (__instance.def.requiredGenes?.FirstOrDefault(geneDef => __instance.pawn.HasActiveGene(geneDef))
+            is not { } sourceGene)
             return;
 
         // This is a minor UI improvement to show which gene caused a thought

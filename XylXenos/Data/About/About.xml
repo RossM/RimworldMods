@@ -5,11 +5,11 @@
   <packageId>Xylthixlm.Xenotypes</packageId>
   <name>Xyl's Xenotypes</name>
   <author>Xylthixlm</author>
-  <modVersion>1.1.1</modVersion>
+  <modVersion>1.2.0</modVersion>
   <description>
     Yep, it's yet another gene and xenotype mod for RimWorld. But this one is mine, and I'm very proud of it. So nyah.
 
-    This mod includes 12 xenotypes, 122 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed and balanced to be lore-friendly and fit with vanilla RimWorld as well as I can make it.    
+    This mod includes 12 xenotypes, 122 new genes, 4 factions, 5 scenarios, and a variety of new events, animals, buildings, and items. Everything is designed and balanced to be lore-friendly and fit with vanilla RimWorld as well as I can make it.
   </description>
   <supportedVersions>
     <li>1.7</li>
@@ -28,5 +28,5 @@
     <!-- Older Posthuman Drift mod that this is a redo of -->
     <li>xylthixlm.races.core</li>
   </incompatibleWith>
-  
+
 </ModMetaData>

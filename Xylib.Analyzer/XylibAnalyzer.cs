@@ -7,6 +7,13 @@ namespace Xylib.Analyzer;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class XylibAnalyzer : DiagnosticAnalyzer
 {
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
+    [
+        StaticPatchClass, MissingFeature, FeatureWithoutPatch, PrefixName, PostfixName, MissingUsedFromXml,
+        MissingConfigErrorsBaseCall, UnsavedField, MissingExposeDataBaseCall, UseRandBlock,
+        UseGeneWithCompsExtension, UsePawnHasActiveGene, UsePawnFirstActiveGeneOfType,
+    ];
+
     public static readonly DiagnosticDescriptor StaticPatchClass = new(
         "XYLIB0001", "Patch class should be static", "Patch class '{0}' should be static",
         "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
@@ -62,13 +69,6 @@ public sealed class XylibAnalyzer : DiagnosticAnalyzer
         "XYLIB0013", "Use the pawn's FirstActiveGeneOfType extension",
         "Use Pawn.FirstActiveGeneOfType<T>() instead of calling Pawn.genes.GetFirstGeneOfType<T>() directly",
         "Style", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-    [
-        StaticPatchClass, MissingFeature, FeatureWithoutPatch, PrefixName, PostfixName, MissingUsedFromXml,
-        MissingConfigErrorsBaseCall, UnsavedField, MissingExposeDataBaseCall, UseRandBlock,
-        UseGeneWithCompsExtension, UsePawnHasActiveGene, UsePawnFirstActiveGeneOfType,
-    ];
 
     public override void Initialize(AnalysisContext context)
     {

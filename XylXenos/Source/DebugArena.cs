@@ -11,19 +11,23 @@ public static class DebugArena
 
     private static readonly Dictionary<string, float> combatPowerTmp = new();
 
-    private static readonly HashSet<PawnKindDef> badKinds = [.. ((IEnumerable<PawnKindDef?>)[
-        PawnKindDefOf.Nociosphere,
-        PawnKindDefOf.Revenant,
-        PawnKindDefOf.FleshmassNucleus,
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Basic"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Carrier"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Clawer"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Barkskin"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Woodmaker"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Medicinemaker"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Berrymaker"),
-        DefDatabase<PawnKindDef>.GetNamed("Dryad_Gaumaker"),
-    ]).OfType<PawnKindDef>()];
+    private static readonly HashSet<PawnKindDef> badKinds =
+    [
+        .. ((IEnumerable<PawnKindDef?>)
+        [
+            PawnKindDefOf.Nociosphere,
+            PawnKindDefOf.Revenant,
+            PawnKindDefOf.FleshmassNucleus,
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Basic"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Carrier"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Clawer"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Barkskin"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Woodmaker"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Medicinemaker"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Berrymaker"),
+            DefDatabase<PawnKindDef>.GetNamed("Dryad_Gaumaker"),
+        ]).OfType<PawnKindDef>(),
+    ];
 
     [DebugAction("Autotests")]
     public static void BattleRoyaleByXenotype()
@@ -158,7 +162,9 @@ public static class DebugArena
         List<PawnKindDef> pawnKindsForBattleRoyale =
         [
             .. DefDatabase<PawnKindDef>.AllDefsListForReading.Where(pawnKindDef => !badKinds.Contains(pawnKindDef))
-                .SelectMany(pawnKindDef => pawnKindDef.RaceProps.Humanlike ? xenotypes.Select(xenotypeDef => PawnKindWithXenotype(pawnKindDef, xenotypeDef)) : [pawnKindDef]),
+                .SelectMany(pawnKindDef => pawnKindDef.RaceProps.Humanlike
+                    ? xenotypes.Select(xenotypeDef => PawnKindWithXenotype(pawnKindDef, xenotypeDef))
+                    : [pawnKindDef]),
         ];
 
         List<DebugActionNode> actions = [];
@@ -252,7 +258,7 @@ public static class DebugArena
 
     private static PawnKindDef PawnKindWithXenotype(PawnKindDef pawnKindDef, XenotypeDef? xenotype)
     {
-        if (xenotype == null)
+        if (xenotype is null)
             return pawnKindDef;
 
         PawnKindDef newPawnKindDef = pawnKindDef.MemberwiseClone();
@@ -303,15 +309,15 @@ public static class DebugArena
                 var rhsDef = kinds.FirstOrDefault(def => def.defName == parts[2]);
                 var score = int.Parse(parts[4]);
 
-                if (lhsDef != null)
+                if (lhsDef is not null)
                     total[lhsDef] += 1;
-                if (rhsDef != null)
+                if (rhsDef is not null)
                     total[rhsDef] += 1;
 
                 switch (score)
                 {
-                    case > 0 when lhsDef != null: wins[lhsDef] += 1; break;
-                    case < 0 when rhsDef != null: wins[rhsDef] += 1; break;
+                    case > 0 when lhsDef is not null: wins[lhsDef] += 1; break;
+                    case < 0 when rhsDef is not null: wins[rhsDef] += 1; break;
                 }
             }
         }
@@ -349,7 +355,7 @@ public static class DebugArena
             // Use RandomElement rather than RandomElementByWeight to avoid bias
             PawnKindDef? rhsDef = filteredKinds.Where(def => def != lhsDef).RandomElement();
 
-            if (lhsDef == null || rhsDef == null)
+            if (lhsDef is null || rhsDef is null)
                 return false;
 
             if (Rand.Chance(0.5f))
@@ -503,7 +509,7 @@ public static class DebugArena
             Pawn pawn = PawnGenerator.GeneratePawn(request);
 
             IntVec3 loc = CellFinder.RandomClosewalkCellNear(spot, map, 12);
-            if (GenSpawn.Spawn(pawn, loc, map, Rot4.Random) != null)
+            if (GenSpawn.Spawn(pawn, loc, map, Rot4.Random) is not null)
                 list.Add(pawn);
             else
                 pawn.Destroy();

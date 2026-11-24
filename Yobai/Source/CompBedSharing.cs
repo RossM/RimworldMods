@@ -14,6 +14,7 @@ public sealed class CompBedSharing : ThingComp
         [UsedImplicitly]
         public TemporarySleepingSlot()
         {
+            // Scribe resolves the pawn after construction, and IsActive filters unresolved references.
             pawn = null!;
         }
 
@@ -58,6 +59,18 @@ public sealed class CompBedSharing : ThingComp
         }
     }
 
+    internal IEnumerable<Pawn> AllAssignedPawns
+    {
+        get
+        {
+            if (Bed.Map == null)
+                return Bed.CurOccupants;
+            IEnumerable<Pawn> sleepers = Bed.Map.SleepingAssignments.GetAssignments(Bed).Where(assignment => assignment.IsInUse)
+                .Select(assignment => assignment.Pawn);
+            return Bed.CurOccupants.Concat(sleepers).Distinct();
+        }
+    }
+
     internal bool HasSleepingSlot(Pawn pawn)
     {
         return BedSharingHelpers.candidateSlotForIsValidBedFor is not null || pawn.TemporarySleepingAssignment?.Place.Bed == Bed;
@@ -80,17 +93,6 @@ public sealed class CompBedSharing : ThingComp
 
         slot = -1;
         return false;
-    }
-
-    internal IEnumerable<Pawn> AllAssignedPawns
-    {
-        get
-        {
-            if (Bed.Map == null)
-                return Bed.CurOccupants;
-            IEnumerable<Pawn> sleepers = Bed.Map.SleepingAssignments.GetAssignments(Bed).Where(assignment => assignment.IsInUse).Select(assignment => assignment.Pawn);
-            return Bed.CurOccupants.Concat(sleepers).Distinct();
-        }
     }
 
     internal bool IsSleepingPlaceAvailable(Pawn pawn, IntVec3 position)
@@ -157,8 +159,10 @@ public sealed class CompBedSharing : ThingComp
 
     private bool IsActive(TemporarySleepingSlot assignment)
     {
-        return Bed.IsEligibleForBedSharing && assignment.Pawn.IsOnMap(Bed.Map!) && IsValidAssignment(Bed, assignment) &&
-               (assignment.TickCreated == Find.TickManager.TicksGame || Bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(assignment.Pawn));
+        // Only spawned beds are eligible, so the bed has a map.
+        return Bed.IsEligibleForBedSharing && assignment.Pawn is { } pawn && pawn.IsOnMap(Bed.Map!) &&
+               IsValidAssignment(Bed, assignment) &&
+               (assignment.TickCreated == Find.TickManager.TicksGame || Bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(pawn));
     }
 
     private static bool IsValidAssignment(Building_Bed bed, TemporarySleepingSlot assignment) =>

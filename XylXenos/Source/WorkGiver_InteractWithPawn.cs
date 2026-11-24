@@ -9,7 +9,15 @@ public class DefModExtension_WorkGiver_InteractWithPawn : DefModExtension
 [UsedFromXml]
 public class WorkGiver_InteractWithPawn : WorkGiver_Scanner
 {
-    public DefModExtension_WorkGiver_InteractWithPawn DefExt => def.GetModExtension<DefModExtension_WorkGiver_InteractWithPawn>()!;
+    public DefModExtension_WorkGiver_InteractWithPawn DefExt
+    {
+        get
+        {
+            var extension = def.GetModExtension<DefModExtension_WorkGiver_InteractWithPawn>();
+            DebugAssert.NotNull(extension);
+            return extension;
+        }
+    }
 
     public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
     {

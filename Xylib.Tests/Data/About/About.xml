@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ModMetaData>
   <packageId>Xylthixlm.Xylib.Tests</packageId>
   <name>Xylib tests</name>
   <author>Xylthixlm</author>
   <description>Standalone in-game code tests for Xylib, including the library and its shared definitions. Run through SmashPhil's DevTools. Enable only for testing.</description>
-  <supportedVersions><li>1.7</li></supportedVersions>
+  <supportedVersions>
+    <li>1.7</li>
+  </supportedVersions>
   <modDependencies>
-    <li><packageId>Xylthixlm.Disharmony</packageId><displayName>Disharmony</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/3818084845</steamWorkshopUrl></li>
-    <li><packageId>SmashPhil.DevTools</packageId><displayName>DevTools</displayName><downloadUrl>https://github.com/SmashPhil/DevTools</downloadUrl></li>
+    <li>
+      <packageId>Xylthixlm.Disharmony</packageId><displayName>Disharmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/3818084845</steamWorkshopUrl>
+    </li>
+    <li>
+      <packageId>SmashPhil.DevTools</packageId><displayName>DevTools</displayName>
+      <downloadUrl>https://github.com/SmashPhil/DevTools</downloadUrl>
+    </li>
   </modDependencies>
-  <loadAfter><li>Xylthixlm.Disharmony</li><li>SmashPhil.DevTools</li></loadAfter>
+  <loadAfter>
+    <li>Xylthixlm.Disharmony</li><li>SmashPhil.DevTools</li>
+  </loadAfter>
 </ModMetaData>

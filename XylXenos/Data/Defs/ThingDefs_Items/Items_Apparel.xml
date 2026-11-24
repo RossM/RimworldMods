@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+  <ThingDef ParentName="HatMakeableBase">
+    <defName>XylApparel_Circlet</defName>
+    <label>circlet</label>
+    <description>TODO.</description>
+    <techLevel>Neolithic</techLevel>
+    <graphicData>
+      <texPath>Xyl/Things/Pawn/Humanlike/Apparel/Circlet/Circlet</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>1</drawSize>
+    </graphicData>
+    <uiIconScale>1.15</uiIconScale>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>XylPreciousStone</li>
+    </stuffCategories>
+    <costStuffCount>20</costStuffCount>
+    <statBases>
+      <WorkToMake>2400</WorkToMake>
+      <Mass>0.5</Mass>
+      <StuffEffectMultiplierArmor>0.25</StuffEffectMultiplierArmor>
+      <StuffEffectMultiplierInsulation_Cold>0.15</StuffEffectMultiplierInsulation_Cold>
+      <StuffEffectMultiplierInsulation_Heat>0</StuffEffectMultiplierInsulation_Heat>
+      <EquipDelay>1.5</EquipDelay>
+    </statBases>
+    <equippedStatOffsets>
+      <PainShockThreshold>0.05</PainShockThreshold>
+    </equippedStatOffsets>
+    <apparel>
+      <countsAsClothingForNudity>false</countsAsClothingForNudity>
+      <renderSkipFlags/>
+      <bodyPartGroups>
+        <li>UpperHead</li>
+      </bodyPartGroups>
+      <renderNodeProperties>
+        <li>
+          <debugLabel>Circlet</debugLabel>
+          <nodeClass>XylXenos.PawnRenderNode_AttachmentHeadComplex</nodeClass>
+          <workerClass>PawnRenderNodeWorker_Apparel_Head</workerClass>
+          <shaderTypeDef>CutoutComplex</shaderTypeDef>
+          <texPath>Xyl/Things/Pawn/Humanlike/Apparel/Circlet/Circlet</texPath>
+          <parentTagDef>ApparelHead</parentTagDef>
+          <drawData>
+            <scale>0.5</scale>
+            <defaultData>
+              <layer>64</layer>
+            </defaultData>
+            <dataNorth>
+              <layer>-3</layer>
+            </dataNorth>
+          </drawData>
+        </li>
+      </renderNodeProperties>
+      <developmentalStageFilter>Child, Adult</developmentalStageFilter>
+      <canBeGeneratedToSatisfyWarmth>false</canBeGeneratedToSatisfyWarmth>
+      <layers>
+        <li>Overhead</li>
+      </layers>
+      <defaultOutfitTags>
+        <li>Soldier</li>
+        <li>Worker</li>
+      </defaultOutfitTags>
+      <forceEyesVisibleForRotations>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+      </forceEyesVisibleForRotations>
+    </apparel>
+    <recipeMaker>
+      <recipeUsers>
+        <li>CraftingSpot</li>
+        <li>ElectricTailoringBench</li>
+        <li>HandTailoringBench</li>
+      </recipeUsers>
+      <displayPriority>160</displayPriority>
+    </recipeMaker>
+    <tradeTags>
+      <li>BasicClothing</li>
+    </tradeTags>
+  </ThingDef>
+
+</Defs>

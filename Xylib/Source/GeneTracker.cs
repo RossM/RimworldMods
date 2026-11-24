@@ -20,15 +20,19 @@ public abstract class GeneTracker(Pawn pawn) : IEventListener
 
     protected static void Append<T>(ref List<T>? dest, List<T>? source)
     {
-        if (source == null || source.Count == 0)
+        if (source is null || source.Count == 0)
             return;
-        if (dest == null)
+        if (dest is null)
             dest = [.. source];
         else
             dest.AddRange(source);
     }
 
-    protected static void Multiply<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keySelector, Func<TItem, float> valueSelector)
+    protected static void Multiply<TItem, TKey>(
+        ref Dictionary<TKey, float>? dest,
+        List<TItem>? source,
+        Func<TItem, TKey> keySelector,
+        Func<TItem, float> valueSelector)
         where TKey : notnull
     {
         if (source is null)
@@ -43,7 +47,11 @@ public abstract class GeneTracker(Pawn pawn) : IEventListener
         }
     }
 
-    protected static void Add<TItem, TKey>(ref Dictionary<TKey, float>? dest, List<TItem>? source, Func<TItem, TKey> keySelector, Func<TItem, float> valueSelector)
+    protected static void Add<TItem, TKey>(
+        ref Dictionary<TKey, float>? dest,
+        List<TItem>? source,
+        Func<TItem, TKey> keySelector,
+        Func<TItem, float> valueSelector)
         where TKey : notnull
     {
         if (source is null)

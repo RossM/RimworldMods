@@ -70,7 +70,7 @@
         <description>My skin is a bit dry. I should find some water.</description>
         <baseMoodEffect>-5</baseMoodEffect>
       </li>
-      <li IsNull="True" />
+      <li IsNull="True"/>
       <li>
         <label>soaking wet</label>
         <description>I'm soaking wet and I love it!</description>

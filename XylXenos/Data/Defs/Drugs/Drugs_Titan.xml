@@ -205,7 +205,7 @@
     <description>Atlas mechanites in the body. They provide slight benefits to mood and performance, and increase atlasite saturation gradually over time.</description>
     <descriptionHyperlinks>
       <ThingDef>XylAtlasite</ThingDef>
-      <HediffDef>XylAtlasiteSaturation</HediffDef>      
+      <HediffDef>XylAtlasiteSaturation</HediffDef>
     </descriptionHyperlinks>
     <hediffClass>Hediff_High</hediffClass>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
@@ -260,7 +260,7 @@
     <description>Accumulated effects of atlas mechanites in the body. They gradually remake the body to be tougher against all sorts of dangers. The saturation will rapidly decline if there are no atlas mechanites active.</description>
     <descriptionHyperlinks>
       <ThingDef>XylAtlasite</ThingDef>
-      <HediffDef>XylAtlasiteHigh</HediffDef>      
+      <HediffDef>XylAtlasiteHigh</HediffDef>
     </descriptionHyperlinks>
     <hediffClass>HediffWithComps</hediffClass>
     <defaultLabelColor>(1,0,0.5)</defaultLabelColor>
@@ -395,7 +395,7 @@
         </li>
       </outcomeDoers>
     </ingestible>
-    <recipeMaker IsNull="true" />
+    <recipeMaker IsNull="true"/>
     <comps>
       <li Class="CompProperties_Drug">
         <chemical>XylCrystal</chemical>
@@ -412,7 +412,7 @@
       </li>
     </modExtensions>
   </ThingDef>
-  
+
   <RecipeDef>
     <defName>Make_XylCrystal</defName>
     <label>make crystal</label>
@@ -556,7 +556,7 @@
       </li>
     </hediffGivers>
   </HediffDef>
-  
+
   <HediffDef>
     <defName>XylCrystalHigh</defName>
     <label>crystal high</label>

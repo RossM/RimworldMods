@@ -9,6 +9,7 @@ public static class Patch_VacuumUtility
     [Target(nameof(VacuumUtility.CanBeVacuumBurnt))]
     public static void CanBeVacuumBurnt_Postfix(Pawn pawn, GeneDef __instance, ref bool __result)
     {
+        // CanBeVacuumBurnt reads immuneToVacuumBurns while iterating this pawn's gene tracker.
         if (pawn.genes!.GetGene(__instance) is GeneWithComps geneWithComps)
             __result = geneWithComps.ImmuneToVacuumBurns;
     }

@@ -52,7 +52,10 @@ public sealed class XmlChecksTests
     public async Task ChecksAbstractXmlBasesInReferencedAssemblies()
     {
         var parent = CSharpCompilation.Create("Parent",
-            [CSharpSyntaxTree.ParseText(AnalyzerTestHelper.Contracts), CSharpSyntaxTree.ParseText("[Xylib.UsedFromXml] public abstract class Parent { }")],
+            [
+                CSharpSyntaxTree.ParseText(AnalyzerTestHelper.Contracts),
+                CSharpSyntaxTree.ParseText("[Xylib.UsedFromXml] public abstract class Parent { }"),
+            ],
             [MetadataReference.CreateFromFile(typeof(object).Assembly.Location)],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         using var stream = new MemoryStream();

@@ -1,6 +1,5 @@
-﻿using RimWorld;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Waylith.Injection;
@@ -18,9 +17,6 @@ internal static class Helpers
 {
     extension(Pawn pawn)
     {
-        [InjectedField(Default = AutoColorMode.NoAutoColor)]
-        public extern ref AutoColorMode AutoColorMode { get; }
-
         public Color? AutoColorColor =>
             pawn.AutoColorMode switch
             {
@@ -28,6 +24,9 @@ internal static class Helpers
                 AutoColorMode.UseIdeoligeonColor => pawn.Ideo?.ApparelColor,
                 _ => null,
             };
+
+        [InjectedField(Default = AutoColorMode.NoAutoColor)]
+        public extern ref AutoColorMode AutoColorMode { get; }
     }
 
     public static void ApplyColors(Pawn pawn, Dictionary<Apparel, Color> apparelColors)

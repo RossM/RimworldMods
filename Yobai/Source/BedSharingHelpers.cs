@@ -11,10 +11,8 @@ internal static class BedSharingHelpers
 
     extension(Building_Bed bed)
     {
-        [InjectedField]
-        private extern ref CompBedSharing? CompBedSharingCached { get; }
-
-        public CompBedSharing CompBedSharing => bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>()!;
+        public CompBedSharing CompBedSharing =>
+            bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>() ?? throw new InvalidOperationException($"Bed {bed} is missing {nameof(CompBedSharing)}.");
 
         public bool IsEligibleForBedSharing =>
             bed.IsNormalHumanlikeBed &&
@@ -25,6 +23,10 @@ internal static class BedSharingHelpers
             bed.def != ThingDefOf.DeathrestCasket;
 
         public bool IsEligibleForNightVisits => bed is { IsEligibleForBedSharing: true, SleepingSlotsCount: > 1 };
+        public IEnumerable<Pawn> AllAssignedPawns => bed.CompBedSharing.AllAssignedPawns;
+
+        [InjectedField]
+        private extern ref CompBedSharing? CompBedSharingCached { get; }
 
         public bool InBedroomOf(Pawn pawn)
         {
@@ -39,7 +41,6 @@ internal static class BedSharingHelpers
 
         public Pawn? GetAssignedPawn(int slot) => bed.GetSleepingPlace(slot).AssignedPawn;
         public bool HasOccupant(Pawn value) => bed.AllAssignedPawns.Contains(value);
-        public IEnumerable<Pawn> AllAssignedPawns => bed.CompBedSharing.AllAssignedPawns;
     }
 
     extension(Pawn pawn)
@@ -54,6 +55,13 @@ internal static class BedSharingHelpers
             // Caravan duties can allow rest while requiring the pawn to stay out of beds.
             pawn.GetLord()?.CurLordToil?.AllowRestingInBed != false;
 
+        internal SleepingAssignments.ActiveAssignment? ActiveSleepingAssignment => pawn.Map?.SleepingAssignments.GetAssignment(pawn);
+
+        internal SleepingAssignments.ActiveAssignment? TemporarySleepingAssignment =>
+            pawn.ActiveSleepingAssignment is { IsTemporary: true } assignment ? assignment : null;
+
+        public Building_Bed? ActiveBed => pawn.ActiveSleepingAssignment?.Place.Bed;
+
         public bool CanSleepInSharedBed(Building_Bed bed)
         {
             return pawn.CanShareBedsNow && bed.IsEligibleForBedSharing && bed.Map == pawn.Map
@@ -64,37 +72,30 @@ internal static class BedSharingHelpers
         {
             return pawn is { Spawned: true, Dead: false } && pawn.Map == map;
         }
-
-        internal SleepingAssignments.ActiveAssignment? ActiveSleepingAssignment => pawn.Map?.SleepingAssignments.GetAssignment(pawn);
-
-        internal SleepingAssignments.ActiveAssignment? TemporarySleepingAssignment => 
-            pawn.ActiveSleepingAssignment is { IsTemporary: true } assignment ? assignment : null;
-
-        public Building_Bed? ActiveBed => pawn.ActiveSleepingAssignment?.Place.Bed;
     }
 
     extension(Map map)
     {
+        // Map.FillComponents constructs SleepingAssignments during map initialization.
+        public SleepingAssignments SleepingAssignments => map.SleepingAssignmentsCached ??= map.GetComponent<SleepingAssignments>()!;
+
         [InjectedField]
         private extern ref SleepingAssignments? SleepingAssignmentsCached { get; }
-
-        public SleepingAssignments SleepingAssignments => map.SleepingAssignmentsCached ??= map.GetComponent<SleepingAssignments>()!;
     }
 
     public static bool AllBedmatesWillingToShareBed(Pawn pawn, Building_Bed bed)
     {
         HashSet<Pawn> loveCluster = [.. pawn.GetLoveCluster()];
         return bed.AllAssignedPawns.All(bedmate =>
-            pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) || 
+            pawn == bedmate || BedUtility.WillingToShareBed(pawn, bedmate) ||
             (bed.InBedroomOf(pawn) && bed.OwnersForReading.Any(loveCluster.Contains) && loveCluster.Contains(bedmate)));
     }
 
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
     {
         return bed != null && pawn.CanSleepInSharedBed(bed)
-                           && bed.CompBedSharing is { } comp
-                           && comp.TryGetSleepingSlot(pawn, out int slot)
-                           && comp.IsSleepingPlaceAvailable(pawn, slot);
+                           && bed.CompBedSharing.TryGetSleepingSlot(pawn, out int slot)
+                           && bed.CompBedSharing.IsSleepingPlaceAvailable(pawn, slot);
     }
 
     public static bool AreLovePartnersWillingToShareBed(Pawn first, Pawn second)

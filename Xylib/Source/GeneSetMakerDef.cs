@@ -23,7 +23,7 @@ public class GeneSetMakerDef : Def
         foreach (var error in base.ConfigErrors())
             yield return error;
 
-        if (root == null)
+        if (root is null)
             yield break;
 
         foreach (var error in root.ConfigErrors())

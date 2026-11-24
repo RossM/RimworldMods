@@ -31,8 +31,9 @@ public class DefModExtension_Incident_WildTribe : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_WildTribe : IncidentWorker
 {
-    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>() ?? 
-                                                        throw new InvalidOperationException($"Missing {nameof(DefModExtension_Incident_WildTribe)}");
+    public DefModExtension_Incident_WildTribe DefExt => def.GetModExtension<DefModExtension_Incident_WildTribe>() ??
+                                                        throw new InvalidOperationException(
+                                                            $"Missing {nameof(DefModExtension_Incident_WildTribe)}");
 
     protected override bool CanFireNowSub(IncidentParms parms)
     {
@@ -44,8 +45,6 @@ public class IncidentWorker_WildTribe : IncidentWorker
 
     protected override bool TryExecuteWorker(IncidentParms parms)
     {
-        DebugAssert.NotNull(def.letterLabel);
-
         var map = parms.target as Map;
         DebugAssert.NotNull(map);
 
@@ -63,8 +62,12 @@ public class IncidentWorker_WildTribe : IncidentWorker
         {
             IntVec3 loc = CellFinder.RandomClosewalkCellNear(start, map, 10);
             GenSpawn.Spawn(pawn, loc, map, rot);
+            // The generated and spawned pawn has the mind state created by PawnComponentsUtility.
             pawn.mindState!.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
         }
+
+        if (string.IsNullOrEmpty(def.letterLabel) || string.IsNullOrEmpty(def.letterText))
+            return true;
 
         string pawnsPlural = DefExt.faction?.pawnsPlural ?? "XylWildPeople".Translate();
         TaggedString baseLetterText = def.letterText.Formatted(pawnsPlural).CapitalizeFirst();

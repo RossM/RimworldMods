@@ -33,7 +33,7 @@ public class CompatPatch
     }
 
     private MethodInfo? GetMethod(Type type, string method, Type[]? parameters = null) =>
-        parameters != null ? type.GetMethod(method, AccessTools.all, parameters) : type.GetMethod(method, AccessTools.all);
+        parameters is not null ? type.GetMethod(method, AccessTools.all, parameters) : type.GetMethod(method, AccessTools.all);
 }
 
 [UsedFromXml]

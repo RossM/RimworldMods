@@ -12,7 +12,7 @@ public static class Patch_StatWorker
         string whitespace,
         [State] ref Hediff_SubstituteCapacity? foundHediff)
     {
-        if (foundHediff != null)
+        if (foundHediff is not null)
             __instance.AppendLine($"{whitespace}        {foundHediff.GetDescription()}");
         foundHediff = null;
     }
@@ -30,7 +30,7 @@ public static class Patch_StatWorker
     {
         var pawn = req.Thing as Pawn;
         foundHediff = Hediff_SubstituteCapacity.FindHediffFor(pawn, capacity, ___stat);
-        if (foundHediff != null)
+        if (foundHediff is not null)
             capacity = foundHediff.DefExt.substituteCapacity;
     }
 

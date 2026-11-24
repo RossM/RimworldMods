@@ -15,6 +15,7 @@ internal static class Patch_Bullet
         if (!Rand.Chance(rangedDodgeChance))
             return;
 
+        // Projectile.CanHit only lets Bullet.Impact receive pawns spawned on the projectile's map.
         MoteMaker.ThrowText(pawn.DrawPos, pawn.Map!, "TextMote_Dodge".Translate(), 1.9f);
         hitThing = null;
     }

@@ -68,14 +68,8 @@ public class Need_Wetness : Need_Seeker
     {
         DebugAssert.NotNull(Find.WorldGrid);
 
-        var caravan = pawn.GetCaravan();
-        if (caravan != null)
-        {
-            var tile = Find.WorldGrid[caravan.Tile];
-            if (tile.IsCoastalOrRiverTile || tile.IsWetlandBiome)
-                return 1.0f;
-            return RainfallToWetnessCurve.Evaluate(tile.rainfall);
-        }
+        if (pawn.GetCaravan() is { } caravan)
+            return GetWetness(Find.WorldGrid[caravan.Tile]);
 
         if (!pawn.Spawned)
             return 0.0f;
@@ -93,17 +87,23 @@ public class Need_Wetness : Need_Seeker
         return GetWetness(pawn.Position, pawn.Map);
     }
 
+    private static float GetWetness(Tile tile)
+    {
+        if (tile.IsCoastalOrRiverTile || tile.IsWetlandBiome)
+            return 1.0f;
+        return RainfallToWetnessCurve.Evaluate(tile.rainfall);
+    }
+
     public static float GetWetness(IntVec3 position, Map map)
     {
         TerrainDef terrain = position.GetTerrain(map);
-        WeatherDef curWeatherLerped = map.weatherManager.CurWeatherLerped;
 
         if (terrain.IsWater)
             return 1.0f;
         if (position.GetThingList(map).Any(t => t.def == ThingDefOf.Filth_Water))
             return 1.0f;
         if (!position.Roofed(map))
-            return Mathf.Clamp01(curWeatherLerped.rainRate / 0.25f);
+            return Mathf.Clamp01(map.weatherManager.RainRate / 0.25f);
         return 0.0f;
     }
 

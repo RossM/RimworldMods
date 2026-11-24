@@ -13,13 +13,17 @@ internal static class SymbolHelpers
     }
 
     internal static bool DerivesFrom(INamedTypeSymbol type, INamedTypeSymbol? baseType) =>
-        baseType is not null && BaseTypesAndSelf(type).Any(t => SymbolEqualityComparer.Default.Equals(t.OriginalDefinition, baseType.OriginalDefinition));
+        baseType is not null && BaseTypesAndSelf(type)
+            .Any(t => SymbolEqualityComparer.Default.Equals(t.OriginalDefinition, baseType.OriginalDefinition));
 
     internal static bool OverridesOrEquals(IMethodSymbol method, IMethodSymbol implementation)
     {
         for (IMethodSymbol? current = method; current is not null; current = current.OverriddenMethod)
+        {
             if (SymbolEqualityComparer.Default.Equals(current, implementation))
                 return true;
+        }
+
         return false;
     }
 
@@ -32,8 +36,10 @@ internal static class SymbolHelpers
 
         return BaseTypesAndSelf(baseType).SelectMany(t => t.GetMembers(method.Name)).OfType<IMethodSymbol>()
             .FirstOrDefault(m => !m.IsStatic && m.Arity == method.Arity && m.Parameters.Length == method.Parameters.Length &&
-                compilation.IsSymbolAccessibleWithin(m, method.ContainingType) &&
-                m.Parameters.Zip(method.Parameters, (a, b) => a.RefKind == b.RefKind && SymbolEqualityComparer.Default.Equals(a.Type, b.Type)).All(equal => equal));
+                                 compilation.IsSymbolAccessibleWithin(m, method.ContainingType) &&
+                                 m.Parameters.Zip(method.Parameters,
+                                         (a, b) => a.RefKind == b.RefKind && SymbolEqualityComparer.Default.Equals(a.Type, b.Type))
+                                     .All(equal => equal));
     }
 
     internal static bool HasAttribute(ISymbol symbol, INamedTypeSymbol? attributeType, bool inherit = true)
@@ -41,7 +47,9 @@ internal static class SymbolHelpers
         if (attributeType is null)
             return false;
 
-        for (ISymbol? current = symbol; current is not null; current = current switch
+        for (ISymbol? current = symbol;
+             current is not null;
+             current = current switch
              {
                  INamedTypeSymbol type => type.BaseType,
                  IMethodSymbol method => method.OverriddenMethod,

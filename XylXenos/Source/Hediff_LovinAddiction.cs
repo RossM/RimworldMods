@@ -21,7 +21,7 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
         get
         {
             string text = base.TipStringExtra;
-            if (Need == null)
+            if (Need is null)
                 return text;
 
             if (!text.NullOrEmpty())

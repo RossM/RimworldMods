@@ -9,7 +9,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$revision = '0600eb11a6781371ee84a5d9a4ce86653c92d7ff'
+$revision = 'f38033a98ff2f42547d100c1f592fee4908bef4d'
 $cache = Join-Path $PSScriptRoot "../temp/Yobai.TestDependencies/DevTools-$revision"
 if (!(Test-Path -LiteralPath (Join-Path $cache '.complete'))) {
     New-Item -ItemType Directory -Path $cache -Force | Out-Null

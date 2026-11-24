@@ -15,12 +15,12 @@ public class HediffComp_DebugHediffGivers : HediffComp
         for (var index = 0; index < stage.hediffGivers.Count; index++)
         {
             HediffGiver? giver = stage.hediffGivers[index];
-            if (giver == null)
+            if (giver is null)
                 continue;
 
             yield return new Command_Action
             {
-                defaultLabel = parent.Part != null
+                defaultLabel = parent.Part is not null
                     ? $"DEV: Trigger {parent.LabelBase} ({parent.Part?.Label}) #{index}"
                     : $"DEV: Trigger {parent.LabelBase} #{index}",
                 action = () => Trigger(giver),

@@ -42,6 +42,7 @@ public class HediffComp_ForceMentalState : HediffComp
         DebugAssert.NotNull(Pawn);
         DebugAssert.False(Pawn.Dead);
 
+        // CurStateDef comes from CurState, and ConfigErrors requires a non-null mentalState def.
         if (Props.endMentalStateOnCure && Pawn.mindState.mentalStateHandler.CurStateDef == Props.mentalState &&
             !Pawn.mindState.mentalStateHandler.CurState!.causedByMood)
             Pawn.mindState.mentalStateHandler.CurState.RecoverFromState();

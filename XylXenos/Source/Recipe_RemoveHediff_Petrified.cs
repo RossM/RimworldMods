@@ -16,7 +16,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
     public override IEnumerable<BodyPartRecord> GetPartsToApplyOn(Pawn pawn, RecipeDef recipe)
     {
         List<Hediff> allHediffs = pawn.health.hediffSet.hediffs;
-        return allHediffs.Where(hediff => hediff.Part != null && ValidHediff(pawn, recipe, hediff)).Select(hediff => hediff.Part);
+        return allHediffs.Where(hediff => hediff.Part is not null && ValidHediff(pawn, recipe, hediff)).Select(hediff => hediff.Part);
     }
 
     public override bool AvailableOnNow(Thing? thing, BodyPartRecord? part = null)
@@ -37,7 +37,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
     {
         DebugAssert.NotNull(recipe.removesHediff);
 
-        if (billDoer != null)
+        if (billDoer is not null)
         {
             if (CheckSurgeryFail(billDoer, pawn, ingredients, part, bill))
                 return;
@@ -63,10 +63,9 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
             return;
         }
 
-        foreach (Hediff hediff in pawn.health.hediffSet.hediffs.Where(hediff => hediff.def == recipe.removesHediff && hediff.Visible).ToList())
-        {
+        foreach (Hediff hediff in pawn.health.hediffSet.hediffs.Where(hediff => hediff.def == recipe.removesHediff && hediff.Visible)
+                     .ToList())
             RemoveHediff(pawn, billDoer, hediff, bill);
-        }
     }
 
     private static void RemoveHediff(Pawn pawn, Pawn? billDoer, Hediff hediff, Bill bill)
@@ -76,7 +75,7 @@ public class Recipe_RemoveHediff_Petrified : Recipe_RemoveHediff
 
         var severity = hediff.Severity;
         pawn.health.RemoveHediff(hediff);
-        if (hediff.def.spawnThingOnRemoved != null && billDoer != null)
+        if (hediff.def.spawnThingOnRemoved is not null && billDoer is not null)
         {
             DebugAssert.NotNull(billDoer.Map);
 

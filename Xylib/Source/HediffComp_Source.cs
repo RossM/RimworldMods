@@ -24,7 +24,7 @@ public class HediffComp_Source : HediffComp
     {
         get
         {
-            if (!Props.showName || other == null)
+            if (!Props.showName || other is null)
                 return null;
             return other.LabelShort;
         }

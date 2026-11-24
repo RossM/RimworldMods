@@ -49,7 +49,18 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         // ReSharper restore UnusedMember.Local
     }
 
-    public DefModExtension_Hediff_DietDependency DefExt => field ??= def.GetModExtension<DefModExtension_Hediff_DietDependency>()!;
+    public DefModExtension_Hediff_DietDependency DefExt
+    {
+        get
+        {
+            if (field is { } cached)
+                return cached;
+
+            var extension = def.GetModExtension<DefModExtension_Hediff_DietDependency>();
+            DebugAssert.NotNull(extension);
+            return field = extension;
+        }
+    }
 
     public bool ShouldSatisfy => CurStageIndex >= (int)Stages.Craving;
 
@@ -61,8 +72,8 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
     {
         get
         {
-            DebugAssert.NotNull(def.stages);
-            DebugAssert.True(def.stages.Count >= StageCount);
+            if (def.stages is null || def.stages.Count < StageCount)
+                return base.TipStringExtra;
 
             string text = base.TipStringExtra;
 
@@ -76,8 +87,13 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
             var severityPerDay =
                 ((HediffCompProperties_SeverityPerDay)comp.props)
                 .severityPerDay;
-            var deficiencyDays = def.stages[(int)Stages.MildDeficiency]!.minSeverity / severityPerDay;
-            var comaDays = def.stages[(int)Stages.Coma]!.minSeverity / severityPerDay;
+            var mildDeficiency = def.stages[(int)Stages.MildDeficiency];
+            DebugAssert.NotNull(mildDeficiency);
+            var deficiencyDays = mildDeficiency.minSeverity / severityPerDay;
+
+            var coma = def.stages[(int)Stages.Coma];
+            DebugAssert.NotNull(coma);
+            var comaDays = coma.minSeverity / severityPerDay;
             var deathDays = def.lethalSeverity / severityPerDay;
             text += "GeneDefChemicalNeedDurationDesc".Translate(DefExt.foodLabel,
                 pawn.Named("PAWN"),
@@ -114,7 +130,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
             { } thing)
             return thing;
 
-        if (!pawnGettingFood.IsColonist || pawnGettingFood.Map == null)
+        if (!pawnGettingFood.IsColonist || pawnGettingFood.Map is null)
             return null;
 
         return (from spawnedColonyAnimal in pawnGettingFood.Map.mapPawns.SpawnedColonyAnimals
@@ -169,8 +185,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
         if (ValidFoodType(food.def))
             return true;
 
-        var compIngredients = food.TryGetComp<CompIngredients>();
-        if (compIngredients == null)
+        if (food.TryGetComp<CompIngredients>() is not { } compIngredients)
             return false;
         if (Enumerable.Any(compIngredients.ingredients, ValidFoodType))
             return true;
@@ -190,7 +205,7 @@ public class Hediff_DietDependency : HediffWithComps, IEventListener
 
         if (numTaken > 0)
             nutrition *= numTaken;
-        else if (pawn.needs.food?.NutritionWanted != null)
+        else if (pawn.needs.food?.NutritionWanted is not null)
             // If only part of a corpse was consumed, numTaken will be 0, so assume the pawn eats until full.
             // There doesn't seem to be an easy way to get the nutrition gained directly.
             nutrition = Math.Min(nutrition, pawn.needs.food.NutritionWanted);

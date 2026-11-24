@@ -8,6 +8,6 @@ public static class Patch_IncidentWorker_Raid
     [Target(nameof(IncidentWorker_Raid.ResolveRaidArriveMode))]
     public static bool ResolveRaidArriveMode_Prefix(IncidentParms parms)
     {
-        return parms.raidArrivalMode == null;
+        return parms.raidArrivalMode is null;
     }
 }

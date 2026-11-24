@@ -24,7 +24,7 @@ public class ThinkNode_ConditionalHasGene : ThinkNode_Conditional
     {
         base.ResolveReferences();
 
-        if (gene == null)
+        if (gene is null)
             Log.Warning($"{nameof(gene)} is null in {nameof(ThinkNode_ConditionalHasGene)}");
     }
 }

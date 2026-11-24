@@ -23,7 +23,7 @@ public class ThoughtWorker_WithSource : ThoughtWorker_Hediff
         Pawn? sourcePawn = hediff?.SourcePawn;
 
         description = description.Formatted(p.Named("PAWN"), sourcePawn.Named("SOURCE"));
-        if (hediff != null)
+        if (hediff is not null)
             description += $"\n\n{"CausedBy".Translate()}: {hediff.LabelBaseCap}";
 
         return description;

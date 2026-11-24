@@ -19,7 +19,15 @@ public class DefModExtension_Hediff_SubstituteCapacity : DefModExtension
 [UsedFromXml]
 public class Hediff_SubstituteCapacity : HediffWithComps
 {
-    public DefModExtension_Hediff_SubstituteCapacity DefExt => def.GetModExtension<DefModExtension_Hediff_SubstituteCapacity>()!;
+    public DefModExtension_Hediff_SubstituteCapacity DefExt
+    {
+        get
+        {
+            var extension = def.GetModExtension<DefModExtension_Hediff_SubstituteCapacity>();
+            DebugAssert.NotNull(extension);
+            return extension;
+        }
+    }
 
     [Unsaved] private int lastActiveCheckTick = int.MinValue;
 
@@ -99,7 +107,7 @@ public class Hediff_SubstituteCapacity : HediffWithComps
             return false;
         if (DefExt.originalCapacity != pawnCapacityDef)
             return false;
-        if (DefExt.excludeStats != null && DefExt.excludeStats.Contains(statDef))
+        if (DefExt.excludeStats is not null && DefExt.excludeStats.Contains(statDef))
             return false;
         return true;
     }

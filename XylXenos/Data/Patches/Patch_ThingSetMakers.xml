@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Patch>
 
@@ -30,6 +30,27 @@
               </filter>
             </fixedParams>
           </thingSetMaker>
+        </thingSetMaker>
+      </li>
+    </value>
+  </Operation>
+
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThingSetMakerDef[@Name="RareFishingCatchesBase"]/root/options</xpath>
+    <value>
+      <!-- Nixie materials -->
+      <li>
+        <weight>10</weight>
+        <thingSetMaker Class="ThingSetMaker_StackCount">
+          <fixedParams>
+            <filter>
+              <thingDefs>
+                <li>XylCoral</li>
+                <li>XylSeaSilk</li>
+              </thingDefs>
+            </filter>
+            <countRange>30~60</countRange>
+          </fixedParams>
         </thingSetMaker>
       </li>
     </value>

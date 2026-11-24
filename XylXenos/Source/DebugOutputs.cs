@@ -77,7 +77,7 @@ public static class DebugOutputs
             })),
         ];
 
-        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet != null),
+        DebugTables.MakeTablesDialog(DefDatabase<PawnKindDef>.AllDefs.Where(pawnKindDef => pawnKindDef.xenotypeSet is not null),
             [.. columns]);
         return;
 
@@ -127,16 +127,20 @@ public static class DebugOutputs
             new("label", factionDef => factionDef.LabelCap),
             .. DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal)
                 .OrderBy(memeDef => memeDef.label)
-                .Select(memeDef => new TableDataGetter<FactionDef>(Abbreviate(memeDef.label!).CapitalizeFirst(), factionDef =>
+                .Select(memeDef =>
                 {
-                    if (factionDef.requiredMemes?.Contains(memeDef) is true)
-                        return "Req";
-                    if (factionDef.allowedMemes is { Count: > 0 })
-                        return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
-                    if (factionDef.disallowedMemes is { Count: > 0 })
-                        return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
-                    return "";
-                })),
+                    DebugAssert.NotNull(memeDef.label);
+                    return new TableDataGetter<FactionDef>(Abbreviate(memeDef.label!).CapitalizeFirst(), factionDef =>
+                    {
+                        if (factionDef.requiredMemes?.Contains(memeDef) is true)
+                            return "Req";
+                        if (factionDef.allowedMemes is { Count: > 0 })
+                            return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
+                        if (factionDef.disallowedMemes is { Count: > 0 })
+                            return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
+                        return "";
+                    });
+                }),
         ];
 
         DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), [.. columns]);
@@ -184,7 +188,7 @@ public static class DebugOutputs
         {
             foreach (var def in GenDefDatabase.GetAllDefsInDatabaseForDef(type))
             {
-                if (def.modContentPack == null)
+                if (def.modContentPack is null)
                     missingDefs.Add(def);
             }
         }
@@ -245,7 +249,7 @@ public static class DebugOutputs
                 offset = gene.statOffsets?.Where(m => m.stat == stat).Aggregate(offset, (o, m) => o + m.value) ?? offset;
                 factor = gene.statFactors?.Where(m => m.stat == stat).Aggregate(factor, (f, m) => f * m.value) ?? factor;
 
-                if (gene.forcedTraits == null)
+                if (gene.forcedTraits is null)
                     continue;
 
                 foreach (var trait in gene.forcedTraits)

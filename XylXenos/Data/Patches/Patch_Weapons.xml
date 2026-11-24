@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Patch>
-  
+
   <Operation Class="Xylib.PatchOperationMerge">
     <xpath>Defs/ThingDef[defName="Beer"]</xpath>
     <value>
@@ -10,5 +10,5 @@
       </weaponTags>
     </value>
   </Operation>
-  
+
 </Patch>
