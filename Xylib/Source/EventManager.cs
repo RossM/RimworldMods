@@ -411,6 +411,7 @@ public class EventManager
         if (notificationInfo is null)
         {
             Interlocked.CompareExchange(ref Notifications[eventDef.index], new(), null);
+            // CompareExchange installs the entry or leaves one installed by another registration. Reset must not run concurrently.
             notificationInfo = Notifications[eventDef.index]!;
         }
 
@@ -499,7 +500,11 @@ public class EventManager
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}");
 
-        RegisterInternal(eventDef, target, (t, data) => callback(t, (T)data!), callback.Target, MethodName(callback), priority);
+        RegisterInternal(eventDef, target, (t, data) =>
+        {
+            DebugAssert.NotNull(data);
+            callback(t, (T)data!);
+        }, callback.Target, MethodName(callback), priority);
     }
 
     /// <summary>
@@ -553,7 +558,11 @@ public class EventManager
             Log.ErrorOnce(
                 $"[EventManager] Registered callback for {callback.Target?.GetType()} {eventDef.defName} expects {typeof(T)} but event will pass {eventDef.dataType}");
 
-        RegisterInternal(eventDef, target, (_, data) => callback((T)data!), callback.Target, MethodName(callback), priority);
+        RegisterInternal(eventDef, target, (_, data) =>
+        {
+            DebugAssert.NotNull(data);
+            callback((T)data!);
+        }, callback.Target, MethodName(callback), priority);
     }
 
     /// <summary>

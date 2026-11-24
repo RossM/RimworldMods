@@ -30,18 +30,20 @@ internal static class Patch_Toils_Bed
     [Target(nameof(Toils_Bed.GotoBed))]
     public static void GotoBed_Postfix(TargetIndex bedIndex, Toil __result)
     {
+        // Toils_Bed.GotoBed always installs its path-starting action.
         Action gotoBed = __result.initAction!;
         __result.initAction = () =>
         {
             Pawn visitor = __result.actor;
+            // CurJobDef comes from the current job, which requires the visitor's job tracker.
             if (visitor.CurJobDef == JobDefOf.Lovin
                 && visitor.CurJob!.GetTarget(bedIndex).Thing is Building_Bed bed
                 && bed.CompBedSharing.HasSleepingSlot(visitor)
                 && visitor.Position != RestUtility.GetBedSleepingSlotPosFor(visitor, bed))
             {
-                Pawn partner = (Pawn)visitor.CurJob.targetA.Thing!;
+                Pawn? partner = (Pawn?)visitor.CurJob.targetA.Thing;
 
-                bool PartnerUnavailable() => partner.CurrentBed() != bed ||
+                bool PartnerUnavailable() => partner is null || partner.CurrentBed() != bed ||
                                              !LovePartnerRelationUtility.LovePartnerRelationExists(visitor, partner) ||
                                              !NightVisitHelpers.AreReadyForLovin(visitor, partner);
 

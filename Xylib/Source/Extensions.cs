@@ -490,12 +490,15 @@ public static class Extensions
         ///     Matching hediffs with <see cref="HediffComp" /> instances.
         /// </returns>
         public IEnumerable<HediffWithComps> HediffsWithComp<T>(Func<T, bool> predicate) where T : HediffComp =>
+            // The cache only returns hediffs whose comps include T.
             pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Where(hediff => predicate(hediff.GetComp<T>()!));
 
         public IEnumerable<T> HediffCompsOfType<T>() where T : HediffComp =>
+            // The cache only returns hediffs whose comps include T.
             pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Select(hediff => hediff.GetComp<T>()!);
 
         public IEnumerable<T> HediffCompsOfType<T>(Func<T, bool> predicate) where T : HediffComp =>
+            // The cache only returns hediffs whose comps include T.
             pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Select(hediff => hediff.GetComp<T>()!).Where(predicate);
 
         /// <summary>
@@ -523,6 +526,7 @@ public static class Extensions
         ///     The first matching hediff, or <see langword="null" /> if no match is found.
         /// </returns>
         public HediffWithComps? FirstHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp =>
+            // The cache only returns hediffs whose comps include T.
             pawn.GeneAndHediffCache.GetHediffsWithComp<T>().FirstOrDefault(hediff => predicate(hediff.GetComp<T>()!));
 
         /// <summary>
@@ -550,6 +554,7 @@ public static class Extensions
         ///     <see langword="true" /> if a matching hediff exists; otherwise, <see langword="false" />.
         /// </returns>
         public bool HasHediffWithComp<T>(Func<T, bool> predicate) where T : HediffComp =>
+            // The cache only returns hediffs whose comps include T.
             pawn.GeneAndHediffCache.GetHediffsWithComp<T>().Any(hediff => predicate(hediff.GetComp<T>()!));
 
         /// <summary>
@@ -603,6 +608,7 @@ public static class Extensions
         ///     The matching hediffs.
         /// </returns>
         public IEnumerable<Hediff> HediffsWithModExtension<T>(Func<T, bool> predicate) where T : DefModExtension =>
+            // The cache only returns hediffs whose defs have an extension assignable to T.
             pawn.GeneAndHediffCache.GetHediffsWithModExtension<T>().Where(hediff => predicate(hediff.def.GetModExtension<T>()!));
 
         public bool ChemicalIsAllowedByGenes(ChemicalDef? chemicalDef)

@@ -39,11 +39,15 @@ public static class Patch_PregnancyUtility
             }
         }
 
-        static List<GeneDef> InheritableGenesFrom(Pawn pawn) =>
-        [
-            .. pawn.genes!.Endogenes.Select(gene => gene.def).Where(gene => gene is
-                { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) }),
-        ];
+        static List<GeneDef> InheritableGenesFrom(Pawn pawn)
+        {
+            DebugAssert.NotNull(pawn.genes);
+            return
+            [
+                .. pawn.genes!.Endogenes.Select(gene => gene.def).Where(gene => gene is
+                    { biostatArc: <= 0, endogeneCategory: not (EndogeneCategory.HairColor or EndogeneCategory.Melanin) }),
+            ];
+        }
     }
 
     [Feature(typeof(GeneCompProperties_Inheritance))]
@@ -59,6 +63,7 @@ public static class Patch_PregnancyUtility
         };
         return;
 
+        // GetDominantParent only selects a parent with a qualifying gene tracker.
         static List<GeneDef> InheritableGenesFrom(Pawn pawn) =>
             [.. pawn.genes!.Endogenes.Select(gene => gene.def).Where(gene => gene.biostatArc <= 0)];
     }

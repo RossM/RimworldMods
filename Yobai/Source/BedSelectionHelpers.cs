@@ -14,6 +14,7 @@ internal static class BedSelectionHelpers
 
         int bedsWithTwoFreeSlots = beds.Count(bed => bed.CompBedSharing.FreeSlotsExcluding(pawn) >= 2);
 
+        // The earlier count check guarantees that the fallback can pick a bed.
         if (!beds.TryRandomElementByWeight(WeightSelector, out var selected))
             selected = beds.RandomElement()!;
         MakePolyculeBedroomSleepJob(pawn, selected);

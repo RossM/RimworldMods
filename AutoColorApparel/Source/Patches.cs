@@ -50,6 +50,7 @@ public static class Patches
                 }));
             }
 
+            // The styling dialog is drawn by the window stack that will host this menu.
             Find.WindowStack!.Add(new FloatMenu(options));
         }
     }

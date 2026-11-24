@@ -32,7 +32,15 @@ public class DefModExtension_Incident_GeneticDisease : DefModExtension
 [UsedFromXml]
 public class IncidentWorker_GeneticDisease : IncidentWorker_DiseaseHuman
 {
-    public DefModExtension_Incident_GeneticDisease DefExt => def.GetModExtension<DefModExtension_Incident_GeneticDisease>()!;
+    public DefModExtension_Incident_GeneticDisease DefExt
+    {
+        get
+        {
+            var extension = def.GetModExtension<DefModExtension_Incident_GeneticDisease>();
+            DebugAssert.NotNull(extension);
+            return extension!;
+        }
+    }
 
     protected override IEnumerable<Pawn> PotentialVictimCandidates(IIncidentTarget target)
     {

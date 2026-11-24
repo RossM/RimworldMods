@@ -64,6 +64,7 @@ public class IncidentWorker_WildTribe : IncidentWorker
         {
             IntVec3 loc = CellFinder.RandomClosewalkCellNear(start, map, 10);
             GenSpawn.Spawn(pawn, loc, map, rot);
+            // The generated and spawned pawn has the mind state created by PawnComponentsUtility.
             pawn.mindState!.exitMapAfterTick = Find.TickManager.TicksGame + exitMapTicks;
         }
 

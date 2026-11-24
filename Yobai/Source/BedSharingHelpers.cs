@@ -11,7 +11,10 @@ internal static class BedSharingHelpers
 
     extension(Building_Bed bed)
     {
-        public CompBedSharing CompBedSharing => bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>()!;
+        public CompBedSharing CompBedSharing =>
+            bed.GetBedSharingComp() ?? throw new InvalidOperationException($"Bed {bed} is missing {nameof(CompBedSharing)}.");
+
+        internal CompBedSharing? GetBedSharingComp() => bed.CompBedSharingCached ??= bed.GetComp<CompBedSharing>();
 
         public bool IsEligibleForBedSharing =>
             bed.IsNormalHumanlikeBed &&
@@ -75,6 +78,7 @@ internal static class BedSharingHelpers
 
     extension(Map map)
     {
+        // Map.FillComponents constructs SleepingAssignments during map initialization.
         public SleepingAssignments SleepingAssignments => map.SleepingAssignmentsCached ??= map.GetComponent<SleepingAssignments>()!;
 
         [InjectedField]
@@ -92,7 +96,7 @@ internal static class BedSharingHelpers
     public static bool CanUseTemporarySleepingSlot(Pawn pawn, Building_Bed? bed)
     {
         return bed != null && pawn.CanSleepInSharedBed(bed)
-                           && bed.CompBedSharing is { } comp
+                           && bed.GetBedSharingComp() is { } comp
                            && comp.TryGetSleepingSlot(pawn, out int slot)
                            && comp.IsSleepingPlaceAvailable(pawn, slot);
     }

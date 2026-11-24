@@ -10,6 +10,7 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
             return null;
 
         int now = Find.TickManager.TicksGame;
+        // CanDoNightVisits requires a living, spawned pawn, which has a mind state.
         if (pawn.mindState!.thinkData.TryGetValue(UniqueSaveKey, out int lastTry) && now < lastTry + GenDate.TicksPerHour)
             return null;
         pawn.mindState.thinkData[UniqueSaveKey] = now;
@@ -22,6 +23,7 @@ public sealed class JobGiver_NightVisit : ThinkNode_JobGiver
         // Like vanilla's lovin' chance node, use a pawn-specific hourly roll without consuming
         // the global random stream. Choose the partner once, before rolling that pair's MTB.
         using var _ = new RandBlock(pawn.RandSeedForHour(Gen.HashCombineInt(UniqueSaveKey, LovinChanceSeedSalt)));
+        // The count check above guarantees that there is a visit to pick.
         NightVisit visit = visits.RandomElement()!;
         bool willing = Rand.MTBEventOccurs(LovePartnerRelationUtility.GetLovinMtbHours(pawn, visit.Partner),
             GenDate.TicksPerHour, GenDate.TicksPerHour);

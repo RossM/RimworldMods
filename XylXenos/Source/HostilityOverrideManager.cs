@@ -6,6 +6,7 @@ internal static class MapExtensions
 {
     extension(Map map)
     {
+        // Map.FillComponents constructs this component during map initialization.
         public HostilityOverrideManager HostilityOverrideManager =>
             map.HostilityOverrideManagerCached ??= map.GetComponent<HostilityOverrideManager>()!;
 

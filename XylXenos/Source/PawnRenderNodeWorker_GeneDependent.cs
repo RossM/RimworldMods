@@ -31,7 +31,11 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
     {
         var result = base.OffsetFor(node, parms, out pivot);
 
-        if (node.Props.narrowCrownHorizontalOffset != 0f && parms.pawn.story!.headType.narrow && parms.facing.IsHorizontal)
+        if (node.Props.narrowCrownHorizontalOffset == 0f)
+            return result;
+
+        DebugAssert.NotNull(parms.pawn.story);
+        if (parms.pawn.story!.headType.narrow && parms.facing.IsHorizontal)
         {
             if (parms.facing == Rot4.East)
                 result.x -= node.Props.narrowCrownHorizontalOffset;
@@ -50,6 +54,7 @@ public class PawnRenderNodeWorker_GeneDependent : PawnRenderNodeWorker
         if (node.Props is PawnRenderNodeProperties_GeneDependent { useBodyGraphicScale: true })
         {
             Vector3 vector = base.ScaleFor(node, parms);
+            DebugAssert.NotNull(parms.pawn.story);
             Vector2 bodyScale = parms.pawn.story!.bodyType.bodyGraphicScale;
             return vector * ((bodyScale.x + bodyScale.y) / 2f);
         }

@@ -24,6 +24,7 @@ public static class PatchHelpers
 
         XenotypeDef? recipientXenotype = recipient.genes?.Xenotype;
         var xenotypeDefExtension = recipientXenotype?.GetModExtension<DefModExtension_Xenotype>();
+        // A non-null extension below also establishes that recipientXenotype exists.
         if (xenotypeDefExtension is null)
             return 0f;
 
@@ -283,6 +284,7 @@ public static class PatchHelpers
         static bool IsSkinColor(GeneDef g) => g.displayCategory == VanillaDefOf.Cosmetic_Skin && g.skinColorOverride.HasValue;
 
         var colorGenes = list.Where(IsSkinColor).ToList();
+        // IsSkinColor only retains genes with a skinColorOverride value.
         SortByColor(colorGenes, g => g.skinColorOverride!.Value);
 
         int i = 0;
@@ -316,6 +318,7 @@ public static class PatchHelpers
 
         foreach (var hediff in pawn.HediffsWithComp<HediffComp_Lactating>())
         {
+            // HediffsWithComp only returns hediffs containing this comp.
             var hediffComp_Lactating = hediff.GetComp<HediffComp_Lactating>()!;
             stringBuilder.AppendLine(
                 $"{hediff.LabelBaseCap}: {hediffComp_Lactating.AddedNutritionPerDay().ToStringWithSign()}");
@@ -369,6 +372,7 @@ public static class PatchHelpers
         if (genes.NullOrEmpty())
             return;
 
+        // The non-empty list only contains genes that passed HasGenderRatio and have the comp props.
         var comp = genes.RandomElement()!.CompProps<GeneCompProperties_GenderRatio>()!;
         pawn.gender = Rand.Chance(comp.femaleChance) ? Gender.Female : Gender.Male;
         return;

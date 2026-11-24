@@ -7,7 +7,11 @@ public class PawnRenderNodeWorker_ForeheadMark : PawnRenderNodeWorker_FlipWhenCr
     {
         var result = base.OffsetFor(node, parms, out pivot);
 
-        if (node.Props.narrowCrownHorizontalOffset != 0f && parms.pawn.story!.headType.narrow && parms.facing.IsHorizontal)
+        if (node.Props.narrowCrownHorizontalOffset == 0f)
+            return result;
+
+        DebugAssert.NotNull(parms.pawn.story);
+        if (parms.pawn.story!.headType.narrow && parms.facing.IsHorizontal)
         {
             if (parms.facing == Rot4.East)
                 result.x -= node.Props.narrowCrownHorizontalOffset;

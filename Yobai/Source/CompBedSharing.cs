@@ -14,6 +14,7 @@ public sealed class CompBedSharing : ThingComp
         [UsedImplicitly]
         public TemporarySleepingSlot()
         {
+            // Scribe resolves the pawn after construction, and IsActive filters unresolved references.
             pawn = null!;
         }
 
@@ -158,8 +159,10 @@ public sealed class CompBedSharing : ThingComp
 
     private bool IsActive(TemporarySleepingSlot assignment)
     {
-        return Bed.IsEligibleForBedSharing && assignment.Pawn.IsOnMap(Bed.Map!) && IsValidAssignment(Bed, assignment) &&
-               (assignment.TickCreated == Find.TickManager.TicksGame || Bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(assignment.Pawn));
+        // Only spawned beds are eligible, so the bed has a map.
+        return Bed.IsEligibleForBedSharing && assignment.Pawn is { } pawn && pawn.IsOnMap(Bed.Map!) &&
+               IsValidAssignment(Bed, assignment) &&
+               (assignment.TickCreated == Find.TickManager.TicksGame || Bed.GetSleepingPlace(assignment.Slot).BeingUsedBy(pawn));
     }
 
     private static bool IsValidAssignment(Building_Bed bed, TemporarySleepingSlot assignment) =>

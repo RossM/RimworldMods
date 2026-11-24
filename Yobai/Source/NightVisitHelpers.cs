@@ -22,8 +22,10 @@ internal static class NightVisitHelpers
     public static bool AreReadyForLovin(Pawn first, Pawn second)
     {
         int now = Find.TickManager.TicksGame;
-        return now >= first.mindState!.canLovinTick &&
-               now >= second.mindState!.canLovinTick &&
+        return first.mindState is { } firstMindState &&
+               second.mindState is { } secondMindState &&
+               now >= firstMindState.canLovinTick &&
+               now >= secondMindState.canLovinTick &&
                first.health.capacities.CanBeAwake &&
                second.health.capacities.CanBeAwake &&
                first.CanReserve(second) &&
@@ -64,7 +66,7 @@ internal static class NightVisitHelpers
                 continue;
             if (!bed.IsEligibleForNightVisits)
                 continue;
-            if (bed.CompBedSharing is not { nightVisitsEnabled: true })
+            if (bed.GetBedSharingComp() is not { nightVisitsEnabled: true })
                 continue;
             if (GetFreeSlotInBed(pawn, bed) is not { } place)
                 continue;

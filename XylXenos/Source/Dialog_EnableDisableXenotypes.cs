@@ -74,6 +74,7 @@ public class Dialog_EnableDisableXenotypes : Window
     public override void PostClose()
     {
         if (!newDisabledXenotypes.SetEquals(settings.disabledXenotypes))
+            // This button is handled while the dialog is being drawn by the window stack.
             Find.WindowStack!.Add(new Dialog_MessageBox(
                 "XylXenotypeSelectionRestartWarning".Translate(),
                 "Yes".Translate(),

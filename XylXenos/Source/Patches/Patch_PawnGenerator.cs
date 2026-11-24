@@ -12,6 +12,7 @@ public static class Patch_PawnGenerator
         if (!Settings.instance.fixGeneticPassions || pawn.genes is not { } genes)
             return;
 
+        // Only humanlike pawns have a gene tracker, and they also have a skill tracker.
         // Apply genetic passion modifiers now that skills have set natural passion
         foreach (var gene in genes.GenesListForReading)
         {
@@ -33,6 +34,7 @@ public static class Patch_PawnGenerator
         if (!Settings.instance.fixGeneticPassions || pawn.genes is not { } genes)
             return;
 
+        // Only humanlike pawns have a gene tracker, and they also have a skill tracker.
         // Back out genetic passion modifiers so we can re-apply them after natural passions have been rolled
         foreach (var gene in genes.GenesListForReading)
         {
@@ -40,6 +42,7 @@ public static class Patch_PawnGenerator
                 continue;
 
             SkillRecord skill = pawn.skills!.GetSkill(gene.def.passionMod.skill);
+            DebugAssert.NotNull(gene.passionPreAdd);
             skill.passion = gene.passionPreAdd!.Value;
         }
     }

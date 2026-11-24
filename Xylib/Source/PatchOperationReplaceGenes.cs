@@ -63,8 +63,10 @@ public class PatchOperationReplaceGenes : PatchOperation
             return false;
 
         var replacementByOriginal = entries.ToDictionary(pair => pair.original, pair => pair.replacement, StringComparer.Ordinal);
+        // XmlDocument supports XPath and returns an empty node list when there are no matches.
         var genes = xml.SelectNodes("Defs/GeneDef")!.Cast<XmlNode>()
             .Where(node => node["defName"] is { } defName && replacementByOriginal.ContainsKey(defName.InnerText)).ToList();
+        // The filter above only retains genes with a defName child.
         if (genes.Select(node => node["defName"]!.InnerText).Distinct(StringComparer.Ordinal).Count() != replacementByOriginal.Count)
             return false;
 
@@ -72,11 +74,13 @@ public class PatchOperationReplaceGenes : PatchOperation
         {
             GetOrCreateChild(gene, nameof(GeneDef.canGenerateInGeneSet)).InnerText = "false";
 
+            // DefModExtension_GeneWithComps is a named, non-generic type.
             XmlNode extension = GetOrCreateModExtension(gene, typeof(DefModExtension_GeneWithComps).FullName!);
 
             GetOrCreateChild(extension, nameof(DefModExtension_GeneWithComps.showInXenotypeCreation)).InnerText = "false";
         }
 
+        // XmlDocument supports XPath and returns an empty node list when there are no matches.
         foreach (XmlNode gene in xml.SelectNodes("Defs/XenotypeDef/genes/li")!)
         {
             if (replacementByOriginal.TryGetValue(gene.InnerText, out var replacement))
@@ -94,13 +98,16 @@ public class PatchOperationReplaceGenes : PatchOperation
         if (extension is not null)
             return extension;
 
+        // The parent is a GeneDef element selected from the input document.
         var element = parent.OwnerDocument!.CreateElement("li");
         element.SetAttribute("Class", name);
+        // Appending an element returns that element.
         return modExtensions.AppendChild(element)!;
     }
 
     private static XmlElement GetOrCreateChild(XmlNode parent, string name)
     {
+        // Every parent here is an element from the input document, and AppendChild returns the new element.
         return parent[name] ?? (XmlElement)parent.AppendChild(parent.OwnerDocument!.CreateElement(name))!;
     }
 }

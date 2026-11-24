@@ -127,16 +127,20 @@ public static class DebugOutputs
             new("label", factionDef => factionDef.LabelCap),
             .. DefDatabase<MemeDef>.AllDefs.Where(memeDef => memeDef.category == MemeCategory.Normal)
                 .OrderBy(memeDef => memeDef.label)
-                .Select(memeDef => new TableDataGetter<FactionDef>(Abbreviate(memeDef.label!).CapitalizeFirst(), factionDef =>
+                .Select(memeDef =>
                 {
-                    if (factionDef.requiredMemes?.Contains(memeDef) is true)
-                        return "Req";
-                    if (factionDef.allowedMemes is { Count: > 0 })
-                        return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
-                    if (factionDef.disallowedMemes is { Count: > 0 })
-                        return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
-                    return "";
-                })),
+                    DebugAssert.NotNull(memeDef.label);
+                    return new TableDataGetter<FactionDef>(Abbreviate(memeDef.label!).CapitalizeFirst(), factionDef =>
+                    {
+                        if (factionDef.requiredMemes?.Contains(memeDef) is true)
+                            return "Req";
+                        if (factionDef.allowedMemes is { Count: > 0 })
+                            return factionDef.allowedMemes.Contains(memeDef) ? "\u2713" : "";
+                        if (factionDef.disallowedMemes is { Count: > 0 })
+                            return factionDef.disallowedMemes.Contains(memeDef) ? "" : "\u2713";
+                        return "";
+                    });
+                }),
         ];
 
         DebugTables.MakeTablesDialog(DefDatabase<FactionDef>.AllDefs.Where(ShouldShow), [.. columns]);

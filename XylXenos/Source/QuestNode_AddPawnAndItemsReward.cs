@@ -43,6 +43,7 @@ public class QuestNode_AddPawnAndItemsReward : QuestNode
             inSignalChoiceUsed = QuestGenUtility.HardcodedSignalWithQuestID(inSignalChoiceUsed.GetValue(slate)),
         };
         choicePart.choices.Add(choice);
+        // QuestGen sets the current quest before running its nodes.
         QuestGen.quest!.AddPart(choicePart);
     }
 }

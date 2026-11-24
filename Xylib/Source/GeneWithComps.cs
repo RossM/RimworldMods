@@ -144,6 +144,7 @@ public class GeneWithComps : Gene, IEventListener
     /// <summary>
     ///     Whether this gene is an endogene or xenogene.
     /// </summary>
+    // The humanlike pawn's gene tracker creates and owns this gene.
     public GeneType GeneType => geneTypeInternal ??= pawn.genes!.Xenogenes.Contains(this) ? GeneType.Xenogene : GeneType.Endogene;
 
     private static readonly Dictionary<Type, bool> hasTickCache = [];
@@ -265,7 +266,9 @@ public class GeneWithComps : Gene, IEventListener
             GeneComp? comp = null;
             try
             {
-                comp = (GeneComp)Activator.CreateInstance(compClass)!;
+                var instance = Activator.CreateInstance(compClass);
+                DebugAssert.NotNull(instance);
+                comp = (GeneComp)instance!;
                 comp.props = compProps;
                 comp.parent = this;
                 comps.Add(comp);

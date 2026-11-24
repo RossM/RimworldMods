@@ -11,10 +11,12 @@ internal static class PatchHelpers
 
     private static Dictionary<HediffDef, StatDef> ResistanceStatByHediff => field ??= Config.Instance.resistanceStatByHediff;
 
+    // RunDefGenerator is the declared private static method on this type.
     private static readonly MethodInfo methodInfo_RunDefGenerator
         = typeof(PatchHelpers).GetMethod(nameof(RunDefGenerator), BindingFlags.NonPublic | BindingFlags.Static)!;
 
     private static readonly ConcurrentDictionary<Type, Action<object, List<string>>?> requiredMemberCheckerCache = new();
+    // List<string> declares a public Add method taking a string.
     private static readonly MethodInfo stringListAddMethod = typeof(List<string>).GetMethod("Add", [typeof(string)])!;
 
     private static void RunDefGenerator<T, TDef>(bool hotReload) where TDef : Def, new() where T : IDefGenerator<TDef>
@@ -30,6 +32,7 @@ internal static class PatchHelpers
                      type => type.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDefGenerator<>)),
                      (type, i) => (type, i.GetGenericArguments()[0])))
         {
+            // GenTypes.AllTypes enumerates declared assembly types, which have qualified names.
             using var _ = new ProfileBlock(type.FullName!);
 
             try
@@ -278,10 +281,12 @@ internal static class PatchHelpers
 
     public static void AddNamesForInheritance(XmlDocument xmlDoc)
     {
+        // XmlDocument supports XPath and returns an empty node list when there are no matches.
         foreach (var node in xmlDoc.SelectNodes("/Defs/*[@ParentDefName]")!.OfType<XmlElement>())
         {
             string defType = node.Name;
             string parentDefName = node.GetAttribute("ParentDefName");
+            // XmlDocument supports XPath and returns an empty node list when there are no matches.
             var parent = xmlDoc.SelectNodes($"/Defs/{defType}[defName=\"{parentDefName}\"]")!.OfType<XmlElement>()
                 .LastOrDefault();
 
