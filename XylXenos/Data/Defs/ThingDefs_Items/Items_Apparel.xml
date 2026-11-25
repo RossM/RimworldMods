@@ -60,7 +60,6 @@
         <li>Overhead</li>
       </layers>
       <defaultOutfitTags>
-        <li>Soldier</li>
         <li>Worker</li>
       </defaultOutfitTags>
       <forceEyesVisibleForRotations>
@@ -75,7 +74,9 @@
         <li>ElectricTailoringBench</li>
         <li>HandTailoringBench</li>
       </recipeUsers>
-      <displayPriority>160</displayPriority>
+      <skillRequirements>
+        <Crafting>4</Crafting>
+      </skillRequirements>
     </recipeMaker>
     <tradeTags>
       <li>BasicClothing</li>
