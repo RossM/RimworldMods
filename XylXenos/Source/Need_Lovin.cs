@@ -35,6 +35,10 @@ public class Need_Lovin(Pawn pawn) : Need(pawn)
 
     public void CategoryChanged()
     {
+        // During loading the hediff can be in a partially-initialized state that will make
+        // Notify_NeedCategoryChanged throw a NullReferenceException
+        if (Scribe.mode != LoadSaveMode.Inactive)
+            return;
         LovinAddictionHediff?.Notify_NeedCategoryChanged();
     }
 }
