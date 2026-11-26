@@ -243,6 +243,11 @@
   <MeditationFocusDef>
     <defName>XylRomantic</defName>
     <label>romantic</label>
+    <modExtensions>
+      <li MayRequire="VanillaExpanded.VPsycastsE" Class="VanillaPsycastsExpanded.MeditationFocusExtension">
+        <icon>Xyl/UI/Icons/Meditation_Romantic</icon>
+      </li>
+    </modExtensions>
   </MeditationFocusDef>
 
   <GeneDef>
