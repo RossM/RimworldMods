@@ -10,9 +10,8 @@ public class Hediff_LovinAddiction : HediffWithCompsExt
         get
         {
             DebugAssert.NotNull(pawn);
-            DebugAssert.False(pawn.Dead);
 
-            return field ??= pawn.needs.TryGetNeed<Need_Lovin>();
+            return field ??= pawn.needs?.TryGetNeed<Need_Lovin>();
         }
     }
 
