@@ -451,6 +451,11 @@
         <count>1</count>
       </li>
     </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>StoneBlocks</li>
+      </categories>
+    </fixedIngredientFilter>
     <recipeUsers>
       <li>DrugLab</li>
     </recipeUsers>
@@ -494,6 +499,11 @@
         <count>4</count>
       </li>
     </ingredients>
+    <fixedIngredientFilter>
+      <categories>
+        <li>StoneBlocks</li>
+      </categories>
+    </fixedIngredientFilter>
     <recipeUsers>
       <li>DrugLab</li>
     </recipeUsers>
