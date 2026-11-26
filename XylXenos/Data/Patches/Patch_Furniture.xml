@@ -73,20 +73,13 @@
             <li Class="FocusStrengthOffset_Quality">
               <curve>
                 <points>
-                  <li>(0,0.18)</li>
-                  <!-- awful -->
-                  <li>(1,0.22)</li>
-                  <!-- poor -->
-                  <li>(2,0.26)</li>
-                  <!-- normal -->
-                  <li>(3,0.28)</li>
-                  <!-- good -->
-                  <li>(4,0.30)</li>
-                  <!-- excellent -->
-                  <li>(5,0.32)</li>
-                  <!-- masterwork -->
-                  <li>(6,0.34)</li>
-                  <!-- legendary -->
+                  <li>(0,0.18)</li> <!-- awful -->
+                  <li>(1,0.22)</li> <!-- poor -->
+                  <li>(2,0.26)</li> <!-- normal -->
+                  <li>(3,0.28)</li> <!-- good -->
+                  <li>(4,0.30)</li> <!-- excellent -->
+                  <li>(5,0.32)</li> <!-- masterwork -->
+                  <li>(6,0.34)</li> <!-- legendary -->
                 </points>
               </curve>
             </li>
